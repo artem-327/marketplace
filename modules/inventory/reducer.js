@@ -43,7 +43,7 @@ export const initialState = {
   datagridFilterReload: false,
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
-  isExportInventoryOpen: false,
+  //isExportInventoryOpen: false,
   tableHandlersFilters: null,
   isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
@@ -641,7 +641,7 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE: {
       return {
         ...state,
-        isExportInventoryOpen: payload
+        //isExportInventoryOpen: payload
       }
     }
 
