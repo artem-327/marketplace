@@ -83,7 +83,7 @@ const ProductPopup = props => {
 
   // Similar to call componentDidUpdate:
   useEffect(() => {
-    if (mounted.current && (props.unitsAll !== previousUnitsAll)) {
+    if (mounted.current && props.unitsAll !== previousUnitsAll) {
       if (props.popupValues.packagingUnit) {
         filterPackagingTypes(
           popupValues.packagingUnit.id,
@@ -97,24 +97,35 @@ const ProductPopup = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    props.getProductsCatalogRequest()
-
-    if (props.popupValues && props.popupValues.nmfcNumber) props.addNmfcNumber(props.popupValues.nmfcNumber)
-
-    if (props.documentTypes.length === 0) props.getDocumentTypes()
-
-    if (props.popupValues) {
-      const attachments = props.popupValues.attachments.map(att => ({
-        id: att.id,
-        name: att.name,
-        documentType: att.documentType.name,
-        linked: true
-      }))
-      setAttachments(attachments)
+    //asynchronous fetch data
+    async function fetchData() {
+      await props.getProductsCatalogRequest()
+      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+      if (props.documentTypes.length === 0) await props.getDocumentTypes()
+      if (props.popupValues) {
+        const attachments = props.popupValues.attachments.map(att => ({
+          id: att.id,
+          name: att.name,
+          documentType: att.documentType.name,
+          linked: true
+        }))
+        setAttachments(attachments)
+      }
     }
 
-    mounted.current = true
-  }, []) // If [] is empty then is similar as componentDidMount.
+    if (!props?.unitsAll?.length) fetchData()
+
+    if (props.popupValues.packagingUnit) {
+      filterPackagingTypes(
+        popupValues.packagingUnit.id,
+        props.unitsAll,
+        props.packagingTypesAll,
+        setpackagingTypesReduced
+      )
+    } else {
+      setpackagingTypesReduced(props.packagingType)
+    }
+  }, [props?.unitsAll?.length]) // If [] is empty then is similar as componentDidMount.
 
   const {
     closePopup,

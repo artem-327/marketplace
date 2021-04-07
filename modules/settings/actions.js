@@ -522,8 +522,8 @@ export function getCreditCardsDataRequest() {
 }
 
 export function getProductsCatalogRequest(data) {
-  return dispatch => {
-    dispatch({
+  return async dispatch => {
+    await dispatch({
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
       async payload() {
         const [/*productCatalog,*/ productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
