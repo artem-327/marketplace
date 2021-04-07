@@ -35,11 +35,9 @@ import {
 const TradeCriteria = ({ tradeCriteria, getTradeCriteria, patchTradeCriteria, loading, dropdowns, intl }) => {
   useEffect(() => {
     const fetchTradeCriteria = async () => {
-      if (!tradeCriteria?.length) {
-        await getTradeCriteria()
-      }
+      await getTradeCriteria()
     }
-    fetchTradeCriteria()
+    if (!tradeCriteria?.length) fetchTradeCriteria()
   }, [tradeCriteria, getTradeCriteria])
 
   return (
