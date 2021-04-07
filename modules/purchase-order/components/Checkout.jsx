@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Head from 'next/head'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { ArrowLeft } from 'react-feather'
 
 //Components
 import HeaderRow from './HeaderRow/HeaderRow'
@@ -13,6 +14,7 @@ import ShippingTerms from './ShippingTerms/ShippingTerms'
 import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
 import Spinner from '../../../components/Spinner/Spinner'
+import BasicButton from '../../../components/buttons/BasicButton'
 
 //Services
 import { getSafe } from '../../../utils/functions'
@@ -25,7 +27,15 @@ import {
 } from './Checkout.services'
 
 // Styles
-import { ContainerMain, DivScrollableContent, ContainerCheckout, GridSections } from './Checkout.styles'
+import {
+  ContainerMain,
+  DivTopButtonRow,
+  DivScrollableContent,
+  ContainerCheckout,
+  GridSections,
+  DivButtonContentWrapper,
+  SpanButtonText
+} from './Checkout.styles'
 
 //Constants
 import { FREIGHT_TYPES } from './Checkout.constants'
@@ -55,7 +65,7 @@ const Checkout = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    const fetchCheckout = async () => {
+    const fetchCheckout = async (freight) => {
       const { paymentProcessor } = props
       props.getDeliveryAddresses()
       props.getPayments(paymentProcessor)
@@ -71,28 +81,29 @@ const Checkout = props => {
       }))
       setSectionState({
         ...sectionState,
-        review: { accepted: false, value: initVal }
+        review: { accepted: false, value: initVal },
+        freight
       })
     }
 
-    fetchCheckout()
     const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
+    let freight = sectionState.freight
+
     if (shippingQuoteId) {
-      setSectionState({
-        ...sectionState,
-        freight: {
-          accepted: true,
-          value: {
-            carrierName: shippingQuoteId,
-            cfEstimatedSubtotal: '',
-            estimatedDeliveryDate: '',
-            quoteId: shippingQuoteId,
-            freightType: FREIGHT_TYPES.ECHO
-          }
-        }
-      })
       setfixedFreightId(true)
+      freight = {
+        accepted: true,
+        value: {
+          carrierName: shippingQuoteId,
+          cfEstimatedSubtotal: '',
+          estimatedDeliveryDate: '',
+          quoteId: shippingQuoteId,
+          freightType: FREIGHT_TYPES.ECHO
+        }
+      }
     }
+
+    fetchCheckout(freight)
   }, [])
 
   const allAccepted = checkAllAccepted(sectionState)
@@ -128,6 +139,21 @@ const Checkout = props => {
         <HeaderRow itemsCount={cartItems.length} />
         <DivScrollableContent>
           <ContainerCheckout>
+            <DivTopButtonRow>
+              <BasicButton
+                type='button'
+                onClick={() => Router.push('/cart')}>
+                <DivButtonContentWrapper>
+                  <ArrowLeft size='18' />
+                  <SpanButtonText>
+                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
+                      {text => text}
+                    </FormattedMessage>
+                  </SpanButtonText>
+                </DivButtonContentWrapper>
+              </BasicButton>
+            </DivTopButtonRow>
+
             <Grid>
               <GridRow>
                 <GridColumn width={12}>

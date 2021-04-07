@@ -24,8 +24,22 @@ export const DivScrollableContent = styled.div`
   overflow-y: auto;
 `
 
+export const DivTopButtonRow = styled.div`
+  padding: 15px 4px;
+`
+
+export const DivButtonContentWrapper = styled.div`
+  margin: auto -8px;
+  display: flex;
+  align-items: center;
+`
+
+export const SpanButtonText = styled.span`
+  padding-left: 10px;
+`
+
 export const ContainerCheckout = styled(SemanticContainer)`
-  padding: 30px 0;
+  padding: 15px 0;
 `
 
 export const GridSections = styled(Grid)`
