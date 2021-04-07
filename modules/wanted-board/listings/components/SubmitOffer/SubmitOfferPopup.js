@@ -711,7 +711,7 @@ class SubmitOfferPopup extends Component {
         .then(() => {
           this.setErrors({})
         })
-        .catch(err => console.log('catch', err))
+        .catch(err => console.error('catch', err))
     }
 
     if (name === 'fulfillmentType' && value === 'PARTIAL') {

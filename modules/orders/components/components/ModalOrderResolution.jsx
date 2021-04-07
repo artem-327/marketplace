@@ -15,7 +15,7 @@ import { CustomA, DivText, DivTextContact, SpanModalText } from '../Orders.style
 import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/DetailRow.style'
 
 //Constants
-import { ORDER_RESOLUTION_PHONE_NUMBER, SUPPORT_EMAIL, currency } from '../../../../constants'
+import { currency } from '../../../../constants'
 
 /**
  * @category Orders - Detail
@@ -26,10 +26,9 @@ const ModalOrderResolution = ({
   loading,
   onClose,
   actions: { orderResolutionAccept, orderResolutionReopen },
-  intl
+  intl,
+  appInfo
 }) => {
-  console.log('order')
-  console.log(order)
   return (
     <ModalCustom size='small' open={true} onClose={() => onClose()} closeIcon={true}>
       <Dimmer active={loading} inverted>
@@ -41,7 +40,7 @@ const ModalOrderResolution = ({
       <Modal.Content>
         <DivText>
           {/* reviewStatus === 4 Credited, reviewStatus === 3 Rejected  */}
-          {order?.reviewStatus === 4 ? (
+          {order?.reviewStatus === 'Credited' ? (
             <FormattedMessage
               id='orders.detail.modal.orderResolution.creditText'
               defaultMessage='After all parties have reviewed the disputed order it has been agreed upon that {Seller_Company} will credit {Credit_Amount} to {Buyer_Company} for Order {Order_ID}.'
@@ -93,9 +92,9 @@ const ModalOrderResolution = ({
             values={{
               emailAndPhoneNumber: (
                 <>
-                  <b>{ORDER_RESOLUTION_PHONE_NUMBER}</b>
+                  <b>{appInfo?.supportPhone}</b>
                   <FormattedMessage id='global.orSpaceAround' defaultMessage=' or ' />
-                  <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</CustomA>
+                  <CustomA href={`mailto: ${appInfo?.supportEmail}`}>{appInfo?.supportEmail}</CustomA>
                 </>
               )
             }}
@@ -123,7 +122,7 @@ const ModalOrderResolution = ({
                 </SpanModalText>
               </DivModal>,
               {
-                cancelText: intl?.formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }),
+                cancelText: null,
                 proceedText: intl?.formatMessage({ id: 'global.close', defaultMessage: 'Close' })
               },
               true //Basic Modal
@@ -158,7 +157,8 @@ ModalOrderResolution.propTypes = {
     orderResolutionAccept: func,
     orderResolutionReopen: func
   },
-  intl: object
+  intl: object,
+  appInfo: object
 }
 
 ModalOrderResolution.defaultValues = {
@@ -171,7 +171,8 @@ ModalOrderResolution.defaultValues = {
   },
   intl: {
     formatMessage: () => {}
-  }
+  },
+  appInfo: null
 }
 
 export default injectIntl(ModalOrderResolution)

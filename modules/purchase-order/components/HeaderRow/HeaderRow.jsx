@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import { GridColumn, GridRow } from 'semantic-ui-react'
-import Logo from '~/assets/images/nav/logo-bluepallet.png'
+import Logo from '../../../../assets/images/blue-pallet/logo.png'
 
 //Services
 import { getSafe } from '../../../../utils/functions'
@@ -14,6 +14,7 @@ import { loadCompanyLogo, getCompanyLogo } from './HeaderRow.services'
 // Styles
 import {
   DivHeaderRow,
+  ContainerHeader,
   DivHeaderRowText,
   DivImageWrapper,
   LogoImage,
@@ -21,6 +22,7 @@ import {
   PopupGrid,
   ButtonHeader
 } from './HeaderRow.styles'
+
 /**
  * @category Purchase Order - Checkout
  * @component
@@ -37,64 +39,66 @@ const HeaderRow = props => {
 
   return (
     <DivHeaderRow>
-      <PopupHeader
-        wide
-        trigger={
-          <DivImageWrapper>
-            <LogoImage
-              src={hasLogo && getSafe(() => useCompanyLogo.value === 'TRUE', false) ? getCompanyLogo(props) : Logo}
-            />
-          </DivImageWrapper>
-        }
-        on='click'
-        open={isPopupOpen}
-        onOpen={() => setIsPopupOpen(true)}
-        onClose={() => setIsPopupOpen(false)}
-        content={
-          <div>
-            <PopupGrid>
-              <GridRow>
-                <GridColumn>
-                  <FormattedMessage
-                    id='checkout.header.returnToCart'
-                    defaultMessage='Are you sure you want to return to your Shopping Cart?'
-                  />
-                </GridColumn>
-              </GridRow>
+      <ContainerHeader>
+        <PopupHeader
+          wide
+          trigger={
+            <DivImageWrapper>
+              <LogoImage
+                src={hasLogo && getSafe(() => useCompanyLogo.value === 'TRUE', false) ? getCompanyLogo(props) : Logo}
+              />
+            </DivImageWrapper>
+          }
+          on='click'
+          open={isPopupOpen}
+          onOpen={() => setIsPopupOpen(true)}
+          onClose={() => setIsPopupOpen(false)}
+          content={
+            <div>
+              <PopupGrid>
+                <GridRow>
+                  <GridColumn>
+                    <FormattedMessage
+                      id='checkout.header.returnToCart'
+                      defaultMessage='Are you sure you want to return to your Shopping Cart?'
+                    />
+                  </GridColumn>
+                </GridRow>
 
-              <GridRow>
-                <GridColumn width={8}>
-                  <ButtonHeader fluid onClick={() => setIsPopupOpen(false)}>
-                    <FormattedMessage id='checkout.header.button.stayInCheckout' defaultMessage='Stay in Checkout'>
-                      {text => text}
-                    </FormattedMessage>
-                  </ButtonHeader>
-                </GridColumn>
-                <GridColumn width={8}>
-                  <ButtonHeader
-                    className='bordered'
-                    fluid
-                    onClick={() => {
-                      setIsPopupOpen(false)
-                      Router.push('/cart')
-                    }}>
-                    <FormattedMessage id='checkout.header.button.returnToCart' defaultMessage='Return to Cart'>
-                      {text => text}
-                    </FormattedMessage>
-                  </ButtonHeader>
-                </GridColumn>
-              </GridRow>
-            </PopupGrid>
-          </div>
-        }
-      />
-      <DivHeaderRowText>
-        <FormattedMessage
-          id='checkout.header.items'
-          defaultMessage={`Checkout (${itemsCount} items)`}
-          values={{ value: itemsCount }}
+                <GridRow>
+                  <GridColumn width={8}>
+                    <ButtonHeader fluid onClick={() => setIsPopupOpen(false)}>
+                      <FormattedMessage id='checkout.header.button.stayInCheckout' defaultMessage='Stay in Checkout'>
+                        {text => text}
+                      </FormattedMessage>
+                    </ButtonHeader>
+                  </GridColumn>
+                  <GridColumn width={8}>
+                    <ButtonHeader
+                      className='bordered'
+                      fluid
+                      onClick={() => {
+                        setIsPopupOpen(false)
+                        Router.push('/cart')
+                      }}>
+                      <FormattedMessage id='checkout.header.button.returnToCart' defaultMessage='Return to Cart'>
+                        {text => text}
+                      </FormattedMessage>
+                    </ButtonHeader>
+                  </GridColumn>
+                </GridRow>
+              </PopupGrid>
+            </div>
+          }
         />
-      </DivHeaderRowText>
+        <DivHeaderRowText>
+          <FormattedMessage
+            id='checkout.header.items'
+            defaultMessage={`Checkout (${itemsCount} items)`}
+            values={{ value: itemsCount }}
+          />
+        </DivHeaderRowText>
+      </ContainerHeader>
     </DivHeaderRow>
   )
 }

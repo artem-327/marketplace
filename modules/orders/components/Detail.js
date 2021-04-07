@@ -869,7 +869,8 @@ class Detail extends Component {
       isSending,
       orderResolutionAccept,
       orderResolutionReopen,
-      closePopup
+      closePopup,
+      appInfo
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1154,6 +1155,7 @@ class Detail extends Component {
                 <>
                   {openedDisputedRequest ? (
                     <ModalOrderResolution
+                      appInfo={appInfo}
                       order={order}
                       onClose={closePopup}
                       loading={isSending}

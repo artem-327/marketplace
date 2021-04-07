@@ -290,7 +290,8 @@ function mapStateToProps(state, ownProps) {
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
     isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false),
     isSending: orders?.isSending,
-    openedDisputedRequest: orders?.openedDisputedRequest
+    openedDisputedRequest: orders?.openedDisputedRequest,
+    appInfo: state?.auth?.identity?.appInfo
   }
 }
 

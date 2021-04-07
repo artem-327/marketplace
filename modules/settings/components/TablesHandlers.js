@@ -21,6 +21,8 @@ import { PlaidLink } from 'react-plaid-link'
 import api from '~/api'
 //Components
 import BasicButton from '../../../components/buttons/BasicButton'
+//Constants
+import { VELLOCI_ACCOUNT_STATUSES } from '../contants'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -276,7 +278,7 @@ class TablesHandlers extends Component {
           ),
           value: ''
         },
-        ...this.props.documentTypes.map(doc => ({
+        ...this.props?.documentTypes?.map(doc => ({
           key: doc.key,
           text: doc.text,
           value: doc.text
@@ -374,7 +376,8 @@ class TablesHandlers extends Component {
       vellociBusinessId,
       vellociToken,
       intl: { formatMessage },
-      isThirdPartyConnectionException
+      isThirdPartyConnectionException,
+      accountStatus
     } = this.props
 
     const filterValue = this.state[currentTab]
@@ -638,7 +641,10 @@ class TablesHandlers extends Component {
                   />
                 ) : null}
               </div>
-              {bankAccTab ? (
+              {bankAccTab &&
+              (accountStatus === VELLOCI_ACCOUNT_STATUSES.ACTIVE ||
+                accountStatus === VELLOCI_ACCOUNT_STATUSES.PENDING_KYB ||
+                accountStatus === VELLOCI_ACCOUNT_STATUSES.MEMBER_PENDING) ? (
                 <Popup
                   size='small'
                   disabled={vellociToken && vellociBusinessId && !isThirdPartyConnectionException}
@@ -734,9 +740,5 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(
-    connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(
-      injectIntl(TablesHandlers)
-    )
-  )
+  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
 )

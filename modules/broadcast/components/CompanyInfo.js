@@ -192,14 +192,14 @@ class CompanyInfo extends Component {
                     <FormattedMessage id='global.test' defaultMessage='Test'>
                       {text => text}
                     </FormattedMessage>
-                  ),
-                  callback: async row => {
-                    try {
-                      console.log('click to row action')
-                    } catch (e) {
-                      console.error(e)
-                    }
-                  }
+                  )
+                  // callback: async row => {
+                  //   try {
+                  //     console.log('click to row action')
+                  //   } catch (e) {
+                  //     console.error(e)
+                  //   }
+                  // }
                 }
               ]}
             />

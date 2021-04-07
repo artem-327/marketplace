@@ -77,9 +77,9 @@ export const OPTIONS_BROADCAST = [
         </svg>
       </DivIconOptions>
     ),
-    title: <FormattedMessage id='myInventory.network' defaultMessage='Network' />,
-    subtitleId: 'myInventory.networkSubtitle',
-    subtitleText: 'Your accepted Partners and invited Guests',
+    title: <FormattedMessage id='global.all' defaultMessage='All' />,
+    subtitleId: 'myInventory.allSubtitle',
+    subtitleText: 'My Network + BluePallet Direct',
     value: GLOBAL_RULES,
     id: null,
     tmp: null
@@ -111,7 +111,7 @@ export const OPTIONS_BROADCAST = [
   {
     icon: (
       <DivIconOptions>
-        <Image size='mini' src={BluePalletLogoMini} />,
+        <Image size='mini' src={BluePalletLogoMini} />
       </DivIconOptions>
     ),
     title: <FormattedMessage id='myInventory.bluePalletDirect' defaultMessage='BluePallet Direct' />,
