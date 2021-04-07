@@ -2,7 +2,8 @@ import styled from 'styled-components'
 import {
   Grid,
   Label,
-  Header
+  Header,
+  Image
 } from 'semantic-ui-react'
 
 export const DetailMessage = styled.div`
@@ -74,14 +75,14 @@ export const NavCircle = styled(Label)`
   }
 `
 
-export const UserImage = styled.div`
+export const UserImage = styled(Image)`
   overflow: hidden;
   float: left;
   box-sizing: border-box;
   width: 40px;
   height: 40px;
   margin: -4px 10px -4px 0;
-  border: 1px solid #dee2e6;
+  border: 1px solid #dee2e6 !important;
   border-radius: 50%;
   
   img {

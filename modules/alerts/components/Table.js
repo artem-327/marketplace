@@ -289,10 +289,8 @@ class Table extends Component {
         ...r,
         user: (
           <>
-            {getSafe(() => r.info.requestedBy.avatar, false) && (
-              <UserImage>
-                <img src={r.info.requestedBy.avatar} />
-              </UserImage>
+            {getSafe(() => r.relatedCompany.base64Logo, false) && (
+              <UserImage src={r.relatedCompany.base64Logo} bordered />
             )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
             <UserCompany as='h4'>
