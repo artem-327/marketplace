@@ -48,7 +48,8 @@ export const getInitialFormValues = sidebarValues => {
   const provinceId = getSafe(() => sidebarValues.billToAddress.address.province.id, '')
   const countryId = getSafe(() => sidebarValues.billToAddress.address.country.id, null)
   const hasProvinces = getSafe(() => sidebarValues.billToAddress.address.country.hasProvinces, false)
-  const zip = getSafe(() => sidebarValues.billToAddress.address.zip.zip, '').replace(' ', '')
+  const zip = getSafe(() => sidebarValues.billToAddress.address.zip.zip, '')
+  const zipID = getSafe(() => sidebarValues.billToAddress.address.zip.id, '')
 
   const initialValues = {
     billToAddress: {
@@ -70,7 +71,8 @@ export const getInitialFormValues = sidebarValues => {
       liftGate: getSafe(() => sidebarValues.billToAddress.liftGate, false),
       readyTime: getSafe(() => sidebarValues.billToAddress.readyTime, ''),
     },
-    name: getSafe(() => sidebarValues.name, '')
+    name: getSafe(() => sidebarValues.name, ''),
+    zipID
   }
   return initialValues
 }
@@ -104,6 +106,7 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
       }
     })) : null
   }
+  delete customerData.zipID
   removeEmpty(customerData)
 
   try {
