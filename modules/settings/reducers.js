@@ -2004,16 +2004,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* PATCH_TRADE_CRITERIA */
+    /* PUT_TRADE_CRITERIA */
 
-    case AT.PATCH_TRADE_CRITERIA_PENDING: {
+    case AT.PUT_TRADE_CRITERIA_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.PATCH_TRADE_CRITERIA_FULFILLED: {
+    case AT.PUT_TRADE_CRITERIA_FULFILLED: {
       let tradeCriteria = state?.tradeCriteria
       if (payload?.settingGroups?.length) {
         payload?.settingGroups?.forEach(p => {
@@ -2029,7 +2029,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.PATCH_TRADE_CRITERIA_REJECTED: {
+    case AT.PUT_TRADE_CRITERIA_REJECTED: {
       return {
         ...state,
         loading: false
@@ -2046,18 +2046,10 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_TRADE_CRITERIA_FULFILLED: {
-      let tradeCriteria = null
-      if (payload?.length) {
-        payload?.forEach(p => {
-          if (p?.code === 'TRADEPASS_CRITERIA') {
-            tradeCriteria = p?.settings
-          }
-        })
-      }
       return {
         ...state,
         loading: false,
-        tradeCriteria
+        tradeCriteria: payload
       }
     }
 

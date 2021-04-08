@@ -338,14 +338,14 @@ export default {
       .get(`/prodex/api/settings/company-user/${id}`)
       .then(response => response.data)
       .catch(err => console.error(err)),
-  patchTradeCriteria: body =>
+  putTradeCriteria: body =>
     api
-      .patch('/prodex/api/settings/company', body)
+      .put('/prodex/api/tradepass/my-criteria', body)
       .then(response => response.data)
       .catch(err => err),
   getTradeCriteria: () =>
     api
-      .get('/prodex/api/settings/company?groups=TRADEPASS_CRITERIA')
+      .get('/prodex/api/tradepass/my-criteria')
       .then(response => response.data)
       .catch(err => err),
   updateSettingsCompanyUser: (userId, request) =>
