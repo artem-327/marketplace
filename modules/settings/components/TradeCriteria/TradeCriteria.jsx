@@ -53,11 +53,9 @@ const TradeCriteria = ({
         initialValues={getInitialFormValues(criteria, criteriaOptions)}
         validationSchema={formValidation()}
         enableReinitialize
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          console.log('values', values)
+        onSubmit={async (values, { setSubmitting }) => {
           await putTradeCriteria(values)
           setSubmitting(false)
-          //resetForm()
         }}>
         {formikProps => (
           <>
