@@ -40,7 +40,6 @@ import ProductImportPopup from '../../my-products/components/ProductImportPopup'
 import { getSafe, uniqueArrayByKey, generateToastMarkup } from '../../../../utils/functions'
 import Tutorial from '../../../tutorial/Tutorial'
 import SearchByNamesAndTags from '../../../search'
-import ExportInventory from '../../../export-inventory/components/ExportInventory'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
@@ -467,15 +466,12 @@ class MyListings extends Component {
       isModalDetailOpen,
       closeModalDetail,
       isProductInfoOpen,
-      closePopup,
-      isExportInventoryOpen,
-      setExportModalOpenState
+      closePopup
     } = this.props
 
     this.props.handleVariableSave('myListingsFilters', this.state.filterValues)
     if (isModalDetailOpen) closeModalDetail()
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportModalOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -660,8 +656,6 @@ class MyListings extends Component {
       broadcastTemplates,
       isProductInfoOpen,
       closePopup,
-      isExportInventoryOpen,
-      setExportModalOpenState,
       broadcastChange
     } = this.props
     let title
@@ -939,8 +933,6 @@ class MyListings extends Component {
                     {
                       isProductInfoOpen,
                       closePopup,
-                      isExportInventoryOpen,
-                      setExportModalOpenState,
                       modalDetailTrigger
                     },
                     true // updateWarehouse
@@ -1180,8 +1172,6 @@ class MyListings extends Component {
       editedId,
       closeModalDetail,
       tutorialCompleted,
-      isExportInventoryOpen,
-      setExportModalOpenState,
       myListingsFilters,
       updatingDatagrid,
       activeInventoryFilter
@@ -1263,20 +1253,6 @@ class MyListings extends Component {
               </Menu.Item>
             ) : null*/}
             <div>
-              <div className='column'>
-                <Button
-                  className='light'
-                  size='large'
-                  primary
-                  onClick={() => setExportModalOpenState(true)}
-                  data-test='my_inventory_export_btn'>
-                  <CornerLeftUp />
-                  {formatMessage({
-                    id: 'myInventory.export',
-                    defaultMessage: 'Export'
-                  })}
-                </Button>
-              </div>
               <div className='column'>
                 <Button
                   className='light'
@@ -1366,7 +1342,6 @@ class MyListings extends Component {
                 isModalDetailOpen,
                 closeModalDetail,
                 (companyProduct, i) => {
-                  if (isExportInventoryOpen) setExportModalOpenState(false)
                   openPopup(companyProduct, i)
                 }
               ).map(a => ({
@@ -1386,7 +1361,6 @@ class MyListings extends Component {
           />
         </div>
         {isModalDetailOpen && <ModalDetailContainer inventoryGrid={this.props.datagrid} />}
-        {isExportInventoryOpen && <ExportInventory onClose={() => setExportModalOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )

@@ -725,13 +725,26 @@ export default function reducer(state = initialState, action) {
         CSV
       }
     }
+    case AT.GET_CSV_MAP_PRODUCT_OFFER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.GET_CSV_MAP_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
 
     case AT.GET_CSV_MAP_COMPANY_GENERIC_PRODUCT_FULFILLED:
     case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED:
     case AT.GET_CSV_MAP_COMPANIES_FULFILLED: {
       return {
         ...state,
-        maps: action.payload
+        maps: action.payload,
+        loading: false
       }
     }
 
@@ -764,10 +777,39 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_UPLOAD_CSV_FILE_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case AT.POST_UPLOAD_CSV_FILE_FULFILLED: {
       return {
         ...state,
-        fileCSVId: action.payload.id
+        fileCSVId: action.payload.id,
+        loading: false
+      }
+    }
+
+    case AT.POST_UPLOAD_CSV_FILE_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.POST_CSV_IMPORT_COMPANIES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_CSV_IMPORT_COMPANIES_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 
@@ -776,7 +818,8 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_POST_CSV_IMPORT_COMPANY_GENERIC_PRODUCTS_PENDING: {
       return {
         ...state,
-        csvImportError: null
+        csvImportError: null,
+        loading: true
       }
     }
 
@@ -789,7 +832,8 @@ export default function reducer(state = initialState, action) {
     case AT.POST_CSV_IMPORT_COMPANIES_FULFILLED: {
       return {
         ...state,
-        csvImportError: action.payload
+        csvImportError: action.payload,
+        loading: false
       }
     }
 
@@ -2018,6 +2062,30 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_TRADE_CRITERIA_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* GET_USER */
+
+    case AT.GET_USER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_USER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        sidebarValues: payload
+      }
+    }
+
+    case AT.GET_USER_REJECTED: {
       return {
         ...state,
         loading: false
