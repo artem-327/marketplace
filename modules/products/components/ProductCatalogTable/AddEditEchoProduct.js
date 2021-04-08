@@ -232,7 +232,6 @@ const IconStyled = styled(Icon)`
   }
 `
 
-
 const DivCircleIcon = styled.div`
   margin: 10.5px auto 10.5px -3px;
   width: 18px;
