@@ -498,12 +498,12 @@ export function closePricingEditPopup() {
   }
 }
 
-export function setExportModalOpenState(open) {
+/*export function setExportModalOpenState(open) {
   return {
     type: AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE,
     payload: open
   }
-}
+}*/
 
 export function handleVariableSave(variable, value) {
   return {

@@ -30,7 +30,6 @@ export const tableRowClickedProductOffer = (row, modalProps, bool = true, indexT
   } = modalProps
 
   if (isProductInfoOpen) closePopup()
-  if (isExportInventoryOpen) setExportModalOpenState(false)
   modalDetailTrigger(row, bool, indexTab)
 }
 
