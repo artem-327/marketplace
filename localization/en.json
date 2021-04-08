@@ -226,6 +226,7 @@
   "navigation.alerts.shippingQuoteRequest": "Shipping Quote Requests",
   "navigation.alerts.companyGenericProductRequests": "Product Requests",
   "navigation.alerts.disputes": "Order Disputes",
+  "navigation.alerts.warehouseVerification": "Warehouse Verification",
   "navigation.companies": "Companies",
   "navigation.dashboard": "Dashboard",
   "navigation.products": "Products",
