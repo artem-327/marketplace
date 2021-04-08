@@ -148,6 +148,12 @@ export const AddressGrid = styled(Grid)`
   }
 `
 
+const SpanIdValue = styled.span`
+  color: #20273a;
+  margin-left: 7px;
+  margin-right: 2px;
+`
+
 class ShippingQuoteRequest extends Component {
   displayAddress = ({ address, header, company }) => {
     return (
@@ -333,12 +339,22 @@ class ShippingQuoteRequest extends Component {
               <GridRow>
                 <GridColumn>
                   <div style={{ float: 'right' }}>
-                    <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations()}>
+                    <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations(row)}>
                       <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
                         {text => text}
                       </FormattedMessage>
                       <ArrowRight size='18' style={{ marginLeft: '12px' }} />
                     </Button>
+                  </div>
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn width={16}>
+                  <div style={{ float: 'right' }}>
+                    <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
+                    <SpanIdValue>
+                      {getSafe(() => row.info.shippingQuoteRequestId, 'N/A')}
+                    </SpanIdValue>
                   </div>
                 </GridColumn>
               </GridRow>
