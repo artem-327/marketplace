@@ -116,13 +116,13 @@ export const generateQueryString = params => {
   return queryParams
 }
 
-export const removeEmpty = obj =>
+export const removeEmpty = (obj, checkFn) =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') {
       removeEmpty(val)
       // if (Object.entries(val).length === 0) delete obj[key]
     } else {
-      if (val == null) {
+      if (val == null || (checkFn && checkFn(val))) {
         try {
           delete obj[key]
         } catch (e) {
@@ -278,15 +278,14 @@ export function getFormattedPhone(phoneNumber, countries) {
   const foundCode = countries.find(country => {
     const phoneCodeLength = country.phoneCode.length
     // some countries can have similar prefix: +1 USA/Canada vs +1-268 Antigua and Barbuda
-    if (minPrefixLength >= phoneCodeLength)
-      return false
+    if (minPrefixLength >= phoneCodeLength) return false
 
     if (phoneNumber[0] === '+') {
-      return (phoneNumber.substring(1, 1+phoneCodeLength) === country.phoneCode)
+      return phoneNumber.substring(1, 1 + phoneCodeLength) === country.phoneCode
     } else {
-      return (phoneNumber.substring(0, phoneCodeLength) === country.phoneCode)
+      return phoneNumber.substring(0, phoneCodeLength) === country.phoneCode
     }
   })
   let formattedNumber = phoneNumber.substring(foundCode.phoneCode.length + (phoneNumber[0] === '+' ? 1 : 0))
-  return `+${foundCode.phoneCode} ${formattedNumber.replace(/^(.{3})(.{3})(.*)$/, "$1 $2 $3").trim()}`
+  return `+${foundCode.phoneCode} ${formattedNumber.replace(/^(.{3})(.{3})(.*)$/, '$1 $2 $3').trim()}`
 }

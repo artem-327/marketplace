@@ -147,21 +147,25 @@ export const removeAttachmentLinkProductOffer = (attachmentId, productOfferId) =
     `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
   )
 
-export const getMarkUp = poId =>
-  api.get(`/prodex/api/product-offers/${poId}/mark-up`).then(response => response.data)
+export const getMarkUp = poId => api.get(`/prodex/api/product-offers/${poId}/mark-up`).then(response => response.data)
 
 export function updateMarkUp(poId, values) {
-  return api.patch(`/prodex/api/product-offers/${poId}/mark-up`, values).then(response => response.data)
+  return api
+    .patch(`/prodex/api/product-offers/${poId}/mark-up`, values)
+    .then(response => response.data)
+    .catch(e => console.error(e))
 }
 
 //TODO missing implementation ???
 export const addVerificationDocuments = (attachment, type) => attachment
 
 export const saveTdsAsTemplate = (templateName, tdsFields) =>
-  api.post('/prodex/api/technical-datasheet-templates', { name: templateName, template: tdsFields }).then(response => response.data)
+  api
+    .post('/prodex/api/technical-datasheet-templates', { name: templateName, template: tdsFields })
+    .then(response => response.data)
 
 export const getTdsTemplates = () =>
   api.get('/prodex/api/technical-datasheet-templates').then(response => response.data)
 
-export const deleteTdsTemplate = (templateId) =>
+export const deleteTdsTemplate = templateId =>
   api.delete(`/prodex/api/technical-datasheet-templates/${templateId}`).then(response => response.data)
