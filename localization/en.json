@@ -50,6 +50,7 @@
   "alerts.freezeProtect": "Freeze Protect",
   "alerts.addShippingQuote": "Add Shipping Quote",
   "alerts.shippingQuoteId": "Shipping Quote ID",
+  "alerts.shippingQuoteIdColon": "Shipping Quote ID:",
   "alerts.checkout": "Checkout",
   "auth.resetMyPassword": "Password Reset",
   "auth.cancelPasswordReset": "Password Reset Cancel",
