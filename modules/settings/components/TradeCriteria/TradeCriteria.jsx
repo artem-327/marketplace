@@ -7,7 +7,7 @@ import { Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 
 //Actions
-import { patchTradeCriteria, getTradeCriteria } from '../../actions'
+import { putTradeCriteria, getTradeCriteria } from '../../actions'
 //Services
 import { getInitialFormValues, formValidation, getDropdowns } from './TradeCriteria.services'
 //Components
@@ -32,33 +32,30 @@ import {
  * @category Settings - Trade Criteria
  * @components
  */
-const TradeCriteria = ({ tradeCriteria, getTradeCriteria, patchTradeCriteria, loading, dropdowns, intl }) => {
+const TradeCriteria = ({
+  tradeCriteria,
+  getTradeCriteria,
+  putTradeCriteria,
+  loading,
+  dropdowns,
+  criteria,
+  criteriaOptions,
+  intl
+}) => {
   useEffect(() => {
-    const fetchTradeCriteria = async () => {
-      await getTradeCriteria()
-    }
+    const fetchTradeCriteria = async () => await getTradeCriteria()
     if (!tradeCriteria?.length) fetchTradeCriteria()
   }, [tradeCriteria, getTradeCriteria])
 
   return (
     <>
       <Formik
-        initialValues={getInitialFormValues(dropdowns)}
+        initialValues={getInitialFormValues(criteria, criteriaOptions)}
         validationSchema={formValidation()}
         enableReinitialize
-        onSubmit={async (values, { setSubmitting, resetForm }) => {
-          let body = {
-            settings: dropdowns.map(d => {
-              return {
-                id: d?.id,
-                value: values[d.name]
-              }
-            })
-          }
-
-          await patchTradeCriteria(body)
+        onSubmit={async (values, { setSubmitting }) => {
+          await putTradeCriteria(values)
           setSubmitting(false)
-          resetForm()
         }}>
         {formikProps => (
           <>
@@ -132,20 +129,22 @@ const TradeCriteria = ({ tradeCriteria, getTradeCriteria, patchTradeCriteria, lo
 }
 
 TradeCriteria.propTypes = {
-  patchTradeCriteria: PropTypes.func,
+  putTradeCriteria: PropTypes.func,
   loading: PropTypes.bool,
   tradeCriteria: PropTypes.array
 }
 
 TradeCriteria.defaultProps = {
-  patchTradeCriteria: () => {},
+  putTradeCriteria: () => {},
   loading: false,
   tradeCriteria: null
 }
 
 const mapStateToProps = state => ({
   loading: state?.settings?.loading,
-  dropdowns: getDropdowns(state?.settings?.tradeCriteria)
+  dropdowns: getDropdowns(state?.settings?.tradeCriteria),
+  criteria: state?.settings?.tradeCriteria?.criteria,
+  criteriaOptions: state?.settings?.tradeCriteria?.criteriaOptions
 })
 
-export default connect(mapStateToProps, { patchTradeCriteria, getTradeCriteria })(injectIntl(TradeCriteria))
+export default connect(mapStateToProps, { putTradeCriteria, getTradeCriteria })(injectIntl(TradeCriteria))

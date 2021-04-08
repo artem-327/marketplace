@@ -1314,10 +1314,10 @@ export function setAttachmentFiles(attachmentFiles) {
   }
 }
 
-export function patchTradeCriteria(body) {
+export function putTradeCriteria(body) {
   return {
-    type: AT.PATCH_TRADE_CRITERIA,
-    payload: api.patchTradeCriteria(body)
+    type: AT.PUT_TRADE_CRITERIA,
+    payload: api.putTradeCriteria(body)
   }
 }
 

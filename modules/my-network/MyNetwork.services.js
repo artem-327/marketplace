@@ -44,7 +44,7 @@ export const getCriteriaLabel = criteria => {
   return (
     <DivCircles>
       {criteriaKeys.map((key, i) => {
-        return <DivCircle key={i} background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
+        return <DivCircle key={i} background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
       })}
     </DivCircles>
   )
@@ -62,8 +62,8 @@ export const getTradeCriteriaValues = criteria => {
     return {
       [key]: (
         <DivValueTradeCriteria>
-          <DivTextValueTradeCriteria>{criteria[key]?.actualValue}</DivTextValueTradeCriteria>
-          <DivCircle background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
+          <DivTextValueTradeCriteria>{criteria[key]?.criteria_expected}</DivTextValueTradeCriteria>
+          <DivCircle background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
         </DivValueTradeCriteria>
       )
     }
