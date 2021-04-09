@@ -64,7 +64,15 @@ const DivRectangle = styled(Rectangle)`
   border: solid 1px #dee2e6;
 `
 
-function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
+function ControlPerson({
+  updateCompany,
+  company,
+  naicsId,
+  formikProps,
+  intl: { formatMessage },
+  entityTypes,
+  naicsCodes
+}) {
   return (
     <GridControlPerson>
       <GridRow>
@@ -243,9 +251,20 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
                         id: 'velloci.controlPerson.industryType.placeholder',
                         defaultMessage: 'Select industry type'
                       }),
+                      onChange: async (_, { value }) => {
+                        formikProps.setFieldValue('controlPerson.naicsCode', value)
+                        if (naicsId !== value && company?.id && company?.name && company?.tinType) {
+                          await updateCompany(company.id, {
+                            name: company.name,
+                            tinType: company.tinType,
+                            naicsCode: value
+                          })
+                        }
+                      },
                       search: true,
                       selection: true,
-                      loading: naicsCodes && naicsCodes.loading
+                      loading: naicsCodes?.loading,
+                      disabled: naicsCodes?.loading
                     }}
                     name='controlPerson.naicsCode'
                     label={
@@ -271,13 +290,19 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
 ControlPerson.propTypes = {
   formikProps: PropTypes.object,
   entityTypes: PropTypes.object,
-  naicsCodes: PropTypes.object
+  naicsCodes: PropTypes.object,
+  naicsId: PropTypes.bool,
+  company: PropTypes.object,
+  updateCompany: PropTypes.func
 }
 
 ControlPerson.defaultProps = {
   formikProps: {},
   entityTypes: {},
-  naicsCodes: {}
+  naicsCodes: {},
+  naicsId: false,
+  company: null,
+  updateCompany: () => {}
 }
 
 export default injectIntl(ControlPerson)

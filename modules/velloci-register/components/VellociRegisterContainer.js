@@ -4,6 +4,7 @@ import VellociRegister from './VellociRegister'
 import * as Actions from '../actions'
 import { getBusinessClassifications } from '~/modules/settings/actions'
 import { getBusinessTypes } from '~/modules/company-form/actions'
+import { updateCompany } from '../../auth/actions'
 //components
 import { getSafe } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
@@ -46,17 +47,24 @@ const mapStateToProps = store => ({
       ssn: '',
       isEstablishedUs: true,
       tinNumber: '',
-      naicsCode: ''
+      naicsCode: store?.auth?.identity?.company?.naicsCategory?.naicsId
     }
   },
   mainContainer: store.layout.mainContainer,
-  appInfo: getSafe(() => store.auth.identity.appInfo, null)
+  appInfo: getSafe(() => store.auth.identity.appInfo, null),
+  naicsId: store?.auth?.identity?.company?.naicsCategory?.naicsId,
+  company: store?.auth?.identity?.company,
+  naicsCodes: {
+    ...store?.vellociRegister?.naicsCodes,
+    loading: store?.vellociRegister?.naicsCodes?.loading || store?.auth?.loading
+  }
 })
 
 const mapDispatchToProps = {
   getBusinessClassifications,
   getBusinessTypes,
   getIdentity,
+  updateCompany,
   ...Actions
 }
 
