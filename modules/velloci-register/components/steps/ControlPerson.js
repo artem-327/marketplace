@@ -253,10 +253,9 @@ function ControlPerson({
                       }),
                       onChange: async (_, { value }) => {
                         formikProps.setFieldValue('controlPerson.naicsCode', value)
-                        if (naicsId !== value && company?.id && company?.name && company?.tinType) {
+                        if (naicsId !== value && company?.id) {
                           await updateCompany(company.id, {
-                            name: company.name,
-                            tinType: company.tinType,
+                            ...company,
                             naicsCode: value
                           })
                         }

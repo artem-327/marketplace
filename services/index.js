@@ -27,3 +27,17 @@ export const isJsonString = str => {
   }
   return true
 }
+/**
+ * Checks if the object is empty or not
+ * @method
+ * @param {object} obj
+ * @returns {boolean}
+ */
+export const isEmptyObject = obj => {
+  if (!obj) return true
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop)) return false
+  }
+
+  return true
+}
