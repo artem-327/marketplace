@@ -85,6 +85,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/admin/admin-settings', false),
     operations:
       getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
+      getSafe(() => Router.router.pathname === '/operations/shipping-quote-requests', false) ||
       getSafe(() => Router.router.pathname === '/operations/tags', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-product-catalog', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-inventory', false) ||

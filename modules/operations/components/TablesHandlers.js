@@ -69,6 +69,9 @@ const textsTable = {
     BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
     SearchText: 'operations.tables.shippingQuotes.search'
   },
+  'shipping-quote-requests': {
+    SearchText: 'operations.tables.shippingQuoteRequests.search'
+  },
   tags: {
     BtnAddText: 'operations.tables.tags.buttonAdd',
     SearchText: 'operations.tables.tags.search'
@@ -127,6 +130,9 @@ class TablesHandlers extends Component {
     super(props)
     this.state = {
       'shipping-quotes': {
+        searchInput: ''
+      },
+      'shipping-quote-requests': {
         searchInput: ''
       },
       tags: {
