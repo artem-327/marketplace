@@ -30,7 +30,7 @@ const OrderSummary = props => {
   } = props
 
   const priceComponent = val =>
-    val ? (
+    val || val === 0 ? (
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
@@ -140,7 +140,7 @@ const OrderSummary = props => {
           <FormattedMessage id='checkout.summary.orderTotal' defaultMessage='Order Total' />
         </GridColumn>
         <GridColumn width={8} className='right bold'>
-          {priceComponent(freightPrice ? freightPrice + subTotalPrice : '')}
+          {priceComponent(+freightPrice + +subTotalPrice)}
         </GridColumn>
       </GridRow>
     </GridSummary>
