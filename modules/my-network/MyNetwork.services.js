@@ -130,12 +130,12 @@ export const getRowDetail = (row, detailRow) => {
     id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
       <DivMember key={row?.connectionId || row?.connectedCompany?.tradepassId}>
-        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.logo} />
+        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.base64Logo} />
 
         <BMember>{row?.connectedCompany?.name}</BMember>
       </DivMember>
     ),
-    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logo} />,
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.base64Logo} />,
     address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
