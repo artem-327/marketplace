@@ -20,7 +20,11 @@ export default {
     })
   },
   getEntityTypes: () => api.get('/prodex/api/payments/velloci/enums/entity-types').then(response => response.data),
-  getNaicsCodes: () => api.get('/prodex/api/payments/velloci/enums/naics-codes').then(response => response.data),
+  getNaicsCodes: () =>
+    api
+      .get('/prodex/api/companies/naics-categories')
+      .then(response => response.data)
+      .catch(e => console.error(e)),
   getBusinessRoles: () => api.get('/prodex/api/payments/velloci/enums/business-roles').then(response => response.data),
   getEntityDocuments: () =>
     api.get('/prodex/api/payments/velloci/enums/entity-documents').then(response => response.data),

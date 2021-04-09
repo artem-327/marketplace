@@ -133,7 +133,10 @@ VellociRegister.propTypes = {
     postRegisterVelloci: PropTypes.func,
     getIdentity: PropTypes.func,
     loadSubmitButton: PropTypes.func,
-    mainContainer: PropTypes.object
+    mainContainer: PropTypes.object,
+    naicsId: PropTypes.bool,
+    company: PropTypes.object,
+    updateCompany: PropTypes.func
   }
 }
 
@@ -162,7 +165,10 @@ VellociRegister.defaultProps = {
     postRegisterVelloci: () => {},
     getIdentity: () => {},
     loadSubmitButton: () => {},
-    mainContainer: {}
+    mainContainer: {},
+    naicsId: false,
+    company: null,
+    updateCompany: () => {}
   }
 }
 
