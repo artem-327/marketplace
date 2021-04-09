@@ -95,7 +95,7 @@ const ProductPopup = props => {
 
     if (!props?.unitsAll?.length) fetchData()
 
-    if (props.popupValues.packagingUnit) {
+    if (props.popupValues?.packagingUnit) {
       filterPackagingTypes(
         popupValues.packagingUnit.id,
         props.unitsAll,
