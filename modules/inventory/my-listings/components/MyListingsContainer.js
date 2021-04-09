@@ -7,7 +7,7 @@ import { withDatagrid } from '~/modules/datagrid'
 
 import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast, broadcastChange } from '~/modules/broadcast/actions'
-import { applyFilter } from '~/modules/filter/actions'
+import { applyFilter, setParams } from '~/modules/filter/actions'
 import { openPopup, closePopup } from '~/modules/company-product-info/actions'
 import { setCompanyElligible } from '~/modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
@@ -137,7 +137,8 @@ function mapStateToProps(store, { datagrid }) {
     isOpenImportPopup: store.settings.isOpenImportPopup,
     isProductInfoOpen: store.companyProductInfo.isOpen,
     tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false),
-    activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false)
+    activeInventoryFilter: getSafe(() => store.filter.inventory.appliedFilter.filters.length > 0, false),
+    preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, currency)
   }
 }
 
@@ -151,6 +152,7 @@ export default withDatagrid(
     openBroadcast,
     broadcastChange,
     applyFilter,
+    setParams,
     setCompanyElligible
   })(MyListings)
 )

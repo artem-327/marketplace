@@ -56,6 +56,7 @@ import {
   INDEX_TAB_PRICE_BOOK,
   BOOLEAN_TRUE
 } from '../MyListings.constants'
+import { filterTypes } from '../../../filter/constants/filter'
 //Styles
 import { NetworkDropdown, NetworkChevronDown } from '../../../../components/Network'
 //Images
@@ -1236,6 +1237,89 @@ class MyListings extends Component {
                   })}
                 </Button>
               </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='small'
+                  onClick={() => {
+                    const dateNow = moment()
+                    this.props.setParams({
+                      currencyCode: this.props.preferredCurrency,
+                      filterType: filterTypes.INVENTORY
+                    })
+                    this.props.applyFilter({
+                      filters: [{
+                        description: "Expiration To",
+                        operator: "LESS_THAN",
+                        path: "ProductOffer.lotExpirationDate",
+                        tagDescription: `Expires < ${dateNow.format('MM/DD/YYYY')}`,
+                        values: [{
+                          value: dateNow.format(),
+                          description: dateNow.format('MM/DD/YYYY')
+                        }],
+                        valuesDescription: [dateNow.format('MM/DD/YYYY')]
+                      }],
+                      notificationEnabled: false,
+                      notifyMail: false,
+                      notifyPhone: false,
+                      notifySystem: false
+                    })
+                    this.props.applyDatagridFilter({
+                      filters: [{
+                        operator: "LESS_THAN",
+                        path: "ProductOffer.lotExpirationDate",
+                        values: [dateNow.format()]
+                      }],
+                      pageSize: 50
+                    })
+                  }}>
+                  {formatMessage({
+                    id: 'global.filters.expired',
+                    defaultMessage: 'Expired'
+                  })}
+                </Button>
+              </div>
+              <div className='column'>
+                <Button
+                  className='light'
+                  size='small'
+                  onClick={() => {
+                    this.props.setParams({
+                      currencyCode: this.props.preferredCurrency,
+                      filterType: filterTypes.INVENTORY
+                    })
+                    this.props.applyFilter({
+                      filters: [{
+                        description: "Broadcasted",
+                        operator: "EQUALS",
+                        path: "ProductOffer.broadcasted",
+                        tagDescription: `Not published`,
+                        values: [{
+                          value: 'NO_BROADCAST',
+                          description: 'Not published'
+                        }],
+                        valuesDescription: ['NO_BROADCAST']
+                      }],
+                      notificationEnabled: false,
+                      notifyMail: false,
+                      notifyPhone: false,
+                      notifySystem: false
+                    })
+                    this.props.applyDatagridFilter({
+                      filters: {
+                        operator: "EQUALS",
+                        path: "ProductOffer.broadcasted",
+                        values: ['NO_BROADCAST']
+                      },
+                      pageSize: 50
+                    })
+                  }}>
+                  {formatMessage({
+                    id: 'global.filters.notPublished',
+                    defaultMessage: 'Not Published'
+                  })}
+                </Button>
+              </div>
               <FiltersRow>
                 <FilterTags filterType='inventory' datagrid={datagrid} />
               </FiltersRow>
@@ -1287,7 +1371,7 @@ class MyListings extends Component {
           </CustomRowDiv>
         </Container>
 
-        <div className='flex stretched inventory-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
+        <div className='flex stretched my-listings-wrapper' style={{ padding: '10px 30px' }}>
           <ProdexTable
             defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
