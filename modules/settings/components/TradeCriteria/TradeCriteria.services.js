@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 //Services
 import { errorMessages } from '../../../../constants/yupValidation'
+import { isEmptyObject } from '../../../../services'
 //Constants
 import { DROPDOWNS } from './TradeCriteria.constants'
 
@@ -13,6 +14,7 @@ import { DROPDOWNS } from './TradeCriteria.constants'
  */
 export const getInitialFormValues = (criteria, criteriaOptions) => {
   let initialValues = {}
+  if (isEmptyObject(criteria) || isEmptyObject(criteriaOptions)) return initialValues
   //converts values of criteria to keys of criteriaOptions based on values between criteria and criteriaOptions[key]
   Object.entries(criteria)?.forEach(([k, val]) => {
     let [key, value] = Object.entries(criteriaOptions[k]).find(([key, value]) => value === val)

@@ -3419,5 +3419,6 @@
   "orders.detail.modal.orderResolution.rejectText": "After all parties have reviewed the disputed order it has been agreed upon that {Buyer_Company} will return the order {Order_ID} to {Seller_Company} and will receive a full refund. {Seller_Company} will take on the expense of both the original freight costs and the return freight costs.",
   "orders.detail.modal.orderResolution.description": "After both parties accept this resolution will update the order invoice to reflect the credit issued. If a full payment has already occured, it will initiate a refund of the agreed amount to the purchaser. If any of this information is incorrect you may choose to reopen the case and a support specialist will contact you with the next steps.",
   "orders.detail.modal.orderResolution.contact": "Feel free to reach out with any additional questions at ",
-  "dispute.reopend.success": "Case reopened, a support specialist will be in touch shortly."
+  "dispute.reopend.success": "Case reopened, a support specialist will be in touch shortly.",
+  "detailCompany.naics": "NAICS"
 }
