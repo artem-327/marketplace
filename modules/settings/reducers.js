@@ -145,7 +145,8 @@ export const initialState = {
   isThirdPartyConnectionException: false,
   tradeCriteria: null,
   userSettings: null,
-  customerWarehousesDatagrid: null
+  customerWarehousesDatagrid: null,
+  insuranceRows: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -2078,6 +2079,30 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_USER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* GET_INSURANCE_DOCUMENTS */
+
+    case AT.GET_INSURANCE_DOCUMENTS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        insuranceRows: payload
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_REJECTED: {
       return {
         ...state,
         loading: false

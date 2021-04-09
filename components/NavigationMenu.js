@@ -66,7 +66,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
       // getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
-      getSafe(() => Router.router.pathname === '/settings/documents', false),
+      getSafe(() => Router.router.pathname === '/settings/documents', false) ||
+      getSafe(() => Router.router.pathname === '/settings/insurance', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders/sales', false) ||
       getSafe(() => Router.router.pathname === '/orders/purchase', false) ||
@@ -613,6 +614,13 @@ class Navigation extends Component {
                       tab='company-details'
                       dataTest='navigation_settings_company_details_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings/insurance'
+                      tab='insurance'
+                      dataTest='navigation_settings_my_insurance_drpdn'>
+                      {formatMessage({ id: 'global.insurance', defaultMessage: 'Insurance' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}

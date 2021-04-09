@@ -1390,3 +1390,27 @@ export function getUser(userId) {
     payload: api.getUser(userId)
   }
 }
+
+export const getInsuranceDocuments = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.GET_INSURANCE_DOCUMENTS_PENDING
+    })
+    await api
+      .getInsuranceDocuments()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_REJECTED,
+            error: err
+          })
+      )
+  }
+}

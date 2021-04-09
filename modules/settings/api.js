@@ -380,5 +380,6 @@ export default {
     api
       .get(`/prodex/api/users/id/${userId}`)
       .then(res => res.data)
-      .catch(e => console.error(e))
+      .catch(e => console.error(e)),
+  getInsuranceDocuments: () => api.get(`/api/tradepass-insurance-documents`)
 }
