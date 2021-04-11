@@ -146,7 +146,9 @@ export const initialState = {
   tradeCriteria: null,
   userSettings: null,
   customerWarehousesDatagrid: null,
-  insuranceRows: null
+  insuranceRows: null,
+  insuranceDocumentsTypes: [],
+  insuranceDocumentsTypesLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1602,6 +1604,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_PENDING:
     case AT.POST_CUSTOMER_PENDING:
     case AT.PATCH_CUSTOMER_PENDING:
     case AT.POST_CUSTOMER_WAREHOUSE_PENDING:
@@ -1614,7 +1617,8 @@ export default function reducer(state = initialState, action) {
         updating: true
       }
     }
-
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED:
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_REJECTED:
     case AT.POST_CUSTOMER_FULFILLED:
     case AT.POST_CUSTOMER_REJECTED:
     case AT.PATCH_CUSTOMER_FULFILLED:
@@ -2106,6 +2110,28 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_PENDING: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: true
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_FULFILLED: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: false,
+        insuranceDocumentsTypes: payload
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_REJECTED: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: false
       }
     }
 

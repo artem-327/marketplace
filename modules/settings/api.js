@@ -381,5 +381,17 @@ export default {
       .get(`/prodex/api/users/id/${userId}`)
       .then(res => res.data)
       .catch(e => console.error(e)),
-  getInsuranceDocuments: () => api.get(`/api/tradepass-insurance-documents`)
+  getInsuranceDocuments: () => api.get(`/prodex/api/tradepass-insurance-documents`),
+  getInsuranceDocumentsTypes: () => api.get(`/prodex/api/tradepass-insurance-documents/types`),
+  uploadInsuranceDocument: (file, type) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post(`/prodex/api/tradepass-insurance-documents?type=${type}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  }
 }
