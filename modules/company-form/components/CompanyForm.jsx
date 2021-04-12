@@ -135,6 +135,7 @@ class CompanyForm extends Component {
       if (!getSafe(() => this.props.data.length, false)) await this.props.getBusinessTypes()
       if (!getSafe(() => this.props.associations.length, false))
         await this.props.getAssociations({ filters: [], pageSize: 50 })
+      if (!getSafe(() => this.props.naicsCodes.data.length, false)) this.props.getNaicsCodes()
     } catch (error) {
       console.error(error)
     }
@@ -313,7 +314,7 @@ class CompanyForm extends Component {
                 }
               ]}
               inputProps={{
-                'data-test': 'company_form_tin_type_drpdn',
+                'data-test': 'company_form_tin_type_drpdn'
               }}
             />
           </FormField>
@@ -424,7 +425,8 @@ class CompanyForm extends Component {
       touched,
       isSubmitting,
       enableCheckbox,
-      associations
+      associations,
+      naicsCodes
     } = this.props
     const { formatMessage } = intl
     return (
@@ -476,10 +478,28 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup data-test='company_form_tinCin_inp'>
-          <FormField width={6}>
+          <FormField width={8}>
             <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
           </FormField>
-          <FormField width={6}>
+          <FormField width={8}>
+            <Dropdown
+              label={<FormattedMessage id='detailCompany.naics' defaultMessage='NAICS' />}
+              name='naicsCode'
+              options={naicsCodes.data}
+              inputProps={{
+                clearable: true,
+                loading: naicsCodes.loading,
+                selection: true,
+                search: true,
+                placeholder: formatMessage({ id: 'detailCompany.naics.placeholder', defaultMessage: 'Select NAICS' }),
+                'data-test': 'company_form_naics_drpdn'
+              }}
+            />
+          </FormField>
+        </FormGroup>
+
+        <FormGroup data-test='company_form_tinCin_inp'>
+          <FormField width={8}>
             <Input
               label={
                 <Popup
@@ -496,7 +516,7 @@ class CompanyForm extends Component {
               name='tin'
             />
           </FormField>
-          <FormField width={4}>
+          <FormField width={8}>
             <FixedDropdown
               name='tinType'
               label={
@@ -518,7 +538,7 @@ class CompanyForm extends Component {
                 }
               ]}
               inputProps={{
-                'data-test': 'form_tin_type_drpdn',
+                'data-test': 'form_tin_type_drpdn'
               }}
             />
           </FormField>
