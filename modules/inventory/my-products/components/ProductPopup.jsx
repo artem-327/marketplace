@@ -98,7 +98,7 @@ const ProductPopup = props => {
     }
 
     if (!props?.unitsAll?.length) fetchData()
-    else if (!attachments.length && props.popupValues.attachments.length) prepareAttachments()
+    else if (!attachments.length && props?.popupValues?.attachments?.length) prepareAttachments()
 
     if (props.popupValues?.packagingUnit) {
       filterPackagingTypes(
