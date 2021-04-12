@@ -8,7 +8,7 @@ You can find the most recent version of this guide [here](https://github.com/fac
 More information is in [Table of React Contents](#table-of-react-contents) section.
 
 ## Steps to install and run FE prodex locally on a Windows machines
-1. Login to the https://gitlab.artio.net/prodex/prodex-web (get access from Michal Unzeitig)
+1. Login to the https://gitlab.artio.net/prodex/prodex-web
 2. Clone or download a current branch (version e.g. 2.0.0)
 3. Make sure you have Node version 11.15.0 
 4. Make sure you have NPM version 6.7
