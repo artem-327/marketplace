@@ -56,6 +56,8 @@ import { getSafe, generateToastMarkup } from '~/utils/functions'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import { getIdentity } from '~/modules/auth/actions'
 import ErrorFocus from '~/components/error-focus'
+//Components
+import Insurance from './Insurance/InsuranceContainer'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -117,14 +119,7 @@ class Settings extends Component {
 
   // marked tab based on role of user or if tab changed.
   changeRoute = queryTab => {
-    const {
-      isCompanyAdmin,
-      tabsNames,
-      tabChanged,
-      currentTab,
-      isUserAdmin,
-      isProductCatalogAdmin
-    } = this.props
+    const { isCompanyAdmin, tabsNames, tabChanged, currentTab, isUserAdmin, isProductCatalogAdmin } = this.props
     // array of tabsNames converted to Map
     let tabsNamesMap = new Map()
     for (let i in tabsNames) {
@@ -190,14 +185,7 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    const {
-      isCompanyAdmin,
-      addTab,
-      tabsNames,
-      getIdentity,
-      renderCopyright,
-      currentTab
-    } = this.props
+    const { isCompanyAdmin, addTab, tabsNames, getIdentity, renderCopyright, currentTab } = this.props
 
     try {
       await getIdentity()
@@ -209,9 +197,7 @@ class Settings extends Component {
 
     let queryTab =
       tabsNames.find(tab => tab.type === currentTab) ||
-      (isCompanyAdmin
-        ? companyDetailsTab
-        : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
+      (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     this.changeRoute(queryTab)
     this.redirectPage(queryTab)
@@ -369,6 +355,8 @@ class Settings extends Component {
       return <Locations />
     } else if (currentTab === 'trade-criteria') {
       return <TradeCriteria />
+    } else if (currentTab === 'insurance') {
+      return <Insurance />
     } else {
       return (
         !this.state.wrongUrl && (
