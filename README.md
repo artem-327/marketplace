@@ -12,17 +12,11 @@ More information is in [Table of React Contents](#table-of-react-contents) secti
 2. Clone or download a current branch (version e.g. 2.0.0)
 3. Make sure you have Node version 11.15.0 
 4. Make sure you have NPM version 6.7
-5. Create new file .env in root of the project and paste this variable: REACT_APP_API_URL= https://dev.echoexchange.net/
+5. Create new file .env in root of the project and paste this variable: REACT_APP_API_URL= URL_TO_API/
 6. In root of the project run this command: 
    ### `npm install`
 7. In root of the project run this command: 
    ### `npm run dev`
-8. Login for dev environment:
-	Company User: 		user1@example.com, password: echopass123, 
-				        user2@example.com, password: echopass123, 
-				        user3@example.com, password: echopass123, 
-				        and others
-	Admin User: 		admin@example.com, password: echopass123
 
 ## Project structure
 
