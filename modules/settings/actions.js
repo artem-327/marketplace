@@ -150,7 +150,7 @@ export function handlerSubmitUserEditPopup(id, payload, userSettings) {
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, payload)
     })
-    await dispatch(updateSettingsCompanyUser(id, userSettings))
+    userSettings && (await dispatch(updateSettingsCompanyUser(id, userSettings)))
   }
 }
 

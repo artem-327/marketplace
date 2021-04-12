@@ -3422,6 +3422,7 @@
   "orders.detail.modal.orderResolution.contact": "Feel free to reach out with any additional questions at ",
   "dispute.reopend.success": "Case reopened, a support specialist will be in touch shortly.",
   "detailCompany.naics": "NAICS",
+  "detailCompany.naics.placeholder": "Select NAICS",
   "insurance.subTitle": "Add any Certificates of Insurance that you may have.",
   "insurance.insurance": "Insurance",
   "insurance.addYour": "Add Your {name} Insurance",
