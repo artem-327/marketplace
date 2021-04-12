@@ -978,6 +978,7 @@
   "global.palletMinPkgs": "Pallet Min Pkgs",
   "global.palletMaxPkgs": "Max Pkgs per Pallet",
   "global.palletWeight": "Pallet Weight",
+  "global.palletWeightUnit": "Pallet Weight Unit",
   "global.palletLength": "Pallet Length",
   "global.palletWidth": "Pallet Width",
   "global.palletHeight": "Pallet Height",
