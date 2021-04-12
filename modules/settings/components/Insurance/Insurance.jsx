@@ -1,4 +1,4 @@
-import { useEffect, useState  } from 'react'
+import { useEffect, useState } from 'react'
 import { array, bool, func } from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
@@ -9,7 +9,6 @@ import ProdexTable from '../../../../components/table'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import InsurancePopup from './InsurancePopup/InsurancePopup'
 import ConfirmationPopup from '../../../../components/confirmation-popup/ConfirmationPopup'
-
 //Constants
 import { COLUMNS } from './Insurance.constants'
 //Services
@@ -61,10 +60,10 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
         </Grid.Row>
         <GridRowAddRow>
           <Grid.Column>
-            <BasicButton
-              onClick={() => openPopup()}
-              data-test='settings_insurance_add_document_btn'>
-              <b><FormattedMessage id='global.add' defaultMessage='Add' /></b>
+            <BasicButton onClick={() => openPopup()} data-test='settings_insurance_add_document_btn'>
+              <b>
+                <FormattedMessage id='global.add' defaultMessage='Add' />
+              </b>
             </BasicButton>
           </Grid.Column>
         </GridRowAddRow>
@@ -77,7 +76,8 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
             <FormattedMessage
               id='insurance.yourInsuranceWillBe'
               defaultMessage='Your Insurance will be verified in 24-48 hours'
-            />}
+            />
+          }
           onClose={() => setIsOpenSuccessPopup(false)}
           closeCaption={
             <FormattedMessage id='insurance.close' defaultMessage='Close'>
@@ -85,7 +85,7 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
             </FormattedMessage>
           }
         />
-        )}
+      )}
     </>
   )
 }
