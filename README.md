@@ -20,7 +20,7 @@ More information is in [Table of React Contents](#table-of-react-contents) secti
 
 ## Project structure
 
-All source codes are in src/ directory. The main scripts are **index.js**, **App.js** and **store.js**.
+All source codes are in pages/ directory. The main scripts are **server.js**, **next.config.js**, **pages/index.js** and **pages/_app.js**.
 >TODO: create .env file in project directory with line REACT_APP_API_URL=URL_TO_API <br> This variable is used by AXIOS as default API URL
 >  
 
