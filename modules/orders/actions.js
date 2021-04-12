@@ -336,16 +336,16 @@ export function saveFilters(filters) {
   }
 }
 
-export function orderResolutionReopen(orderId) {
+export function orderResolutionReopen(orderId, ordersType) {
   return {
     type: AT.ORDERS_RESOLUTION_REOPEN,
-    payload: Api.orderResolutionReopen(orderId)
+    payload: Api.orderResolutionReopen(orderId, ordersType)
   }
 }
 
-export function orderResolutionAccept(orderId) {
+export function orderResolutionAccept(orderId, ordersType) {
   return {
     type: AT.ORDERS_RESOLUTION_ACCEPT,
-    payload: Api.orderResolutionAccept(orderId)
+    payload: Api.orderResolutionAccept(orderId, ordersType)
   }
 }

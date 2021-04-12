@@ -138,14 +138,14 @@ export default {
     api.patch(`/prodex/api/purchase-orders/${orderId}/shipping-tracking-code?trackingCode=${trackingCode}`),
   editReturnTrackingCode: (orderId, trackingCode) =>
     api.patch(`/prodex/api/sale-orders/${orderId}/return-shipping-tracking-code?trackingCode=${trackingCode}`),
-  orderResolutionAccept: orderId =>
+  orderResolutionAccept: (orderId, ordersType) =>
     api
-      .patch(`/prodex/api/purchase-orders/${orderId}/dispute-resolution-accept`)
+      .patch(`/prodex/api/${ordersType}-orders/${orderId}/dispute-resolution-accept`)
       .then(res => res.data)
       .catch(e => console.error(e)),
-  orderResolutionReopen: orderId =>
+  orderResolutionReopen: (orderId, ordersType) =>
     api
-      .patch(`/prodex/api/purchase-orders/${orderId}/dispute-resolution-reopen`)
+      .patch(`/prodex/api/${ordersType}-orders/${orderId}/dispute-resolution-reopen`)
       .then(res => res.data)
       .catch(e => console.error(e))
 }
