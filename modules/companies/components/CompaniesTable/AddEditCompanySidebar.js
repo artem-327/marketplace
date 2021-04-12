@@ -121,7 +121,8 @@ const initialFormValues = {
 const getInitialFormValues = values => {
   return {
     ...initialFormValues,
-    ...(values !== null && { ...values })
+    ...(values !== null && { ...values }),
+    naicsCode: values?.naicsCategory?.naicsId
   }
 }
 
@@ -482,7 +483,6 @@ class AddEditCompanySidebar extends Component {
                       hasLogo={popupValues ? popupValues.hasLogo : false}
                       enableCheckbox={!!popupValues}
                       naicsCodes={naicsCodes}
-                      naicsCode={naicsCode}
                       getNaicsCodes={getNaicsCodes}
                     />
                     {!popupValues && (

@@ -127,14 +127,15 @@ class CompanyForm extends Component {
     associations: [],
     businessType: {
       id: ''
-    }
+    },
+    naicsCode: null
   }
   async componentDidMount() {
     this.loadCompanyLogo()
     try {
-      if (!getSafe(() => this.props.data.length, false)) await this.props.getBusinessTypes()
+      if (!getSafe(() => this.props.data.length, false)) this.props.getBusinessTypes()
       if (!getSafe(() => this.props.associations.length, false))
-        await this.props.getAssociations({ filters: [], pageSize: 50 })
+        this.props.getAssociations({ filters: [], pageSize: 50 })
       if (!getSafe(() => this.props.naicsCodes.data.length, false)) this.props.getNaicsCodes()
     } catch (error) {
       console.error(error)
@@ -144,7 +145,8 @@ class CompanyForm extends Component {
       businessType: { id: getSafe(() => this.props.values.businessType.id, '') },
       associations: getSafe(() => this.props.values.associations.length, false)
         ? this.props.values.associations.map(assoc => assoc.id)
-        : []
+        : [],
+      naicsCode: this.props?.values?.naicsCode
     })
   }
 
@@ -477,23 +479,29 @@ class CompanyForm extends Component {
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
         </FormGroup>
 
-        <FormGroup data-test='company_form_tinCin_inp'>
-          <FormField width={8}>
+        <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
+          <FormField>
             <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
           </FormField>
-          <FormField width={8}>
+          <FormField className='upload-input'>
+            <label htmlFor='field_dropdown_naics'>
+              <FormattedMessage id='detailCompany.naics' defaultMessage='NAICS' />
+            </label>
             <Dropdown
-              label={<FormattedMessage id='detailCompany.naics' defaultMessage='NAICS' />}
               name='naicsCode'
-              options={naicsCodes.data}
-              inputProps={{
-                clearable: true,
-                loading: naicsCodes.loading,
-                selection: true,
-                search: true,
-                placeholder: formatMessage({ id: 'detailCompany.naics.placeholder', defaultMessage: 'Select NAICS' }),
-                'data-test': 'company_form_naics_drpdn'
+              value={this.state.naicsCode}
+              onChange={(e, data) => {
+                e.preventDefault()
+                this.setState({
+                  naicsCode: data.value
+                })
+                setFieldValue('naicsCode', data.value)
               }}
+              options={naicsCodes.data}
+              clearable={true}
+              loading={naicsCodes.loading}
+              selection={true}
+              search={true}
             />
           </FormField>
         </FormGroup>
