@@ -132,10 +132,15 @@ MyTradePass.defaultProps = {
 function mapStateToProps({ settings }) {
   const myTradePass = settings.myTradePass
   const address = myTradePass?.primaryAddress
+  const comma = address?.streetAddress || address?.city ? ', ' : ''
   return {
     loading: settings.loading,
     myTradePass,
-    address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
+    address: address
+      ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
+          address?.country?.code || ''
+        }`
+      : '',
     criteria: getTradeCriteriaValues(myTradePass?.companyCriteria ? myTradePass.companyCriteria : {}),
     legalData: {
       legalBusinessName: myTradePass?.name,
