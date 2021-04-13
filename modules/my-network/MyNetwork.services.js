@@ -124,6 +124,7 @@ export const getRowDetail = (row, detailRow) => {
 
   let r = typeof row?.connectionId !== 'undefined' && detailRow?.connectionId === row?.connectionId ? detailRow : row
   let address = r?.connectedCompany?.primaryAddress
+  const comma = address?.streetAddress || address?.city ? ', ' : ''
 
   return {
     ...row,
@@ -136,7 +137,11 @@ export const getRowDetail = (row, detailRow) => {
       </DivMember>
     ),
     logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.base64Logo} />,
-    address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
+    address: address
+      ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
+          address?.country?.code || ''
+        }`
+      : '',
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
     connectionStatus: getStatusLabel(row?.status),
