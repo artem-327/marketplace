@@ -77,7 +77,7 @@
   "error.server": "{error} error occurred.",
   "error.client": "A client error occurred.",
   "error.apologize": "We apologize for inconvenience.",
-  "error.backButtonText": "Back to Echo Exchange",
+  "error.backButtonText": "Back to {companyName}",
   "error.footer": "If this issue persists please contact: {email}",
   "error.title": "Error!",
   "error.gatewayTimeout.content": "The system is currently undergoing maintenance. Please, check back soon.",
