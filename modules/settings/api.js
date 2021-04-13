@@ -393,5 +393,10 @@ export default {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
       }
     })
-  }
+  },
+  getMyTradePass: () =>
+    api
+      .get(`/prodex/api/tradepass/my-tradepass`)
+      .then(res => res.data)
+      .catch(err => console.error(err))
 }

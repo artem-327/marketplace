@@ -32,6 +32,7 @@ import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import CompanyDetailsPage from './CompanyDetailsPage/CompanyDetailsPage'
+import MyTradePass from './MyTradePass/MyTradePass'
 
 import Router from 'next/router'
 
@@ -357,6 +358,8 @@ class Settings extends Component {
       return <TradeCriteria />
     } else if (currentTab === 'insurance') {
       return <Insurance />
+    } else if (currentTab === 'my-tradepass') {
+      return <MyTradePass />
     } else {
       return (
         !this.state.wrongUrl && (

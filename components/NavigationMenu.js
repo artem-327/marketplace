@@ -59,6 +59,7 @@ class Navigation extends Component {
     dropdowns: {},
     currentType: '',
     settings:
+      getSafe(() => Router.router.pathname === '/settings/my-tradepass', false) ||
       getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
       getSafe(() => Router.router.pathname === '/settings/trade-criteria', false) ||
@@ -600,7 +601,7 @@ class Navigation extends Component {
             }
             className={settings ? 'opened' : null}
             opened={settings.toString()}
-            onClick={() => this.toggleOpened('settings', '/settings/company-details')}
+            onClick={() => this.toggleOpened('settings', '/settings/my-tradepass')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}
             data-test='navigation_menu_settings_drpdn'>
@@ -608,6 +609,13 @@ class Navigation extends Component {
               <PerfectScrollbar>
                 {isCompanyAdmin ? (
                   <>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings/my-tradepass'
+                      tab='my-tradepass'
+                      dataTest='navigation_settings_my_trade_pass_drpdn'>
+                      {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My TradePass' })}
+                    </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/settings/company-details'
