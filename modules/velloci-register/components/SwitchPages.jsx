@@ -21,7 +21,8 @@ export const switchPages = props => {
         <ControlPerson
           updateCompany={props.updateCompany}
           company={props.company}
-          naicsId={props.naicsId}
+          companyId={props.companyId}
+          naicsCode={props.naicsCode}
           formikProps={props.formikProps}
           entityTypes={props.entityTypes}
           naicsCodes={props.naicsCodes}

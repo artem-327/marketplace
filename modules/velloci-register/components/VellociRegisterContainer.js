@@ -9,6 +9,8 @@ import { updateCompany } from '../../auth/actions'
 import { getSafe } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { initialValues } from '../constants'
+//Services
+import { getRequestCompanyObject } from './VellociRegister.services'
 
 const mapStateToProps = store => ({
   ...store.vellociRegister,
@@ -52,8 +54,9 @@ const mapStateToProps = store => ({
   },
   mainContainer: store.layout.mainContainer,
   appInfo: getSafe(() => store.auth.identity.appInfo, null),
-  naicsId: store?.auth?.identity?.company?.naicsCategory?.naicsId,
-  company: store?.auth?.identity?.company,
+  naicsCode: store?.auth?.identity?.company?.naicsCategory?.naicsId,
+  company: getRequestCompanyObject(store?.auth?.identity?.company),
+  companyId: store?.auth?.identity?.company?.id,
   naicsCodes: {
     ...store?.vellociRegister?.naicsCodes,
     loading: store?.vellociRegister?.naicsCodes?.loading || store?.auth?.loading

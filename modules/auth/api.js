@@ -23,7 +23,10 @@ export const searchCountries = searchQuery => api.get(`/prodex/api/countries/sea
 export const searchProvinces = countryId => api.get(`/prodex/api/provinces/country/${countryId}`)
 
 export const updateCompany = (id, payload) =>
-  api.patch(`/prodex/api/companies/id/${id}`, payload).then(response => response.data)
+  api
+    .patch(`/prodex/api/companies/id/${id}`, payload)
+    .then(response => response.data)
+    .catch(e => console.error(e))
 
 export const getCompanyDetails = id =>
   api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
