@@ -1462,3 +1462,10 @@ export const uploadInsuranceDocument = (file, type) => {
       )
   }
 }
+
+export function getMyTradePass() {
+  return {
+    type: AT.GET_MY_TRADEPASS,
+    payload: api.getMyTradePass()
+  }
+}

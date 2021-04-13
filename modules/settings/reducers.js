@@ -148,7 +148,8 @@ export const initialState = {
   customerWarehousesDatagrid: null,
   insuranceRows: null,
   insuranceDocumentsTypes: [],
-  insuranceDocumentsTypesLoading: false
+  insuranceDocumentsTypesLoading: false,
+  myTradePass: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -2132,6 +2133,26 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         insuranceDocumentsTypesLoading: false
+      }
+    }
+
+    case AT.GET_MY_TRADEPASS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.GET_MY_TRADEPASS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.GET_MY_TRADEPASS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        myTradePass: payload
       }
     }
 

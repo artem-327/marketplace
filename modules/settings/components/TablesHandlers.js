@@ -200,6 +200,9 @@ const textsTable = {
   },
   'company-details': {
     hideHandler: true
+  },
+  'my-tradepass': {
+    hideHandler: true
   }
 }
 
