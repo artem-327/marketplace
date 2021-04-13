@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
-import PropTypes from 'prop-types'
+import { number, string, bool, array, object, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
 import { Image, Loader, Dimmer, GridRow, GridColumn, Divider } from 'semantic-ui-react'
 
 // Components
@@ -28,39 +27,20 @@ import {
 } from './MyTradePass.styles'
 
 // Services
-import {
-  getTradeCriteriaValues,
-
-} from './MyTradePass.services'
+import { getTradeCriteriaValues } from './MyTradePass.services'
 import { getMyTradePass } from '../../actions'
 
+/**
+ * Displays detail information about company
+ * @category My TradePass
+ * @component
+ */
 const MyTradePass = props => {
-  const {
-    getMyTradePass,
-    myTradePass,
-    loading,
-    address,
-    criteria,
-    legalData,
-    marketingData,
-    verifiedData
-  } = props
+  const { getMyTradePass, myTradePass, loading, address, criteria, legalData, marketingData, verifiedData } = props
 
-  // Similar to call componentDidMount:
   useEffect(() => {
     getMyTradePass()
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
-
-  console.log('!!!!!!!!!! render myTradePass', myTradePass)
-
+  }, [])
 
   return (
     <DivPageWrapper>
@@ -79,15 +59,11 @@ const MyTradePass = props => {
                 <DivCollectionStat>
                   <DivLeftAligned $flexWidth='60%'>
                     <FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />
-                    <DivValue>
-                      {myTradePass?.tradepassId}
-                    </DivValue>
+                    <DivValue>{myTradePass?.tradepassId}</DivValue>
                   </DivLeftAligned>
                   <DivLeftAligned $leftBorder $flexWidth='20%'>
                     <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
-                    <DivValue>
-                      {myTradePass?.transactionsCount || 0}
-                    </DivValue>
+                    <DivValue>{myTradePass?.transactionsCount || 0}</DivValue>
                   </DivLeftAligned>
                   <DivLeftAligned $leftBorder $flexWidth='20%'>
                     <FormattedMessage id='myNetworks.detailRow.averageValue' defaultMessage='Average Value' />
@@ -100,7 +76,9 @@ const MyTradePass = props => {
                           value={myTradePass.averageTransactionValue}
                           currency={currency}
                         />
-                      ) : 'N/A'}
+                      ) : (
+                        'N/A'
+                      )}
                     </DivValue>
                   </DivLeftAligned>
                 </DivCollectionStat>
@@ -122,30 +100,43 @@ const MyTradePass = props => {
         </GridRow>
         <BottomSegments legalData={legalData} marketingData={marketingData} verifiedData={verifiedData} />
         <Divider />
-
-
-
       </StyledGrid>
     </DivPageWrapper>
   )
 }
 
 MyTradePass.propTypes = {
-  itemsCount: PropTypes.number
+  itemsCount: number,
+  getMyTradePass: func,
+  myTradePass: object,
+  loading: bool,
+  address: object,
+  criteria: object,
+  legalData: object,
+  marketingData: object,
+  verifiedData: object
 }
 
 MyTradePass.defaultProps = {
-  itemsCount: 0
+  itemsCount: 0,
+  getMyTradePass: () => {},
+  myTradePass: null,
+  loading: false,
+  address: null,
+  criteria: null,
+  legalData: null,
+  marketingData: null,
+  verifiedData: null
 }
 
 function mapStateToProps({ settings }) {
-  const myTradePass = settings.myTradePass?.connectedCompany
+  const myTradePass = settings.myTradePass
   const address = myTradePass?.primaryAddress
   return {
     loading: settings.loading,
     myTradePass,
     address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
-    criteria: getTradeCriteriaValues(myTradePass?.criteria ? myTradePass.criteria : {}),
+    criteria: getTradeCriteriaValues(myTradePass?.companyCriteria ? myTradePass.companyCriteria : {}),
     legalData: {
       legalBusinessName: myTradePass?.name,
       ein: myTradePass?.tin,
@@ -153,14 +144,14 @@ function mapStateToProps({ settings }) {
       inBusinessSince: myTradePass?.inBusinessSince,
       numberOfEmployees: myTradePass?.numberOfEmployees
         ? {
-          numberOfEmployees: (
-            <FormattedNumber
-              minimumFractionDigits={0}
-              maximumFractionDigits={0}
-              value={myTradePass?.numberOfEmployees || 0}
-            />
-          )
-        }
+            numberOfEmployees: (
+              <FormattedNumber
+                minimumFractionDigits={0}
+                maximumFractionDigits={0}
+                value={myTradePass?.numberOfEmployees || 0}
+              />
+            )
+          }
         : null
     },
     marketingData: {
@@ -175,8 +166,7 @@ function mapStateToProps({ settings }) {
       articlesIncorporation: myTradePass?.articlesOfIncorporation === 'VERIFIED' ? 'Verified' : 'Unverified',
       certificateInsurance: myTradePass?.certificateOfInsurance === 'VERIFIED' ? 'Verified' : 'Unverified',
       linkedBankAccounts: myTradePass?.linkedBankAccount === 'VERIFIED' ? 'Verified' : 'Unverified',
-      tradeOrganization:
-        myTradePass?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
+      tradeOrganization: myTradePass?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
     }
   }
 }

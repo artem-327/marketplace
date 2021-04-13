@@ -396,8 +396,7 @@ export default {
   },
   getMyTradePass: () =>
     api
-      //! ! temporary .get('/prodex/api/tradepass/my-tradepass')
-      .get(`/prodex/api/tradepass/connection/${'af2485b8-dd0a-4710-a68b-3d747829c38d'}`)
+      .get(`/prodex/api/tradepass/my-tradepass`)
       .then(res => res.data)
       .catch(err => console.error(err))
 }

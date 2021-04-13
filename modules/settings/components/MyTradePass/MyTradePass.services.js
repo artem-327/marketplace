@@ -1,12 +1,10 @@
-import {
-  DivValueTradeCriteria,
-  DivTextValueTradeCriteria
-} from './MyTradePass.styles'
+import { DivValueTradeCriteria, DivTextValueTradeCriteria } from './MyTradePass.styles'
 
 /**
- * @category My Network
+ * @category My TradePass
  * @method
  * @param {object} criteria
+ * @returns {object}
  */
 export const getTradeCriteriaValues = criteria => {
   if (!criteria) return null
@@ -15,7 +13,7 @@ export const getTradeCriteriaValues = criteria => {
     return {
       [key]: (
         <DivValueTradeCriteria>
-          <DivTextValueTradeCriteria>{criteria[key]?.criteria_expected}</DivTextValueTradeCriteria>
+          <DivTextValueTradeCriteria>{criteria[key]}</DivTextValueTradeCriteria>
         </DivValueTradeCriteria>
       )
     }
