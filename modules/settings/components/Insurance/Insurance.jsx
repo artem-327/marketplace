@@ -53,7 +53,7 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
                 columns={COLUMNS}
                 loading={loading}
                 rows={getRows(rows, { openPopup })}
-                estimatedRowHeight={1000}
+                rowDetailType={true}
               />
             </div>
           </Grid.Column>
