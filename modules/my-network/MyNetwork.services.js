@@ -62,7 +62,7 @@ export const getTradeCriteriaValues = criteria => {
     return {
       [key]: (
         <DivValueTradeCriteria>
-          <DivTextValueTradeCriteria>{criteria[key]?.criteria_expected}</DivTextValueTradeCriteria>
+          <DivTextValueTradeCriteria>{criteria[key]?.criteria_match_description}</DivTextValueTradeCriteria>
           <DivCircle background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
         </DivValueTradeCriteria>
       )
@@ -140,10 +140,10 @@ export const getRowDetail = (row, detailRow) => {
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
     connectionStatus: getStatusLabel(row?.status),
-    eligibilityCriteria: getCriteriaLabel(row?.criteria || row?.connectedCompany?.criteria),
+    eligibilityCriteria: getCriteriaLabel(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
-    tradeCriteria: getTradeCriteriaValues(row?.criteria || row?.connectedCompany?.criteria),
+    tradeCriteria: getTradeCriteriaValues(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
     legalData: {
       legalBusinessName: r?.connectedCompany?.name,
       ein: r?.connectedCompany?.tin,
