@@ -21,6 +21,5 @@ export const getRequestCompanyObject = company => {
     )
       response[key] = key === 'businessType' ? company[key]?.id : company[key]
   })
-  console.log('response', response)
   return response
 }
