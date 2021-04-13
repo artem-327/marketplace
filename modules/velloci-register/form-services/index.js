@@ -18,6 +18,8 @@ import { titleForms } from '../constants'
 
 /**
  * Function validates values from VellociRegister form.
+ *  @category Velloci Register
+ * @method
  */
 export const getValidationSchema = () =>
   Yup.lazy(values => {
@@ -135,7 +137,8 @@ export const getValidationSchema = () =>
 
 /**
  * Function prepares values from form to request body for BE request.
- *
+ *  @category Velloci Register
+ * @method
  * @param {object} values The object of values from form.
  * @return {object} The new object prepared for BE request.
  */
@@ -193,11 +196,14 @@ export const getBody = values => {
     beneficialOwners,
     website: getSafe(() => businessInfo.url, '')
   }
+
   return getObjectWithoutEmptyElements(result)
 }
 
 /**
  * Function submit form or move user to the next page.
+ * @category Velloci Register
+ * @method
  * @param {object} formikProps The object of values from form.
  * @param {number} activeStep The index of active page.
  * @param {function} nextStep The redux action which moves user to the next page.
@@ -219,6 +225,8 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
 
 /**
  * Function handle submit form and register Velloci.
+ *  @category Velloci Register
+ * @method
  * @param {object} values The object of values from form.
  * @param {object} props The props of velloci form.
  * @param {object} selfFormikProps The object of formik props.
