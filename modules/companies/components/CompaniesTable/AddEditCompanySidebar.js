@@ -40,6 +40,8 @@ import { BottomButtons } from '../../constants'
 
 import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '~/modules/admin/constants/layout'
 import ErrorFocus from '~/components/error-focus'
+//Actions
+import { getNaicsCodes } from '../../../velloci-register/actions'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -68,6 +70,7 @@ const initialFormValues = {
   cin: '',
   dba: '',
   dunsNumber: '',
+  naicsCode: '',
   industryType: '',
   socialFacebook: '',
   socialInstagram: '',
@@ -118,7 +121,8 @@ const initialFormValues = {
 const getInitialFormValues = values => {
   return {
     ...initialFormValues,
-    ...(values !== null && { ...values })
+    ...(values !== null && { ...values }),
+    naicsCode: values?.naicsCategory?.naicsId
   }
 }
 
@@ -308,7 +312,10 @@ class AddEditCompanySidebar extends Component {
       // AddressSuggestMailingBranchInput,
       postCompanyLogo,
       deleteCompanyLogo,
-      datagrid
+      datagrid,
+      naicsCodes,
+      naicsCode,
+      getNaicsCodes
     } = this.props
 
     const { selectLogo, removeLogo } = this
@@ -330,7 +337,6 @@ class AddEditCompanySidebar extends Component {
         onSubmit={async (values, actions) => {
           try {
             if (popupValues) {
-
               let associations = []
               if (getSafe(() => values.associations[0].id, false)) {
                 associations = values.associations.map(assoc => assoc.id)
@@ -343,6 +349,7 @@ class AddEditCompanySidebar extends Component {
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
+                naicsCode: values?.naicsCode,
                 enabled: getSafe(() => values.enabled, false),
                 industryType: getSafe(() => values.industryType, ''),
                 name: getSafe(() => values.name, ''),
@@ -475,6 +482,8 @@ class AddEditCompanySidebar extends Component {
                       companyId={popupValues ? popupValues.id : null}
                       hasLogo={popupValues ? popupValues.hasLogo : false}
                       enableCheckbox={!!popupValues}
+                      naicsCodes={naicsCodes}
+                      getNaicsCodes={getNaicsCodes}
                     />
                     {!popupValues && (
                       <>
@@ -726,8 +735,7 @@ class AddEditCompanySidebar extends Component {
               <ErrorFocus />
             </Form>
           )
-        }}>
-      </Formik>
+        }}></Formik>
     )
   }
 }
@@ -744,15 +752,18 @@ const mapDispatchToProps = {
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   postCompanyLogo,
-  deleteCompanyLogo
+  deleteCompanyLogo,
+  getNaicsCodes
 }
 
-const mapStateToProps = ({ companiesAdmin, zip }) => {
+const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {
   const popupValues = companiesAdmin.popupValues
   return {
     ...companiesAdmin,
     popupValues,
-    zip
+    zip,
+    naicsCodes: vellociRegister?.naicsCodes,
+    naicsCode: companiesAdmin?.naicsCategory?.naicsId
   }
 }
 

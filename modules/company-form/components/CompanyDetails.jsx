@@ -8,8 +8,8 @@ import { getSafe } from '~/utils/functions'
 // Components
 import ErrorFocus from '../../../components/error-focus'
 import { Required } from '~/components/constants/layout'
-import { GridRow, GridColumn, Dimmer, Loader, Button as ButtonSemantic } from 'semantic-ui-react'
-import { Input, Button, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { GridRow, GridColumn, Loader, Button as ButtonSemantic } from 'semantic-ui-react'
+import { Input, Button, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { AddressForm } from '~/modules/address-form'
 import PictureUpload from '../../../components/picture-upload/PictureUpload'
@@ -33,8 +33,10 @@ import {
 
 // Services
 import { removeFile, updateFilesList } from './CompanyDetails.services'
+//Actions
 import * as Actions from '../actions'
 import { removeAttachment } from '../../inventory/actions'
+import { getNaicsCodes } from '../../velloci-register/actions'
 
 const CompanyDetails = props => {
   const [openDocumentationPopup, setOpenDocumentationPopup] = useState(false)
@@ -57,8 +59,7 @@ const CompanyDetails = props => {
     deleting,
     businessTypes,
     associations,
-    industryTypesLoading,
-    industryTypes,
+    naicsCodes,
     documentTypesAll,
     documentTypesFederalOwnershipCertifications,
     documentTypesManagementCertifications,
@@ -75,7 +76,7 @@ const CompanyDetails = props => {
   useEffect(() => {
     try {
       if (!getSafe(() => props.documentTypesAll.length, false)) props.getDocumentTypes()
-      if (!getSafe(() => props.industryTypes.length, false)) props.getIndustryTypes()
+      if (!getSafe(() => props.naicsCodes.data.length, false)) props.getNaicsCodes()
       if (!getSafe(() => props.businessTypes.length, false)) props.getBusinessTypes()
       if (!getSafe(() => props.associations.length, false)) props.getAssociations({ filters: [], pageSize: 50 })
     } catch (e) {
@@ -154,7 +155,7 @@ const CompanyDetails = props => {
                   label={<FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />}
                   name='vellociBusinessId'
                   inputProps={{
-                    disabled: true
+                    readOnly: true
                   }}
                 />
               </GridColumnTradePassId>
@@ -333,16 +334,16 @@ const CompanyDetails = props => {
       <GridRow>
         <GridColumn width={16}>
           <Dropdown
-            label={<FormattedMessage id='company.yourIndustryType' defaultMessage='Your Industry Type' />}
-            name='industryType'
-            options={industryTypes}
+            label={<FormattedMessage id='detailCompany.naics' defaultMessage='NAICS' />}
+            name='naicsCode'
+            options={naicsCodes.data}
             inputProps={{
               clearable: true,
-              loading: industryTypesLoading,
+              loading: naicsCodes.loading,
               selection: true,
               search: true,
-              placeholder: formatMessage({ id: 'company.selectIndustryType', defaultMessage: 'Select Industry Type' }),
-              'data-test': 'company_form_businessType_drpdn'
+              placeholder: formatMessage({ id: 'detailCompany.naics.placeholder', defaultMessage: 'Select NAICS' }),
+              'data-test': 'company_form_naics_drpdn'
             }}
           />
         </GridColumn>
@@ -515,20 +516,20 @@ function mapStateToProps(state) {
       []
     ),
     documentTypesManagementCertifications: getSafe(() => state.businessTypes.documentTypesManagementCertifications, []),
-    industryTypesLoading: getSafe(() => state.businessTypes.industryTypesLoading, false),
-    industryTypes: getSafe(() => state.businessTypes.industryTypes, []).map(el => ({
-      key: el,
-      // replace '_' with ' ', capitalize words
-      text: el.replace(/_/g, ' ').replace(/(^|\s)\S/g, l => l.toUpperCase()),
-      value: el
-    })),
     companyLegalDocs: getSafe(() => state.businessTypes.companyLegalDocs, []),
     companyLegalDocsLoading: getSafe(() => state.businessTypes.companyLegalDocsLoading, false),
     managementCertificationsDocs: getSafe(() => state.businessTypes.managementCertificationsDocs, []),
     managementCertificationsDocsLoading: getSafe(() => state.businessTypes.managementCertificationsDocsLoading, false),
     federalOwnershipDocs: getSafe(() => state.businessTypes.federalOwnershipDocs, []),
-    federalOwnershipDocsLoading: getSafe(() => state.businessTypes.federalOwnershipDocsLoading, false)
+    federalOwnershipDocsLoading: getSafe(() => state.businessTypes.federalOwnershipDocsLoading, false),
+    naicsCodes: state?.vellociRegister?.naicsCodes
   }
 }
 
-export default injectIntl(connect(mapStateToProps, { ...Actions, removeAttachment })(CompanyDetails))
+const mapDispatchToProps = {
+  ...Actions,
+  removeAttachment,
+  getNaicsCodes
+}
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CompanyDetails))

@@ -4,16 +4,18 @@ import { getInsuranceDocuments, openPopup } from '../../actions'
 //Components
 import Insurance from './Insurance'
 //Selectors
-import { makeGetDatagridRows } from '../../selectors'
+import { makeGetDatagridRows, makeGetLoading, makeGetOpenPopup } from '../../selectors'
 
 const makeMapStateToProps = () => {
   const getRows = makeGetDatagridRows()
+  const getLoading = makeGetLoading()
+  const getOpenPopup = makeGetOpenPopup()
 
-  const mapStateToProps = ({ settings }) => {
+  const mapStateToProps = state => {
     return {
-      rows: getRows(settings?.insuranceRows),
-      loading: settings.loading,
-      isOpenPopup: settings.isOpenPopup
+      rows: getRows(state),
+      loading: getLoading(state),
+      isOpenPopup: getOpenPopup(state)
     }
   }
   return mapStateToProps

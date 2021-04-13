@@ -21,11 +21,11 @@ const ConfirmSegment = styled(Segment.Group)`
   position: relative;
   display: flex !important;
   width: 800px;
-  margin: 100px auto 0 !important;
+  margin: 120px auto 0 !important;
   border: 0 none !important;
   padding: 40px 40px 0 !important;
   background: #fff;
-  box-shadow: 0 0 0 3000px #1b3454 !important;
+  box-shadow: 0 0 0 3000px #fafafa !important;
 `
 
 const InnerSegment = styled(Segment)`
@@ -75,7 +75,7 @@ const LoginHeader = styled.div`
     display: block;
     width: 103px;
     height: 4px;
-    background: #1b3454;
+    background: #fafafa;
   }
 `
 
