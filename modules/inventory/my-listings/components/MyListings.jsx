@@ -389,7 +389,6 @@ class MyListings extends Component {
           title: ' ',
           width: 81,
           minWidth: 81,
-          maxWidth: 81,
           allowReordering: false
         }
       ],

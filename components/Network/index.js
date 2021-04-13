@@ -5,7 +5,7 @@ import { ChevronDown } from 'react-feather'
 export const NetworkDropdown = styled(Dropdown)`
   &.ui.dropdown {
     position: relative;
-    ${({ $widthSharedListings }) => ($widthSharedListings ? `width: ${$widthSharedListings}` : '50px')};
+    ${({ $widthSharedListings }) => ($widthSharedListings ? `width: ${$widthSharedListings}` : 'width: 50px')};
     height: 32px !important;
     margin: -5px 0 !important;
     border: 1px solid #dee2e6;
