@@ -161,7 +161,7 @@ export function getReturnStatus(returnStatus) {
  * Returns string of status or null.
  * @method
  * @param {number} disputeReason
- * @returns {'Pending' | 'Accepted by buyer' | 'Accepted by seller' | 'Accepted' | null}
+ * @returns {'Pending' | 'Accepted by buyer' | 'Accepted by seller' | 'Accepted' | 'N/A'}
  */
 export function getDisputeStatus(disputeReason) {
   switch (disputeReason) {
@@ -174,6 +174,6 @@ export function getDisputeStatus(disputeReason) {
     case 4:
       return 'Accepted'
     default:
-      return null
+      return 'N/A'
   }
 }

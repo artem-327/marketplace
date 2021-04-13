@@ -27,7 +27,8 @@ const ModalOrderResolution = ({
   onClose,
   actions: { orderResolutionAccept, orderResolutionReopen },
   intl,
-  appInfo
+  appInfo,
+  ordersType
 }) => {
   return (
     <ModalCustom size='small' open={true} onClose={() => onClose()} closeIcon={true}>
@@ -105,7 +106,7 @@ const ModalOrderResolution = ({
         <BasicButton
           noBorder
           onClick={async () => {
-            await orderResolutionReopen(order.id)
+            await orderResolutionReopen(order.id, ordersType)
             onClose()
             confirm(
               <DivModal>
@@ -139,7 +140,7 @@ const ModalOrderResolution = ({
         </BasicButton>
         <BasicButton
           onClick={async () => {
-            await orderResolutionAccept(order.id)
+            await orderResolutionAccept(order.id, ordersType)
             onClose()
           }}>
           <FormattedMessage id='global.accept' defaultMessage='Accept' />
@@ -158,7 +159,8 @@ ModalOrderResolution.propTypes = {
     orderResolutionReopen: func
   },
   intl: object,
-  appInfo: object
+  appInfo: object,
+  ordersType: string
 }
 
 ModalOrderResolution.defaultValues = {
@@ -172,7 +174,8 @@ ModalOrderResolution.defaultValues = {
   intl: {
     formatMessage: () => {}
   },
-  appInfo: null
+  appInfo: null,
+  ordersType: 'sale'
 }
 
 export default injectIntl(ModalOrderResolution)
