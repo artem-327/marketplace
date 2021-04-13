@@ -1160,8 +1160,9 @@ class Detail extends Component {
                       onClose={closePopup}
                       loading={isSending}
                       actions={{ orderResolutionAccept, orderResolutionReopen }}
-                      ordersType={this.props?.router?.query?.type === 'sales' ? 'sale' : this.props?.router?.query?.type}
-}
+                      ordersType={
+                        this.props?.router?.query?.type === 'sales' ? 'sale' : this.props?.router?.query?.type
+                      }
                     />
                   ) : null}
                   {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
