@@ -253,6 +253,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
+        pendingRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_PENDING',
+        fulfilledRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_REJECTED',
         apiCall: '/prodex/api/packaging-types'
       },
       update: {
