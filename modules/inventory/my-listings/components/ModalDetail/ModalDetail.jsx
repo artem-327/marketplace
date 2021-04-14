@@ -21,6 +21,7 @@ import {
 import { withToastManager } from 'react-toast-notifications'
 import { Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 import moment from 'moment'
+import { Warning } from '@material-ui/icons'
 
 //Components
 import { DateInput } from '../../../../../components/custom-formik'
@@ -68,7 +69,8 @@ import {
   PricingIcon,
   GridColumnRequired,
   CustomGridColumn,
-  CustomGridRow
+  CustomGridRow,
+  DivFlex
 } from './ModalDetail.styles'
 //Constants
 import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
@@ -92,7 +94,8 @@ class ModalDetail extends Component {
     attachmentFiles: [],
     isOpenOptionalInformation: false,
     openedTdsList: false,
-    openedTdsSaveAs: false
+    openedTdsSaveAs: false,
+    isOverMinPkgs: false
   }
 
   componentDidMount = async () => {
@@ -696,7 +699,7 @@ class ModalDetail extends Component {
       broadcastChange,
       autocompleteData
     } = this.props
-    const { openedTdsList, openedTdsSaveAs } = this.state
+    const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = this.state
 
     const optionsProduct = autocompleteData.map((el, i) => {
       const code = getSafe(() => el.intProductCode, '')
@@ -954,19 +957,59 @@ class ModalDetail extends Component {
                                                     id='addInventory.pkgsAvailable'
                                                     defaultMessage='PKGs Available'>
                                                     {text => (
-                                                      <label>
+                                                      <DivFlex>
                                                         {text}
                                                         <Required />
-                                                      </label>
+                                                        {isOverMinPkgs ? (
+                                                          <Popup
+                                                            size='tiny'
+                                                            position='top center'
+                                                            inverted
+                                                            style={{
+                                                              fontSize: '12px',
+                                                              color: '#cecfd4',
+                                                              opacity: '0.9'
+                                                            }}
+                                                            header={
+                                                              <div>
+                                                                <FormattedMessage
+                                                                  id='inventory.isBelowMin'
+                                                                  defaultMessage='The available quantity is below the min quantity'
+                                                                />
+                                                              </div>
+                                                            }
+                                                            trigger={
+                                                              <div>
+                                                                <Warning
+                                                                  className='title-icon'
+                                                                  style={{ fontSize: '16px', color: '#f16844' }}
+                                                                />
+                                                              </div>
+                                                            } // <div> has to be there otherwise popup will be not shown
+                                                          />
+                                                        ) : null}
+                                                      </DivFlex>
                                                     )}
                                                   </FormattedMessage>
+
                                                   <Input
                                                     name='edit.pkgAvailable'
                                                     inputProps={{
                                                       placeholder: '0',
                                                       type: 'number',
                                                       min: 1,
-                                                      fluid: true
+                                                      fluid: true,
+                                                      onChange: (e, { value }) => {
+                                                        value = parseInt(value)
+                                                        if (!isNaN(value)) {
+                                                          setFieldValue('edit.pkgAvailable', value)
+                                                          if (values?.edit?.minimum) {
+                                                            values.edit.minimum > value
+                                                              ? this.setState({ isOverMinPkgs: true })
+                                                              : this.setState({ isOverMinPkgs: false })
+                                                          }
+                                                        }
+                                                      }
                                                     }}
                                                   />
                                                 </FormField>
@@ -1002,9 +1045,15 @@ class ModalDetail extends Component {
                                                             setFieldValue,
                                                             validateForm
                                                           )
+
                                                           // It seems to do bug when created new inventory
                                                           // value is adding in handleSubmit
                                                           //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                                        }
+                                                        if (values?.edit?.pkgAvailable && !isNaN(value)) {
+                                                          values.edit.pkgAvailable < value
+                                                            ? this.setState({ isOverMinPkgs: true })
+                                                            : this.setState({ isOverMinPkgs: false })
                                                         }
                                                       }
                                                     }}
