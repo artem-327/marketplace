@@ -28,7 +28,7 @@ export const prepareDataForTable = data => {
           }</b>
         ),
         carrier: row?.insurer,
-        coverage: row?.coverage,
+        coverage: row?.aggregate_limit,
         expiration: row?.expiration_date ? new Intl.DateTimeFormat(language).format(new Date(row.expiration_date)) : ''
       })
     })
