@@ -40,7 +40,7 @@ const mapStateToProps = store => ({
     },
     controlPerson: {
       isControlPerson: false,
-      legalBusinessName: getSafe(() => store.auth.identity.company.cfDisplayName, ''),
+      legalBusinessName: store?.auth?.identity?.company?.dba || '',
       entityType: getSafe(() => store.auth.identity.company.businessType.dwollaName, []),
       industryType: '',
       isEin: true,
