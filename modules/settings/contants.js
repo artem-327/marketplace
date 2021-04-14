@@ -7,7 +7,7 @@ export const defaultTabs = [
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Logistics', id: 13, type: 'logistics' },
   { name: 'Documents', id: 15, type: 'documents' },
-  { name: 'My TradePass', id: 17, type: 'my-tradepass' }
+  { name: 'My Trade Pass', id: 17, type: 'my-tradepass' }
 ]
 
 // TODO FORMATTED MESSAGE

@@ -595,7 +595,7 @@ class Navigation extends Component {
             icon={<Settings size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
+                <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass' />
                 {settings ? <ChevronUp /> : <ChevronDown />}
               </>
             }
@@ -614,7 +614,7 @@ class Navigation extends Component {
                       to='/settings/my-tradepass'
                       tab='my-tradepass'
                       dataTest='navigation_settings_my_trade_pass_drpdn'>
-                      {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My TradePass' })}
+                      {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My Trade Pass' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}

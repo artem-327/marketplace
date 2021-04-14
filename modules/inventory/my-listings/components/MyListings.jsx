@@ -682,7 +682,7 @@ class MyListings extends Component {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
           id: 'myInventory.allSubtitle',
-          defaultMessage: 'My Network + BluePallet Direct'
+          defaultMessage: 'My Network + Blue Pallet Direct'
         }),
         value: 'GLOBAL_RULES'
       },
@@ -712,7 +712,7 @@ class MyListings extends Component {
       },
       {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BluePallet Direct' }),
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'Blue Pallet Direct' }),
         subtitle: formatMessage({
           id: 'myInventory.bluePalletDirectSubtitle',
           defaultMessage: 'Open Marketplace'
