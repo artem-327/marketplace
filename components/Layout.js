@@ -481,7 +481,7 @@ class Layout extends Component {
           </ContentContainer>
           {copyrightContainer}
         </FlexContainer>
-        <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
+        <AgreementModal onAccept={agreeWithTOS} isOpen={false} open={false}  /> {/* isOpen={isOpen} deleted.. referring <Modal {...additionalProps} open={open || isOpen} onClose={logout} closeIcon> */}
 
         {takeover ? (
           <CustomDiv>
