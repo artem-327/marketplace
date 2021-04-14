@@ -325,7 +325,7 @@ class Layout extends Component {
         <CopyrightContainer>
           <FormattedMessage
             id='global.copyright'
-            defaultMessage={`Copyright ${moment().format('YYYY')} BluePallet`}
+            defaultMessage={`Copyright ${moment().format('YYYY')} Blue Pallet`}
             values={{ currentYear: moment().format('YYYY') }}
           />
         </CopyrightContainer>

@@ -153,7 +153,7 @@ class ConfirmationPage extends Component {
       searchProvinces
     } = this.props
     const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-    const companyName = getSafe(() => identity.appInfo.systemCompanyName, 'BluePallet')
+    const companyName = getSafe(() => identity.appInfo.systemCompanyName, 'Blue Pallet')
 
     let { formatMessage } = intl
 

@@ -58,7 +58,7 @@ const MyTradePass = props => {
               <SegmentCustom textAlign='right'>
                 <DivCollectionStat>
                   <DivLeftAligned $flexWidth='60%'>
-                    <FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />
+                    <FormattedMessage id='company.myTradePassId' defaultMessage='My Trade Pass ID' />
                     <DivValue>{myTradePass?.tradepassId}</DivValue>
                   </DivLeftAligned>
                   <DivLeftAligned $leftBorder $flexWidth='20%'>
