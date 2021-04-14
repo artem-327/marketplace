@@ -324,6 +324,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
+        pendingRequest: 'ADMIN_POST_MANUFACTURERS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_MANUFACTURERS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_MANUFACTURERS_DATA_REJECTED',
         apiCall: '/prodex/api/manufacturers'
       },
       update: {
@@ -380,6 +383,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_GRADES_DATA',
+        pendingRequest: 'ADMIN_POST_GRADES_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_GRADES_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_GRADES_DATA_REJECTED',
         apiCall: '/prodex/api/product-grades'
       },
       update: {
@@ -436,6 +442,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_FORMS_DATA',
+        pendingRequest: 'ADMIN_POST_FORMS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_FORMS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_FORMS_DATA_REJECTED',
         apiCall: '/prodex/api/product-forms'
       },
       update: {
@@ -492,6 +501,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_CONDITIONS_DATA',
+        pendingRequest: 'ADMIN_POST_CONDITIONS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_CONDITIONS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_CONDITIONS_DATA_REJECTED',
         apiCall: '/prodex/api/product-conditions'
       },
       update: {
@@ -593,6 +605,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADD_ASSOCIATION',
+        pendingRequest: 'ADD_ASSOCIATION_PENDING',
+        fulfilledRequest: 'ADD_ASSOCIATION_FULFILLED',
+        rejectedRequest: 'ADD_ASSOCIATION_REJECTED',
         apiCall: '/prodex/api/associations',
         typeQuery: true
       },
