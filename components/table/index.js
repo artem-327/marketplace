@@ -409,6 +409,8 @@ class _Table extends Component {
         name: pt.string.isRequired,
         title: pt.string,
         width: pt.number,
+        maxWidth: pt.number,
+        minWidth: pt.number,
         sortPath: pt.string,
         allowReordering: pt.bool
       })
@@ -776,6 +778,7 @@ class _Table extends Component {
       width: c.width || 1280 / columns.length,
       align: c.align ? c.align : 'left',
       maxWidth: c.maxWidth ? c.maxWidth : null,
+      minWidth: c.minWidth ? c.minWidth : null,
       allowReordering: typeof c.allowReordering !== 'undefined' ? c.allowReordering : true
     }))
   }
@@ -896,7 +899,9 @@ class _Table extends Component {
       dataWidths.forEach(dataWidth =>
         stateWidths.forEach(stateWidth => {
           if (dataWidth.columnName === stateWidth.columnName) {
-            if (stateWidth.maxWidth && dataWidth.width > stateWidth.maxWidth) {
+            if (stateWidth.minWidth && dataWidth.width < stateWidth.minWidth) {
+              result.push({ ...stateWidth, width: stateWidth.minWidth })
+            } else if (stateWidth.maxWidth && dataWidth.width > stateWidth.maxWidth) {
               result.push({ ...stateWidth, width: stateWidth.maxWidth })
             } else if (!stateWidth.maxWidth && dataWidth.width > 400) {
               result.push({ ...stateWidth, width: 400 })
