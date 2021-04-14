@@ -98,3 +98,10 @@ export const GridFields = styled(Grid)`
     display: none !important;
   }
 `
+
+export const DivFlex = styled.div`
+  display: flex;
+  margin: 0px !important;
+  font-size: 1em !important;
+  color: #404040 !important;
+`

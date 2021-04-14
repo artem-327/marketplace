@@ -11,22 +11,11 @@ class Index extends Component {
     const {
       intl: { formatMessage }
     } = this.props
-    const titleName = formatMessage(
-      {
-        id: 'title.settings',
-        defaultMessage: 'My Trade Pass - {tab}'
-      },
-      {
-        tab: formatMessage({
-          id: 'title.settings.system-settings',
-          defaultMessage: 'Settings'
-        })
-      }
-    )
+    const titleName = formatMessage({ id: 'title.settings.myTradePass', defaultMessage: 'My Trade Pass' })
 
     return (
       <Layout title={titleName}>
-        <SettingsPage currentTab={'system-settings'} />
+        <SettingsPage currentTab={'my-tradepass'} />
       </Layout>
     )
   }

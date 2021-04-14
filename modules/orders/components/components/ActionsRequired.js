@@ -333,7 +333,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
-
+            {/* Do not show any buttons related to returning order. We do not support returning order at this moment https://bluepallet.atlassian.net/browse/DT-140?focusedCommentId=11885
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
                   {
@@ -343,7 +343,7 @@ class ActionsRequired extends Component {
                     text: 'order.returnShipmentSale'
                   }
                 ])
-              : null}
+              : null} */}
 
             {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 11, null, 'order.returnInTransit.description', [
@@ -409,7 +409,6 @@ class ActionsRequired extends Component {
 
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
-                  disputeButton, //!!REMOVE
                   {
                     buttonType: 'primary',
                     onClick: () => openPopupName('openedPurchaseOrderShipping'),

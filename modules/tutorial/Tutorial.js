@@ -380,7 +380,7 @@ class Tutorial extends Component {
               <Content>
                 <FormattedMessage
                   id='tutorial.businessVerification.content'
-                  defaultMessage='BluePallet is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, BluePallet must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  defaultMessage='Blue Pallet is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, Blue Pallet must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
                   {text => text}
                 </FormattedMessage>
               </Content>

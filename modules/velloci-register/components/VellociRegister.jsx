@@ -20,7 +20,10 @@ import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
 
 // Global variable to store global state
 let selfFormikProps = {} //TODO specify type
-
+/**
+ * @category Velloci Register
+ * @component
+ */
 const VellociRegister = props => {
   // Stores previos values for compating with current value
   const prevNumberBeneficialOwners = usePrevious(props.numberBeneficialOwners)
@@ -109,67 +112,63 @@ const VellociRegister = props => {
 }
 
 VellociRegister.propTypes = {
-  props: {
-    nextStep: PropTypes.func,
-    prevStep: PropTypes.func,
-    activeStep: PropTypes.number,
-    countBeneficialOwners: PropTypes.func,
-    numberBeneficialOwners: PropTypes.number,
-    isLoadingSubmitButton: PropTypes.bool,
-    initialValues: PropTypes.object,
-    openEmailPopup: PropTypes.func,
-    emailPopup: PropTypes.object,
-    entityTypes: PropTypes.object,
-    getEntityTypes: PropTypes.func,
-    naicsCodes: PropTypes.object,
-    getNaicsCodes: PropTypes.func,
-    businessRoles: PropTypes.object,
-    getBusinessRoles: PropTypes.object,
-    entityDocuments: PropTypes.object,
-    getEntityDocuments: PropTypes.func,
-    politicallyExposedPersons: PropTypes.object,
-    getPoliticallyExposedPersons: PropTypes.func,
-    cleareActiveStep: PropTypes.func,
-    postRegisterVelloci: PropTypes.func,
-    getIdentity: PropTypes.func,
-    loadSubmitButton: PropTypes.func,
-    mainContainer: PropTypes.object,
-    naicsId: PropTypes.bool,
-    company: PropTypes.object,
-    updateCompany: PropTypes.func
-  }
+  nextStep: PropTypes.func,
+  prevStep: PropTypes.func,
+  activeStep: PropTypes.number,
+  countBeneficialOwners: PropTypes.func,
+  numberBeneficialOwners: PropTypes.number,
+  isLoadingSubmitButton: PropTypes.bool,
+  initialValues: PropTypes.object,
+  openEmailPopup: PropTypes.func,
+  emailPopup: PropTypes.object,
+  entityTypes: PropTypes.object,
+  getEntityTypes: PropTypes.func,
+  naicsCodes: PropTypes.object,
+  getNaicsCodes: PropTypes.func,
+  businessRoles: PropTypes.object,
+  getBusinessRoles: PropTypes.func,
+  entityDocuments: PropTypes.object,
+  getEntityDocuments: PropTypes.func,
+  politicallyExposedPersons: PropTypes.object,
+  getPoliticallyExposedPersons: PropTypes.func,
+  cleareActiveStep: PropTypes.func,
+  postRegisterVelloci: PropTypes.func,
+  getIdentity: PropTypes.func,
+  loadSubmitButton: PropTypes.func,
+  mainContainer: PropTypes.object,
+  naicsCode: PropTypes.bool,
+  company: PropTypes.object,
+  updateCompany: PropTypes.func
 }
 
 VellociRegister.defaultProps = {
-  props: {
-    nextStep: () => {},
-    prevStep: () => {},
-    activeStep: 0,
-    countBeneficialOwners: () => {},
-    numberBeneficialOwners: 0,
-    isLoadingSubmitButton: false,
-    initialValues: {},
-    openEmailPopup: () => {},
-    emailPopup: {},
-    entityTypes: {},
-    getEntityTypes: () => {},
-    naicsCodes: {},
-    getNaicsCodes: () => {},
-    businessRoles: {},
-    getBusinessRoles: {},
-    entityDocuments: {},
-    getEntityDocuments: () => {},
-    politicallyExposedPersons: {},
-    getPoliticallyExposedPersons: () => {},
-    cleareActiveStep: () => {},
-    postRegisterVelloci: () => {},
-    getIdentity: () => {},
-    loadSubmitButton: () => {},
-    mainContainer: {},
-    naicsId: false,
-    company: null,
-    updateCompany: () => {}
-  }
+  nextStep: () => {},
+  prevStep: () => {},
+  activeStep: 0,
+  countBeneficialOwners: () => {},
+  numberBeneficialOwners: 0,
+  isLoadingSubmitButton: false,
+  initialValues: {},
+  openEmailPopup: () => {},
+  emailPopup: {},
+  entityTypes: {},
+  getEntityTypes: () => {},
+  naicsCodes: {},
+  getNaicsCodes: () => {},
+  businessRoles: {},
+  getBusinessRoles: () => {},
+  entityDocuments: {},
+  getEntityDocuments: () => {},
+  politicallyExposedPersons: {},
+  getPoliticallyExposedPersons: () => {},
+  cleareActiveStep: () => {},
+  postRegisterVelloci: () => {},
+  getIdentity: () => {},
+  loadSubmitButton: () => {},
+  mainContainer: {},
+  naicsCode: false,
+  company: null,
+  updateCompany: () => {}
 }
 
 export default VellociRegister

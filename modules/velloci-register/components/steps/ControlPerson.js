@@ -67,11 +67,12 @@ const DivRectangle = styled(Rectangle)`
 function ControlPerson({
   updateCompany,
   company,
-  naicsId,
+  naicsCode,
   formikProps,
   intl: { formatMessage },
   entityTypes,
-  naicsCodes
+  naicsCodes,
+  companyId
 }) {
   return (
     <GridControlPerson>
@@ -253,8 +254,8 @@ function ControlPerson({
                       }),
                       onChange: async (_, { value }) => {
                         formikProps.setFieldValue('controlPerson.naicsCode', value)
-                        if (naicsId !== value && company?.id) {
-                          await updateCompany(company.id, {
+                        if (naicsCode !== value && companyId) {
+                          await updateCompany(companyId, {
                             ...company,
                             naicsCode: value
                           })
@@ -290,18 +291,20 @@ ControlPerson.propTypes = {
   formikProps: PropTypes.object,
   entityTypes: PropTypes.object,
   naicsCodes: PropTypes.object,
-  naicsId: PropTypes.bool,
+  naicsCode: PropTypes.number,
   company: PropTypes.object,
-  updateCompany: PropTypes.func
+  updateCompany: PropTypes.func,
+  companyId: PropTypes.number
 }
 
 ControlPerson.defaultProps = {
   formikProps: {},
   entityTypes: {},
-  naicsCodes: {},
-  naicsId: false,
+  naicsCodes: { data: [] },
+  naicsCode: null,
   company: null,
-  updateCompany: () => {}
+  updateCompany: () => {},
+  companyId: null
 }
 
 export default injectIntl(ControlPerson)

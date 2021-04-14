@@ -1160,6 +1160,9 @@ class Detail extends Component {
                       onClose={closePopup}
                       loading={isSending}
                       actions={{ orderResolutionAccept, orderResolutionReopen }}
+                      ordersType={
+                        this.props?.router?.query?.type === 'sales' ? 'sale' : this.props?.router?.query?.type
+                      }
                     />
                   ) : null}
                   {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
@@ -1263,7 +1266,7 @@ class Detail extends Component {
                           <GridDataColumn width={valColumn}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </GridColumn>
-                      <GridColumn width={4} floated='right'>
+                      <GridColumn width={6} floated='right'>
                         <GridData>
                           <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
                             {ordersType === 'Sales' ? (
@@ -1285,6 +1288,22 @@ class Detail extends Component {
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData> */}
+                                    {order?.transactionFee ? (
+                                      <TableRowData>
+                                        <Table.Cell>
+                                          <FormattedMessage id='order.brokerageFee' defaultMessage='Transaction Fee' />
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>-{order.transactionFee}</Table.Cell>
+                                      </TableRowData>
+                                    ) : null}
+                                    {order?.brokerageFee ? (
+                                      <TableRowData>
+                                        <Table.Cell>
+                                          <FormattedMessage id='order.brokerageFee' defaultMessage='Brokerage Fee' />
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>-{order.brokerageFee}</Table.Cell>
+                                      </TableRowData>
+                                    ) : null}
                                   </Table.Body>
                                   <Table.Footer>
                                     <TableRowData>

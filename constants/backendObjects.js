@@ -307,3 +307,29 @@ export const ShippingStatusEnum = {
     text: 'Returned'
   }
 }
+
+/**
+ * @category Velloci Register
+ * @constant {Array<string>}
+ */
+export const COMPANY_REQUEST_KEYS = [
+  'associations',
+  'businessType',
+  'cin',
+  'dba',
+  'dunsNumber',
+  'enabled',
+  'industryType',
+  'naicsCode',
+  'name',
+  'phone',
+  'socialFacebook',
+  'socialInstagram',
+  'socialLinkedin',
+  'socialTwitter',
+  'tagline',
+  'tin',
+  'tinType',
+  'type',
+  'website'
+]

@@ -62,12 +62,12 @@ const BluePalletModal = props => {
       </Modal.Header>
       <Modal.Content>
         <ContentMainTitle as='h3'>
-          <FormattedMessage id='bluePallet.whatIs' defaultMessage='What is BluePallet Direct?' />
+          <FormattedMessage id='bluePallet.whatIs' defaultMessage='What is Blue Pallet Direct?' />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='BluePallet Direct anonymously displays selected inventory on our direct feed for all qualified members on the BluePallet platform to view and purchase. Selling and buying inventory through BluePallet Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that BluePallet direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='Blue Pallet Direct anonymously displays selected inventory on our direct feed for all qualified members on the Blue Pallet platform to view and purchase. Selling and buying inventory through Blue Pallet Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Pallet direct transactions are safe, secure, simple, and reliable.'
           />
         </AnswerBlock>
         <Grid>
@@ -78,7 +78,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='TradePass Verified Buyers' />
+                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='Trade Pass Verified Buyers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -101,7 +101,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='TradePass Verified Sellers' />
+                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='Trade Pass Verified Sellers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -119,7 +119,7 @@ const BluePalletModal = props => {
           </Grid.Column>
         </Grid>
         <FooterInfo>
-          <FormattedMessage id='bluePallet.footerInfo' defaultMessage='BluePallet Direct only displays inventory of BluePallet Members. BluePallet Direct does not manufacture, distribute, or possess any products listed on the BluePallet Direct Marketplace. BluePallet Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.' />
+          <FormattedMessage id='bluePallet.footerInfo' defaultMessage='Blue Pallet Direct only displays inventory of Blue Pallet Members. Blue Pallet Direct does not manufacture, distribute, or possess any products listed on the Blue Pallet Direct Marketplace. Blue Pallet Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.' />
         </FooterInfo>
       </Modal.Content>
     </ModalCustom>

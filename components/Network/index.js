@@ -4,12 +4,14 @@ import { ChevronDown } from 'react-feather'
 
 export const NetworkDropdown = styled(Dropdown)`
   &.ui.dropdown {
-    ${({ $widthSharedListings }) => ($widthSharedListings ? `width: ${$widthSharedListings}` : '50px')};
+    position: relative;
+    ${({ $widthSharedListings }) => ($widthSharedListings ? `width: ${$widthSharedListings}` : 'width: 50px')};
     height: 32px !important;
     margin: -5px 0 !important;
     border: 1px solid #dee2e6;
     border-radius: 3px;
-    padding: 6px 5px 6px 8px;
+    padding: 6px 19px 6px 8px;
+    background: #fff;
 
     > .text {
       svg {
@@ -27,6 +29,12 @@ export const NetworkDropdown = styled(Dropdown)`
         margin-right: 0px !important;
         margin-top: 0px !important;
       }
+    }
+    
+    > svg {
+      position: absolute;
+      top: 6px;
+      right: 5px;
     }
 
     &.active {
