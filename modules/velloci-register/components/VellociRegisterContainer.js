@@ -27,11 +27,9 @@ const mapStateToProps = store => ({
         ),
         city: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.city, ''),
         country: JSON.stringify({
-          countryId: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.country.id, ''),
-          hasProvinces: getSafe(
-            () => store.auth.identity.company.primaryBranch.deliveryAddress.address.country.hasProvinces,
-            ''
-          )
+          countryId: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.country.id, 1),
+          hasProvinces:
+            store?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.hasProvinces ?? true
         }),
         zip: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.zip.zip, ''),
         province: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.province.id, '')
