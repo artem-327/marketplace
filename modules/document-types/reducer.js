@@ -103,6 +103,21 @@ export default function reducer(state = initialState, action) {
         [payload.variable]: payload.value
       }
     }
+
+    case AT.DOCUMENT_TYPES_DELETE_DOCUMENT_TYPES_DATA_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.DOCUMENT_TYPES_DELETE_DOCUMENT_TYPES_DATA_FULFILLED:
+    case AT.DOCUMENT_TYPES_DELETE_DOCUMENT_TYPES_DATA_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }
