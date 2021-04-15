@@ -42,7 +42,6 @@ import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { AgreementModal } from '../components/modals'
 import { getCountryCodes } from '../modules/phoneNumber/actions'
 
 import { toggleMenu, openGlobalAddForm, setMainContainer } from '../modules/layout/actions'
@@ -481,7 +480,6 @@ class Layout extends Component {
           </ContentContainer>
           {copyrightContainer}
         </FlexContainer>
-        <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
         {takeover ? (
           <CustomDiv>
