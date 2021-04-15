@@ -1,3 +1,6 @@
+import { TCompanyRequest } from '../types'
+import { COMPANY_REQUEST_KEYS } from '../constants/backendObjects'
+
 /**
  * Function remove empty elements from object with one level (child).
  * @method
@@ -40,4 +43,25 @@ export const isEmptyObject = obj => {
   }
 
   return true
+}
+
+/**
+ * Prepares RequestCompany object for BE request
+ * @method
+ * @param {object} company
+ * @returns {TCompanyRequest | {}} Company request object
+ */
+export const getCompanyRequestObject = company => {
+  let companyRequest = {}
+  if (!company || isEmptyObject(company)) return companyRequest
+
+  COMPANY_REQUEST_KEYS.forEach(key => {
+    if (
+      (company[key] && !Array.isArray(company[key])) ||
+      (company[key] && typeof company[key] === 'object' && !isEmptyObject(company[key])) ||
+      (company[key] && Array.isArray(company[key]) && company[key].length)
+    )
+      companyRequest[key] = key === 'businessType' ? company[key]?.id : company[key]
+  })
+  return companyRequest
 }

@@ -247,6 +247,13 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
       }
     }
 
+    if (props?.naicsCode !== values?.controlPerson?.naicsCode && props?.companyId) {
+      await props?.updateCompany(props?.companyId, {
+        ...props?.company,
+        naicsCode: values?.controlPerson?.naicsCode
+      })
+    }
+
     await props.postRegisterVelloci(body, companyId, files)
     if (companyId) {
       Router.push('/companies/companies')
