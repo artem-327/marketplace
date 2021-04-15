@@ -252,15 +252,6 @@ function ControlPerson({
                         id: 'velloci.controlPerson.industryType.placeholder',
                         defaultMessage: 'Select industry type'
                       }),
-                      onChange: async (_, { value }) => {
-                        formikProps.setFieldValue('controlPerson.naicsCode', value)
-                        if (naicsCode !== value && companyId) {
-                          await updateCompany(companyId, {
-                            ...company,
-                            naicsCode: value
-                          })
-                        }
-                      },
                       search: true,
                       selection: true,
                       loading: naicsCodes?.loading,
