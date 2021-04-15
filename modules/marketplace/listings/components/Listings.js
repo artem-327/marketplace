@@ -408,6 +408,7 @@ class Listings extends Component {
       isMerchant,
       isCompanyAdmin,
       openPopup,
+      buyEligible,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -437,7 +438,13 @@ class Listings extends Component {
         id: 'marketplace.makeAnOffer',
         defaultMessage: 'Make an Offer'
       }),
-      callback: () => openPopup(row.rawData)
+      callback: () => {
+        if (!buyEligible) {
+          this.setState({ viewOnlyPopupOpen: true })
+          return
+        }
+        openPopup(row.rawData)
+      }
     }
     if (isMerchant || isCompanyAdmin) {
       rowActions.push(buttonInfo)
@@ -462,7 +469,8 @@ class Listings extends Component {
       sidebar: { openInfo },
       tableHandlersFiltersListings,
       activeMarketplaceFilter,
-      isOpenPopup
+      isOpenPopup,
+      buyEligible
     } = this.props
     const { columns, openFilterPopup, viewOnlyPopupOpen } = this.state
     let { formatMessage } = intl
@@ -553,7 +561,7 @@ class Listings extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        <AddCart openInfo={openInfo} />
+        <AddCart openInfo={openInfo} buyEnabled={buyEligible}/>
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
         {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })}/>}

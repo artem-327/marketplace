@@ -1855,7 +1855,8 @@ class AddCart extends Component {
     let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
     const {
       sidebarChanged,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      buyEnabled
     } = this.props
     const { activeTab } = this.state
     let { isOpen } = sidebar
@@ -1892,11 +1893,17 @@ class AddCart extends Component {
         ) : (
           <>
             <Menu pointing secondary>
-              {tabsMarketPlace.map((tab, i) => (
-                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                  {formatMessage(tab.text)}
-                </Menu.Item>
-              ))}
+              {tabsMarketPlace.map((tab, i) =>
+                tab.key === 'buy' && !buyEnabled ? (
+                  null
+                ) : (
+                  <Menu.Item
+                    onClick={() => this.setState({ activeTab: i })}
+                    active={activeTab === i}>
+                    {formatMessage(tab.text)}
+                  </Menu.Item>
+                )
+              )}
             </Menu>
             {isOpen ? this.getContent() : null}
           </>
@@ -1909,7 +1916,8 @@ class AddCart extends Component {
 AddCart.propTypes = {
   offer: object,
   order: object,
-  openInfo: boolean
+  openInfo: boolean,
+  buyEnabled: boolean
   // id: number,
   // pkgAmount: number,
   // pricing: object,
