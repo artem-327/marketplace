@@ -19,7 +19,9 @@ import {
   StyledForm,
   BottomMargedRow,
   LoginField,
-  LoginButton
+  LoginButton,
+  DivTerms,
+  LinkLabel
 } from '../constants/layout'
 import { initialValues, validationSchema } from '../constants/validation'
 
@@ -112,10 +114,29 @@ class Password extends Component {
                     </LoginField>
 
                     <LoginButton size='big' fluid>
-                      <FormattedMessage id='global.continue' defaultMessage='Continue'>
+                      <FormattedMessage id='global.signUp' defaultMessage='Sign up'>
                         {text => text}
                       </FormattedMessage>
                     </LoginButton>
+
+                    {!forgottenPassword && (
+                      <DivTerms>
+                        <FormattedMessage
+                          id='verification.termsText'
+                          defaultMessage='By signing up you agree to the Terms and Conditions'
+                          values={{
+                            terms: (
+                              <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                                <FormattedMessage
+                                  id='verification.termsAndConditions'
+                                  defaultMessage='Terms and Conditions'
+                                />
+                              </LinkLabel>
+                            )
+                          }}
+                        />
+                      </DivTerms>
+                    )}
                   </>
                 )
               }}
