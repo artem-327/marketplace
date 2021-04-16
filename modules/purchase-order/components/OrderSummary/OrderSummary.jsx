@@ -14,6 +14,8 @@ import { currency } from '~/constants/index'
 
 //Services
 import { GridSummary, LinkLabel } from './OrderSummary.styles'
+//Constants
+import { URL_TERMS } from '../../../../constants'
 /**
  * @category Purchase Order - Checkout
  * @component
@@ -85,7 +87,7 @@ const OrderSummary = props => {
                   </LinkLabel>
                 ),
                 conditionsOfUse: (
-                  <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabel href={URL_TERMS} target='_blank'>
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
                 )

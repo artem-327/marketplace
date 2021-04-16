@@ -6,6 +6,8 @@ import { defaultTabs } from './contants'
 import { getSafe } from '../../utils/functions'
 import { currency } from '~/constants/index'
 import { FormattedMessage } from 'react-intl'
+//Constants
+import { URL_TERMS } from '../../constants'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -104,7 +106,7 @@ export const initialState = {
           tos: (
             <FormattedMessage id='verification.termsOfService'>
               {text => (
-                <Link href='https://www.echosystem.com/terms-of-service'>
+                <Link href={URL_TERMS}>
                   <a target='_blank'>{text}</a>
                 </Link>
               )}
