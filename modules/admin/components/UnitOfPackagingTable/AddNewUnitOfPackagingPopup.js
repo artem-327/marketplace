@@ -9,6 +9,7 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
+import {makeGetUnitsOfMeasures} from '../../selectors'
 
 const initialFormValues = {
   val0: '',
@@ -202,22 +203,17 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   let cfg = state.admin.config['packaging-types']
+  const getUnitsOfMeasures = makeGetUnitsOfMeasures()
   return {
     config: cfg,
     measureOptions: state.admin.measureTypes.map(d => {
       return {
-        key: d.id,
+        id: d.id,
         text: d.name,
         value: d.id
       }
     }),
-    unitsOfMeasures: state.admin.unitsOfMeasures.map(d => {
-      return {
-        key: d.id,
-        text: d.name,
-        value: d.id
-      }
-    })
+    unitsOfMeasures: getUnitsOfMeasures(state)
   }
 }
 
