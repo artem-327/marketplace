@@ -338,7 +338,8 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    if (isMerchant || isOrderProcessing || isLoading) {
+
+    if (!(isCompanyAdmin || tutorialTab) || isLoading) {
       return null
     } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
       return (
