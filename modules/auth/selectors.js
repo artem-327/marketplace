@@ -8,7 +8,7 @@ const getEmail = state => state?.auth?.identity?.email
 const getUrl = state => state?.auth?.identity?.company?.website
 const getStreetAddress = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.streetAddress
 const getCity = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.city
-const getCountryId = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.id ?? true
+const getCountryId = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.id ?? 1
 const getHasProvinces = state =>
   state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.hasProvinces ?? true
 const getZip = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.zip?.zip
