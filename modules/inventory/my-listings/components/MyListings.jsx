@@ -463,12 +463,7 @@ class MyListings extends Component {
   }
 
   componentWillUnmount() {
-    const {
-      isModalDetailOpen,
-      closeModalDetail,
-      isProductInfoOpen,
-      closePopup
-    } = this.props
+    const { isModalDetailOpen, closeModalDetail, isProductInfoOpen, closePopup } = this.props
 
     this.props.handleVariableSave('myListingsFilters', this.state.filterValues)
     if (isModalDetailOpen) closeModalDetail()
@@ -949,32 +944,59 @@ class MyListings extends Component {
             content={r.productName}
             onContentClick={() => tableRowClickedProductOffer(r, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_EDIT)}
             rightAlignedContent={
-              r.expired || productStatusText ? (
-                <Popup
-                  size='small'
-                  inverted
-                  style={{
-                    fontSize: '12px',
-                    color: '#cecfd4',
-                    opacity: '0.9'
-                  }}
-                  header={
-                    <div>
-                      {r.expired && (
-                        <div>
-                          <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
-                        </div>
-                      )}
-                      {productStatusText && <div>{productStatusText}</div>}
-                    </div>
-                  }
-                  trigger={
-                    <div>
-                      <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
-                    </div>
-                  } // <div> has to be there otherwise popup will be not shown
-                />
-              ) : null
+              <>
+                {r.expired || productStatusText ? (
+                  <Popup
+                    size='small'
+                    inverted
+                    style={{
+                      fontSize: '12px',
+                      color: '#cecfd4',
+                      opacity: '0.9'
+                    }}
+                    header={
+                      <div>
+                        {r.expired && (
+                          <div>
+                            <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                          </div>
+                        )}
+                        {productStatusText && <div>{productStatusText}</div>}
+                      </div>
+                    }
+                    trigger={
+                      <div>
+                        <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
+                      </div>
+                    } // <div> has to be there otherwise popup will be not shown
+                  />
+                ) : null}
+                {r?.rawData?.minPkg > r?.rawData?.pkgAvailable ? (
+                  <Popup
+                    size='tiny'
+                    position='top center'
+                    inverted
+                    style={{
+                      fontSize: '12px',
+                      color: '#cecfd4',
+                      opacity: '0.9'
+                    }}
+                    header={
+                      <div>
+                        <FormattedMessage
+                          id='inventory.isBelowMin'
+                          defaultMessage='The available quantity is below the min quantity'
+                        />
+                      </div>
+                    }
+                    trigger={
+                      <div>
+                        <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
+                      </div>
+                    } // <div> has to be there otherwise popup will be not shown
+                  />
+                ) : null}
+              </>
             }
           />
         ),
