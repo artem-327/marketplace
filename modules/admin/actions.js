@@ -202,6 +202,14 @@ export function getMeasureTypesDataRequest() {
   }
 }
 
+export function getAllUnitsOfMeasuresDataRequest() {
+  return {
+    type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES,
+    payload: api.getAllUnitsOfMeasures()
+  }
+}
+
+
 export function getAllUnNumbersDataRequest() {
   return {
     type: AT.ADMIN_GET_UN_NUMBERS,

@@ -17,7 +17,9 @@ const initialFormValues = {
   val3: '',
   val4: '',
   val5: '',
-  val6: ''
+  val6: '',
+  val7: '',
+  val8: ''
 }
 
 const formValidation = Yup.object().shape({
@@ -27,12 +29,14 @@ const formValidation = Yup.object().shape({
   val3: Yup.number().required('Required'),
   val4: Yup.number().required('Required'),
   val5: Yup.number().required('Required'),
-  val6: Yup.number().required('Required')
+  val6: Yup.number().required('Required'),
+  val7: Yup.number().required('Required'),
+  val8: Yup.string().trim().min(1, 'Too short')
 })
 
 class AddNewUnitOfPackagingPopup extends Component {
   render() {
-    const { closeAddPopup, config, postNewRequest, measureOptions } = this.props
+    const { closeAddPopup, config, postNewRequest, measureOptions, unitsOfMeasures } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -52,7 +56,9 @@ class AddNewUnitOfPackagingPopup extends Component {
                 [config.edit[3].name]: parseFloat(values.val3),
                 [config.edit[4].name]: parseFloat(values.val4),
                 [config.edit[5].name]: parseFloat(values.val5),
-                [config.edit[6].name]: parseFloat(values.val6)
+                [config.edit[6].name]: parseFloat(values.val6),
+                [config.edit[7].name]: parseFloat(values.val7),
+                [config.edit[8].name]: parseFloat(values.val8)
               }
               try {
                 await postNewRequest(config, data)
@@ -143,6 +149,32 @@ class AddNewUnitOfPackagingPopup extends Component {
                 step={config.edit[6].step}
               />
             </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_weight'>
+              <Input
+                inputProps={{ type: config.edit[7].type, step: config.edit[7].step }}
+                label={
+                  <>
+                    {config.edit[7].title}
+                    <Required />
+                  </>
+                }
+                name='val7'
+                step={config.edit[7].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal'>
+              <Dropdown
+                label={
+                  <>
+                    {config.edit[8].title}
+                    <Required />
+                  </>
+                }
+                options={unitsOfMeasures}
+                name='val8'
+                inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
+              />
+            </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset data-test='admin_add_unit_packaging_cancel_btn'>
                 <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -173,6 +205,13 @@ const mapStateToProps = state => {
   return {
     config: cfg,
     measureOptions: state.admin.measureTypes.map(d => {
+      return {
+        id: d.id,
+        text: d.name,
+        value: d.id
+      }
+    }),
+    unitsOfMeasures: state.admin.unitsOfMeasures.map(d => {
       return {
         id: d.id,
         text: d.name,

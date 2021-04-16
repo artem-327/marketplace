@@ -17,6 +17,7 @@ export const initialState = {
   altCasNamesRows: [],
   documentTypesRows: [],
   measureTypes: [],
+  unitsOfMeasures: [],
   hazardClasses: [],
   packagingGroups: [],
   unNumbersFiltered: [],
@@ -316,6 +317,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         measureTypes: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_FULFILLED: {
+      return {
+        ...state,
+        unitsOfMeasures: action.payload
       }
     }
 

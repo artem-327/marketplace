@@ -227,6 +227,27 @@ export const config = {
         type: 'number',
         step: 1,
         required: true
+      },
+      {
+        name: 'weight',
+        title: (
+          <FormattedMessage id='global.weight' defaultMessage='Weight'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'weightUnit',
+        title: (
+          <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
       }
     ],
     api: {
