@@ -814,7 +814,13 @@ class Filter extends Component {
                       type: 'number',
                       label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
                       labelPosition: 'left',
-                      fluid: true
+                      fluid: true,
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace('-', '')
+                        e.target.value = e.target.value.replace('+', '')
+                        e.target.value = e.target.value.replace('.', '')
+                        e.target.value = parseInt(e.target.value)
+                      }
                     }}
                   />
                 </GridColumn>
@@ -826,7 +832,13 @@ class Filter extends Component {
                       type: 'number',
                       label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
                       labelPosition: 'left',
-                      fluid: true
+                      fluid: true,
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace('-', '')
+                        e.target.value = e.target.value.replace('+', '')
+                        e.target.value = e.target.value.replace('.', '')
+                        e.target.value = parseInt(e.target.value)
+                      }
                     }}
                   />
                 </GridColumn>
@@ -845,7 +857,12 @@ class Filter extends Component {
                       min: 0.001,
                       step: 0.001,
                       placeholder: '0.000',
-                      fluid: true
+                      fluid: true,
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace('-', '')
+                        e.target.value = e.target.value.replace('+', '')
+                        e.target.value = parseFloat(e.target.value)
+                      }
                     },
                     formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                     currencySymbol,
@@ -860,7 +877,12 @@ class Filter extends Component {
                       min: 0.001,
                       step: 0.001,
                       placeholder: '0.000',
-                      fluid: true
+                      fluid: true,
+                      onChange: (e) => {
+                        e.target.value = e.target.value.replace('-', '')
+                        e.target.value = e.target.value.replace('+', '')
+                        e.target.value = parseFloat(e.target.value)
+                      }
                     },
                     formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                     currencySymbol,
