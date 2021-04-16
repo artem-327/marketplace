@@ -14,6 +14,7 @@ const getHasProvinces = state =>
 const getZip = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.zip?.zip
 const getProvince = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.province?.id
 const getDba = state => state?.auth?.identity?.company?.dba
+const getCompanyName = state => state?.auth?.identity?.company?.name
 const getBussinessType = state => state?.auth?.identity?.company?.businessType?.id
 const getEin = state => state?.auth?.identity?.company?.tin
 const getAppInfo = state => state?.auth?.identity?.appInfo
@@ -31,6 +32,7 @@ export const makeGetHasProvinces = () => createSelector([getHasProvinces], hasPr
 export const makeGetZip = () => createSelector([getZip], zip => zip)
 export const makeGetProvince = () => createSelector([getProvince], province => province)
 export const makeGetDba = () => createSelector([getDba], dba => dba)
+export const makeGetCompanyName = () => createSelector([getCompanyName], name => name)
 export const makeGetBussinessType = () => createSelector([getBussinessType], businessType => businessType)
 export const makeGetEin = () => createSelector([getEin], ein => ein)
 export const makeGetAppInfo = () => createSelector([getAppInfo], appInfo => appInfo)
