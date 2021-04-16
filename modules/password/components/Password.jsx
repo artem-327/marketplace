@@ -29,6 +29,8 @@ import { withToastManager } from 'react-toast-notifications'
 
 import Logo from '~/assets/images/login/logo-bluepallet.png'
 import Icon from '~/assets/images/login/icon-bluepallet.png'
+//Constants
+import { URL_TERMS } from '../../../constants'
 
 class Password extends Component {
   render() {
@@ -86,7 +88,10 @@ class Password extends Component {
                     <LoginField>
                       <Input
                         name='securityCode'
-                        label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })}
+                        label={formatMessage({
+                          id: 'verification.labels.securityCode',
+                          defaultMessage: 'Security Code'
+                        })}
                       />
                     </LoginField>
                     <LoginField>
@@ -126,7 +131,7 @@ class Password extends Component {
                           defaultMessage='By signing up you agree to the Terms and Conditions'
                           values={{
                             terms: (
-                              <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                              <LinkLabel href={URL_TERMS} target='_blank'>
                                 <FormattedMessage
                                   id='verification.termsAndConditions'
                                   defaultMessage='Terms and Conditions'
