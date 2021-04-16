@@ -30,7 +30,8 @@ import {
   makeGetEin,
   makeGetAppInfo,
   makeGetCompanyRequest,
-  makeGetCompanyId
+  makeGetCompanyId,
+  makeGetCompanyName
 } from '../../auth/selectors'
 import { makeGetMainContainer } from '../../layout/selectors'
 
@@ -48,6 +49,7 @@ const makeMapStateToProps = () => {
   const getZip = makeGetZip()
   const getProvince = makeGetProvince()
   const getDba = makeGetDba()
+  const getCompanyName = makeGetCompanyName()
   const getBussinessType = makeGetBussinessType()
   const getEin = makeGetEin()
   const getMainContainer = makeGetMainContainer()
@@ -80,7 +82,7 @@ const makeMapStateToProps = () => {
         },
         controlPerson: {
           isControlPerson: false,
-          legalBusinessName: getDba(state),
+          legalBusinessName: getCompanyName(state),
           entityType: '', // getBussinessType(state), //this is not correct match for entityType from GET payments/velloci/enums/entity-types. 15.4.2021 Tomáš Drlíček knows about this and it will be fix in the future by BE developers
           industryType: '',
           isEin: true,
