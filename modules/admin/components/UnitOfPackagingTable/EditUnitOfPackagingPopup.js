@@ -24,7 +24,7 @@ const formValidation = Yup.object().shape({
 
 class EditUnitOfPackagingPopup extends Component {
   render() {
-    const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions } = this.props
+    const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions, unitsOfMeasures } = this.props
 
     const { id } = popupValues
 
@@ -60,7 +60,7 @@ class EditUnitOfPackagingPopup extends Component {
                 [config.edit[5].name]: parseFloat(values.val5),
                 [config.edit[6].name]: parseFloat(values.val6),
                 [config.edit[7].name]: parseFloat(values.val7),
-                [config.edit[8].name]: parseFloat(values.val8)
+                [config.edit[8].name]: values.val8
               }
               try {
                 await putEditedDataRequest(config, id, data)
@@ -172,7 +172,7 @@ class EditUnitOfPackagingPopup extends Component {
                     <Required />
                   </>
                 }
-                options={measureOptions}
+                options={unitsOfMeasures}
                 name='val8'
                 inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
               />
@@ -209,7 +209,14 @@ const mapStateToProps = state => {
     popupValues: state.admin.popupValues,
     measureOptions: state.admin.measureTypes.map(d => {
       return {
-        id: d.id,
+        key: d.id,
+        text: d.name,
+        value: d.id
+      }
+    }),
+    unitsOfMeasures: state.admin.unitsOfMeasures.map(d => {
+      return {
+        key: d.id,
         text: d.name,
         value: d.id
       }

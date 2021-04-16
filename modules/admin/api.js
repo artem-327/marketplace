@@ -27,9 +27,8 @@ export async function getMeasureTypes() {
   return data
 }
 
-export async function getAllUnitsOfMeasures() {
-  const { data } = await api.get('/prodex/api/units')
-  return data
+export function getAllUnitsOfMeasures() {
+  return api.get('/prodex/api/units')
 }
 
 export async function getHazardClasses() {

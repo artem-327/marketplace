@@ -203,9 +203,26 @@ export function getMeasureTypesDataRequest() {
 }
 
 export function getAllUnitsOfMeasuresDataRequest() {
-  return {
-    type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES,
-    payload: api.getAllUnitsOfMeasures()
+  return async dispatch => {
+    await dispatch({
+      type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_PENDING
+    })
+    await api
+      .getAllUnitsOfMeasures()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_REJECTED,
+            error: err
+          })
+      )
   }
 }
 
