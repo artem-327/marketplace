@@ -256,7 +256,7 @@ class Layout extends Component {
     const {
       children,
       router: { pathname },
-      title = 'Echo exchange',
+      title = 'Blue Pallet',
       auth,
       identity,
       takeOverCompanyFinish,
@@ -336,7 +336,7 @@ class Layout extends Component {
       <MainContainer fluid className={mainClass}>
         <Head>
           <title>
-            {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo exchange' })} / {title}
+            {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Blue Pallet' })} / {title}
           </title>
         </Head>
 

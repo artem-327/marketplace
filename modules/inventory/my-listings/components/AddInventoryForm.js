@@ -1917,7 +1917,7 @@ class AddInventoryForm extends Component {
                                                           <br />
                                                           <FormattedMessage
                                                             id='addInventory.uploadSpecSheet.description3'
-                                                            defaultMessage={`IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.`}
+                                                            defaultMessage={`IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Blue Pallet's Terms and Conditions.`}
                                                           />
                                                         </>
                                                       }

@@ -165,7 +165,7 @@ class DwollaRegister extends Component {
                       <Header as='h2'>
                         <FormattedMessage
                           id='dwolla.thanksForJoining'
-                          defaultMessage='Thank you for joining the Echo Marketplace.'
+                          defaultMessage='Thank you for joining the Blue Pallet Marketplace.'
                         />
                       </Header>
                     </GridColumn>
@@ -518,7 +518,7 @@ class DwollaRegister extends Component {
                       <GridColumn>
                         <FormattedMessage
                           id='dwolla.controllerDesc1'
-                          defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
+                          defaultMessage='To assure compliance with US financial institution policies, Blue Pallet must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
                         />
                       </GridColumn>
                     </GridRow>

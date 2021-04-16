@@ -275,7 +275,7 @@ class PurchaseOrderShipping extends Component {
                                 <GridColumn computer={16}>
                                   <FormattedMessage
                                     id='order.weightLimitExceeded'
-                                    defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                    defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Blue Pallet team, who will send you an email with Quote Id.`}
                                   />
                                 </GridColumn>
                               </GridRow>
@@ -295,7 +295,7 @@ class PurchaseOrderShipping extends Component {
                                     <CustomDivContent>
                                       <FormattedMessage
                                         id='cart.noShippingQuotes.processManually'
-                                        defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                        defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Blue Pallet team, who will send you an email with Quote Id.`}
                                       />
                                     </CustomDivContent>
                                   </Rectangle>

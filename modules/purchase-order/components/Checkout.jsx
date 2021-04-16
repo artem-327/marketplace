@@ -133,7 +133,7 @@ const Checkout = props => {
   return (
     <>
       <Head>
-        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: 'Echosystem / Checkout' })}</title>
+        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: 'Blue Pallet / Checkout' })}</title>
       </Head>
       <ContainerMain fluid>
         <HeaderRow itemsCount={cartItems.length} />

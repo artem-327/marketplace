@@ -79,7 +79,7 @@ const OrderSummary = props => {
           {allAccepted ? (
             <FormattedMessage
               id='checkout.summary.byPlacingYourOrder'
-              defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+              defaultMessage='By placing your order, you agree to Blue Pallet’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
                   <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>

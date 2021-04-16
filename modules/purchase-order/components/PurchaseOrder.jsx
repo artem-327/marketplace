@@ -514,8 +514,8 @@ class PurchaseOrder extends Component {
                                           ? 'cart.weightLimitExceeded.content'
                                           : 'cart.palletLimitExceeded.content',
                                         defaultMessage: cart.weightLimitExceed
-                                          ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                          : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                          ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Blue Pallet team, who will send you an email with Quote Id.`
+                                          : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Blue Pallet team, who will send you an email with Quote Id.`
                                       },
                                       { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr }
                                     )}
@@ -547,7 +547,7 @@ class PurchaseOrder extends Component {
                                 <DivContent>
                                   <FormattedMessage
                                     id='cart.noShippingQuotes.processManually'
-                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Blue Pallet team, who will send you an email with Quote Id.`}
                                   />
                                 </DivContent>
                               </CustomRectangle>

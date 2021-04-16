@@ -66,11 +66,11 @@ class TransactionInfo extends Component {
               </RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='Echo System Transaction' />
+              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='Blue Pallet Transaction' />
               <RightSpan>{echoSystemTransaction}</RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Echo Support Phone' />
+              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Blue Pallet Support Phone' />
               <RightSpan>{echoSupportPhone}</RightSpan>
             </SmallerTextColumn>
           </GridRow>
