@@ -113,16 +113,9 @@ export function login(username, password) {
         if (isOrderOperator || identity.roles.find(role => role.name === 'Echo Operator')) {
           urlPage = '/operations/orders'
         }
-        if (
-          !(
-            identity.roles.find(role => role.id === 2 || role.id === 67) && // 2 = Company Admin, 67 = Guest Company Admin
-            getSafe(() => identity.company.reviewRequested, false)
-          )
-        ) {
-          isAdmin
-            ? Router.push('/dashboard')
-            : Router.push(urlPage)
-        }
+
+        if (isAdmin) Router.push('/dashboard')
+        else Router.push(urlPage)
 
         return authPayload
       }
