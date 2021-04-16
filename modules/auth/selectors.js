@@ -8,9 +8,9 @@ const getEmail = state => state?.auth?.identity?.email
 const getUrl = state => state?.auth?.identity?.company?.website
 const getStreetAddress = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.streetAddress
 const getCity = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.city
-const getCountryId = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.id ?? 1
+const getCountryId = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.id
 const getHasProvinces = state =>
-  state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.hasProvinces ?? true
+  state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.hasProvinces
 const getZip = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.zip?.zip
 const getProvince = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.province?.id
 const getDba = state => state?.auth?.identity?.company?.dba
@@ -27,8 +27,8 @@ export const makeGetEmail = () => createSelector([getEmail], email => email)
 export const makeGetUrl = () => createSelector([getUrl], url => url)
 export const makeGetStreetAddress = () => createSelector([getStreetAddress], streetAddress => streetAddress)
 export const makeGetCity = () => createSelector([getCity], city => city)
-export const makeGetCountryId = () => createSelector([getCountryId], countryId => countryId)
-export const makeGetHasProvinces = () => createSelector([getHasProvinces], hasProvinces => hasProvinces)
+export const makeGetCountryId = () => createSelector([getCountryId], countryId => countryId ?? 1)
+export const makeGetHasProvinces = () => createSelector([getHasProvinces], hasProvinces => hasProvinces ?? true)
 export const makeGetZip = () => createSelector([getZip], zip => zip)
 export const makeGetProvince = () => createSelector([getProvince], province => province)
 export const makeGetDba = () => createSelector([getDba], dba => dba)
