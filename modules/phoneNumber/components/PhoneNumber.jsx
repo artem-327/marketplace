@@ -52,7 +52,7 @@ const StyledInputMask = styled(InputMask)`
   }
 `
 
-function splitPhoneNumber(phone, phoneCountryCodes) {
+function splitPhoneNumber(phone, phoneCountryCodes, maxPhoneNumberLength) {
   let filtered = phoneCountryCodes.filter(
     (
       d // filter possible country codes
@@ -66,10 +66,10 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
   if (sorted.length > 0) {
     return {
       phoneCountryCode: sorted[0].value,
-      phoneNumber: phone.slice(sorted[0].value.length)
+      phoneNumber: phone.slice(sorted[0].value.length).substring(0, maxPhoneNumberLength)
     }
   } else {
-    return { phoneCountryCode: '', phoneNumber: phone }
+    return { phoneCountryCode: '', phoneNumber: phone.substring(0, maxPhoneNumberLength) }
   }
 }
 /**
@@ -84,12 +84,12 @@ export default class PhoneNumber extends Component {
   }
 
   componentDidMount = async () => {
-    const { defaultCountryCode } = this.props
+    const { defaultCountryCode, maxPhoneNumberLength } = this.props
 
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
-    phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
+    phone = splitPhoneNumber(phone, this.props.phoneCountryCodes, maxPhoneNumberLength)
     this.setState({
       phoneCountryCode: phone.phoneCountryCode ? phone.phoneCountryCode : defaultCountryCode,
       phoneNumber: phone.phoneNumber,
@@ -104,7 +104,7 @@ export default class PhoneNumber extends Component {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
 
     if (phone !== this.state.phoneFull) {
-      phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
+      phone = splitPhoneNumber(phone, this.props.phoneCountryCodes, this.props.maxPhoneNumberLength)
 
       this.setState({
         phoneCountryCode: phone.phoneCountryCode
@@ -155,13 +155,14 @@ export default class PhoneNumber extends Component {
 
   beforeMaskedStateChange = ({ currentState, nextState, previousState }) => {
     let { value } = nextState
-    const { name, setFieldValue, setFieldTouched } = this.props
+    const { name, setFieldValue, setFieldTouched, maxPhoneNumberLength } = this.props
 
     if (currentState) {
       if (currentState.value && currentState.value.charAt(0) === '+') {
+        // Entered number starts with '+' -> '+' can not be entered, only by CTRL+V
         const enteredNumber = currentState.value.replace(/\D/g, '')
 
-        let phone = splitPhoneNumber(enteredNumber, this.props.phoneCountryCodes)
+        let phone = splitPhoneNumber(enteredNumber, this.props.phoneCountryCodes, maxPhoneNumberLength)
         if (phone.phoneCountryCode) {
           value = phone.phoneNumber
           const phoneFull = phone.phoneCountryCode + phone.phoneNumber
@@ -173,7 +174,7 @@ export default class PhoneNumber extends Component {
               phoneFull
             },
             () => {
-              setFieldValue(name, '+' + enteredNumber)
+              setFieldValue(name, '+' + phoneFull)
               setFieldTouched(name, true, true)
 
               return {
@@ -192,8 +193,10 @@ export default class PhoneNumber extends Component {
         const currentNumber = currentState.value.replace(/\D/g, '')
         const nextNumber = nextState.value.replace(/\D/g, '')
         const previousNumber = previousState.value.replace(/\D/g, '')
-        const newValue = currentNumber === previousNumber ? nextNumber : currentNumber
+        let newValue = currentNumber === previousNumber ? nextNumber : currentNumber
         // end of workaround
+
+        newValue = newValue.substring(0, maxPhoneNumberLength)
 
         const phone = { ...this.state, ...{ phoneNumber: newValue } }
         const phoneFull =
@@ -293,7 +296,8 @@ PhoneNumber.propTypes = {
   clearable: bool,
   placeholder: string,
   background: string,
-  width: number
+  width: number,
+  maxPhoneNumberLength: number
 }
 
 PhoneNumber.defaultProps = {
@@ -311,5 +315,6 @@ PhoneNumber.defaultProps = {
   clearable: false,
   placeholder: null,
   background: null,
-  width: null
+  width: null,
+  maxPhoneNumberLength: 10 // length without a country code
 }
