@@ -148,7 +148,7 @@ AgreementModal.defaultProps = {
 const mapStateToProps = ({ auth, settings }) => {
   return {
     ...settings.agreementModal,
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
+    systemCompanyName: auth?.identity?.appInfo?.systemCompanyName,
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
   }
 }

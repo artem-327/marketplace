@@ -431,7 +431,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { companies, companyGenericProduct }) => {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
+    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,

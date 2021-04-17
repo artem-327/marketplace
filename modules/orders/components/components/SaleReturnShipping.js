@@ -448,7 +448,7 @@ function mapStateToProps(state) {
   const { detail } = orders
 
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
+    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
     order: detail,
     orderId: detail.id,
     isSending: orders.isSending,
