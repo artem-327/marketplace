@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import Router from 'next/router'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -60,7 +61,8 @@ const Checkout = props => {
     purchaseHazmatEligible,
     intl: { formatMessage },
     loading,
-    isThirdPartyConnectionException
+    isThirdPartyConnectionException,
+    systemCompanyName
   } = props
 
   // Similar to call componentDidMount:
@@ -133,7 +135,7 @@ const Checkout = props => {
   return (
     <>
       <Head>
-        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: 'Blue Pallet / Checkout' })}</title>
+        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' }, { companyName: systemCompanyName })}</title>
       </Head>
       <ContainerMain fluid>
         <HeaderRow itemsCount={cartItems.length} />
@@ -265,4 +267,10 @@ Checkout.defaultProps = {
   loading: false
 }
 
-export default injectIntl(Checkout)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(Checkout))

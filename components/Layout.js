@@ -256,7 +256,7 @@ class Layout extends Component {
     const {
       children,
       router: { pathname },
-      title = 'Blue Pallet',
+      title = '',
       auth,
       identity,
       takeOverCompanyFinish,
@@ -287,7 +287,8 @@ class Layout extends Component {
       inviteDetailCompany,
       buttonActionsDetailRow,
       isOpenInviteModal,
-      triggerModal
+      triggerModal,
+      systemCompanyName
     } = this.props
 
     const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
@@ -326,8 +327,8 @@ class Layout extends Component {
         <CopyrightContainer>
           <FormattedMessage
             id='global.copyright'
-            defaultMessage={`Copyright ${moment().format('YYYY')} Blue Pallet`}
-            values={{ currentYear: moment().format('YYYY') }}
+            defaultMessage={`Copyright ${moment().format('YYYY')} {companyName}`}
+            values={{ currentYear: moment().format('YYYY'), companyName: systemCompanyName }}
           />
         </CopyrightContainer>
       )
@@ -336,7 +337,7 @@ class Layout extends Component {
       <MainContainer fluid className={mainClass}>
         <Head>
           <title>
-            {formatMessage({ id: 'global.echoTitle', defaultMessage: 'Blue Pallet' })} / {title}
+            {systemCompanyName} / {title}
           </title>
         </Head>
 
@@ -557,6 +558,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
+    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
     identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,

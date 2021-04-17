@@ -32,6 +32,7 @@ class AgreementModal extends Component {
       additionalProps,
       tos,
       isCompanyAdmin,
+      systemCompanyName,
       intl: { formatMessage }
     } = this.props
 
@@ -49,7 +50,7 @@ class AgreementModal extends Component {
                   values={{
                     echosTermsOfService: (
                       <a href={URL_TERMS} target='_blank'>
-                        {formatMessage({ id: 'verification.echosTOS' })}
+                        {formatMessage({ id: 'verification.echosTOS' }, { companyName: systemCompanyName })}
                       </a>
                     ),
                     echosTermsOfUse: (
@@ -83,7 +84,7 @@ class AgreementModal extends Component {
                   values={{
                     echosTermsOfService: (
                       <a href={URL_TERMS} target='_blank'>
-                        {formatMessage({ id: 'verification.echosTOS' })}
+                        {formatMessage({ id: 'verification.echosTOS' }, { companyName: systemCompanyName })}
                       </a>
                     ),
                     echosTermsOfUse: (
@@ -147,6 +148,7 @@ AgreementModal.defaultProps = {
 const mapStateToProps = ({ auth, settings }) => {
   return {
     ...settings.agreementModal,
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
   }
 }

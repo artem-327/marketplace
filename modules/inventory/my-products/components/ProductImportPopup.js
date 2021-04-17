@@ -140,13 +140,21 @@ class ProductImportPopup extends Component {
       companies,
       companyGenericProduct,
       productOffer,
-      loading
+      loading,
+      systemCompanyName
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
 
     const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
-      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+      if (opt.titleId && opt.titleText)
+        return {
+          ...opt,
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: systemCompanyName }),
+          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName })
+        }
+      else
+        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName }) }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -423,6 +431,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { companies, companyGenericProduct }) => {
   return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
