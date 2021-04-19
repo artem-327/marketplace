@@ -574,6 +574,16 @@ class Filter extends Component {
     })
   }
 
+  smartIntegerFilter = event => {
+    event.target.value = event.target.value.replace(/[+.-]/g, '')
+    event.target.value = parseInt(event.target.value)
+  }
+
+  smartFloatFilter = event => {
+    event.target.value = event.target.value.replace(/[+-]/g, '')
+    event.target.value = parseFloat(event.target.value)
+  }
+
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
@@ -815,12 +825,7 @@ class Filter extends Component {
                       label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
                       labelPosition: 'left',
                       fluid: true,
-                      onChange: (e) => {
-                        e.target.value = e.target.value.replace('-', '')
-                        e.target.value = e.target.value.replace('+', '')
-                        e.target.value = e.target.value.replace('.', '')
-                        e.target.value = parseInt(e.target.value)
-                      }
+                      onChange: (e) => { this.smartIntegerFilter(e) }
                     }}
                   />
                 </GridColumn>
@@ -833,12 +838,7 @@ class Filter extends Component {
                       label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
                       labelPosition: 'left',
                       fluid: true,
-                      onChange: (e) => {
-                        e.target.value = e.target.value.replace('-', '')
-                        e.target.value = e.target.value.replace('+', '')
-                        e.target.value = e.target.value.replace('.', '')
-                        e.target.value = parseInt(e.target.value)
-                      }
+                      onChange: (e) => { this.smartIntegerFilter(e) }
                     }}
                   />
                 </GridColumn>
@@ -858,11 +858,7 @@ class Filter extends Component {
                       step: 0.001,
                       placeholder: '0.000',
                       fluid: true,
-                      onChange: (e) => {
-                        e.target.value = e.target.value.replace('-', '')
-                        e.target.value = e.target.value.replace('+', '')
-                        e.target.value = parseFloat(e.target.value)
-                      }
+                      onChange: (e) => { this.smartFloatFilter(e) }
                     },
                     formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                     currencySymbol,
@@ -878,11 +874,7 @@ class Filter extends Component {
                       step: 0.001,
                       placeholder: '0.000',
                       fluid: true,
-                      onChange: (e) => {
-                        e.target.value = e.target.value.replace('-', '')
-                        e.target.value = e.target.value.replace('+', '')
-                        e.target.value = parseFloat(e.target.value)
-                      }
+                      onChange: (e) => { this.smartFloatFilter(e) }
                     },
                     formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                     currencySymbol,
