@@ -446,16 +446,12 @@ class Listings extends Component {
         openPopup(row.rawData)
       }
     }
-    if (isMerchant || isCompanyAdmin) {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-      /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
-      rowActions.push(buttonMakeAnOffer)
-    } else {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-      rowActions.push(buttonMakeAnOffer)
-    }
+
+    /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
+    rowActions.push(buttonInfo)
+    rowActions.push(buttonBuy)
+    !row?.brokeredOffer && rowActions.push(buttonMakeAnOffer)
+
     return rowActions
   }
 
@@ -561,10 +557,10 @@ class Listings extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        <AddCart openInfo={openInfo} buyEnabled={buyEligible}/>
+        <AddCart openInfo={openInfo} buyEnabled={buyEligible} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
-        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })}/>}
+        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })} />}
       </Container>
     )
   }
