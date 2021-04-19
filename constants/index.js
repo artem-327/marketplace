@@ -136,3 +136,8 @@ export const ORDER_RESOLUTION_PHONE_NUMBER = '833-321-3246'
  * @constant {string}
  */
 export const currencyUSSymbol = 'US$'
+
+/**
+ * @constant {string}
+ */
+export const URL_TERMS = 'https://www.bluepallet.io/terms'

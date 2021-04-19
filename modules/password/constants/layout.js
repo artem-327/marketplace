@@ -136,3 +136,15 @@ export const VersionWrapper = styled.div`
   color: #848893;
   line-height: 49px;
 `
+
+export const DivTerms = styled.div`
+  font-size: 12px;
+  line-height: 1.17;
+  color: #404040;
+  text-align: center;
+  margin-top: 29px;
+`
+
+export const LinkLabel = styled.a`
+  color: #2599d5;
+`

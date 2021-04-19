@@ -42,7 +42,6 @@ import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { AgreementModal } from '../components/modals'
 import { getCountryCodes } from '../modules/phoneNumber/actions'
 
 import { toggleMenu, openGlobalAddForm, setMainContainer } from '../modules/layout/actions'
@@ -66,6 +65,8 @@ import InviteModal from '../modules/my-network/components/InviteModal/InviteModa
 import { search, buttonActionsDetailRow, triggerModal } from '../modules/my-network/actions'
 //Services
 import { getRowDetail } from '../modules/my-network/MyNetwork.services'
+//Constants
+import { URL_TERMS } from '../constants'
 
 export const IconMinimize2 = styled(Minimize2)`
   text-align: center;
@@ -404,7 +405,7 @@ class Layout extends Component {
                   )}
                   <Dropdown.Item
                     as={Menu.Item}
-                    onClick={() => window.open('https://www.echosystem.com/terms-of-service')}
+                    onClick={() => window.open(URL_TERMS)}
                     data-test='navigation_menu_user_terms_of_service_drpdn'>
                     {formatMessage({
                       id: 'global.termsOfService',
@@ -481,7 +482,6 @@ class Layout extends Component {
           </ContentContainer>
           {copyrightContainer}
         </FlexContainer>
-        <AgreementModal onAccept={agreeWithTOS} isOpen={isOpen} />
 
         {takeover ? (
           <CustomDiv>

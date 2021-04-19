@@ -129,6 +129,11 @@ class ModalDetail extends Component {
 
     searchManufacturers('', 200)
     this.switchTab(modalActiveTab)
+    if (detailValues?.minPkg) {
+      detailValues?.minPkg > detailValues?.pkgAvailable
+        ? this.setState({ isOverMinPkgs: true })
+        : this.setState({ isOverMinPkgs: false })
+    }
   }
 
   fetchIfNoData = (name, fn) => {
