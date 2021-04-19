@@ -122,10 +122,10 @@ class AddEditLogisticProvider extends Component {
                   await postNewLogisticsProvider(payload)
                   datagrid.loadData()
                 }
+                closePopup()
               } catch {
               } finally {
                 setSubmitting(false)
-                closePopup()
               }
             }}
             render={props => {
