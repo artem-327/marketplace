@@ -155,15 +155,13 @@ export const getRowDetail = (row, detailRow) => {
       telephoneNumber: r?.connectedCompany?.phone,
       inBusinessSince: r?.connectedCompany?.inBusinessSince,
       numberOfEmployees: r?.connectedCompany?.numberOfEmployees
-        ? {
-            numberOfEmployees: (
-              <FormattedNumber
-                minimumFractionDigits={0}
-                maximumFractionDigits={0}
-                value={r?.connectedCompany?.numberOfEmployees || 0}
-              />
-            )
-          }
+        ? (
+            <FormattedNumber
+              minimumFractionDigits={0}
+              maximumFractionDigits={0}
+              value={r?.connectedCompany?.numberOfEmployees || 0}
+            />
+          )
         : null
     },
     marketingData: {
