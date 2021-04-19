@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import React, { Component } from 'react'
 import * as PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { MoreVertical } from 'react-feather'
@@ -47,7 +47,7 @@ const DivIcons = styled.div`
 export const RowDropdown = styled(Dropdown)`
   display: block !important;
   height: 100% !important;
-  margin: auto 0;
+  margin: 0;
 
   &:hover {
     font-weight: bold;
@@ -56,6 +56,19 @@ export const RowDropdown = styled(Dropdown)`
 
   .dropdown.icon {
     display: none;
+  }
+  
+  &[aria-expanded="true"].active.visible .menu.transition.visible {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 20px !important;
+  }
+  
+  &[aria-expanded="true"].active.visible.upward .menu.transition.visible {
+    bottom: auto !important;
+    transform: translateY(-100%) !important;
+    margin-top: 0 !important;
   }
 `
 
@@ -77,6 +90,11 @@ export const RowDropdownIcon = styled.div`
 `
 
 class ActionCell extends Component {
+  constructor(props) {
+    super(props)
+    this.actionRef = React.createRef()
+  }
+
   getActionItems = (actions = [], row) => {
     if (!getSafe(() => actions.length, false)) return
     return actions.map((a, i) =>
@@ -99,6 +117,27 @@ class ActionCell extends Component {
       <DivRow>
         {getActions ? (
           <RowDropdown
+            ref={this.actionRef}
+            onOpen={(e, data) => {
+              const dropdownElement = this.actionRef.current.ref.current
+              const dropdownList = dropdownElement.querySelector('.menu')
+              const tableResponsive = dropdownElement.closest('div.table-responsive')
+              dropdownList.setAttribute('style', `top: ${dropdownElement.getBoundingClientRect().top}px !important;`)
+
+              tableResponsive.addEventListener("scroll", () => {
+                this.actionRef.current?.close()
+              })
+            }}
+            onClose={(e, data) => {
+              const dropdownElement = this.actionRef.current.ref.current
+              const dropdownList = dropdownElement.querySelector('.menu')
+              const tableResponsive = dropdownElement.closest('div.table-responsive')
+              dropdownList.setAttribute('style', ``)
+
+              tableResponsive.removeEventListener("scroll", () => {
+                this.actionRef.current?.close()
+              })
+            }}
             disabled={!actions.length}
             trigger={<RowDropdownIcon>{actions && actions.length ? <MoreVertical /> : null}</RowDropdownIcon>}>
             <Dropdown.Menu>{this.getActionItems(actions, row)}</Dropdown.Menu>
