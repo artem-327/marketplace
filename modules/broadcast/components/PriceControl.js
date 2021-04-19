@@ -218,8 +218,8 @@ export default class PriceControl extends Component {
     let type = rule?.priceAddition ? 'addition' : this.state.type
 
     let value = null
-    if (this.state.type === 'addition') value = rule.priceAddition
-    if (this.state.type === 'multiplier') value = rule.priceMultiplier
+    if (type === 'addition') value = rule.priceAddition
+    if (type === 'multiplier') value = rule.priceMultiplier
 
     return (
       <Box asModal={asModal}>
