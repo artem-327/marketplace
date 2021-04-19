@@ -97,7 +97,7 @@ const makeMapStateToProps = () => {
       mainContainer: getMainContainer(state),
       appInfo: getAppInfo(state),
       naicsCode: getNaicsCode(state),
-      company: getCompanyRequest(state),
+      companyRequestBody: getCompanyRequest(state),
       companyId: getCompanyId(state),
       naicsCodes: {
         ...getNaicsCodes(state),

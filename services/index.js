@@ -1,5 +1,4 @@
 import { TCompanyRequest } from '../types'
-import { COMPANY_REQUEST_KEYS } from '../constants/backendObjects'
 
 /**
  * Function remove empty elements from object with one level (child).
@@ -49,19 +48,32 @@ export const isEmptyObject = obj => {
  * Prepares RequestCompany object for BE request
  * @method
  * @param {object} company
- * @returns {TCompanyRequest | {}} Company request object
+ * @return {TCompanyRequest} Company request object
  */
 export const getCompanyRequestObject = company => {
-  let companyRequest = {}
-  if (!company || isEmptyObject(company)) return companyRequest
+  if (!company || isEmptyObject(company)) return
+  let associations = []
+  if (company?.associations?.length) company?.associations?.forEach(a => associations.push(a?.id))
 
-  COMPANY_REQUEST_KEYS.forEach(key => {
-    if (
-      (company[key] && !Array.isArray(company[key])) ||
-      (company[key] && typeof company[key] === 'object' && !isEmptyObject(company[key])) ||
-      (company[key] && Array.isArray(company[key]) && company[key].length)
-    )
-      companyRequest[key] = key === 'businessType' ? company[key]?.id : company[key]
-  })
-  return companyRequest
+  return {
+    associations,
+    businessType: company?.businessType?.id,
+    cin: company?.cin,
+    dba: company?.dba,
+    dunsNumber: company?.dunsNumber,
+    enabled: company?.enabled,
+    industryType: company?.industryType,
+    naicsCode: company?.naicsCode,
+    name: company?.name,
+    phone: company?.phone,
+    socialFacebook: company?.socialFacebook,
+    socialInstagram: company?.socialInstagram,
+    socialLinkedin: company?.socialLinkedin,
+    socialTwitter: company?.socialTwitter,
+    tagline: company?.tagline,
+    tin: company?.tin,
+    tinType: company?.tinType,
+    type: company?.type,
+    website: company?.website
+  }
 }
