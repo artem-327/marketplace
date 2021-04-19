@@ -92,6 +92,11 @@ class Products extends Component {
                   operator: 'LIKE',
                   path: 'CompanyGenericProduct.company.cfDisplayName',
                   values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyGenericProduct.productGroup.name',
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
