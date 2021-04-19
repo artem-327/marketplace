@@ -41,9 +41,9 @@
     "monospaceLinks": false,
     "search": true,
     "better-docs": {
-      "name": "Echo System Documentation - Frontend",
+      "name": "Blue Pallet System Documentation - Frontend",
       "logo": "./assets/images/login/logo_login.png",
-      "title": "Echo System Documentation - Frontend"
+      "title": "Blue Pallet System Documentation - Frontend"
     }
   }
 }

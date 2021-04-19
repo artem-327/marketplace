@@ -652,7 +652,8 @@ class MyListings extends Component {
       broadcastTemplates,
       isProductInfoOpen,
       closePopup,
-      broadcastChange
+      broadcastChange,
+      systemCompanyName
     } = this.props
     let title
 
@@ -677,7 +678,9 @@ class MyListings extends Component {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
           id: 'myInventory.allSubtitle',
-          defaultMessage: 'My Network + Blue Pallet Direct'
+          defaultMessage: 'My Network + {companyName} Direct'
+        }, {
+          companyName: systemCompanyName
         }),
         value: 'GLOBAL_RULES'
       },
@@ -707,7 +710,9 @@ class MyListings extends Component {
       },
       {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'Blue Pallet Direct' }),
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: '{companyName} Direct' }, {
+          companyName: systemCompanyName
+        }),
         subtitle: formatMessage({
           id: 'myInventory.bluePalletDirectSubtitle',
           defaultMessage: 'Open Marketplace'
@@ -891,7 +896,7 @@ class MyListings extends Component {
           productStatusText = (
             <FormattedMessage
               id='myInventory.productStatus.unmapped'
-              defaultMessage="This Offer's Company Product is not mapped to Echo Product, so it will not be visible to other users at Marketplace."
+              defaultMessage="This Offer's Company Product is not mapped to Company Generic Product, so it will not be visible to other users at Marketplace."
             />
           )
           break
