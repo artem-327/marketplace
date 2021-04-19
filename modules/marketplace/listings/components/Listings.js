@@ -88,6 +88,15 @@ class Listings extends Component {
           allowReordering: false
         },
         {
+          name: 'seller',
+          title: (
+            <FormattedMessage id='sharedListings.detailRow.seller' defaultMessage='SELLER'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140
+        },
+        {
           name: 'packaging',
           title: (
             <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
