@@ -88,6 +88,15 @@ class Listings extends Component {
           allowReordering: false
         },
         {
+          name: 'seller',
+          title: (
+            <FormattedMessage id='sharedListings.detailRow.seller' defaultMessage='SELLER'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140
+        },
+        {
           name: 'packaging',
           title: (
             <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
@@ -561,10 +570,10 @@ class Listings extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        <AddCart openInfo={openInfo} buyEnabled={buyEligible}/>
+        <AddCart openInfo={openInfo} buyEnabled={buyEligible} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
-        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })}/>}
+        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })} />}
       </Container>
     )
   }
