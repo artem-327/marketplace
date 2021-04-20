@@ -325,7 +325,8 @@ class Tutorial extends Component {
       isBusinessVerification,
       isTutorial,
       vellociBusinessId,
-      marginGlobalPrice
+      marginGlobalPrice,
+      systemCompanyName
     } = this.props
 
     let margin = '15px 32px 15px 32px'
@@ -381,7 +382,11 @@ class Tutorial extends Component {
               <Content>
                 <FormattedMessage
                   id='tutorial.businessVerification.content'
-                  defaultMessage='Blue Pallet is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, Blue Pallet must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  defaultMessage='{companyName} is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, {companyName} must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'
+                  values={{
+                    companyName: systemCompanyName
+                  }}
+                >
                   {text => text}
                 </FormattedMessage>
               </Content>
@@ -416,6 +421,7 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
 
   return {
+    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
     name: getSafe(() => state.auth.identity.name, ''),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),

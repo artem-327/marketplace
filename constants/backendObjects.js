@@ -309,27 +309,27 @@ export const ShippingStatusEnum = {
 }
 
 /**
- * @category Velloci Register
- * @constant {Array<string>}
+ *
+ * @constant {Object<string, any>}
  */
-export const COMPANY_REQUEST_KEYS = [
-  'associations',
-  'businessType',
-  'cin',
-  'dba',
-  'dunsNumber',
-  'enabled',
-  'industryType',
-  'naicsCode',
-  'name',
-  'phone',
-  'socialFacebook',
-  'socialInstagram',
-  'socialLinkedin',
-  'socialTwitter',
-  'tagline',
-  'tin',
-  'tinType',
-  'type',
-  'website'
-]
+export const COMPANY_REQUEST = {
+  associations: '',
+  businessType: '',
+  cin: '',
+  dba: '',
+  dunsNumber: '',
+  enabled: '',
+  industryType: '',
+  naicsCode: '',
+  name: '',
+  phone: '',
+  socialFacebook: '',
+  socialInstagram: '',
+  socialLinkedin: '',
+  socialTwitter: '',
+  tagline: '',
+  tin: '',
+  tinType: '',
+  type: '',
+  website: ''
+}

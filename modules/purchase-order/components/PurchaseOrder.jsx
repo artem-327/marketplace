@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -350,7 +351,8 @@ class PurchaseOrder extends Component {
       dispatch,
       preferredBankAccountId,
       intl: { formatMessage },
-      shippingQuoteSelected
+      shippingQuoteSelected,
+      systemCompanyName
     } = this.props
     let {
       cart,
@@ -514,10 +516,10 @@ class PurchaseOrder extends Component {
                                           ? 'cart.weightLimitExceeded.content'
                                           : 'cart.palletLimitExceeded.content',
                                         defaultMessage: cart.weightLimitExceed
-                                          ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
-                                          : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`
+                                          ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`
+                                          : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`
                                       },
-                                      { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr }
+                                      { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr, companyName: systemCompanyName }
                                     )}
                                   </CustomMessage.Content>
                                 </CustomMessage>
@@ -547,7 +549,10 @@ class PurchaseOrder extends Component {
                                 <DivContent>
                                   <FormattedMessage
                                     id='cart.noShippingQuotes.processManually'
-                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by Echo team, who will send you an email with Quote Id.`}
+                                    defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
+                                    values={{
+                                      companyName: systemCompanyName
+                                    }}
                                   />
                                 </DivContent>
                               </CustomRectangle>
@@ -736,7 +741,13 @@ class PurchaseOrder extends Component {
   }
 }
 
-export default injectIntl(withToastManager(PurchaseOrder))
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(withToastManager(PurchaseOrder)))
 
 PurchaseOrder.propTypes = {
   cartItem: PropTypes.object,
