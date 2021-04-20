@@ -79,7 +79,7 @@ export const OPTIONS_BROADCAST = [
     ),
     title: <FormattedMessage id='global.all' defaultMessage='All' />,
     subtitleId: 'myInventory.allSubtitle',
-    subtitleText: 'My Network + BluePallet Direct',
+    subtitleText: 'My Network + {companyName} Direct',
     value: GLOBAL_RULES,
     id: null,
     tmp: null
@@ -114,7 +114,8 @@ export const OPTIONS_BROADCAST = [
         <Image size='mini' src={BluePalletLogoMini} />
       </DivIconOptions>
     ),
-    title: <FormattedMessage id='myInventory.bluePalletDirect' defaultMessage='BluePallet Direct' />,
+    titleId: 'myInventory.bluePalletDirect',
+    titleText: '{companyName} Direct',
     subtitleId: 'myInventory.bluePalletDirectSubtitle',
     subtitleText: 'Open Marketplace',
     value: 'GLOBAL_RULES_ONLY_BROKERS'

@@ -59,6 +59,7 @@ class Navigation extends Component {
     dropdowns: {},
     currentType: '',
     settings:
+      getSafe(() => Router.router.pathname === '/settings/my-tradepass', false) ||
       getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
       getSafe(() => Router.router.pathname === '/settings/system-settings', false) ||
       getSafe(() => Router.router.pathname === '/settings/trade-criteria', false) ||
@@ -66,7 +67,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/settings/locations', false) ||
       getSafe(() => Router.router.pathname === '/settings/bank-accounts', false) ||
       // getSafe(() => Router.router.pathname === '/settings/logistics', false) ||
-      getSafe(() => Router.router.pathname === '/settings/documents', false),
+      getSafe(() => Router.router.pathname === '/settings/documents', false) ||
+      getSafe(() => Router.router.pathname === '/settings/insurance', false),
     orders:
       getSafe(() => Router.router.pathname === '/orders/sales', false) ||
       getSafe(() => Router.router.pathname === '/orders/purchase', false) ||
@@ -85,6 +87,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/admin/admin-settings', false),
     operations:
       getSafe(() => Router.router.pathname === '/operations/shipping-quotes', false) ||
+      getSafe(() => Router.router.pathname === '/operations/shipping-quote-requests', false) ||
       getSafe(() => Router.router.pathname === '/operations/tags', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-product-catalog', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-inventory', false) ||
@@ -592,13 +595,13 @@ class Navigation extends Component {
             icon={<Settings size={22} />}
             text={
               <>
-                <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
+                <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass' />
                 {settings ? <ChevronUp /> : <ChevronDown />}
               </>
             }
             className={settings ? 'opened' : null}
             opened={settings.toString()}
-            onClick={() => this.toggleOpened('settings', '/settings/company-details')}
+            onClick={() => this.toggleOpened('settings', '/settings/my-tradepass')}
             refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
             refId={'settings'}
             data-test='navigation_menu_settings_drpdn'>
@@ -608,10 +611,24 @@ class Navigation extends Component {
                   <>
                     <Dropdown.Item
                       as={MenuLink}
+                      to='/settings/my-tradepass'
+                      tab='my-tradepass'
+                      dataTest='navigation_settings_my_trade_pass_drpdn'>
+                      {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My Trade Pass' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
                       to='/settings/company-details'
                       tab='company-details'
                       dataTest='navigation_settings_company_details_drpdn'>
                       {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/settings/insurance'
+                      tab='insurance'
+                      dataTest='navigation_settings_my_insurance_drpdn'>
+                      {formatMessage({ id: 'global.insurance', defaultMessage: 'Insurance' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}

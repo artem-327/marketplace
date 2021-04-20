@@ -2,62 +2,118 @@ import { connect } from 'react-redux'
 import VellociRegister from './VellociRegister'
 //Actions
 import * as Actions from '../actions'
-import { getBusinessClassifications } from '~/modules/settings/actions'
-import { getBusinessTypes } from '~/modules/company-form/actions'
+import { getBusinessClassifications } from '../../settings/actions'
+import { getBusinessTypes } from '../../company-form/actions'
+import { updateCompany, getIdentity } from '../../auth/actions'
 //components
-import { getSafe } from '~/utils/functions'
-import { getIdentity } from '~/modules/auth/actions'
 import { initialValues } from '../constants'
+//Selectors
+import {
+  makeGetStateVellociRegister,
+  makeGetInitialValues,
+  makeGetNaicsCodes,
+  makeGetNaicsCodesloading
+} from '../selectors'
+import {
+  makeGetNaicsCode,
+  makeGetPhoneNumber,
+  makeGetEmail,
+  makeGetUrl,
+  makeGetStreetAddress,
+  makeGetCity,
+  makeGetCountryId,
+  makeGetHasProvinces,
+  makeGetZip,
+  makeGetProvince,
+  makeGetDba,
+  makeGetBussinessType,
+  makeGetEin,
+  makeGetAppInfo,
+  makeGetCompanyRequest,
+  makeGetCompanyId,
+  makeGetCompanyName
+} from '../../auth/selectors'
+import { makeGetMainContainer } from '../../layout/selectors'
 
-const mapStateToProps = store => ({
-  ...store.vellociRegister,
-  initialValues: {
-    ...initialValues,
-    businessInfo: {
-      phoneNumber: getSafe(() => store.auth.identity.company.phone, ''),
-      email: getSafe(() => store.auth.identity.email, ''),
-      url: getSafe(() => store.auth.identity.company.website, ''),
-      address: {
-        streetAddress: getSafe(
-          () => store.auth.identity.company.primaryBranch.deliveryAddress.address.streetAddress,
-          ''
-        ),
-        city: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.city, ''),
-        country: JSON.stringify({
-          countryId: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.country.id, ''),
-          hasProvinces: getSafe(
-            () => store.auth.identity.company.primaryBranch.deliveryAddress.address.country.hasProvinces,
-            ''
-          )
-        }),
-        zip: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.zip.zip, ''),
-        province: getSafe(() => store.auth.identity.company.primaryBranch.deliveryAddress.address.province.id, '')
+const makeMapStateToProps = () => {
+  const getNaicsCode = makeGetNaicsCode()
+  const getStateVellociRegister = makeGetStateVellociRegister()
+  const getInitialValues = makeGetInitialValues()
+  const getPhoneNumber = makeGetPhoneNumber()
+  const getEmail = makeGetEmail()
+  const getUrl = makeGetUrl()
+  const getStreetAddress = makeGetStreetAddress()
+  const getCity = makeGetCity()
+  const getCountryId = makeGetCountryId()
+  const getHasProvinces = makeGetHasProvinces()
+  const getZip = makeGetZip()
+  const getProvince = makeGetProvince()
+  const getDba = makeGetDba()
+  const getCompanyName = makeGetCompanyName()
+  const getBussinessType = makeGetBussinessType()
+  const getEin = makeGetEin()
+  const getMainContainer = makeGetMainContainer()
+  const getAppInfo = makeGetAppInfo()
+  const getCompanyRequest = makeGetCompanyRequest()
+  const getCompanyId = makeGetCompanyId()
+  const getNaicsCodes = makeGetNaicsCodes()
+  const getNaicsCodesloading = makeGetNaicsCodesloading()
+
+  const mapStateToProps = (state, props) => {
+    return {
+      ...getStateVellociRegister(state),
+      initialValues: {
+        ...getInitialValues(initialValues),
+        businessInfo: {
+          phoneNumber: getPhoneNumber(state),
+          email: getEmail(state),
+          url: getUrl(state),
+          address: {
+            streetAddress: getStreetAddress(state),
+            city: getCity(state),
+            country: JSON.stringify({
+              countryId: getCountryId(state),
+              hasProvinces: getHasProvinces(state)
+            }),
+            zip: getZip(state),
+            province: getProvince(state)
+          },
+          dba: getDba(state)
+        },
+        controlPerson: {
+          isControlPerson: false,
+          legalBusinessName: getCompanyName(state),
+          entityType: '', // getBussinessType(state), //this is not correct match for entityType from GET payments/velloci/enums/entity-types. 15.4.2021 Tomáš Drlíček knows about this and it will be fix in the future by BE developers
+          industryType: '',
+          isEin: true,
+          isSsn: false,
+          ein: getEin(state),
+          ssn: '',
+          isEstablishedUs: true,
+          tinNumber: '',
+          naicsCode: getNaicsCode(state)
+        }
       },
-      dba: getSafe(() => store.auth.identity.company.dba, '')
-    },
-    controlPerson: {
-      isControlPerson: false,
-      legalBusinessName: getSafe(() => store.auth.identity.company.cfDisplayName, ''),
-      entityType: getSafe(() => store.auth.identity.company.businessType.dwollaName, []),
-      industryType: '',
-      isEin: true,
-      isSsn: false,
-      ein: getSafe(() => store.auth.identity.company.tin, ''),
-      ssn: '',
-      isEstablishedUs: true,
-      tinNumber: '',
-      naicsCode: ''
+      mainContainer: getMainContainer(state),
+      appInfo: getAppInfo(state),
+      naicsCode: getNaicsCode(state),
+      companyRequestBody: getCompanyRequest(state),
+      companyId: getCompanyId(state),
+      naicsCodes: {
+        ...getNaicsCodes(state),
+        loading: getNaicsCodesloading(state)
+      }
     }
-  },
-  mainContainer: store.layout.mainContainer,
-  appInfo: getSafe(() => store.auth.identity.appInfo, null)
-})
+  }
+  return mapStateToProps
+}
 
 const mapDispatchToProps = {
   getBusinessClassifications,
   getBusinessTypes,
   getIdentity,
+  updateCompany,
   ...Actions
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(VellociRegister)
+export default connect(makeMapStateToProps, mapDispatchToProps)(VellociRegister)

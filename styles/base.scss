@@ -841,6 +841,11 @@ h3.ui.header {
   }
 }
 
+.ui.loading.form:before,
+.ui.loading.form:after {
+  position: fixed !important;
+}
+
 .ui.form .field > label {
   font-size: 1em;
   font-weight: 400;

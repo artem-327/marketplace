@@ -14,6 +14,8 @@ import { currency } from '~/constants/index'
 
 //Services
 import { GridSummary, LinkLabel } from './OrderSummary.styles'
+//Constants
+import { URL_TERMS } from '../../../../constants'
 /**
  * @category Purchase Order - Checkout
  * @component
@@ -26,11 +28,12 @@ const OrderSummary = props => {
     submitButtonDisabled,
     loading,
     subTotalPrice,
-    isNotHazardousPermissions
+    isNotHazardousPermissions,
+    systemCompanyName
   } = props
 
   const priceComponent = val =>
-    val ? (
+    val || val === 0 ? (
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
@@ -77,7 +80,7 @@ const OrderSummary = props => {
           {allAccepted ? (
             <FormattedMessage
               id='checkout.summary.byPlacingYourOrder'
-              defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+              defaultMessage='By placing your order, you agree to {companyName}’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
                   <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>
@@ -85,10 +88,11 @@ const OrderSummary = props => {
                   </LinkLabel>
                 ),
                 conditionsOfUse: (
-                  <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabel href={URL_TERMS} target='_blank'>
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
-                )
+                ),
+                companyName: systemCompanyName
               }}
             />
           ) : (
@@ -140,7 +144,7 @@ const OrderSummary = props => {
           <FormattedMessage id='checkout.summary.orderTotal' defaultMessage='Order Total' />
         </GridColumn>
         <GridColumn width={8} className='right bold'>
-          {priceComponent(freightPrice ? freightPrice + subTotalPrice : '')}
+          {priceComponent(+freightPrice + +subTotalPrice)}
         </GridColumn>
       </GridRow>
     </GridSummary>
@@ -159,4 +163,10 @@ OrderSummary.defaultProps = {
   loading: false
 }
 
-export default injectIntl(OrderSummary)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(OrderSummary))

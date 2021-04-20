@@ -8,6 +8,7 @@ import styled from 'styled-components'
 
 import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTable'
 import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopup'
+import ShippingQuoteRequestsTable from './shipping-quote-requests/ShippingQuoteRequestsTable'
 import TagsTable from './tags/TagsTable'
 import TagsPopup from './tags/TagsPopup'
 import CompanyProductTable from './company-product-catalog/CompanyProductTable'
@@ -36,6 +37,7 @@ class Operations extends Component {
 
     const tables = {
       'shipping-quotes': <ShippingQuotesTable />,
+      'shipping-quote-requests': <ShippingQuoteRequestsTable />,
       tags: <TagsTable />,
       'company-product-catalog': <CompanyProductTable />,
       'company-inventory': <CompanyInventoryTable />,
@@ -72,6 +74,29 @@ class Operations extends Component {
               }
             ]
           return filter
+        }
+      },
+      'shipping-quote-requests': {
+        url: '/prodex/api/messaging-center/datagrid',
+        searchToFilter: v => {
+          let filters = {
+            or: [],
+            and: [
+              {
+                operator: 'EQUALS',
+                path: 'Message.category',
+                values: ['Shipping_Quote_Request']
+              }
+            ]
+          }
+          if (v && v.searchInput) {
+            filters.or.push({
+              operator: 'LIKE',
+              path: 'Message.text',
+              values: [`%${v.searchInput}%`]
+            })
+          }
+          return filters
         }
       },
       tags: {

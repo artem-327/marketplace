@@ -150,7 +150,7 @@ export function handlerSubmitUserEditPopup(id, payload, userSettings) {
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, payload)
     })
-    await dispatch(updateSettingsCompanyUser(id, userSettings))
+    userSettings && (await dispatch(updateSettingsCompanyUser(id, userSettings)))
   }
 }
 
@@ -328,13 +328,11 @@ export function handleFiltersValue(value) {
   }
 }
 
-//////////////////////
 export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagrid) {
   return async dispatch => {
-    const response = await api.putWarehouse(id, payload)
-    await dispatch({
+    const { value } = await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-      payload: response
+      payload: api.putWarehouse(id, payload)
     })
     if (attachmentFiles && attachmentFiles.length) {
       attachmentFiles.forEach(attachment => {
@@ -345,13 +343,13 @@ export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagri
       })
       if (typeof warehousesDatagrid !== 'undefined')
         warehousesDatagrid.updateRow(id, () => ({
-          ...response,
-          attachments: response.attachments.concat(attachmentFiles)
+          ...value,
+          attachments: value.attachments.concat(attachmentFiles)
         }))
       else Datagrid.loadData()
     } else {
-      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => response)
-      else Datagrid.updateRow(id, () => response)
+      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => value)
+      else Datagrid.updateRow(id, () => value)
     }
     dispatch(closeSidebar())
   }
@@ -625,12 +623,11 @@ export function getStoredCSV(data) {
 
 export function postNewUserRequest(payload, userSettings) {
   return async dispatch => {
-    const user = await api.postNewUser(payload)
-    await dispatch({
+    const { value } = await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
-      payload: user
+      payload: api.postNewUser(payload)
     })
-    await dispatch(updateSettingsCompanyUser(user.id, userSettings))
+    await dispatch(updateSettingsCompanyUser(value.id, userSettings))
   }
 }
 
@@ -1388,5 +1385,84 @@ export function getUser(userId) {
   return {
     type: AT.GET_USER,
     payload: api.getUser(userId)
+  }
+}
+
+export const getInsuranceDocuments = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.GET_INSURANCE_DOCUMENTS_PENDING
+    })
+    await api
+      .getInsuranceDocuments()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export const getInsuranceDocumentsTypes = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.GET_INSURANCE_DOCUMENTS_TYPES_PENDING
+    })
+    await api
+      .getInsuranceDocumentsTypes()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_TYPES_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_TYPES_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export const uploadInsuranceDocument = (file, type) => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.UPLOAD_INSURANCE_DOCUMENTS_PENDING
+    })
+    await api
+      .uploadInsuranceDocument(file, type)
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.UPLOAD_INSURANCE_DOCUMENTS_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export function getMyTradePass() {
+  return {
+    type: AT.GET_MY_TRADEPASS,
+    payload: api.getMyTradePass()
   }
 }

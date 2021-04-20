@@ -8,6 +8,8 @@ import { getSafe } from '~/utils/functions'
 import { logout } from '~/modules/auth/actions'
 import { triggerAgreementModal } from '~/modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
+//Constants
+import { URL_TERMS } from '../../constants'
 
 const TopMargedDiv = styled.div`
   margin-top: 15px;
@@ -30,6 +32,7 @@ class AgreementModal extends Component {
       additionalProps,
       tos,
       isCompanyAdmin,
+      systemCompanyName,
       intl: { formatMessage }
     } = this.props
 
@@ -46,8 +49,8 @@ class AgreementModal extends Component {
                   id='agree.withTOS.companyAdmin'
                   values={{
                     echosTermsOfService: (
-                      <a href='https://www.echosystem.com/terms-of-service' target='_blank'>
-                        {formatMessage({ id: 'verification.echosTOS' })}
+                      <a href={URL_TERMS} target='_blank'>
+                        {formatMessage({ id: 'verification.echosTOS' }, { companyName: systemCompanyName })}
                       </a>
                     ),
                     echosTermsOfUse: (
@@ -80,8 +83,8 @@ class AgreementModal extends Component {
                   id='agree.withTOS.nonCompanyAdmin'
                   values={{
                     echosTermsOfService: (
-                      <a href='https://www.echosystem.com/terms-of-service' target='_blank'>
-                        {formatMessage({ id: 'verification.echosTOS' })}
+                      <a href={URL_TERMS} target='_blank'>
+                        {formatMessage({ id: 'verification.echosTOS' }, { companyName: systemCompanyName })}
                       </a>
                     ),
                     echosTermsOfUse: (
@@ -145,6 +148,7 @@ AgreementModal.defaultProps = {
 const mapStateToProps = ({ auth, settings }) => {
   return {
     ...settings.agreementModal,
+    systemCompanyName: auth?.identity?.appInfo?.systemCompanyName,
     isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, false)
   }
 }

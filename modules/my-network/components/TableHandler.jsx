@@ -76,6 +76,7 @@ const TableHandler = props => {
         search={props?.search}
         isError={props?.isError}
         loading={props?.loading}
+        updating={props?.updating}
         detailCompany={props?.detailCompany}
         buttonActionsDetailRow={props?.buttonActionsDetailRow}
       />
@@ -100,7 +101,8 @@ TableHandler.propTypes = {
   search: PropTypes.func,
   isOpenModal: PropTypes.bool,
   isError: PropTypes.bool,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  updating: PropTypes.bool
 }
 TableHandler.defaultProps = {
   datagrid: null,
@@ -108,13 +110,15 @@ TableHandler.defaultProps = {
   search: () => {},
   isOpenModal: false,
   isError: false,
-  loading: false
+  loading: false,
+  updating: false
 }
 
 const mapStateToProps = ({ myNetwork }) => ({
   isOpenModal: myNetwork?.isOpenModal,
   isError: myNetwork?.isError,
   loading: myNetwork?.loading,
+  updating: myNetwork?.updating,
   detailCompany: getRowDetail(myNetwork?.companyNetworkConnection),
   bluePalletModal: myNetwork?.bluePalletModal
 })

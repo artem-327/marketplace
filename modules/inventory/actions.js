@@ -26,13 +26,12 @@ export function initProductOfferEdit(id) {
 }
 
 export function addAttachment(attachment, type, additionalParams = {}) {
-  return {
-    type: AT.INVENTORY_ADD_ATTACHMENT,
-    async payload() {
-      const data = await api.addAttachment(attachment, type, additionalParams)
-      Datagrid && Datagrid.loadData()
-      return data
-    }
+  return async dispatch => {
+    await dispatch({
+      type: AT.INVENTORY_ADD_ATTACHMENT,
+      payload: api.addAttachment(attachment, type, additionalParams)
+    })
+    Datagrid && Datagrid.loadData()
   }
 }
 
@@ -170,12 +169,11 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
         return response
       } else {
-        const response = await api.updateProductOffer(poId, paramsCleaned)
-        await dispatch({
+        const response = await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-          payload: response
+          payload: api.updateProductOffer(poId, paramsCleaned)
         })
-        return response
+        return response.value
       }
     } else {
       const newProd = await dispatch({

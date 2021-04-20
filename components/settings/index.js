@@ -299,7 +299,7 @@ class Settings extends Component {
           this.handleSubmit(values)
         }}
         render={formikProps => {
-          let { values, resetForm } = formikProps
+          let { values, resetForm, isSubmitting } = formikProps
           this.resetForm = resetForm
           let allDisabled =
             systemSettings &&
@@ -399,13 +399,14 @@ class Settings extends Component {
                     trigger={
                       <PopupTriggerWrapper>
                         <Button
-                          loading={loading}
+                          loading={loading || isSubmitting}
                           onClick={async () => {
                             this.setState({ clickedButton: true }, () => !allDisabled && formikProps.handleSubmit())
                             formikProps.resetForm(values)
                           }}
                           primary
-                          disabled={allDisabled}>
+                          type='button'
+                          disabled={allDisabled || isSubmitting}>
                           <FormattedMessage id='global.save' defaultMessage='Save'>
                             {text => text}
                           </FormattedMessage>

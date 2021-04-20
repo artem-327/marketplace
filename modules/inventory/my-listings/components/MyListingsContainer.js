@@ -24,6 +24,7 @@ function mapStateToProps(store, { datagrid }) {
 
   return {
     ...store.simpleAdd,
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName,
     broadcastTemplates: store.broadcast.templates,
     advancedFilters: store.filter.inventory.appliedFilter,
     editedId,

@@ -7,6 +7,7 @@ import { withToastManager } from 'react-toast-notifications'
 function mapStateToProps(store) {
   return {
     ...store.simpleAdd,
+    systemCompanyName: store.auth.identity.appInfo.systemCompanyName,
     edit: (Router.router && Router.router.query.id) || false
   }
 }

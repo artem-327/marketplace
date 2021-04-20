@@ -69,13 +69,14 @@ export default class PriceControl extends Component {
       }
     } else {
       if (type === 'addition') {
-        values = { priceAddition: value ? parseFloat(value) : 0, priceMultiplier: 0 }
+        values = { priceAddition: value === '' ? value : Number(value), priceMultiplier: 0 }
       } else {
-        values = { priceMultiplier: value ? parseFloat(value) : 0, priceAddition: 0 }
+        values = { priceMultiplier: value === '' ? value : Number(value), priceAddition: 0 }
       }
     }
 
     asignValues(values, rule)
+
     let idCompanies = []
     let foundAllNodes = []
     if (item?.hasChildren()) {
@@ -148,6 +149,7 @@ export default class PriceControl extends Component {
         }
       }
     }
+
     this.props.onChange(item, foundAllNodes)
     return false
   }
@@ -215,14 +217,9 @@ export default class PriceControl extends Component {
     const prices = hideFobPrice ? null : this.getPrices()
     let type = rule?.priceAddition ? 'addition' : this.state.type
 
-    let value =
-      !getSafe(() => rule.priceAddition, false) && !getSafe(() => rule.priceMultiplier, false)
-        ? ''
-        : rule.priceAddition !== 0
-        ? rule.priceAddition
-        : rule.priceMultiplier !== 0
-        ? rule.priceMultiplier
-        : ''
+    let value = null
+    if (type === 'addition') value = rule.priceAddition
+    if (type === 'multiplier') value = rule.priceMultiplier
 
     return (
       <Box asModal={asModal}>

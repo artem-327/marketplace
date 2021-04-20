@@ -2,25 +2,27 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from "~/utils/functions"
+import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 
 //Components
 import { GridColumn, Icon, Button } from 'semantic-ui-react'
 
 import {
-  GridStyled, DivLine, ColumnWithLine, RowWithLine, RowWithRectangle, CustomMessage, ButtonCustom
-
+  GridStyled,
+  DivLine,
+  ColumnWithLine,
+  RowWithLine,
+  RowWithRectangle,
+  CustomMessage,
+  ButtonCustom
 } from './FreightLabel.styles'
 
 // Constants
 import { FREIGHT_TYPES } from '../Checkout.constants'
 
 const FreightLabel = props => {
-  const {
-    isOwn,
-    onChange
-  } = props
+  const { isOwn, onChange } = props
 
   return (
     <GridStyled>
@@ -55,13 +57,14 @@ const FreightLabel = props => {
               onClick={() =>
                 onChange({
                   freightType: FREIGHT_TYPES.OWN,
-                  carrierName:
-                    <FormattedMessage id='cart.usingOwnFreight' defaultMessage='You are using your own freight' />,
-                  cfEstimatedSubtotal: '',
+                  carrierName: (
+                    <FormattedMessage id='cart.usingOwnFreight' defaultMessage='You are using your own freight' />
+                  ),
+                  cfEstimatedSubtotal: 0,
                   estimatedDeliveryDate: '',
                   quoteId: ''
-                })}
-            >
+                })
+              }>
               <Icon name='archive' />
               <FormattedMessage id='cart.ownFreight' defaultMessage='Own Freight'>
                 {text => text}
@@ -74,18 +77,12 @@ const FreightLabel = props => {
   )
 }
 
-FreightLabel.propTypes = {
+FreightLabel.propTypes = {}
 
-}
-
-FreightLabel.defaultProps = {
-
-}
+FreightLabel.defaultProps = {}
 
 function mapStateToProps(store, props) {
-  return {
-
-  }
+  return {}
 }
 
-export default injectIntl(connect(mapStateToProps, {  })(FreightLabel))
+export default injectIntl(connect(mapStateToProps, {})(FreightLabel))
