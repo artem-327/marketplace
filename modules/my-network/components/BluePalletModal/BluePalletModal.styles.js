@@ -30,7 +30,7 @@ export const ContentHeaderTitle = styled(Header)`
   
   img {
     display: inline-block !important;
-    max-width: 229px !important;
+    max-height: 78px !important;
     margin-top: 2px;
     margin-right: 6px;
     vertical-align: top !important;

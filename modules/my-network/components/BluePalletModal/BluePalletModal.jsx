@@ -18,7 +18,7 @@ import {
   FooterInfo
 } from './BluePalletModal.styles'
 // Icons
-import Logo from '~/assets/images/nav/logo-bluepallet.png'
+import Logo from '~/assets/images/nav/logo-bluetrade.png'
 import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
 import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg'
 import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
@@ -47,7 +47,6 @@ const BluePalletModal = props => {
         <HeaderWrapper>
           <ContentHeaderTitle as='h2'>
             <Image src={Logo} />
-            <FormattedMessage id='bluePallet.direct' defaultMessage='Direct' />
           </ContentHeaderTitle>
           <IconsWrapper>
             <IconWrapper>
