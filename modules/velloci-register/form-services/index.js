@@ -12,7 +12,7 @@ import {
 import Router from 'next/router'
 //Services
 import { getObjectWithoutEmptyElements } from '~/services'
-import { getSafe } from '~/utils/functions'
+import { getSafe, removeEmpty } from '~/utils/functions'
 import { getStringISODate } from '~/components/date-format'
 import { titleForms } from '../constants'
 
@@ -234,6 +234,14 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
 export const handleSubmit = async (values, props, selfFormikProps) => {
   if (props.activeStep !== 6) return
 
+  let companyRequest = { ...props?.companyRequestBody }
+
+  removeEmpty(companyRequest, val => Array.isArray(val) && !!val?.length)
+  const companyRequestBody = {
+    ...companyRequest,
+    naicsCode: values?.controlPerson?.naicsCode
+  }
+
   try {
     props.loadSubmitButton(true)
     const body = getBody(values)
@@ -245,6 +253,10 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
       if (searchParams.has('companyId')) {
         companyId = Number(searchParams.get('companyId'))
       }
+    }
+
+    if (props?.naicsCode !== values?.controlPerson?.naicsCode && props?.companyId) {
+      await props?.updateCompany(props?.companyId, companyRequestBody)
     }
 
     await props.postRegisterVelloci(body, companyId, files)

@@ -148,15 +148,13 @@ function mapStateToProps({ settings }) {
       telephoneNumber: myTradePass?.phone,
       inBusinessSince: myTradePass?.inBusinessSince,
       numberOfEmployees: myTradePass?.numberOfEmployees
-        ? {
-            numberOfEmployees: (
-              <FormattedNumber
-                minimumFractionDigits={0}
-                maximumFractionDigits={0}
-                value={myTradePass?.numberOfEmployees || 0}
-              />
-            )
-          }
+        ? (
+            <FormattedNumber
+              minimumFractionDigits={0}
+              maximumFractionDigits={0}
+              value={myTradePass?.numberOfEmployees || 0}
+            />
+          )
         : null
     },
     marketingData: {

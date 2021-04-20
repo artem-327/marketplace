@@ -1,3 +1,5 @@
+import { TCompanyRequest } from '../types'
+
 /**
  * Function remove empty elements from object with one level (child).
  * @method
@@ -40,4 +42,38 @@ export const isEmptyObject = obj => {
   }
 
   return true
+}
+
+/**
+ * Prepares RequestCompany object for BE request
+ * @method
+ * @param {object} company
+ * @return {TCompanyRequest} Company request object
+ */
+export const getCompanyRequestObject = company => {
+  if (!company || isEmptyObject(company)) return
+  let associations = []
+  if (company?.associations?.length) company?.associations?.forEach(a => associations.push(a?.id))
+
+  return {
+    associations,
+    businessType: company?.businessType?.id,
+    cin: company?.cin,
+    dba: company?.dba,
+    dunsNumber: company?.dunsNumber,
+    enabled: company?.enabled,
+    industryType: company?.industryType,
+    naicsCode: company?.naicsCode,
+    name: company?.name,
+    phone: company?.phone,
+    socialFacebook: company?.socialFacebook,
+    socialInstagram: company?.socialInstagram,
+    socialLinkedin: company?.socialLinkedin,
+    socialTwitter: company?.socialTwitter,
+    tagline: company?.tagline,
+    tin: company?.tin,
+    tinType: company?.tinType,
+    type: company?.type,
+    website: company?.website
+  }
 }

@@ -189,7 +189,7 @@ const Cart = props => {
           </ContentSegment>
         </SummaryColumn>
       </Grid>
-      {getSafe(() => sidebar.id, false) ? <AddCart isEdit={true} /> : null}
+      {getSafe(() => sidebar.id, false) ? <AddCart isEdit={true} buyEnabled={true} /> : null}
     </>
   )
 }

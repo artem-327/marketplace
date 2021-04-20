@@ -56,11 +56,11 @@ class TagsPopup extends Component {
               try {
                 if (popupValues) await updateTag(rowId, values.name)
                 else await createTag(values.name)
+                closePopup()
               } catch (err) {
                 console.error(err)
               } finally {
                 setSubmitting(false)
-                closePopup()
               }
             }}>
             {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {

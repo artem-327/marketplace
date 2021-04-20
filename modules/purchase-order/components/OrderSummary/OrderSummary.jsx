@@ -14,6 +14,8 @@ import { currency } from '~/constants/index'
 
 //Services
 import { GridSummary, LinkLabel } from './OrderSummary.styles'
+//Constants
+import { URL_TERMS } from '../../../../constants'
 /**
  * @category Purchase Order - Checkout
  * @component
@@ -26,7 +28,8 @@ const OrderSummary = props => {
     submitButtonDisabled,
     loading,
     subTotalPrice,
-    isNotHazardousPermissions
+    isNotHazardousPermissions,
+    systemCompanyName
   } = props
 
   const priceComponent = val =>
@@ -77,7 +80,7 @@ const OrderSummary = props => {
           {allAccepted ? (
             <FormattedMessage
               id='checkout.summary.byPlacingYourOrder'
-              defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+              defaultMessage='By placing your order, you agree to {companyName}’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
                   <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>
@@ -85,10 +88,11 @@ const OrderSummary = props => {
                   </LinkLabel>
                 ),
                 conditionsOfUse: (
-                  <LinkLabel href='https://www.echosystem.com/terms-of-service' target='_blank'>
+                  <LinkLabel href={URL_TERMS} target='_blank'>
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
-                )
+                ),
+                companyName: systemCompanyName
               }}
             />
           ) : (
@@ -159,4 +163,10 @@ OrderSummary.defaultProps = {
   loading: false
 }
 
-export default injectIntl(OrderSummary)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(OrderSummary))

@@ -125,7 +125,7 @@ class SearchByNamesAndTags extends Component {
       active,
       usedOptions
     })
-    this.setState({ active, usedOptions })
+    this.setState({ active, usedOptions, searchQuery: '' })
   }
 
   handleDeleteClick = (e, data) => {

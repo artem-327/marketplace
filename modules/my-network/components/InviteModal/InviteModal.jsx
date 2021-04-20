@@ -22,6 +22,7 @@ const InviteModal = props => {
     search,
     isError,
     loading,
+    updating,
     detailCompany,
     buttonActionsDetailRow,
     openGlobalAddForm
@@ -50,6 +51,7 @@ const InviteModal = props => {
               row={detailCompany}
               buttonActionsDetailRow={buttonActionsDetailRow}
               openGlobalAddForm={openGlobalAddForm}
+              updating={updating}
             />
           </>
         ) : (
@@ -120,6 +122,7 @@ InviteModal.propTypes = {
   open: bool,
   isError: bool,
   loading: bool,
+  updating: bool,
   onClose: func,
   search: func,
   detailCompany: object,
@@ -131,6 +134,7 @@ InviteModal.defaultProps = {
   open: false,
   isError: false,
   loading: false,
+  updating: false,
   onClose: () => {},
   search: () => {},
   detailCompany: null,

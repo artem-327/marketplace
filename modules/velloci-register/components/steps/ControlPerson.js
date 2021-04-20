@@ -64,16 +64,7 @@ const DivRectangle = styled(Rectangle)`
   border: solid 1px #dee2e6;
 `
 
-function ControlPerson({
-  updateCompany,
-  company,
-  naicsCode,
-  formikProps,
-  intl: { formatMessage },
-  entityTypes,
-  naicsCodes,
-  companyId
-}) {
+function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
   return (
     <GridControlPerson>
       <GridRow>
@@ -252,15 +243,6 @@ function ControlPerson({
                         id: 'velloci.controlPerson.industryType.placeholder',
                         defaultMessage: 'Select industry type'
                       }),
-                      onChange: async (_, { value }) => {
-                        formikProps.setFieldValue('controlPerson.naicsCode', value)
-                        if (naicsCode !== value && companyId) {
-                          await updateCompany(companyId, {
-                            ...company,
-                            naicsCode: value
-                          })
-                        }
-                      },
                       search: true,
                       selection: true,
                       loading: naicsCodes?.loading,
@@ -290,21 +272,13 @@ function ControlPerson({
 ControlPerson.propTypes = {
   formikProps: PropTypes.object,
   entityTypes: PropTypes.object,
-  naicsCodes: PropTypes.object,
-  naicsCode: PropTypes.number,
-  company: PropTypes.object,
-  updateCompany: PropTypes.func,
-  companyId: PropTypes.number
+  naicsCodes: PropTypes.object
 }
 
 ControlPerson.defaultProps = {
   formikProps: {},
   entityTypes: {},
-  naicsCodes: { data: [] },
-  naicsCode: null,
-  company: null,
-  updateCompany: () => {},
-  companyId: null
+  naicsCodes: { data: [] }
 }
 
 export default injectIntl(ControlPerson)

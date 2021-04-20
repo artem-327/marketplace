@@ -113,6 +113,16 @@ const SharedListings = props => {
               }))
               setExpandedRowIds([])
             } else {
+              setValues(prevValues => ({
+                ...prevValues,
+                header: {
+                  ...prevValues.header,
+                  priceMultiplier: '',
+                  priceAddition: '',
+                  priceOverride: '',
+                  id: row.id
+                }
+              }))
               setExpandedRowIds([row.id])
               try {
                 const { value } = await getMarkUp(row.id)

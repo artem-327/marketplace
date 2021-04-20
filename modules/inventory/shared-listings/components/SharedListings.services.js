@@ -104,7 +104,7 @@ export const getRows = (rows, props) => {
         productStatusText = (
           <FormattedMessage
             id='myInventory.productStatus.unmapped'
-            defaultMessage="This Offer's Company Product is not mapped to Echo Product, so it will not be visible to other users at Marketplace."
+            defaultMessage="This Offer's Company Product is not mapped to Company Generic Product, so it will not be visible to other users at Marketplace."
           />
         )
         break

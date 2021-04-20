@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Button, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Form, Label } from 'semantic-ui-react'
@@ -129,6 +130,11 @@ class ModalDetail extends Component {
 
     searchManufacturers('', 200)
     this.switchTab(modalActiveTab)
+    if (detailValues?.minPkg) {
+      detailValues?.minPkg > detailValues?.pkgAvailable
+        ? this.setState({ isOverMinPkgs: true })
+        : this.setState({ isOverMinPkgs: false })
+    }
   }
 
   fetchIfNoData = (name, fn) => {
@@ -697,7 +703,8 @@ class ModalDetail extends Component {
       tdsTemplatesLoading,
       tdsTemplates,
       broadcastChange,
-      autocompleteData
+      autocompleteData,
+      systemCompanyName
     } = this.props
     const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = this.state
 
@@ -714,9 +721,15 @@ class ModalDetail extends Component {
         value: el.id
       }
     })
-
     const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
-      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+      if (opt.titleId && opt.titleText)
+        return {
+          ...opt,
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: systemCompanyName }),
+          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName })
+        }
+      else
+        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName }) }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -2068,4 +2081,10 @@ class ModalDetail extends Component {
   }
 }
 
-export default withToastManager(injectIntl(ModalDetail))
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(withToastManager(injectIntl(ModalDetail)))
