@@ -1,14 +1,20 @@
 import { Component } from 'react'
 import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
-import { Menu, Grid, Tab, Popup, Input, Dropdown, Button } from 'semantic-ui-react'
-import { Package, DollarSign, User, Layers, Coffee, Globe, Activity, BarChart2 } from 'react-feather'
+import { Menu, Grid, Tab, Popup, Input, Dropdown, Button, Image } from 'semantic-ui-react'
+import { Package, DollarSign, User, Layers, Coffee, Activity, BarChart2 } from 'react-feather'
 //components
 import { getSafe } from '~/utils/functions'
 import PieGraph from './PieGraph'
 import LineGraph from './LineGraph'
 import BarGraph from './BarGraph'
 import SummaryRectangle from './SummaryRectangle'
+import PartnersIcon from '../../../assets/images/dashboard/partners.svg'
+import UsersIcon from '../../../assets/images/dashboard/users.svg'
+import ProductOrdersIcon from '../../../assets/images/dashboard/product_orders.svg'
+import InventoryIcon from '../../../assets/images/dashboard/inventory.svg'
+import SalesIcon from '../../../assets/images/dashboard/sales.svg'
+import ProductsIcon from '../../../assets/images/dashboard/products.svg'
 //styled
 import styled from 'styled-components'
 import moment from 'moment'
@@ -1227,27 +1233,27 @@ class Dashboard extends Component {
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/my-network'}
-                  icon={<Coffee />}
+                  icon={<Image src={PartnersIcon} />}
                   data={totalCompanyPartners}
                   title={'Partners'}
                   titleId={'dashboard.totalPartnersCompanies.title'}
-                  styleCircle={{ backgroundColor: '#2599d5', border: 'solid 5px rgb(211, 235, 247)' }}
+                  styleCircle={null}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/inventory/my-products'}
-                  icon={<Package />}
+                  icon={<Image src={ProductsIcon} />}
                   data={companyProductsCount}
                   title='Products'
                   titleId='dashboard.totalProducts.title'
-                  styleCircle={{ backgroundColor: '#ffc65d', border: 'solid 5px rgb(255, 244, 222)' }}
+                  styleCircle={null}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/inventory/my-listings'}
-                  icon={<Layers />}
+                  icon={<Image src={InventoryIcon} />}
                   data={productOffersValue && Math.round(productOffersValue)}
                   title={isAdmin && !takeover ? 'Inventory' : 'Inventory'}
                   titleId={
@@ -1255,7 +1261,7 @@ class Dashboard extends Component {
                       ? 'dashboard.totalValueWithoutMilion.title'
                       : 'dashboard.totalInventoryCount.title'
                   }
-                  styleCircle={{ backgroundColor: '#96d3b7', border: 'solid 5px rgb(234, 246, 241)' }}
+                  styleCircle={null}
                   style='currency'
                   currency={currency}
                 />
@@ -1266,27 +1272,27 @@ class Dashboard extends Component {
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/settings/users'}
-                  icon={<User />}
+                  icon={<Image src={UsersIcon} />}
                   data={usersCount}
                   title='Users'
                   titleId='dashboard.totalUsersCount.title'
-                  styleCircle={{ backgroundColor: '#84c225', border: 'solid 5px rgb(230, 243, 211)' }}
+                  styleCircle={null}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={'/inventory/my-listings'}
-                  icon={<Globe />}
+                  icon={<Image src={ProductOrdersIcon} />}
                   data={productOffers}
                   title='Product Offers'
                   titleId='dashboard.totalProductOffers.title'
-                  styleCircle={{ backgroundColor: '#4cc3da', border: 'solid 5px rgb(219, 243, 248)' }}
+                  styleCircle={null}
                 />
               </Grid.Column>
               <Grid.Column width={5}>
                 <SummaryRectangle
                   onClickUrl={isAdmin && !takeover ? '' : '/marketplace/listings'}
-                  icon={<DollarSign />}
+                  icon={<Image src={SalesIcon} />}
                   data={broadcastedProductOffersValue && Math.round(broadcastedProductOffersValue)}
                   title={isAdmin && !takeover ? 'Broadcasted' : 'Sales'}
                   titleId={
@@ -1294,7 +1300,7 @@ class Dashboard extends Component {
                       ? 'dashboard.totalBroadcastedValueWithoutMilion.title'
                       : 'dashboard.totalSales.title'
                   }
-                  styleCircle={{ backgroundColor: '#f16844', border: 'solid 5px rgb(252, 225, 218)' }}
+                  styleCircle={null}
                   style='currency'
                   currency={currency}
                 />

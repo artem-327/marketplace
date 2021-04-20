@@ -14,8 +14,8 @@ const RectangleSummary = styled.div`
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
   border: solid 1px #dee2e6;
   background-color: #ffffff;
-  
-  &[style*="pointer"]:hover [class*="DivNumbers"] {
+
+  &[style*='pointer']:hover [class*='DivNumbers'] {
     color: #2599d5;
   }
 `
@@ -123,11 +123,24 @@ const SummaryRectangle = ({
       style={{
         ...(onClickUrl && { cursor: 'pointer' })
       }}
-      onClick={onClickUrl ? () => Router.push(onClickUrl) : undefined}
-    >
+      onClick={onClickUrl ? () => Router.push(onClickUrl) : undefined}>
       <RectangleSummaryHeader>
         <DivIcon>
-          <Circle style={styleCircle}>{icon}</Circle>
+          <Circle
+            style={
+              styleCircle
+                ? styleCircle
+                : {
+                    width: '82px',
+                    height: '82px',
+                    margin: '0 -6px -12px',
+                    borderRadius: '0',
+                    border: '0 none',
+                    backgroundColor: 'transparent'
+                  }
+            }>
+            {icon}
+          </Circle>
         </DivIcon>
         <DivSummary>
           <DivNumbers>
