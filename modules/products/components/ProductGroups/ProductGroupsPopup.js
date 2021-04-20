@@ -180,10 +180,10 @@ class ProductGroupsPopup extends Component {
                           <Required />
                         </>
                       }
-                      fieldProps={{ width: 6 }}
+                      fieldProps={{ width: 8 }}
                     />
                     <FormikDropdown
-                      fieldProps={{ width: 5 }}
+                      fieldProps={{ width: 8 }}
                       label={
                         <>
                           <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>

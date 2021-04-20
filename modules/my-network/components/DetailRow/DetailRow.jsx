@@ -31,9 +31,13 @@ const DetailRow = ({
   expandRow = null,
   buttonActionsDetailRow = null,
   openGlobalAddForm,
-  loadingDetailRow = false
+  loadingDetailRow = false,
+  updating = false
 }) => (
   <StyledGrid>
+    <Dimmer active={updating} inverted>
+      <Loader size='large' />
+    </Dimmer>
     <Header
       id={row?.id}
       logo={row?.logo}
@@ -85,7 +89,8 @@ DetailRow.propTypes = {
   expandRow: PropTypes.func,
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
-  loadingDetailRow: PropTypes.bool
+  loadingDetailRow: PropTypes.bool,
+  updating: PropTypes.bool
 }
 
 DetailRow.defaultProps = {
@@ -93,7 +98,8 @@ DetailRow.defaultProps = {
   expandRow: null,
   buttonActionsDetailRow: null,
   openGlobalAddForm: null,
-  loadingDetailRow: false
+  loadingDetailRow: false,
+  updating: false
 }
 
 export default DetailRow

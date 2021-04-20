@@ -328,13 +328,11 @@ export function handleFiltersValue(value) {
   }
 }
 
-//////////////////////
 export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagrid) {
   return async dispatch => {
-    const response = await api.putWarehouse(id, payload)
-    await dispatch({
+    const { value } = await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-      payload: response
+      payload: api.putWarehouse(id, payload)
     })
     if (attachmentFiles && attachmentFiles.length) {
       attachmentFiles.forEach(attachment => {
@@ -345,13 +343,13 @@ export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagri
       })
       if (typeof warehousesDatagrid !== 'undefined')
         warehousesDatagrid.updateRow(id, () => ({
-          ...response,
-          attachments: response.attachments.concat(attachmentFiles)
+          ...value,
+          attachments: value.attachments.concat(attachmentFiles)
         }))
       else Datagrid.loadData()
     } else {
-      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => response)
-      else Datagrid.updateRow(id, () => response)
+      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => value)
+      else Datagrid.updateRow(id, () => value)
     }
     dispatch(closeSidebar())
   }
@@ -625,12 +623,11 @@ export function getStoredCSV(data) {
 
 export function postNewUserRequest(payload, userSettings) {
   return async dispatch => {
-    const user = await api.postNewUser(payload)
-    await dispatch({
+    const { value } = await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
-      payload: user
+      payload: api.postNewUser(payload)
     })
-    await dispatch(updateSettingsCompanyUser(user.id, userSettings))
+    await dispatch(updateSettingsCompanyUser(value.id, userSettings))
   }
 }
 
