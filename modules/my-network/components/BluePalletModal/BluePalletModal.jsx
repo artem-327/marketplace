@@ -82,7 +82,7 @@ const BluePalletModal = props => {
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade transactions are safe, secure, simple, and reliable.'
             values={{
               companyName: systemCompanyName
             }}
