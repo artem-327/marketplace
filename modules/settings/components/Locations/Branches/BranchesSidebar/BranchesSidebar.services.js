@@ -3,6 +3,7 @@ import * as Yup from 'yup'
 import { addressValidationSchema, errorMessages, phoneValidation } from '../../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../../utils/functions'
 import { removeEmpty } from '../../../../../../utils/functions'
+import {closeSidebar} from "../../../../actions";
 
 const minLength = errorMessages.minLength(3)
 /**
@@ -78,7 +79,11 @@ export const getInitialFormValues = sidebarValues => {
  * postNewWarehouseRequest: (isCreate: boolean, requestData: Object<string, any>) => void}} helperFunctions
  * @param {number} id
  */
-export const submitHandler = async (values, { setSubmitting, putEditWarehouse, postNewWarehouseRequest }, id) => {
+export const submitHandler = async (
+  values,
+  { setSubmitting, putEditWarehouse, postNewWarehouseRequest, closeSidebar },
+  id
+) => {
   let country = JSON.parse(values.deliveryAddress.address.country).countryId
   let requestData = {}
 
@@ -109,6 +114,7 @@ export const submitHandler = async (values, { setSubmitting, putEditWarehouse, p
     } else {
       await postNewWarehouseRequest(values.alsoCreate, requestData)
     }
+    closeSidebar()
   } catch {
   } finally {
     setSubmitting(false)

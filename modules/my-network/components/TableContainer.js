@@ -25,7 +25,7 @@ const mapStateToProps = ({ myNetwork }, { datagrid }) => {
 
   return {
     datagrid,
-    loadingDatagrid: datagrid.loading,
+    loadingDatagrid: datagrid.loading || myNetwork.loading,
     statuses: getStatuses(mockRows),
     rows: rows?.length ? rows.map(row => getRowDetail(row, myNetwork?.detailRow)) : [],
     inviteDetailCompany: getRowDetail(myNetwork?.companyNetworkConnection),
