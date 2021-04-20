@@ -1,6 +1,6 @@
 // Constants
 import { getSafe, removeEmpty } from '~/utils/functions'
-import { INITIAL_VALUES } from "../../../company-form/components/CompanyDetails.constants"
+import { INITIAL_VALUES } from '../../../company-form/components/CompanyDetails.constants'
 
 export const getInitialFormValues = values => {
   const provinceId = getSafe(() => values.primaryBranch.deliveryAddress.address.province.id, '')
@@ -22,6 +22,7 @@ export const getInitialFormValues = values => {
     },
     email: getSafe(() => values.primaryUser.email, ''),
     phone: getSafe(() => values.primaryUser.phone, ''),
+    naicsCode: values?.naicsCategory?.naicsId
   }
 }
 
@@ -47,7 +48,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
       'dba',
       'dunsNumber',
       'enabled',
-      'industryType',
+      'naicsCode',
       'name',
       'socialFacebook',
       'socialInstagram',
@@ -61,7 +62,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
     propsToIncludeCompany.forEach(prop => (values[prop] ? (requestBodyCompany[prop] = values[prop]) : null))
     requestBodyCompany = {
       ...requestBodyCompany,
-      phone: getSafe(() => company.phone, null),
+      phone: getSafe(() => company.phone, null)
     }
     removeEmpty(requestBodyCompany)
 
@@ -82,7 +83,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
       regulatoryDhsCoiSignedDate: getSafe(() => userData.regulatoryDhsCoiSignedDate, null),
       regulatoryHazmatAuthorized: getSafe(() => userData.regulatoryHazmatAuthorized, false),
       roles: getSafe(() => userData.roles, []).map(el => el.id),
-      sellMarketSegments: getSafe(() => userData.sellMarketSegments, []).map(el => el.id),
+      sellMarketSegments: getSafe(() => userData.sellMarketSegments, []).map(el => el.id)
     }
     removeEmpty(requestBodyUser)
 
@@ -110,7 +111,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
           country: JSON.parse(values.address.country).countryId,
           province: values.address.province,
           streetAddress: values.address.streetAddress,
-          zip: values.address.zip,
+          zip: values.address.zip
         }
       }
     }

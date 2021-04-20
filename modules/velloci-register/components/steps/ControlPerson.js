@@ -245,7 +245,8 @@ function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naic
                       }),
                       search: true,
                       selection: true,
-                      loading: naicsCodes && naicsCodes.loading
+                      loading: naicsCodes?.loading,
+                      disabled: naicsCodes?.loading
                     }}
                     name='controlPerson.naicsCode'
                     label={
@@ -277,7 +278,7 @@ ControlPerson.propTypes = {
 ControlPerson.defaultProps = {
   formikProps: {},
   entityTypes: {},
-  naicsCodes: {}
+  naicsCodes: { data: [] }
 }
 
 export default injectIntl(ControlPerson)

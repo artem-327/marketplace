@@ -150,7 +150,7 @@ export function handlerSubmitUserEditPopup(id, payload, userSettings) {
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, payload)
     })
-    await dispatch(updateSettingsCompanyUser(id, userSettings))
+    userSettings && (await dispatch(updateSettingsCompanyUser(id, userSettings)))
   }
 }
 
@@ -1314,10 +1314,10 @@ export function setAttachmentFiles(attachmentFiles) {
   }
 }
 
-export function patchTradeCriteria(body) {
+export function putTradeCriteria(body) {
   return {
-    type: AT.PATCH_TRADE_CRITERIA,
-    payload: api.patchTradeCriteria(body)
+    type: AT.PUT_TRADE_CRITERIA,
+    payload: api.putTradeCriteria(body)
   }
 }
 
@@ -1388,5 +1388,84 @@ export function getUser(userId) {
   return {
     type: AT.GET_USER,
     payload: api.getUser(userId)
+  }
+}
+
+export const getInsuranceDocuments = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.GET_INSURANCE_DOCUMENTS_PENDING
+    })
+    await api
+      .getInsuranceDocuments()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export const getInsuranceDocumentsTypes = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.GET_INSURANCE_DOCUMENTS_TYPES_PENDING
+    })
+    await api
+      .getInsuranceDocumentsTypes()
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_TYPES_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.GET_INSURANCE_DOCUMENTS_TYPES_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export const uploadInsuranceDocument = (file, type) => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.UPLOAD_INSURANCE_DOCUMENTS_PENDING
+    })
+    await api
+      .uploadInsuranceDocument(file, type)
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.UPLOAD_INSURANCE_DOCUMENTS_REJECTED,
+            error: err
+          })
+      )
+  }
+}
+
+export function getMyTradePass() {
+  return {
+    type: AT.GET_MY_TRADEPASS,
+    payload: api.getMyTradePass()
   }
 }

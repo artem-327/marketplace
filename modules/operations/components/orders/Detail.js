@@ -913,7 +913,7 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
+                                        <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData>

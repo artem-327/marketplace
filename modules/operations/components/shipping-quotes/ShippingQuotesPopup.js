@@ -9,11 +9,11 @@ import Router from 'next/router'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
 import { DateInput } from '~/components/custom-formik'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { errorMessages, minOrZeroLength, dateValidation } from '~/constants/yupValidation'
 import { withDatagrid } from '~/modules/datagrid'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { closePopup, updateShippingQuote, createShippingQuote, searchManualQuoteRequest } from '../../actions'
+import { closePopup, createShippingQuote, searchManualQuoteRequest } from '../../actions'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 import { debounce } from 'lodash'
@@ -43,16 +43,26 @@ const formValidation = () =>
   )
 
 class ShippingQuotesPopup extends Component {
+  state = {
+    selectedOption: null
+  }
+
   handleSearch = debounce(text => {
     this.props.searchManualQuoteRequest(text)
   }, 250)
+
+  componentDidMount() {
+    const { popupValues } = this.props
+
+    if (popupValues) {
+      this.setState({ selectedOption: popupValues.options})
+    }
+  }
 
   render() {
     const {
       closePopup,
       popupValues,
-      rowId,
-      updateShippingQuote,
       createShippingQuote,
       toastManager,
       intl: { formatMessage },
@@ -62,7 +72,15 @@ class ShippingQuotesPopup extends Component {
       searchedManQuotRequestsLoading
     } = this.props
 
-    const formatedSearchedManQuotRequests = searchedManQuotRequests.map(val => ({
+    const { selectedOption } = this.state
+
+    let allManQuotRequestsOptions = searchedManQuotRequests.slice()
+    if (selectedOption) {
+      allManQuotRequestsOptions.push(selectedOption)
+      allManQuotRequestsOptions = uniqueArrayByKey(allManQuotRequestsOptions, 'id')
+    }
+
+    const formatedSearchedManQuotRequests = allManQuotRequestsOptions.map(val => ({
       key: val.id,
       value: val.id,
       text: `${val.id} - ${val.requestingCompany.name}`,
@@ -78,16 +96,12 @@ class ShippingQuotesPopup extends Component {
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
         <Modal.Header>
-          {popupValues ? (
-            <FormattedMessage id='settings.editShippingQuote' defaultMessage='Edit Shipping Quote' />
-          ) : (
-            <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' />
-          )}
+          <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' />
         </Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={popupValues ? popupValues : initialFormValues}
+            initialValues={{ ...initialFormValues, shippingQuoteRequestId: popupValues ? popupValues.options.id : '' }}
             validationSchema={formValidation()}
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
@@ -100,19 +114,15 @@ class ShippingQuotesPopup extends Component {
               }
 
               try {
-                let response
-                if (popupValues) response = await updateShippingQuote(rowId, payload)
-                else response = await createShippingQuote(payload)
+                const response = await createShippingQuote(payload)
 
                 if (updateDatagrid) datagrid.loadData()
 
-                let status = popupValues ? 'shippingQuoteUpdated' : 'shippingQuoteCreated'
-
                 toastManager.add(
                   generateToastMarkup(
-                    <FormattedMessage id={`notifications.${status}.header`} />,
+                    <FormattedMessage id={`notifications.shippingQuoteCreated.header`} />,
                     <FormattedMessage
-                      id={`notifications.${status}.content`}
+                      id={`notifications.shippingQuoteCreated.content`}
                       values={{ name: response.value.quoteId }}
                     />
                   ),
@@ -195,7 +205,16 @@ class ShippingQuotesPopup extends Component {
                         search: options => options,
                         selection: true,
                         clearable: true,
-                        onSearchChange: (e, { searchQuery }) => searchQuery.length > 0 && this.handleSearch(searchQuery)
+                        onSearchChange: (e, { searchQuery }) =>
+                          searchQuery.length > 0 && this.handleSearch(searchQuery),
+                        onChange: (e, { value }) => {
+                          if (value) {
+                            const selectedOption = allManQuotRequestsOptions.find(el => el.id === value)
+                            this.setState({ selectedOption })
+                          } else {
+                            this.setState({ selectedOption: null })
+                          }
+                        }
                       }}
                       fieldProps={{ width: 8 }}
                     />
@@ -233,28 +252,26 @@ ShippingQuotesPopup.defaultProps = {
 
 const mapDispatchToProps = {
   closePopup,
-  updateShippingQuote,
   createShippingQuote,
   searchManualQuoteRequest
 }
 
 const mapStateToProps = state => {
   const { popupValues } = state.operations
-  let validityDate =
-    popupValues && popupValues.validityDate ? moment(popupValues.validityDate).format(getLocaleDateFormat()) : ''
-
   return {
-    rowId: getSafe(() => popupValues.id),
     searchedManQuotRequests: state.operations.searchedManQuotRequests,
     searchedManQuotRequestsLoading: state.operations.searchedManQuotRequestsLoading,
-    popupValues: popupValues
-      ? {
-          carrierName: popupValues.carrierName,
-          quoteId: popupValues.quoteId,
-          price: popupValues.price,
-          validityDate: validityDate
+    popupValues: popupValues ? {
+      options: {
+        id: getSafe(() => popupValues.info.shippingQuoteRequestId, ''),
+        requestingCompany: {
+          name: getSafe(() => popupValues.info.buyerCompanyName, 'N/A'),
+        },
+        requestingUser: {
+          name: getSafe(() => popupValues.requestingUser.name, ''), // TODO to be adjusted
         }
-      : null
+      }
+    } : null
   }
 }
 

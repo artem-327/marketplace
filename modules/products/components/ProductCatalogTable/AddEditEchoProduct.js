@@ -66,10 +66,6 @@ const DivTitleColumn = styled.div`
   font-size: 14px;
 `
 
-const DivDocumentManager = styled.div`
-  padding-bottom: 6px;
-`
-
 const PaperclipIcon = styled(Paperclip)`
   -webkit-transform: scaleX(-1);
   transform: scaleX(-1);
@@ -218,52 +214,32 @@ const CustomTextarea = styled(TextareaAutosize)`
   background-color: #fdfdfd !important;
 `
 
-const CustomGridColumn = styled(GridColumn)`
-  #__next & {
-    align-self: flex-start !important;
-  }
-`
-
-const TabsWrapper = styled.div`
-  overflow: hidden; // fix for space at the end of flex column
-`
-
-const GridColumnBtn = styled(GridColumn)`
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
-`
-
 const DivIcon = styled.div`
   margin-right: 8px;
 `
 
-const StyledButton = styled(Button)`
-  min-width: 18px !important;
-  min-height: 18px !important;
-  width: 18px !important;
-  height: 18px !important; 
-  padding: 0 !important;
-  background: transparent !important;
-  border: solid 1px #dee2e6 !important;
-  border-radius: 9px !important;
-  
-  margin: 11px 0 !important;
-
-  &.red {
-    color: #f16844 !important;
-  }
-  &.grey {
-    color: #848893 !important;
-  }
-`
-
-const DivCentered = styled.div`
-  margin: -2px 0;
-`
-
 const IconStyled = styled(Icon)` 
-  vertical-align: middle;
-  margin: auto 0 !important;
+  &.small.icon {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    vertical-align: middle;
+    color: #848893;
+    
+    &.delete {
+      color: #f16844;
+    }
+  }
+`
+
+const DivCircleIcon = styled.div`
+  margin: 10.5px auto 10.5px -3px;
+  width: 18px;
+  height: 18px; 
+  border-radius: 9px;
+  border: solid 1px #dee2e6;
+  background-color: #ffffff;
+  cursor: pointer;
 `
 
 const DivReadOnlyValues = styled.div`
@@ -1346,21 +1322,17 @@ class AddEditEchoProduct extends React.Component {
 
                       <GridColumnMixtures width={1}>
                         {index ? (
-                          <StyledButton
-                            icon
-                            color='red'
+                          <DivCircleIcon
                             onClick={() => {
                               arrayHelpers.remove(index)
                               this.setState({ changedForm: true })
                             }}
-                            data-test={`settings_product_popup_remove_${index}_btn`}>
-                            <DivCentered>
-                              <IconStyled name='delete' size='small' />
-                            </DivCentered>
-                          </StyledButton>
-                        ) : (
-                          ''
-                        )}
+                            data-test={`settings_product_popup_remove_${index}_btn`}
+                          >
+                            <IconStyled name='delete' size='small'  />
+                          </DivCircleIcon>
+                          ) : ''
+                        }
                       </GridColumnMixtures>
                     </GridRowCustom>
                   ))
@@ -1368,9 +1340,7 @@ class AddEditEchoProduct extends React.Component {
               <GridRowCustom>
                 <GridColumnMixtures width={15}></GridColumnMixtures>
                 <GridColumnMixtures width={1}>
-                  <StyledButton
-                    icon
-                    color='grey'
+                  <DivCircleIcon
                     onClick={() => {
                       arrayHelpers.push({
                         name: '',
@@ -1383,11 +1353,10 @@ class AddEditEchoProduct extends React.Component {
                       })
                       this.setState({ changedForm: true })
                     }}
-                    data-test='settings_product_popup_add_btn'>
-                    <DivCentered>
-                      <IconStyled name='plus' size='small' />
-                    </DivCentered>
-                  </StyledButton>
+                    data-test='settings_product_popup_add_btn'
+                  >
+                    <IconStyled name='plus' size='small'  />
+                  </DivCircleIcon>
                 </GridColumnMixtures>
               </GridRowCustom>
             </>

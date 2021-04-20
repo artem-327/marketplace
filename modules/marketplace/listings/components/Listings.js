@@ -88,6 +88,15 @@ class Listings extends Component {
           allowReordering: false
         },
         {
+          name: 'seller',
+          title: (
+            <FormattedMessage id='sharedListings.detailRow.seller' defaultMessage='SELLER'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          width: 140
+        },
+        {
           name: 'packaging',
           title: (
             <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>
@@ -408,6 +417,7 @@ class Listings extends Component {
       isMerchant,
       isCompanyAdmin,
       openPopup,
+      buyEligible,
       intl: { formatMessage }
     } = this.props
     const rowActions = []
@@ -437,18 +447,20 @@ class Listings extends Component {
         id: 'marketplace.makeAnOffer',
         defaultMessage: 'Make an Offer'
       }),
-      callback: () => openPopup(row.rawData)
+      callback: () => {
+        if (!buyEligible) {
+          this.setState({ viewOnlyPopupOpen: true })
+          return
+        }
+        openPopup(row.rawData)
+      }
     }
-    if (isMerchant || isCompanyAdmin) {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-      /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
-      rowActions.push(buttonMakeAnOffer)
-    } else {
-      rowActions.push(buttonInfo)
-      rowActions.push(buttonBuy)
-      rowActions.push(buttonMakeAnOffer)
-    }
+
+    /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
+    rowActions.push(buttonInfo)
+    rowActions.push(buttonBuy)
+    !row?.brokeredOffer && rowActions.push(buttonMakeAnOffer)
+
     return rowActions
   }
 
@@ -462,7 +474,8 @@ class Listings extends Component {
       sidebar: { openInfo },
       tableHandlersFiltersListings,
       activeMarketplaceFilter,
-      isOpenPopup
+      isOpenPopup,
+      buyEligible
     } = this.props
     const { columns, openFilterPopup, viewOnlyPopupOpen } = this.state
     let { formatMessage } = intl
@@ -553,10 +566,10 @@ class Listings extends Component {
             data-test='marketplace_listings_row_action'
           />
         </div>
-        <AddCart openInfo={openInfo} />
+        <AddCart openInfo={openInfo} buyEnabled={buyEligible} />
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
-        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })}/>}
+        {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })} />}
       </Container>
     )
   }

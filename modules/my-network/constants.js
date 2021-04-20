@@ -140,27 +140,23 @@ export const mockRows = [
 ]
 
 /**
- * @constant {{
- *    red: '#f16844',
- *    yellow: '#ffb85d',
- *    green: '#84c225'
- *}}
+ * @constant
  */
 export const COLORS = {
-  red: '#f16844',
-  yellow: '#ffb85d',
-  green: '#84c225'
+  RED: '#f16844',
+  YELLOW: '#ffb85d',
+  GREEN: '#84c225'
 }
 
 /**
  * @constant {Array<string>}
  */
 export const ATTRIBUTES_TRADE_CRITERIA = [
-  'aggregateInsurance',
-  'daysBeyond',
-  'creditRisk',
+  'aggregate_insurance',
+  'days_beyond',
+  'credit_risk',
   'violations',
-  'socialPresence'
+  'social_presence'
 ]
 
 /**

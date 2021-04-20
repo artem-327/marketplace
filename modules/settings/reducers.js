@@ -6,6 +6,8 @@ import { defaultTabs } from './contants'
 import { getSafe } from '../../utils/functions'
 import { currency } from '~/constants/index'
 import { FormattedMessage } from 'react-intl'
+//Constants
+import { URL_TERMS } from '../../constants'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -104,7 +106,7 @@ export const initialState = {
           tos: (
             <FormattedMessage id='verification.termsOfService'>
               {text => (
-                <Link href='https://www.echosystem.com/terms-of-service'>
+                <Link href={URL_TERMS}>
                   <a target='_blank'>{text}</a>
                 </Link>
               )}
@@ -145,7 +147,11 @@ export const initialState = {
   isThirdPartyConnectionException: false,
   tradeCriteria: null,
   userSettings: null,
-  customerWarehousesDatagrid: null
+  customerWarehousesDatagrid: null,
+  insuranceRows: null,
+  insuranceDocumentsTypes: [],
+  insuranceDocumentsTypesLoading: false,
+  myTradePass: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -1601,6 +1607,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_PENDING:
     case AT.POST_CUSTOMER_PENDING:
     case AT.PATCH_CUSTOMER_PENDING:
     case AT.POST_CUSTOMER_WAREHOUSE_PENDING:
@@ -1613,7 +1620,8 @@ export default function reducer(state = initialState, action) {
         updating: true
       }
     }
-
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED:
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_REJECTED:
     case AT.POST_CUSTOMER_FULFILLED:
     case AT.POST_CUSTOMER_REJECTED:
     case AT.PATCH_CUSTOMER_FULFILLED:
@@ -2004,16 +2012,16 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    /* PATCH_TRADE_CRITERIA */
+    /* PUT_TRADE_CRITERIA */
 
-    case AT.PATCH_TRADE_CRITERIA_PENDING: {
+    case AT.PUT_TRADE_CRITERIA_PENDING: {
       return {
         ...state,
         loading: true
       }
     }
 
-    case AT.PATCH_TRADE_CRITERIA_FULFILLED: {
+    case AT.PUT_TRADE_CRITERIA_FULFILLED: {
       let tradeCriteria = state?.tradeCriteria
       if (payload?.settingGroups?.length) {
         payload?.settingGroups?.forEach(p => {
@@ -2029,7 +2037,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.PATCH_TRADE_CRITERIA_REJECTED: {
+    case AT.PUT_TRADE_CRITERIA_REJECTED: {
       return {
         ...state,
         loading: false
@@ -2046,18 +2054,10 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_TRADE_CRITERIA_FULFILLED: {
-      let tradeCriteria = null
-      if (payload?.length) {
-        payload?.forEach(p => {
-          if (p?.code === 'TRADEPASS_CRITERIA') {
-            tradeCriteria = p?.settings
-          }
-        })
-      }
       return {
         ...state,
         loading: false,
-        tradeCriteria
+        tradeCriteria: payload
       }
     }
 
@@ -2089,6 +2089,72 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    /* GET_INSURANCE_DOCUMENTS */
+
+    case AT.GET_INSURANCE_DOCUMENTS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        insuranceRows: payload
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_PENDING: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: true
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_FULFILLED: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: false,
+        insuranceDocumentsTypes: payload
+      }
+    }
+
+    case AT.GET_INSURANCE_DOCUMENTS_TYPES_REJECTED: {
+      return {
+        ...state,
+        insuranceDocumentsTypesLoading: false
+      }
+    }
+
+    case AT.GET_MY_TRADEPASS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.GET_MY_TRADEPASS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.GET_MY_TRADEPASS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        myTradePass: payload
       }
     }
 

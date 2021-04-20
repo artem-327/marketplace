@@ -338,14 +338,14 @@ export default {
       .get(`/prodex/api/settings/company-user/${id}`)
       .then(response => response.data)
       .catch(err => console.error(err)),
-  patchTradeCriteria: body =>
+  putTradeCriteria: body =>
     api
-      .patch('/prodex/api/settings/company', body)
+      .put('/prodex/api/tradepass/my-criteria', body)
       .then(response => response.data)
       .catch(err => err),
   getTradeCriteria: () =>
     api
-      .get('/prodex/api/settings/company?groups=TRADEPASS_CRITERIA')
+      .get('/prodex/api/tradepass/my-criteria')
       .then(response => response.data)
       .catch(err => err),
   updateSettingsCompanyUser: (userId, request) =>
@@ -380,5 +380,23 @@ export default {
     api
       .get(`/prodex/api/users/id/${userId}`)
       .then(res => res.data)
-      .catch(e => console.error(e))
+      .catch(e => console.error(e)),
+  getInsuranceDocuments: () => api.get(`/prodex/api/tradepass-insurance-documents`),
+  getInsuranceDocumentsTypes: () => api.get(`/prodex/api/tradepass-insurance-documents/types`),
+  uploadInsuranceDocument: (file, type) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return api.post(`/prodex/api/tradepass-insurance-documents?type=${type}`, formData, {
+      headers: {
+        accept: 'application/json',
+        'Accept-Language': 'en-US,en;q=0.8',
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+      }
+    })
+  },
+  getMyTradePass: () =>
+    api
+      .get(`/prodex/api/tradepass/my-tradepass`)
+      .then(res => res.data)
+      .catch(err => console.error(err))
 }

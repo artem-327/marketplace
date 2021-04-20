@@ -77,11 +77,7 @@ const ProductPopup = props => {
   }
 
   useEffect(() => {
-    //async fetch data
-    async function fetchData() {
-      await props.getProductsCatalogRequest()
-      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
-      if (props.documentTypes.length === 0) await props.getDocumentTypes()
+    function prepareAttachments() {
       if (props.popupValues) {
         const attachments = props.popupValues.attachments.map(att => ({
           id: att.id,
@@ -93,9 +89,18 @@ const ProductPopup = props => {
       }
     }
 
-    if (!props?.unitsAll?.length) fetchData()
+    //async fetch data
+    async function fetchData() {
+      await props.getProductsCatalogRequest()
+      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+      if (props.documentTypes.length === 0) await props.getDocumentTypes()
+      prepareAttachments()
+    }
 
-    if (props.popupValues.packagingUnit) {
+    if (!props?.unitsAll?.length) fetchData()
+    else if (!attachments.length && props?.popupValues?.attachments?.length) prepareAttachments()
+
+    if (props.popupValues?.packagingUnit) {
       filterPackagingTypes(
         popupValues.packagingUnit.id,
         props.unitsAll,

@@ -5,7 +5,7 @@ export const INITIAL_VALUES = {
   dba: '',
   dunsNumber: '',
   enabled: '',
-  industryType: '',
+  naicsCode: '',
   name: '',
   phone: '',
   socialFacebook: '',

@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
@@ -18,7 +19,7 @@ import {
 } from './Popup.styles'
 
 const ViewOnlyPopup = props => {
-  const { onCancel } = props
+  const { onCancel, systemCompanyName } = props
 
   return (
     <ModalStyled
@@ -45,7 +46,11 @@ const ViewOnlyPopup = props => {
           <DivDescription>
             <FormattedMessage
               id='marketplace.viewOnlyPopupText'
-              defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on BluePallet Direct. You will only be able to view BluePallet Direct listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'/>
+              defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on {companyName} Direct. You will only be able to view {companyName} Direct listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'
+              values={{
+                companyName: systemCompanyName
+              }}
+            />
           </DivDescription>
           <DivButtons>
             <DivButtonColumn>
@@ -66,4 +71,10 @@ const ViewOnlyPopup = props => {
   )
 }
 
-export default injectIntl(ViewOnlyPopup)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(ViewOnlyPopup))

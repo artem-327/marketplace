@@ -307,3 +307,29 @@ export const ShippingStatusEnum = {
     text: 'Returned'
   }
 }
+
+/**
+ *
+ * @constant {Object<string, any>}
+ */
+export const COMPANY_REQUEST = {
+  associations: '',
+  businessType: '',
+  cin: '',
+  dba: '',
+  dunsNumber: '',
+  enabled: '',
+  industryType: '',
+  naicsCode: '',
+  name: '',
+  phone: '',
+  socialFacebook: '',
+  socialInstagram: '',
+  socialLinkedin: '',
+  socialTwitter: '',
+  tagline: '',
+  tin: '',
+  tinType: '',
+  type: '',
+  website: ''
+}
