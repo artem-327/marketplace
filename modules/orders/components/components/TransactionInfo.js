@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import { OrderSegment, OrderList } from '~/modules/orders/components/Detail'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import styled from 'styled-components'
@@ -50,7 +51,7 @@ class TransactionInfo extends Component {
       }
     `
 
-    const { order, echoSupportPhone } = this.props
+    const { order, echoSupportPhone, systemCompanyName } = this.props
     const echoSystemTransaction = getSafe(() => order.dwollaTransfers[0].transferId, 'N/A')
 
     return (
@@ -66,17 +67,23 @@ class TransactionInfo extends Component {
               </RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='Echo System Transaction' />
+              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='{companyName} Transaction' values={{ companyName: systemCompanyName }} />
               <RightSpan>{echoSystemTransaction}</RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='Echo Support Phone' />
+              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='{companyName} Support Phone' values={{ companyName: systemCompanyName }} />
               <RightSpan>{echoSupportPhone}</RightSpan>
             </SmallerTextColumn>
           </GridRow>
         </Grid>
       </StyledSegment>
     )
+  }
+}
+
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
   }
 }
 
@@ -88,4 +95,4 @@ TransactionInfo.defaultProps = {
   echoSupportPhone: ''
 }
 
-export default injectIntl(TransactionInfo)
+export default connect(mapStateToProps)(injectIntl(TransactionInfo))

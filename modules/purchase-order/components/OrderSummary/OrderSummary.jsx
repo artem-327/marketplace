@@ -28,7 +28,8 @@ const OrderSummary = props => {
     submitButtonDisabled,
     loading,
     subTotalPrice,
-    isNotHazardousPermissions
+    isNotHazardousPermissions,
+    systemCompanyName
   } = props
 
   const priceComponent = val =>
@@ -79,7 +80,7 @@ const OrderSummary = props => {
           {allAccepted ? (
             <FormattedMessage
               id='checkout.summary.byPlacingYourOrder'
-              defaultMessage='By placing your order, you agree to Echosystem’s Privacy Policy and Conditions of use}.'
+              defaultMessage='By placing your order, you agree to {companyName}’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
                   <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>
@@ -90,7 +91,8 @@ const OrderSummary = props => {
                   <LinkLabel href={URL_TERMS} target='_blank'>
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
-                )
+                ),
+                companyName: systemCompanyName
               }}
             />
           ) : (
@@ -161,4 +163,10 @@ OrderSummary.defaultProps = {
   loading: false
 }
 
-export default injectIntl(OrderSummary)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(OrderSummary))

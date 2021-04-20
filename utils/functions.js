@@ -118,7 +118,7 @@ export const generateQueryString = params => {
 
 export const removeEmpty = (obj, checkFn) =>
   Object.entries(obj).forEach(([key, val]) => {
-    if (val && typeof val === 'object') {
+    if (val && !Array.isArray(val) && typeof val === 'object') {
       removeEmpty(val)
       // if (Object.entries(val).length === 0) delete obj[key]
     } else {

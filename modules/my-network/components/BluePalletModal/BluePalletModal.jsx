@@ -1,9 +1,22 @@
 import { useState } from 'react'
+import { connect } from 'react-redux'
 import { Modal, Dimmer, Loader, List, Grid, Image } from 'semantic-ui-react'
 import { func, bool } from 'prop-types'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Styles
-import { ModalCustom, HeaderWrapper, ContentHeaderTitle, IconsWrapper, IconWrapper, IconBox, ContentMainTitle, ContentSubTitle, AnswerBlock, ListBlock, FooterInfo } from './BluePalletModal.styles'
+import {
+  ModalCustom,
+  HeaderWrapper,
+  ContentHeaderTitle,
+  IconsWrapper,
+  IconWrapper,
+  IconBox,
+  ContentMainTitle,
+  ContentSubTitle,
+  AnswerBlock,
+  ListBlock,
+  FooterInfo
+} from './BluePalletModal.styles'
 // Icons
 import Logo from '~/assets/images/nav/logo-bluepallet.png'
 import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
@@ -11,6 +24,7 @@ import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg
 import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
 import IconSimple from '~/assets/images/blue-pallet/target.svg'
 import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
+import * as Actions from '../../../inventory/actions'
 /**
  * Modal allow connect between companies.
  * @category My Network
@@ -18,10 +32,7 @@ import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
  */
 const BluePalletModal = props => {
   const [value, setValue] = useState('')
-  const {
-    open,
-    onClose
-  } = props
+  const { open, onClose, systemCompanyName } = props
 
   return (
     <ModalCustom
@@ -62,12 +73,19 @@ const BluePalletModal = props => {
       </Modal.Header>
       <Modal.Content>
         <ContentMainTitle as='h3'>
-          <FormattedMessage id='bluePallet.whatIs' defaultMessage='What is Blue Pallet Direct?' />
+          <FormattedMessage
+            id='bluePallet.whatIs'
+            defaultMessage='What is {companyName} Direct?'
+            values={{ companyName: systemCompanyName }}
+          />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='Blue Pallet Direct anonymously displays selected inventory on our direct feed for all qualified members on the Blue Pallet platform to view and purchase. Selling and buying inventory through Blue Pallet Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Pallet direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='{companyName} Direct anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through {companyName} Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that {companyName} direct transactions are safe, secure, simple, and reliable.'
+            values={{
+              companyName: systemCompanyName
+            }}
           />
         </AnswerBlock>
         <Grid>
@@ -86,7 +104,10 @@ const BluePalletModal = props => {
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
-                <FormattedMessage id='bluePallet.anonymouslySell' defaultMessage='Anonymously Sell to our entire network of buyers' />
+                <FormattedMessage
+                  id='bluePallet.anonymouslySell'
+                  defaultMessage='Anonymously Sell to our entire network of buyers'
+                />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -119,7 +140,13 @@ const BluePalletModal = props => {
           </Grid.Column>
         </Grid>
         <FooterInfo>
-          <FormattedMessage id='bluePallet.footerInfo' defaultMessage='Blue Pallet Direct only displays inventory of Blue Pallet Members. Blue Pallet Direct does not manufacture, distribute, or possess any products listed on the Blue Pallet Direct Marketplace. Blue Pallet Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.' />
+          <FormattedMessage
+            id='bluePallet.footerInfo'
+            defaultMessage='{companyName} Direct only displays inventory of {companyName} Members. {companyName} Direct does not manufacture, distribute, or possess any products listed on the {companyName} Direct Marketplace. {companyName} Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            values={{
+              companyName: systemCompanyName
+            }}
+          />
         </FooterInfo>
       </Modal.Content>
     </ModalCustom>
@@ -136,4 +163,10 @@ BluePalletModal.defaultProps = {
   onClose: () => {}
 }
 
-export default injectIntl(BluePalletModal)
+function mapStateToProps(store) {
+  return {
+    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(BluePalletModal))
