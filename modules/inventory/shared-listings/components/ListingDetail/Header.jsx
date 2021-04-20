@@ -159,6 +159,7 @@ const Header = props => {
                 name='priceMultiplier'
                 placeholder={'Enter Markup'}
                 readOnly={!values.id || loadingMarkup}
+                disabled={loadingMarkup}
                 onChange={(e, data) => {
                   onChange({ ...values, priceMultiplier: data.value })
                 }}

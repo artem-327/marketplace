@@ -3,6 +3,7 @@ import { NETWORK_STATUS } from './constants'
 
 export const initialState = {
   loading: false,
+  updating: false,
   networkStatus: NETWORK_STATUS.ALL,
   all: 0,
   connected: 0,
@@ -106,6 +107,45 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         bluePalletModal: false
+      }
+    }
+
+    case AT.DISCONNECT_PENDING:
+    case AT.REJECT_PENDING:
+    case AT.ACCEPT_PENDING:
+    case AT.REMOVE_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.REJECT_FULFILLED:
+    case AT.REJECT_REJECTED:
+    case AT.ACCEPT_FULFILLED:
+    case AT.ACCEPT_REJECTED:
+    case AT.DISCONNECT_FULFILLED:
+    case AT.DISCONNECT_REJECTED:
+    case AT.REMOVE_FULFILLED:
+    case AT.REMOVE_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.INVITE_PENDING: {
+      return {
+        ...state,
+        updating: true
+      }
+    }
+
+    case AT.INVITE_FULFILLED:
+    case AT.INVITE_REJECTED: {
+      return {
+        ...state,
+        updating: false
       }
     }
 
