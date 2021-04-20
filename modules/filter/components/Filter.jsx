@@ -574,16 +574,6 @@ class Filter extends Component {
     })
   }
 
-  smartIntegerFilter = event => {
-    event.target.value = event.target.value.replace(/[+.-]/g, '')
-    event.target.value = parseInt(event.target.value)
-  }
-
-  smartFloatFilter = event => {
-    event.target.value = event.target.value.replace(/[+-]/g, '')
-    event.target.value = parseFloat(event.target.value)
-  }
-
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productConditions,
@@ -824,8 +814,7 @@ class Filter extends Component {
                       type: 'number',
                       label: formatMessage({ id: 'filter.FromQuantity', defaultMessage: 'From' }),
                       labelPosition: 'left',
-                      fluid: true,
-                      onChange: (e) => { this.smartIntegerFilter(e) }
+                      fluid: true
                     }}
                   />
                 </GridColumn>
@@ -837,8 +826,7 @@ class Filter extends Component {
                       type: 'number',
                       label: formatMessage({ id: 'filter.ToQuantity', defaultMessage: 'To' }),
                       labelPosition: 'left',
-                      fluid: true,
-                      onChange: (e) => { this.smartIntegerFilter(e) }
+                      fluid: true
                     }}
                   />
                 </GridColumn>
@@ -857,8 +845,7 @@ class Filter extends Component {
                       min: 0.001,
                       step: 0.001,
                       placeholder: '0.000',
-                      fluid: true,
-                      onChange: (e) => { this.smartFloatFilter(e) }
+                      fluid: true
                     },
                     formatMessage({ id: 'filter.FromPrice', defaultMessage: 'From' }),
                     currencySymbol,
@@ -873,8 +860,7 @@ class Filter extends Component {
                       min: 0.001,
                       step: 0.001,
                       placeholder: '0.000',
-                      fluid: true,
-                      onChange: (e) => { this.smartFloatFilter(e) }
+                      fluid: true
                     },
                     formatMessage({ id: 'filter.ToPrice', defaultMessage: 'To' }),
                     currencySymbol,

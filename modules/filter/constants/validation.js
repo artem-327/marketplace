@@ -53,7 +53,9 @@ const errorMessages = {
   minimum: min => <FormattedMessage id='validation.minimum' values={{ min }} />,
   maximum: max => <FormattedMessage id='validation.maximum' values={{ max }} />,
   lessThan: value => <FormattedMessage id='validation.lessThan' values={{ value }} />,
-  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{ value }} />
+  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{ value }} />,
+  maxDecimals: max => <FormattedMessage id='validation.maxDecimals' max={{ max }} />,
+  integer: <FormattedMessage id='validation.integer' />
 }
 
 const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
@@ -68,7 +70,7 @@ const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
 
   let defaultValidation = Yup.number().min(newOptions.minimum, errorMessages.minimum(newOptions.minimum))
 
-  if (newOptions.additionalValidation) defaultValidation = newOptions.additionalValidation(defaultValidation)
+  if (newOptions?.additionalValidation) defaultValidation = newOptions.additionalValidation(defaultValidation)
 
   let validation = defaultValidation.notRequired().nullable()
 
@@ -94,7 +96,13 @@ export const validationSchema = openedSaveFilter =>
       ...comparationHelper(
         { propertyName: 'quantityFrom', value: 'To Quantity' },
         { propertyName: 'quantityTo', value: 'From Quantity' },
-        values
+        values,
+        {
+          minimum: 1,
+          additionalValidation: validation => {
+            return validation.integer(errorMessages.integer)
+          }
+        }
       ),
 
       ...comparationHelper(
@@ -116,8 +124,7 @@ export const validationSchema = openedSaveFilter =>
         }
       ),
 
-      maximumPricePerUOM: Yup
-        .number()
+      maximumPricePerUOM: Yup.number('number')
         .min(0.001, errorMessages.minimum(0.001))
         .typeError(errorMessages.mustBeNumber)
         .test('maxdec', errorMessages.maxDecimals(3), val => {
