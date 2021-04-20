@@ -122,7 +122,7 @@ export const validationSchema = openedSaveFilter =>
         }
       ),
 
-      maximumPricePerUOM: Yup.number('number')
+      maximumPricePerUOM: Yup.number()
         .min(0.001, errorMessages.minimum(0.001))
         .typeError(errorMessagesGlobal.mustBeNumber)
         .test('maxdec', errorMessagesGlobal.maxDecimals(3), val => {
@@ -130,22 +130,22 @@ export const validationSchema = openedSaveFilter =>
         })
         .notRequired(),
 
-      expirationFrom: Yup.number('number')
+      expirationFrom: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      expirationTo: Yup.number('number')
+      expirationTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      neededAtFrom: Yup.number('number')
+      neededAtFrom: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      neededAtTo: Yup.number('number')
+      neededAtTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      mfgFrom: Yup.number('number')
+      mfgFrom: Yup.number()
         .min(0, errorMessages.minimum(0))
         .notRequired(),
-      mfgTo: Yup.number('number')
+      mfgTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
 
