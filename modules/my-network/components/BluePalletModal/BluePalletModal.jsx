@@ -75,14 +75,14 @@ const BluePalletModal = props => {
         <ContentMainTitle as='h3'>
           <FormattedMessage
             id='bluePallet.whatIs'
-            defaultMessage='What is Blue Trade Direct?'
+            defaultMessage='What is Blue Trade?'
             values={{ companyName: systemCompanyName }}
           />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='Blue Trade Direct anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade direct transactions are safe, secure, simple, and reliable.'
             values={{
               companyName: systemCompanyName
             }}
@@ -142,7 +142,7 @@ const BluePalletModal = props => {
         <FooterInfo>
           <FormattedMessage
             id='bluePallet.footerInfo'
-            defaultMessage='Blue Trade Direct only displays inventory of {companyName} Members. Blue Trade Direct does not manufacture, distribute, or possess any products listed on the Blue Trade Direct Marketplace. Blue Trade Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            defaultMessage='Blue Trade only displays inventory of {companyName} Members. Blue Trade does not manufacture, distribute, or possess any products listed on the Blue Trade Marketplace. Blue Trade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
             values={{
               companyName: systemCompanyName
             }}
