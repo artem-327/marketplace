@@ -53,9 +53,7 @@ const errorMessages = {
   minimum: min => <FormattedMessage id='validation.minimum' values={{ min }} />,
   maximum: max => <FormattedMessage id='validation.maximum' values={{ max }} />,
   lessThan: value => <FormattedMessage id='validation.lessThan' values={{ value }} />,
-  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{ value }} />,
-  maxDecimals: max => <FormattedMessage id='validation.maxDecimals' max={{ max }} />,
-  integer: <FormattedMessage id='validation.integer' />
+  greaterThan: value => <FormattedMessage id='validation.greaterThan' values={{ value }} />
 }
 
 const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
@@ -100,7 +98,7 @@ export const validationSchema = openedSaveFilter =>
         {
           minimum: 1,
           additionalValidation: validation => {
-            return validation.integer(errorMessages.integer)
+            return validation.integer(errorMessagesGlobal.integer)
           }
         }
       ),
@@ -126,8 +124,8 @@ export const validationSchema = openedSaveFilter =>
 
       maximumPricePerUOM: Yup.number('number')
         .min(0.001, errorMessages.minimum(0.001))
-        .typeError(errorMessages.mustBeNumber)
-        .test('maxdec', errorMessages.maxDecimals(3), val => {
+        .typeError(errorMessagesGlobal.mustBeNumber)
+        .test('maxdec', errorMessagesGlobal.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         })
         .notRequired(),
