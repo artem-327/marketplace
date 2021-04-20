@@ -115,12 +115,10 @@ class ModalDetail extends Component {
     } else {
       searchOrigins('', 200)
     }
-    this.fetchIfNoData('listConditions', getProductConditions)
     this.fetchIfNoData('listForms', getProductForms)
     this.fetchIfNoData('listGrades', getProductGrades)
     this.fetchIfNoData('warehousesList', getWarehouses)
 
-    searchManufacturers('', 200)
     this.switchTab(modalActiveTab)
     if (detailValues?.minPkg) {
       detailValues?.minPkg > detailValues?.pkgAvailable
