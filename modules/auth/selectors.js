@@ -14,7 +14,7 @@ const getCountryIdHomeBranch = state =>
 const getHasProvinces = state =>
   state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.country?.hasProvinces
 const getZip = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.zip?.zip
-const getZipHomeBranch = state => state.auth.identity.homeBranch.deliveryAddress.address.zip.zip
+const getZipHomeBranch = state => state?.auth?.identity?.homeBranch?.deliveryAddress?.address?.zip?.zip
 const getProvince = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.province?.id
 const getDba = state => state?.auth?.identity?.company?.dba
 const getCompanyName = state => state?.auth?.identity?.company?.name
