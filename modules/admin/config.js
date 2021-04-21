@@ -207,6 +207,16 @@ export const config = {
         required: true
       },
       {
+        name: 'dimensionUnit',
+        title: (
+          <FormattedMessage id='global.dimensionUnit' defaultMessage='Dimension Unit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      },
+      {
         name: 'palletPkgMax',
         title: (
           <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max'>
