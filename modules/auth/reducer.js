@@ -59,7 +59,8 @@ export const initialState = {
     version: ''
   },
   loading: false,
-  identity: null
+  identity: null,
+  error: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -349,6 +350,28 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.UPDATE_COMPANY_DETAILS_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.UPDATE_COMPANY_DETAILS_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: action.payload
+        }
+      }
+    }
+
+    case AT.UPDATE_COMPANY_DETAILS_REJECTED: {
+      return {
+        ...state,
+        error: action.error
+      }
+    }
     default: {
       return state
     }
