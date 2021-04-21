@@ -45,6 +45,7 @@ export const makeGetCompanyName = () => createSelector([getCompanyName], name =>
 export const makeGetBussinessType = () => createSelector([getBussinessType], businessType => businessType)
 export const makeGetEin = () => createSelector([getEin], ein => ein)
 export const makeGetAppInfo = () => createSelector([getAppInfo], appInfo => appInfo)
+export const makeGetCompany = () => createSelector([getCompany], company => company)
 export const makeGetCompanyId = () => createSelector([getCompanyId], companyId => companyId)
 export const makeGetCompanyRequest = () => createSelector([getCompany], company => getCompanyRequestObject(company))
 export const makeGetIsMerchant = () => createSelector([getIsMerchant], isMerchant => isMerchant ?? false)

@@ -1,6 +1,8 @@
 // Constants
 import { getSafe, removeEmpty } from '~/utils/functions'
 import { INITIAL_VALUES } from '../../../company-form/components/CompanyDetails.constants'
+//Services
+import { getCompanyRequestObject } from '../../../../services'
 
 export const getInitialFormValues = values => {
   const provinceId = getSafe(() => values.primaryBranch.deliveryAddress.address.province.id, '')
@@ -27,44 +29,13 @@ export const getInitialFormValues = values => {
 }
 
 export const handleSubmit = async (values, { setSubmitting }, props, state) => {
-  const {
-    postCompanyLogo,
-    deleteCompanyLogo,
-    updateCompany,
-    getIdentity,
-    company,
-    handlerSubmitUserEditPopup,
-    putEditWarehouse
-  } = props
+  const { postCompanyLogo, deleteCompanyLogo, getIdentity, company, updateCompanyDetails } = props
   const { companyLogo, shouldUpdateLogo } = state
 
   try {
-    // Company endpoint data
-    let requestBodyCompany = {}
-    let propsToIncludeCompany = [
-      'associations',
-      'businessType',
-      'cin',
-      'dba',
-      'dunsNumber',
-      'enabled',
-      'naicsCode',
-      'name',
-      'socialFacebook',
-      'socialInstagram',
-      'socialLinkedin',
-      'socialTwitter',
-      'tagline',
-      'tin',
-      'tinType',
-      'website'
-    ]
-    propsToIncludeCompany.forEach(prop => (values[prop] ? (requestBodyCompany[prop] = values[prop]) : null))
-    requestBodyCompany = {
-      ...requestBodyCompany,
-      phone: getSafe(() => company.phone, null)
-    }
-    removeEmpty(requestBodyCompany)
+    let newCompanyObj = { ...values, phone: getSafe(() => company.phone, null) }
+    // Company request object
+    let requestBodyCompany = getCompanyRequestObject(company, newCompanyObj)
 
     // Primary User endpoint data
     const userData = company.primaryUser
@@ -117,14 +88,11 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
     }
     removeEmpty(requestBodyBranch)
 
-    await Promise.all([
-      updateCompany(values.id, {
-        ...requestBodyCompany,
-        businessType: values.businessType ? values.businessType : null
-      }),
-      handlerSubmitUserEditPopup(company.primaryUser.id, requestBodyUser),
-      putEditWarehouse(requestBodyBranch, branchData.id)
-    ])
+    await updateCompanyDetails(values.id, {
+      company: requestBodyCompany,
+      branch: requestBodyBranch,
+      user: requestBodyUser
+    })
 
     if (shouldUpdateLogo) {
       if (companyLogo) {
@@ -133,7 +101,6 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
         await deleteCompanyLogo(values.id)
       }
     }
-    getIdentity() // To get updated state
   } catch (err) {
     console.error(err)
   } finally {
