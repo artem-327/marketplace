@@ -15,6 +15,7 @@ import { getObjectWithoutEmptyElements } from '~/services'
 import { getSafe, removeEmpty } from '~/utils/functions'
 import { getStringISODate } from '~/components/date-format'
 import { titleForms } from '../constants'
+import { isEmptyObject } from '../../../services'
 
 /**
  * Function validates values from VellociRegister form.
@@ -234,16 +235,8 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
 export const handleSubmit = async (values, props, selfFormikProps) => {
   if (props.activeStep !== 6) return
 
-  let companyRequest = { ...props?.companyRequestBody }
-
-  removeEmpty(companyRequest, val => Array.isArray(val) && !!val?.length)
-  const companyRequestBody = {
-    ...companyRequest,
-    naicsCode: values?.controlPerson?.naicsCode
-  }
-
   try {
-    props.loadSubmitButton(true)
+    props?.loadSubmitButton(true)
     const body = getBody(values)
 
     const files = getSafe(() => values.companyFormationDocument.attachments, '')
@@ -255,7 +248,16 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
       }
     }
 
-    if (props?.naicsCode !== values?.controlPerson?.naicsCode && props?.companyId) {
+    if (
+      props?.naicsCode !== values?.controlPerson?.naicsCode &&
+      props?.companyId &&
+      typeof props?.companyRequestBody === 'object' &&
+      !isEmptyObject(props?.companyRequestBody)
+    ) {
+      const companyRequestBody = {
+        ...props?.companyRequestBody,
+        naicsCode: values?.controlPerson?.naicsCode
+      }
       await props?.updateCompany(props?.companyId, companyRequestBody)
     }
 
