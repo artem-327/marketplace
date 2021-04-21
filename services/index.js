@@ -50,7 +50,7 @@ export const isEmptyObject = obj => {
  * Prepares CompanyRequest object for BE request PATCH /api/companies/id/{companyId}
  * @method
  * @param {TCompanyObject & Object<string, any>} companyObj Company object from Redux store "auth.identity.company" from selector function "makeGetCompany".
- * @param {TCompanyObject & Object<string, any>} [newCompanyObj] Object whit new values for update a Company. Object needs to have the same attributes as TCompanyObject if wants to modifie object CompanyRequest for PATCH /api/companies/id/{companyId}.
+ * @param {Object<string, any>} [newCompanyObj] Object whit new values for update a Company. Object needs to have the same attributes as TCompanyObject if wants to modifie object CompanyRequest for PATCH /api/companies/id/{companyId}.
  * @return {TCompanyRequest} Company request object without attributes where no values for PATCH /api/companies/id/{companyId}.
  * @throws Will throw an error if the argument "companyObj" is null | undefined | empty object | type not a object. Parameter "companyObj" is required! Pass "auth.identity.company" from Redux where are stored all data about CompanyResponse (from BE) to the parameter "companyObj"!
  */
