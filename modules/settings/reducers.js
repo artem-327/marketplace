@@ -1086,6 +1086,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        isLoadingAddedAccounts: !state.isLoadingAddedAccounts,
         bankAccountsRows: state.bankAccountsRows.filter(account => account.id !== payload)
       }
     }
@@ -1099,11 +1100,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.DWOLLA_SET_PREFERRED_REJECTED:
-    case AT.DWOLLA_SET_PREFERRED_FULFILLED: {
+    case AT.DWOLLA_SET_PREFERRED_REJECTED: {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.DWOLLA_SET_PREFERRED_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        isLoadingAddedAccounts: !state.isLoadingAddedAccounts
       }
     }
 
@@ -1737,7 +1745,6 @@ export default function reducer(state = initialState, action) {
     case AT.VELLOCI_ADD_ACOUNT_PENDING: {
       return {
         ...state,
-        isLoadingAddedAccounts: true,
         loading: true
       }
     }
@@ -1745,7 +1752,7 @@ export default function reducer(state = initialState, action) {
     case AT.VELLOCI_ADD_ACOUNT_FULFILLED: {
       return {
         ...state,
-        isLoadingAddedAccounts: false,
+        isLoadingAddedAccounts: !state.isLoadingAddedAccounts,
         loading: false
       }
     }
@@ -1753,7 +1760,6 @@ export default function reducer(state = initialState, action) {
     case AT.VELLOCI_ADD_ACOUNT_REJECTED: {
       return {
         ...state,
-        isLoadingAddedAccounts: false,
         loading: false,
         isThirdPartyConnectionException:
           getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
