@@ -9,8 +9,8 @@ import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, StyledInput, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
 
-import Logo from '~/assets/images/login/logo-bluepallet.png'
-import Icon from '~/assets/images/login/icon-bluepallet.png'
+import Logo from '~/assets/images/login/logo-bluepallet.svg'
+import Icon from '~/assets/images/login/icon-bluepallet.svg'
 
 const StyledForm = styled(Form)`
   margin-bottom: 15px;
