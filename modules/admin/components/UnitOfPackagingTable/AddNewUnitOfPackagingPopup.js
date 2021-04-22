@@ -217,22 +217,25 @@ const mapDispatchToProps = {
   postNewRequest
 }
 
-const mapStateToProps = state => {
-  let cfg = state.admin.config['packaging-types']
+const makeMapStateToProps = () => {
   const getDimensionUnits = makeGetDimensionUnits()
   const getWeightUnits = makeGetWeightUnits()
-  return {
-    config: cfg,
-    measureOptions: state.admin.measureTypes.map(d => {
-      return {
-        id: d.id,
-        text: d.name,
-        value: d.id
-      }
-    }),
-    dimensionUnits: getDimensionUnits(state),
-    weightUnits: getWeightUnits(state)
+  const mapStateToProps = state => {
+    let cfg = state.admin.config['packaging-types']
+    return {
+      config: cfg,
+      measureOptions: state.admin.measureTypes.map(d => {
+        return {
+          id: d.id,
+          text: d.name,
+          value: d.id
+        }
+      }),
+      dimensionUnits: getDimensionUnits(state),
+      weightUnits: getWeightUnits(state)
+    }
   }
+  return mapStateToProps
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)
+export default connect(makeMapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)
