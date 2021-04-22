@@ -3437,5 +3437,6 @@
   "insurance.carrier": "CARRIER",
   "insurance.coverage": "COVERAGE",
   "insurance.expiration": "EXPIRATION",
-  "inventory.isBelowMin": "The available quantity is below the min quantity"
+  "inventory.isBelowMin": "The available quantity is below the min quantity",
+  "priceBook.noElementsChanged": "There are no elements to be changed"
 }

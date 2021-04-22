@@ -1,8 +1,9 @@
-import { Icon, Checkbox } from 'semantic-ui-react'
+import { Icon, Checkbox, Popup } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './styles/Broadcast.style'
 import { getBroadcast } from '~/modules/broadcast/utils'
 import { getSafe } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const EmptyIconSpace = () => (
   <span style={{ width: '1.18em', display: 'inline-block', marginRight: '0.25rem' }}>&nbsp;</span>
@@ -57,8 +58,11 @@ const RuleItem = props => {
     .reverse()
     .slice(1)
     .filter(n => n.model.rule.broadcast === 1)
+
   const parentBroadcasted = broadcastedParents.reverse()[0]
+
   let nodeBroadcast = rule.broadcast
+  let toggleDisabled = false
   const hasNonHiddenChild = item.first(n => !n.model.rule.hidden && n.model.rule.id !== item.model.rule.id)
 
   const displayArrow = item.children.length > 0 && rule.type !== 'root' && hasNonHiddenChild
@@ -67,9 +71,9 @@ const RuleItem = props => {
     let all = item.all(n => n.model.rule.type === 'branch').length
 
     let broadcastingTo = item.all(n => n.model.rule.type === 'branch' && n.model.rule.broadcast === 1).length
-
-    if (all === broadcastingTo) nodeBroadcast = 1
-    else if (broadcastingTo === 0) nodeBroadcast = 0
+    if (all === 0 && broadcastingTo === 0) toggleDisabled = true
+    if (all !== 0 && all === broadcastingTo) nodeBroadcast = 1
+    else if (all !== 0 && broadcastingTo === 0) nodeBroadcast = 0
   } else if (item.hasChildren()) {
     nodeBroadcast = getBroadcast(item)
   }
@@ -92,15 +96,26 @@ const RuleItem = props => {
         style={styleRow}>
         <Rule.Toggle
           style={asModal ? { flex: '0 0 62px' } : { flex: '0 0 88px', maxWidth: '60px', paddingLeft: '0 !important' }}>
-          <Checkbox
-            className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
-            data-test='broadcast_rule_toggle_chckb'
-            toggle
-            fitted
-            indeterminate={nodeBroadcast === 2}
-            checked={nodeBroadcast === 1}
-            // disabled={toggleDisabled}
-            onClick={e => onChange(item, 'broadcast', e)}
+          <Popup
+            position='right center'
+            trigger={
+              <div>
+                <Checkbox
+                  className={rule.priceOverride && nodeBroadcast === 1 && 'independent'}
+                  data-test='broadcast_rule_toggle_chckb'
+                  toggle
+                  fitted
+                  indeterminate={nodeBroadcast === 2}
+                  checked={nodeBroadcast === 1}
+                  disabled={toggleDisabled}
+                  onClick={e => onChange(item, 'broadcast', e)}
+                />
+              </div>
+            }
+            disabled={!toggleDisabled}
+            content={
+              <FormattedMessage id='priceBook.noElementsChanged' defaultMessage='There are no elements to be changed' />
+            }
           />
         </Rule.Toggle>
         <Rule.RowContent depth={nodePath.length}>
