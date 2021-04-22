@@ -97,12 +97,12 @@ RowDescription.defaultProps = {
 }
 
 function mapStateToProps(store, { productOffer }) {
-  const companyProduct = productOffer.companyProduct
+  const companyProduct = getSafe(() => productOffer.companyProduct, null)
   const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
 
   return {
     currentUserId: getSafe(() => store.auth.identity.id, ''),
-    productName: getSafe(() => companyProduct.intProductName, ''),
+    productName: getSafe(() => companyProduct.intProductName, 'N/A'),
     listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
     packagingType: getSafe(() => companyProduct.packagingType.name, ''),
     packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
