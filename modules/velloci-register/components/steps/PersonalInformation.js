@@ -15,6 +15,7 @@ import { AddressForm } from '~/modules/address-form'
 import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import { roles } from '../../../../components/settings/constants'
 
 const GridPersonalInformation = styled(Grid)`
   margin: 14px 16px !important;
@@ -51,6 +52,16 @@ function PersonalInformation({
 }) {
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
+    let businessRolesOptions =
+      businessRoles && businessRoles.data && businessRoles.data.length
+        ? businessRoles.data.map(el => ({
+            key: el,
+            value: el,
+            text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
+          }))
+        : []
+
+    if (i > 0) businessRolesOptions = businessRolesOptions?.filter(role => role?.key !== 'controlling_officer')
     forms.push(
       <GridPersonalInformation key={i}>
         {i > 0 && (
@@ -248,15 +259,7 @@ function PersonalInformation({
           {!registerBeneficialOwner && (
             <ColumnCustom>
               <Dropdown
-                options={
-                  businessRoles && businessRoles.data && businessRoles.data.length
-                    ? businessRoles.data.map(el => ({
-                        key: el,
-                        value: el,
-                        text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-                      }))
-                    : []
-                }
+                options={businessRolesOptions}
                 fieldProps={{
                   'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
                 }}
