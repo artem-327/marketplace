@@ -267,7 +267,6 @@ function PersonalInformation({
                   }),
                   search: true,
                   selection: true,
-                  disabled: i > 0,
                   loading: businessRoles && businessRoles.loading
                 }}
                 name={`verifyPersonalInformation[${i}].businessRole`}
