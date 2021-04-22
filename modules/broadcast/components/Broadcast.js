@@ -72,7 +72,7 @@ import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 import confirm from '~/components/Confirmable/confirm'
-import { normalizeTree, getBroadcast, getNodeStatus } from '~/modules/broadcast/utils'
+import { normalizeTree, getBroadcast, getNodeStatus } from '../utils'
 import CompanyInfo from './CompanyInfo'
 
 class Broadcast extends Component {

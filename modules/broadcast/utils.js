@@ -28,16 +28,23 @@ export const getNodeStatus = (item, additionalCondition = () => true) => {
 
   if (item.hasChildren()) {
     var all = item.all(n => !n.hasChildren()).length
+
     var broadcasted = item.all(n => {
       return !n.hasChildren() && getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1
-    })
-      .length
+    }).length
     anyChildBroadcasting = !!item.first(n => {
-      return getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 &&
-        getSafe(() => n.model.rule.id, n.model.id) !== item.model.id && additionalCondition(n)
+      const isTrue =
+        getSafe(() => n.model.rule.broadcast, n.model.broadcast) === 1 &&
+        (!!n?.model?.rule?.id || !!n?.model?.id) &&
+        getSafe(() => n.model.rule.id, n.model.id) !== item?.model?.id
+
+      return isTrue
     })
 
-    allChildrenBroadcasting = all !== 0 && broadcasted !== 0 && all === broadcasted
+    allChildrenBroadcasting =
+      all !== 0 &&
+      broadcasted !== 0 &&
+      (all === broadcasted || (item?.model?.type === 'root' && item?.model?.broadcast === 1))
   }
 
   return { allChildrenBroadcasting, anyChildBroadcasting }
