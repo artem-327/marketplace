@@ -231,7 +231,8 @@ class Table extends Component {
     const messageDetailTable = {
       MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
       MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
-      MessageShippingQuoteInfoResponse: <ShippingQuoteInfo row={row.rawData} />
+      MessageShippingQuoteInfoResponse:
+        <ShippingQuoteInfo row={row.rawData} onClose={() => this.toggleDetail(row.id)} />
     }
     // TODO when BE will have GET endpoint for Detail Order in Operatins
     // and FE adjust component Detail in Operation

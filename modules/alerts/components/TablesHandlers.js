@@ -105,13 +105,11 @@ class TablesHandlers extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFilters, datagrid, isAdmin } = this.props
+    const { tableHandlersFilters, datagrid } = this.props
     let { currentTab } = this.props
 
     currentTab = null
     this.handleFiltersValue({ category: currentTab })
-
-    !isAdmin && datagrid.clear() // ! ! ??
 
     if (tableHandlersFilters) {
       this.setState(tableHandlersFilters)
@@ -142,7 +140,6 @@ class TablesHandlers extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.currentTab !== prevProps.currentTab) {
       const { currentTab } = this.props
-      !this.props.isAdmin && this.props.datagrid.clear()    // ! ! ???
       const filter = this.state[currentTab]
       if (filter) {
         this.handleFiltersValue({ ...filter, category: currentTab })
@@ -290,7 +287,6 @@ class TablesHandlers extends Component {
 const mapStateToProps = ({ auth, alerts }) => {
   return {
     ...alerts,
-    isAdmin: getSafe(() => auth.identity.isAdmin, false),
     currentTab: alerts.topMenuTab
   }
 }

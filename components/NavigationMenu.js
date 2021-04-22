@@ -930,7 +930,7 @@ class Navigation extends Component {
                     {tab.newMessages ? <NavCircle circular>{tab.newMessages}</NavCircle> : null}
                     {formatMessage({
                       id: `navigation.alerts.${categoryConstant}`,
-                      defaultMessage: `${tab.category}`
+                      defaultMessage: `${tab.category.replace(/_/g, ' ')}`
                     })}
                   </Dropdown.Item>
                 )
