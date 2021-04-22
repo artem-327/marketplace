@@ -364,32 +364,32 @@ const ProductPopup = props => {
                   <GridRow columns={3}>                    
                     <GridColumn>
                       <Input
-                        name='pkgWeight'
+                        name='pkgTypeWeight'
                         label={
                           <>
-                            <FormattedMessage id='global.pkgWeight' defaultMessage='Weight of Package' />
-                            {(palletParamsRequired || values.palletSaleOnly) && <Required />}
+                            <FormattedMessage id='global.pkgTypeWeight' defaultMessage='Weight (Read Only)' />
+                            <Required />
                           </>
                         }
-                        inputProps={{ placeholder: '0', type: 'number', min: 1 }}
+                        inputProps={{ placeholder: '0', type: 'number', min: 0, readOnly: true, disabled: !getSafe(() => formikProps.values.packagingType, false) }}
                       />
                     </GridColumn>
                     <GridColumn>
-                      <Dropdown
-                        name='packageWeightUnit'
-                        options={packageWeightUnits}
+                      <Input
+                        name='pkgTypeWeightUnit'
                         label={
                           <>
-                            <FormattedMessage id='global.unitPkgWeight' defaultMessage='Unit of Package Weight' />
+                            <FormattedMessage id='global.pkgTypeWeightUnit' defaultMessage='Weight Unit (Read Only)' />
                             <Required />
                           </>
                         }
                         inputProps={{
-                          'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
                           placeholder: formatMessage({
-                            id: 'productCatalog.selectWeightUnit',
-                            defaultMessage: 'Select Weight Unit'
-                          })
+                            id: 'global.pkgTypeWeightUnit',
+                            defaultMessage: 'Comes from Packaging Type'
+                          }),
+                          readOnly: true, 
+                          disabled: !getSafe(() => formikProps.values.packagingType, false)
                         }}
                       />
                     </GridColumn>
@@ -404,40 +404,6 @@ const ProductPopup = props => {
                           </>
                         }
                         inputProps={{ placeholder: '0', type: 'number', min: 1 }}
-                      />
-                    </GridColumn>
-                  </GridRow>
-
-                  <GridRow columns={3}>                    
-                    <GridColumn>
-                      <Input
-                        name='contentWeight'
-                        label={
-                          <>
-                            <FormattedMessage id='global.contentWeight' defaultMessage='Weight of Package Content' />
-                            {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                          </>
-                        }
-                        inputProps={{ placeholder: '0', type: 'number', min: 1 }}
-                      />
-                    </GridColumn>
-                    <GridColumn>
-                      <Dropdown
-                        name='contentWeightUnit'
-                        options={packageWeightUnits}
-                        label={
-                          <>
-                            <FormattedMessage id='global.contentWeightUnit' defaultMessage='Unit of Package Content Weight' />
-                            <Required />
-                          </>
-                        }
-                        inputProps={{
-                          'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
-                          placeholder: formatMessage({
-                            id: 'productCatalog.selectWeightUnit',
-                            defaultMessage: 'Select Weight Unit'
-                          })
-                        }}
                       />
                     </GridColumn>
                   </GridRow>

@@ -151,6 +151,8 @@ export const getInitialFormValues = props => {
       packagingUnit: '',
       palletMinPkgs: '',
       palletMaxPkgs: '',
+      pkgTypeWeight: '',
+      pkgTypeWeightUnit: '',
       palletWeight: getSafe(() => palletWeightInitFromSettings, ''),
       palletLength: getSafe(() => palletLengthInitFromSettings, ''),
       palletWidth: getSafe(() => palletWidthInitFromSettings, ''),
@@ -185,6 +187,8 @@ export const getInitialFormValues = props => {
       packagingLength: getSafe(() => popupValues.packagingLength, ''),
       palletMinPkgs: getSafe(() => popupValues.palletMinPkgs, ''),
       palletMaxPkgs: getSafe(() => popupValues.palletMaxPkgs, ''),
+      pkgTypeWeight: getSafe(() => popupValues.packagingType?.weight, ''),
+      pkgTypeWeightUnit: getSafe(() => popupValues.packagingType?.weightUnit?.name, ''),
       palletWeight: popupValues && typeof popupValues.palletWeight !== 'undefined' ? popupValues.palletWeight : '',
       palletLength: popupValues && typeof popupValues.palletLength !== 'undefined' ? popupValues.palletLength : '',
       palletWidth: popupValues && typeof popupValues.palletWidth !== 'undefined' ? popupValues.palletWidth : '',
@@ -321,15 +325,20 @@ export const attachDocumentsUploadAttachment = (att, values, setFieldValue, stat
 export const handleChangePackagingType = (e, value, setFieldValue, values, props) => {
   const { packagingTypesAll } = props
   const selectedPackingType = packagingTypesAll.find(type => type.id === value)
-
-  const elementsToInclude = ['palletPkgMax', 'palletPkgMin']
+  const elementsToInclude = ['palletPkgMax', 'palletPkgMin', 'pkgTypeWeight', 'pkgTypeWeightUnit', 'packageWeight']
   elementsToInclude.forEach(element => {
     if (selectedPackingType && selectedPackingType[element]) {
       switch (element) {
         case 'palletPkgMin':
-          !values.palletMinPkgs && setFieldValue('palletMinPkgs', selectedPackingType[element])
+          setFieldValue('palletMinPkgs', selectedPackingType[element])
         case 'palletPkgMax':
-          !values.palletMaxPkgs && setFieldValue('palletMaxPkgs', selectedPackingType[element])
+          setFieldValue('palletMaxPkgs', selectedPackingType[element])
+        case 'pkgTypeWeight':
+          setFieldValue('pkgTypeWeight', selectedPackingType?.weight)
+        case 'pkgTypeWeightUnit':
+          setFieldValue('pkgTypeWeightUnit', selectedPackingType?.weightUnit?.name)
+        case 'packageWeight':
+          values.packagingUnit === selectedPackingType?.weightUnit?.id ? setFieldValue('packageWeight', parseFloat(values.packagingSize) + parseFloat(selectedPackingType?.weight)) : setFieldValue('packageWeight', '')
         default:
           return
       }
