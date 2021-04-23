@@ -142,7 +142,8 @@ const mapStateToProps = (state, { datagrid }) => {
         palletPkgMax: d.palletPkgMax,
         palletPkgMin: d.palletPkgMin,
         weight: d.weight,
-        weightUnit: d.weightUnit
+        weightUnit: d.weightUnit,
+        dimensionUnit: d.dimensionUnit
       }
     }),
     filterValue: state.admin.filterValue,
