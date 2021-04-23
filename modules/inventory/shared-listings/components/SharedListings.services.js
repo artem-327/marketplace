@@ -15,7 +15,7 @@ export const getActions = triggerPriceBookModal => {
   return [
     {
       text: 'Price Book',
-      callback: row => triggerPriceBookModal(true, row.id)
+      callback: row => triggerPriceBookModal(true, row)
     }
   ]
 }
