@@ -10,7 +10,8 @@ import {
   closeConfirmPopup,
   deleteConfirmation,
   deleteUnitOfPackaging,
-  getMeasureTypesDataRequest
+  getMeasureTypesDataRequest,
+  getAllUnitsOfMeasuresDataRequest
 } from '../../actions'
 import { withDatagrid } from '~/modules/datagrid'
 
@@ -44,6 +45,7 @@ class UnitOfPackagingTable extends Component {
   }
   componentDidMount() {
     this.props.getMeasureTypesDataRequest()
+    this.props.getAllUnitsOfMeasuresDataRequest()
   }
 
   getActions = () => {
@@ -119,7 +121,8 @@ const mapDispatchToProps = {
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  getMeasureTypesDataRequest
+  getMeasureTypesDataRequest,
+  getAllUnitsOfMeasuresDataRequest
 }
 
 const mapStateToProps = (state, { datagrid }) => {
@@ -137,7 +140,9 @@ const mapStateToProps = (state, { datagrid }) => {
         width: d.width,
         height: d.height,
         palletPkgMax: d.palletPkgMax,
-        palletPkgMin: d.palletPkgMin
+        palletPkgMin: d.palletPkgMin,
+        weight: d.weight,
+        weightUnit: d.weightUnit
       }
     }),
     filterValue: state.admin.filterValue,

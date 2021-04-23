@@ -21,6 +21,7 @@ import moment from 'moment'
 import Calendar from 'react-calendar'
 import 'react-calendar/dist/Calendar.css'
 import { currency } from '~/constants/index'
+import Tutorial from '../../tutorial/Tutorial'
 
 const CustomGrid = styled(Grid)`
   flex-shrink: 0;
@@ -1019,9 +1020,16 @@ class Dashboard extends Component {
     return (
       <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
         <Grid.Row>
-          <Grid.Column width={16}>
-            {false && isAdmin && !takeover && (
-              /* #35120 - currently not used */ <Popup
+          <Grid.Column width={15}>
+            <Tutorial marginDashboard isTutorial={false} isBusinessVerification={true} />
+          </Grid.Column>
+        </Grid.Row>
+
+        {false && isAdmin && !takeover && (
+          /* #35120 - currently not used */
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Popup
                 on='click'
                 trigger={
                   <Select>
@@ -1161,9 +1169,9 @@ class Dashboard extends Component {
                   </DateGrid>
                 }
               />
-            )}
-          </Grid.Column>
-        </Grid.Row>
+            </Grid.Column>
+          </Grid.Row>
+        )}
 
         {isAdmin && !takeover && (
           <>

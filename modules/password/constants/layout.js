@@ -58,8 +58,8 @@ export const LogoImage = styled(Image)`
 `
 
 export const LogoIcon = styled(Image)`
-  width: 100px;
-  margin: 0 auto 18px;
+  width: 124px;
+  margin: -25px auto -8px;
 `
 
 export const LoginHeader = styled.div`

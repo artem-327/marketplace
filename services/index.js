@@ -52,13 +52,9 @@ export const isEmptyObject = obj => {
  * @param {TCompanyObject & Object<string, any>} companyObj Company object from Redux store "auth.identity.company" from selector function "makeGetCompany".
  * @param {Object<string, any>} [newCompanyObj] Object whit new values for update a Company. Object needs to have the same attributes as TCompanyObject if wants to modifie object CompanyRequest for PATCH /api/companies/id/{companyId}.
  * @return {TCompanyRequest} Company request object without attributes where no values for PATCH /api/companies/id/{companyId}.
- * @throws Will throw an error if the argument "companyObj" is null | undefined | empty object | type not a object. Parameter "companyObj" is required! Pass "auth.identity.company" from Redux where are stored all data about CompanyResponse (from BE) to the parameter "companyObj"!
  */
 export const getCompanyRequestObject = (companyObj, newCompanyObj) => {
-  if (!companyObj || isEmptyObject(companyObj) || typeof companyObj !== 'object')
-    throw new Error(
-      'Parameter "companyObj" is required! Pass "auth.identity.company" from Redux where are stored all data about CompanyResponse (from BE) to the parameter "companyObj"!'
-    )
+  if (!companyObj || isEmptyObject(companyObj) || typeof companyObj !== 'object') return
   let associations = []
   if (newCompanyObj?.associations?.length)
     newCompanyObj?.associations?.forEach(a => associations.push(typeof a === 'number' ? a : a?.id))
