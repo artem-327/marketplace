@@ -240,7 +240,7 @@ export const INIT_VALUES = {
     expirationDate: '',
     documentType: '',
     broadcastOption: 'GLOBAL_RULES',
-    acceptBids: true
+    acceptBids: false
   },
   priceTiers: {
     priceTiers: 1,

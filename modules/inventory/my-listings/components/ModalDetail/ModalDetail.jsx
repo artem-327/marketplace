@@ -726,10 +726,19 @@ class ModalDetail extends Component {
         return {
           ...opt,
           title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: systemCompanyName }),
-          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName })
+          subtitle: formatMessage(
+            { id: opt.subtitleId, defaultMessage: opt.subtitleText },
+            { companyName: systemCompanyName }
+          )
         }
       else
-        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName }) }
+        return {
+          ...opt,
+          subtitle: formatMessage(
+            { id: opt.subtitleId, defaultMessage: opt.subtitleText },
+            { companyName: systemCompanyName }
+          )
+        }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -1247,29 +1256,26 @@ class ModalDetail extends Component {
                                       </GridColumn>
                                     </CustomGridRow>
 
-                                    {/* It's not supported yet */}
-                                    {false && (
-                                      <CustomGridRow>
-                                        <GridColumn width={8}>
-                                          <FormField width={8}>
-                                            <FormattedMessage
-                                              id='myInventory.acceptBids'
-                                              defaultMessage='Accept bids on offer?'>
-                                              {text => <label>{text}</label>}
-                                            </FormattedMessage>
-                                            <Dropdown
-                                              name='edit.acceptBids'
-                                              options={OPTIONS_YES_NO}
-                                              inputProps={{
-                                                onChange: this.onChange,
-                                                'data-test': 'add_inventory_acceptBids',
-                                                fluid: true
-                                              }}
-                                            />
-                                          </FormField>
-                                        </GridColumn>
-                                      </CustomGridRow>
-                                    )}
+                                    <CustomGridRow>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.acceptBids'
+                                            defaultMessage='Accept bids on offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.acceptBids'
+                                            options={OPTIONS_YES_NO}
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_acceptBids',
+                                              fluid: true
+                                            }}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                    </CustomGridRow>
                                     <CustomGridRow>
                                       <GridColumnOptionalInformation
                                         onClick={() =>
