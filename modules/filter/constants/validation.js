@@ -68,7 +68,7 @@ const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
 
   let defaultValidation = Yup.number().min(newOptions.minimum, errorMessages.minimum(newOptions.minimum))
 
-  if (newOptions.additionalValidation) defaultValidation = newOptions.additionalValidation(defaultValidation)
+  if (newOptions?.additionalValidation) defaultValidation = newOptions.additionalValidation(defaultValidation)
 
   let validation = defaultValidation.notRequired().nullable()
 
@@ -94,7 +94,13 @@ export const validationSchema = openedSaveFilter =>
       ...comparationHelper(
         { propertyName: 'quantityFrom', value: 'To Quantity' },
         { propertyName: 'quantityTo', value: 'From Quantity' },
-        values
+        values,
+        {
+          minimum: 1,
+          additionalValidation: validation => {
+            return validation.integer(errorMessagesGlobal.integer)
+          }
+        }
       ),
 
       ...comparationHelper(
@@ -116,31 +122,30 @@ export const validationSchema = openedSaveFilter =>
         }
       ),
 
-      maximumPricePerUOM: Yup
-        .number()
+      maximumPricePerUOM: Yup.number()
         .min(0.001, errorMessages.minimum(0.001))
-        .typeError(errorMessages.mustBeNumber)
-        .test('maxdec', errorMessages.maxDecimals(3), val => {
+        .typeError(errorMessagesGlobal.mustBeNumber)
+        .test('maxdec', errorMessagesGlobal.maxDecimals(3), val => {
           return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
         })
         .notRequired(),
 
-      expirationFrom: Yup.number('number')
+      expirationFrom: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      expirationTo: Yup.number('number')
+      expirationTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      neededAtFrom: Yup.number('number')
+      neededAtFrom: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      neededAtTo: Yup.number('number')
+      neededAtTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
-      mfgFrom: Yup.number('number')
+      mfgFrom: Yup.number()
         .min(0, errorMessages.minimum(0))
         .notRequired(),
-      mfgTo: Yup.number('number')
+      mfgTo: Yup.number()
         .moreThan(0, errorMessages.greaterThan(0))
         .notRequired(),
 
