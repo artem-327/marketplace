@@ -33,7 +33,7 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
 })
 export const broadcastChange = createAsyncAction(
   'BROADCAST_CHANGE',
-  async (row, option, template, datagrid, isUpdateWarehouse = true) => {
+  async (row, option, template, datagrid, isUpdateWarehouse = true, dataType = '') => {
     let warehouse = isUpdateWarehouse
       ? {
           warehouse: {
@@ -47,7 +47,10 @@ export const broadcastChange = createAsyncAction(
     let editedRow = {
       ...row,
       ...warehouse,
-      broadcastOption: option,
+      ...(dataType === 'shared-listings'
+        ? { resellerBroadcastOption: { key: option }}
+        : { broadcastOption: option }
+      ),
       broadcastTemplateResponse: template
     }
     datagrid.updateRow(row.id, () => ({
@@ -61,7 +64,7 @@ export const broadcastChange = createAsyncAction(
   }
 )
 
-export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid) => {
+export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid, dataType) => {
   if (row && row.id) {
     datagrid && datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
@@ -79,11 +82,14 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         ...row,
         warehouse: {
           deliveryAddress: {
-            cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
+            cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse?.deliveryAddress?.cfName
           }
         },
         isBroadcastLoading: false,
-        broadcastOption: 'CUSTOM_RULES'
+        ...(dataType === 'shared-listings'
+            ? { resellerBroadcastOption: { key: 'CUSTOM_RULES' }}
+            : { broadcastOption: 'CUSTOM_RULES' }
+        )
       }))
     return {
       broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)

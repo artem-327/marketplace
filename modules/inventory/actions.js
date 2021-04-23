@@ -595,14 +595,14 @@ export function setActiveTab(tab) {
   }
 }
 
-export function triggerPriceBookModal(isOpen, rowIdPriceBook) {
+export function triggerPriceBookModal(isOpen, rowPriceBook) {
   return async dispatch => {
     await dispatch({
       type: AT.TRIGGER_PRICE_BOOK_MODAL,
-      payload: { isOpen, rowIdPriceBook }
+      payload: { isOpen, rowPriceBook }
     })
-    if (rowIdPriceBook && isOpen) {
-      await dispatch(openBroadcast({ id: rowIdPriceBook }))
+    if (rowPriceBook && isOpen) {
+      await dispatch(openBroadcast(rowPriceBook))
     }
   }
 }
