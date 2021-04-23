@@ -61,6 +61,15 @@ export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
 }
 
+export async function getSharedProductOffer(poId) {
+  return api.post('/prodex/api/product-offers/shared-listings/datagrid', {
+    orFilters: [],
+    filters: [{ operator: 'EQUALS', path: 'ProductOffer.id', values: [poId] }],
+    pageSize: 50,
+    pageNumber: 0
+  }).then(response => response.data)
+}
+
 export async function deleteProductOffer(poId) {
   return api.delete(`/prodex/api/product-offers/${poId}`)
 }

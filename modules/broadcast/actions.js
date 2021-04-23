@@ -68,7 +68,10 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
   if (row && row.id) {
     datagrid && datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
-        ...row,
+        ...(dataType === 'shared-listings'
+          ? { ...row.rawData }
+          : { ...row }
+        ),
         warehouse: {
           deliveryAddress: {
             cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
@@ -79,7 +82,6 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
     const data = await api.saveRules(row.id, rules)
     datagrid && datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
-        ...row,
         warehouse: {
           deliveryAddress: {
             cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse?.deliveryAddress?.cfName
@@ -87,9 +89,9 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         },
         isBroadcastLoading: false,
         ...(dataType === 'shared-listings'
-            ? { resellerBroadcastOption: { key: 'CUSTOM_RULES' }}
-            : { broadcastOption: 'CUSTOM_RULES' }
-        )
+            ? { ...row.rawData, resellerBroadcastOption: { key: 'CUSTOM_RULES' }}
+            : { ...row, broadcastOption: 'CUSTOM_RULES' }
+        ),
       }))
     return {
       broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)
