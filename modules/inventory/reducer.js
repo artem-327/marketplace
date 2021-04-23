@@ -55,7 +55,7 @@ export const initialState = {
   broadcastOption: GLOBAL_RULES,
   activeTab: 0,
   isOpenPriceBookModal: false,
-  rowIdPriceBook: { id: null }
+  rowPriceBook: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -707,7 +707,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenPriceBookModal: action?.payload?.isOpen,
-        rowIdPriceBook: { id: action?.payload?.rowIdPriceBook }
+        rowPriceBook: action?.payload?.rowPriceBook
       }
     }
 
