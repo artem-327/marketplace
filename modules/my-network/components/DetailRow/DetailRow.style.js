@@ -30,9 +30,11 @@ export const DivAvarageValue = styled.div`
 `
 
 export const DivValue = styled.div`
+  ${({ $minHeight }) => ($minHeight ? `min-height: ${$minHeight};` : '')}
   font-size: ${({ fontSize }) => (fontSize ? fontSize : '20px')};
   font-weight: bold;
-  color: #282820;
+  color: ${({ $color }) => ($color ? $color : '#282820')};
+  ${({ lineHeight }) => (lineHeight ? `line-height: ${lineHeight};` : '')}
 `
 
 export const DivPadding = styled.div`
@@ -58,7 +60,9 @@ export const DivEmpty = styled.div`
 
 export const GridColumnDetail = styled(Grid.Column)`
   padding: 0px !important;
-  ${({ $colorText }) => ($colorText ? `color: ${$colorText} !important` : null)}
+  font-size: 12px !important;
+  ${({ $colorText }) => ($colorText ? `color: ${$colorText} !important;` : null)}
+  line-height: ${({$lineHeight}) => ($lineHeight ? `${$lineHeight} !important` : '1.58334 !important')};
 `
 
 export const GridRowBottomSegment = styled(Grid.Row)`
@@ -70,7 +74,15 @@ export const GridRowLoadingBottomSegment = styled(Grid.Row)`
 `
 
 export const SegmentBottom = styled(Segment)`
-  padding-top: 0px !important;
+  padding: 0px 24px 5px !important;
+  
+  &:first-child {
+    padding-left: 5px !important;
+  }
+  
+  .row {
+    padding: 5px 0 !important;
+  }
 `
 
 export const DivCircle = styled.div`
