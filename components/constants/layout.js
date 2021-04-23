@@ -676,6 +676,16 @@ export const LeftMenu = styled(Menu)`
           &.hexagon {
             color: #20273a !important;
           }
+          
+          &#tradepassIcon {
+            width: 20px !important;
+            height: 20px !important;
+            
+            * {
+              fill: #cecfd4 !important;
+              fill-rule: evenodd;
+            }
+          }
         }
       }
 
@@ -698,6 +708,16 @@ export const LeftMenu = styled(Menu)`
         > .text ~ i,
         > .text ~ svg {
           color: #20273a !important;
+          
+          &#tradepassIcon {
+            width: 20px !important;
+            height: 20px !important;
+            
+            * {
+              fill: #20273a !important;
+              fill-rule: evenodd;
+            }
+          }
         }
 
         &:before,
@@ -716,6 +736,16 @@ export const LeftMenu = styled(Menu)`
         > .text ~ i,
         > .text ~ svg {
           color: #20273a !important;
+          
+          &#tradepassIcon {
+            width: 20px !important;
+            height: 20px !important;
+            
+            * {
+              fill: #20273a !important;
+              fill-rule: evenodd;
+            }
+          }
         }
 
         &:before,

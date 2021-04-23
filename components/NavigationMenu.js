@@ -594,7 +594,14 @@ class Navigation extends Component {
 
             {(isCompanyAdmin || isUserAdmin) && (
               <DropdownItem
-                icon={<Settings size={22}/>}
+                icon={
+                  <svg id="tradepassIcon" data-name="tradepassIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
+                    <polygon className="cls-1" points="564.831 383.173 564.831 452.205 347.22 577.847 287.431 543.331 564.831 383.173"/>
+                    <polygon className="cls-1" points="129.611 200.946 129.611 131.901 298.209 229.243 238.418 263.76 129.611 200.946"/>
+                    <path className="cls-1" d="M564.831,131.9v69.043Q401.617,295.163,238.418,389.391l-108.807-62.82V257.53l108.807,62.823q163.2-94.24,326.413-188.457"/>
+                    <path className="cls-1" d="M564.831,257.53v69.046Q401.617,420.8,238.418,515.032L129.611,452.205V383.173l108.807,62.814q163.2-94.232,326.413-188.457"/>
+                  </svg>
+                }
                 text={
                   <>
                     <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass'/>
