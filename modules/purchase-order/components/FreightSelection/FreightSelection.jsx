@@ -121,9 +121,9 @@ const FreightSelection = props => {
         <>
           {sectionState.accepted || isExpanded ? (
             isExpanded ? (
-              <>
+              <div>
                 {!cart.weightLimitExceed && !cart.palletLimitExceed && !fixedFreightId && (
-                  <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+                  <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
                     <Dimmer inverted active={shippingQuotesAreFetching}>
                       <Loader />
                     </Dimmer>
@@ -306,7 +306,7 @@ const FreightSelection = props => {
                     </GridStyled>
                   )}
                 <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
-              </>
+              </div>
             ) : (
               <DivSectionCollapsedWrapper>
                 <DivSectionCollapsedRow>
