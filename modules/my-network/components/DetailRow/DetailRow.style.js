@@ -66,7 +66,11 @@ export const GridColumnDetail = styled(Grid.Column)`
 `
 
 export const GridRowBottomSegment = styled(Grid.Row)`
-  padding: 20px 0px !important;
+  padding: 15px 0px 20px !important;
+  
+  &:last-child {
+    padding: 10px 0px 5px !important;
+  }
 `
 
 export const GridRowLoadingBottomSegment = styled(Grid.Row)`

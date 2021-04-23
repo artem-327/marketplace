@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const DivPageWrapper = styled.div`
   margin: 30px 30px 50px;
-  padding: 20px 20px 18px;
+  padding: 20px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #ffffff;
