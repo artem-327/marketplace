@@ -361,39 +361,7 @@ const ProductPopup = props => {
                     </GridColumn>
                   </GridRow>
 
-                  <GridRow columns={3}>                    
-                    <GridColumn>
-                      <Input
-                        name='pkgTypeWeight'
-                        label={
-                          <>
-                            <FormattedMessage id='global.pkgTypeWeight' defaultMessage='Weight (Read Only)' />
-                            <Required />
-                          </>
-                        }
-                        inputProps={{ placeholder: '0', type: 'number', min: 0, readOnly: true, disabled: !getSafe(() => formikProps.values.packagingType, false) }}
-                      />
-                    </GridColumn>
-                    <GridColumn>
-                      <Input
-                        name='pkgTypeWeightUnit'
-                        label={
-                          <>
-                            <FormattedMessage id='global.pkgTypeWeightUnit' defaultMessage='Weight Unit (Read Only)' />
-                            <Required />
-                          </>
-                        }
-                        inputProps={{
-                          placeholder: formatMessage({
-                            id: 'global.pkgTypeWeightUnit',
-                            defaultMessage: 'Comes from Packaging Type'
-                          }),
-                          readOnly: true, 
-                          disabled: !getSafe(() => formikProps.values.packagingType, false)
-                        }}
-                      />
-                    </GridColumn>
-
+                  <GridRow columns={3}> 
                     <GridColumn>
                       <Input
                         name='palletMaxPkgs'
