@@ -102,8 +102,8 @@ const Header = props => {
 
           <Grid.Row>
             <GridColumnDetail width={16}>
-              <TableSegment>
-                <StyledList divided relaxed horizontal size='large'>
+              <TableSegment $oldDesign={true}>
+                <StyledList divided relaxed horizontal size='large' $oldDesign={true}>
                   {priceColumns.map((p, i) => (
                     <List.Item key={i}>
                       <List.Content>

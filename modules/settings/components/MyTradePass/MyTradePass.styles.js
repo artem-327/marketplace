@@ -51,6 +51,10 @@ export const SegmentCustom = styled(Segment)`
   &:last-child {
     padding-right: 39px !important;
   }
+  
+  img {
+    max-width: 150px !important;
+  }
 `
 
 export const SegmentSlogan = styled(Segment)`
