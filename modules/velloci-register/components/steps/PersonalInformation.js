@@ -62,6 +62,8 @@ function PersonalInformation({
         : []
 
     if (i > 0) businessRolesOptions = businessRolesOptions?.filter(role => role?.key !== 'controlling_officer')
+    if (i === 0 && formikProps?.values?.verifyPersonalInformation[0]?.businessRole !== 'controlling_officer')
+      formikProps.setFieldValue('verifyPersonalInformation[0].businessRole', 'controlling_officer')
     forms.push(
       <GridPersonalInformation key={i}>
         {i > 0 && (
@@ -270,6 +272,7 @@ function PersonalInformation({
                   }),
                   search: true,
                   selection: true,
+                  disabled: i === 0,
                   loading: businessRoles && businessRoles.loading
                 }}
                 name={`verifyPersonalInformation[${i}].businessRole`}
