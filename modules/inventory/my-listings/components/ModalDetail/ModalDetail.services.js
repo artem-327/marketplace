@@ -233,7 +233,8 @@ export const getEditValues = detailValues => {
           : '',
       warehouse: getSafe(() => detailValues.warehouse.id, null),
       tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }]),
-      shared: getSafe(() => detailValues.shared, false)
+      shared: getSafe(() => detailValues.shared, false),
+      acceptBids: detailValues?.acceptBids ?? false
     },
     priceTiers: {
       priceTiers: getSafe(() => detailValues.pricingTiers.length, 0),
