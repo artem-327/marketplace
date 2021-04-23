@@ -50,7 +50,7 @@ const SharedListings = props => {
     getTemplates,
     broadcastTemplates,
     triggerPriceBookModal,
-    rowIdPriceBook,
+    rowPriceBook,
     getMarkUp
   } = props
 
@@ -74,7 +74,8 @@ const SharedListings = props => {
       <ModalPriceBook
         isOpenPriceBookModal={isOpenPriceBookModal}
         triggerPriceBookModal={triggerPriceBookModal}
-        rowIdPriceBook={rowIdPriceBook}
+        detailValues={rowPriceBook}
+        tableDatagrid={datagrid}
       />
 
       <TableHandler datagrid={datagrid} />

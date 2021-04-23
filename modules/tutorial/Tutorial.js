@@ -314,6 +314,7 @@ class Tutorial extends Component {
   render() {
     const { tutorialTab, isLoading } = this.state
     const {
+      marginDashboard,
       marginMarketplace,
       marginHolds,
       marginOrders,
@@ -330,6 +331,7 @@ class Tutorial extends Component {
     } = this.props
 
     let margin = '15px 32px 15px 32px'
+    if (marginDashboard) margin = '0'
     if (marginMarketplace) margin = '10px 0'
     if (marginHolds) margin = '0 0 14px 0'
     if (marginOrders) margin = '20px 32px 0 32px'

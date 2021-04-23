@@ -3,16 +3,20 @@ import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '../../datagrid'
 import { getSafe } from '../../../utils/functions'
-import HighMenu from './HighMenu/HighMenu'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '../../tutorial/Tutorial'
-import { generateQueryString } from '../../../utils/functions'
 import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopup'
+import { getCategories, loadData } from '../actions'
+import { injectIntl } from 'react-intl'
 
 class Alerts extends Component {
   state = {
     selectedRows: []
+  }
+
+  componentDidMount = () => {
+    this.props.getCategories()
   }
 
   getApiConfig = () => ({
@@ -56,21 +60,13 @@ class Alerts extends Component {
   })
 
   render() {
-    const { isOpenPopupOperations, isAdmin } = this.props
+    const { isOpenPopupOperations} = this.props
 
     return (
       <>
         {<Tutorial isTutorial={false} isBusinessVerification={true} />}
         <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
           <div id='page' className='flex stretched scrolling'>
-            {isAdmin ? (
-              <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
-            ) : (
-              <Container fluid>
-                <HighMenu onDatagridUpdate={selection => this.setState({ selectedRows: selection })} />
-              </Container>
-            )}
-
             <Container fluid style={{ padding: '20px 30px' }}>
               <TablesHandlers
                 selectedRows={this.state.selectedRows}
@@ -92,10 +88,15 @@ class Alerts extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, operations }) => ({
-  isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
+const mapStateToProps = ({ auth, operations, alerts }) => ({
   tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
-  isOpenPopupOperations: operations.isOpenPopup
+  isOpenPopupOperations: operations.isOpenPopup,
+  topMenuTab: alerts.topMenuTab,
+  /**
+   * Categories from api/messaging-center/message-categories
+   * Removed all Wanted_Board categories based on https://bluepallet.atlassian.net/browse/DT-88
+   */
+  categories: alerts.categories.filter(cat => cat.category.indexOf('Wanted_Board') < 0)
 })
 
-export default connect(mapStateToProps)(Alerts)
+export default connect(mapStateToProps, { getCategories, loadData })(injectIntl(Alerts))
