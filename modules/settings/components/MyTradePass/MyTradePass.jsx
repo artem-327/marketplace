@@ -19,6 +19,7 @@ import {
   StyledGrid,
   SegmentGroupHeader,
   SegmentCustom,
+  SegmentSlogan,
   DivCollectionStat,
   DivGreyText,
   DivLeftAligned,
@@ -36,7 +37,7 @@ import { getMyTradePass } from '../../actions'
  * @component
  */
 const MyTradePass = props => {
-  const { getMyTradePass, myTradePass, loading, address, criteria, legalData, marketingData, verifiedData } = props
+  const { getMyTradePass, myTradePass, loading, address, slogan, criteria, legalData, marketingData, verifiedData } = props
 
   useEffect(() => {
     getMyTradePass()
@@ -50,9 +51,9 @@ const MyTradePass = props => {
       <StyledGrid>
         <GridRow>
           <GridColumn>
-            <SegmentGroupHeader horizontal $alignItems={'align-items: center !important'}>
+            <SegmentGroupHeader horizontal $alignItems={'align-items: flex-start !important'}>
               <SegmentCustom textAlign='left'>
-                <Image verticalAlign='middle' size='small' spaced={false} src={myTradePass?.base64Logo} />
+                <Image verticalAlign='middle' spaced={false} src={myTradePass?.base64Logo} />
                 <DivGreyText>{address}</DivGreyText>
               </SegmentCustom>
               <SegmentCustom textAlign='right'>
@@ -83,6 +84,9 @@ const MyTradePass = props => {
                   </DivLeftAligned>
                 </DivCollectionStat>
               </SegmentCustom>
+              <SegmentSlogan>
+                {slogan}
+              </SegmentSlogan>
             </SegmentGroupHeader>
           </GridColumn>
         </GridRow>
@@ -99,7 +103,6 @@ const MyTradePass = props => {
           </GridColumn>
         </GridRow>
         <BottomSegments legalData={legalData} marketingData={marketingData} verifiedData={verifiedData} />
-        <Divider />
       </StyledGrid>
     </DivPageWrapper>
   )
@@ -141,6 +144,7 @@ function mapStateToProps({ settings }) {
           address?.country?.code || ''
         }`
       : '',
+    slogan: myTradePass?.tagline,
     criteria: getTradeCriteriaValues(myTradePass?.companyCriteria ? myTradePass.companyCriteria : {}),
     legalData: {
       legalBusinessName: myTradePass?.name,

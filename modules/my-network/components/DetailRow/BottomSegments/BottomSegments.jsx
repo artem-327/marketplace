@@ -12,7 +12,7 @@ const BottomSegmentData = props => (
     <GridColumnDetail>
       <SegmentGroupHeader horizontal $noneBorder>
         {Object.keys(props).map((key, i) => {
-          return <ColumnSegment key={i} data={props[key]} titleId={key} />
+          return <ColumnSegment key={i} data={props[key]} titleId={key} blueValue={key === 'verifiedData'} />
         })}
       </SegmentGroupHeader>
     </GridColumnDetail>
