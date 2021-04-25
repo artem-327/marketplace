@@ -271,6 +271,10 @@ class Navigation extends Component {
       allNetworks
     } = this.props
 
+    // necessary to load nav properly after page refresh
+    if (!auth?.identity)
+      return ''
+
     const {
       dropdowns,
       settings,
