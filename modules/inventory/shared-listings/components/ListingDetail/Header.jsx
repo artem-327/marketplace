@@ -27,7 +27,7 @@ import { getSafe } from '../../../../../utils/functions'
 
 // Services
 import { submitHandler } from './Header.services'
-import { updateMarkUp } from '../../../actions'
+import { updateMarkUp, getSharedProductOffer } from '../../../actions'
 
 /**
  * @category Inventory - Shared Listings
@@ -208,4 +208,4 @@ function areEqual(prevProps, nextProps) {
 
 const MemoHeader =  memo(Header, areEqual)
 
-export default connect(mapStateToProps, { updateMarkUp })(MemoHeader)
+export default connect(mapStateToProps, { updateMarkUp, getSharedProductOffer })(MemoHeader)
