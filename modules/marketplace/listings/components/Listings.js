@@ -459,7 +459,7 @@ class Listings extends Component {
     /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
     rowActions.push(buttonInfo)
     rowActions.push(buttonBuy)
-    !row?.brokeredOffer && rowActions.push(buttonMakeAnOffer)
+    row?.brokeredOffer && rowActions.push(buttonMakeAnOffer)
 
     return rowActions
   }
