@@ -8,6 +8,7 @@ import { GridColumn, GridRow, Button, Popup } from 'semantic-ui-react'
 import { currency } from '~/constants/index'
 
 //Components
+import BasicButton from '../../../../components/buttons/BasicButton'
 
 //Hooks
 //import { usePrevious } from '../../../hooks'
@@ -53,14 +54,16 @@ const OrderSummary = props => {
         trigger={
           <GridRow>
             <GridColumn>
-              <Button
+              <BasicButton
                 fluid
                 loading={loading}
-                color='blue'
+                background='#00c7f9 !important'
+                textcolor='#FFF !important'
+                margin='0px !important'
                 disabled={submitButtonDisabled}
                 onClick={() => onButtonClick()}>
                 {buttonText}
-              </Button>
+              </BasicButton>
             </GridColumn>
           </GridRow>
         }
