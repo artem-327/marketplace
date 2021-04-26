@@ -24,14 +24,28 @@ export function initProductOfferEdit(id) {
     }
   }
 }
+/** This implementation of addAttachment action couldn't be use for UploadAttachment component.
+ *  UploadAttachment component expect return Promise from addAttachment action.
+ *  This implementation doesn't return anything.
+ */
+// export function addAttachment(attachment, type, additionalParams = {}) {
+//   return async dispatch => {
+//     await dispatch({
+//       type: AT.INVENTORY_ADD_ATTACHMENT,
+//       payload: api.addAttachment(attachment, type, additionalParams)
+//     })
+//     Datagrid && Datagrid.loadData()
+//   }
+// }
 
 export function addAttachment(attachment, type, additionalParams = {}) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.INVENTORY_ADD_ATTACHMENT,
-      payload: api.addAttachment(attachment, type, additionalParams)
-    })
-    Datagrid && Datagrid.loadData()
+  return {
+    type: AT.INVENTORY_ADD_ATTACHMENT,
+    async payload() {
+      const data = await api.addAttachment(attachment, type, additionalParams)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
   }
 }
 
