@@ -66,7 +66,14 @@ const SharedListings = props => {
   }, [])
 
   const getRowDetail = (row, props, state) => {
-    return <ListingDetail row={row.rawData} parentState={state} values={values} onChange={data => setValues(data)} />
+    return (
+      <ListingDetail
+        row={row.rawData}
+        parentState={state}
+        values={values}
+        onChange={data => setValues(data)}
+        datagrid={props.datagrid}
+      />)
   }
 
   return (

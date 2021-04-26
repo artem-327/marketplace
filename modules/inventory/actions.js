@@ -297,6 +297,11 @@ export const getProductOffer = productOfferId => ({
   payload: api.getProductOffer(productOfferId)
 })
 
+export const getSharedProductOffer = productOfferId => ({
+  type: AT.INVENTORY_GET_SHARED_PRODUCT_OFFER,
+  payload: api.getSharedProductOffer(productOfferId)
+})
+
 export function deleteProductOffer(productOfferId) {
   return async dispatch => {
     await dispatch({
