@@ -226,6 +226,7 @@ const makeMapStateToProps = () => {
     let cfg = state.admin.config['packaging-types']
     return {
       config: cfg,
+      popupValues: state.admin.popupValues,
       measureOptions: state.admin.measureTypes.map(d => {
         return {
           id: d.id,

@@ -18,11 +18,11 @@ export const StyledGrid = styled(Grid)`
 `
 
 export const TableSegment = styled(Segment)`
-  margin: 0;
-  border-color: #dee2e6 !important;
-  padding: 20px !important;
-  background: #f6f6f6 !important;
-
+  ${({ $oldDesign }) => ($oldDesign ? '' : 'margin: 0;')}
+  ${({ $oldDesign }) => ($oldDesign ? '' : 'border-color: #dee2e6 !important;')}
+  ${({ $oldDesign }) => ($oldDesign ? '' : 'padding: 20px !important;')}
+  background-color: ${({ $oldDesign }) => ($oldDesign ? '#f5f7fa' : '#f6f6f6')} !important;
+  
   &.ui.segment {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
@@ -48,20 +48,20 @@ export const StyledList = styled(List)`
 
     > .item {
       text-align: left !important;
-      padding: 0px 20px !important;
+      padding: 0px ${({ $oldDesign }) => ($oldDesign ? '10px' : '20px')} !important;
       max-width: fit-content !important;
 
       .header {
         margin: 0;
-        padding: 11px 0 4px;
+        padding: ${({ $oldDesign }) => ($oldDesign ? '0 0 3px' : '11px 0 4px')};
         font-size: 12px;
         font-weight: 400;
         color: #848893;
-        line-height: 1.25;
+        line-height: ${({ $oldDesign }) => ($oldDesign ? '1.1666667' : '1.25')};
       }
 
       .description {
-        padding: 0 0 13px;
+        padding: ${({ $oldDesign }) => ($oldDesign ? '0' : '0 0 13px')};
         font-size: 14px;
         color: #20273a;
         line-height: 1.2142857;
