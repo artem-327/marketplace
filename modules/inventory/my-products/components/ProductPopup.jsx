@@ -9,7 +9,7 @@ import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import { AttachmentManager } from '~/modules/attachments'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import UploadAttachment from '../../components/upload/UploadAttachment'
 import ProdexGrid from '~/components/table'
 import { FlexContent } from '~/modules/inventory/constants/layout'
 import { X as XIcon } from 'react-feather'
@@ -98,7 +98,7 @@ const ProductPopup = props => {
     }
 
     if (!props?.unitsAll?.length) fetchData()
-    else if (!attachments.length && props?.popupValues?.attachments?.length) prepareAttachments()
+    else if (attachments?.length !== props?.popupValues?.attachments?.length) prepareAttachments()
 
     if (props.popupValues?.packagingUnit) {
       filterPackagingTypes(
@@ -110,7 +110,7 @@ const ProductPopup = props => {
     } else {
       setpackagingTypesReduced(props.packagingType)
     }
-  }, [props?.unitsAll?.length])
+  }, [props?.unitsAll?.length, props?.popupValues?.attachments])
 
   const {
     closePopup,

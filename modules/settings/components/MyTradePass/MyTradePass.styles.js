@@ -58,7 +58,7 @@ export const SegmentCustom = styled(Segment)`
 `
 
 export const SegmentSlogan = styled(Segment)`
-  width: 100%;
+  width: 100% !important;
   height: auto;
   margin: 25px 10px 0 0;
   border: 0 none !important;

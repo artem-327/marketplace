@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //Components
 import { Grid, GridColumn, Radio } from 'semantic-ui-react'
@@ -73,43 +74,45 @@ const Payment = props => {
       content={
         sectionState.accepted || isExpanded ? (
           isExpanded ? (
-            <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
-              {!getSafe(() => payments.length, false) && isThirdPartyConnectionException ? (
-                <Grid.Row>
-                  <Grid.Column textAlign='center'>
-                    <FormattedMessage
-                      id='payments.bankAccountCannnotRetrieved'
-                      defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
-                    />
-                  </Grid.Column>
-                </Grid.Row>
-              ) : (
-                payments.map((item, index) => (
-                  <GridRowExpandedSelectionRow
-                    key={index}
-                    checked={value === item.id}
-                    onClick={() => onValueChange(item.id)}
-                    selection={'true'}>
-                    <GridColumn width={6}>
-                      <DivFlexRow>
-                        <DivCentered>
-                          <Radio checked={value === item.id} />
-                        </DivCentered>
-                        <div>
-                          <DivSectionHeader>{item.name}</DivSectionHeader>
-                          <DivSectionName>{item.institutionName}</DivSectionName>
-                        </div>
-                      </DivFlexRow>
-                    </GridColumn>
-                    {false && (
-                      <GridColumn width={10}>
-                        <DivSectionHeader>{item.institutionName}</DivSectionHeader>
-                        <DivSectionName>TBD ...Address...</DivSectionName>
+            <GridExpandedSection overflow={'overflow: auto;'} $psscroll={true} maxheight='605px'>
+              <PerfectScrollbar className='ui grid'>
+                {!getSafe(() => payments.length, false) && isThirdPartyConnectionException ? (
+                  <Grid.Row>
+                    <Grid.Column textAlign='center'>
+                      <FormattedMessage
+                        id='payments.bankAccountCannnotRetrieved'
+                        defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'
+                      />
+                    </Grid.Column>
+                  </Grid.Row>
+                ) : (
+                  payments.map((item, index) => (
+                    <GridRowExpandedSelectionRow
+                      key={index}
+                      checked={value === item.id}
+                      onClick={() => onValueChange(item.id)}
+                      selection={'true'}>
+                      <GridColumn width={6}>
+                        <DivFlexRow>
+                          <DivCentered>
+                            <Radio checked={value === item.id} />
+                          </DivCentered>
+                          <div>
+                            <DivSectionHeader>{item.name}</DivSectionHeader>
+                            <DivSectionName>{item.institutionName}</DivSectionName>
+                          </div>
+                        </DivFlexRow>
                       </GridColumn>
-                    )}
-                  </GridRowExpandedSelectionRow>
-                ))
-              )}
+                      {false && (
+                        <GridColumn width={10}>
+                          <DivSectionHeader>{item.institutionName}</DivSectionHeader>
+                          <DivSectionName>TBD ...Address...</DivSectionName>
+                        </GridColumn>
+                      )}
+                    </GridRowExpandedSelectionRow>
+                  ))
+                )}
+              </PerfectScrollbar>
             </GridExpandedSection>
           ) : (
             <DivSectionCollapsedWrapper>
