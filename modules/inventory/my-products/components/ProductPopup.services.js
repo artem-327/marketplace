@@ -326,9 +326,9 @@ export const handleChangePackagingType = (e, value, setFieldValue, values, props
     if (selectedPackingType && selectedPackingType[element]) {
       switch (element) {
         case 'palletPkgMin':
-          setFieldValue('palletMinPkgs', selectedPackingType[element])
+          setFieldValue('palletMinPkgs', selectedPackingType['palletPkgMin'])
         case 'palletPkgMax':
-          setFieldValue('palletMaxPkgs', selectedPackingType[element])
+          setFieldValue('palletMaxPkgs', selectedPackingType['palletPkgMax'])
         case 'packageWeight':
           values.packagingUnit === selectedPackingType?.weightUnit?.id ? setFieldValue('packageWeight', parseFloat(values.packagingSize) + parseFloat(selectedPackingType?.weight)) : setFieldValue('packageWeight', '')
         default:
