@@ -530,7 +530,8 @@ class Detail extends Component {
       !getSafe(() => prevState.attachmentRows.length, false) &&
       !getSafe(() => this.state.attachmentRows.length, false) &&
       !getSafe(() => prevProps.order.attachments.length, false) &&
-      getSafe(() => order.attachments.length, false)
+      getSafe(() => order.attachments.length, false) ||
+      (getSafe(() => order.id, 0) !== getSafe(() => prevProps.order.id, 0))
     ) {
       this.setState({
         attachmentRows: this.getRows(order.attachments)
