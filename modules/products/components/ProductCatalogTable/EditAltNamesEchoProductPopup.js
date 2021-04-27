@@ -86,28 +86,38 @@ class EditAltNamesEchoProductPopup extends Component {
     arrayHelpers.insert(0, { id: null, alternativeName: '', color: 'grey', description: '', canSave: false })
   }
 
-  handleDeleteName = async (productId, arrayHelpers, val, index) => {
-    if (val.id === null) {
-      arrayHelpers.remove(index)
-    } else {
-      await this.props.deleteCompanyGenericProductsAltName(productId, val.id)
-      await this.processFetchedData()
-    }
+  handleDeleteName = async (productId, arrayHelpers, val, index, setSubmitting) => {
+    setSubmitting(true)
+    try {
+      if (val.id === null) {
+        arrayHelpers.remove(index)
+      } else {
+        await this.props.deleteCompanyGenericProductsAltName(productId, val.id)
+        await this.processFetchedData()
+      }
+    } catch (e) {}
+    setSubmitting(false)
   }
 
-  handleSaveName = async (productId, val, index) => {
+  handleSaveName = async (productId, val, index, setSubmitting) => {
+    setSubmitting(true)
     let name = val.alternativeName.trim()
     if (name.length < 3) return
-    if (val.id === null) {
-      // Create new name
-      let value = { alternativeName: name }
-      await this.props.postNewCompanyGenericProductsAltName(productId, value)
-    } else {
-      // Update name
-      let value = { alternativeName: name }
-      await this.props.updateCompanyGenericProductsAltName(productId, val.id, value)
-    }
-    await this.processFetchedData()
+
+    try {
+      if (val.id === null) {
+        // Create new name
+        let value = {alternativeName: name}
+        await this.props.postNewCompanyGenericProductsAltName(productId, value)
+      } else {
+        // Update name
+        let value = {alternativeName: name}
+        await this.props.updateCompanyGenericProductsAltName(productId, val.id, value)
+      }
+      await this.processFetchedData()
+    } catch (e) {}
+
+    setSubmitting(false)
   }
 
   render() {
@@ -121,12 +131,12 @@ class EditAltNamesEchoProductPopup extends Component {
         initialValues={{ ...initialFormValues, ...initialState }}
         onReset={closePopup}
         onSubmit={() => {}}>
-        {({ values, errors, setFieldValue }) => (
+        {({ values, errors, setFieldValue, isSubmitting, setSubmitting }) => (
           <Modal closeIcon onClose={() => closePopup()} open centered={false}>
             <Modal.Header>
               <FormattedMessage id='settings.editProductAltNames' defaultMessage='Edit Product Alternative Names' />
             </Modal.Header>
-            <Form loading={loading}>
+            <Form loading={loading || isSubmitting}>
               <StyledModalContent>
                 <FieldArray
                   name='productAltNames'
@@ -189,7 +199,7 @@ class EditAltNamesEchoProductPopup extends Component {
                                             size='large'
                                             onClick={() => {
                                               if (val.canSave === true) {
-                                                this.handleSaveName(popupValues.id, val, index)
+                                                this.handleSaveName(popupValues.id, val, index, setSubmitting)
                                                 setFieldValue(`productAltNames[${index}].color`, 'grey')
                                                 setFieldValue(`productAltNames[${index}].description`, '')
                                                 setFieldValue(`productAltNames[${index}].canSave`, false)
@@ -206,7 +216,7 @@ class EditAltNamesEchoProductPopup extends Component {
                                         size='large'
                                         onClick={() => {
                                           if (val.canSave === true) {
-                                            this.handleSaveName(popupValues.id, val, index)
+                                            this.handleSaveName(popupValues.id, val, index, setSubmitting)
                                             setFieldValue(`productAltNames[${index}].color`, 'grey')
                                             setFieldValue(`productAltNames[${index}].description`, '')
                                             setFieldValue(`productAltNames[${index}].canSave`, false)
@@ -221,7 +231,9 @@ class EditAltNamesEchoProductPopup extends Component {
                                     <Icon
                                       name='trash alternate outline'
                                       size='large'
-                                      onClick={() => this.handleDeleteName(popupValues.id, arrayHelpers, val, index)}
+                                      onClick={() =>
+                                        this.handleDeleteName(popupValues.id, arrayHelpers, val, index, setSubmitting)
+                                      }
                                       data-test={`settings_product_alt_name_delete_${index}_btn`}
                                     />
                                   </TableCell>

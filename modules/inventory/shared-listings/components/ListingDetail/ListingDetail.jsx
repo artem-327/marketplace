@@ -30,11 +30,16 @@ class ListingDetail extends Component {
   }
 
   render() {
-    const { values, onChange, parentState, row } = this.props
+    const { values, onChange, parentState, row, datagrid } = this.props
     const { expandedRowIds, setExpandedRowIds } = parentState
     return (
       <>
-        <Header row={row} values={values.header} onChange={data => onChange({ ...values, header: data })} />
+        <Header
+          row={row}
+          values={values.header}
+          onChange={data => onChange({ ...values, header: data })}
+          datagrid={datagrid}
+        />
         <Tabs
           row={row}
           activeTab={values?.tabs?.activeTab}

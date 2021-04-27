@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { MoreVertical } from 'react-feather'
 import { getSafe } from '~/utils/functions'
@@ -17,6 +18,19 @@ const DropdownActions = styled(Dropdown)`
     width: 16px !important;
     height: 16px !important;
     margin: 7px 8px 7px -2px !important;
+  }
+  
+  &[aria-expanded="true"].active.visible .menu.transition.visible {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 25px !important;
+  }
+  
+  &[aria-expanded="true"].active.visible.upward .menu.transition.visible {
+    bottom: auto !important;
+    transform: translateY(-100%) !important;
+    margin-top: 5px !important;
   }
 `
 
@@ -86,31 +100,31 @@ function getContainerDimensions(element) {
   }
 }
 
-function repositionMenu(element) {
-  const viewport = getContainerDimensions(element)
+function repositionMenu(dropdownRef) {
+  const dropdownElement = dropdownRef.current.ref.current
+  const dropdownList = dropdownElement.querySelector('.menu')
+  const tableResponsive = dropdownElement.closest('div.table-responsive')
+  dropdownList.setAttribute('style', `top: ${dropdownElement.getBoundingClientRect().top}px !important;`)
 
-  // Calculate free space around dropdown
-  const topSpace = element.parentNode.offsetTop - viewport.container.scrollTop + element.offsetTop
-  const bottomSpace =
-    viewport.height -
-    (element.parentNode.offsetTop - viewport.container.scrollTop) -
-    element.offsetTop -
-    element.clientHeight
+  tableResponsive.addEventListener("scroll", () => {
+    dropdownRef.current?.close()
+  })
+}
 
-  // Changing dropdown behavior as we know more about available space (top/bottom)
-  if (topSpace > bottomSpace) {
-    if (!element.getAttribute('data-upward')) {
-      element.setAttribute('data-upward', true)
-    }
-  } else {
-    if (element.getAttribute('data-upward')) {
-      element.removeAttribute('data-upward')
-    }
-  }
+function closeMenu(dropdownRef) {
+  const dropdownElement = dropdownRef.current.ref.current
+  const dropdownList = dropdownElement.querySelector('.menu')
+  const tableResponsive = dropdownElement.closest('div.table-responsive')
+  dropdownList.setAttribute('style', ``)
+
+  tableResponsive.removeEventListener("scroll", () => {
+    dropdownRef.current?.close()
+  })
 }
 
 export function rowActionsCellFormatter({ column: { actions, name }, row, groupLength, isBankTable, menuIcon }) {
   const dropdownItems = getDropdownItems(actions, row)
+  const dropdownRef = useRef(null)
 
   // Don't display if all dropdownItems are null
   const displayMenu = getSafe(() => dropdownItems.length, false) ? dropdownItems.findIndex(p => p !== null) >= 0 : false
@@ -131,6 +145,7 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
     menuIcon ? (
       <>
         <DropdownActions
+          ref={dropdownRef}
           icon=''
           trigger={
             <>
@@ -138,15 +153,16 @@ export function rowActionsCellFormatter({ column: { actions, name }, row, groupL
               <DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>
             </>
           }
-          onOpen={e => repositionMenu(e.currentTarget)}>
+          onOpen={() => repositionMenu(dropdownRef)}>
           <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
         </DropdownActions>
       </>
     ) : (
       <DropdownActions
+        ref={dropdownRef}
         icon=''
         trigger={<DivName className={actions && actions.length ? 'has-actions' : ''}>{trigger}</DivName>}
-        onOpen={e => repositionMenu(e.currentTarget)}>
+        onOpen={() => repositionMenu(dropdownRef)}>
         <Dropdown.Menu>{dropdownItems}</Dropdown.Menu>
       </DropdownActions>
     )

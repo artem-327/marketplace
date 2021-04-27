@@ -18,15 +18,7 @@ export const switchPages = props => {
     }
     case 1: {
       return (
-        <ControlPerson
-          updateCompany={props.updateCompany}
-          company={props.company}
-          companyId={props.companyId}
-          naicsCode={props.naicsCode}
-          formikProps={props.formikProps}
-          entityTypes={props.entityTypes}
-          naicsCodes={props.naicsCodes}
-        />
+        <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
       )
     }
     case 2: {

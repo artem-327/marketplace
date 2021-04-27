@@ -201,3 +201,27 @@ export const updateIdentity = payload => ({ type: AT.UPDATE_IDENTITY, payload })
 export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })
 
 export const agreeWithTOS = () => ({ type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS() })
+
+export const updateCompanyDetails = (companyId, request) => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.UPDATE_COMPANY_DETAILS_PENDING
+    })
+    await api
+      .updateCompanyDetails(companyId, request)
+      .then(
+        async response =>
+          await dispatch({
+            type: AT.UPDATE_COMPANY_DETAILS_FULFILLED,
+            payload: response.data
+          })
+      )
+      .catch(
+        async err =>
+          await dispatch({
+            type: AT.UPDATE_COMPANY_DETAILS_REJECTED,
+            error: err
+          })
+      )
+  }
+}

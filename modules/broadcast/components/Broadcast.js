@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { bool, number, object } from 'prop-types'
+import { bool, number, object, string } from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
@@ -72,7 +72,7 @@ import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
 import confirm from '~/components/Confirmable/confirm'
-import { normalizeTree, getBroadcast, getNodeStatus } from '~/modules/broadcast/utils'
+import { normalizeTree, getBroadcast, getNodeStatus } from '../utils'
 import CompanyInfo from './CompanyInfo'
 
 class Broadcast extends Component {
@@ -1253,7 +1253,8 @@ class Broadcast extends Component {
       templates,
       changedForm,
       detailValues,
-      inventoryGrid
+      inventoryGrid,
+      dataType
     } = this.props
     let filteredTree = this.treeToModel(undefined, undefined, true)
 
@@ -1263,7 +1264,7 @@ class Broadcast extends Component {
         value: 'branch'
       })
 
-      const { value } = await saveRules(detailValues, filteredTree, inventoryGrid)
+      const { value } = await saveRules(detailValues, filteredTree, inventoryGrid, dataType)
 
       let name,
         dataId = null
@@ -1459,7 +1460,8 @@ Broadcast.propTypes = {
   isOpenTemplateModal: bool,
   saveSidebar: number,
   detailValues: object,
-  inventoryGrid: object
+  inventoryGrid: object,
+  dataType: string
 }
 
 Broadcast.defaultProps = {
@@ -1469,7 +1471,8 @@ Broadcast.defaultProps = {
   isOpenTemplateModal: false,
   saveSidebar: 0,
   detailValues: {},
-  inventoryGrid: {}
+  inventoryGrid: {},
+  dataType: ''
 }
 
 export default injectIntl(

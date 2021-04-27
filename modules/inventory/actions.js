@@ -24,6 +24,19 @@ export function initProductOfferEdit(id) {
     }
   }
 }
+/** This implementation of addAttachment action couldn't be use for UploadAttachment component.
+ *  UploadAttachment component expect return Promise from addAttachment action.
+ *  This implementation doesn't return anything.
+ */
+// export function addAttachment(attachment, type, additionalParams = {}) {
+//   return async dispatch => {
+//     await dispatch({
+//       type: AT.INVENTORY_ADD_ATTACHMENT,
+//       payload: api.addAttachment(attachment, type, additionalParams)
+//     })
+//     Datagrid && Datagrid.loadData()
+//   }
+// }
 
 export function addAttachment(attachment, type, additionalParams = {}) {
   return {
@@ -119,7 +132,8 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       validityDate: values.expirationDate ? moment(values.expirationDate).utc(values.expirationDate).format() : null,
       warehouse: parseInt(values.warehouse),
       tdsFields: getSafe(() => values.tdsFields, ''),
-      shared: getSafe(() => values.shared, '')
+      shared: getSafe(() => values.shared, ''),
+      acceptBids: values?.acceptBids
     }
   } else {
     params = values // ! ! az bude BE vracet pricingTiers, tak predelat zkombinovat tento radek s vytvarenim objektu vyse (prejmenovane / chybejici atributy)
@@ -170,12 +184,11 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
         })
         return response
       } else {
-        const response = await api.updateProductOffer(poId, paramsCleaned)
-        await dispatch({
+        const response = await dispatch({
           type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-          payload: response
+          payload: api.updateProductOffer(poId, paramsCleaned)
         })
-        return response
+        return response.value
       }
     } else {
       const newProd = await dispatch({
@@ -282,6 +295,11 @@ export function getProductGrades() {
 export const getProductOffer = productOfferId => ({
   type: AT.INVENTORY_GET_PRODUCT_OFFER,
   payload: api.getProductOffer(productOfferId)
+})
+
+export const getSharedProductOffer = productOfferId => ({
+  type: AT.INVENTORY_GET_SHARED_PRODUCT_OFFER,
+  payload: api.getSharedProductOffer(productOfferId)
 })
 
 export function deleteProductOffer(productOfferId) {
@@ -597,14 +615,14 @@ export function setActiveTab(tab) {
   }
 }
 
-export function triggerPriceBookModal(isOpen, rowIdPriceBook) {
+export function triggerPriceBookModal(isOpen, rowPriceBook) {
   return async dispatch => {
     await dispatch({
       type: AT.TRIGGER_PRICE_BOOK_MODAL,
-      payload: { isOpen, rowIdPriceBook }
+      payload: { isOpen, rowPriceBook }
     })
-    if (rowIdPriceBook && isOpen) {
-      await dispatch(openBroadcast({ id: rowIdPriceBook }))
+    if (rowPriceBook && isOpen) {
+      await dispatch(openBroadcast(rowPriceBook))
     }
   }
 }

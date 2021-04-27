@@ -18,9 +18,11 @@ const ModalPriceBook = props => {
         <Broadcast
           asModal={true}
           close={() => props.triggerPriceBookModal(false, null)}
-          detailValues={props.rowIdPriceBook}
+          detailValues={props.detailValues}
           isPrepared={true}
           styleMarginBottom={true}
+          dataType='shared-listings'
+          inventoryGrid={props.tableDatagrid}
         />
       </Modal.Content>
     </Modal>

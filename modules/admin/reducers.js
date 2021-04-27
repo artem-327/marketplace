@@ -17,6 +17,7 @@ export const initialState = {
   altCasNamesRows: [],
   documentTypesRows: [],
   measureTypes: [],
+  unitsOfMeasures: [],
   hazardClasses: [],
   packagingGroups: [],
   unNumbersFiltered: [],
@@ -31,7 +32,6 @@ export const initialState = {
   currentEdit2Form: null,
   currentAddForm: null,
   currentAddDwolla: null,
-
   confirmMessage: null,
   deleteRowById: null,
   filterValue: '',
@@ -217,6 +217,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
+        loading: false,
         deleteRowById: null,
         confirmMessage: null
       }
@@ -278,6 +279,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_MANUFACTURERS_DATA_PENDING:
+    case AT.ADMIN_DELETE_GRADES_DATA_PENDING:
+    case AT.ADMIN_DELETE_FORMS_DATA_PENDING:
+    case AT.ADMIN_DELETE_CONDITIONS_DATA_PENDING:
+    case AT.DELETE_NMFC_NUMBER_PENDING:
+    case AT.DELETE_ASSOCIATION_PENDING:
     case AT.ADMIN_DELETE_CARRIER_PENDING:
     case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_PENDING:
     case AT.ADMIN_DELETE_USER_PENDING:
@@ -316,6 +323,27 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         measureTypes: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        unitsOfMeasures: action.payload
+      }
+    }
+    case AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_REJECTED: {
+      return {
+        ...state,
+        loading: false, 
+        error: action.error
       }
     }
 
@@ -390,6 +418,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DELETE_ASSOCIATION_FULFILLED:
+    case AT.DELETE_ASSOCIATION_REJECTED:
+    case AT.DELETE_NMFC_NUMBER_REJECTED:
+    case AT.DELETE_NMFC_NUMBER_FULFILLED:
+    case AT.ADMIN_DELETE_CONDITIONS_DATA_REJECTED:
+    case AT.ADMIN_DELETE_FORMS_DATA_REJECTED:
+    case AT.ADMIN_DELETE_GRADES_DATA_REJECTED:
+    case AT.ADMIN_DELETE_MANUFACTURERS_DATA_REJECTED:
     case AT.ADMIN_DELETE_CARRIER_FULFILLED:
     case AT.ADMIN_DELETE_LOGISTICS_PROVIDER_FULFILLED:
     case AT.ADMIN_DELETE_USER_FULFILLED:
@@ -444,7 +480,7 @@ export default function reducer(state = initialState, action) {
 
     /* DELETE UNIT OF PACKAGING */
 
-    /*case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_PENDING: {
+    case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_PENDING: {
       return {
         ...state,
         loading: true
@@ -463,7 +499,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false
       }
-    }*/
+    }
 
     case AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
       return {

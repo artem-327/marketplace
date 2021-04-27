@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import { AlertCircle } from 'react-feather'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //Components
 import { GridColumn, Radio, Icon, Button, Header, Input, Dimmer, Loader, Divider } from 'semantic-ui-react'
@@ -121,61 +122,63 @@ const FreightSelection = props => {
         <>
           {sectionState.accepted || isExpanded ? (
             isExpanded ? (
-              <>
+              <div>
                 {!cart.weightLimitExceed && !cart.palletLimitExceed && !fixedFreightId && (
-                  <GridExpandedSection overflow={'overflow: auto;'} maxHeight='605px'>
+                  <GridExpandedSection overflow={'overflow: auto;'} $psscroll={true} maxheight='605px'>
                     <Dimmer inverted active={shippingQuotesAreFetching}>
                       <Loader />
                     </Dimmer>
-                    {freightOptions.map((item, index) => (
-                      <GridRowExpandedSelectionRow
-                        key={index}
-                        checked={value && value.quoteId === item.quoteId}
-                        onClick={() => !isOwn && onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
-                        selection={isOwn ? '' : 'true'}>
-                        <GridColumn width={10}>
-                          <DivFlexRow>
-                            <DivCentered>
-                              <Radio checked={value && value.quoteId === item.quoteId} disabled={isOwn} />
-                            </DivCentered>
-                            <div>
-                              <DivSectionHeader disabled={isOwn}>{item.carrierName}</DivSectionHeader>
-                              <DivSectionName disabled={isOwn}>
-                                <FormattedNumber
-                                  minimumFractionDigits={2}
-                                  maximumFractionDigits={2}
-                                  style='currency'
-                                  currency={currency}
-                                  value={item.cfEstimatedSubtotal}
-                                />
-                              </DivSectionName>
-                            </div>
-                          </DivFlexRow>
-                        </GridColumn>
-                        <GridColumn width={3}>
-                          <DivSectionSmallHeader>
-                            <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
-                          </DivSectionSmallHeader>
-                          <DivSectionName disabled={isOwn}>
-                            {moment(item.estimatedDeliveryDate).fromNow()}
-                          </DivSectionName>
-                        </GridColumn>
-                        {false && (
-                          <GridColumn width={2}>
-                            <DivSectionSmallHeader>
-                              <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
-                            </DivSectionSmallHeader>
-                            <DivSectionName disabled={isOwn}>{item.quoteId /* missing in endpoint */}</DivSectionName>
+                    <PerfectScrollbar className='ui grid'>
+                      {freightOptions.map((item, index) => (
+                        <GridRowExpandedSelectionRow
+                          key={index}
+                          checked={value && value.quoteId === item.quoteId}
+                          onClick={() => !isOwn && onValueChange({ ...item, freightType: FREIGHT_TYPES.ECHO })}
+                          selection={isOwn ? '' : 'true'}>
+                          <GridColumn width={10}>
+                            <DivFlexRow>
+                              <DivCentered>
+                                <Radio checked={value && value.quoteId === item.quoteId} disabled={isOwn} />
+                              </DivCentered>
+                              <div>
+                                <DivSectionHeader disabled={isOwn}>{item.carrierName}</DivSectionHeader>
+                                <DivSectionName disabled={isOwn}>
+                                  <FormattedNumber
+                                    minimumFractionDigits={2}
+                                    maximumFractionDigits={2}
+                                    style='currency'
+                                    currency={currency}
+                                    value={item.cfEstimatedSubtotal}
+                                  />
+                                </DivSectionName>
+                              </div>
+                            </DivFlexRow>
                           </GridColumn>
-                        )}
-                        <GridColumn width={3}>
-                          <DivSectionSmallHeader>
-                            <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
-                          </DivSectionSmallHeader>
-                          <DivSectionName disabled={isOwn}>{item.serviceType}</DivSectionName>
-                        </GridColumn>
-                      </GridRowExpandedSelectionRow>
-                    ))}
+                          <GridColumn width={3}>
+                            <DivSectionSmallHeader>
+                              <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
+                            </DivSectionSmallHeader>
+                            <DivSectionName disabled={isOwn}>
+                              {moment(item.estimatedDeliveryDate).fromNow()}
+                            </DivSectionName>
+                          </GridColumn>
+                          {false && (
+                            <GridColumn width={2}>
+                              <DivSectionSmallHeader>
+                                <FormattedMessage id='checkout.freight.etd' defaultMessage='ETD' />
+                              </DivSectionSmallHeader>
+                              <DivSectionName disabled={isOwn}>{item.quoteId /* missing in endpoint */}</DivSectionName>
+                            </GridColumn>
+                          )}
+                          <GridColumn width={3}>
+                            <DivSectionSmallHeader>
+                              <FormattedMessage id='checkout.freight.service' defaultMessage='Service' />
+                            </DivSectionSmallHeader>
+                            <DivSectionName disabled={isOwn}>{item.serviceType}</DivSectionName>
+                          </GridColumn>
+                        </GridRowExpandedSelectionRow>
+                      ))}
+                    </PerfectScrollbar>
                   </GridExpandedSection>
                 )}
 
@@ -306,7 +309,7 @@ const FreightSelection = props => {
                     </GridStyled>
                   )}
                 <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
-              </>
+              </div>
             ) : (
               <DivSectionCollapsedWrapper>
                 <DivSectionCollapsedRow>

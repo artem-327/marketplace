@@ -1,5 +1,6 @@
-import { TCompanyRequest } from '../types'
-import { COMPANY_REQUEST_KEYS } from '../constants/backendObjects'
+import { TCompanyRequest, TCompanyObject } from '../types'
+// Services
+import { removeEmpty } from '../utils/functions'
 
 /**
  * Function remove empty elements from object with one level (child).
@@ -46,22 +47,53 @@ export const isEmptyObject = obj => {
 }
 
 /**
- * Prepares RequestCompany object for BE request
+ * Prepares CompanyRequest object for BE request PATCH /api/companies/id/{companyId}
  * @method
- * @param {object} company
- * @returns {TCompanyRequest | {}} Company request object
+ * @param {TCompanyObject & Object<string, any>} companyObj Company object from Redux store "auth.identity.company" from selector function "makeGetCompany".
+ * @param {Object<string, any>} [newCompanyObj] Object whit new values for update a Company. Object needs to have the same attributes as TCompanyObject if wants to modifie object CompanyRequest for PATCH /api/companies/id/{companyId}.
+ * @return {TCompanyRequest} Company request object without attributes where no values for PATCH /api/companies/id/{companyId}.
  */
-export const getCompanyRequestObject = company => {
-  let companyRequest = {}
-  if (!company || isEmptyObject(company)) return companyRequest
+export const getCompanyRequestObject = (companyObj, newCompanyObj) => {
+  if (!companyObj || isEmptyObject(companyObj) || typeof companyObj !== 'object') return
+  let associations = []
+  if (newCompanyObj?.associations?.length)
+    newCompanyObj?.associations?.forEach(a => associations.push(typeof a === 'number' ? a : a?.id))
+  else if (companyObj?.associations?.length)
+    companyObj?.associations?.forEach(a => associations.push(typeof a === 'number' ? a : a?.id))
 
-  COMPANY_REQUEST_KEYS.forEach(key => {
-    if (
-      (company[key] && !Array.isArray(company[key])) ||
-      (company[key] && typeof company[key] === 'object' && !isEmptyObject(company[key])) ||
-      (company[key] && Array.isArray(company[key]) && company[key].length)
-    )
-      companyRequest[key] = key === 'businessType' ? company[key]?.id : company[key]
-  })
+  let businessType = null
+  if (newCompanyObj?.businessType)
+    businessType =
+      typeof newCompanyObj?.businessType === 'number' ? newCompanyObj?.businessType : newCompanyObj?.businessType?.id
+  else if (companyObj?.businessType)
+    businessType =
+      typeof companyObj?.businessType === 'number' ? companyObj?.businessType : companyObj?.businessType?.id
+  /**
+   * @type {TCompanyRequest}
+   */
+  let companyRequest = {
+    associations,
+    businessType,
+    cin: newCompanyObj?.cin ?? companyObj?.cin,
+    dba: newCompanyObj?.dba ?? companyObj?.dba,
+    dunsNumber: newCompanyObj?.dunsNumber ?? companyObj?.dunsNumber,
+    enabled: newCompanyObj?.enabled ?? companyObj?.enabled,
+    industryType: newCompanyObj?.industryType ?? companyObj?.industryType,
+    naicsCode: newCompanyObj?.naicsCode ?? companyObj?.naicsCode,
+    name: newCompanyObj?.name ?? companyObj?.name,
+    phone: newCompanyObj?.phone ?? companyObj?.phone,
+    socialFacebook: newCompanyObj?.socialFacebook ?? companyObj?.socialFacebook,
+    socialInstagram: newCompanyObj?.socialInstagram ?? companyObj?.socialInstagram,
+    socialLinkedin: newCompanyObj?.socialLinkedin ?? companyObj?.socialLinkedin,
+    socialTwitter: newCompanyObj?.socialTwitter ?? companyObj?.socialTwitter,
+    tagline: newCompanyObj?.tagline ?? companyObj?.tagline,
+    tin: newCompanyObj?.tin ?? companyObj?.tin,
+    tinType: newCompanyObj?.tinType ?? companyObj?.tinType,
+    type: newCompanyObj?.type ?? companyObj?.type,
+    website: newCompanyObj?.website ?? companyObj?.website
+  }
+
+  removeEmpty(companyRequest)
+
   return companyRequest
 }

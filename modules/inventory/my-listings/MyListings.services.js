@@ -44,6 +44,7 @@ export const tableRowClickedProductOffer = (row, modalProps, bool = true, indexT
  * @param {{ id: number, name: string } | null} [template=null] Object or null. If parameter 'value' contains '|' then template is mandatory.
  * @param {{ isProductInfoOpen: boolean, closePopup: function, isExportInventoryOpen: boolean, setExportModalOpenState: function, modalDetailTrigger: function}} [modalProps=null] Object with variables and functions for open ModalDetail on Price Book tab.
  * @param {boolean} updateWarehouse Update warehouse in datagrid
+ * @param {string} dataType endpoint data type used to distinguish how to update datagrid row data
  * @example
  * import { onClickBroadcast } from './MyListings.services'
  * onClickBroadcast(
@@ -63,7 +64,8 @@ export const onClickBroadcast = (
   datagrid,
   template = null,
   modalProps = null,
-  updateWarehouse = false
+  updateWarehouse = false,
+  dataType = ''
 ) => {
   switch (value) {
     case 'CUSTOM_RULES':
@@ -71,9 +73,9 @@ export const onClickBroadcast = (
       break
     default:
       if (value.indexOf('|') >= 0) {
-        broadcastChange(row, value.substr(0, value.indexOf('|')), template, datagrid, false)
+        broadcastChange(row, value.substr(0, value.indexOf('|')), template, datagrid, false, dataType)
       } else {
-        broadcastChange(row, value, template, datagrid, updateWarehouse)
+        broadcastChange(row, value, template, datagrid, updateWarehouse, dataType)
       }
       break
   }

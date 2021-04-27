@@ -46,7 +46,7 @@ const ViewOnlyPopup = props => {
           <DivDescription>
             <FormattedMessage
               id='marketplace.viewOnlyPopupText'
-              defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on {companyName} Direct. You will only be able to view {companyName} Direct listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'
+              defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on Blue Trade. You will only be able to view Blue Trade listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'
               values={{
                 companyName: systemCompanyName
               }}

@@ -940,27 +940,16 @@ class CompanyProductInfo extends Component {
       }
 
       case 1: {
-        // Tds
-        return (
-          <Grid verticalAlign='middle'>
-            {getTdsElements({
-              elements: getSafe(() => values.companyGenericProduct.tdsFields, [])
-            })}
-          </Grid>
-        )
-      }
-
-      case 2: {
         // Properties
         return <Grid verticalAlign='middle'>{this.getSharedContent('companyGenericProduct.')}</Grid>
       }
 
-      case 3: {
+      case 2: {
         // Regulatory
         return <Grid verticalAlign='middle'>{this.renderCasProduct()}</Grid>
       }
 
-      case 4: {
+      case 3: {
         // Transportation
         return (
           <Grid verticalAlign='middle'>
@@ -1079,7 +1068,7 @@ class CompanyProductInfo extends Component {
         )
       }
 
-      case 5: {
+      case 4: {
         // Documents
         return (
           <DocumentManager
@@ -1089,6 +1078,17 @@ class CompanyProductInfo extends Component {
             normalWidth={!readOnly}
             reduceColumns={readOnly}
           />
+        )
+      }
+
+      case 5: {
+        // Tds
+        return (
+          <Grid verticalAlign='middle'>
+            {getTdsElements({
+              elements: getSafe(() => values.companyGenericProduct.tdsFields, [])
+            })}
+          </Grid>
         )
       }
 
