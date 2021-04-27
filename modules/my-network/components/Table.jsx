@@ -20,15 +20,13 @@ const Table = props => {
     loadingDatagrid,
     rows,
     connectionsStatuses,
-    statuses,
     buttonActionsDetailRow,
     getConnection,
     loadingDetailRow,
-    datagrid,
-    showBluePallet
+    showBluePallet,
+    query
   } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
-  const query = datagrid?.query
 
   useEffect(() => {
     if (
