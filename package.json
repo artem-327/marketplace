@@ -102,6 +102,7 @@
     "@types/jest": "^26.0.23",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
     "babel-eslint": "^10.0.1",
+    "babel-plugin-react-remove-properties": "^0.3.0",
     "babel-plugin-styled-components": "^1.10.0",
     "enzyme": "^3.11.0",
     "eslint": "^5.16.0",

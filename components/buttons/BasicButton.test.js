@@ -14,7 +14,7 @@ describe('BasicButton: (props: any): JSX.Element', () => {
     expect(wrapper.exists()).toBe(true)
     console.log(wrapper.debug()) // see what is exactly rendered
 
-    const basicButtonComponent = wrapper.find("[data-test='components-basicbutton']")
-    expect(basicButtonComponent.length).toBe(1)
+    const button = wrapper.find("[data-test='components-basicbutton']")
+    expect(button.length).toBe(1)
   })
 })
