@@ -82,20 +82,19 @@ class ShippingQuoteRequestsTable extends Component {
     return this.props.rows.map(r => {
       const open = this.state.expandedRowIds.some(id => id === r.id)
       const recent =
-        moment(r.createdAt).isSame(moment(), 'day') ||
-        moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
+        moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
 
       return {
         ...r,
         user: (
           <>
-            {getSafe(() => r.relatedCompany.base64Logo, false) && (
-              <UserImage src={r.relatedCompany.base64Logo} bordered />
+            {getSafe(() => r.relatedCompany.avatarUrl, false) && (
+              <UserImage src={r.relatedCompany.avatarUrl} bordered />
             )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
             <UserCompany as='h4'>
               {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
-              getSafe(() => r.info.buyerCompanyName, false)}
+                getSafe(() => r.info.buyerCompanyName, false)}
             </UserCompany>
           </>
         ),
@@ -125,11 +124,7 @@ class ShippingQuoteRequestsTable extends Component {
             header={
               <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
             }
-            trigger={
-              <div style={{ color: '#848893' }}>
-                {moment(r.createdAt).fromNow()}
-              </div>
-            }
+            trigger={<div style={{ color: '#848893' }}>{moment(r.createdAt).fromNow()}</div>}
           />
         ) : (
           'N/A'
@@ -138,16 +133,19 @@ class ShippingQuoteRequestsTable extends Component {
           ? moment(r.createdAt).isSame(moment(), 'day')
             ? 'Today'
             : moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
-              ? 'Yesterday'
-              : moment(r.createdAt).isSame(moment(), 'week')
-                ? 'This Week'
-                : moment(r.createdAt).isSame(moment(), 'month')
-                  ? 'This Month'
-                  : 'Older'
+            ? 'Yesterday'
+            : moment(r.createdAt).isSame(moment(), 'week')
+            ? 'This Week'
+            : moment(r.createdAt).isSame(moment(), 'month')
+            ? 'This Month'
+            : 'Older'
           : '',
-        expand:  r.info ? (
-          open ? <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
-          : <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+        expand: r.info ? (
+          open ? (
+            <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+          ) : (
+            <ChevronDown size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+          )
         ) : null
       }
     })
@@ -171,20 +169,18 @@ class ShippingQuoteRequestsTable extends Component {
             loading={datagrid.loading}
             columnReordering={false}
             groupBy={['timeGroup']}
-            getChildGroups={
-              rows => {
-                return _(rows)
-                  .groupBy('timeGroup')
-                  .map(v => {
-                    return {
-                      key: `${v[0].timeGroup}`,
-                      childRows: v,
-                      groupLength: v.length
-                    }
-                  })
-                  .value()
-              }
-            }
+            getChildGroups={rows => {
+              return _(rows)
+                .groupBy('timeGroup')
+                .map(v => {
+                  return {
+                    key: `${v[0].timeGroup}`,
+                    childRows: v,
+                    groupLength: v.length
+                  }
+                })
+                .value()
+            }}
             renderGroupLabel={({ row: { value }, groupLength }) => null}
             hideGroupCheckboxes={true}
             columns={columns}

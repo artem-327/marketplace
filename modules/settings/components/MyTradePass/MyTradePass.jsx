@@ -37,7 +37,17 @@ import { getMyTradePass } from '../../actions'
  * @component
  */
 const MyTradePass = props => {
-  const { getMyTradePass, myTradePass, loading, address, slogan, criteria, legalData, marketingData, verifiedData } = props
+  const {
+    getMyTradePass,
+    myTradePass,
+    loading,
+    address,
+    slogan,
+    criteria,
+    legalData,
+    marketingData,
+    verifiedData
+  } = props
 
   useEffect(() => {
     getMyTradePass()
@@ -53,7 +63,7 @@ const MyTradePass = props => {
           <GridColumn>
             <SegmentGroupHeader horizontal $alignItems={'align-items: flex-start !important'}>
               <SegmentCustom textAlign='left'>
-                <Image verticalAlign='middle' spaced={false} src={myTradePass?.base64Logo} />
+                <Image verticalAlign='middle' spaced={false} src={myTradePass?.avatarUrl} />
                 <DivGreyText>{address}</DivGreyText>
               </SegmentCustom>
               <SegmentCustom textAlign='right'>
@@ -84,11 +94,7 @@ const MyTradePass = props => {
                   </DivLeftAligned>
                 </DivCollectionStat>
               </SegmentCustom>
-              {slogan && (
-              <SegmentSlogan>
-                {slogan}
-              </SegmentSlogan>
-              )}
+              {slogan && <SegmentSlogan>{slogan}</SegmentSlogan>}
             </SegmentGroupHeader>
           </GridColumn>
         </GridRow>
@@ -153,15 +159,13 @@ function mapStateToProps({ settings }) {
       ein: myTradePass?.tin,
       telephoneNumber: myTradePass?.phone,
       inBusinessSince: myTradePass?.inBusinessSince,
-      numberOfEmployees: myTradePass?.numberOfEmployees
-        ? (
-            <FormattedNumber
-              minimumFractionDigits={0}
-              maximumFractionDigits={0}
-              value={myTradePass?.numberOfEmployees || 0}
-            />
-          )
-        : null
+      numberOfEmployees: myTradePass?.numberOfEmployees ? (
+        <FormattedNumber
+          minimumFractionDigits={0}
+          maximumFractionDigits={0}
+          value={myTradePass?.numberOfEmployees || 0}
+        />
+      ) : null
     },
     marketingData: {
       website: myTradePass?.website,
