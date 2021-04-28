@@ -361,7 +361,7 @@ const ProductPopup = props => {
                     </GridColumn>
                   </GridRow>
 
-                  <GridRow columns={3}>
+                  <GridRow columns={3}> 
                     <GridColumn>
                       <Input
                         name='palletMaxPkgs'

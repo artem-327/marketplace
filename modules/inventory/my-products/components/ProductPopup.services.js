@@ -321,15 +321,16 @@ export const attachDocumentsUploadAttachment = (att, values, setFieldValue, stat
 export const handleChangePackagingType = (e, value, setFieldValue, values, props) => {
   const { packagingTypesAll } = props
   const selectedPackingType = packagingTypesAll.find(type => type.id === value)
-
-  const elementsToInclude = ['palletPkgMax', 'palletPkgMin']
+  const elementsToInclude = ['palletPkgMax', 'palletPkgMin', 'packageWeight']
   elementsToInclude.forEach(element => {
     if (selectedPackingType && selectedPackingType[element]) {
       switch (element) {
         case 'palletPkgMin':
-          !values.palletMinPkgs && setFieldValue('palletMinPkgs', selectedPackingType[element])
+          setFieldValue('palletMinPkgs', selectedPackingType['palletPkgMin'])
         case 'palletPkgMax':
-          !values.palletMaxPkgs && setFieldValue('palletMaxPkgs', selectedPackingType[element])
+          setFieldValue('palletMaxPkgs', selectedPackingType['palletPkgMax'])
+        case 'packageWeight':
+          values.packagingUnit === selectedPackingType?.weightUnit?.id ? setFieldValue('packageWeight', parseFloat(values.packagingSize) + parseFloat(selectedPackingType?.weight)) : setFieldValue('packageWeight', '')
         default:
           return
       }
