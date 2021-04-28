@@ -94,7 +94,7 @@ const MyTradePass = props => {
                   </DivLeftAligned>
                 </DivCollectionStat>
               </SegmentCustom>
-              <SegmentSlogan>{slogan}</SegmentSlogan>
+              {slogan && <SegmentSlogan>{slogan}</SegmentSlogan>}
             </SegmentGroupHeader>
           </GridColumn>
         </GridRow>

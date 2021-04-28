@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl, FormattedNumber } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
+import PerfectScrollbar from 'react-perfect-scrollbar'
 
 //Components
 import { Button, GridRow, GridColumn, Radio, Dimmer, Loader, Popup } from 'semantic-ui-react'
@@ -96,67 +97,69 @@ const ShippingTerms = props => {
                 searchValue={searchValue}
                 onSetSearchValueChange={val => setSearchValue(val)}
               />
-              <GridExpandedSection overflow={'overflow: auto;'} maxheight='605px'>
+              <GridExpandedSection overflow={'overflow: auto;'} $psscroll={true} maxheight='605px'>
                 <Dimmer inverted active={warehousesFetching || isFetching}>
                   <Loader />
                 </Dimmer>
-                {addressOptions.map((item, index) => {
-                  const disabled = !item.isBroadcasted
-                  return (
-                    <GridRowExpandedSelectionRow
-                      key={index}
-                      checked={value && value.id === item.id && !disabled}
-                      onClick={() => !disabled && onValueChange(item)}
-                      selection={'true'}
-                      disabled={disabled}>
-                      <GridColumn width={16}>
-                        <Popup
-                          disabled={!disabled}
-                          wide
-                          trigger={
-                            <DivFlexRow>
-                              <DivCentered>
-                                <Radio checked={value && value.id === item.id && !disabled} disabled={disabled} />
-                              </DivCentered>
-                              <div>
-                                <DivSectionHeader disabled={disabled}>{item.name}</DivSectionHeader>
-                                <DivSectionName disabled={disabled}>{item.description}</DivSectionName>
-                              </div>
-                              <DivRightSection>
-                                <IconEdit
-                                  disabled={disabled}
-                                  size={18}
-                                  onClick={() => {
-                                    if (!disabled) {
-                                      setAddAddressValues(item)
-                                      setIsOpenAddAddress(true)
-                                    }
-                                  }}
-                                />
-                              </DivRightSection>
-                            </DivFlexRow>
-                          }
-                          content={
-                            <FormattedMessage
-                              id='checkout.shipping.disabledPopupDescription'
-                              defaultMessage='A product in this order is not able to be shipped to this location due to regional restrictions set by the vendor. Please select a different address.'
-                            />
-                          }
+                <PerfectScrollbar className='ui grid'>
+                  {addressOptions.map((item, index) => {
+                    const disabled = !item.isBroadcasted
+                    return (
+                      <GridRowExpandedSelectionRow
+                        key={index}
+                        checked={value && value.id === item.id && !disabled}
+                        onClick={() => !disabled && onValueChange(item)}
+                        selection={'true'}
+                        disabled={disabled}>
+                        <GridColumn width={16}>
+                          <Popup
+                            disabled={!disabled}
+                            wide
+                            trigger={
+                              <DivFlexRow>
+                                <DivCentered>
+                                  <Radio checked={value && value.id === item.id && !disabled} disabled={disabled} />
+                                </DivCentered>
+                                <div>
+                                  <DivSectionHeader disabled={disabled}>{item.name}</DivSectionHeader>
+                                  <DivSectionName disabled={disabled}>{item.description}</DivSectionName>
+                                </div>
+                                <DivRightSection>
+                                  <IconEdit
+                                    disabled={disabled}
+                                    size={18}
+                                    onClick={() => {
+                                      if (!disabled) {
+                                        setAddAddressValues(item)
+                                        setIsOpenAddAddress(true)
+                                      }
+                                    }}
+                                  />
+                                </DivRightSection>
+                              </DivFlexRow>
+                            }
+                            content={
+                              <FormattedMessage
+                                id='checkout.shipping.disabledPopupDescription'
+                                defaultMessage='A product in this order is not able to be shipped to this location due to regional restrictions set by the vendor. Please select a different address.'
+                              />
+                            }
+                          />
+                        </GridColumn>
+                      </GridRowExpandedSelectionRow>
+                    )
+                  })}
+                  {addressOptions.length >= 50 && (
+                    <GridRow>
+                      <GridColumn textAlign='center' width={16}>
+                        <FormattedMessage
+                          id='checkout.moreResultsAreAvailable'
+                          defaultMessage='More results are available, please search by location name or address.'
                         />
                       </GridColumn>
-                    </GridRowExpandedSelectionRow>
-                  )
-                })}
-                {addressOptions.length >= 50 && (
-                  <GridRow>
-                    <GridColumn textAlign='center' width={16}>
-                      <FormattedMessage
-                        id='checkout.moreResultsAreAvailable'
-                        defaultMessage='More results are available, please search by location name or address.'
-                      />
-                    </GridColumn>
-                  </GridRow>
-                )}
+                    </GridRow>
+                  )}
+                </PerfectScrollbar>
               </GridExpandedSection>
               <DivRightButtons>
                 <Button
