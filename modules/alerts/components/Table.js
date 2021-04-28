@@ -51,6 +51,9 @@ const StyledNotification = styled.div`
     }
   }
 `
+const StyledAlertHeader = styled.span`
+  cursor: pointer;
+`
 
 class Table extends Component {
   state = {
@@ -121,7 +124,7 @@ class Table extends Component {
           if (row.info) this.toggleDetail(row.id)
           if (!row.read) this.handleClickOnUnread(row)
         }}>
-        {ReactHtmlParser(row.text)}
+        <StyledAlertHeader>{ReactHtmlParser(row.text)}</StyledAlertHeader>
         {row.read && (
           <CheckIcon>
             <Check />
