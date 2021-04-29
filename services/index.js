@@ -1,4 +1,6 @@
-import { TCompanyRequest } from '../types'
+import { TCompanyRequest, TCompanyObject } from '../types'
+// Services
+import { removeEmpty } from '../utils/functions'
 
 /**
  * Function remove empty elements from object with one level (child).
@@ -45,35 +47,53 @@ export const isEmptyObject = obj => {
 }
 
 /**
- * Prepares RequestCompany object for BE request
+ * Prepares CompanyRequest object for BE request PATCH /api/companies/id/{companyId}
  * @method
- * @param {object} company
- * @return {TCompanyRequest} Company request object
+ * @param {TCompanyObject & Object<string, any>} companyObj Company object from Redux store "auth.identity.company" from selector function "makeGetCompany".
+ * @param {Object<string, any>} [newCompanyObj] Object whit new values for update a Company. Object needs to have the same attributes as TCompanyObject if wants to modifie object CompanyRequest for PATCH /api/companies/id/{companyId}.
+ * @return {TCompanyRequest} Company request object without attributes where no values for PATCH /api/companies/id/{companyId}.
  */
-export const getCompanyRequestObject = company => {
-  if (!company || isEmptyObject(company)) return
+export const getCompanyRequestObject = (companyObj, newCompanyObj) => {
+  if (!companyObj || isEmptyObject(companyObj) || typeof companyObj !== 'object') return
   let associations = []
-  if (company?.associations?.length) company?.associations?.forEach(a => associations.push(a?.id))
+  if (newCompanyObj?.associations?.length)
+    newCompanyObj?.associations?.forEach(a => associations.push(typeof a === 'number' ? a : a?.id))
+  else if (companyObj?.associations?.length)
+    companyObj?.associations?.forEach(a => associations.push(typeof a === 'number' ? a : a?.id))
 
-  return {
+  let businessType = null
+  if (newCompanyObj?.businessType)
+    businessType =
+      typeof newCompanyObj?.businessType === 'number' ? newCompanyObj?.businessType : newCompanyObj?.businessType?.id
+  else if (companyObj?.businessType)
+    businessType =
+      typeof companyObj?.businessType === 'number' ? companyObj?.businessType : companyObj?.businessType?.id
+  /**
+   * @type {TCompanyRequest}
+   */
+  let companyRequest = {
     associations,
-    businessType: company?.businessType?.id,
-    cin: company?.cin,
-    dba: company?.dba,
-    dunsNumber: company?.dunsNumber,
-    enabled: company?.enabled,
-    industryType: company?.industryType,
-    naicsCode: company?.naicsCode,
-    name: company?.name,
-    phone: company?.phone,
-    socialFacebook: company?.socialFacebook,
-    socialInstagram: company?.socialInstagram,
-    socialLinkedin: company?.socialLinkedin,
-    socialTwitter: company?.socialTwitter,
-    tagline: company?.tagline,
-    tin: company?.tin,
-    tinType: company?.tinType,
-    type: company?.type,
-    website: company?.website
+    businessType,
+    cin: newCompanyObj?.cin ?? companyObj?.cin,
+    dba: newCompanyObj?.dba ?? companyObj?.dba,
+    dunsNumber: newCompanyObj?.dunsNumber ?? companyObj?.dunsNumber,
+    enabled: newCompanyObj?.enabled ?? companyObj?.enabled,
+    industryType: newCompanyObj?.industryType ?? companyObj?.industryType,
+    naicsCode: newCompanyObj?.naicsCode ?? companyObj?.naicsCode,
+    name: newCompanyObj?.name ?? companyObj?.name,
+    phone: newCompanyObj?.phone ?? companyObj?.phone,
+    socialFacebook: newCompanyObj?.socialFacebook ?? companyObj?.socialFacebook,
+    socialInstagram: newCompanyObj?.socialInstagram ?? companyObj?.socialInstagram,
+    socialLinkedin: newCompanyObj?.socialLinkedin ?? companyObj?.socialLinkedin,
+    socialTwitter: newCompanyObj?.socialTwitter ?? companyObj?.socialTwitter,
+    tagline: newCompanyObj?.tagline ?? companyObj?.tagline,
+    tin: newCompanyObj?.tin ?? companyObj?.tin,
+    tinType: newCompanyObj?.tinType ?? companyObj?.tinType,
+    type: newCompanyObj?.type ?? companyObj?.type,
+    website: newCompanyObj?.website ?? companyObj?.website
   }
+
+  removeEmpty(companyRequest)
+
+  return companyRequest
 }

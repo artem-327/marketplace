@@ -411,7 +411,7 @@ const BidsRowDetail = props => {
                         </GridColumn>
                       </GridRow>
 
-                      {showAcceptRejectCounterSection && (
+                      {showAcceptRejectCounterSection && !!productOffer && (
                         <>
                           <GridRow style={{ padding: '7.5px 10px' }}>
                             <GridColumn width={5}>
@@ -550,7 +550,7 @@ const BidsRowDetail = props => {
                   )}
                 </GridStyled>
                 <ErrorFocus />
-                {!(seller && lastStatus === 'ACCEPTED') && (
+                {!(seller && lastStatus === 'ACCEPTED') && !!productOffer && (
                   <BottomButtons>
                     {!seller && (lastStatus === 'ACCEPTED' || lastStatus === 'REJECTED') ? (
                       <div style={{ display: 'flex' }}>
@@ -560,7 +560,7 @@ const BidsRowDetail = props => {
                                 <div style={{ margin: 'auto 20px' }}>
                                   <FormattedMessage
                                     id='marketplace.detailRow.youMayCheckout'
-                                    defaultMessage='ou may now checkout with this order'
+                                    defaultMessage='You may now checkout with this order'
                                   />
                                 </div>
                                 <Button
@@ -656,8 +656,8 @@ BidsRowDetail.defaultProps = {
 
 function mapStateToProps(store, params) {
   const { popupValues } = params
-  const productOffer = popupValues.productOffer
-  const companyProduct = productOffer.companyProduct
+  const productOffer = getSafe(() => popupValues.productOffer, null)
+  const companyProduct = getSafe(() => productOffer.companyProduct, null)
 
   const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
 
@@ -666,7 +666,7 @@ function mapStateToProps(store, params) {
     productOffer,
     isSending: store.marketplace.isSending,
     loading: store.marketplace.loading,
-    productName: getSafe(() => companyProduct.intProductName, ''),
+    productName: getSafe(() => companyProduct.intProductName, 'N/A'),
     listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
     packagingType: getSafe(() => companyProduct.packagingType.name, ''),
     packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),

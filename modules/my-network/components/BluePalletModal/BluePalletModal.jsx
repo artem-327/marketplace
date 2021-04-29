@@ -18,7 +18,7 @@ import {
   FooterInfo
 } from './BluePalletModal.styles'
 // Icons
-import Logo from '~/assets/images/nav/logo-bluepallet.png'
+import Logo from '~/assets/images/nav/logo-bluetrade.png'
 import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
 import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg'
 import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
@@ -47,7 +47,6 @@ const BluePalletModal = props => {
         <HeaderWrapper>
           <ContentHeaderTitle as='h2'>
             <Image src={Logo} />
-            <FormattedMessage id='bluePallet.direct' defaultMessage='Direct' />
           </ContentHeaderTitle>
           <IconsWrapper>
             <IconWrapper>
@@ -75,14 +74,14 @@ const BluePalletModal = props => {
         <ContentMainTitle as='h3'>
           <FormattedMessage
             id='bluePallet.whatIs'
-            defaultMessage='What is {companyName} Direct?'
+            defaultMessage='What is Blue Trade?'
             values={{ companyName: systemCompanyName }}
           />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='{companyName} Direct anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through {companyName} Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that {companyName} direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade transactions are safe, secure, simple, and reliable.'
             values={{
               companyName: systemCompanyName
             }}
@@ -142,7 +141,7 @@ const BluePalletModal = props => {
         <FooterInfo>
           <FormattedMessage
             id='bluePallet.footerInfo'
-            defaultMessage='{companyName} Direct only displays inventory of {companyName} Members. {companyName} Direct does not manufacture, distribute, or possess any products listed on the {companyName} Direct Marketplace. {companyName} Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            defaultMessage='Blue Trade only displays inventory of {companyName} Members. Blue Trade does not manufacture, distribute, or possess any products listed on the Blue Trade Marketplace. Blue Trade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
             values={{
               companyName: systemCompanyName
             }}

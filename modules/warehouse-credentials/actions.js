@@ -19,6 +19,22 @@ export function approveDeaListCertificate(branchId, values) {
   }
 }
 
+export function approveEpaCertificate(branchId, values) {
+  const approveData = {
+    epaFacilityUrl: values.epaFacilityUrl,
+    epaFrsId: values.epaFrsId,
+    epaRegion: values.epaRegion
+  }
+  return {
+    type: AT.WAREHOUSE_CREDENTIALS_EPA_APPROVE,
+    async payload() {
+      const data = await api.approveEpaCertificate(branchId, approveData)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
 export function approveTaxExemptCertificate(branchId, values) {
   const approveData = {
     taxExemptCertificateNumber: values.certificateNumber,
@@ -40,6 +56,17 @@ export function denyDeaListCertificate(branchId) {
     type: AT.WAREHOUSE_CREDENTIALS_DEA_DENY,
     async payload() {
       const data = await api.denyDeaListCertificate(branchId)
+      Datagrid && Datagrid.loadData()
+      return data
+    }
+  }
+}
+
+export function denyEpaCertificate(branchId) {
+  return {
+    type: AT.WAREHOUSE_CREDENTIALS_EPA_DENY,
+    async payload() {
+      const data = await api.denyEpaCertificate(branchId)
       Datagrid && Datagrid.loadData()
       return data
     }

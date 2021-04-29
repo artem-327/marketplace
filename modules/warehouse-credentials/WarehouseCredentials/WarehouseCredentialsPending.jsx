@@ -5,8 +5,10 @@ import { Formik } from 'formik'
 import moment from 'moment'
 import {
   approveDeaListCertificate,
+  approveEpaCertificate,
   approveTaxExemptCertificate,
   denyDeaListCertificate,
+  denyEpaCertificate,
   denyTaxExemptCertificate
 } from '../actions'
 import { debounce } from 'lodash'
@@ -285,6 +287,101 @@ class WarehouseCredentialsPending extends Component {
                   </FormArea>
                 </>
               )}
+              {branch.epaReceiveVerify && (
+                <>
+                  <CertHeader>
+                    <FormattedMessage
+                      id='warehouseCredentials.epaCertificate'
+                      defaultMessage='EPA Certificate'
+                    />
+                  </CertHeader>
+                  <Warehouse>
+                    <Map />
+                    <label>
+                      <FormattedMessage id='warehouseCredentials.warehouseAddress' defaultMessage='Warehouse Address' />
+                    </label>
+                    {getFormattedAddress({
+                      street: getSafe(() => branch.deliveryAddress.address.streetAddress, false),
+                      city: getSafe(() => branch.deliveryAddress.address.city, false),
+                      zip: getSafe(() => branch.deliveryAddress.address.zip.zip, false),
+                      country: getSafe(() => branch.deliveryAddress.address.country.name, false),
+                      province: getSafe(() => branch.deliveryAddress.address.province.name, false)
+                    })}
+                  </Warehouse>
+                  <FormArea>
+                    <FormGroup widths='equal'>
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.frsId' defaultMessage='FRS ID' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaFrsId'
+                      />
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.epaRegion' defaultMessage='EPA Region' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaRegion'
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal'>
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.epaFacilityUrl' defaultMessage='Detailed Factory Report' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaFacilityUrl'
+                        type='url'
+                      />
+                    </FormGroup>
+                    <ButtonGroup>
+                      <BasicButton $noBorder={true} onClick={() => this.props.denyEpaCertificate(branch.id)}>
+                        <FormattedMessage id='global.deny' defaultMessage='Deny' />
+                      </BasicButton>
+                      <BasicButton
+                        onClick={() =>
+                          validateForm()
+                            .then(r => {
+                              const formPart = 'epa'
+                              // stop when errors found
+                              if (Object.keys(r).length && Object.keys(r).includes(formPart)) {
+                                Object.keys(r[formPart]).forEach((key, index) => {
+                                  // setFieldTouched is necessary to show error when Formik has defined validation scheme
+                                  setFieldTouched(`${formPart}.${key}`, true)
+                                  setFieldError(
+                                    `${formPart}.${key}`,
+                                    formatMessage({
+                                      id: r[formPart][key].props.id,
+                                      defaultMessage: r[formPart][key].props.defaultMessage
+                                    })
+                                  )
+                                })
+                                //submitForm() // show errors
+                                return false
+                              }
+
+                              this.props.approveEpaCertificate(branch.id, formikProps.values[formPart])
+                            })
+                            .catch(e => {
+                              console.error(e)
+                            })
+                        }>
+                        <FormattedMessage id='global.approve' defaultMessage='Approve' />
+                      </BasicButton>
+                    </ButtonGroup>
+                  </FormArea>
+                </>
+              )}
               {branch.taxExemptReceiveVerify && (
                 <>
                   <CertHeader>
@@ -500,8 +597,10 @@ const mapDispatchToProps = {
   putEditWarehouse,
   downloadAttachment,
   approveDeaListCertificate,
+  approveEpaCertificate,
   approveTaxExemptCertificate,
   denyDeaListCertificate,
+  denyEpaCertificate,
   denyTaxExemptCertificate
 }
 

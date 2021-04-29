@@ -50,7 +50,7 @@ const SharedListings = props => {
     getTemplates,
     broadcastTemplates,
     triggerPriceBookModal,
-    rowIdPriceBook,
+    rowPriceBook,
     getMarkUp
   } = props
 
@@ -66,7 +66,14 @@ const SharedListings = props => {
   }, [])
 
   const getRowDetail = (row, props, state) => {
-    return <ListingDetail row={row.rawData} parentState={state} values={values} onChange={data => setValues(data)} />
+    return (
+      <ListingDetail
+        row={row.rawData}
+        parentState={state}
+        values={values}
+        onChange={data => setValues(data)}
+        datagrid={props.datagrid}
+      />)
   }
 
   return (
@@ -74,7 +81,8 @@ const SharedListings = props => {
       <ModalPriceBook
         isOpenPriceBookModal={isOpenPriceBookModal}
         triggerPriceBookModal={triggerPriceBookModal}
-        rowIdPriceBook={rowIdPriceBook}
+        detailValues={rowPriceBook}
+        tableDatagrid={datagrid}
       />
 
       <TableHandler datagrid={datagrid} />

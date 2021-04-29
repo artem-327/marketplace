@@ -78,13 +78,13 @@ const mapStateToProps = (
       searchedProducts,
       searchedProductsLoading,
       warehousesList,
-      listDocumentTypes,
       editProductOfferInitTrig,
       tdsTemplatesLoading,
       tdsTemplates,
       broadcastOption
     },
-    broadcast
+    broadcast,
+    settings: { documentTypes }
   },
   { inventoryGrid }
 ) => ({
@@ -104,7 +104,6 @@ const mapStateToProps = (
   searchedProducts,
   searchedProductsLoading,
   warehousesList,
-  listDocumentTypes,
   editProductOfferInitTrig,
   currencySymbol: '$',
   datagrid: inventoryGrid,
@@ -112,7 +111,8 @@ const mapStateToProps = (
   broadcastTemplates: getSafe(() => broadcast.templates, []),
   tdsTemplatesLoading,
   tdsTemplates,
-  broadcastOption
+  broadcastOption,
+  listDocumentTypes: documentTypes
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalDetail)

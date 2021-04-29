@@ -1,12 +1,27 @@
 import { removeEmpty } from '../../../../../utils/functions'
 
 export const submitHandler = async (values, props) => {
-  let body = {
-    priceAddition: values.priceAddition,
-    priceMultiplier: parseFloat(values.priceMultiplier),
-    priceOverride: values.priceOverride
+  const { updateMarkUp, getSharedProductOffer, datagrid } = props
+
+  try {
+    let body = {
+      priceAddition: values.priceAddition,
+      priceMultiplier: parseFloat(values.priceMultiplier),
+      priceOverride: values.priceOverride
+    }
+
+    removeEmpty(body, val => val === 0)
+    await updateMarkUp(values.id, body)
+  } catch (e) {
+    console.error(e)
   }
 
-  removeEmpty(body, val => val === 0)
-  await props.updateMarkUp(values.id, body)
+  try {
+    const { value } = await getSharedProductOffer(values.id)
+    if (value && value.length) {
+      datagrid.updateRow(values.id, () => value[0])
+    }
+  } catch (e) {
+    console.error(e)
+  }
 }

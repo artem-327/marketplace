@@ -32,3 +32,6 @@ export const getCompanyDetails = id =>
   api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 
 export const agreeWithTOS = () => api.patch('/prodex/api/users/accept-tos')
+
+export const updateCompanyDetails = (companyId, request) =>
+  api.patch(`/prodex/api/companies/id/${companyId}/details`, request)

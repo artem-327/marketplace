@@ -15,7 +15,7 @@ export const getActions = triggerPriceBookModal => {
   return [
     {
       text: 'Price Book',
-      callback: row => triggerPriceBookModal(true, row.id)
+      callback: row => triggerPriceBookModal(true, row)
     }
   ]
 }
@@ -173,14 +173,17 @@ export const getRows = (rows, props) => {
               content: <Header icon={option.icon} content={option.title} subheader={option.subtitle} />,
               onClick: () => {
                 if (option.value === 'CUSTOM_RULES') {
-                  triggerPriceBookModal(true, r.id)
+                  triggerPriceBookModal(true, r)
                 } else {
                   onClickBroadcast(
                     r,
                     option.value,
                     broadcastChange,
                     datagrid,
-                    option.id ? { id: option.id, name: option.tmp } : null
+                    option.id ? { id: option.id, name: option.tmp } : null,
+                    null,
+                    false,
+                    'shared-listings'
                   )
                 }
               }
