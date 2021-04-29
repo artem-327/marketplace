@@ -272,8 +272,7 @@ class Navigation extends Component {
     } = this.props
 
     // necessary to load nav properly after page refresh
-    if (!auth?.identity)
-      return ''
+    if (!auth?.identity) return ''
 
     const {
       dropdowns,
@@ -339,17 +338,17 @@ class Navigation extends Component {
           <>
             <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
               <>
-                <Home size={22}/>
-                {formatMessage({id: 'navigation.dashboard', defaultMessage: 'Dashboard'})}
+                <Home size={22} />
+                {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
               </>
             </MenuLink>
 
             <DropdownItem
-              icon={<Layers size={22}/>}
+              icon={<Layers size={22} />}
               text={
                 <>
-                  <FormattedMessage id='navigation.inventory' defaultMessage='Inventory'/>
-                  {inventory ? <ChevronUp/> : <ChevronDown/>}
+                  <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
+                  {inventory ? <ChevronUp /> : <ChevronDown />}
                 </>
               }
               className={inventory ? 'opened' : null}
@@ -364,26 +363,29 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/inventory/my-listings'
                     dataTest='navigation_menu_inventory_my_listings_drpdn'>
-                    {formatMessage({id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings'})}
+                    {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={MenuLink}
                     to='/inventory/my-products'
                     dataTest='navigation_menu_inventory_my_products_drpdn'>
-                    {formatMessage({id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products'})}
+                    {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={MenuLink}
                     to='/inventory/shared-listings'
                     dataTest='navigation_menu_inventory_shared_listings_drpdn'>
-                    {formatMessage({id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings'})}
+                    {formatMessage({ id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings' })}
                   </Dropdown.Item>
                   {isCompanyAdmin && (
                     <Dropdown.Item
                       as={MenuLink}
                       to='/inventory/global-price-book'
                       dataTest='navigation_menu_inventory_global_price_book_drpdn'>
-                      {formatMessage({id: 'navigation.inventoryGlobalPriceBook', defaultMessage: 'Global Price Book'})}
+                      {formatMessage({
+                        id: 'navigation.inventoryGlobalPriceBook',
+                        defaultMessage: 'Global Price Book'
+                      })}
                     </Dropdown.Item>
                   )}
                 </PerfectScrollbar>
@@ -391,11 +393,11 @@ class Navigation extends Component {
             </DropdownItem>
 
             <DropdownItem
-              icon={<ShoppingBag size={22}/>}
+              icon={<ShoppingBag size={22} />}
               text={
                 <>
-                  <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace'/>
-                  {marketplace ? <ChevronUp/> : <ChevronDown/>}
+                  <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace' />
+                  {marketplace ? <ChevronUp /> : <ChevronDown />}
                 </>
               }
               className={marketplace ? 'opened' : null}
@@ -410,40 +412,40 @@ class Navigation extends Component {
                     as={MenuLink}
                     to='/marketplace/listings'
                     dataTest='navigation_menu_marketplace_listings_drpdn'>
-                    {formatMessage({id: 'navigation.marketplaceListings', defaultMessage: 'Listings'})}
+                    {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={MenuLink}
                     to='/marketplace/bids-sent'
                     dataTest='navigation_menu_marketplace_bids_sent_drpdn'>
-                    {formatMessage({id: 'navigation.marketplaceBidsSent', defaultMessage: 'Bids Sent'})}
+                    {formatMessage({ id: 'navigation.marketplaceBidsSent', defaultMessage: 'Bids Sent' })}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={MenuLink}
                     to='/marketplace/bids-received'
                     dataTest='navigation_menu_marketplace_bids_received_drpdn'>
-                    {formatMessage({id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received'})}
+                    {formatMessage({ id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received' })}
                   </Dropdown.Item>
                   {
                     /* DT-293 temporary disabled */ false && (
-                    <Dropdown.Item
-                      as={MenuLink}
-                      to='/marketplace/holds'
-                      dataTest='navigation_menu_marketplace_holds_drpdn'>
-                      {formatMessage({id: 'navigation.marketplaceHolds', defaultMessage: 'Holds'})}
-                    </Dropdown.Item>
-                  )
+                      <Dropdown.Item
+                        as={MenuLink}
+                        to='/marketplace/holds'
+                        dataTest='navigation_menu_marketplace_holds_drpdn'>
+                        {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
+                      </Dropdown.Item>
+                    )
                   }
                 </PerfectScrollbar>
               </Dropdown.Menu>
             </DropdownItem>
 
             <DropdownItem
-              icon={<Globe size={22}/>}
+              icon={<Globe size={22} />}
               text={
                 <>
-                  <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network'/>
-                  {myNetwork ? <ChevronUp/> : <ChevronDown/>}
+                  <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+                  {myNetwork ? <ChevronUp /> : <ChevronDown />}
                 </>
               }
               className={myNetwork ? 'opened' : null}
@@ -459,69 +461,69 @@ class Navigation extends Component {
                     pointer={true}
                     dataTest='navigation_menu_my_Network_all_drpdn'
                     status={NETWORK_STATUS.ALL}
-                    networkStatus={() => Datagrid?.setQuery({status: NETWORK_STATUS.ALL})}>
+                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
                     {formatMessage(
                       {
                         id: 'navigation.myNetworkAll',
                         defaultMessage: 'All ({value})'
                       },
-                      {value: allNetworks}
+                      { value: allNetworks }
                     )}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={DivItem}
                     pointer={true}
                     status={NETWORK_STATUS.ACTIVE}
-                    networkStatus={() => Datagrid?.setQuery({status: NETWORK_STATUS.ACTIVE})}
+                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
                     dataTest='navigation_menu_my_network_active_drpdn'>
                     {formatMessage(
                       {
                         id: 'navigation.myNetworkActive',
                         defaultMessage: 'Active ({value})'
                       },
-                      {value: connectedNetworks}
+                      { value: connectedNetworks }
                     )}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={DivItem}
                     pointer={true}
                     status={NETWORK_STATUS.PENDING}
-                    networkStatus={() => Datagrid?.setQuery({status: NETWORK_STATUS.PENDING})}
+                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
                     dataTest='navigation_menu_my_network_pending_drpdn'>
                     {formatMessage(
                       {
                         id: 'navigation.myNetworkPending',
                         defaultMessage: 'Pending ({value})'
                       },
-                      {value: pendingNetworks}
+                      { value: pendingNetworks }
                     )}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={DivItem}
                     pointer={true}
                     status={NETWORK_STATUS.DECLINED}
-                    networkStatus={() => Datagrid?.setQuery({status: NETWORK_STATUS.DECLINED})}
+                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
                     dataTest='navigation_menu_my_network_declined_drpdn'>
                     {formatMessage(
                       {
                         id: 'navigation.myNetworkDeclined',
                         defaultMessage: 'Declined ({value})'
                       },
-                      {value: declinedNetworks}
+                      { value: declinedNetworks }
                     )}
                   </Dropdown.Item>
                   <Dropdown.Item
                     as={DivItem}
                     pointer={true}
                     status={NETWORK_STATUS.DISCONNECTED}
-                    networkStatus={() => Datagrid?.setQuery({status: NETWORK_STATUS.DISCONNECTED})}
+                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
                     dataTest='navigation_menu_my_network_disconnected_drpdn'>
                     {formatMessage(
                       {
                         id: 'navigation.myNetworkDisconnected',
                         defaultMessage: 'Disconnected ({value})'
                       },
-                      {value: disconnectedNetworks}
+                      { value: disconnectedNetworks }
                     )}
                   </Dropdown.Item>
                 </PerfectScrollbar>
@@ -531,11 +533,11 @@ class Navigation extends Component {
             {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
             {false && (
               <DropdownItem
-                icon={<Grid size={22}/>}
+                icon={<Grid size={22} />}
                 text={
                   <>
-                    <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board'/>
-                    {wantedBoard ? <ChevronUp/> : <ChevronDown/>}
+                    <FormattedMessage id='navigation.wantedBoard' defaultMessage='Wanted Board' />
+                    {wantedBoard ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
                 className={wantedBoard ? 'opened' : null}
@@ -551,31 +553,31 @@ class Navigation extends Component {
                         as={MenuLink}
                         to='/wanted-board/listings'
                         dataTest='navigation_wanted_board_listings_drpdn'>
-                        {formatMessage({id: 'navigation.wantedBoardListings', defaultMessage: 'Listings'})}
+                        {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
                       </Dropdown.Item>
                       <Dropdown.Item
                         as={MenuLink}
                         to='/wanted-board/bids-sent'
                         dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                        {formatMessage({id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent'})}
+                        {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
                       </Dropdown.Item>
                     </>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/wanted-board/bids-received'
                       dataTest='navigation_wanted_board_bids_received_drpdn'>
-                      {formatMessage({id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests'})}
+                      {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
                     </Dropdown.Item>
                   </PerfectScrollbar>
                 </Dropdown.Menu>
               </DropdownItem>
             )}
             <DropdownItem
-              icon={<FileText size={22}/>}
+              icon={<FileText size={22} />}
               text={
                 <>
-                  <FormattedMessage id='navigation.orders' defaultMessage='Orders'/>
-                  {orders ? <ChevronUp/> : <ChevronDown/>}
+                  <FormattedMessage id='navigation.orders' defaultMessage='Orders' />
+                  {orders ? <ChevronUp /> : <ChevronDown />}
                 </>
               }
               className={orders ? 'opened' : null}
@@ -587,10 +589,10 @@ class Navigation extends Component {
               <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
                 <PerfectScrollbar>
                   <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
-                    {formatMessage({id: 'navigation.salesOrders', defaultMessage: 'Sales Orders'})}
+                    {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
                   </Dropdown.Item>
                   <Dropdown.Item as={MenuLink} to='/orders/purchase' dataTest='navigation_orders_purchase_orders_drpdn'>
-                    {formatMessage({id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders'})}
+                    {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
                   </Dropdown.Item>
                 </PerfectScrollbar>
               </Dropdown.Menu>
@@ -599,17 +601,33 @@ class Navigation extends Component {
             {(isCompanyAdmin || isUserAdmin) && (
               <DropdownItem
                 icon={
-                  <svg id="tradepassIcon" data-name="tradepassIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 720">
-                    <polygon className="cls-1" points="564.831 383.173 564.831 452.205 347.22 577.847 287.431 543.331 564.831 383.173"/>
-                    <polygon className="cls-1" points="129.611 200.946 129.611 131.901 298.209 229.243 238.418 263.76 129.611 200.946"/>
-                    <path className="cls-1" d="M564.831,131.9v69.043Q401.617,295.163,238.418,389.391l-108.807-62.82V257.53l108.807,62.823q163.2-94.24,326.413-188.457"/>
-                    <path className="cls-1" d="M564.831,257.53v69.046Q401.617,420.8,238.418,515.032L129.611,452.205V383.173l108.807,62.814q163.2-94.232,326.413-188.457"/>
+                  <svg
+                    id='tradepassIcon'
+                    data-name='tradepassIcon'
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 720 720'>
+                    <polygon
+                      className='cls-1'
+                      points='564.831 383.173 564.831 452.205 347.22 577.847 287.431 543.331 564.831 383.173'
+                    />
+                    <polygon
+                      className='cls-1'
+                      points='129.611 200.946 129.611 131.901 298.209 229.243 238.418 263.76 129.611 200.946'
+                    />
+                    <path
+                      className='cls-1'
+                      d='M564.831,131.9v69.043Q401.617,295.163,238.418,389.391l-108.807-62.82V257.53l108.807,62.823q163.2-94.24,326.413-188.457'
+                    />
+                    <path
+                      className='cls-1'
+                      d='M564.831,257.53v69.046Q401.617,420.8,238.418,515.032L129.611,452.205V383.173l108.807,62.814q163.2-94.232,326.413-188.457'
+                    />
                   </svg>
                 }
                 text={
                   <>
-                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass'/>
-                    {settings ? <ChevronUp/> : <ChevronDown/>}
+                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass' />
+                    {settings ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
                 className={settings ? 'opened' : null}
@@ -627,35 +645,35 @@ class Navigation extends Component {
                           to='/settings/my-tradepass'
                           tab='my-tradepass'
                           dataTest='navigation_settings_my_trade_pass_drpdn'>
-                          {formatMessage({id: 'navigation.myTradePass', defaultMessage: 'My Trade Pass'})}
+                          {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My Trade Pass' })}
                         </Dropdown.Item>
                         <Dropdown.Item
                           as={MenuLink}
                           to='/settings/company-details'
                           tab='company-details'
                           dataTest='navigation_settings_company_details_drpdn'>
-                          {formatMessage({id: 'navigation.companySettings', defaultMessage: 'Company Details'})}
+                          {formatMessage({ id: 'navigation.companySettings', defaultMessage: 'Company Details' })}
                         </Dropdown.Item>
                         <Dropdown.Item
                           as={MenuLink}
                           to='/settings/insurance'
                           tab='insurance'
                           dataTest='navigation_settings_my_insurance_drpdn'>
-                          {formatMessage({id: 'global.insurance', defaultMessage: 'Insurance'})}
+                          {formatMessage({ id: 'global.insurance', defaultMessage: 'Insurance' })}
                         </Dropdown.Item>
                         <Dropdown.Item
                           as={MenuLink}
                           to='/settings/system-settings'
                           tab='system-settings'
                           dataTest='navigation_settings_system_settings_drpdn'>
-                          {formatMessage({id: 'navigation.Settings', defaultMessage: 'Settings'})}
+                          {formatMessage({ id: 'navigation.Settings', defaultMessage: 'Settings' })}
                         </Dropdown.Item>
                         <Dropdown.Item
                           as={MenuLink}
                           to='/settings/trade-criteria'
                           tab='trade-criteria'
                           dataTest='navigation_settings_my_trade_criteria_drpdn'>
-                          {formatMessage({id: 'navigation.myTradeCriteria', defaultMessage: 'My Trade Criteria'})}
+                          {formatMessage({ id: 'navigation.myTradeCriteria', defaultMessage: 'My Trade Criteria' })}
                         </Dropdown.Item>
                       </>
                     ) : null}
@@ -665,7 +683,7 @@ class Navigation extends Component {
                         to='/settings/users'
                         tab='users'
                         dataTest='navigation_settings_users_drpdn'>
-                        {formatMessage({id: 'navigation.users', defaultMessage: 'Users'})}
+                        {formatMessage({ id: 'navigation.users', defaultMessage: 'Users' })}
                       </Dropdown.Item>
                     ) : null}
                     {isCompanyAdmin ? (
@@ -675,7 +693,7 @@ class Navigation extends Component {
                           to='/settings/locations'
                           tab='locations'
                           dataTest='navigation_settings_locations_drpdn'>
-                          {formatMessage({id: 'navigation.locations', defaultMessage: 'Locations'})}
+                          {formatMessage({ id: 'navigation.locations', defaultMessage: 'Locations' })}
                         </Dropdown.Item>
                       </>
                     ) : null}
@@ -686,7 +704,7 @@ class Navigation extends Component {
                           to='/settings/bank-accounts'
                           tab='bank-accounts'
                           dataTest='navigation_settings_bank_accounts_drpdn'>
-                          {formatMessage({id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts'})}
+                          {formatMessage({ id: 'navigation.bankAccounts', defaultMessage: 'Bank Accounts' })}
                         </Dropdown.Item>
                         {/* Commented based on https://bluepallet.atlassian.net/browse/DT-227 */}
                         {/* <Dropdown.Item
@@ -696,13 +714,14 @@ class Navigation extends Component {
                       dataTest='navigation_settings_logistics_drpdn'>
                       {formatMessage({ id: 'navigation.logistics', defaultMessage: 'Logistics' })}
                     </Dropdown.Item> */}
-                        <Dropdown.Item
+                        {/* Commented based on https://bluepallet.atlassian.net/browse/DT-257 */}
+                        {/* <Dropdown.Item
                           as={MenuLink}
                           to='/settings/documents'
                           tab='documents'
                           dataTest='navigation_settings_documents_drpdn'>
                           {formatMessage({id: 'navigation.documents', defaultMessage: 'Documents'})}
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                       </>
                     ) : null}
                   </PerfectScrollbar>
@@ -716,16 +735,16 @@ class Navigation extends Component {
               <>
                 <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
                   <>
-                    <Home size={22}/>
-                    {formatMessage({id: 'navigation.dashboard', defaultMessage: 'Dashboard'})}
+                    <Home size={22} />
+                    {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
                   </>
                 </MenuLink>
                 <DropdownItem
-                  icon={<Briefcase size={22}/>}
+                  icon={<Briefcase size={22} />}
                   text={
                     <>
-                      <FormattedMessage id='navigation.companies' defaultMessage='Companies'/>
-                      {companies ? <ChevronUp/> : <ChevronDown/>}
+                      <FormattedMessage id='navigation.companies' defaultMessage='Companies' />
+                      {companies ? <ChevronUp /> : <ChevronDown />}
                     </>
                   }
                   className={companies ? 'opened' : null}
@@ -742,7 +761,7 @@ class Navigation extends Component {
                           as={MenuLink}
                           to={`/companies/${tab.type}`}
                           dataTest={`navigation_companies_${tab.type}_drpdn`}>
-                          {formatMessage({id: `navigation.${tab.type}`, defaultMessage: `${tab.name}`})}
+                          {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
                         </Dropdown.Item>
                       ))}
                     </PerfectScrollbar>
@@ -750,11 +769,11 @@ class Navigation extends Component {
                 </DropdownItem>
 
                 <DropdownItem
-                  icon={<Package size={22}/>}
+                  icon={<Package size={22} />}
                   text={
                     <>
-                      <FormattedMessage id='navigation.products' defaultMessage='Products'/>
-                      {products ? <ChevronUp/> : <ChevronDown/>}
+                      <FormattedMessage id='navigation.products' defaultMessage='Products' />
+                      {products ? <ChevronUp /> : <ChevronDown />}
                     </>
                   }
                   className={products ? 'opened' : null}
@@ -771,7 +790,7 @@ class Navigation extends Component {
                           as={MenuLink}
                           to={`/products/${tab.type}`}
                           dataTest={`navigation_products_${tab.type}_drpdn`}>
-                          {formatMessage({id: `navigation.${tab.type}`, defaultMessage: `${tab.name}`})}
+                          {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
                         </Dropdown.Item>
                       ))}
                     </PerfectScrollbar>
@@ -779,23 +798,23 @@ class Navigation extends Component {
                 </DropdownItem>
                 <MenuLink to='/document-types' dataTest='navigation_menu_admin_document-types'>
                   <>
-                    <FileText size={22}/>
-                    {formatMessage({id: 'navigation.documentTypes', defaultMessage: 'Document Types'})}
+                    <FileText size={22} />
+                    {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
                   </>
                 </MenuLink>
                 <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market_segments'>
                   <>
-                    <Disc size={22}/>
-                    {formatMessage({id: 'navigation.marketSegments', defaultMessage: 'Market Segments'})}
+                    <Disc size={22} />
+                    {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
                   </>
                 </MenuLink>
 
                 <DropdownItem
-                  icon={<Settings size={22}/>}
+                  icon={<Settings size={22} />}
                   text={
                     <>
-                      <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings'/>
-                      {admin ? <ChevronUp/> : <ChevronDown/>}
+                      <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings' />
+                      {admin ? <ChevronUp /> : <ChevronDown />}
                     </>
                   }
                   className={admin ? 'opened' : null}
@@ -812,7 +831,7 @@ class Navigation extends Component {
                           as={MenuLink}
                           to={`/admin/${tab.type}`}
                           dataTest={`navigation_admin_settings_${tab.type}_drpdn`}>
-                          {formatMessage({id: `navigation.admin.${tab.type}`, defaultMessage: `${tab.name}`})}
+                          {formatMessage({ id: `navigation.admin.${tab.type}`, defaultMessage: `${tab.name}` })}
                         </Dropdown.Item>
                       ))}
                     </PerfectScrollbar>
@@ -823,11 +842,11 @@ class Navigation extends Component {
             {(isAdmin || isEchoOperator || isOrderOperator) && (
               <>
                 <DropdownItem
-                  icon={<Archive size={22}/>}
+                  icon={<Archive size={22} />}
                   text={
                     <>
-                      <FormattedMessage id='navigation.operations' defaultMessage='Operations'/>
-                      {operations ? <ChevronUp/> : <ChevronDown/>}
+                      <FormattedMessage id='navigation.operations' defaultMessage='Operations' />
+                      {operations ? <ChevronUp /> : <ChevronDown />}
                     </>
                   }
                   className={operations ? 'opened' : null}
@@ -849,7 +868,7 @@ class Navigation extends Component {
                           as={MenuLink}
                           to={`/operations/${tab.type}`}
                           dataTest={`navigation_operations_${tab.type}_drpdn`}>
-                          {formatMessage({id: `navigation.operations.${tab.type}`, defaultMessage: `${tab.name}`})}
+                          {formatMessage({ id: `navigation.operations.${tab.type}`, defaultMessage: `${tab.name}` })}
                         </Dropdown.Item>
                       ))}
                     </PerfectScrollbar>
@@ -859,11 +878,11 @@ class Navigation extends Component {
             )}
             {isAdmin && (
               <DropdownItem
-                icon={<MenuIcon size={22}/>}
+                icon={<MenuIcon size={22} />}
                 text={
                   <>
-                    <FormattedMessage id='navigation.credentials' defaultMessage='Warehouse Credentials'/>
-                    {credentials ? <ChevronUp/> : <ChevronDown/>}
+                    <FormattedMessage id='navigation.credentials' defaultMessage='Warehouse Credentials' />
+                    {credentials ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
                 className={credentials ? 'opened' : null}
@@ -881,14 +900,14 @@ class Navigation extends Component {
                       as={MenuLink}
                       to={`/warehouse-credentials/certified`}
                       dataTest={'navigation_credentials_all_drpdn'}>
-                      {formatMessage({id: 'navigation.credentials.certified', defaultMessage: 'Certified'})}
+                      {formatMessage({ id: 'navigation.credentials.certified', defaultMessage: 'Certified' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       key={0}
                       as={MenuLink}
                       to={`/warehouse-credentials/pending`}
                       dataTest={'navigation_credentials_pending_drpdn'}>
-                      {formatMessage({id: 'navigation.credentials.pending', defaultMessage: 'Pending'})}
+                      {formatMessage({ id: 'navigation.credentials.pending', defaultMessage: 'Pending' })}
                     </Dropdown.Item>
                   </PerfectScrollbar>
                 </Dropdown.Menu>
