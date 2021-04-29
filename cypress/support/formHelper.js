@@ -3,6 +3,11 @@ Cypress.Commands.add("clickSave", () => {
     cy.wait(1000)
 })
 
+Cypress.Commands.add("clickConfirm", () => {
+    cy.get('[data-test=confirm_dialog_proceed_btn]').click({force: true})
+    cy.wait(1000)
+})
+
 Cypress.Commands.add("clickAdd", () => {
     cy.get("[data-test='admin_table_add_btn']").click({force: true})
 })
@@ -20,6 +25,7 @@ Cypress.Commands.add("enterText", (selector,text) => {
 
 Cypress.Commands.add("searchInList", (text) => {
     cy.get("input[type=text]").eq(0).clear().type(text)
+    cy.waitForUI()
 })
 
 Cypress.Commands.add("searchInAdminList", (text) => {

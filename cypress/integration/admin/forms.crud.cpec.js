@@ -2,6 +2,7 @@ context("Form CRUD", () => {
 
     let formId = null
     let filter = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Liquor%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Finest%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -24,6 +25,10 @@ context("Form CRUD", () => {
     it("Creates a form", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'product-forms', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-forms', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-forms', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'product-forms', itemId)
             })

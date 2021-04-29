@@ -62,6 +62,7 @@ context("Associations CRUD", () => {
         cy.get('#field_input_val0').clear().type("Echoprod")
         cy.get('[data-test=admin_edit_association_save_btn]').click()
         cy.searchInList("Echoprod")
+        cy.waitForUI()
 
         cy.openElement(productId, 0)
 
@@ -86,7 +87,7 @@ context("Associations CRUD", () => {
         cy.searchInList("EchoProd")
 
         cy.openElement(productId, 1)
-        cy.clickSave()
+        cy.clickConfirm()
 
         cy.contains("Echoprod").should("not.exist")
     })

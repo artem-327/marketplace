@@ -1,6 +1,6 @@
 context("Document Types CRUD", () => {
 
-    let tagsId = null
+    let typeId = null
     let filter = [{"operator": "LIKE", "path": "DocumentType.name", "values": ["%TYPE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
@@ -31,18 +31,21 @@ context("Document Types CRUD", () => {
         cy.enterText("#field_input_val0", "TYPE")
         cy.clickSave()
 
+        cy.searchInList("TYPE")
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'document-types', filter).then(itemId => {
                 cy.openElement(itemId, 0)
 
-                tagsId = itemId
+                typeId = itemId
             })
         })
+
         cy.get("#field_input_val0").should("have.value", "TYPE")
     })
 
     it("Edits a document", () => {
-        cy.openElement(tagsId, 0)
+        cy.searchInList("TYPE")
+        cy.openElement(typeId, 0)
 
         cy.get("#field_input_val0")
             .clear()
@@ -51,7 +54,7 @@ context("Document Types CRUD", () => {
 
         cy.clickSave()
 
-        cy.openElement(tagsId, 0)
+        cy.openElement(typeId, 0)
 
         cy.get("#field_input_val0").should("have.value", "TYPE2")
     })
@@ -69,10 +72,10 @@ context("Document Types CRUD", () => {
     })
 
     it("Deletes a document", () => {
-        cy.openElement(tagsId, 1)
+        cy.openElement(typeId, 1)
 
         cy.contains("Yes").click()
 
-        cy.get("[data-test=action_" + tagsId + "]").should("not.exist")
+        cy.get("[data-test=action_" + typeId + "]").should("not.exist")
     })
 })

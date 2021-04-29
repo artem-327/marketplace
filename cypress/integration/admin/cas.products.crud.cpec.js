@@ -27,9 +27,9 @@ context("CAS products CRUD", () => {
 
         cy.get('[data-test=products_open_popup_btn]').click({force: true})
 
-        cy.enterText("[name='casProduct.casNumber']", "100-95-521")
-        cy.enterText("[name='casProduct.casIndexName']", "Testinonium")
-        cy.clickSave()
+        cy.enterText("#field_input_casNumber", "100-95-521")
+        cy.enterText("#field_input_casIndexName", "Testinonium")
+        cy.get('[data-test=cas_product_sidebar_submit_btn]').click()
 
         cy.get('.column > .ui > input')
             .type("Testinonium")
@@ -42,10 +42,10 @@ context("CAS products CRUD", () => {
             })
         })
 
-        cy.get("[name='casProduct.casNumber']")
+        cy.get("#field_input_casNumber")
             .should("have.value", "100-95-521")
 
-        cy.get("[name='casProduct.casIndexName']")
+        cy.get("#field_input_casIndexName")
             .should("have.value", "Testinonium")
     })
 
@@ -55,16 +55,16 @@ context("CAS products CRUD", () => {
 
         cy.openElement(productId, 0)
 
-        cy.get("[name='casProduct.casIndexName']")
+        cy.get("#field_input_casIndexName")
             .clear()
             .type("Testerium")
             .should("have.value", "Testerium")
 
-        cy.clickSave()
+        cy.get('[data-test=cas_product_sidebar_submit_btn]').click()
 
         cy.openElement(productId, 0)
 
-        cy.get("[name='casProduct.casIndexName']")
+        cy.get("#field_input_casIndexName")
             .should("have.value", "Testerium")
     })
 
@@ -131,7 +131,7 @@ context("CAS products CRUD", () => {
     it("Checks error messages", () => {
         cy.get('[data-test=products_open_popup_btn]').click({force: true})
 
-        cy.clickSave()
+        cy.get('[data-test=cas_product_sidebar_submit_btn]').click()
 
         cy.get(".error")
             .should("have.length", 2)
@@ -146,7 +146,7 @@ context("CAS products CRUD", () => {
 
         cy.openElement(productId, 2)
 
-        cy.clickSave()
+        cy.clickConfirm()
 
         cy.contains("Testerium").should("not.exist")
     })

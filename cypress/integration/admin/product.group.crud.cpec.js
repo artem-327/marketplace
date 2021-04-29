@@ -2,6 +2,7 @@ context("Product Group CRUD", () => {
 
     let productId = null
     let filter = [{"operator": "LIKE", "path": "ProductGroup.name", "values": ["%Test%"]}]
+    let filterEdited = [{"operator": "LIKE", "path": "ProductGroup.name", "values": ["%Echoprod%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -25,6 +26,10 @@ context("Product Group CRUD", () => {
     it("Creates a Product Group", () => {
         cy.getToken().then(token => {
             cy.getFirstEntityWithFilter(token, 'product-groups', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-groups', itemId)
+            })
+            cy.getFirstEntityWithFilter(token, 'product-groups', filterEdited).then(itemId => {
                 if (itemId != null)
                     cy.deleteEntity(token, 'product-groups', itemId)
             })
@@ -82,7 +87,7 @@ context("Product Group CRUD", () => {
         cy.searchInList("EchoProd")
 
         cy.openElement(productId, 1)
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Echoprod").should("not.exist")
     })

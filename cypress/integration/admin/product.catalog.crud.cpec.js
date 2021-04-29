@@ -132,7 +132,7 @@ context("Generic Company Product CRUD", () => {
             .should("not.exist")
     })
 
-    /* Causes Cypress to freeze
+    // Causes Cypress to freeze
         it("Checks error messages", () => {
             cy.get("[data-test=products_open_popup_btn]").click()
 
@@ -150,12 +150,12 @@ context("Generic Company Product CRUD", () => {
                 expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
             })
         })
-    */
+
     it("Deletes a product", () => {
         cy.searchInList("EchoProd")
 
         cy.openElement(productId, 5)
-        cy.clickSave()
+        cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Echoprod").should("not.exist")
     })

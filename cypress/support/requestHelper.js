@@ -326,7 +326,7 @@ Cypress.Commands.add("createProductOffer", (token, companyProduct, warehouse) =>
         headers: {
             authorization: "Bearer " + token
         },
-        body: {"broadcasted":false,"companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse}
+        body: {"broadcastOption": "FREE_FOR_ALL","companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse}
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
@@ -588,7 +588,7 @@ Cypress.Commands.add("getDeliveryAddresses", (token) => {
 Cypress.Commands.add("setOfferBroadcasting", (token, id, state) => {
     cy.request({
         method: 'PATCH',
-        url: '/prodex/api/product-offers/' + id +'/broadcast?broadcasted='+ state,
+        url: '/prodex/api/product-offers/' + id +'/broadcast-option?option='+ state,
         headers: {
             authorization: "Bearer " + token
         }

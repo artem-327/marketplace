@@ -36,14 +36,21 @@ context("Units of packaging CRUD", () => {
 
         cy.enterText("#field_input_val0", "Test package")
 
-        cy.get("#field_dropdown_val1").click()
+        cy.get("[data-test='admin_add_unit_packaging_type_drpdn']").click()
         cy.get("#2").click()
 
         cy.enterText("#field_input_val2", "10")
         cy.enterText("#field_input_val3", "10")
         cy.enterText("#field_input_val4", "10")
-        cy.enterText("#field_input_val5", "10")
         cy.enterText("#field_input_val6", "10")
+        cy.enterText("#field_input_val7", "10")
+        cy.enterText("#field_input_val8", "10")
+
+        cy.get("[data-test='admin_add_pallet_pkg_dimension_unit']").click()
+        cy.get("[data-test='admin_add_pallet_pkg_dimension_unit']").contains("span", "meter").click()
+
+        cy.get("[data-test='admin_add_pallet_pkg_weight_unit']").click()
+        cy.get("[data-test='admin_add_pallet_pkg_weight_unit']").contains("span", "kilograms").click()
 
         cy.clickSave()
 
@@ -59,6 +66,8 @@ context("Units of packaging CRUD", () => {
         })
         cy.get("#field_input_val0").should("have.value", "Test package")
         cy.contains("volume")
+        cy.contains("meter")
+        cy.contains("kilograms")
     })
 
     it("Edits a package unit", () => {
@@ -86,7 +95,7 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 6)
+            .should("have.length", 9)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

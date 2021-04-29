@@ -33,6 +33,8 @@ context("Companies CRUD", () => {
 
         cy.enterText("#field_input_name", "Donald The Ducks")
         cy.enterText("#field_input_website", "https://www.donald.com/")
+        cy.get("[data-test='form_tin_type_drpdn'").click({force: true})
+        cy.get("[data-test='form_tin_type_drpdn'").contains('span', 'EIN').click()
 
         cy.enterText('input[id="field_input_primaryUser.name"]', "Donal Duck")
         cy.enterText('input[id="field_input_primaryUser.email"]', "duck@duck.com")
@@ -59,6 +61,9 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.wait("@companyCreate")
+        cy.wait("@companyCreate").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
+        })
     })
 
     it("Edits a company", () => {
@@ -95,7 +100,7 @@ context("Companies CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 11)
+            .should("have.length", 12)
     })
 
     it("Deletes a company", () => {
