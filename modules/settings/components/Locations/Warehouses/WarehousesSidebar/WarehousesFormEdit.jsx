@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Header, FormGroup, Image } from 'semantic-ui-react'
+import { Header, FormGroup, Image, Grid } from 'semantic-ui-react'
 import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -25,6 +25,9 @@ import {
   DivIcon,
   ImageResized
 } from '../../Locations.styles'
+import {
+  EpaWrapper
+} from "../../../../../warehouse-credentials/WarehouseCredentials/WarehouseCredentials.styles"
 
 const customHeader = (
   <DivHeader>
@@ -270,6 +273,32 @@ const WarehousesFormEdit = ({
             }}
           />
         </FormGroup>
+        {sidebarValues.epaReceive && (
+          <>
+            <EpaWrapper $bgColor='#ffffff'>
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.frsId' defaultMessage='FRS ID' />
+                </label>
+                {getSafe(() => sidebarValues.epaFrsId, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaRegion' defaultMessage='EPA Region' />
+                </label>
+                {getSafe(() => sidebarValues.epaRegion, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaFacilityUrl' defaultMessage='Detailed Factory Report' />
+                </label>
+                {getSafe(() => sidebarValues.epaFacilityUrl, '')}
+              </div>
+            </EpaWrapper>
+          </>
+        )}
         <HorizontalRule />
         <FormGroup data-test='settings_warehouse_popup_certifications_tax_drpdn'>
           <Dropdown
