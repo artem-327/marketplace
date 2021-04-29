@@ -74,6 +74,8 @@ import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/components/Confirmable/confirm'
 import { normalizeTree, getBroadcast, getNodeStatus } from '../utils'
 import CompanyInfo from './CompanyInfo'
+//Selectors
+import { makeGetCompanySharedListingDefaultMarkup } from '../../auth/selectors'
 
 class Broadcast extends Component {
   state = {
@@ -774,7 +776,8 @@ class Broadcast extends Component {
       associationsFetching,
       associations,
       close,
-      styleMarginBottom
+      styleMarginBottom,
+      companySharedListingDefaultMarkup
     } = this.props
 
     let totalCompanies = _.uniqBy(
@@ -1150,6 +1153,7 @@ class Broadcast extends Component {
                       openModalCompanyInfo={openModalCompanyInfo}
                       getCompanyInfo={getCompanyInfo}
                       treeData={treeData}
+                      companySharedListingDefaultMarkup={companySharedListingDefaultMarkup}
                     />
                   </Rule.Content>
                 </Rule.Root>
@@ -1474,21 +1478,21 @@ Broadcast.defaultProps = {
   inventoryGrid: {},
   dataType: ''
 }
+const makeMapStateToProps = () => {
+  const getCompanySharedListingDefaultMarkup = makeGetCompanySharedListingDefaultMarkup()
+  const mapStateToProps = state => {
+    const broadcast = state?.broadcast
+    const treeData = state?.broadcast?.data
+      ? new TreeModel({ childrenPropertyName: 'elements' }).parse(state?.broadcast?.data)
+      : new TreeModel().parse({ model: { rule: {} } })
 
-export default injectIntl(
-  withToastManager(
-    connect(
-      ({ broadcast }) => {
-        const treeData = broadcast.data
-          ? new TreeModel({ childrenPropertyName: 'elements' }).parse(broadcast.data)
-          : new TreeModel().parse({ model: { rule: {} } })
+    return {
+      companySharedListingDefaultMarkup: getCompanySharedListingDefaultMarkup(state),
+      treeData,
+      ...broadcast
+    }
+  }
+  return mapStateToProps
+}
 
-        return {
-          treeData,
-          ...broadcast
-        }
-      },
-      { ...Actions }
-    )(Broadcast)
-  )
-)
+export default injectIntl(withToastManager(connect(makeMapStateToProps, { ...Actions })(Broadcast)))
