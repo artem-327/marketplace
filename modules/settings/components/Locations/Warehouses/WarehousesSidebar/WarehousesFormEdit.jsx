@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Header, FormGroup, Image, Grid } from 'semantic-ui-react'
+import { Header, FormGroup, Image } from 'semantic-ui-react'
 import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
