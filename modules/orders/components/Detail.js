@@ -1723,10 +1723,6 @@ class Detail extends Component {
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToAddress}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToPhone}</GridDataColumn>
@@ -1734,14 +1730,18 @@ class Detail extends Component {
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToEmail}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                         </GridData>
                       </GridColumn>
                       <GridColumn>
                         <GridData columns={2}>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.carrier' defaultMessage='Carrier' />
                           </GridDataColumn>
