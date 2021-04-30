@@ -55,19 +55,24 @@ const StyledAlertHeader = styled.span`
   cursor: pointer;
 `
 
+const DivUser = styled.div`
+  width: 200px;
+  min-width: 200px
+`
+
+const DivNotificationRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+`
+
 class Table extends Component {
   state = {
     columns: [
       {
-        name: 'user',
-        title: <div></div>,
-        width: 200,
-        disabled: false
-      },
-      {
         name: 'notification',
         title: <div></div>,
-        width: 720,
+        width: 920,
         maxWidth: 2000,
         disabled: false
       },
@@ -163,22 +168,31 @@ class Table extends Component {
       const open = this.state.expandedRowIds.some(id => id === r.id)
       const recent =
         moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
+
+      const isUserData = getSafe(() => r.relatedCompany.avatarUrl, false)
+        || r.nameOfUser || getSafe(() => r.info.requestedBy.company.cfDisplayName, false)
+        || getSafe(() => r.info.buyerCompanyName, false)
+
       return {
         ...r,
-        user: (
-          <>
-            {getSafe(() => r.relatedCompany.avatarUrl, false) && (
-              <UserImage src={r.relatedCompany.avatarUrl} bordered />
-            )}
-            <UserName as='h3'>{r.nameOfUser}</UserName>
-            <UserCompany as='h4'>
-              {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
-                getSafe(() => r.info.buyerCompanyName, false)}
-            </UserCompany>
-          </>
-        ),
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
-        notification: this.notificationText(r.rawData),
+        notification: (
+          <DivNotificationRow>
+            {!!isUserData && (
+              <DivUser>
+                {getSafe(() => r.relatedCompany.avatarUrl, false) && (
+                  <UserImage src={r.relatedCompany.avatarUrl} bordered />
+                )}
+                <UserName as='h3'>{r.nameOfUser}</UserName>
+                <UserCompany as='h4'>
+                  {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
+                  getSafe(() => r.info.buyerCompanyName, false)}
+                </UserCompany>
+              </DivUser>
+            )}
+            {this.notificationText(r.rawData)}
+          </DivNotificationRow>
+        ),
         time: r.createdAt ? (
           <Popup
             size='small'
