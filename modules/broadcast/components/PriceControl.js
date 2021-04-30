@@ -6,8 +6,6 @@ import _ from 'lodash'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
-//Constants
-import { SETTINGS } from '../../auth/constants'
 
 export default class PriceControl extends Component {
   static propTypes = {
@@ -211,16 +209,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const {
-      disabled,
-      offer,
-      item,
-      hideFobPrice,
-      filter,
-      asModal,
-      treeData,
-      companySharedListingDefaultMarkup
-    } = this.props
+    const { disabled, item, hideFobPrice, asModal, treeData } = this.props
     const {
       model: { rule }
     } = item
@@ -231,16 +220,7 @@ export default class PriceControl extends Component {
     let value = null
     if (type === 'addition') value = rule.priceAddition
     if (type === 'multiplier') value = rule.priceMultiplier
-    if (
-      !item.model.rule.priceAddition &&
-      !item.model.rule.priceMultiplier &&
-      item?.isRoot() &&
-      item.model.children.length < 1 &&
-      companySharedListingDefaultMarkup?.value &&
-      companySharedListingDefaultMarkup?.value !== SETTINGS.EMPTY_SETTING
-    ) {
-      value = companySharedListingDefaultMarkup?.value
-    }
+
     return (
       <Box asModal={asModal}>
         <PriceInput

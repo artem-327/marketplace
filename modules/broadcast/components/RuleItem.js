@@ -24,8 +24,7 @@ const RuleItem = props => {
     getCompanyInfo,
     changeInModel,
     associationFilter,
-    treeData,
-    companySharedListingDefaultMarkup
+    treeData
   } = props
   // let item = _.cloneDeep(props.item)
   let { item } = props
@@ -153,7 +152,6 @@ const RuleItem = props => {
           filter={filter}
           associationFilter={associationFilter}
           treeData={treeData}
-          companySharedListingDefaultMarkup={companySharedListingDefaultMarkup}
         />
       </Rule.Row>
 
@@ -176,7 +174,6 @@ const RuleItem = props => {
             openModalCompanyInfo={openModalCompanyInfo}
             getCompanyInfo={getCompanyInfo}
             treeData={treeData}
-            companySharedListingDefaultMarkup={companySharedListingDefaultMarkup}
           />
         ))}
     </>

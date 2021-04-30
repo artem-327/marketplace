@@ -76,6 +76,8 @@ import { normalizeTree, getBroadcast, getNodeStatus } from '../utils'
 import CompanyInfo from './CompanyInfo'
 //Selectors
 import { makeGetCompanySharedListingDefaultMarkup } from '../../auth/selectors'
+//Constants
+import { SETTINGS } from '../../auth/constants'
 
 class Broadcast extends Component {
   state = {
@@ -776,8 +778,7 @@ class Broadcast extends Component {
       associationsFetching,
       associations,
       close,
-      styleMarginBottom,
-      companySharedListingDefaultMarkup
+      styleMarginBottom
     } = this.props
 
     let totalCompanies = _.uniqBy(
@@ -1153,7 +1154,6 @@ class Broadcast extends Component {
                       openModalCompanyInfo={openModalCompanyInfo}
                       getCompanyInfo={getCompanyInfo}
                       treeData={treeData}
-                      companySharedListingDefaultMarkup={companySharedListingDefaultMarkup}
                     />
                   </Rule.Content>
                 </Rule.Root>
@@ -1478,6 +1478,10 @@ Broadcast.defaultProps = {
   inventoryGrid: {},
   dataType: ''
 }
+
+const checkTreeDataPrices = treeData =>
+  !treeData.first(node => node?.model?.priceAddition || node?.model?.priceMultiplier)
+
 const makeMapStateToProps = () => {
   const getCompanySharedListingDefaultMarkup = makeGetCompanySharedListingDefaultMarkup()
   const mapStateToProps = state => {
@@ -1486,8 +1490,21 @@ const makeMapStateToProps = () => {
       ? new TreeModel({ childrenPropertyName: 'elements' }).parse(state?.broadcast?.data)
       : new TreeModel().parse({ model: { rule: {} } })
 
+    const companySharedListingDefaultMarkup = getCompanySharedListingDefaultMarkup(state)
+
+    //setup Markup default value in a root if there doesn't exist any value in treeData
+    if (
+      treeData?.model?.type === 'root' &&
+      checkTreeDataPrices(treeData) &&
+      companySharedListingDefaultMarkup?.value &&
+      companySharedListingDefaultMarkup?.value !== SETTINGS.EMPTY_SETTING
+    ) {
+      treeData.model.broadcast = 1
+      treeData.model.priceMultiplier = +companySharedListingDefaultMarkup?.value
+      treeData.model.priceAddition = 0
+    }
+
     return {
-      companySharedListingDefaultMarkup: getCompanySharedListingDefaultMarkup(state),
       treeData,
       ...broadcast
     }
