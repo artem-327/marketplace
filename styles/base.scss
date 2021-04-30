@@ -2214,6 +2214,10 @@ i.file {
             margin: 0 !important;
           }
 
+          span.cell-wrapper [class*="RowDropdown"].dropdown {
+            margin: 0 0 0 1.5rem !important;
+          }
+
           [class*="RowDropdownIcon"] {
             margin-top: 1px !important;
             margin-bottom: 1px !important;
@@ -2252,12 +2256,8 @@ i.file {
           }
 
           > span.cell-wrapper {
-            position: relative !important;
-            z-index: 1;
-            transform: translateY(-1px);
-            overflow: visible;
-            display: block;
-            max-width: 100%;
+            overflow: hidden;
+            width: 100%;
             text-overflow: ellipsis;
 
             &.cell-wrapper {
@@ -2341,7 +2341,7 @@ i.file {
         &[class=""] td {
 
           &.p-0 + td > .cell-wrapper {
-            padding-left: 1.5em;
+            padding-left: 0;
           }
         }
 

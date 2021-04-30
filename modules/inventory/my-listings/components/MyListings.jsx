@@ -37,7 +37,7 @@ import confirm from '../../../../components/Confirmable/confirm'
 import FilterTags from '../../../filter/components/FitlerTags'
 import { groupActions } from '../../../company-product-info/constants'
 import ProductImportPopup from '../../my-products/components/ProductImportPopup'
-import { getSafe, uniqueArrayByKey, generateToastMarkup } from '../../../../utils/functions'
+import {getSafe, uniqueArrayByKey, generateToastMarkup, getFormattedAddress} from '../../../../utils/functions'
 import Tutorial from '../../../tutorial/Tutorial'
 import SearchByNamesAndTags from '../../../search'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
@@ -162,6 +162,7 @@ class MyListings extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      expandedRowIds: [],
       columns: [
         /*{
           name: 'actCol',
@@ -1187,6 +1188,20 @@ class MyListings extends Component {
     }
   }
 
+  getRowDetail = ({ row }) => {
+    return (
+      <ModalDetailContainer inventoryGrid={this.props.datagrid} />
+    )
+  }
+
+  toggleCellComponent = ({ expanded, tableRow, row, style, ...restProps }) => {
+    return (
+      <td data-test='warehouse_toggle_column' className={`warehouse_opener ${expanded ? 'opened' : 'closed'}`}>
+        {expanded ? <IconUp /> : <IconDown />}
+      </td>
+    )
+  }
+
   render() {
     const {
       openBroadcast,
@@ -1406,6 +1421,27 @@ class MyListings extends Component {
             tableName='my_inventory_grid'
             columns={columns}
             rows={rows}
+            // NEW CHANGES
+            /*rowDetailType={true}
+            rowDetail={this.getRowDetail}
+            onRowClick={(_, row) => {
+              //if (row.root && row.branches.length) {
+                let ids = this.state.expandedRowIds.slice()
+              console.log('IDS', ids)
+                if (ids.includes(row.id)) {
+                  this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
+                } else {
+                  ids.push(row.id)
+                  this.setState({ expandedRowIds: ids })
+                }
+              //}
+            }}
+            expandedRowIds={this.state.expandedRowIds}
+            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
+            estimatedRowHeight={1500}
+            toggleCellComponent={this.toggleCellComponent}
+            isToggleCellComponent={true}*/
+            // END of NEW CHANGES
             selectByRowClick
             hideCheckboxes
             loading={datagrid.loading || updatingDatagrid}
