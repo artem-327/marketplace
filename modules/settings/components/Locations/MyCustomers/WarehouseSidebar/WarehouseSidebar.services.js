@@ -1,5 +1,10 @@
 import * as Yup from 'yup'
-import { errorMessages, phoneValidation, addressValidationSchema } from '../../../../../../constants/yupValidation'
+import {
+  errorMessages,
+  phoneValidation,
+  addressValidationSchema,
+  validateTime
+} from '../../../../../../constants/yupValidation'
 
 // Services
 import { getSafe, removeEmpty } from '../../../../../../utils/functions'
@@ -24,7 +29,9 @@ export const formValidation = () =>
       .min(2, errorMessages.minLength(1))
       .required(errorMessages.requiredMessage),
     contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
-    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+    contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+    readyTime: validateTime(),
+    closeTime: validateTime()
   })
 
 /**
