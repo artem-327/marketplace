@@ -32,14 +32,16 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <meta name='viewport' content='initial-scale=1.0, width=device-width' />
-          {process.env.NODE_ENV === 'production' ? (
+          {process.env.NODE_ENV === 'production' ||
+          process.env.NODE_ENV === 'review' ||
+          process.env.GTM_ENVIRONMENT === 'review' ? (
             <script
               dangerouslySetInnerHTML={{
                 __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
         j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','GTM-NR7XMB8');`
+        })(window,document,'script','dataLayer','GTM-NSLBBQG');`
               }}></script>
           ) : null}
         </Head>
@@ -58,10 +60,12 @@ export default class MyDocument extends Document {
           <meta name='theme-color' content='#1b3454' />
         </HeadDocument>
         <body>
-          {process.env.NODE_ENV === 'production' ? (
+          {process.env.NODE_ENV === 'production' ||
+          process.env.NODE_ENV === 'review' ||
+          process.env.GTM_ENVIRONMENT === 'review' ? (
             <noscript
               dangerouslySetInnerHTML={{
-                __html: `<frame src="https://www.googletagmanager.com/ns.html?id=GTM-NR7XMB8"
+                __html: `<frame src="https://www.googletagmanager.com/ns.html?id=GTM-NSLBBQG"
             height="0" width="0" style="display:none;visibility:hidden"></iframe>`
               }}></noscript>
           ) : null}

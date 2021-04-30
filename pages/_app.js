@@ -66,7 +66,8 @@ class ProdexApp extends App {
 
   render() {
     const { Component, pageProps, store } = this.props
-
+    console.log('process.env.NODE_ENV=', process.env.NODE_ENV)
+    console.log('process.env.GTM_ENVIRONMENT=', process.env.GTM_ENVIRONMEN)
     return (
       <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
         <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>

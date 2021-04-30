@@ -91,11 +91,14 @@
   "scripts": {
     "dev": "node --max-old-space-size=8192 server.js",
     "build": "next build",
-    "start-s": "next start",
+    "next:start": "next start",
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch",
-    "docs": "jsdoc -c ./jsdoc.json"
+    "docs": "jsdoc -c ./jsdoc.json",
+    "build:review": "NODE_ENV=review next build",
+    "next:review": "NODE_ENV=review next start",
+    "start:review": "NODE_ENV=review node --max-old-space-size=8192 server.js"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
