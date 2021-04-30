@@ -123,6 +123,12 @@ const DivBottomButtons = styled.div`
   justify-content: flex-end;
 `
 
+const GridRowDescription = styled(GridRow)`
+  &.row {
+    margin: -5px 0 10px !important;
+  }
+`
+
 class ShippingQuoteInfo extends Component {
   displayAddress = ({ address, company }) => {
     return (
@@ -148,6 +154,11 @@ class ShippingQuoteInfo extends Component {
     return (
       <DetailMessage>
         <StyledGrid>
+          <GridRowDescription>
+            <GridColumn width={16}>
+              {row.text}
+            </GridColumn>
+          </GridRowDescription>
           {
             row.info.items.map((item, index) => {
               const packagingUnit = getSafe(() => item.packagingUnit.nameAbbreviation, '')
@@ -242,16 +253,19 @@ class ShippingQuoteInfo extends Component {
               </TableSegment>
             </GridColumn>
           </GridRow>
-          <GridRow>
-            <GridColumn width={16}>
-              <DivSimpleText>
-                <FormattedMessage
-                  id='alerts.youCanNowApply'
-                  defaultMessage='You can now apply the quote to your order'
-                />
-              </DivSimpleText>
-            </GridColumn>
-          </GridRow>
+          {!!cartItems && (
+            <GridRow>
+              <GridColumn width={16}>
+                <DivSimpleText>
+                  <FormattedMessage
+                    id='alerts.freightQuoteCanNow'
+                    defaultMessage={`The freight quote ${row.info.shippingQuoteId} can now be applied to your order`}
+                    values={{ quoteId: row.info.shippingQuoteId }}
+                  />
+                </DivSimpleText>
+              </GridColumn>
+            </GridRow>
+          )}
         </StyledGrid>
         <DivBottomButtons>
           <BasicButton
