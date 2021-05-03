@@ -30,7 +30,7 @@ const OrderSummary = props => {
     loading,
     subTotalPrice,
     isNotHazardousPermissions,
-    systemCompanyName
+    applicationName
   } = props
 
   const priceComponent = val =>
@@ -95,7 +95,7 @@ const OrderSummary = props => {
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
                 ),
-                companyName: systemCompanyName
+                companyName: applicationName
               }}
             />
           ) : (
@@ -168,7 +168,7 @@ OrderSummary.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

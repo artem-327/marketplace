@@ -1919,7 +1919,7 @@ class AddInventoryForm extends Component {
                                                             id='addInventory.uploadSpecSheet.description3'
                                                             defaultMessage={`IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against {companyName}'s Terms and Conditions.`}
                                                             values={{
-                                                              companyName: this.props.systemCompanyName
+                                                              companyName: this.props.applicationName
                                                             }}
                                                           />
                                                         </>

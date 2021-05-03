@@ -131,12 +131,12 @@ export const getRowDetail = (row, detailRow) => {
     id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
       <DivMember key={row?.connectionId || row?.connectedCompany?.tradepassId}>
-        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.base64Logo} />
+        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.avatarUrl} />
 
         <BMember>{row?.connectedCompany?.name}</BMember>
       </DivMember>
     ),
-    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.base64Logo} />,
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.avatarUrl} />,
     address: address
       ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
           address?.country?.code || ''
@@ -154,15 +154,13 @@ export const getRowDetail = (row, detailRow) => {
       ein: r?.connectedCompany?.tin,
       telephoneNumber: r?.connectedCompany?.phone,
       inBusinessSince: r?.connectedCompany?.inBusinessSince,
-      numberOfEmployees: r?.connectedCompany?.numberOfEmployees
-        ? (
-            <FormattedNumber
-              minimumFractionDigits={0}
-              maximumFractionDigits={0}
-              value={r?.connectedCompany?.numberOfEmployees || 0}
-            />
-          )
-        : null
+      numberOfEmployees: r?.connectedCompany?.numberOfEmployees ? (
+        <FormattedNumber
+          minimumFractionDigits={0}
+          maximumFractionDigits={0}
+          value={r?.connectedCompany?.numberOfEmployees || 0}
+        />
+      ) : null
     },
     marketingData: {
       website: r?.connectedCompany?.website,

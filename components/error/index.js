@@ -57,7 +57,7 @@ class ErrorComponent extends Component {
             <br />
             <Button size='massive' primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
               <FormattedMessage id='error.backButtonText' values={{
-                companyName: getSafe(() => this.props.appInfo.systemCompanyName, '')
+                companyName: getSafe(() => this.props.appInfo.applicationName, '')
               }}>{text => text}</FormattedMessage>
             </Button>
           </Message>

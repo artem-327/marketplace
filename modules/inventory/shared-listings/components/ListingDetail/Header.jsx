@@ -60,7 +60,7 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={5} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={row?.owner?.base64Logo} fluid rounded size='tiny' />
+                <Image verticalAlign='middle' src={row?.owner?.avatarUrl} fluid rounded size='tiny' />
               </DivRectangle>
             </GridColumnDetail>
             <GridColumnDetail width={11}>
@@ -201,11 +201,13 @@ function mapStateToProps(store) {
 }
 
 function areEqual(prevProps, nextProps) {
-  return prevProps?.row?.id === nextProps?.row?.id &&
+  return (
+    prevProps?.row?.id === nextProps?.row?.id &&
     prevProps?.values?.priceMultiplier === nextProps?.values?.priceMultiplier &&
     prevProps?.loadingMarkup === nextProps?.loadingMarkup
+  )
 }
 
-const MemoHeader =  memo(Header, areEqual)
+const MemoHeader = memo(Header, areEqual)
 
 export default connect(mapStateToProps, { updateMarkUp, getSharedProductOffer })(MemoHeader)
