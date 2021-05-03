@@ -352,7 +352,7 @@ class PurchaseOrder extends Component {
       preferredBankAccountId,
       intl: { formatMessage },
       shippingQuoteSelected,
-      systemCompanyName
+      applicationName
     } = this.props
     let {
       cart,
@@ -519,7 +519,7 @@ class PurchaseOrder extends Component {
                                           ? `Your order weight exceeds weight limit ${weightLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`
                                           : `Your order pallet exceeds pallet limit ${palletLimitStr} for automatic shipping quotes. Your shipping quote needs to be processed manually. If you wish to continue, click the "Request Shipping Quote" button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`
                                       },
-                                      { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr, companyName: systemCompanyName }
+                                      { limit: cart.weightLimitExceed ? weightLimitStr : palletLimitStr, companyName: applicationName }
                                     )}
                                   </CustomMessage.Content>
                                 </CustomMessage>
@@ -551,7 +551,7 @@ class PurchaseOrder extends Component {
                                     id='cart.noShippingQuotes.processManually'
                                     defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
                                     values={{
-                                      companyName: systemCompanyName
+                                      companyName: applicationName
                                     }}
                                   />
                                 </DivContent>
@@ -743,7 +743,7 @@ class PurchaseOrder extends Component {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

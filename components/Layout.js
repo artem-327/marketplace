@@ -288,7 +288,7 @@ class Layout extends Component {
       buttonActionsDetailRow,
       isOpenInviteModal,
       triggerModal,
-      systemCompanyName
+      applicationName
     } = this.props
 
     const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
@@ -328,7 +328,7 @@ class Layout extends Component {
           <FormattedMessage
             id='global.copyright'
             defaultMessage={`Copyright ${moment().format('YYYY')} {companyName}`}
-            values={{ currentYear: moment().format('YYYY'), companyName: systemCompanyName }}
+            values={{ currentYear: moment().format('YYYY'), companyName: applicationName }}
           />
         </CopyrightContainer>
       )
@@ -337,7 +337,7 @@ class Layout extends Component {
       <MainContainer fluid className={mainClass}>
         <Head>
           <title>
-            {systemCompanyName} / {title}
+            {applicationName} / {title}
           </title>
         </Head>
 
@@ -558,7 +558,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,

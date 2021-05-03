@@ -327,7 +327,7 @@ class Tutorial extends Component {
       isTutorial,
       vellociBusinessId,
       marginGlobalPrice,
-      systemCompanyName
+      applicationName
     } = this.props
 
     let margin = '15px 32px 15px 32px'
@@ -386,7 +386,7 @@ class Tutorial extends Component {
                   id='tutorial.businessVerification.content'
                   defaultMessage='{companyName} is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, {companyName} must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'
                   values={{
-                    companyName: systemCompanyName
+                    companyName: applicationName
                   }}
                 >
                   {text => text}
@@ -423,7 +423,7 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
 
   return {
-    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
     name: getSafe(() => state.auth.identity.name, ''),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
