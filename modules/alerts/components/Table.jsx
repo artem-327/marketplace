@@ -1,4 +1,5 @@
 import { Fragment, Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -19,27 +20,7 @@ import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
 import { UserImage, UserName, UserCompany, CheckIcon } from './layout'
 import Link from 'next/link'
 
-const StyledStatusLabel = styled(Label)`
-  font-size: 12px !important;
-  height: 22px !important;
-  font-weight: normal !important;
-  font-stretch: normal;
-  font-style: normal;
-  border-radius: 11px !important;
-  padding: 0.3333em 1.16667em 0.16667em 1.16667em !important;
-  cursor: pointer;
-
-  &.read {
-    color: #848893;
-    border: solid 1px #dee2e6;
-    background-color: #edeef2;
-  }
-
-  &.unread {
-    color: #ffffff;
-    background-color: #2599d5 !important;
-  }
-`
+import { COLUMNS } from './Table.constants'
 
 const StyledNotification = styled.div`
   &.clickable {
@@ -66,68 +47,20 @@ const DivNotificationRow = styled.div`
   flex-wrap: nowrap;
 `
 
-class Table extends Component {
-  state = {
-    columns: [
-      {
-        name: 'notification',
-        title: <div></div>,
-        width: 920,
-        maxWidth: 2000,
-        disabled: false
-      },
-      {
-        name: 'time',
-        title: <div></div>,
-        sortPath: 'Message.createdAt',
-        width: 160,
-        disabled: false
-      },
-      {
-        name: 'timeGroup',
-        disabled: true
-      },
-      {
-        name: 'expand',
-        title: <div></div>,
-        caption: (
-          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        align: 'center',
-        width: 50,
-        disabled: true
-      }
-    ],
-    expandedRowIds: []
-  }
+const Table = props => {
+  const { intl, datagrid, markSeenSending, selectedRows } = props
+  const { formatMessage } = intl
 
-  statusLabel = (row, val) => {
-    const read = val === 'read'
-    return (
-      <StyledStatusLabel
-        className={val}
-        onClick={() => {
-          if (read) this.handleClickOnRead(row)
-          else this.handleClickOnUnread(row)
-        }}>
-        {read ? (
-          <FormattedMessage id='alerts.status.read' defaultMessage='Read' />
-        ) : (
-          <FormattedMessage id='alerts.status.unread' defaultMessage='Unread' />
-        )}
-      </StyledStatusLabel>
-    )
-  }
+  const [expandedRowIds, setExpandedRowIds] = useState([])
+  const state = { expandedRowIds, setExpandedRowIds }
 
-  notificationText = row => {
+  const notificationText = row => {
     return (
       <StyledNotification
         style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
         onClick={() => {
-          if (row.info) this.toggleDetail(row.id)
-          if (!row.read) this.handleClickOnUnread(row)
+          if (row.info) toggleDetail(row.id)
+          if (!row.read) handleClickOnUnread(row)
         }}>
         <StyledAlertHeader>{ReactHtmlParser(row.text)}</StyledAlertHeader>
         {row.read && (
@@ -139,8 +72,8 @@ class Table extends Component {
     )
   }
 
-  toggleDetail = rowId => {
-    let { expandedRowIds } = this.state
+  const toggleDetail = rowId => {
+    let { expandedRowIds, setExpandedRowIds } = state
     if (expandedRowIds.length) {
       let found = false
       let rows = expandedRowIds.reduce((result, id) => {
@@ -155,17 +88,17 @@ class Table extends Component {
       if (!found) {
         rows.push(rowId)
       }
-      this.setState({ expandedRowIds: rows })
+      setExpandedRowIds(rows)
     } else {
-      this.setState({ expandedRowIds: [rowId] })
+      setExpandedRowIds([rowId])
     }
   }
 
-  getRows = () => {
-    return this.props.rows.map(r => {
+  const getRows = props => {
+    return props.rows.map(r => {
       const read = r.read ? 'read' : 'unread'
-      const selected = this.props.selectedRows.some(id => id === r.id)
-      const open = this.state.expandedRowIds.some(id => id === r.id)
+      const selected = props.selectedRows.some(id => id === r.id)
+      const open = state.expandedRowIds.some(id => id === r.id)
       const recent =
         moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
 
@@ -190,7 +123,7 @@ class Table extends Component {
                 </UserCompany>
               </DivUser>
             )}
-            {this.notificationText(r.rawData)}
+            {notificationText(r.rawData)}
           </DivNotificationRow>
         ),
         time: r.createdAt ? (
@@ -223,13 +156,13 @@ class Table extends Component {
           : '',
         expand: r.info ? (
           open ? (
-            <ChevronUp size={16} onClick={() => this.toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
+            <ChevronUp size={16} onClick={() => toggleDetail(r.id)} style={{ cursor: 'pointer' }} />
           ) : (
             <ChevronDown
               size={16}
               onClick={() => {
-                this.toggleDetail(r.id)
-                if (!r.read) this.handleClickOnUnread(r)
+                toggleDetail(r.id)
+                if (!r.read) handleClickOnUnread(r)
               }}
               style={{ cursor: 'pointer' }}
             />
@@ -239,13 +172,13 @@ class Table extends Component {
     })
   }
 
-  getRowDetail = ({ row }) => {
+  const getRowDetail = ({ row }) => {
     const messageType = row.info && row.info.infoType ? row.info.infoType : ''
     const messageDetailTable = {
       MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
       MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
       MessageShippingQuoteInfoResponse: (
-        <ShippingQuoteInfo row={row.rawData} onClose={() => this.toggleDetail(row.id)} />
+        <ShippingQuoteInfo row={row.rawData} onClose={() => toggleDetail(row.id)} />
       )
     }
     // TODO when BE will have GET endpoint for Detail Order in Operatins
@@ -262,8 +195,8 @@ class Table extends Component {
     return <>{messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : textMessage}</>
   }
 
-  handleClickOnUnread = async row => {
-    const { datagrid, getCategories, markSeen, getCountUnseen } = this.props
+  const handleClickOnUnread = async row => {
+    const { datagrid, getCategories, markSeen, getCountUnseen } = props
     try {
       await markSeen(row.id)
       datagrid.updateRow(row.id, () => ({
@@ -278,24 +211,8 @@ class Table extends Component {
     }
   }
 
-  handleClickOnRead = async row => {
-    const { datagrid, getCategories, markUnseen, getCountUnseen } = this.props
-    try {
-      await markUnseen(row.id)
-      datagrid.updateRow(row.id, () => ({
-        ...row,
-        read: false,
-        readAt: null
-      }))
-      getCountUnseen()
-      getCategories()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
-    const { selectedRows } = this.props
+  const toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
+    const { selectedRows } = props
     return (
       <td
         style={{
@@ -312,10 +229,10 @@ class Table extends Component {
             if (checked) {
               if (!newSelectedRows.includes(row.id)) {
                 newSelectedRows.push(row.id)
-                this.props.onSelectionChange(newSelectedRows)
+                props.onSelectionChange(newSelectedRows)
               }
             } else {
-              this.props.onSelectionChange(newSelectedRows.filter(id => id !== row.id))
+              props.onSelectionChange(newSelectedRows.filter(id => id !== row.id))
             }
           }}
         />
@@ -323,57 +240,51 @@ class Table extends Component {
     )
   }
 
-  render() {
-    const { intl, datagrid, markSeenSending, selectedRows } = this.props
-    const { formatMessage } = intl
-    const { columns, expandedRowIds } = this.state
-
-    return (
-      <Fragment>
-        <div className={'flex stretched table-detail-rows-wrapper notifications-wrapper notifications-admin-wrapper'}>
-          <ProdexTable
-            tableName={'notifications_table'}
-            {...datagrid.tableProps}
-            loading={datagrid.loading || markSeenSending}
-            columnReordering={false}
-            groupBy={['timeGroup']}
-            getChildGroups={rows => {
-              return _(rows)
-                .groupBy('timeGroup')
-                .map(v => {
-                  return {
-                    key: `${v[0].timeGroup}`,
-                    childRows: v,
-                    groupLength: v.length
-                  }
-                })
-                .value()
-            }}
-            renderGroupLabel={({ row: { value }, groupLength }) => null}
-            hideGroupCheckboxes={true}
-            columns={columns}
-            isBankTable={true}
-            rowDetailType={true}
-            rows={this.getRows()}
-            rowDetail={this.getRowDetail}
-            expandedRowIds={expandedRowIds}
-            onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-            rowSelection={true}
-            lockSelection={false}
-            showSelectAll={false}
-            toggleCellComponent={this.toggleCellComponent}
-            isToggleCellComponent={true}
-            selectedRows={selectedRows}
-            onSelectionChange={selectedRows => {
-              this.props.onSelectionChange(selectedRows)
-            }}
-            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
-            defaultSorting={{ columnName: 'time', sortPath: 'Message.createdAt', direction: 'DESC' }}
-          />
-        </div>
-      </Fragment>
-    )
-  }
+  return (
+    <Fragment>
+      <div className={'flex stretched table-detail-rows-wrapper notifications-wrapper notifications-admin-wrapper'}>
+        <ProdexTable
+          tableName={'notifications_table'}
+          {...datagrid.tableProps}
+          loading={datagrid.loading || markSeenSending}
+          columnReordering={false}
+          groupBy={['timeGroup']}
+          getChildGroups={rows => {
+            return _(rows)
+              .groupBy('timeGroup')
+              .map(v => {
+                return {
+                  key: `${v[0].timeGroup}`,
+                  childRows: v,
+                  groupLength: v.length
+                }
+              })
+              .value()
+          }}
+          renderGroupLabel={({ row: { value }, groupLength }) => null}
+          hideGroupCheckboxes={true}
+          columns={COLUMNS}
+          isBankTable={true}
+          rowDetailType={true}
+          rows={getRows(props)}
+          rowDetail={getRowDetail}
+          expandedRowIds={expandedRowIds}
+          onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
+          rowSelection={true}
+          lockSelection={false}
+          showSelectAll={false}
+          toggleCellComponent={toggleCellComponent}
+          isToggleCellComponent={true}
+          selectedRows={selectedRows}
+          onSelectionChange={selectedRows => {
+            props.onSelectionChange(selectedRows)
+          }}
+          estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
+          defaultSorting={{ columnName: 'time', sortPath: 'Message.createdAt', direction: 'DESC' }}
+        />
+      </div>
+    </Fragment>
+  )
 }
 
 const mapStateToProps = (state, { datagrid }) => {

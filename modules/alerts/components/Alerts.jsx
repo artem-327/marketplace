@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { withDatagrid, DatagridProvider } from '../../datagrid'
@@ -10,16 +10,16 @@ import ShippingQuotesPopup from '../../operations/components/shipping-quotes/Shi
 import { getCategories, loadData } from '../actions'
 import { injectIntl } from 'react-intl'
 
-class Alerts extends Component {
-  state = {
-    selectedRows: []
-  }
+const Alerts = props => {
+  const { isOpenPopupOperations} = props
+  const [selectedRows, setSelectedRows] = useState([])
 
-  componentDidMount = () => {
-    this.props.getCategories()
-  }
+  // Similar to call componentDidMount:
+  useEffect(() => {
+    props.getCategories()
+  }, [])  // If [] is empty then is similar as componentDidMount.
 
-  getApiConfig = () => ({
+  const getApiConfig = () => ({
     url: '/prodex/api/messaging-center/datagrid',
     searchToFilter: v => {
       let filters = { or: [], and: [] }
@@ -59,33 +59,29 @@ class Alerts extends Component {
     }
   })
 
-  render() {
-    const { isOpenPopupOperations} = this.props
+  return (
+    <>
+      {<Tutorial isTutorial={false} isBusinessVerification={true} />}
+      <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
+        <div id='page' className='flex stretched scrolling'>
+          <Container fluid style={{ padding: '20px 30px' }}>
+            <TablesHandlers
+              selectedRows={selectedRows}
+              onDatagridUpdate={selection => setSelectedRows(selection)}
+            />
+          </Container>
 
-    return (
-      <>
-        {<Tutorial isTutorial={false} isBusinessVerification={true} />}
-        <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
-          <div id='page' className='flex stretched scrolling'>
-            <Container fluid style={{ padding: '20px 30px' }}>
-              <TablesHandlers
-                selectedRows={this.state.selectedRows}
-                onDatagridUpdate={selection => this.setState({ selectedRows: selection })}
-              />
-            </Container>
-
-            <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              <Table
-                onSelectionChange={selectedRows => this.setState({ selectedRows })}
-                selectedRows={this.state.selectedRows}
-              />
-            </Container>
-          </div>
-        </DatagridProvider>
-        {isOpenPopupOperations && <ShippingQuotesPopup updateDatagrid={false} />}
-      </>
-    )
-  }
+          <Container fluid style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
+            <Table
+              onSelectionChange={selectedRows => setSelectedRows(selectedRows)}
+              selectedRows={selectedRows}
+            />
+          </Container>
+        </div>
+      </DatagridProvider>
+      {isOpenPopupOperations && <ShippingQuotesPopup updateDatagrid={false} />}
+    </>
+  )
 }
 
 const mapStateToProps = ({ auth, operations, alerts }) => ({
