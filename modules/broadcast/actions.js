@@ -47,31 +47,27 @@ export const broadcastChange = createAsyncAction(
     let editedRow = {
       ...row,
       ...warehouse,
-      ...(dataType === 'shared-listings'
-        ? { resellerBroadcastOption: { key: option }}
-        : { broadcastOption: option }
-      ),
+      ...(dataType === 'shared-listings' ? { resellerBroadcastOption: { key: option } } : { broadcastOption: option }),
       broadcastTemplateResponse: template
     }
-    datagrid.updateRow(row.id, () => ({
+    await datagrid.updateRow(row.id, () => ({
       ...row,
       ...warehouse,
       isBroadcastLoading: true
     }))
     await api.broadcastChange(row.id, option, template ? template.id : null)
-    datagrid.updateRow(row.id, () => ({ ...editedRow, isBroadcastLoading: false }))
+    await datagrid.updateRow(row.id, () => ({ ...editedRow, isBroadcastLoading: false }))
+
     return editedRow
   }
 )
 
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, datagrid, dataType) => {
   if (row && row.id) {
-    datagrid && datagrid.updateRow &&
+    datagrid &&
+      datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
-        ...(dataType === 'shared-listings'
-          ? { ...row.rawData }
-          : { ...row }
-        ),
+        ...(dataType === 'shared-listings' ? { ...row.rawData } : { ...row }),
         warehouse: {
           deliveryAddress: {
             cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
@@ -80,7 +76,8 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         isBroadcastLoading: true
       }))
     const data = await api.saveRules(row.id, rules)
-    datagrid && datagrid.updateRow &&
+    datagrid &&
+      datagrid.updateRow &&
       datagrid.updateRow(row.id, () => ({
         warehouse: {
           deliveryAddress: {
@@ -89,9 +86,8 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         },
         isBroadcastLoading: false,
         ...(dataType === 'shared-listings'
-            ? { ...row.rawData, resellerBroadcastOption: { key: 'CUSTOM_RULES' }}
-            : { ...row, broadcastOption: 'CUSTOM_RULES' }
-        ),
+          ? { ...row.rawData, resellerBroadcastOption: { key: 'CUSTOM_RULES' } }
+          : { ...row, broadcastOption: 'CUSTOM_RULES' })
       }))
     return {
       broadcastTemplateName: getSafe(() => data.broadcastTemplateName, null)
