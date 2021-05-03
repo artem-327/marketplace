@@ -1,6 +1,11 @@
 import * as Yup from 'yup'
 //Services
-import { addressValidationSchema, errorMessages, phoneValidation, validateTime } from '../../../../../../constants/yupValidation'
+import {
+  addressValidationSchema,
+  errorMessages,
+  phoneValidation,
+  validateTime
+} from '../../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../../utils/functions'
 import { removeEmpty } from '../../../../../../utils/functions'
 
@@ -34,7 +39,9 @@ export const formValidation = () =>
           .min(2, errorMessages.minLength(1))
           .required(errorMessages.requiredMessage),
         contactPhone: phoneValidation(10).required(errorMessages.requiredMessage),
-        contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+        contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+        readyTime: validateTime(),
+        closeTime: validateTime()
       })
     )
   })
@@ -109,12 +116,15 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
   delete customerData.zipID
   removeEmpty(customerData)
 
+  if (customerData.warehouseAddresses) {
+    customerData.warehouseAddresses.forEach((el, i) => removeEmpty(customerData.warehouseAddresses[i]))
+  }
+
   try {
     if (sidebarValues) {
       const {value} = await updateCustomer(sidebarValues.id, customerData)
       datagrid.updateRow(sidebarValues.id, () => value)
       props.closeSidebar()
-
     } else {
       const {value} = await addCustomer(customerData)
       datagrid.loadData()

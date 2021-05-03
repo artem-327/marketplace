@@ -87,7 +87,7 @@ export const getRows = rows => {
             style={{ width: '20px' }}
             size='mini'
             spaced={true}
-            src={po?.owner?.base64Logo}
+            src={po?.owner?.avatarUrl}
           />
 
           <span>{po?.owner?.name}</span>

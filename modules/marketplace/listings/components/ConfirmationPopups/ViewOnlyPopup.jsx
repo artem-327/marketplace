@@ -19,7 +19,7 @@ import {
 } from './Popup.styles'
 
 const ViewOnlyPopup = props => {
-  const { onCancel, systemCompanyName } = props
+  const { onCancel, applicationName } = props
 
   return (
     <ModalStyled
@@ -48,7 +48,7 @@ const ViewOnlyPopup = props => {
               id='marketplace.viewOnlyPopupText'
               defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on Blue Trade. You will only be able to view Blue Trade listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'
               values={{
-                companyName: systemCompanyName
+                companyName: applicationName
               }}
             />
           </DivDescription>
@@ -73,7 +73,7 @@ const ViewOnlyPopup = props => {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

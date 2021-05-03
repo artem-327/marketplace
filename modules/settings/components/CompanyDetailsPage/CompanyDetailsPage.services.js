@@ -24,7 +24,8 @@ export const getInitialFormValues = values => {
     },
     email: getSafe(() => values.primaryUser.email, ''),
     phone: getSafe(() => values.primaryUser.phone, ''),
-    naicsCode: values?.naicsCategory?.naicsId
+    naicsCode: values?.naicsCategory?.naicsId,
+    companyPhone: getSafe(() => values.phone, '')
   }
 }
 
@@ -33,7 +34,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
   const { companyLogo, shouldUpdateLogo } = state
 
   try {
-    let newCompanyObj = { ...values, phone: getSafe(() => company.phone, null) }
+    let newCompanyObj = { ...values, phone: values.companyPhone }
     // Company request object
     let requestBodyCompany = getCompanyRequestObject(company, newCompanyObj)
 

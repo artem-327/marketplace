@@ -138,7 +138,7 @@ export const initialState = {
   vellociToken: '',
   isReloadBankAcounts: false,
   sidebarValues: null,
-  isHideInactiveAccounts: false,
+  isHideInactiveAccounts: true,
   institutId: null,
   isLoadingAddedAccounts: false,
   isLoadingModal: false,

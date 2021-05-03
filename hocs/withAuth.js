@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SecureContext } from './securePage'
 
-export default Component =>
+const AuthComponent = Component =>
   class WithAuthComponent extends React.Component {
     static contextType = SecureContext
 
@@ -19,3 +19,5 @@ export default Component =>
       )
     }
   }
+
+export default AuthComponent

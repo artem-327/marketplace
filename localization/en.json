@@ -38,7 +38,7 @@
   "alerts.price": "Price",
   "alerts.quoteId": "Quote ID",
   "alerts.validityDate": "Validity Date",
-  "alerts.youCanNowApply": "You can now apply the quote to your order",
+  "alerts.youCanNowApply": "You can now apply the quote to your order by clicking the Checkout button",
   "alerts.close": "Close",
   "alerts.checkout": "Checkout",
   "auth.resetMyPassword": "Password Reset",
