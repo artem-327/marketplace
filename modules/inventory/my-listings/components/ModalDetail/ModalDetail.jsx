@@ -694,7 +694,7 @@ class ModalDetail extends Component {
       tdsTemplates,
       broadcastChange,
       autocompleteData,
-      systemCompanyName
+      applicationName
     } = this.props
     const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = this.state
 
@@ -715,10 +715,10 @@ class ModalDetail extends Component {
       if (opt.titleId && opt.titleText)
         return {
           ...opt,
-          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: systemCompanyName }),
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: applicationName }),
           subtitle: formatMessage(
             { id: opt.subtitleId, defaultMessage: opt.subtitleText },
-            { companyName: systemCompanyName }
+            { companyName: applicationName }
           )
         }
       else
@@ -726,7 +726,7 @@ class ModalDetail extends Component {
           ...opt,
           subtitle: formatMessage(
             { id: opt.subtitleId, defaultMessage: opt.subtitleText },
-            { companyName: systemCompanyName }
+            { companyName: applicationName }
           )
         }
     }).concat([
@@ -2084,7 +2084,7 @@ class ModalDetail extends Component {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 
