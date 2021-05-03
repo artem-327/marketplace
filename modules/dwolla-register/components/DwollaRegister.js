@@ -140,7 +140,7 @@ class DwollaRegister extends Component {
       businessClassificationsLoading,
       isAdmin,
       identity,
-      systemCompanyName
+      applicationName
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
@@ -169,7 +169,7 @@ class DwollaRegister extends Component {
                           id='dwolla.thanksForJoining'
                           defaultMessage='Thank you for joining the {companyName} Marketplace.'
                           values={{
-                            companyName: systemCompanyName
+                            companyName: applicationName
                           }}
                         />
                       </Header>
@@ -201,7 +201,7 @@ class DwollaRegister extends Component {
                               (833)321-3246
                             </a>
                           ),
-                          companyName: systemCompanyName
+                          companyName: applicationName
                         }}
                       />
                     </GridColumn>
@@ -526,7 +526,7 @@ class DwollaRegister extends Component {
                           id='dwolla.controllerDesc1'
                           defaultMessage='To assure compliance with US financial institution policies, {companyName} must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
                           values={{
-                            companyName: systemCompanyName
+                            companyName: applicationName
                           }}
                         />
                       </GridColumn>
@@ -720,7 +720,7 @@ class DwollaRegister extends Component {
                                 (833) 321 3246
                               </a>
                             ),
-                            companyName: systemCompanyName
+                            companyName: applicationName
                           }}
                         />
                         {/* <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' /> */}
@@ -884,7 +884,7 @@ class DwollaRegister extends Component {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

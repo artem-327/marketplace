@@ -51,7 +51,7 @@ class TransactionInfo extends Component {
       }
     `
 
-    const { order, echoSupportPhone, systemCompanyName } = this.props
+    const { order, echoSupportPhone, applicationName } = this.props
     const echoSystemTransaction = getSafe(() => order.dwollaTransfers[0].transferId, 'N/A')
 
     return (
@@ -67,11 +67,11 @@ class TransactionInfo extends Component {
               </RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='{companyName} Transaction' values={{ companyName: systemCompanyName }} />
+              <FormattedMessage id='order.detail.echoSystemTransaction' defaultMessage='{companyName} Transaction' values={{ companyName: applicationName }} />
               <RightSpan>{echoSystemTransaction}</RightSpan>
             </SmallerTextColumn>
             <SmallerTextColumn>
-              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='{companyName} Support Phone' values={{ companyName: systemCompanyName }} />
+              <FormattedMessage id='order.detail.echoSupportPhone' defaultMessage='{companyName} Support Phone' values={{ companyName: applicationName }} />
               <RightSpan>{echoSupportPhone}</RightSpan>
             </SmallerTextColumn>
           </GridRow>
@@ -83,7 +83,7 @@ class TransactionInfo extends Component {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 
