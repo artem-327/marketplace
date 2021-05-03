@@ -168,7 +168,7 @@ const CompanyDetails = props => {
         <FormattedMessage id='company.dbaName' defaultMessage='DBA Name' />
       </GridRowSectionDescription>
       <GridRow>
-        <GridColumn width={16}>
+        <GridColumn width={8}>
           <Input
             label={
               <>
@@ -196,6 +196,19 @@ const CompanyDetails = props => {
                 defaultMessage: 'Business Name'
               })
             }}
+          />
+        </GridColumn>
+        <GridColumn width={8}>
+          <PhoneNumber
+            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+            name='companyPhone'
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched}
+            errors={errors}
+            touched={touched}
+            isSubmitting={isSubmitting}
+            clearable
           />
         </GridColumn>
       </GridRow>
