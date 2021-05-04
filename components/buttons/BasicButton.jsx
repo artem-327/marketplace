@@ -20,7 +20,7 @@ const BasicButton = props => {
       disabled={disabled}
       onClick={onClick}
       {...rest}
-      data-test='components-basicbutton'>
+      data-test='component-basicbutton'>
       {props.children}
     </CustomButton>
   )
