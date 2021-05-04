@@ -8,6 +8,7 @@ import { GridColumn, GridRow, Button, Popup } from 'semantic-ui-react'
 import { currency } from '~/constants/index'
 
 //Components
+import BasicButton from '../../../../components/buttons/BasicButton'
 
 //Hooks
 //import { usePrevious } from '../../../hooks'
@@ -29,7 +30,7 @@ const OrderSummary = props => {
     loading,
     subTotalPrice,
     isNotHazardousPermissions,
-    systemCompanyName
+    applicationName
   } = props
 
   const priceComponent = val =>
@@ -53,14 +54,16 @@ const OrderSummary = props => {
         trigger={
           <GridRow>
             <GridColumn>
-              <Button
+              <BasicButton
                 fluid
                 loading={loading}
-                color='blue'
+                background='#00c7f9 !important'
+                textcolor='#FFF !important'
+                margin='0px !important'
                 disabled={submitButtonDisabled}
                 onClick={() => onButtonClick()}>
                 {buttonText}
-              </Button>
+              </BasicButton>
             </GridColumn>
           </GridRow>
         }
@@ -92,7 +95,7 @@ const OrderSummary = props => {
                     <FormattedMessage id='checkout.summary.conditionsOfUse' defaultMessage='Conditions Of Use' />
                   </LinkLabel>
                 ),
-                companyName: systemCompanyName
+                companyName: applicationName
               }}
             />
           ) : (
@@ -165,7 +168,7 @@ OrderSummary.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

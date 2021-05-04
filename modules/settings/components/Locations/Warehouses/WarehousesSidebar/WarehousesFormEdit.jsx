@@ -248,6 +248,29 @@ const WarehousesFormEdit = ({
           </>
         )}
         <HorizontalRule />
+        <FormGroup data-test='settings_warehouse_popup_certifications_epa_drpdn'>
+          <Dropdown
+            label={formatMessage({
+              id: 'settings.certifications.isCertifiedByEPA',
+              defaultMessage: 'Is this location certified by EPA?'
+            })}
+            name='epaReceiveFlag'
+            options={[
+              {
+                text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                value: false
+              },
+              {
+                text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                value: true
+              }
+            ]}
+            inputProps={{
+              disabled: !sidebarValues
+            }}
+          />
+        </FormGroup>
+        <HorizontalRule />
         <FormGroup data-test='settings_warehouse_popup_certifications_tax_drpdn'>
           <Dropdown
             label={formatMessage({

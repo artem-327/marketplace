@@ -115,7 +115,10 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
   }
   delete customerData.zipID
   removeEmpty(customerData)
-  customerData.warehouseAddresses.forEach((el, i) => removeEmpty(customerData.warehouseAddresses[i]))
+
+  if (customerData.warehouseAddresses) {
+    customerData.warehouseAddresses.forEach((el, i) => removeEmpty(customerData.warehouseAddresses[i]))
+  }
 
   try {
     if (sidebarValues) {

@@ -160,7 +160,7 @@ class ShippingQuoteInfo extends Component {
             </GridColumn>
           </GridRowDescription>
           {
-            row.info.items.map((item, index) => {
+            row.info.items && row.info.items.map((item, index) => {
               const packagingUnit = getSafe(() => item.packagingUnit.nameAbbreviation, '')
               const packagingType = getSafe(() => item.packagingType.name, '')
               return (
@@ -176,28 +176,34 @@ class ShippingQuoteInfo extends Component {
           }
           <GridRow>
             <GridColumn width={16}>
-              <AddressRow>
-                {this.displayAddress({
-                  company: getSafe(() => row.info.originCompanyName, ''),
-                  address: {
-                    country: getSafe(() => row.info.originCountry, ''),
-                    province: getSafe(() => row.info.originProvince, ''),
-                    city: getSafe(() => row.info.originCity, ''),
-                    streetAddress: getSafe(() => row.info.originStreet, ''),
-                    zip: getSafe(() => row.info.originZip, '')
-                  }
-                })}
-                {this.displayAddress({
-                  company: getSafe(() => row.info.destinationCompanyName, ''),
-                  address: {
-                    country: getSafe(() => row.info.destinationCountry, ''),
-                    province: getSafe(() => row.info.destinationProvince, ''),
-                    city: getSafe(() => row.info.destinationCity, ''),
-                    streetAddress: getSafe(() => row.info.destinationStreet, ''),
-                    zip: getSafe(() => row.info.destinationZip, '')
-                  }
-                })}
-              </AddressRow>
+              {
+                !!getSafe(() => row.info.originCompanyName, false) &&
+                !!getSafe(() => row.info.destinationCompanyName, false)
+                  ? (
+                    <AddressRow>
+                      {this.displayAddress({
+                        company: getSafe(() => row.info.originCompanyName, ''),
+                        address: {
+                          country: getSafe(() => row.info.originCountry, ''),
+                          province: getSafe(() => row.info.originProvince, ''),
+                          city: getSafe(() => row.info.originCity, ''),
+                          streetAddress: getSafe(() => row.info.originStreet, ''),
+                          zip: getSafe(() => row.info.originZip, '')
+                        }
+                      })}
+                      {this.displayAddress({
+                        company: getSafe(() => row.info.destinationCompanyName, ''),
+                        address: {
+                          country: getSafe(() => row.info.destinationCountry, ''),
+                          province: getSafe(() => row.info.destinationProvince, ''),
+                          city: getSafe(() => row.info.destinationCity, ''),
+                          streetAddress: getSafe(() => row.info.destinationStreet, ''),
+                          zip: getSafe(() => row.info.destinationZip, '')
+                        }
+                      })}
+                    </AddressRow>
+                  ) : null
+              }
             </GridColumn>
           </GridRow>
 
@@ -258,9 +264,8 @@ class ShippingQuoteInfo extends Component {
               <GridColumn width={16}>
                 <DivSimpleText>
                   <FormattedMessage
-                    id='alerts.freightQuoteCanNow'
-                    defaultMessage={`The freight quote ${row.info.shippingQuoteId} can now be applied to your order`}
-                    values={{ quoteId: row.info.shippingQuoteId }}
+                    id='alerts.youCanNowApply'
+                    defaultMessage='You can now apply the quote to your order by clicking the Checkout button'
                   />
                 </DivSimpleText>
               </GridColumn>

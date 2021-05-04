@@ -206,7 +206,7 @@ class PurchaseOrderShipping extends Component {
       isSending,
       shippingQuotesAreFetching,
       shippingQuotes,
-      systemCompanyName
+      applicationName
     } = this.props
 
     const manualShipmentQuoteId = order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
@@ -278,7 +278,7 @@ class PurchaseOrderShipping extends Component {
                                     id='order.weightLimitExceeded'
                                     defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
                                     values={{
-                                      companyName: systemCompanyName
+                                      companyName: applicationName
                                     }}
                                   />
                                 </GridColumn>
@@ -301,7 +301,7 @@ class PurchaseOrderShipping extends Component {
                                         id='cart.noShippingQuotes.processManually'
                                         defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
                                         values={{
-                                          companyName: systemCompanyName
+                                          companyName: applicationName
                                         }}
                                       />
                                     </CustomDivContent>
@@ -459,7 +459,7 @@ function mapStateToProps(state) {
   const { detail } = orders
 
   return {
-    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     order: detail,
     orderId: detail.id,
     isSending: orders.isSending,

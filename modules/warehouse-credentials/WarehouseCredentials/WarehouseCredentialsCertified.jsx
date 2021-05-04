@@ -29,6 +29,7 @@ import {
   CertHeader,
   Warehouse,
   FileName,
+  EpaWrapper,
   DivDate,
   FormArea,
   ButtonGroup
@@ -193,6 +194,42 @@ class WarehouseCredentialsCertified extends Component {
 
               <Download className='download' />
             </FileName>
+          </>
+        )}
+        {branch.epaReceive && (
+          <>
+            <CertHeader>
+              <FormattedMessage
+                id='warehouseCredentials.epaCertificate'
+                defaultMessage='EPA Certificate'
+              />
+            </CertHeader>
+            <EpaWrapper
+              onClick={e => {
+                if (getSafe(() => branch.deaListCertificateFile.name, ''))
+                  this.downloadAttachment(branch.deaListCertificateFile.name, branch.deaListCertificateFile.id)
+              }}>
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.frsId' defaultMessage='FRS ID' />
+                </label>
+                {getSafe(() => branch.epaFrsId, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaRegion' defaultMessage='EPA Region' />
+                </label>
+                {getSafe(() => branch.epaRegion, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaFacilityUrl' defaultMessage='Detailed Factory Report' />
+                </label>
+                {getSafe(() => branch.epaFacilityUrl, '')}
+              </div>
+            </EpaWrapper>
           </>
         )}
         {branch.taxExemptReceive && (
