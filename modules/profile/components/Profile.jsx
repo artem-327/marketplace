@@ -1,12 +1,12 @@
-import { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import MyProfile from './MyProfile'
 import ChangePassword from './ChangePassword'
 
-class Profile extends Component {
-  renderContent = () => {
-    const { changePasswordPopup } = this.props
+const Profile = props => {
+  const renderContent = () => {
+    const { changePasswordPopup } = props
 
     return (
       <>
@@ -16,9 +16,7 @@ class Profile extends Component {
     )
   }
 
-  render() {
-    return this.renderContent()
-  }
+  return renderContent()
 }
 
 const mapStateToProps = ({ profile }) => {
