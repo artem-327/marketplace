@@ -25,6 +25,7 @@ import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
+import ImmediateModal from '../modules/alerts/components/ImmediateModal/ImmediateModal'
 
 import CreateMenu from './CreateMenu'
 import { Messages } from '../modules/messages'
@@ -439,6 +440,7 @@ class Layout extends Component {
                     data-test='navigation_notifications'
                     className='item-cart'>
                     <NotificationsIcon />
+                    <ImmediateModal />
                   </Menu.Item>
                   {
                     /* DT-293 temporary disabled */ false && (
