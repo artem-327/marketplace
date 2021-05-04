@@ -28,4 +28,10 @@ describe('BasicButton: (props: any): JSX.Element', () => {
     const button = findByTestAttr(wrapper, 'component-basicbutton')
     expect(button.length).toBe(1)
   })
+
+  test('clicking on button', () => {
+    const wrapper = setup()
+    const button = findByTestAttr(wrapper, 'component-basicbutton')
+    button.simulate('click')
+  })
 })
