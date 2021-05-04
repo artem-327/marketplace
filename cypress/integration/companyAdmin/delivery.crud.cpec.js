@@ -1,13 +1,12 @@
-context("Prodex Delivery Addresses CRUD", () => {
+context("Prodex Customers CRUD", () => {
     let addressId = null
-    let filter = [{"operator": "LIKE", "path": "DeliveryAddress.address.streetAddress", "values": ["%126 N G St%"]}]
+    let filter = [{ "operator": "LIKE", "path": "Customer.name", "values": ["%Test%"] }]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.intercept("POST", "/prodex/api/delivery-addresses/datagrid").as("addressLoadingPOST")
+        cy.intercept("POST", "/prodex/api/customers/datagrid").as("customersLoading")
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
         cy.viewport(2250, 2250)
 
         cy.FElogin(userJSON.email, userJSON.password)
@@ -15,65 +14,79 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.wait("@inventoryLoading")
         cy.openSettings()
         cy.get("[data-test='navigation_settings_locations_drpdn']").click()
-        cy.wait("@addressLoadingPOST")
+        cy.wait("@customersLoading")
         cy.waitForUI()
     })
 
-    it("Creates a delivery address", () => {
+    it("Creates a Customer", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, 'delivery-addresses', filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'customers', filter).then(itemId => {
                 if (itemId != null)
-                    cy.deleteEntity(token, 'delivery-addresses/id', itemId)
+                    cy.deleteEntity(token, 'customers', itemId)
             })
         })
         cy.get('[data-test=settings_open_popup_btn]').click()
         cy.waitForUI()
+// Bill To Address
+        cy.enterText("#field_input_name", "Test")
+        cy.enterText("input[id='field_input_billToAddress.addressName']", "Bill Address Name")
+        cy.enterText("input[id='field_input_billToAddress.address.streetAddress']", "126 N G St")
+        cy.enterText("input[id='field_input_billToAddress.address.city']", "Harlingen")
 
-        cy.enterText("#field_input_addressName", "Automatic")
-
-        cy.enterText("input[id='field_input_address.streetAddress']", "126 N G St")
-        cy.enterText("input[id='field_input_address.city']", "Harlingen")
-
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
+        cy.selectFromDropdown("div[id='field_dropdown_billToAddress.address.country']", "Bahamas")
         cy.waitForUI()
-        cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
+        cy.selectFromDropdown("div[id='field_dropdown_billToAddress.address.zip']", "75000")
 
-        cy.enterText("#field_input_contactName", "Marie Currie")
-        cy.get('.phone-num').type("1234567895")
+        cy.enterText("input[id='field_input_billToAddress.contactName']", "Marie Currie")
+        cy.get('input[name="billToAddress.contactPhone"]').type("1234567895")
+        cy.enterText("input[id='field_input_billToAddress.contactEmail']", "marie@address.com")
 
-        cy.enterText("#field_input_contactEmail", "marie@address.com")
+// Warehouse
+        cy.enterText("input[id='field_input_warehouseAddresses[0].addressName']", "Warehouse A")
+        cy.enterText("input[id='field_input_warehouseAddresses[0].address.streetAddress']", "127 N G St")
+        cy.enterText("input[id='field_input_warehouseAddresses[0].address.city']", "Harlingen")
+
+        cy.selectFromDropdown("div[id='field_dropdown_warehouseAddresses[0].address.country']", "Bahamas")
+        cy.waitForUI()
+        cy.selectFromDropdown("div[id='field_dropdown_warehouseAddresses[0].address.zip']", "75000")
+
+        cy.enterText("input[id='field_input_warehouseAddresses[0].contactName']", "Marie Currie")
+        cy.get('input[name="warehouseAddresses[0].contactPhone"]').type("1234567895")
+        cy.enterText("input[id='field_input_warehouseAddresses[0].contactEmail']", "marie@address.com")
+
 
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
         cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstAddressIdWithFilter(token, filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'customers', filter).then(itemId => {
                 cy.openElement(itemId, 0)
 
                 addressId = itemId
             })
         })
 
-        cy.contains("126 N G St")
-        cy.contains("75000")
+        cy.get('#field_input_name').should("have.value", "Test")
 
-        cy.get("input[id='field_input_address.city']")
+        cy.get("input[id='field_input_billToAddress.addressName']").should("have.value", "Bill Address Name")
+
+        cy.get("input[id='field_input_billToAddress.address.city']")
             .should("have.value", "Harlingen")
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_billToAddress.contactName']")
             .should("have.value", "Marie Currie")
 
         cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
             .should("have.value", "123 456 7895")
 
-        cy.get("#field_input_contactEmail")
+        cy.get("input[id='field_input_billToAddress.contactEmail']")
             .should("have.value", "marie@address.com")
     })
 
-    it("Edits a delivery address", () => {
+    it("Edits a customer", () => {
         cy.openElement(addressId, 0)
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_billToAddress.contactName']")
             .clear()
             .type("Adolf Schwarzenegger")
             .should("have.value", "Adolf Schwarzenegger")
@@ -84,7 +97,7 @@ context("Prodex Delivery Addresses CRUD", () => {
 
         cy.openElement(addressId, 0)
 
-        cy.get("#field_input_contactName")
+        cy.get("input[id='field_input_billToAddress.contactName']")
             .should("have.value", "Adolf Schwarzenegger")
     })
 
@@ -94,22 +107,22 @@ context("Prodex Delivery Addresses CRUD", () => {
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
 
         cy.get(".error")
-            .should("have.length", 8)
+            .should("have.length", 17)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
 
-    it("Deletes a delivery adress", () => {
+    it("Deletes a Customer", () => {
         cy.openElement(addressId, 1)
 
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
-        cy.contains("126 N G St").should("not.exist")
+        cy.contains("Test").should("not.exist")
 
         cy.reload()
-        cy.wait("@POST")
+        cy.wait("@customersLoading")
 
-        cy.contains("126 N G St").should("not.exist")
+        cy.contains("Test").should("not.exist")
     })
 })

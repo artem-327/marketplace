@@ -1,6 +1,6 @@
 context("Company Product Catalog CRUD", () => {
     let productId = null
-    let filter = [{"operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OURPR%"]}]
+    let filter = [{ "operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OURPR%"] }]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
@@ -8,11 +8,13 @@ context("Company Product Catalog CRUD", () => {
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/company-products/datagrid?type=ALL").as("productLoading")
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.deleteWholeCart(token)
+        })
 
         cy.FElogin(userJSON.email, userJSON.password)
 
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
 
         cy.get('[data-test=navigation_menu_inventory_my_products_drpdn]').click()
@@ -31,7 +33,7 @@ context("Company Product Catalog CRUD", () => {
         })
         cy.settingsAdd()
 
-        cy.selectFromDropdown("div[id='field_dropdown_companyGenericProduct']","ABEX")
+        cy.selectFromDropdown("div[id='field_dropdown_companyGenericProduct']", "ABEX")
 
         cy.enterText("#field_input_intProductName", "Our product")
         cy.enterText("#field_input_intProductCode", "OURPR")
@@ -46,11 +48,11 @@ context("Company Product Catalog CRUD", () => {
 
         cy.get("div[id='field_dropdown_nmfcNumber']")
             .children("input")
-            .type("15", {force: true})
-            .should("have.value","15")
+            .type("15", { force: true })
+            .should("have.value", "15")
 
         cy.get("div[id='field_dropdown_nmfcNumber']").within(() => {
-            cy.get("div[role='option']").eq(0).click({force: true})
+            cy.get("div[role='option']").eq(0).click({ force: true })
         })
 
         cy.get("[data-test='settings_product_popup_freightClass_drpdn']").click()

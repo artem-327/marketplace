@@ -1,7 +1,7 @@
 context("Prodex User CRUD", () => {
     let userID = null
-    let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%Automator%"]},
-        {"operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%Automator%"]}]
+    let filter = [{ "operator": "LIKE", "path": "User.name", "values": ["%Automator%"] },
+        { "operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%Automator%"] }]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
@@ -12,11 +12,13 @@ context("Prodex User CRUD", () => {
         cy.intercept("POST", "/prodex/api/users").as("usersSave")
         cy.viewport(2500, 1200)
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.deleteWholeCart(token)
+        })
 
         cy.FElogin(userJSON.email, userJSON.password)
 
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.openSettings()
         cy.contains("Users").click()
         cy.waitForUI()
@@ -42,7 +44,7 @@ context("Prodex User CRUD", () => {
         cy.waitForUI()
         cy.get("#field_dropdown_homeBranch").find("div[role='option']").eq(0).click()
 
-        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+        cy.get('div[class*="UserEditSidebarstyles"]').within(() => {
             cy.contains("Merchant").click()
         })
 
@@ -81,7 +83,9 @@ context("Prodex User CRUD", () => {
             .should("have.value", "Jen Automator")
 
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
+        cy.get('[data-test=settings_users_popup_reset_btn]').click()
 
+        cy.waitForUI()
         cy.openElement(userID, 0)
 
         cy.get("#field_input_name")
@@ -93,18 +97,18 @@ context("Prodex User CRUD", () => {
 
         cy.openElement(userID, 0)
 
-        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+        cy.get('div[class*="UserEditSidebarstyles"]').within(() => {
             cy.contains("Merchant").click()
             cy.contains("Order View").click()
         })
 
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
+        cy.get('[data-test=settings_users_popup_reset_btn]').click()
 
         cy.waitForUI()
-
         cy.openElement(userID, 0)
 
-        cy.get('[style="padding-bottom: 0px;"]').within(() => {
+        cy.get('div[class*="UserEditSidebarstyles"]').within(() => {
             cy.contains("Merchant").prev().should("not.be.checked")
             cy.contains("Order View").prev().should("be.checked")
         })
@@ -116,7 +120,7 @@ context("Prodex User CRUD", () => {
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
 
         cy.get(".error")
-            .should("have.length", 12)
+            .should("have.length", 11)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

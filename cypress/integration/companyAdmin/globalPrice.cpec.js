@@ -7,11 +7,13 @@ context("Prodex Global Price", () => {
         cy.intercept("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.deleteWholeCart(token)
+        })
 
         cy.FElogin(userJSON.email, userJSON.password)
 
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
     })
 
     after(function () {
@@ -39,7 +41,7 @@ context("Prodex Global Price", () => {
         cy.wait("@rulesSaving")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
-            .eq(0)
+            .eq(1)
             .should("have.class", "ui checked fitted toggle checkbox")
     })
 

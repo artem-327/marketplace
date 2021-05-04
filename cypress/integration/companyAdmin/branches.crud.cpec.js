@@ -1,9 +1,9 @@
 context("Prodex Branches CRUD", () => {
     let branchId = null
     let filter = [
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.addressName", "values":["%Harlingen%"]},
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.streetAddress", "values":["%Harlingen%"]},
-        {"operator":"LIKE", "path":"Branch.deliveryAddress.address.city", "values":["%Harlingen%"]}
+        { "operator": "LIKE", "path": "Branch.deliveryAddress.addressName", "values": ["%Harlingen%"] },
+        { "operator": "LIKE", "path": "Branch.deliveryAddress.address.streetAddress", "values": ["%Harlingen%"] },
+        { "operator": "LIKE", "path": "Branch.deliveryAddress.address.city", "values": ["%Harlingen%"] }
     ]
     const userJSON = require('../../fixtures/user.json')
 
@@ -11,17 +11,16 @@ context("Prodex Branches CRUD", () => {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
-        cy.intercept("POST", "/prodex/api/delivery-addresses/datagrid").as("deliveryLoadingPOST")
-
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {cy.deleteWholeCart(token)})
+        cy.intercept("POST", "/prodex/api/branches").as("branchCreate")
+        cy.intercept("POST", "/prodex/api/customers/datagrid").as("customersPOST")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
-        cy.wait("@inventoryLoading", {timeout: 100000})
+        cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.openSettings()
         cy.waitForUI()
         cy.get("[data-test='navigation_settings_locations_drpdn']").click()
-        cy.wait("@deliveryLoadingPOST")
+        cy.wait("@customersPOST")
 
         cy.contains("Branches").click()
         cy.wait("@branchesLoadingPOST")
@@ -50,6 +49,12 @@ context("Prodex Branches CRUD", () => {
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
+        cy.wait("@branchCreate")
+        cy.wait("@branchCreate").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(201)
+        })
+        cy.get('[data-test=settings_branches_popup_reset_btn]').click()
+        cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstBranchIdWithFilter(token, filter).then(itemId => {
