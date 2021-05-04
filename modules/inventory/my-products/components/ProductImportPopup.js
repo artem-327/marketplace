@@ -141,7 +141,7 @@ class ProductImportPopup extends Component {
       companyGenericProduct,
       productOffer,
       loading,
-      systemCompanyName
+      applicationName
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
@@ -150,11 +150,11 @@ class ProductImportPopup extends Component {
       if (opt.titleId && opt.titleText)
         return {
           ...opt,
-          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: systemCompanyName }),
-          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName })
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: applicationName }),
+          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: applicationName })
         }
       else
-        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: systemCompanyName }) }
+        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: applicationName }) }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -431,7 +431,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { companies, companyGenericProduct }) => {
   return {
-    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,

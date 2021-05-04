@@ -79,7 +79,7 @@ export const makeGetDatagridRows = () => {
         groupProductName: getSafe(() => po.companyProduct.intProductName, 'Unmapped'),
         seller: (
           <DivSeller key={po.id}>
-            <Image verticalAlign='middle' size='mini' spaced={true} src={po?.createdBy?.company?.base64Logo} />
+            <Image verticalAlign='middle' size='mini' spaced={true} src={po?.createdBy?.company?.avatarUrl} />
             <SpanSellerName>{po?.owner?.cfDisplayName}</SpanSellerName>
           </DivSeller>
         ),

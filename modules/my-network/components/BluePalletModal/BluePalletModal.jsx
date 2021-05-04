@@ -32,7 +32,7 @@ import * as Actions from '../../../inventory/actions'
  */
 const BluePalletModal = props => {
   const [value, setValue] = useState('')
-  const { open, onClose, systemCompanyName } = props
+  const { open, onClose, applicationName } = props
 
   return (
     <ModalCustom
@@ -75,7 +75,7 @@ const BluePalletModal = props => {
           <FormattedMessage
             id='bluePallet.whatIs'
             defaultMessage='What is Blue Trade?'
-            values={{ companyName: systemCompanyName }}
+            values={{ companyName: applicationName }}
           />
         </ContentMainTitle>
         <AnswerBlock>
@@ -83,7 +83,7 @@ const BluePalletModal = props => {
             id='bluePallet.whatIs.answer'
             defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade transactions are safe, secure, simple, and reliable.'
             values={{
-              companyName: systemCompanyName
+              companyName: applicationName
             }}
           />
         </AnswerBlock>
@@ -143,7 +143,7 @@ const BluePalletModal = props => {
             id='bluePallet.footerInfo'
             defaultMessage='Blue Trade only displays inventory of {companyName} Members. Blue Trade does not manufacture, distribute, or possess any products listed on the Blue Trade Marketplace. Blue Trade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
             values={{
-              companyName: systemCompanyName
+              companyName: applicationName
             }}
           />
         </FooterInfo>
@@ -164,7 +164,7 @@ BluePalletModal.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

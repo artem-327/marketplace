@@ -51,20 +51,28 @@ const StyledNotification = styled.div`
     }
   }
 `
+const StyledAlertHeader = styled.span`
+  cursor: pointer;
+`
+
+const DivUser = styled.div`
+  width: 200px;
+  min-width: 200px
+`
+
+const DivNotificationRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+`
 
 class Table extends Component {
   state = {
     columns: [
       {
-        name: 'user',
-        title: <div></div>,
-        width: 200,
-        disabled: false
-      },
-      {
         name: 'notification',
         title: <div></div>,
-        width: 720,
+        width: 920,
         maxWidth: 2000,
         disabled: false
       },
@@ -121,7 +129,7 @@ class Table extends Component {
           if (row.info) this.toggleDetail(row.id)
           if (!row.read) this.handleClickOnUnread(row)
         }}>
-        {ReactHtmlParser(row.text)}
+        <StyledAlertHeader>{ReactHtmlParser(row.text)}</StyledAlertHeader>
         {row.read && (
           <CheckIcon>
             <Check />
@@ -160,22 +168,31 @@ class Table extends Component {
       const open = this.state.expandedRowIds.some(id => id === r.id)
       const recent =
         moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
+
+      const isUserData = getSafe(() => r.relatedCompany.avatarUrl, false)
+        || r.nameOfUser || getSafe(() => r.info.requestedBy.company.cfDisplayName, false)
+        || getSafe(() => r.info.buyerCompanyName, false)
+
       return {
         ...r,
-        user: (
-          <>
-            {getSafe(() => r.relatedCompany.base64Logo, false) && (
-              <UserImage src={r.relatedCompany.base64Logo} bordered />
-            )}
-            <UserName as='h3'>{r.nameOfUser}</UserName>
-            <UserCompany as='h4'>
-              {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
-                getSafe(() => r.info.buyerCompanyName, false)}
-            </UserCompany>
-          </>
-        ),
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
-        notification: this.notificationText(r.rawData),
+        notification: (
+          <DivNotificationRow>
+            {!!isUserData && (
+              <DivUser>
+                {getSafe(() => r.relatedCompany.avatarUrl, false) && (
+                  <UserImage src={r.relatedCompany.avatarUrl} bordered />
+                )}
+                <UserName as='h3'>{r.nameOfUser}</UserName>
+                <UserCompany as='h4'>
+                  {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
+                  getSafe(() => r.info.buyerCompanyName, false)}
+                </UserCompany>
+              </DivUser>
+            )}
+            {this.notificationText(r.rawData)}
+          </DivNotificationRow>
+        ),
         time: r.createdAt ? (
           <Popup
             size='small'
@@ -188,11 +205,7 @@ class Table extends Component {
             header={
               <div style={{ color: '#cecfd4', fontSize: '12px' }}>{moment(r.createdAt).toDate().toLocaleString()}</div>
             }
-            trigger={
-              <div style={{ color: '#848893' }}>
-                {moment(r.createdAt).fromNow()}
-              </div>
-            }
+            trigger={<div style={{ color: '#848893' }}>{moment(r.createdAt).fromNow()}</div>}
           />
         ) : (
           'N/A'
@@ -231,8 +244,9 @@ class Table extends Component {
     const messageDetailTable = {
       MessageCompanyGenericProductRequestInfoResponse: <GenericProductRequest row={row.rawData} />,
       MessageShippingQuoteRequestInfoResponse: <ShippingQuoteRequest row={row.rawData} />,
-      MessageShippingQuoteInfoResponse:
+      MessageShippingQuoteInfoResponse: (
         <ShippingQuoteInfo row={row.rawData} onClose={() => this.toggleDetail(row.id)} />
+      )
     }
     // TODO when BE will have GET endpoint for Detail Order in Operatins
     // and FE adjust component Detail in Operation
@@ -316,28 +330,25 @@ class Table extends Component {
 
     return (
       <Fragment>
-        <div
-          className={'flex stretched table-detail-rows-wrapper notifications-wrapper notifications-admin-wrapper'}>
+        <div className={'flex stretched table-detail-rows-wrapper notifications-wrapper notifications-admin-wrapper'}>
           <ProdexTable
             tableName={'notifications_table'}
             {...datagrid.tableProps}
             loading={datagrid.loading || markSeenSending}
             columnReordering={false}
             groupBy={['timeGroup']}
-            getChildGroups={
-              rows => {
-                return _(rows)
-                  .groupBy('timeGroup')
-                  .map(v => {
-                    return {
-                      key: `${v[0].timeGroup}`,
-                      childRows: v,
-                      groupLength: v.length
-                    }
-                  })
-                  .value()
-              }
-            }
+            getChildGroups={rows => {
+              return _(rows)
+                .groupBy('timeGroup')
+                .map(v => {
+                  return {
+                    key: `${v[0].timeGroup}`,
+                    childRows: v,
+                    groupLength: v.length
+                  }
+                })
+                .value()
+            }}
             renderGroupLabel={({ row: { value }, groupLength }) => null}
             hideGroupCheckboxes={true}
             columns={columns}

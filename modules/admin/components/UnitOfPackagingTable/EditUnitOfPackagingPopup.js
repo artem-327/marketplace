@@ -10,17 +10,18 @@ import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 import {makeGetDimensionUnits, makeGetWeightUnits} from '../../selectors'
+import { errorMessages } from '~/constants/yupValidation'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().min(1, 'Too short').required('Required'),
   val1: Yup.number().required('Required'),
-  val2: Yup.number().required('Required'),
-  val3: Yup.number().required('Required'),
-  val4: Yup.number().required('Required'),
+  val2: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
+  val3: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
+  val4: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
   val5: Yup.number().required('Required'),
-  val6: Yup.number().required('Required'),
-  val7: Yup.number().required('Required'),
-  val8: Yup.number().required('Required'),
+  val6: Yup.number().integer(errorMessages.integer).min(1, errorMessages.minimum(1)).required('Required'),
+  val7: Yup.number().integer(errorMessages.integer).min(1, errorMessages.minimum(1)).required('Required'),
+  val8: Yup.number().min(0, errorMessages.minimum(0)).required('Required'),
   val9: Yup.number().required('Required')
 })
 
