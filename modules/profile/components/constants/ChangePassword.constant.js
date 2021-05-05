@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { errorMessages, passwordValidation } from '~/constants/yupValidation'
+import { errorMessages, passwordValidation } from '../../../../constants/yupValidation'
 
 export const initialFormValues = {
     oldPassword: '',

@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { errorMessages, phoneValidation } from '../../../../constants/yupValidation'
 
 export const initialFormValues = {
     name: '',

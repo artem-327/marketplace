@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 import moment from 'moment'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 
 const getChangePasswordPopup = state => state?.profile?.changePasswordPopup
 const getLanguages = state => state?.settings?.languages
@@ -12,7 +12,7 @@ const getLastLoginAt = state => state?.auth?.identity?.lastLoginAt
 export const makeGetChangePasswordPopup = () => createSelector([getChangePasswordPopup], changePasswordPopup => {return changePasswordPopup})
 export const makeGetLanguages = () => createSelector([getLanguages], languages => {return languages})
 export const makeGetLanguagesFetching = () => createSelector([getLanguagesFetching], languagesFetching => {return languagesFetching})
-export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => {console.log("------> " + tutorialCompleted); return getSafe(() => tutorialCompleted, false)})
+export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => {return getSafe(() => tutorialCompleted, false)})
 export const makeGetPopupValues = () => createSelector([getPopupValues, getLastLoginAt], (popupValues, lastLoginAt) => {
   return popupValues
   ? {

@@ -5,13 +5,13 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 
-import { getLanguages } from '~/modules/settings/actions'
-import { PhoneNumber } from '~/modules/phoneNumber'
+import { getLanguages } from '../../settings/actions'
+import { PhoneNumber } from '../../phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 import { getIdentity } from '../../auth/actions'
 import { closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup, setPreferredLanguage, loadFile, saveAvatarPicture, deleteAvatarPicture } from '../actions'
 import { makeGetChangePasswordPopup, makeGetLanguages, makeGetLanguagesFetching, makeGetTutorialCompleted, makeGetPopupValues } from '../selectors'
-import { DivLogoWrapper, ImageSearchStyled, DivLabel } from './styles/MyProfile.style'
+import { DivLogoWrapper, ImageSearchStyled, DivLabel } from '../styles'
 import { initialFormValues, formValidation } from './constants/MyProfile.constant'
 
 const MyProfile = props => {
