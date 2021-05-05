@@ -1,5 +1,5 @@
-import api from '~/api'
 import axios from 'axios/index'
+import api from '~/api'
 
 export default {
   getUsersMe: () => api.get('/prodex/api/users/me').then(response => response.data),

@@ -2,57 +2,17 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { ImageSearch } from '@material-ui/icons'
-import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 import { getLanguages } from '~/modules/settings/actions'
-import { getSafe } from '~/utils/functions'
-import { FormattedDateTime } from '~/components/formatted-messages/'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 import { getIdentity } from '../../auth/actions'
-import {makeGetChangePasswordPopup, makeGetLanguages, makeGetLanguagesFetching, makeGetTutorialCompleted, makeGetPopupValues} from '../selectors'
-
-const DivLogoWrapper = styled.div`
-  padding: 20px;
-`
-
-const ImageSearchStyled = styled(ImageSearch)`
-  font-size: 64px !important;
-`
-
-const DivLabel = styled.div`
-  margin-bottom: 4px;
-`
-
-import {
-  closePopup,
-  getUserMeData,
-  getCurrencies,
-  updateMyProfile,
-  openChangePasswordPopup,
-  setPreferredLanguage,
-  loadFile,
-  saveAvatarPicture,
-  deleteAvatarPicture
-} from '../actions'
-
-const initialFormValues = {
-  name: '',
-  email: '',
-  phone: '',
-  jobTitle: '',
-  userAvatar: null
-}
-
-const formValidation = Yup.object().shape({
-  name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-  phone: phoneValidation(10)
-})
+import { closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup, setPreferredLanguage, loadFile, saveAvatarPicture, deleteAvatarPicture } from '../actions'
+import { makeGetChangePasswordPopup, makeGetLanguages, makeGetLanguagesFetching, makeGetTutorialCompleted, makeGetPopupValues } from '../selectors'
+import { DivLogoWrapper, ImageSearchStyled, DivLabel } from './styles/MyProfile.style'
+import { initialFormValues, formValidation } from './constants/MyProfile.constant'
 
 const MyProfile = props => {
   useEffect(()=>{
@@ -223,6 +183,46 @@ const MyProfile = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+MyProfile.propTypes = {
+  closePopup: PropTypes.func,
+  getUserMeData: PropTypes.func,
+  getCurrencies: PropTypes.func,
+  updateMyProfile: PropTypes.func,
+  openChangePasswordPopup: PropTypes.func,
+  getLanguages: PropTypes.func,
+  setPreferredLanguage: PropTypes.func,
+  loadFile: PropTypes.func,
+  getIdentity: PropTypes.func,
+  saveAvatarPicture: PropTypes.func,
+  deleteAvatarPicture: PropTypes.func,
+  intl: PropTypes.object,
+  popupValues: PropTypes.object,
+  changePasswordPopup: PropTypes.bool,
+  languages: PropTypes.array,
+  languagesFetching: PropTypes.bool,
+  tutorialCompleted: PropTypes.bool
+}
+
+MyProfile.defaultProps = {
+  closePopup: () => {},
+  getUserMeData: () => {},
+  getCurrencies: () => {},
+  updateMyProfile: () => {},
+  openChangePasswordPopup: () => {},
+  getLanguages: () => {},
+  setPreferredLanguage: () => {},
+  loadFile: () => {},
+  getIdentity: () => {},
+  saveAvatarPicture: () => {},
+  deleteAvatarPicture: () => {},
+  intl: {},
+  popupValues: {},
+  changePasswordPopup: false,
+  languages: [],
+  languagesFetching: false,
+  tutorialCompleted: true
 }
 
 const mapDispatchToProps = {

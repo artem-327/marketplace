@@ -2,32 +2,11 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 
 import { changePassword, closeChangePasswordPopup } from '../actions'
-import { errorMessages, passwordValidation } from '~/constants/yupValidation'
-
-const initialFormValues = {
-  oldPassword: '',
-  newPassword: '',
-  newPasswordRetype: ''
-}
-
-const formValidation = () =>
-  Yup.lazy(values =>
-    Yup.object().shape({
-      oldPassword: Yup.string()
-        .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
-        .min(3, errorMessages.minLength(3))
-        .required(errorMessages.requiredMessage),
-      newPassword: passwordValidation(),
-      newPasswordRetype: Yup.string(errorMessages.passwordsMustMatch)
-        .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
-        .required(errorMessages.requiredMessage)
-        .oneOf([values.newPassword], errorMessages.passwordsMustMatch)
-    })
-  )
+import { initialFormValues, formValidation } from './constants/ChangePassword.constant'
 
 const ChangePassword = props => {
   const {
@@ -84,6 +63,18 @@ const ChangePassword = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+ChangePassword.propTypes = {
+  changePassword: PropTypes.func,
+  closeChangePasswordPopup: PropTypes.func,
+  intl: PropTypes.object
+}
+
+ChangePassword.defaultProps = {
+  changePassword: () => {},
+  closeChangePasswordPopup: () => {},
+  intl: {}
 }
 
 const mapDispatchToProps = {

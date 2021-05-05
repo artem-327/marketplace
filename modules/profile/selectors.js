@@ -12,7 +12,7 @@ const getLastLoginAt = state => state?.auth?.identity?.lastLoginAt
 export const makeGetChangePasswordPopup = () => createSelector([getChangePasswordPopup], changePasswordPopup => {return changePasswordPopup})
 export const makeGetLanguages = () => createSelector([getLanguages], languages => {return languages})
 export const makeGetLanguagesFetching = () => createSelector([getLanguagesFetching], languagesFetching => {return languagesFetching})
-export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => {return getSafe(() => tutorialCompleted, false)})
+export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => {console.log("------> " + tutorialCompleted); return getSafe(() => tutorialCompleted, false)})
 export const makeGetPopupValues = () => createSelector([getPopupValues, getLastLoginAt], (popupValues, lastLoginAt) => {
   return popupValues
   ? {
