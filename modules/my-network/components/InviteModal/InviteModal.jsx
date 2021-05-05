@@ -107,7 +107,8 @@ const InviteModal = props => {
               } catch (err) {
                 console.error(err)
               }
-            }}>
+            }}
+            data-test='component-my-network-invite-modal-search-button'>
             <b>
               <FormattedMessage id='global.search' defaultMessage='Search' />
             </b>

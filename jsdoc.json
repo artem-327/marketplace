@@ -31,7 +31,8 @@
       "./modules/company-form/components",
       "./modules/products/components/CasProductsTable",
       "./modules/purchase-order",
-      "./modules/warehouse-credentials"
+      "./modules/warehouse-credentials",
+      "./test"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },

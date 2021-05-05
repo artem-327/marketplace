@@ -5,6 +5,7 @@ import ColumnSegment from './ColumnSegment'
 import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../DetailRow.style'
 /**
  * Segments shows Legal Data, Merketing Data and Verified Data
+ * @category My Network
  * @component
  */
 const BottomSegmentData = props => (
