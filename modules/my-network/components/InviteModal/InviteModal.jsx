@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Modal, Dimmer, Loader, Input } from 'semantic-ui-react'
-import { func, bool, array, object } from 'prop-types'
+import { func, bool, array, object, shape, oneOfType } from 'prop-types'
 import { Trash2 } from 'react-feather'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Components
@@ -72,6 +72,7 @@ const InviteModal = props => {
               value={value}
               onChange={(e, data) => setValue(data?.value)}
               type='text'
+              data-test='component-invite-modal-input'
             />
             {isError && (
               <DivError>
@@ -128,7 +129,13 @@ InviteModal.propTypes = {
   search: func,
   detailCompany: object,
   buttonActionsDetailRow: func,
-  openGlobalAddForm: func
+  openGlobalAddForm: func,
+  intl: oneOfType([
+    shape({
+      formatMessage: func
+    }),
+    func
+  ])
 }
 
 InviteModal.defaultProps = {
@@ -140,7 +147,8 @@ InviteModal.defaultProps = {
   search: () => {},
   detailCompany: null,
   buttonActionsDetailRow: () => {},
-  openGlobalAddForm: null
+  openGlobalAddForm: null,
+  intl: { formatMessage: () => {} }
 }
 
 export default injectIntl(InviteModal)
