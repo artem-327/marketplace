@@ -165,7 +165,7 @@ const CompanyDetails = props => {
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name' />
+        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name and Phone Number' />
       </GridRowSectionDescription>
       <GridRow>
         <GridColumn width={8}>

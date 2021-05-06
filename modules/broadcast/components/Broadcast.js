@@ -711,7 +711,7 @@ class Broadcast extends Component {
                   </Dimmer>
                 ) : Array.isArray(templates) && templates.length ? (
                   templates.map(template => (
-                    <Table.Row>
+                    <Table.Row key={template.id}>
                       <Table.Cell width={12}>{template.name}</Table.Cell>
 
                       <Table.Cell textAlign='right'>
