@@ -1,19 +1,21 @@
-import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
+import React, { memo, useEffect } from 'react'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
-
-import { getLanguages } from '../../settings/actions'
+//Components
 import { PhoneNumber } from '../../phoneNumber'
 import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
-import { getIdentity } from '../../auth/actions'
-import { closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup, setPreferredLanguage, loadFile, saveAvatarPicture, deleteAvatarPicture } from '../actions'
-import { makeGetChangePasswordPopup, makeGetLanguages, makeGetLanguagesFetching, makeGetTutorialCompleted, makeGetPopupValues } from '../selectors'
+//Styles
 import { DivLogoWrapper, ImageSearchStyled, DivLabel } from '../styles'
+//Constants
 import { initialFormValues, formValidation } from './constants/MyProfile.constant'
 
+/**
+ * Modal popup to show and edit user's detailed information
+ * @category Profile
+ * @component
+ */
 const MyProfile = props => {
   useEffect(()=>{
     props.getUserMeData()
@@ -185,6 +187,10 @@ const MyProfile = props => {
   )
 }
 
+function areEqual(prevProps, nextProps) {
+  return prevProps?.popupValues?.email === nextProps?.popupValues?.email
+}
+
 MyProfile.propTypes = {
   closePopup: PropTypes.func,
   getUserMeData: PropTypes.func,
@@ -225,36 +231,6 @@ MyProfile.defaultProps = {
   tutorialCompleted: true
 }
 
-const mapDispatchToProps = {
-  closePopup,
-  getUserMeData,
-  getCurrencies,
-  updateMyProfile,
-  openChangePasswordPopup,
-  getLanguages,
-  setPreferredLanguage,
-  loadFile,
-  getIdentity,
-  saveAvatarPicture,
-  deleteAvatarPicture
-}
+const MemoMyProfile = memo(MyProfile, areEqual)
 
-const makeMapStateToProps = () => {
-  const getChangePasswordPopup = makeGetChangePasswordPopup()
-  const getLanguages = makeGetLanguages()
-  const getLanguagesFetching = makeGetLanguagesFetching()
-  const getTutorialCompleted = makeGetTutorialCompleted()
-  const getPopupValues = makeGetPopupValues()
-
-  const mapStateToProps = state => {
-    return {
-      popupValues: getPopupValues(state),
-      changePasswordPopup: getChangePasswordPopup(state),
-      languages: getLanguages(state),
-      languagesFetching: getLanguagesFetching(state),
-      tutorialCompleted: getTutorialCompleted(state)
-    }
-  }
-  return mapStateToProps
-}
-export default injectIntl(connect(makeMapStateToProps, mapDispatchToProps)(MyProfile))
+export default injectIntl(MemoMyProfile)

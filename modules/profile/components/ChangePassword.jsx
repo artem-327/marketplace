@@ -1,13 +1,16 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import { Modal } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
-
-import { changePassword, closeChangePasswordPopup } from '../actions'
+//Constants
 import { initialFormValues, formValidation } from './constants/ChangePassword.constant'
 
+/**
+ * Modal popup to edit password
+ * @category Profile
+ * @component
+ */
 const ChangePassword = props => {
   const {
     closeChangePasswordPopup,
@@ -77,9 +80,4 @@ ChangePassword.defaultProps = {
   intl: {}
 }
 
-const mapDispatchToProps = {
-  changePassword,
-  closeChangePasswordPopup
-}
-
-export default injectIntl(connect(null, mapDispatchToProps)(ChangePassword))
+export default injectIntl(ChangePassword)
