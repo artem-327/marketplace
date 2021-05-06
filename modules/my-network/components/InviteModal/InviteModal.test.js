@@ -8,8 +8,8 @@ import { findByTestAttr, mountWithIntl, checkProps } from '../../../../test/test
 import InviteModal from './InviteModal'
 import { initialState } from '../../../add-bank-accounts/reducer'
 
+//mock entire module for destructuring useState on import
 const mockSetValue = jest.fn()
-
 jest.mock('react', () => ({
   ...jest.requireActual('react'),
   useState: initialState => [initialState, mockSetValue]
