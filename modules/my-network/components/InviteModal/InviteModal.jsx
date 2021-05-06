@@ -102,7 +102,8 @@ const InviteModal = props => {
             noBorder
             textcolor='#ffffff !important'
             background='#00c7f9 !important'
-            onClick={async () => {
+            onClick={async e => {
+              e.preventDefault()
               try {
                 await search(value)
               } catch (err) {

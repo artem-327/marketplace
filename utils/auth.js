@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie'
-import api from '~/api'
+import api from '../api'
 import Router from 'next/router'
 
 export const setAuth = async auth => {
