@@ -32,9 +32,7 @@
       "./modules/products/components/CasProductsTable",
       "./modules/purchase-order",
       "./modules/warehouse-credentials",
-      "./modules/profile/components/ProfileContainer",
-      "./modules/profile/components/MyProfile",
-      "./modules/profile/components/ChangePassword"
+      "./modules/profile"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },
