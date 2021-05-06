@@ -169,9 +169,9 @@ class DatagridProvider extends Component {
           }
 
           const { data } = response
-          const allLoaded = data.length < datagridParams.pageSize || data.length === 0
+          const allLoaded = data?.length < datagridParams?.pageSize || data?.length === 0
 
-          if (this.state.loadedAllData || allLoaded) this.props.renderCopyright()
+          if (allLoaded) this.props.renderCopyright()
           else this.props.cleanRenderCopyright()
 
           let arrRows = this.state.rows
@@ -197,7 +197,7 @@ class DatagridProvider extends Component {
             rows: newRows,
             loading: false,
             allLoaded,
-            loadedAllData: s.loadedAllData ? s.loadedAllData : allLoaded,
+            loadedAllData: allLoaded,
             datagridParams: {
               ...s.datagridParams,
               pageNumber: pageNumber + (allLoaded ? 0 : 1)
