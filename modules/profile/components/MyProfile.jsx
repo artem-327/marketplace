@@ -9,7 +9,7 @@ import UploadAttachment from '../../inventory/components/upload/UploadAttachment
 //Styles
 import { DivLogoWrapper, ImageSearchStyled, DivLabel } from '../styles'
 //Constants
-import { initialFormValues, formValidation } from './constants/MyProfile.constant'
+import { initialMyProfileFormValues, MyProfileFormValidation } from '../constants'
 
 /**
  * Modal popup to show and edit user's detailed information
@@ -48,8 +48,8 @@ const MyProfile = props => {
       <Modal.Content>
         <Form
           enableReinitialize
-          validationSchema={formValidation}
-          initialValues={popupValues ? popupValues : initialFormValues}
+          validationSchema={MyProfileFormValidation}
+          initialValues={popupValues ? popupValues : initialMyProfileFormValues}
           onReset={closePopup}
           onSubmit={async (values, { setSubmitting }) => {
             try {

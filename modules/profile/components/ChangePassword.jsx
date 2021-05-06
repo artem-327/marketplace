@@ -4,7 +4,7 @@ import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 //Constants
-import { initialFormValues, formValidation } from './constants/ChangePassword.constant'
+import { initialChangePasswordFormValues, ChangePasswordFormValidation } from '../constants'
 
 /**
  * Modal popup to edit password
@@ -25,9 +25,9 @@ const ChangePassword = props => {
       <Modal.Content>
         <Form
           enableReinitialize
-          initialValues={initialFormValues}
+          initialValues={initialChangePasswordFormValues}
           validateOnChange={true}
-          validationSchema={formValidation}
+          validationSchema={ChangePasswordFormValidation}
           onReset={closeChangePasswordPopup}
           onSubmit={async (values, actions) => {
             delete values['newPasswordRetype']

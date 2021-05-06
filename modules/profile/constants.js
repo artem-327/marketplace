@@ -1,12 +1,35 @@
 import * as Yup from 'yup'
-import { errorMessages, passwordValidation } from '../../../../constants/yupValidation'
+import { errorMessages, phoneValidation, passwordValidation } from '../../constants/yupValidation'
+
+/**
+ * Initial form values in My profile modal popup
+ * @category Profile
+ * @constant
+ */
+export const initialMyProfileFormValues = {
+    name: '',
+    email: '',
+    phone: '',
+    jobTitle: '',
+    userAvatar: null
+}
+
+/**
+ * Form validation for name and phone fields in My profile modal popup
+ * @category Profile
+ * @constant
+ */
+export const MyProfileFormValidation = Yup.object().shape({
+    name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    phone: phoneValidation(10)
+})
 
 /**
  * Initial form values in Password change modal popup
  * @category Profile
  * @constant
  */
-export const initialFormValues = {
+ export const initialChangePasswordFormValues = {
     oldPassword: '',
     newPassword: '',
     newPasswordRetype: ''
@@ -17,7 +40,7 @@ export const initialFormValues = {
  * @category Profile
  * @constant
  */
-export const formValidation = () =>
+export const ChangePasswordFormValidation = () =>
     Yup.lazy(values =>
         Yup.object().shape({
         oldPassword: Yup.string()
