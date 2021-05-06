@@ -32,7 +32,8 @@
       "./modules/products/components/CasProductsTable",
       "./modules/purchase-order",
       "./modules/warehouse-credentials",
-      "./test"
+      "./test",
+      "./modules/profile"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },
