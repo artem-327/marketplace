@@ -21,7 +21,8 @@ export const validationSchema = Yup.object().shape({
   phone: phoneValidation(10),
   companyPhone: phoneValidation(10),
   address: addressValidationSchema(),
-  email: Yup.string().trim().email(errorMessages.invalidEmail)
+  email: Yup.string().trim().email(errorMessages.invalidEmail),
+  tagline: Yup.string().trim().max(100, errorMessages.maxLength(100))
 })
 
 export const removeFile = async (fileId, reloadDocuments, props) => {
