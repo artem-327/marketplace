@@ -1,5 +1,4 @@
-import api from '~/api'
-import { generateQueryString } from '~/utils/functions'
+import api from '../../api'
 
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
 

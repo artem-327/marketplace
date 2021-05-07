@@ -1,5 +1,5 @@
 import * as AT from './action-types'
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 import { Header } from 'semantic-ui-react'
 
 export const initialState = {
@@ -48,7 +48,7 @@ export const initialState = {
   componentSearchCasLoading: false,
   datagridFilter: { filters: [] },
   datagridFilterReload: false,
-  datagridFilterUpdate: false,
+  datagridFilterUpdate: false
 }
 
 export default function reducer(state = initialState, action) {

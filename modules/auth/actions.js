@@ -1,10 +1,10 @@
 import * as AT from './action-types'
 import * as api from './api'
-import { setAuth, unsetAuth, authorize } from '~/utils/auth'
+import { setAuth, unsetAuth, authorize } from '../../utils/auth'
 import Router from 'next/router'
-import { ROLES_ENUM } from '~/utils/constants'
-import { getSafe } from '~/utils/functions'
-import { currency } from '~/constants/index'
+import { ROLES_ENUM } from '../../utils/constants'
+import { getSafe } from '../../utils/functions'
+import { currency } from '../../constants/index'
 
 export function getIdentity() {
   return {

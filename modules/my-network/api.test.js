@@ -14,12 +14,12 @@ describe('search TradePass connection', () => {
       const request = moxios.requests.mostRecent()
       request.respondWith({
         status: 200,
-        response: 'success'
+        response: { connectedCompany: 'some values' }
       })
     })
     //Update to test app in redux
     return apiCalls.search().then(res => {
-      expect(res.data).toBe('success')
+      expect(res.data).toStrictEqual({ connectedCompany: 'some values' })
     })
   })
 })

@@ -1,6 +1,5 @@
 import * as AT from './action-types'
-import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 import Router from 'next/router'
 
 const initialState = {

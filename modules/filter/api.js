@@ -1,4 +1,4 @@
-import api from '~/api'
+import api from '../../api'
 
 export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)
 
@@ -36,4 +36,4 @@ export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').th
 
 export const getCountries = () => api.get('/prodex/api/countries').then(response => response.data)
 
-export const getProvinces = (id) => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)
+export const getProvinces = id => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)

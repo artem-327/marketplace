@@ -4,10 +4,10 @@ import { Grid, GridColumn, Button } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Router from 'next/router'
 //Components
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
-import { getLocaleDateFormat } from '~/components/date-format'
-import AddCart from '~/components/AddCart'
+import { currency } from '../../../constants/index'
+import { getSafe } from '../../../utils/functions'
+import { getLocaleDateFormat } from '../../../components/date-format'
+import AddCart from '../../../components/AddCart'
 import CartItem from './CartItem/CartItem'
 
 //Styles
@@ -25,14 +25,14 @@ import {
   DivNormalText,
   DivTotalHeader,
   DivButtonContent,
-  IconShoppingBag,
+  IconShoppingBag
 } from './StyledComponents'
 
 const Cart = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     props.getCart()
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) // If [] is empty then is similar as componentDidMount.
 
   const {
     intl: { formatMessage },
@@ -47,28 +47,26 @@ const Cart = props => {
       <Grid>
         <CartColumn mobile={14} tablet={9} computer={9}>
           <ContentSegment loading={cartIsFetching}>
-            {itemsCount === 0 && !cartIsFetching
-              ? (
-                <GridStyled verticalAlign='middle'>
-                  <StyledGridRow padding='213px 0 7px'>
-                    <GridColumn computer={16} textAlign='center'>
-                      {formatMessage({ id: 'cart.empty', defaultMessage: 'Your cart is empty.' })}
-                    </GridColumn>
-                  </StyledGridRow>
-                  <StyledGridRow padding='7px 0 213px'>
-                    <GridColumn computer={16} textAlign='center'>
-                      <Button basic onClick={() => Router.push('/marketplace/listings')}>
-                        <DivButtonContent>
-                          <IconShoppingBag/>
-                          {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
-                        </DivButtonContent>
-                      </Button>
-                    </GridColumn>
-                  </StyledGridRow>
-                </GridStyled>
-              )
-              : (
-                <>
+            {itemsCount === 0 && !cartIsFetching ? (
+              <GridStyled verticalAlign='middle'>
+                <StyledGridRow padding='213px 0 7px'>
+                  <GridColumn computer={16} textAlign='center'>
+                    {formatMessage({ id: 'cart.empty', defaultMessage: 'Your cart is empty.' })}
+                  </GridColumn>
+                </StyledGridRow>
+                <StyledGridRow padding='7px 0 213px'>
+                  <GridColumn computer={16} textAlign='center'>
+                    <Button basic onClick={() => Router.push('/marketplace/listings')}>
+                      <DivButtonContent>
+                        <IconShoppingBag />
+                        {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
+                      </DivButtonContent>
+                    </Button>
+                  </GridColumn>
+                </StyledGridRow>
+              </GridStyled>
+            ) : (
+              <>
                 <GridStyled>
                   <StyledRow bottomshadow>
                     <VerticalUnpaddedColumn>
@@ -82,18 +80,11 @@ const Cart = props => {
                     </VerticalUnpaddedColumn>
                   </StyledRow>
                 </GridStyled>
-                  {getSafe(() => cart.cartItems, []).map((item, i) => (
-                    <CartItem
-                      key={i}
-                      item={item}
-                      index={i}
-                      cart={cart}
-                    />
-                    ))
-                  }
-                </>
-              )
-            }
+                {getSafe(() => cart.cartItems, []).map((item, i) => (
+                  <CartItem key={i} item={item} index={i} cart={cart} />
+                ))}
+              </>
+            )}
           </ContentSegment>
         </CartColumn>
         <SummaryColumn mobile={14} tablet={7} computer={5}>
@@ -173,14 +164,13 @@ const Cart = props => {
                   </StyledGridRow>
                   <StyledGridRow padding='5px 0 20px'>
                     <GridColumn computer={16}>
-                        <ButtonStyled
-                          primary
-                          fuid
-                          disabled={itemsCount === 0 || cartIsFetching}
-                          onClick={() => Router.push('/purchase-order')}
-                        >
-                          {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
-                        </ButtonStyled>
+                      <ButtonStyled
+                        primary
+                        fuid
+                        disabled={itemsCount === 0 || cartIsFetching}
+                        onClick={() => Router.push('/purchase-order')}>
+                        {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
+                      </ButtonStyled>
                     </GridColumn>
                   </StyledGridRow>
                 </>

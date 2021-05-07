@@ -1,10 +1,10 @@
 import * as AT from './action-types'
-import * as inventoryAT from '~/modules/inventory/action-types'
+import * as inventoryAT from '../inventory/action-types'
 import Link from 'next/link'
 
 import { defaultTabs } from './contants'
 import { getSafe } from '../../utils/functions'
-import { currency } from '~/constants/index'
+import { currency } from '../../constants'
 import { FormattedMessage } from 'react-intl'
 //Constants
 import { URL_TERMS } from '../../constants'

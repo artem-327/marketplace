@@ -1,7 +1,21 @@
 import React from 'react'
+import { createStore, Store, applyMiddleware } from 'redux'
 import { ShallowWrapper, mount, shallow, ReactWrapper } from 'enzyme'
 import { IntlProvider } from 'react-intl'
 import checkPropTypes from 'check-prop-types'
+import myNetworkReducer from '../modules/my-network/reducer'
+import { middlewares } from '../store'
+
+/**
+ * Create a testing store with imported reducers, middleware, and initial state.
+ * @function storeFactory
+ * @param {object} initialState - Initial state for store
+ * @returns {Store} - Redux store
+ */
+export const storeFactory = initialState => {
+  return createStore(myNetworkReducer, initialState, applyMiddleware(...middlewares))
+}
+
 /**
  * Return node(s) with the given data-test attribute.
  * @param {ShallowWrapper | ReactWrapper} wrapper - Enzyme shallow wrapper.

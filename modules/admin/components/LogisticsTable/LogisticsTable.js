@@ -1,15 +1,11 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import confirm from '~/components/Confirmable/confirm'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import { deleteLogisticsProvider, openPopup } from '../../actions'
-import { withDatagrid } from '~/modules/datagrid'
-import { ArrayToFirstItem, FormattedPhone } from '~/components/formatted-messages/'
-import moment from 'moment'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import { withDatagrid } from '../../../../modules/datagrid'
 
 class LogisticsTable extends Component {
   constructor(props) {

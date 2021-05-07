@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 
 const mergeAndFilterCodes = (newCodes, oldCodes) => {
   if (!(newCodes instanceof Array)) newCodes = [newCodes]

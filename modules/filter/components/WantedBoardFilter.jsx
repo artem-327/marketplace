@@ -3,17 +3,17 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '../../../utils/functions'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-import { removeEmpty } from '~/utils/functions'
+import { removeEmpty } from '../../../utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-import ErrorFocus from '~/components/error-focus'
+import ErrorFocus from '../../../components/error-focus'
 
 import { Button, FormField, GridRow, GridColumn, Dimmer, Label, Modal, Menu } from 'semantic-ui-react'
 
-import { uniqueArrayByKey } from '~/utils/functions'
+import { uniqueArrayByKey } from '../../../utils/functions'
 
-import confirm from '~/components/Confirmable/confirm'
+import confirm from '../../../components/Confirmable/confirm'
 
 import { datagridValues, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
@@ -36,7 +36,7 @@ import {
   PopupGrid,
   StyledModalHeader
 } from '../constants/layout'
-import { getDuplicatePackagingTypesByKey } from '~/services/filters'
+import { getDuplicatePackagingTypesByKey } from '../../../services/filters'
 
 class WantedBoardFilter extends Component {
   state = {

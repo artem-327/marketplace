@@ -1,5 +1,4 @@
 import * as AT from './action-types'
-import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   deleteRowById: null,

@@ -2,12 +2,12 @@
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import { GridColumn, GridRow } from 'semantic-ui-react'
 import moment from 'moment'
-import confirm from '~/components/Confirmable/confirm'
-import { currency } from '~/constants/index'
-import { getLocaleDateFormat } from '~/components/date-format'
+import confirm from '../../../../components/Confirmable/confirm'
+import { currency } from '../../../../constants/index'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 
 // Styles
 import {
