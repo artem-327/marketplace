@@ -1147,7 +1147,7 @@
   "company.logoButtonChange": "Change",
   "company.companyDetails": "Company Details",
   "company.companyFormDescription": "The following information will help other businesses find you and determine if you are compliant with their practices.",
-  "company.dbaName": "DBA Name",
+  "company.dbaName": "DBA Name and Phone Number",
   "company.dbaNameIfApplicable": "DBA Name {ifApplicable}",
   "company.ifApplicable": "(if applicable)",
   "company.businessName": "Business Name",

@@ -207,13 +207,13 @@ export const GridStyledNotes = styled(Grid)`
 export const GridRowNotesLabel = styled(GridRow)`
   &.row {
     padding: 5px 0 0px !important;
-    margin: 0 !important;;
+    margin: 0 !important;
   }
 `
 
 export const GridColumnNotesLabel = styled(GridColumn)`
   &.column {
-    padding: 0 !important;;
+    padding: 0 !important;
   }
 `
 
@@ -221,14 +221,14 @@ export const GridRowNotesContent = styled(GridRow)`
   &.row {
     border-radius: 3px;
     border: solid 1px #dee2e6;
-    padding: 9px 0 !important;;
-    margin: 3px 0 5px!important;;
+    padding: 9px 0 !important;
+    margin: 3px 0 5px !important;
   }
 `
 
 export const GridColumnNotesContent = styled(GridColumn)`
   &.column {
-    padding: 0 19px !important;;
+    padding: 0 19px !important;
   }
 `
 
@@ -323,5 +323,6 @@ export const GridRowTab = styled(Grid.Row)`
 export const InputMarkup = styled(Input)`
   &.ui.fluid.input > input {
     background: #fdfdfd !important;
+    height: 40px;
   }
 `
