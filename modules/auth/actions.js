@@ -98,8 +98,6 @@ export function login(username, password) {
             }
           }
         }
-        // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
-        // user is first login as companyAdmin then redirect to settings
 
         if (
           identity &&
@@ -120,7 +118,6 @@ export function login(username, password) {
         return authPayload
       }
     })
-    // dispatch(triggerAgreementModal(true))
   }
 }
 
@@ -148,23 +145,6 @@ export const resetPasswordRequest = email => ({
     Router.push('/password/reset')
   }
 })
-
-// export function registration(email, password, firstName, middleName, lastName) {
-//   return {
-//     type: AT.REGISTRATION,
-//     payload: axios({
-//       method: 'post',
-//       url: "/api/users",
-//       data: {
-//         email: email,
-//         password: password,
-//         firstname: firstName,
-//         middlename: middleName,
-//         lastname: lastName
-//       }
-//     })
-//   }
-// }
 
 export const reviewCompany = values => {
   delete values.address.availableCountries
