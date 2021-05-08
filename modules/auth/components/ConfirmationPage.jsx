@@ -4,134 +4,17 @@ import * as Actions from '../actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-import styled from 'styled-components'
-import * as val from 'yup'
 import Router from 'next/router'
 import { Required } from '../../../components/constants/layout'
 import Logo from '../../../assets/images/login/logo-bluepallet.svg'
-
-import { addressValidationSchema, errorMessages, einValidation, phoneValidation } from '../../../constants/yupValidation'
 
 import { getSafe, removeEmpty } from '../../../utils/functions'
 import { AddressForm } from '../../address-form'
 import { PhoneNumber } from '../../phoneNumber'
 
-const ConfirmSegment = styled(Segment.Group)`
-  position: relative;
-  display: flex !important;
-  width: 800px;
-  margin: 120px auto 0 !important;
-  border: 0 none !important;
-  padding: 40px 40px 0 !important;
-  background: #fff;
-  box-shadow: 0 0 0 3000px #fafafa !important;
-`
+import { ConfirmSegment, InnerSegment, ButtonsSegment, LogoWrapper, LogoImage, LoginHeader } from '../styles'
 
-const InnerSegment = styled(Segment)`
-  margin: 0 !important;
-  border: 0 none !important;
-  padding: 0 0 40px !important;
-  background: #fff !important;
-  box-shadow: 0 0 0 transparent !important;
-`
-
-const ButtonsSegment = styled(Segment)`
-  padding: 40px 0 !important;
-`
-
-const LogoWrapper = styled(Segment)`
-  position: absolute !important;
-  top: -165px;
-  left: 50%;
-  width: 348px;
-  max-width: 348px;
-  margin: 0 0 0 -174px !important;
-  border: 0 none !important;
-  padding: 0 !important;
-  background: transparent !important;
-  box-shadow: 0 0 0 0 transparent !important;
-`
-
-const LogoImage = styled(Image)`
-  width: 100%;
-  height: auto;
-`
-
-const LoginHeader = styled.div`
-  position: relative;
-  margin: -31px 0 1.8571429rem -40px;
-  padding: 0 0 4px 40px;
-  text-decoration: none !important;
-  font-size: 1.7857143em;
-  font-weight: 400;
-  line-height: 2.44;
-
-  &:after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    display: block;
-    width: 103px;
-    height: 4px;
-    background: #fafafa;
-  }
-`
-
-const initValues = {
-  address: {
-    address: {
-      city: '',
-      country: '',
-      province: '',
-      streetAddress: '',
-      zip: ''
-    },
-    callAhead: false,
-    contactEmail: '',
-    contactName: '',
-    contactPhone: '',
-    deliveryNotes: '',
-    forkLift: false,
-    liftGate: false
-  },
-  companyAdminUser: {
-    name: '',
-    jobTitle: '',
-    phone: '',
-    email: ''
-  },
-  dba: '',
-  dunsNumber: '',
-  name: '',
-  tin: ''
-}
-
-const validationScheme = val.object().shape({
-  address: val.object().shape({
-    address: addressValidationSchema(),
-    contactName: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-    contactEmail: val
-      .string(errorMessages.invalidEmail)
-      .trim()
-      .email(errorMessages.invalidEmail)
-      .required(errorMessages.requiredMessage),
-    contactPhone: phoneValidation(10).required(errorMessages.requiredMessage)
-  }),
-  companyAdminUser: val.object().shape({
-    name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-    jobTitle: val.string(),
-    phone: phoneValidation(10),
-    email: val
-      .string(errorMessages.invalidEmail)
-      .trim()
-      .email(errorMessages.invalidEmail)
-      .required(errorMessages.requiredMessage)
-  }),
-  dba: val.string(),
-  name: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-  tin: einValidation()
-})
+import { initConfirmPageValues, validationConfirmPageScheme } from '../constants'
 
 const ConfirmationPage = props => {
   useEffect(() => {
@@ -158,8 +41,8 @@ const ConfirmationPage = props => {
   return (
     <Form
       enableReinitialize
-      initialValues={{ ...initValues, ...confirmationForm }}
-      validationSchema={validationScheme}
+      initialValues={{ ...initConfirmPageValues, ...confirmationForm }}
+      validationSchema={validationConfirmPageScheme}
       onSubmit={async (values, actions) => {
         let payload = {
           ...values,

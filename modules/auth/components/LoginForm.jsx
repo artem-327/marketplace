@@ -1,50 +1,15 @@
 import { useState, useEffect } from 'react'
 import { withRouter } from 'next/router'
-import { Segment, Image, Button, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
-import * as val from 'yup'
-import { errorMessages } from '../../../constants/yupValidation'
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
 
 import Logo from '../../../assets/images/login/logo-bluepallet.svg'
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
 
-const StyledForm = styled(Form)`
-  margin-bottom: 15px;
-`
+import { StyledForm, LoginButton, AutoColumn } from '../styles'
 
-const LoginButton = styled(Button)`
-  margin-top: 40px !important;
-`
-
-const AutoColumn = styled(GridColumn)`
-  width: auto !important;
-  white-space: nowrap;
-
-  &.right.aligned {
-    margin-left: auto !important;
-  }
-`
-
-const validationScheme = val.object().shape({
-  username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
-  password: val
-    .string()
-    .min(3, errorMessages.minLength(3))
-    .required(errorMessages.requiredMessage)
-    .test('trailing-spaces', errorMessages.trailingSpaces, val => val && val.trim() === val)
-})
-
-const resetScheme = val.object().shape({
-  username: val.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
-})
-
-const initialValues = {
-  username: '',
-  password: ''
-}
+import { validationLoginFormScheme, resetLoginFormScheme, initLoginFormValues } from '../constants'
 
 const LoginForm = props => {
   const [usernameError, setUsernameError] = useState(false)
@@ -84,9 +49,9 @@ const LoginForm = props => {
           )}
 
           <StyledForm
-            initialValues={initialValues}
+            initialValues={initLoginFormValues}
             validateOnChange={true}
-            validationSchema={resetPassword ? resetScheme : validationScheme}
+            validationSchema={resetPassword ? resetLoginFormScheme : validationLoginFormScheme}
             onSubmit={async (values, actions) => {
               const { username, password } = values
               const { login, resetPasswordRequest } = props
