@@ -91,7 +91,7 @@
   "scripts": {
     "dev": "node --max-old-space-size=8192 server.js",
     "build": "next build",
-    "start-s": "next start",
+    "next:start": "next start",
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch",

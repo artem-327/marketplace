@@ -119,7 +119,7 @@ class ModalDetail extends Component {
     this.fetchIfNoData('listGrades', getProductGrades)
     this.fetchIfNoData('warehousesList', getWarehouses)
 
-    this.switchTab(modalActiveTab)
+    this.switchTab(modalActiveTab, detailValues)
     if (detailValues?.minPkg) {
       detailValues?.minPkg > detailValues?.pkgAvailable
         ? this.setState({ isOverMinPkgs: true })

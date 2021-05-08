@@ -327,7 +327,7 @@ class Layout extends Component {
         <CopyrightContainer>
           <FormattedMessage
             id='global.copyright'
-            defaultMessage={`Copyright ${moment().format('YYYY')} {companyName}`}
+            defaultMessage={`Copyright {currentYear} {companyName}`}
             values={{ currentYear: moment().format('YYYY'), companyName: applicationName }}
           />
         </CopyrightContainer>
@@ -481,7 +481,7 @@ class Layout extends Component {
             className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
-          {copyrightContainer}
+          {renderCopyright ? copyrightContainer : null}
         </FlexContainer>
 
         {takeover ? (

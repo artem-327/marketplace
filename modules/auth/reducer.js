@@ -1,11 +1,12 @@
 import moment from 'moment'
 
 import * as AT from './action-types'
-import { ROLES_ENUM } from '~/utils/constants'
-import { getSafe } from '~/utils/functions'
-import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
-import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
-import { SET_PREFERRED_LANGUAGE_FULFILLED } from '~/modules/settings/action-types'
+import { ROLES_ENUM } from '../../utils/constants'
+import { getSafe } from '../../utils/functions'
+import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../admin/action-types'
+import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../settings/action-types'
+import { SET_PREFERRED_LANGUAGE_FULFILLED } from '../settings/action-types'
+import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '../profile/action-types'
 
 const getAccessRights = roles => {
   let accessRights = {}
