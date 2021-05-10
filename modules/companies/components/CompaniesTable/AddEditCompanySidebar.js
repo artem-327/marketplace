@@ -724,7 +724,10 @@ class AddEditCompanySidebar extends Component {
                         {text => text}
                       </FormattedMessage>
                     </Button.Reset>
-                    <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
+                    <Button.Submit
+                      data-test='admin_popup_company_save_btn'
+                      onClick={props.handleSubmit}
+                      disabled={isSubmitting}>
                       <FormattedMessage id='global.save' defaultMessage='Save'>
                         {text => text}
                       </FormattedMessage>
@@ -735,7 +738,8 @@ class AddEditCompanySidebar extends Component {
               <ErrorFocus />
             </Form>
           )
-        }}></Formik>
+        }}
+      />
     )
   }
 }
