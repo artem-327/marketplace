@@ -405,7 +405,7 @@ class CompanyProductInfo extends Component {
       {this.getTextarea({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
-        name: `${prefix}recommendedUse`
+        name: `${prefix}recommendedUses`
       })}
       {this.getInput({
         id: 'global.usesAdvisedAgainst',
@@ -997,7 +997,7 @@ class CompanyProductInfo extends Component {
             {this.getTextarea({
               id: 'global.reportableQuantity',
               defaultMessage: 'Reportable Quantity',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantities`
+              name: this.state.companyGenericProductGrouping === 'dot' ? `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity` : `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantities`
             })}
             {this.getTextarea({
               id: 'global.environmentalHazards',
