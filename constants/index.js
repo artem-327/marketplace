@@ -140,4 +140,9 @@ export const currencyUSSymbol = 'US$'
 /**
  * @constant {string}
  */
-export const URL_TERMS = 'https://www.bluepallet.io/terms'
+ export const URL_TERMS = 'https://www.bluepallet.io/terms'
+
+/**
+ * @constant {string}
+ */
+ export const URL_PRIVACY = 'https://www.bluepallet.io/privacy'
