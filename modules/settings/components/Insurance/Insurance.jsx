@@ -18,8 +18,7 @@ import { getRows } from './Insurance.services'
  * @category My TradePass - Insurance
  * @component
  */
-const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopup }) => {
-  const [isOpenSuccessPopup, setIsOpenSuccessPopup] = useState(false)
+const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, closeSuccessPopup, isOpenPopup, isOpenSuccessPopup }) => {
 
   useEffect(() => {
     getInsuranceDocuments()
@@ -68,7 +67,7 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
           </Grid.Column>
         </GridRowAddRow>
       </GridInsurance>
-      {isOpenPopup && <InsurancePopup onUpload={() => setIsOpenSuccessPopup(true)} />}
+      {isOpenPopup && <InsurancePopup />}
       {isOpenSuccessPopup && (
         <ConfirmationPopup
           header={<FormattedMessage id='insurance.success' defaultMessage='Success!' />}
@@ -78,7 +77,7 @@ const Insurance = ({ rows, loading, getInsuranceDocuments, openPopup, isOpenPopu
               defaultMessage='Your Insurance will be verified in 24-48 hours'
             />
           }
-          onClose={() => setIsOpenSuccessPopup(false)}
+          onClose={() => closeSuccessPopup() }
           closeCaption={
             <FormattedMessage id='insurance.close' defaultMessage='Close'>
               {text => text}
