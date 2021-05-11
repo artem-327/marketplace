@@ -23,6 +23,13 @@ export function openPopup(rows = null) {
   }
 }
 
+export function closeSuccessPopup (rows = null) {
+  return {
+    type: AT.CLOSE_SUCCESS_POPUP,
+    payload: rows
+  }
+}
+
 export function closePopup(rows = null) {
   return {
     type: AT.CLOSE_POPUP,
