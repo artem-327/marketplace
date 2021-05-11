@@ -74,6 +74,7 @@ const VellociRegister = props => {
           <SetupIndicator activeStep={props.activeStep} />
           <Formik
             onSubmit={values => handleSubmit(values, props, selfFormikProps)}
+            enableReinitialize
             validateOnChange={true}
             initialValues={props.initialValues}
             validationSchema={getValidationSchema()}
