@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react'
 import { withRouter } from 'next/router'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
+//Components
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
-
+//Images
 import Logo from '../../../assets/images/login/logo-bluepallet.svg'
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
-
+//Styles
 import { StyledForm, LoginButton, AutoColumn } from '../styles'
-
+//Constants
 import { validationLoginFormScheme, resetLoginFormScheme, initLoginFormValues } from '../constants'
 
 const LoginForm = props => {
@@ -139,6 +141,32 @@ const LoginForm = props => {
       </LoginContainer>
     </>
   )
+}
+
+LoginForm.propTypes = {
+  isLoading: PropTypes.bool,
+  message: PropTypes.string,
+  version: PropTypes.string,
+  intl: PropTypes.object,
+  router: PropTypes.any,
+  identity: PropTypes.object,
+  loginInit: PropTypes.func,
+  getVersion: PropTypes.func,
+  login: PropTypes.func,
+  resetPasswordRequest: PropTypes.func
+}
+
+LoginForm.defaultProps = {
+  isLoading: false,
+  message: '',
+  version: '',
+  intl: {},
+  router: null,
+  identity: {},
+  loginInit: () => {},
+  getVersion: () => {},
+  login: () => {},
+  resetPasswordRequest: () => {}
 }
 
 export default withRouter(injectIntl(LoginForm))

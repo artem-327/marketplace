@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { connect } from 'react-redux'
+//Actions
 import { logout } from '../actions'
 
 const Logout = props => {
