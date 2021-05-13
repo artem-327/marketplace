@@ -404,7 +404,7 @@ class CompanyProductInfo extends Component {
       {this.getTextarea({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
-        name: `${prefix}recommendedUses`
+        name: prefix === 'casProduct.' ? `${prefix}recommendedUses` : `${prefix}recommendedUse`
       })}
       {this.getInput({
         id: 'global.usesAdvisedAgainst',

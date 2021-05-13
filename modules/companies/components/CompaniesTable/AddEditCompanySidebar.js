@@ -369,24 +369,12 @@ class AddEditCompanySidebar extends Component {
 
               const data = await updateCompany(popupValues.id, newValues)
               if (this.state.shouldUpdateLogo) {
-                if (this.state.companyLogo) postCompanyLogo(data.id, companyLogo)
-                else deleteCompanyLogo(popupValues.id)
+                if (this.state.companyLogo) await postCompanyLogo(data.id, companyLogo)
+                else await deleteCompanyLogo(popupValues.id)
               }
               datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!this.state.companyLogo }))
+              actions.setSubmitting(false)
             } else {
-              if (
-                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
-                !deepSearch(
-                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
-                  val => val !== ''
-                )
-              ) {
-                delete values['mailingBranch']
-              } else {
-                if (values.mailingBranch.deliveryAddress.contactEmail !== '')
-                  values.mailingBranch.deliveryAddress.contactEmail = values.mailingBranch.deliveryAddress.contactEmail.trim()
-              }
-
               let branches = ['primaryBranch', 'mailingBranch']
 
               if (values.businessType) values.businessType = values.businessType.id
@@ -400,6 +388,19 @@ class AddEditCompanySidebar extends Component {
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
+              if (
+                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
+                !deepSearch(
+                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
+                  val => val !== ''
+                )
+              ) {
+                delete payload['mailingBranch']
+              } else {
+                if (payload.mailingBranch.deliveryAddress.contactEmail !== '')
+                  payload.mailingBranch.deliveryAddress.contactEmail = payload.mailingBranch.deliveryAddress.contactEmail.trim()
+              }
+
               if (!payload.type) delete payload.type
               delete payload.enabled
               if (!payload.businessType) delete payload.businessType
@@ -410,22 +411,21 @@ class AddEditCompanySidebar extends Component {
                   const loadedLogo = btoa(reader.result)
                   const data = await createCompany(payload)
                   await postCompanyLogo(data.id, companyLogo)
-
                   datagrid.clear()
                   datagrid.loadData()
+                  actions.setSubmitting(false)
                 }
                 reader.readAsBinaryString(this.state.companyLogo)
               } else {
                 await createCompany(payload)
-
                 datagrid.clear()
                 datagrid.loadData()
+                actions.setSubmitting(false)
               }
             }
           } catch (err) {
-            console.error(err)
-          } finally {
             actions.setSubmitting(false)
+            console.error(err)
           }
         }}
         onReset={closePopup}

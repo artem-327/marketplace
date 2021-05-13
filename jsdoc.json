@@ -41,9 +41,9 @@
     "monospaceLinks": false,
     "search": true,
     "better-docs": {
-      "name": "Blue Pallet System Documentation - Frontend",
+      "name": "BlueTrade System Documentation - Frontend",
       "logo": "./assets/images/login/logo_login.png",
-      "title": "Blue Pallet System Documentation - Frontend"
+      "title": "BlueTrade System Documentation - Frontend"
     }
   }
 }
