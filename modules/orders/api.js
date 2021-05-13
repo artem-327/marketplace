@@ -85,7 +85,7 @@ export default {
     let params = { ...request }
     const formData = new FormData()
     for (let i in files) {
-      formData.append('files', files[i])
+      formData.append('file', files[i])
     }
     let queryParams = generateQueryString(params)
 
