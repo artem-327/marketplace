@@ -11,7 +11,7 @@ import { ModalCustom, DivConent } from './styles'
  * @category Alert
  * @component
  */
-const ImmediateModal = props => {
+const ImmediateAcceptModal = props => {
   const {
     open
   } = props
@@ -87,12 +87,12 @@ const ImmediateModal = props => {
   )
 }
 
-ImmediateModal.propTypes = {
+ImmediateAcceptModal.propTypes = {
   open: PropTypes.bool
 }
 
-ImmediateModal.defaultProps = {
+ImmediateAcceptModal.defaultProps = {
   open: true
 }
 
-export default injectIntl(ImmediateModal)
+export default injectIntl(ImmediateAcceptModal)

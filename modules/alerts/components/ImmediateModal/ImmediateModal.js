@@ -4,6 +4,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 //Components
 import ImmediateAcceptModal from './ImmediateAcceptModal'
 import ImmediateRejectModal from './ImmediateRejectModal'
+import ImmediateAppealModal from './ImmediateAppealModal'
 
 /**
  * Immediate Modal Popup
@@ -19,6 +20,7 @@ const ImmediateModal = props => {
     <>
       { modalType === "accept" && <ImmediateAcceptModal /> }
       { modalType === "reject" && <ImmediateRejectModal /> }
+      { modalType === "appeal" && <ImmediateAppealModal /> }
     </>
   )
 }
@@ -28,7 +30,7 @@ ImmediateModal.propTypes = {
 }
 
 ImmediateModal.defaultProps = {
-  modalType: "reject"
+  modalType: "appeal"
 }
 
 export default injectIntl(ImmediateModal)

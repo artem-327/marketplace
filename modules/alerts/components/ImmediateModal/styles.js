@@ -10,6 +10,16 @@ export const ModalCustom = styled(Modal)`
   }
 `
 
+export const ModalAppeal = styled(Modal)`
+  &.ui.modal {
+    width: 900px;
+    margin-top: 200px !important;
+  }
+  &.ui.modal > .actions {
+    background: none !important;
+  }
+`
+
 export const DivConent = styled.div`
   padding-bottom: 15px;
   text-align: center;
