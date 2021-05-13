@@ -82,9 +82,9 @@ const Header = props => {
                 </BasicButtonCustom>
                 <BasicButtonCustom
                   fluid
-                  onClick={() => console.log('click trade pass')}
+                  onClick={() => console.log('click TradePass')}
                   data-test='shared_listings_trade_pass_btn'>
-                  <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='Trade Pass' />
+                  <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='TradePass' />
                 </BasicButtonCustom> */}
               </DivButtons>
             </GridColumnDetail>
