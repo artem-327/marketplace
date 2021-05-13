@@ -136,7 +136,7 @@ export const getRowDetail = (row, detailRow) => {
         <BMember>{row?.connectedCompany?.name}</BMember>
       </DivMember>
     ),
-    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.avatarUrl} />,
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logoUrl} />,
     address: address
       ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
           address?.country?.code || ''

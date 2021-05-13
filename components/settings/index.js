@@ -36,6 +36,7 @@ const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
   padding: 2.5em 1.5em 1.5em;
+  overflow: auto;
 `
 
 const ButtonsWrapper = styled(Grid)`
@@ -310,8 +311,9 @@ class Settings extends Component {
               <Dimmer inverted active={loading}>
                 <Loader />
               </Dimmer>
-              {systemSettings && systemSettings.length
-                ? systemSettings.map(group => {
+              <FixyWrapper>
+                {systemSettings && systemSettings.length
+                  ? systemSettings.map(group => {
                     return (
                       <>
                         <StyledHeader as='h2' className='ui medium header'>
@@ -392,6 +394,7 @@ class Settings extends Component {
                     )
                   })
                 : null}
+              </FixyWrapper>
               <ButtonsWrapper isUserSettings={this.props.isUserSettings}>
                 <Grid.Column textAlign='right'>
                   <Popup
@@ -459,9 +462,7 @@ class Settings extends Component {
           <FormattedMessage id='settings.systemSettings' defaultMessage='System Settings' />
         </Modal.Header>
 
-        <FixyWrapper>
-          <Modal.Content scrolling={scrolling}>{getMarkup()}</Modal.Content>
-        </FixyWrapper>
+        <Modal.Content scrolling={scrolling}>{getMarkup()}</Modal.Content>
       </Modal>
     )
   }

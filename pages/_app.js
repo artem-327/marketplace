@@ -16,7 +16,7 @@ import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from 'react-feather'
 
-const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-MKSVRW4'
+const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-NSLBBQG'
 
 const tagManagerArgs = { gtmId: gtmId }
 
@@ -59,15 +59,13 @@ const ProdexToast = toast => {
 
 class ProdexApp extends App {
   componentDidMount() {
-    if (gtmId) {
+    if (gtmId && process.env.APP_ENV !== 'review' && process.env.NODE_ENV === 'production') {
       TagManager.initialize(tagManagerArgs)
     }
   }
 
   render() {
     const { Component, pageProps, store } = this.props
-    console.log('process.env.APP_ENV=', process.env.APP_ENV)
-    console.log('process.env.NODE_ENV=', process.env.NODE_ENV)
     return (
       <IntlProvider locale='en' messages={EN} textComponent={({ children }) => <>{children}</>}>
         <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={7 * 1000} components={{ Toast: ProdexToast }}>

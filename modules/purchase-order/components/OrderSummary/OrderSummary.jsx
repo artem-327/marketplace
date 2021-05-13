@@ -15,7 +15,7 @@ import { currency } from '~/constants/index'
 //Services
 import { GridSummary, LinkLabel } from './OrderSummary.styles'
 //Constants
-import { URL_TERMS } from '../../../../constants'
+import { URL_TERMS, URL_PRIVACY } from '../../../../constants'
 /**
  * @category Purchase Order - Checkout
  * @component
@@ -83,7 +83,7 @@ const OrderSummary = props => {
               defaultMessage='By placing your order, you agree to {companyName}’s Privacy Policy and Conditions of use}.'
               values={{
                 privacyPolicy: (
-                  <LinkLabel href='https://www.echosystem.com/privacy-policy' target='_blank'>
+                  <LinkLabel href={URL_PRIVACY} target='_blank'>
                     <FormattedMessage id='checkout.summary.privacyPolicy' defaultMessage='Privacy Policy' />
                   </LinkLabel>
                 ),

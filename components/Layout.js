@@ -19,7 +19,7 @@ import {
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup, Dimmer } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
-import Logo from '../assets/images/nav/logo-bluepallet.svg'
+import Logo from '../assets/images/nav/logo-bluetrade.svg'
 import LogoSmall from '../assets/images/nav/logo4x.png'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
@@ -276,7 +276,7 @@ class Layout extends Component {
       useGravatar,
       gravatarSrc,
       companyName,
-      isEchoOperator,
+      isOperator,
       isOrderOperator,
       renderCopyright,
       openGlobalAddForm,
@@ -426,7 +426,7 @@ class Layout extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
+              {auth && auth.identity && !auth.identity.isAdmin && !isOperator && !isOrderOperator && (
                 <>
                   <Menu.Item
                     onClick={() => Router.push('/cart')}
@@ -585,7 +585,7 @@ const mapStateToProps = state => {
         'false'
       ).toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.id === 34),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),

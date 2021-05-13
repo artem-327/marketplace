@@ -139,6 +139,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DELIVERY_ADDRESS_EDIT_REJECTED: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
     case AT.DELIVERY_ADDRESS_EDIT_PENDING: {
       return {
         ...state,
@@ -183,6 +190,13 @@ export default function reducer(state = initialState, action) {
           [state.warehouses.findIndex(value => value.id === action.payload.id)]: action.payload
         }),
         shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+    }
+
+    case AT.UPDATE_WAREHOUSE_REJECTED: {
+      return {
+        ...state,
+        isFetching: false
       }
     }
 
