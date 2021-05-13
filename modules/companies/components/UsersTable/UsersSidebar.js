@@ -90,7 +90,6 @@ const UsersSidebar = props => {
     if (props.popupValues) {
       switchUser(props, state)
     } else {
-      props.searchCompany('', 30)
       setPopupValues(null)
     }
     // Commented by https://pm.artio.net/issues/34033#note-9
@@ -134,7 +133,7 @@ const UsersSidebar = props => {
                 ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
                 : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })}
             </Modal.Header>
-            <Dimmer inverted active={updating}>
+            <Dimmer inverted active={updating || searchedCompaniesLoading}>
               <Loader />
             </Dimmer>
 
