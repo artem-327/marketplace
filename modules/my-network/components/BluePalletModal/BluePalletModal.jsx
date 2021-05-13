@@ -20,7 +20,7 @@ import {
 // Icons
 import Logo from '~/assets/images/nav/logo-bluetrade.png'
 import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
-import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg'
+import BluePalletCircle from '~/assets/images/blue-pallet/blue-trade-circle.svg'
 import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
 import IconSimple from '~/assets/images/blue-pallet/target.svg'
 import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
@@ -74,14 +74,14 @@ const BluePalletModal = props => {
         <ContentMainTitle as='h3'>
           <FormattedMessage
             id='bluePallet.whatIs'
-            defaultMessage='What is Blue Trade?'
+            defaultMessage='What is BlueTrade?'
             values={{ companyName: applicationName }}
           />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade transactions are safe, secure, simple, and reliable.'
+            defaultMessage='BlueTrade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through BlueTrade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that BlueTrade transactions are safe, secure, simple, and reliable.'
             values={{
               companyName: applicationName
             }}
@@ -141,7 +141,7 @@ const BluePalletModal = props => {
         <FooterInfo>
           <FormattedMessage
             id='bluePallet.footerInfo'
-            defaultMessage='Blue Trade only displays inventory of {companyName} Members. Blue Trade does not manufacture, distribute, or possess any products listed on the Blue Trade Marketplace. Blue Trade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            defaultMessage='BlueTrade only displays inventory of {companyName} Members. BlueTrade does not manufacture, distribute, or possess any products listed on the BlueTrade Marketplace. BlueTrade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
             values={{
               companyName: applicationName
             }}

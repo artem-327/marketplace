@@ -678,7 +678,7 @@ class MyListings extends Component {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
           id: 'myInventory.allSubtitle',
-          defaultMessage: 'My Network + Blue Trade'
+          defaultMessage: 'My Network + BlueTrade'
         }, {
           companyName: applicationName
         }),
@@ -710,7 +710,7 @@ class MyListings extends Component {
       },
       {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'Blue Trade' }, {
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BlueTrade' }, {
           companyName: applicationName
         }),
         subtitle: formatMessage({
