@@ -79,8 +79,8 @@ export const getRows = (state, props) => {
     const lastHistory = histories[histories.length - 1]
     const greyed = expandedRowIds.length && expandedRowIds[0] !== r.id
 
-    const Icon = lastHistory.createdBy.avatar
-      ? (<Image src={lastHistory.createdBy.avatar} avatar size='small' />)
+    const Icon = lastHistory.createdBy.avatarUrl
+      ? (<Image src={lastHistory.createdBy.avatarUrl} avatar size='small' />)
       : DefaultIcon
 
     return {

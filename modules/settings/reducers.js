@@ -15,6 +15,7 @@ export const initialState = {
   popupLoading: false,
   popupValues: null,
   isOpenPopup: false,
+  isOpenSuccessPopup: false,
   editTrig: false,
   editedId: null,
   updating: false,
@@ -175,6 +176,12 @@ export default function reducer(state = initialState, action) {
         popupValues: null,
         editedId: null,
         isOpenPopupDeleteInstitution: false
+      }
+    }
+    case AT.CLOSE_SUCCESS_POPUP: {
+      return {
+        ...state,
+        isOpenSuccessPopup: false
       }
     }
     case AT.OPEN_CUSTOMER_WAREHOUSE: {
@@ -1628,7 +1635,6 @@ export default function reducer(state = initialState, action) {
         updating: true
       }
     }
-    case AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED:
     case AT.UPLOAD_INSURANCE_DOCUMENTS_REJECTED:
     case AT.POST_CUSTOMER_FULFILLED:
     case AT.POST_CUSTOMER_REJECTED:
@@ -1647,6 +1653,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         updating: false
+      }
+    }
+
+    
+    case AT.UPLOAD_INSURANCE_DOCUMENTS_FULFILLED: {
+      return {
+        ...state,
+        updating: false,
+        isOpenSuccessPopup: true
       }
     }
 

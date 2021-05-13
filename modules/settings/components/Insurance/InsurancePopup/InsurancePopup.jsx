@@ -160,14 +160,6 @@ const InsurancePopup = props => {
   )
 }
 
-InsurancePopup.propTypes = {
-  onUpload: PropTypes.func
-}
-
-InsurancePopup.defaultProps = {
-  onUpload: () => {}
-}
-
 function mapStateToProps(state) {
   return {
     popupValues: state.settings.popupValues,

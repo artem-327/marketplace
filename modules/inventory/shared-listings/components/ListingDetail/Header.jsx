@@ -60,7 +60,7 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={5} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={row?.owner?.avatarUrl} fluid rounded size='tiny' />
+                <Image verticalAlign='middle' src={row?.owner?.logoUrl} fluid rounded size='tiny' />
               </DivRectangle>
             </GridColumnDetail>
             <GridColumnDetail width={11}>
