@@ -95,7 +95,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='Trade Pass Verified Buyers' />
+                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='TradePass Verified Buyers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -121,7 +121,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='Trade Pass Verified Sellers' />
+                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='TradePass Verified Sellers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
