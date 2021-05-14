@@ -95,6 +95,7 @@ export const MoreDropdown = styled(Dropdown)`
   }
 `
 
+// Cannot simply rewrite to Hooks as "componentWillUnmount" will not work properly
 class TablesHandlers extends Component {
   constructor(props) {
     super(props)

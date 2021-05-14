@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -13,46 +12,7 @@ import { DetailMessage, StyledGrid } from '../layout'
 
 import { Grid, GridRow, GridColumn, Segment, List, Input, Button } from 'semantic-ui-react'
 
-const TableSegment = styled(Segment)`
-  margin: 0;
-
-  &.ui.segment {
-    padding: 10px 15px;
-  }
-`
-
-const StyledList = styled(List)`
-  &.horizontal.divided:not(.celled) {
-    display: flex !important;
-    flex-flow: row;
-    justify-content: space-between;
-    margin: 0;
-    &:nth-child(n + 2) {
-      border-top: 1px solid rgba(34, 36, 38, 0.15);
-    }
-
-    > .item {
-      flex-grow: 1;
-      max-width: 150px;
-      padding: 10px 15px !important;
-
-      .header {
-        margin: 0;
-        padding: 0 0 3px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #848893;
-        line-height: 1.1666667;
-      }
-
-      .description {
-        font-size: 14px;
-        color: #20273a;
-        line-height: 1.2142857;
-      }
-    }
-  }
-`
+import { TableSegment, ListTable } from '../Alerts.styles'
 
 const AddressRow = styled.div`
   display: flex;
@@ -154,8 +114,8 @@ const SpanIdValue = styled.span`
   margin-right: 2px;
 `
 
-class ShippingQuoteRequest extends Component {
-  displayAddress = ({ address, header, company }) => {
+const ShippingQuoteRequest = props => {
+  const displayAddress = ({ address, header, company }) => {
     return (
       <AddressGrid>
         <GridRow>
@@ -180,204 +140,142 @@ class ShippingQuoteRequest extends Component {
     )
   }
 
-  render() {
-    const { row, openPopupOperations } = this.props
+  const { row, openPopupOperations } = props
 
-    return (
-      <DetailMessage>
-        <StyledGrid>
-          {false && (
+  return (
+    <DetailMessage>
+      <StyledGrid>
+        <GridRow>
+          <GridColumn width={16}>
+            <TableSegment>
+              {row.info.items.map(item => {
+                return (
+                  <ListTable divided relaxed horizontal size='large'>
+                    {
+                      [
+                        {
+                          header: <FormattedMessage id='alerts.product' defaultMessage='Product' />,
+                          description: item.product
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />,
+                          description: <>{item.grossWeightLbs} {'lbs'}</>
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />,
+                          description: item.nmfc
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />,
+                          description: item.freightClass
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />,
+                          description: item.maxPkgsPerPallet
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />,
+                          description: item.hazardous
+                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />,
+                          description: item.stackable
+                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                        },
+                        {
+                          header: <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />,
+                          description: item.freezeProtect
+                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                        }
+                      ].map((column, index) =>
+                        <List.Item key={index}>
+                          <List.Content>
+                            <List.Header as='label'>{column.header}</List.Header>
+                            <List.Description as='span'>{column.description}</List.Description>
+                          </List.Content>
+                        </List.Item>
+                      )
+                    }
+                  </ListTable>
+                )
+              })}
+            </TableSegment>
+          </GridColumn>
+        </GridRow>
+      </StyledGrid>
+
+      <AddressRow>
+        <div className='addresses' style={{ margin: '0 -5px' }}>
+          {displayAddress({
+            header: 'From',
+            company: getSafe(() => row.info.sellerCompanyName, ''),
+            address: {
+              country: getSafe(() => row.info.originCountry, ''),
+              province: getSafe(() => row.info.originProvince, ''),
+              city: getSafe(() => row.info.originCity, ''),
+              streetAddress: getSafe(() => row.info.originStreet, ''),
+              zip: getSafe(() => row.info.originZip, '')
+            }
+          })}
+          {displayAddress({
+            header: 'To',
+            company: getSafe(() => row.info.buyerCompanyName, ''),
+            address: {
+              country: getSafe(() => row.info.destinationCountry, ''),
+              province: getSafe(() => row.info.destinationProvince, ''),
+              city: getSafe(() => row.info.destinationCity, ''),
+              streetAddress: getSafe(() => row.info.destinationStreet, ''),
+              zip: getSafe(() => row.info.destinationZip, '')
+            }
+          })}
+        </div>
+        <div className='right-buttons'>
+          <Grid>
             <GridRow>
-              <GridColumn width={16} style={{ color: '#20273a' }}>
-                {row.text}
-                {
-                  false && (
-                    <FormattedMessage
-                      id='alerts.shippingQuoteRequest'
-                      defaultMessage='{name} from {company} has requested a quote for the following order:'
-                      values={{
-                        name: 'Some Name',
-                        company: 'Company name'
-                      }}
-                    />
-                  ) /* temporary disabled*/
-                }
+              <GridColumn>
+                <div style={{ float: 'right' }}>
+                  <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations(row)}>
+                    <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
+                      {text => text}
+                    </FormattedMessage>
+                    <ArrowRight size='18' style={{ marginLeft: '12px' }} />
+                  </Button>
+                </div>
               </GridColumn>
             </GridRow>
-          )}
-
-          <GridRow>
-            <GridColumn width={16}>
-              <TableSegment>
-                {row.info.items.map(item => {
-                  return (
-                    <StyledList divided relaxed horizontal size='large'>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.product' defaultMessage='Product' />
-                          </List.Header>
-                          <List.Description as='span'>{item.product}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.grossWeightLbs} {'lbs'}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
-                          </List.Header>
-                          <List.Description as='span'>{item.nmfc}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
-                          </List.Header>
-                          <List.Description as='span'>{item.freightClass}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
-                          </List.Header>
-                          <List.Description as='span'>{item.maxPkgsPerPallet}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.hazardous ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.stackable ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.freezeProtect ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                    </StyledList>
-                  )
-                })}
-              </TableSegment>
-            </GridColumn>
-          </GridRow>
-        </StyledGrid>
-
-        <AddressRow>
-          <div className='addresses' style={{ margin: '0 -5px' }}>
-            {this.displayAddress({
-              header: 'From',
-              company: getSafe(() => row.info.sellerCompanyName, ''),
-              address: {
-                country: getSafe(() => row.info.originCountry, ''),
-                province: getSafe(() => row.info.originProvince, ''),
-                city: getSafe(() => row.info.originCity, ''),
-                streetAddress: getSafe(() => row.info.originStreet, ''),
-                zip: getSafe(() => row.info.originZip, '')
-              }
-            })}
-            {this.displayAddress({
-              header: 'To',
-              company: getSafe(() => row.info.buyerCompanyName, ''),
-              address: {
-                country: getSafe(() => row.info.destinationCountry, ''),
-                province: getSafe(() => row.info.destinationProvince, ''),
-                city: getSafe(() => row.info.destinationCity, ''),
-                streetAddress: getSafe(() => row.info.destinationStreet, ''),
-                zip: getSafe(() => row.info.destinationZip, '')
-              }
-            })}
-          </div>
-          <div className='right-buttons'>
-            <Grid>
+            <GridRow>
+              <GridColumn width={16}>
+                <div style={{ float: 'right' }}>
+                  <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
+                  <SpanIdValue>
+                    {getSafe(() => row.info.shippingQuoteRequestId, 'N/A')}
+                  </SpanIdValue>
+                </div>
+              </GridColumn>
+            </GridRow>
+            {false && (
               <GridRow>
                 <GridColumn>
-                  <div style={{ float: 'right' }}>
-                    <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations(row)}>
-                      <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
+                  <div style={{ display: 'flex', flexDirection: 'row', float: 'right' }}>
+                    <Input style={{ marginRight: '5px' }} onChange={() => {}} />
+                    <Button style={{ marginRight: '0' }} onClick={() => {}}>
+                      <FormattedMessage id='alerts.send' defaultMessage='Send'>
                         {text => text}
                       </FormattedMessage>
-                      <ArrowRight size='18' style={{ marginLeft: '12px' }} />
                     </Button>
                   </div>
                 </GridColumn>
               </GridRow>
-              <GridRow>
-                <GridColumn width={16}>
-                  <div style={{ float: 'right' }}>
-                    <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
-                    <SpanIdValue>
-                      {getSafe(() => row.info.shippingQuoteRequestId, 'N/A')}
-                    </SpanIdValue>
-                  </div>
-                </GridColumn>
-              </GridRow>
-              {false && (
-                <GridRow>
-                  <GridColumn>
-                    <div style={{ display: 'flex', flexDirection: 'row', float: 'right' }}>
-                      <Input style={{ marginRight: '5px' }} onChange={() => {}} />
-                      <Button style={{ marginRight: '0' }} onClick={() => {}}>
-                        <FormattedMessage id='alerts.send' defaultMessage='Send'>
-                          {text => text}
-                        </FormattedMessage>
-                      </Button>
-                    </div>
-                  </GridColumn>
-                </GridRow>
-              )}
-            </Grid>
-          </div>
-        </AddressRow>
-      </DetailMessage>
-    )
-  }
+            )}
+          </Grid>
+        </div>
+      </AddressRow>
+    </DetailMessage>
+  )
 }
 
 const mapStateToProps = state => {

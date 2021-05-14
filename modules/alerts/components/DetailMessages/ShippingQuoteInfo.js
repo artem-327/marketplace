@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
@@ -6,7 +5,6 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 import * as Actions from '../../actions'
 import styled from 'styled-components'
-import { ArrowRight } from 'react-feather'
 import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 import Router from 'next/router'
 import moment from 'moment'
@@ -16,6 +14,8 @@ import BasicButton from '../../../../components/buttons/BasicButton'
 import { DetailMessage, StyledGrid } from '../layout'
 
 import { Grid, GridRow, GridColumn, Segment, List, Button } from 'semantic-ui-react'
+
+import { TableSegment, ListTable } from '../Alerts.styles'
 
 const DivSimpleText = styled.div`
   color: #20273a;
@@ -75,48 +75,6 @@ const AddressRow = styled.div`
   margin: 5px 0;
 `
 
-const TableSegment = styled(Segment)`
-  margin: 0;
-
-  &.ui.segment {
-    padding: 10px 15px;
-  }
-`
-
-const StyledList = styled(List)`
-  &.horizontal.divided:not(.celled) {
-    display: flex !important;
-    flex-flow: row;
-    justify-content: space-between;
-    margin: 0;
-    &:nth-child(n + 2) {
-      border-top: 1px solid rgba(34, 36, 38, 0.15);
-    }
-
-    > .item {
-      flex-grow: 1;
-      max-width: 150px;
-      padding: 10px 15px !important;
-
-      .header {
-        margin: 0;
-        padding: 0 0 3px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #848893;
-        line-height: 1.1666667;
-      }
-
-      .description {
-        font-size: 14px;
-        font-weight: bold;
-        color: #20273a;
-        line-height: 1.2142857;
-      }
-    }
-  }
-`
-
 const DivBottomButtons = styled.div`
   display: flex;
   flex-direction: row;
@@ -129,8 +87,10 @@ const GridRowDescription = styled(GridRow)`
   }
 `
 
-class ShippingQuoteInfo extends Component {
-  displayAddress = ({ address, company }) => {
+// ! ! TODO  .description { font-weight: bold; }
+
+const ShippingQuoteInfo = props => {
+  const displayAddress = ({ address, company }) => {
     return (
       <AddressGrid>
         <GridRow>
@@ -149,157 +109,148 @@ class ShippingQuoteInfo extends Component {
     )
   }
 
-  render() {
-    const { row, cartItems, onClose } = this.props
-    return (
-      <DetailMessage>
-        <StyledGrid>
-          <GridRowDescription>
-            <GridColumn width={16}>
-              {row.text}
-            </GridColumn>
-          </GridRowDescription>
-          {
-            row.info.items && row.info.items.map((item, index) => {
-              const packagingUnit = getSafe(() => item.packagingUnit.nameAbbreviation, '')
-              const packagingType = getSafe(() => item.packagingType.name, '')
-              return (
-                <GridRow>
-                  <GridColumn width={16}>
-                    <DivProductName>
-                      {`${item.pkgAmount} x ${item.packagingSize} ${packagingUnit} ${packagingType} ${item.product}`}
-                    </DivProductName>
-                  </GridColumn>
-                </GridRow>
-              )
-            })
-          }
-          <GridRow>
-            <GridColumn width={16}>
-              {
-                !!getSafe(() => row.info.originCompanyName, false) &&
-                !!getSafe(() => row.info.destinationCompanyName, false)
-                  ? (
-                    <AddressRow>
-                      {this.displayAddress({
-                        company: getSafe(() => row.info.originCompanyName, ''),
-                        address: {
-                          country: getSafe(() => row.info.originCountry, ''),
-                          province: getSafe(() => row.info.originProvince, ''),
-                          city: getSafe(() => row.info.originCity, ''),
-                          streetAddress: getSafe(() => row.info.originStreet, ''),
-                          zip: getSafe(() => row.info.originZip, '')
-                        }
-                      })}
-                      {this.displayAddress({
-                        company: getSafe(() => row.info.destinationCompanyName, ''),
-                        address: {
-                          country: getSafe(() => row.info.destinationCountry, ''),
-                          province: getSafe(() => row.info.destinationProvince, ''),
-                          city: getSafe(() => row.info.destinationCity, ''),
-                          streetAddress: getSafe(() => row.info.destinationStreet, ''),
-                          zip: getSafe(() => row.info.destinationZip, '')
-                        }
-                      })}
-                    </AddressRow>
-                  ) : null
-              }
-            </GridColumn>
-          </GridRow>
+  const { row, cartItems, onClose } = props
+  return (
+    <DetailMessage>
+      <StyledGrid>
+        <GridRowDescription>
+          <GridColumn width={16}>
+            {row.text}
+          </GridColumn>
+        </GridRowDescription>
+        {
+          row.info.items && row.info.items.map((item, index) => {
+            const packagingUnit = getSafe(() => item.packagingUnit.nameAbbreviation, '')
+            const packagingType = getSafe(() => item.packagingType.name, '')
+            return (
+              <GridRow>
+                <GridColumn width={16}>
+                  <DivProductName>
+                    {`${item.pkgAmount} x ${item.packagingSize} ${packagingUnit} ${packagingType} ${item.product}`}
+                  </DivProductName>
+                </GridColumn>
+              </GridRow>
+            )
+          })
+        }
+        <GridRow>
+          <GridColumn width={16}>
+            {
+              !!getSafe(() => row.info.originCompanyName, false) &&
+              !!getSafe(() => row.info.destinationCompanyName, false)
+                ? (
+                  <AddressRow>
+                    {displayAddress({
+                      company: getSafe(() => row.info.originCompanyName, ''),
+                      address: {
+                        country: getSafe(() => row.info.originCountry, ''),
+                        province: getSafe(() => row.info.originProvince, ''),
+                        city: getSafe(() => row.info.originCity, ''),
+                        streetAddress: getSafe(() => row.info.originStreet, ''),
+                        zip: getSafe(() => row.info.originZip, '')
+                      }
+                    })}
+                    {displayAddress({
+                      company: getSafe(() => row.info.destinationCompanyName, ''),
+                      address: {
+                        country: getSafe(() => row.info.destinationCountry, ''),
+                        province: getSafe(() => row.info.destinationProvince, ''),
+                        city: getSafe(() => row.info.destinationCity, ''),
+                        streetAddress: getSafe(() => row.info.destinationStreet, ''),
+                        zip: getSafe(() => row.info.destinationZip, '')
+                      }
+                    })}
+                  </AddressRow>
+                ) : null
+            }
+          </GridColumn>
+        </GridRow>
 
+        <GridRow>
+          <GridColumn width={16}>
+            <TableSegment>
+              <ListTable divided relaxed horizontal size='large'>
+                {
+                  [
+                    {
+                      header: <FormattedMessage id='alerts.carrier' defaultMessage='Carrier' />,
+                      description: row.info.carrier
+                    },
+                    {
+                      header: <FormattedMessage id='alerts.price' defaultMessage='Price' />,
+                      description: row.info.price ?
+                        <FormattedNumber
+                          minimumFractionDigits={2}
+                          maximumFractionDigits={2}
+                          style='currency'
+                          currency={currency}
+                          value={row.info.price}
+                        />
+                        : ''
+                    },
+                    {
+                      header: <FormattedMessage id='alerts.quoteId' defaultMessage='Quote ID' />,
+                      description: row.info.shippingQuoteId
+                    },
+                    {
+                      header: <FormattedMessage id='alerts.validityDate' defaultMessage='Validity Date' />,
+                      description: row.info.validityDate
+                        ? moment(row.info.validityDate).format(getLocaleDateFormat())
+                        : ''
+                    }
+                  ].map((column, index) =>
+                    <List.Item key={index}>
+                      <List.Content>
+                        <List.Header as='label'>{column.header}</List.Header>
+                        <List.Description as='span'>{column.description}</List.Description>
+                      </List.Content>
+                    </List.Item>
+                  )
+                }
+              </ListTable>
+            </TableSegment>
+          </GridColumn>
+        </GridRow>
+        {!!cartItems && (
           <GridRow>
             <GridColumn width={16}>
-              <TableSegment>
-                <StyledList divided relaxed horizontal size='large'>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='alerts.carrier' defaultMessage='Carrier' />
-                      </List.Header>
-                      <List.Description as='span'>{row.info.carrier}</List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='alerts.price' defaultMessage='Price' />
-                      </List.Header>
-                      <List.Description as='span'>
-                        {row.info.price ?
-                          <FormattedNumber
-                            minimumFractionDigits={2}
-                            maximumFractionDigits={2}
-                            style='currency'
-                            currency={currency}
-                            value={row.info.price}
-                          />
-                          : ''}
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='alerts.quoteId' defaultMessage='Quote ID' />
-                      </List.Header>
-                      <List.Description as='span'>{row.info.shippingQuoteId}</List.Description>
-                    </List.Content>
-                  </List.Item>
-                  <List.Item>
-                    <List.Content>
-                      <List.Header as='label'>
-                        <FormattedMessage id='alerts.validityDate' defaultMessage='Validity Date' />
-                      </List.Header>
-                      <List.Description as='span'>
-                        {row.info.validityDate ? moment(row.info.validityDate).format(getLocaleDateFormat()) : ''}
-                      </List.Description>
-                    </List.Content>
-                  </List.Item>
-                </StyledList>
-              </TableSegment>
+              <DivSimpleText>
+                <FormattedMessage
+                  id='alerts.youCanNowApply'
+                  defaultMessage='You can now apply the quote to your order by clicking the Checkout button'
+                />
+              </DivSimpleText>
             </GridColumn>
           </GridRow>
-          {!!cartItems && (
-            <GridRow>
-              <GridColumn width={16}>
-                <DivSimpleText>
-                  <FormattedMessage
-                    id='alerts.youCanNowApply'
-                    defaultMessage='You can now apply the quote to your order by clicking the Checkout button'
-                  />
-                </DivSimpleText>
-              </GridColumn>
-            </GridRow>
-          )}
-        </StyledGrid>
-        <DivBottomButtons>
-          <BasicButton
-            noBorder
-            size='large'
-            inputProps={{ type: 'button' }}
-            onClick={() => onClose()}
-            data-test='notifications_shipping_quote_info_close_btn'>
-            <FormattedMessage id='alerts.close' defaultMessage='Close'>
-              {text => text}
-            </FormattedMessage>
-          </BasicButton>
-          <BasicButton
-            primary
-            disabled={!cartItems}
-            size='large'
-            inputProps={{ type: 'button' }}
-            onClick={() => {
-              Router.push(`/purchase-order?shippingQuoteId=${row.info.shippingQuoteId}`)
-            }}
-            data-test='notifications_shipping_quote_info_checkout_btn'>
-            <FormattedMessage id='alerts.checkout' defaultMessage='Checkout'>
-              {text => text}
-            </FormattedMessage>
-          </BasicButton>
-        </DivBottomButtons>
-      </DetailMessage>
-    )
-  }
+        )}
+      </StyledGrid>
+      <DivBottomButtons>
+        <BasicButton
+          noBorder
+          size='large'
+          inputProps={{ type: 'button' }}
+          onClick={() => onClose()}
+          data-test='notifications_shipping_quote_info_close_btn'>
+          <FormattedMessage id='alerts.close' defaultMessage='Close'>
+            {text => text}
+          </FormattedMessage>
+        </BasicButton>
+        <BasicButton
+          primary
+          disabled={!cartItems}
+          size='large'
+          inputProps={{ type: 'button' }}
+          onClick={() => {
+            Router.push(`/purchase-order?shippingQuoteId=${row.info.shippingQuoteId}`)
+          }}
+          data-test='notifications_shipping_quote_info_checkout_btn'>
+          <FormattedMessage id='alerts.checkout' defaultMessage='Checkout'>
+            {text => text}
+          </FormattedMessage>
+        </BasicButton>
+      </DivBottomButtons>
+    </DetailMessage>
+  )
 }
 
 const mapStateToProps = state => {
