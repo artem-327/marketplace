@@ -209,7 +209,7 @@ export const EpaWrapper = styled.div`
   border: 1px solid #dee2e6;
   border-radius: 3px;
   padding: 12px 22px 14px 19px;
-  background-color: #f8f9fb;
+  background-color: ${({ $bgColor }) => ($bgColor ? $bgColor : '#f8f9fb')};
   font-size: 14px;
   color: #20273a;
   line-height: 18px;

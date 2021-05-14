@@ -37,7 +37,7 @@ import { openProfilePopup } from '../modules/profile/actions'
 import { agreeWithTOS } from '../modules/auth/actions'
 import { triggerSystemSettingsModal } from '../modules/settings/actions'
 
-import Profile from '../modules/profile/components/Profile'
+import Profile from '../modules/profile/components/ProfileContainer'
 import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '../utils/functions'
@@ -327,7 +327,7 @@ class Layout extends Component {
         <CopyrightContainer>
           <FormattedMessage
             id='global.copyright'
-            defaultMessage={`Copyright ${moment().format('YYYY')} {companyName}`}
+            defaultMessage={`Copyright {currentYear} {companyName}`}
             values={{ currentYear: moment().format('YYYY'), companyName: applicationName }}
           />
         </CopyrightContainer>
@@ -481,7 +481,7 @@ class Layout extends Component {
             className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
-          {copyrightContainer}
+          {renderCopyright ? copyrightContainer : null}
         </FlexContainer>
 
         {takeover ? (
