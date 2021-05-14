@@ -57,7 +57,7 @@ const Cart = props => {
                   </StyledGridRow>
                   <StyledGridRow padding='7px 0 213px'>
                     <GridColumn computer={16} textAlign='center'>
-                      <Button basic onClick={() => Router.push('/marketplace/listings')} data-test='cart_keep_shopping_btn'>
+                      <Button basic onClick={() => Router.push('/marketplace/listings')} data-test='cart_keep_shopping_btn_empty'>
                         <DivButtonContent>
                           <IconShoppingBag/>
                           {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
