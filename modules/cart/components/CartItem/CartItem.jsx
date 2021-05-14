@@ -60,13 +60,13 @@ const CartItem = props => {
       <GridStyled>
         <StyledGridRow padding='11px 0 7px'>
           <GridColumn largeScreen={8}>
-            <CustomHeader>{item.productOffer.companyProduct.companyGenericProduct.name}</CustomHeader>
+            <CustomHeader data-test='cart_product_name_header'>{item.productOffer.companyProduct.companyGenericProduct.name}</CustomHeader>
             <FormattedMessage id='cart.manufacturer' defaultMessage='Manufacturer:' />{' '}
             {getSafe(() => item.productOffer.companyProduct.companyGenericProduct.manufacturer.name, '')}
           </GridColumn>
           <GridColumn textAlign='right' largeScreen={8}>
             <DivIconsWrapper>
-              <DivIconRectangle>
+              <DivIconRectangle data-test='cart_product_remove_icon'>
                 <IconTrash2
                   onClick={() =>
                     confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(() =>
@@ -75,7 +75,7 @@ const CartItem = props => {
                   }
                 />
               </DivIconRectangle>
-              <DivIconRectangle disabled={editDisabled}>
+              <DivIconRectangle disabled={editDisabled} data-test='cart_product_edit_icon'>
                 <IconEdit2 disabled={editDisabled} onClick={() => (editDisabled ? {} : editCart(item))} />
               </DivIconRectangle>
             </DivIconsWrapper>

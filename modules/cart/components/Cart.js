@@ -57,7 +57,7 @@ const Cart = props => {
                   </StyledGridRow>
                   <StyledGridRow padding='7px 0 213px'>
                     <GridColumn computer={16} textAlign='center'>
-                      <Button basic onClick={() => Router.push('/marketplace/listings')}>
+                      <Button basic onClick={() => Router.push('/marketplace/listings')} data-test='cart_keep_shopping_btn'>
                         <DivButtonContent>
                           <IconShoppingBag/>
                           {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
@@ -72,7 +72,7 @@ const Cart = props => {
                 <GridStyled>
                   <StyledRow bottomshadow>
                     <VerticalUnpaddedColumn>
-                      <DivHeader>
+                      <DivHeader data-test='cart_total_items_count'>
                         <FormattedMessage
                           id='cart.totalItems'
                           defaultMessage={`Total Items: ${itemsCount}`}
@@ -148,7 +148,7 @@ const Cart = props => {
                 </VerticalUnpaddedColumn>
 
                 <VerticalUnpaddedColumn textAlign='right'>
-                  <DivHeader>
+                  <DivHeader data-test='cart_total_price_header'>
                     <FormattedNumber
                       minimumFractionDigits={2}
                       maximumFractionDigits={2}
@@ -164,7 +164,7 @@ const Cart = props => {
                 <>
                   <StyledGridRow padding='20px 0 5px'>
                     <GridColumn computer={16}>
-                      <ButtonStyled basic onClick={() => Router.push('/marketplace/listings')}>
+                      <ButtonStyled basic onClick={() => Router.push('/marketplace/listings')} data-test='cart_keep_shopping_btn'>
                         <DivHeader>
                           {formatMessage({ id: 'cart.keepShopping', defaultMessage: 'Keep Shopping' })}
                         </DivHeader>
@@ -178,6 +178,7 @@ const Cart = props => {
                           fuid
                           disabled={itemsCount === 0 || cartIsFetching}
                           onClick={() => Router.push('/purchase-order')}
+                          data-test='cart_proceed_to_checkout_btn'
                         >
                           {formatMessage({ id: 'cart.proceedToCheckout', defaultMessage: 'Proceed to Checkout' })}
                         </ButtonStyled>
