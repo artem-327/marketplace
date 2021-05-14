@@ -33,7 +33,7 @@ const ShippingHandler = props => {
     onSetSearchValueChange
   } = props
 
-  // This useEffect is used similar as componentDidUpdate
+  // This useEffect is used similar as componentDidMount & componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
   useEffect(() => {
     searchAddress(props)
