@@ -110,7 +110,7 @@ export function login(username, password) {
         ) {
           urlPage = '/settings/company-details'
         }
-        if (identity.roles.find(role => role.id === 34)) {
+        if (identity.roles.find(role => role.name === 'Operator')) {
           urlPage = '/operations/shipping-quotes'
         }
 
