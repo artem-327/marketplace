@@ -1,4 +1,4 @@
-context("Holds tests", () => {
+xcontext("Holds tests", () => {
 
     let warehouseFilter = [{"operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [9]}]
     let warehouseOffer = null

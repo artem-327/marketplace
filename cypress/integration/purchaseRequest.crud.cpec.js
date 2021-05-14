@@ -1,4 +1,4 @@
-context("Wanted Board Purchase Request CRUD", () => {
+xcontext("Wanted Board Purchase Request CRUD", () => {
 
     let productName = "Rukavice"
     const userJSON = require('../fixtures/user.json')
@@ -15,7 +15,6 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.waitForUI()
         cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", {timeout: 100000})
-        cy.url().should("include", "inventory")
 
         cy.contains("Wanted Board").click()
         cy.wait("@wantedBoardLoading", { timeout: 30000 })

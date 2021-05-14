@@ -50,10 +50,9 @@ context("Prodex Customers CRUD", () => {
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_warehouseAddresses[0].address.zip']", "75000")
 
-        cy.enterText("input[id='field_input_warehouseAddresses[0].contactName']", "Marie Currie")
+        cy.enterText("input[id='field_input_warehouseAddresses[0].contactName']", "James Newman")
         cy.get('input[name="warehouseAddresses[0].contactPhone"]').type("1234567895")
         cy.enterText("input[id='field_input_warehouseAddresses[0].contactEmail']", "marie@address.com")
-
 
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
         cy.waitForUI()
@@ -65,7 +64,7 @@ context("Prodex Customers CRUD", () => {
                 addressId = itemId
             })
         })
-
+//Checking Billing address
         cy.get('#field_input_name').should("have.value", "Test")
 
         cy.get("input[id='field_input_billToAddress.addressName']").should("have.value", "Bill Address Name")
@@ -80,6 +79,26 @@ context("Prodex Customers CRUD", () => {
             .should("have.value", "123 456 7895")
 
         cy.get("input[id='field_input_billToAddress.contactEmail']")
+            .should("have.value", "marie@address.com")
+
+        cy.get('[data-test="settings_branches_popup_reset_btn"]').click()
+        cy.waitForUI()
+        cy.contains('tr','Test').click()
+
+        cy.contains("span","Warehouse A").click()
+//Checking warehouse
+        cy.get("#field_input_addressName").should("have.value", "Warehouse A")
+
+        cy.get("input[id='field_input_address.city']")
+            .should("have.value", "Harlingen")
+
+        cy.get("#field_input_contactName")
+            .should("have.value", "James Newman")
+
+        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+            .should("have.value", "123 456 7895")
+
+        cy.get("#field_input_contactEmail")
             .should("have.value", "marie@address.com")
     })
 
@@ -112,6 +131,62 @@ context("Prodex Customers CRUD", () => {
             expect(element.text()).to.match(/(Required)/i)
         })
     })
+
+    it("Add new Customer warehouse", () => {
+        cy.contains('tr','Test').click()
+        cy.contains('button', 'Add New').click()
+
+        cy.enterText("#field_input_addressName", "Warehouse B")
+        cy.enterText("input[id='field_input_address.streetAddress']", "127 N G St")
+        cy.enterText("input[id='field_input_address.city']", "Harlingen")
+
+        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
+        cy.waitForUI()
+        cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
+
+        cy.enterText("input[id='field_input_contactName']", "James Newman")
+        cy.get('input[name="contactPhone"]').type("1234567895")
+        cy.enterText("input[id='field_input_contactEmail']", "marie@address.com")
+
+        cy.get('[data-test=add_warehouse_sidebar_submit_btn]').click()
+        cy.waitForUI()
+
+        cy.contains("span","Warehouse B").click()
+//Checking warehouse
+        cy.get("#field_input_addressName").should("have.value", "Warehouse B")
+
+        cy.get("input[id='field_input_address.city']")
+            .should("have.value", "Harlingen")
+
+        cy.get("#field_input_contactName")
+            .should("have.value", "James Newman")
+
+        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+            .should("have.value", "123 456 7895")
+
+        cy.get("#field_input_contactEmail")
+            .should("have.value", "marie@address.com")
+    })
+
+    it("Edit Customer warehouse", () => {
+        cy.contains('tr','Test').click()
+        cy.contains("span","Warehouse A").click()
+
+        cy.get("input[id='field_input_contactName']")
+            .clear()
+            .type("Adolf Schwarzenegger")
+            .should("have.value", "Adolf Schwarzenegger")
+
+        cy.get('[data-test=add_warehouse_sidebar_submit_btn]').click()
+
+        cy.waitForUI()
+
+        cy.contains("span","Warehouse A").click()
+
+        cy.get("input[id='field_input_contactName']")
+            .should("have.value", "Adolf Schwarzenegger")
+    })
+
 
     it("Deletes a Customer", () => {
         cy.openElement(addressId, 1)

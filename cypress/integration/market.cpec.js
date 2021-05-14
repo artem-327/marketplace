@@ -1,4 +1,4 @@
-context("Market place tests",() => {
+context("Marketplace tests",() => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {

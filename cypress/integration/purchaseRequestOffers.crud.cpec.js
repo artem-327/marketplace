@@ -1,4 +1,4 @@
-context("Wanted Board Purchase Request Offers CRUD", () => {
+xcontext("Wanted Board Purchase Request Offers CRUD", () => {
 
     let productName = "Rukavice"
     let purchaseRequestId = null

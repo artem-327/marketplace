@@ -5,7 +5,7 @@ context("Permissions tests",() => {
     const productCatalogUser =  require('../fixtures/productCatalogAdmin.json')
     const productOfferManager  =  require('../fixtures/productOfferManager.json')
     const userAdmin =  require('../fixtures/userAdmin.json')
-    const echoOperator =  require('../fixtures/echoOperator.json')
+    const operator =  require('../fixtures/operator.json')
 
     beforeEach(function () {
         cy.intercept("POST","**/datagrid**").as("loading")
@@ -44,12 +44,11 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
 
         cy.get("[data-test='navigation_orders_drpdn']").click()
-        cy.get("[data-test='navigation_orders_purchase_orders_drpdn']").click()
         cy.wait('@loading')
 
         //Volatile
         cy.waitForUI()
-        cy.openElement(89, 0)
+        cy.openElement(77, 0)
         cy.get("[data-test='orders_detail_orderShipping_btn']").should('not.exist')
     })
 
@@ -113,8 +112,8 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
     })
 
-    it("Echo Operator permissions", () =>{
-        cy.FElogin(echoOperator.email, echoOperator.password)
+    it("Operator permissions", () =>{
+        cy.FElogin(operator.email, operator.password)
 
         cy.wait('@loading', {timeout: 30000})
         cy.url().should("include", "operations")

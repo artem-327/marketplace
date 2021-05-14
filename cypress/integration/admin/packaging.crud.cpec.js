@@ -95,7 +95,7 @@ context("Units of packaging CRUD", () => {
         cy.clickSave()
 
         cy.get(".error")
-            .should("have.length", 9)
+            .should("have.length", 10)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

@@ -1,7 +1,7 @@
 context("Prodex Admin User CRUD", () => {
     let userID = null
-    let filter = [{"operator":"LIKE","path":"User.name","values":["%Automator%"]},
-        {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%Automator%"]}]
+    let filter = [{"operator":"LIKE","path":"User.name","values":["%TesterFE%"]},
+        {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%TesterFE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
@@ -34,7 +34,7 @@ context("Prodex Admin User CRUD", () => {
 
         cy.get('[data-test=companies_table_add_btn]').click()
 
-        cy.enterText("#field_input_name", "John Automator")
+        cy.enterText("#field_input_name", "John TesterFE")
         cy.enterText("#field_input_jobTitle", "Automatior")
         cy.enterText("#field_input_email", "automation@example.com")
 
@@ -65,7 +65,7 @@ context("Prodex Admin User CRUD", () => {
         })
 
         cy.get("#field_input_name")
-            .should("have.value", "John Automator")
+            .should("have.value", "John TesterFE")
 
         cy.get("#field_input_jobTitle")
             .should("have.value", "Automatior")
@@ -76,7 +76,7 @@ context("Prodex Admin User CRUD", () => {
 
     it("Edits a user", () => {
         cy.waitForUI()
-        cy.searchInList("John Automator")
+        cy.searchInList("John TesterFE")
         cy.wait("@usersLogin")
         cy.waitForUI()
 
@@ -85,20 +85,20 @@ context("Prodex Admin User CRUD", () => {
 
         cy.get("#field_input_name").clear()
 
-        cy.get("#field_input_name").click().clear().type("Jen Automator")
-            .should("have.value", "Jen Automator")
+        cy.get("#field_input_name").click().clear().type("Jen TesterFE")
+            .should("have.value", "Jen TesterFE")
 
         cy.get('[data-test=admin_users_popup_submit_btn]').click()
 
         cy.openElement(userID, 0)
 
         cy.get("#field_input_name")
-            .should("have.value", "Jen Automator")
+            .should("have.value", "Jen TesterFE")
     })
 
     it("Edit user roles", () => {
         cy.waitForUI()
-        cy.searchInList("Jen Automator")
+        cy.searchInList("Jen TesterFE")
         cy.wait("@usersLogin")
         cy.waitForUI()
         cy.openElement(userID, 0)
@@ -134,14 +134,14 @@ context("Prodex Admin User CRUD", () => {
 
     it("Deletes a user", () => {
         cy.waitForUI()
-        cy.searchInList("Jen Automator")
+        cy.searchInList("Jen TesterFE")
         cy.wait("@usersLogin")
         cy.waitForUI()
         cy.openElement(userID, 1)
 
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
-        cy.contains("Jen Automator").should("not.exist")
+        cy.contains("Jen TesterFE").should("not.exist")
 /*
         cy.reload()
         cy.wait("@companiesLoad", {timeout: 100000})
@@ -150,6 +150,6 @@ context("Prodex Admin User CRUD", () => {
         cy.get("[data-test=tabs_menu_item_users]").click()
         cy.wait("@usersLogin", {timeout: 100000})
 */
-        cy.contains("Jen Automator").should("not.exist")
+        cy.contains("Jen TesterFE").should("not.exist")
     })
 })

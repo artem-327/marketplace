@@ -2,6 +2,7 @@ context("Inventory CRUD", () => {
     let filter = null
     let filterQuantity = null
     let productName = null
+    let offerId = null
     const userJSON = require('../fixtures/user.json')
 
     before(function () {
@@ -14,13 +15,18 @@ context("Inventory CRUD", () => {
 
                 productName = helper
                 filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }]
-                filterQuantity = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [idHelper] }, { "operator": "GREATER_THAN_OR_EQUAL_TO", "path": "ProductOffer.quantity", "values": ["10"] }]
+                filterQuantity = [{
+                    "operator": "EQUALS",
+                    "path": "ProductOffer.companyProduct.id",
+                    "values": [idHelper]
+                }, { "operator": "GREATER_THAN_OR_EQUAL_TO", "path": "ProductOffer.quantity", "values": ["10"] }]
             })
         })
     })
 
     beforeEach(function () {
         cy.viewport(3000, 2000)
+        cy.intercept("POST", "/prodex/api/product-offers/").as("newOffer")
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/countries/search*").as("addingLoading")
         cy.intercept("GET", "/prodex/api/product-offers/*").as("offerLoading")
@@ -28,7 +34,7 @@ context("Inventory CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.visit("/inventory/my-listings")
+        cy.get("[data-test='navigation_menu_inventory_my_listings_drpdn']", { timeout: 100000 }).click()
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })
@@ -58,9 +64,17 @@ context("Inventory CRUD", () => {
 
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
-        cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
+        cy.get("[data-test=modal_inventory_save_new]").click({ force: true })
+        cy.wait("@newOffer")
+        cy.wait("@newOffer").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(201)
+            //cy.log(response.body.id)
+            //cy.wrap(response.body.id).as('wrappedId')
+            offerId = response.body.id
+            cy.log(offerId)
+        })
+
         cy.get('[data-test=confirm_dialog_cancel_btn]').click()
 
         cy.wait("@inventoryLoading")
@@ -72,12 +86,8 @@ context("Inventory CRUD", () => {
     })
 
     it("Update item", () => {
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click({force: true})
-                cy.get("[data-test=action_" + itemId + "_0]").click()
-            })
-        })
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({ force: true })
+        cy.get("[data-test=action_" + offerId + "_0]").click()
 
         cy.wait("@offerLoading")
 
@@ -88,19 +98,15 @@ context("Inventory CRUD", () => {
 
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "10")
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.get("[data-test=modal_inventory_save_new]").click()
         cy.contains("Success")
 
-        cy.contains("Mercer Distribution Services").should('be.visible')
+        cy.contains("Mercer Distribution Services").should('exist')
     })
 
     it("See item details", () => {
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_0]").parent().parent().click({force: true})
-                cy.get("[data-test=action_" + itemId + "_0]").click()
-            })
-        })
+        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({ force: true })
+        cy.get("[data-test=action_" + offerId + "_0]").click()
 
         cy.wait("@offerLoading")
 
@@ -130,7 +136,7 @@ context("Inventory CRUD", () => {
     it("Delete item", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_5]").parent().parent().click({force: true})
+                cy.get("[data-test=action_" + itemId + "_5]").parent().parent().click({ force: true })
                 cy.get("[data-test=action_" + itemId + "_5]").click()
 
                 cy.waitForUI()
@@ -147,7 +153,7 @@ context("Inventory CRUD", () => {
         cy.get("[id='field_input_edit.pkgAvailable']").click()
         cy.get("[id='field_input_edit.fobPrice']").click()
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
+        cy.get("[data-test=modal_inventory_save_new]").click({ force: true })
         cy.get(".error")
             .should("have.length", 3)
             .find(".sui-error-message").each((element) => {
@@ -155,7 +161,7 @@ context("Inventory CRUD", () => {
         })
 
         cy.get("[data-test=detail_inventory_tab_documents]").eq(0).click()
-        cy.contains("Errors on form").should("visible")
+        cy.contains("Errors on form").should("be.visible")
 
     })
 
@@ -171,6 +177,9 @@ context("Inventory CRUD", () => {
 
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
+
+        cy.contains("Optional Information").click()
+
         cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
         cy.enterText("[id='field_textarea_edit.internalNotes']", "Hello")
         cy.enterText("[id='field_textarea_edit.externalNotes']", "Hello")
@@ -197,7 +206,7 @@ context("Inventory CRUD", () => {
             cy.contains("Yes").click()
         })
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click({ force: true })
+        cy.get("[data-test=modal_inventory_save_new]").click({ force: true })
 
         cy.contains("20")
         cy.contains("Cargo")
@@ -206,6 +215,16 @@ context("Inventory CRUD", () => {
 
     it('Filter inventory', () => {
         cy.intercept("GET", '/prodex/api/company-products/own/search?*').as('search')
+
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.getMyProductsBody(token).then(productBody => {
+                let productId = productBody[ 0 ].id
+                cy.getFirstEntityWithFilter(token, 'branches/warehouses', []).then(warehouseId => {
+                    cy.createProductOffer(token, productId, warehouseId).then(offer => {
+                    })
+                })
+            })
+        })
 
         cy.waitForUI()
         cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
@@ -240,20 +259,17 @@ context("Inventory CRUD", () => {
     it("Set price triers", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
-                cy.get("[data-test=action_" + itemId + "_4]").parent().parent().click()
+                cy.get("[data-test=action_" + itemId + "_4]").parent().parent().click({ force: true })
                 cy.get("[data-test=action_" + itemId + "_4]").click()
             })
         })
 
-        cy.get("[data-test='new_inventory_price_tiers_drpdn']", { timeout: 10000 }).click()
-        cy.get("[data-test='new_inventory_price_tiers_drpdn']").within(() => {
-            cy.contains("2").click()
-        })
+        cy.get("div[class*='DivButtonPlus']", { timeout: 10000 }).click()
 
         cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].quantityFrom']", '10')
         cy.setNumberInput("[id='field_input_priceTiers.pricingTiers[1].price']", '30')
 
-        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.get("[data-test='modal_inventory_save_new']").click()
 
         cy.contains("Success")
     })

@@ -1,6 +1,6 @@
 context("Company Product Catalog CRUD", () => {
     let productId = null
-    let filter = [{ "operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OURPR%"] }]
+    let filter = [{ "operator": "LIKE", "path": "CompanyProduct.intProductCode", "values": ["%OUR%"] }]
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {

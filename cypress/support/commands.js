@@ -84,6 +84,19 @@ Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
     cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
 })
 
+Cypress.Commands.add("openOffer", (elementId, dropdownOption) => {
+    cy.waitForUI()
+
+    cy.get("[data-test*=action_" + elementId + "]").eq(0).scrollIntoView()
+    cy.get("[data-test*=action_" + elementId + "]").eq(0).parent().parent().click({force: true})
+    cy.get("[data-test*=action_" + elementId + "]").eq(dropdownOption).click()
+})
+
+Cypress.Commands.add("searchInMarketplace", (productName) => {
+    cy.get("input[type=text]").eq(0).type(productName, {force: true})
+    cy.get('div[class*=SearchByNamesAndTags]').find('div[role="option"]').eq(0).click()
+})
+
 Cypress.Commands.add('getRefreshToken', (username, password) =>{
     cy.request({
         method: 'POST',

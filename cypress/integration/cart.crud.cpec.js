@@ -37,16 +37,8 @@ context("Shopping cart CRUD", () => {
 
                 marketPlaceId = suitableOffers[ 0 ].id
 
-                //Open tab inside marketplace. Checking if undefined
-                if(suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                    cy.contains("Unmapped").click()
-                }else{
-                    marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
-
-                    //cy.contains(marketPlaceName).click()
-                }
-
-                cy.openElement(marketPlaceId, 1)
+                marketPlaceName = suitableOffers[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+                cy.openOffer(marketPlaceId, 1)
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("1")
@@ -57,12 +49,12 @@ context("Shopping cart CRUD", () => {
                 cy.getUserToken(userJSON.email, userJSON.password).then(token => {
                     //Check product name
                     cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                        cy.get('div[class*="CustomHeader"]').should('contain', itemBody.companyProduct.companyGenericProduct.name)
                     })
 
                     //Check cart price
                     cy.getCartBody(token).then(priceBody => {
-                        cy.get('.right > .StyledComponents__DescriptionValue-sc-17etn3b-15').should(($label) => {
+                        cy.get('div[class*="TotalRow"]').find('div[class*=DivHeader]').should(($label) => {
                             const actualPrice = $label.text()
                             expect(actualPrice.replace(/[^\d.]/g, '')).to.eq(addZeroes(priceBody.cfPriceSubtotal))
                         })
@@ -75,7 +67,7 @@ context("Shopping cart CRUD", () => {
     it("Edit item in shopping card", () => {
         cy.get("[data-test='navigation_menu_cart']").click()
 
-        cy.get('.row > .right > :nth-child(2)').click()
+        cy.get('svg[class*="IconEdit"]').click()
         cy.get("input")
             .clear()
             .type("2")
@@ -87,7 +79,7 @@ context("Shopping cart CRUD", () => {
                 expect(priceBody.cartItems[ 0 ].pkgAmount).to.eq(2)
 
                 //Expect right price displayed
-                cy.get('.right > .StyledComponents__DescriptionValue-sc-17etn3b-15').should(($label) => {
+                cy.get('div[class*="TotalRow"]').find('div[class*=DivHeader]').should(($label) => {
                     const actualPrice = $label.text()
                     expect(actualPrice.replace(/[^\d.]/g, '')).to.eq(addZeroes(priceBody.cfPriceSubtotal))
                 })
@@ -98,73 +90,58 @@ context("Shopping cart CRUD", () => {
 
     it("Add second item in shopping card", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
-                cy.deleteWholeCart(token)
-                //TODO Automatic searching inside marketplace body
-                let warehouseFilter = [{ "operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [35] }]
+            cy.deleteWholeCart(token)
+            //TODO Automatic searching inside marketplace body
+            let warehouseFilter = [{
+                "operator": "LIKE",
+                "path": "ProductOffer.companyProduct.companyGenericProduct.company.name",
+                "values": ["%Automation%"]
+            }]
 
-                cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
-                    let marketPlaceIdNum1 = sameWarehouseOffer[ 0 ].id
-                    let marketPlaceIdNum2 = sameWarehouseOffer[ 2 ].id
-                    let marketPlaceName1 = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.name
-                    let marketPlaceName2 = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.name
-                    marketPlaceId = marketPlaceIdNum1
-                    //Open tab
-                    if(sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                        cy.contains("Unmapped").click()
-                    }else{
-                        marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
+            cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
+                let marketPlaceIdNum1 = sameWarehouseOffer[ 0 ].id
+                let marketPlaceIdNum2 = sameWarehouseOffer[ 2 ].id
+                marketPlaceId = marketPlaceIdNum1
+                marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
-                        //cy.contains(marketPlaceName).click()
-                    }
-                    cy.openElement(sameWarehouseOffer[ 0 ].id, 1)
+                cy.openOffer(sameWarehouseOffer[ 0 ].id, 1)
 
-                    cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
-                        cy.get('input[type="number"]').type("2")
-                    })
-
-                    cy.contains("Continue").click()
-
-                    cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
-                    })
-
-                    cy.contains("Marketplace").click()
-                    cy.wait("@marketplaceLoading", { timeout: 30000 })
-
-                    cy.waitForUI()
-
-                    cy.get('div.selection')
-                        .children("input")
-                        .type(sameWarehouseOffer[ 2 ].companyProduct.intProductName, {force:true})
-                        .should("have.value",sameWarehouseOffer[ 2 ].companyProduct.intProductName)
-                    //Open desired tab
-                    if(sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup == undefined){
-                        //cy.contains("Unmapped").click()
-                    }else{
-                        marketPlaceName = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup.name
-
-                        //cy.contains(marketPlaceName).click()
-                    }
-                    cy.openElement(marketPlaceIdNum2, 1)
-
-                    cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
-                        cy.get('input[type="number"]').type("2")
-                    })
-
-                    cy.contains("Continue").click()
-
-                    cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(0).should('contain', itemBody.companyProduct.companyGenericProduct.name)
-                    })
-                    cy.getItemBody(token, marketPlaceIdNum2).then(itemBody => {
-                        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').eq(1).should('contain', itemBody.companyProduct.companyGenericProduct.name)
-                    })
-
+                cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
+                    cy.get('input[type="number"]').type("5")
                 })
 
-            })
+                cy.contains("Continue").click()
 
+                cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
+                    cy.get('div[class*="CustomHeader"]').should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                })
+
+                cy.contains("Marketplace").click()
+                cy.wait("@marketplaceLoading", { timeout: 30000 })
+
+                cy.waitForUI()
+
+                cy.get('div.selection')
+                    .children("input")
+                    .type(sameWarehouseOffer[ 2 ].companyProduct.intProductName, { force: true })
+                    .should("have.value", sameWarehouseOffer[ 2 ].companyProduct.intProductName)
+                marketPlaceName = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup.name
+
+                cy.openOffer(marketPlaceIdNum2, 1)
+
+                cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
+                    cy.get('input[type="number"]').type("5")
+                })
+
+                cy.contains("Continue").click()
+
+                cy.getItemBody(token, marketPlaceIdNum1).then(itemBody => {
+                    cy.get('div[class*="CustomHeader"]').eq(0).should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                })
+                cy.getItemBody(token, marketPlaceIdNum2).then(itemBody => {
+                    cy.get('div[class*="CustomHeader"]').eq(1).should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                })
+            })
         })
     })
 
@@ -172,23 +149,23 @@ context("Shopping cart CRUD", () => {
         cy.wait(10000)
         cy.get("[data-test='navigation_menu_cart']").click()
 
-        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should("have.length", "2")
+        cy.get('div[class*="CustomHeader"]').should("have.length", "2")
 
-        cy.get('.negative').eq(1).click()
+        cy.get('svg[class*="IconTrash"]').eq(1).click()
         cy.contains("Yes").click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                cy.get('div[class*="CustomHeader"]').should('contain', itemBody.companyProduct.companyGenericProduct.name)
             })
         })
 
         cy.reload()
 
-        cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should("have.length", "1")
+        cy.get('div[class*="CustomHeader"]').should("have.length", "1")
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getItemBody(token, marketPlaceId).then(itemBody => {
-                cy.get('.StyledComponents__CustomHeader-sc-17etn3b-5').should('contain', itemBody.companyProduct.companyGenericProduct.name)
+                cy.get('div[class*="CustomHeader"]').should('contain', itemBody.companyProduct.companyGenericProduct.name)
             })
         })
     })
@@ -197,28 +174,37 @@ context("Shopping cart CRUD", () => {
         cy.wait(10000)
         cy.get("[data-test='navigation_menu_cart']").click()
 
-        cy.get('.seven > .ui').click()
-
+        cy.contains("button", "Proceed to Checkout").click()
         cy.url().should("include", "purchase-order")
-        cy.contains("Place Order").should('not.be.enabled')
-        cy.get("#field_dropdown_address").click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getDeliveryAddresses(token).then(addresses => {
-                cy.get("div[role=listbox]").within(() => {
-                    cy.contains(addresses[ 0 ].addressName).click()
+            //Check cart price
+            cy.getCartBody(token).then(priceBody => {
+                cy.contains('Sub Total').next().should(($label) => {
+                    const actualPrice = $label.text()
+                    expect(actualPrice.replace(/[^\d.]/g, '')).to.eq(addZeroes(priceBody.cfPriceSubtotal))
                 })
             })
         })
 
-        cy.contains("Own Freight", { timeout: 60000 }).click()
+        cy.contains("button", "Confirm Items").click()
+        cy.contains("div", "Delivery Addresses").click()
 
-        cy.get("#field_dropdown_payment").click()
-        cy.get("#field_dropdown_payment").within(($form) => {
-            cy.get("[role=option]").eq(0).click()
+        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
+            cy.getDeliveryAddresses(token).then(addresses => {
+                cy.contains(addresses[ 0 ].addressName).click()
+            })
         })
 
-        cy.contains("Place Order").should('be.enabled')
+        cy.contains("button", "Use this Address").click()
+
+        cy.get("div.radio:visible").first().click()
+        cy.contains("button", "Use this Payment Method").click()
+
+        cy.contains("Own Freight", { timeout: 60000 }).click()
+        cy.contains("button", "Use this Freight", { timeout: 60000 }).click()
+
+        cy.contains("Place Order").should('be.visible')
     })
 
 })

@@ -5,6 +5,7 @@ Cypress.Commands.add("selectChemical", (chemical) => {
 
     cy.get("[id='field_dropdown_edit.product']")
         .children("input")
+        .clear()
         .type(chemical, {force: true})
         .should("have.value",chemical)
 

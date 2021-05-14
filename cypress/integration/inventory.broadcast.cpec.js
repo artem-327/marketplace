@@ -28,8 +28,7 @@ context("Inventory Broadcasting", () => {
         cy.viewport(3000, 2000)
 
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.intercept("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
-        cy.intercept("POST", '/prodex/api/broadcast-rules/*').as('rulesSaving')
+        cy.intercept("PATCH", '/prodex/api/product-offers/*/broadcast-option?option=***').as('broadcast')
         cy.intercept("GET", "/prodex/api/product-offers/*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
@@ -40,91 +39,74 @@ context("Inventory Broadcasting", () => {
     })
 
     it('Start/stop item broadcasting', () => {
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.setOfferBroadcasting(token, offerId, "false")
-        })
-
         cy.waitForUI()
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_0]").click()
+        cy.openOffer(offerId, 0)
 
         cy.wait("@offerLoading")
-        //Set broadcast
-        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
-        cy.get("[id='field_dropdown_edit.broadcasted']").click()
-        cy.get("[id='field_dropdown_edit.broadcasted']").within(() => {
+        //Set Just Me
+        cy.get("[id='field_dropdown_edit.broadcastOption']").should("contain.text", "Network")
+        cy.get("[id='field_dropdown_edit.broadcastOption']").click()
+        cy.get("[id='field_dropdown_edit.broadcastOption']").within(() => {
             cy.get("[role='option']").within(() => {
-                cy.contains("Yes").click()
+                cy.contains("Just Me").click()
             })
         })
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
+        cy.wait("@broadcast")
 
-        cy.waitForUI()
-        //Set not broadcasted
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_0]").click()
-
-        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "Yes")
-        cy.get("[id='field_dropdown_edit.broadcasted']").click()
-        cy.get("[id='field_dropdown_edit.broadcasted']").within(() => {
+        //Set Network
+        cy.get("[id='field_dropdown_edit.broadcastOption']").should("contain.text", "Just Me")
+        cy.get("[id='field_dropdown_edit.broadcastOption']").click()
+        cy.get("[id='field_dropdown_edit.broadcastOption']").within(() => {
             cy.get("[role='option']").within(() => {
-                cy.contains("No").click()
+                cy.contains("Network").click()
             })
         })
+        cy.wait("@broadcast")
 
-        cy.get("[data-test=sidebar_inventory_save_new]").click()
         cy.visit("/inventory/my-listings")
         cy.wait("@inventoryLoading", { timeout: 100000 })
 
         //Assert saved
-        cy.get("[data-test=action_" + offerId + "_0]").parent().parent().click({force: true})
+        cy.openOffer(offerId, 0)
         cy.waitForUI()
-        cy.get("[data-test=action_" + offerId + "_0]").click()
-        cy.waitForUI()
-        cy.get("[id='field_dropdown_edit.broadcasted']").eq(0).should("contain.text", "No")
+        cy.get("[id='field_dropdown_edit.broadcastOption']").should("contain.text", "Network")
     })
 
     it('Turn on custom broadcasting', () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token, offerId, jsonBody)
-            })
+            cy.setOfferBroadcasting(token, offerId, "NO_BROADCAST")
         })
 
         cy.reload()
         cy.waitForUI()
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_3]").click()
+        cy.openOffer(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
-            .eq(8)
+            .eq(1)
             .should("have.class", "ui checked fitted toggle checkbox")
             .click()
         cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
-        cy.wait("@rulesSaving")
+        cy.wait("@broadcast")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)
-            .should("have.class", "ui indeterminate fitted toggle checkbox")
+            .should("have.class", "ui checked fitted toggle checkbox")
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
-            .eq(8)
+            .eq(1)
             .should("have.class", "ui fitted toggle checkbox")
     })
 
     it("Turns off the broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.returnTurnOnJson().then(jsonBody => {
-                cy.setOfferPriceBook(token, offerId, jsonBody)
-            })
+            cy.setOfferBroadcasting(token, offerId, "GLOBAL_RULES")
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_3]").click()
+        cy.openOffer(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
@@ -134,22 +116,19 @@ context("Inventory Broadcasting", () => {
             .click()
         cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
-        cy.wait("@rulesSaving")
+        cy.wait("@broadcast")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
-            .eq(0)
+            .eq(1)
             .should("have.class", "ui fitted toggle checkbox")
     })
 
-    it("Turns on the broadcasting for Albreta and USA only", () => {
+    it("Turns on the broadcasting for Alberta and USA only", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token, offerId, jsonBody)
-            })
+            cy.setOfferBroadcasting(token, offerId, "NO_BROADCAST")
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_3]").click()
+        cy.openOffer(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
@@ -170,7 +149,7 @@ context("Inventory Broadcasting", () => {
 
         cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
-        cy.wait("@rulesSaving")
+        cy.wait("@broadcast")
 
         cy.get('[data-test=broadcast_global_category_drpdn]').click()
         cy.contains("Region").click()
@@ -187,13 +166,10 @@ context("Inventory Broadcasting", () => {
 
     it("Switch to Region broadcasting", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.returnTurnOffJson().then(jsonBody => {
-                cy.setOfferPriceBook(token, offerId, jsonBody)
-            })
+            cy.setOfferBroadcasting(token, offerId, "GLOBAL_RULES")
         })
 
-        cy.get("[data-test=action_" + offerId + "_3]").parent().parent().click({force: true})
-        cy.get("[data-test=action_" + offerId + "_3]").click()
+        cy.openOffer(offerId, 3)
 
         cy.get("[data-test=broadcast_rule_row_click]", { timeout: 100000 }).should("be.visible")
 
@@ -206,7 +182,7 @@ context("Inventory Broadcasting", () => {
             .click()
         cy.get('[data-test=broadcast_modal_apply_btn]').click()
 
-        cy.wait("@rulesSaving")
+        cy.wait("@broadcast")
 
         cy.get("[data-test='broadcast_rule_toggle_chckb']")
             .eq(0)

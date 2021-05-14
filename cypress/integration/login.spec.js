@@ -9,7 +9,7 @@ context("Login and logout", () => {
     const productCatalogUser =  require('../fixtures/productCatalogAdmin.json')
     const productOfferManager  =  require('../fixtures/productOfferManager.json')
     const userAdmin =  require('../fixtures/userAdmin.json')
-    const echoOperator =  require('../fixtures/echoOperator.json')
+    const operator =  require('../fixtures/operator.json')
 
     it('Bad credentials', () => {
         //This is the post call we are interested in capturing
@@ -159,8 +159,8 @@ context("Login and logout", () => {
         cy.url().should("include", "/login")
     })
 
-    it('Echo Operator login and logout', () => {
-        cy.FElogin(echoOperator.email, echoOperator.password)
+    it('Operator login and logout', () => {
+        cy.FElogin(operator.email, operator.password)
 
         cy.waitForUI()
         cy.get(".user-menu-wrapper").click()
