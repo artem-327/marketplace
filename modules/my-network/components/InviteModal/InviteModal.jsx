@@ -42,7 +42,7 @@ const InviteModal = props => {
         <Loader size='large' />
       </Dimmer>
       <Modal.Header>
-        <FormattedMessage id='myNetworks.inviteModal.title' defaultMessage='Trade Pass ID' />
+        <FormattedMessage id='myNetworks.inviteModal.title' defaultMessage='TradePass ID' />
       </Modal.Header>
       <Modal.Content>
         {detailCompany ? (
@@ -59,7 +59,7 @@ const InviteModal = props => {
             <DivConent>
               <FormattedMessage
                 id='myNetworks.inviteModal.content'
-                defaultMessage='Sending an invite to a member will allow that member to see your Trade Pass and allow that member to add you to their network.'
+                defaultMessage='Sending an invite to a member will allow that member to see your TradePass and allow that member to add you to their network.'
               />
             </DivConent>
             <Input
@@ -67,7 +67,7 @@ const InviteModal = props => {
               error={isError}
               placeholder={formatMessage({
                 id: 'myNetworks.inviteModal.placeholder',
-                defaultMessage: 'Enter Trade Pass ID'
+                defaultMessage: 'Enter TradePass ID'
               })}
               value={value}
               onChange={(e, data) => setValue(data?.value)}
@@ -77,7 +77,7 @@ const InviteModal = props => {
               <DivError>
                 <FormattedMessage
                   id='myNetworks.inviteModal.errorLabel'
-                  defaultMessage='No member was found in this Trade Pass ID'
+                  defaultMessage='No member was found in this TradePass ID'
                 />
               </DivError>
             )}
