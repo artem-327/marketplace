@@ -3418,6 +3418,7 @@
   "order.actionDisputed": "Order Disputed",
   "order.actionDisputed.text": "This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here.",
   "operations.orders.detail.modal.reason": "Reason:",
+  "operations.orders.detail.modal.attachments": "Attachments:",
   "orders.detail.modal.orderResolution.creditText": "After all parties have reviewed the disputed order it has been agreed upon that {Seller_Company} will credit {Credit_Amount} to {Buyer_Company} for Order {Order_ID}.",
   "orders.detail.modal.orderResolution.rejectText": "After all parties have reviewed the disputed order it has been agreed upon that {Buyer_Company} will return the order {Order_ID} to {Seller_Company} and will receive a full refund. {Seller_Company} will take on the expense of both the original freight costs and the return freight costs.",
   "orders.detail.modal.orderResolution.description": "After both parties accept this resolution will update the order invoice to reflect the credit issued. If a full payment has already occured, it will initiate a refund of the agreed amount to the purchaser. If any of this information is incorrect you may choose to reopen the case and a support specialist will contact you with the next steps.",
