@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
@@ -40,83 +40,73 @@ const textsTable = {
   }
 }
 
-class TablesHandlers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
+const TablesHandlers = props => {
+  const [state, setState] = useState(null)
 
-  componentDidMount() {
-    const { tableHandlersFilters, currentTab, datagrid } = this.props
+  useEffect(() => {
+    const { tableHandlersFilters, currentTab, datagrid } = props
 
     datagrid.clear()
     if (tableHandlersFilters) {
-      this.setState(tableHandlersFilters)
+      setState(tableHandlersFilters)
       if (currentTab) {
         const filter = tableHandlersFilters[currentTab]
         if (filter) {
-          this.handleFiltersValue(filter)
+          handleFiltersValue(filter)
         } else {
-          this.handleFiltersValue(null)
+          handleFiltersValue(null)
         }
       }
     } else {
       if (currentTab) {
-        const filter = this.state[currentTab]
+        const filter = state[currentTab]
         if (filter) {
-          this.handleFiltersValue(filter)
+          handleFiltersValue(filter)
         } else {
-          this.handleFiltersValue(null)
+          handleFiltersValue(null)
         }
       }
     }
-  }
+  }, [])
 
-  componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFilters', this.state)
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.currentTab !== prevProps.currentTab) {
-      const { currentTab } = this.props
-      this.props.datagrid.clear()
-      const filter = this.state[currentTab]
-      if (filter) {
-        this.handleFiltersValue(filter)
-      } else {
-        this.handleFiltersValue(null)
-      }
+  useEffect(() => {
+    props.handleVariableSave('tableHandlersFilters', state)
+    const filter = state[props.currentTab]
+    if (filter) {
+      handleFiltersValue(filter)
+    } else {
+      handleFiltersValue(null)
     }
-  }
+  }, [state])
 
-  handleFiltersValue = debounce(filter => {
-    const { datagrid } = this.props
+  const handleFiltersValue = debounce(filter => {
+    const { datagrid } = props
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  handleFilterChangeInputSearch = (e, data) => {
-    const { currentTab } = this.props
+  const handleFilterChangeInputSearch = (e, data) => {
+    const { currentTab } = props
     if (currentTab === '') return
 
     const filter = {
-      ...this.state[currentTab],
+      ...state[currentTab],
       [data.name]: data.value
     }
-    this.setState({ [currentTab]: filter })
-    this.handleFiltersValue(filter)
+    setState({ [currentTab]: filter })
+    handleFiltersValue(filter)
   }
 
-  renderHandler = () => {
+  const renderHandler = () => {
     const {
       currentTab,
       openPopup,
       intl: { formatMessage },
       openImportPopup,
       handleFilterChange
-    } = this.props
+    } = props
 
     const item = textsTable[currentTab]
-    const filterValue = this.state[currentTab]
+    const filterValue = state[currentTab]
 
     return (
       <CustomRowDiv>
@@ -132,7 +122,7 @@ class TablesHandlers extends Component {
                   id: item.SearchText,
                   defaultMessage: 'Search CAS product by name or number '
                 })}
-                onChange={this.handleFilterChangeInputSearch}
+                onChange={handleFilterChangeInputSearch}
               />
             )}
           </div>
@@ -164,9 +154,8 @@ class TablesHandlers extends Component {
     )
   }
 
-  render() {
-    return <PositionHeaderSettings>{this.renderHandler()}</PositionHeaderSettings>
-  }
+  return <PositionHeaderSettings>{renderHandler()}</PositionHeaderSettings>
+  
 }
 
 const mapStateToProps = state => {

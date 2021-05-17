@@ -36,17 +36,6 @@ class ProductGroupsTable extends Component {
             </FormattedMessage>
           )
         }
-        /**
-         * Commented based on https://pm.artio.net/issues/34033#note-22
-         */
-        // {
-        //   name: 'marketSegments',
-        //   title: (
-        //     <FormattedMessage id='product.groups.marketSegments' defaultMessage='Market Segment'>
-        //       {text => text}
-        //     </FormattedMessage>
-        //   )
-        // }
       ]
     }
   }
@@ -150,18 +139,6 @@ const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
           onTagClick={handleFilterChange}
         />
       )
-      /**
-       * Commented based on https://pm.artio.net/issues/34033#note-22
-       */
-      // marketSegments: (
-      //   <ArrayToFirstItem
-      //     values={row.marketSegments ? row.marketSegments.map(d => (d.name ? d.name : d)) : ''}
-      //     rowItems={3}
-      //     ids={row.marketSegments ? row.marketSegments.map(d => (d.id ? d.id : d)) : ''}
-      //     tags={true}
-      //     onTagClick={handleFilterChange}
-      //   />
-      // )
     })),
     filterValue: state.productsAdmin.filterValue,
     editedId: state.productsAdmin.editedId,

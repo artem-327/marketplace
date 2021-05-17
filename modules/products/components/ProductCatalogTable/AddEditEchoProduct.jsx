@@ -912,18 +912,6 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  // RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
-  //   <GridRow>
-  //     <GridColumn width={6}>
-  //       <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
-  //     </GridColumn>
-
-  //     <GridColumn width={10}>
-  //       <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
-  //     </GridColumn>
-  //   </GridRow>
-  // )
-
   RowInput = ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => {
     const {
       intl: { formatMessage }

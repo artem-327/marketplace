@@ -72,8 +72,6 @@ export function postNewCasProductRequest(values) {
     })
     Datagrid.loadData()
     dispatch(closePopup())
-    // Reload CAS Product list using filters
-    // dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
   }
 }
 
@@ -369,7 +367,6 @@ export function postProductGroups(request) {
 }
 
 export function putProductGroups(id, request, selectedTagsOptions) {
-  //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
   return {
     type: AT.PRODUCTS_GROUPS_UPDATE,
     async payload() {
@@ -378,10 +375,6 @@ export function putProductGroups(id, request, selectedTagsOptions) {
         name: request.name,
         tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
         id: id
-        /**
-         * Commented based on https://pm.artio.net/issues/34033#note-22
-         */
-        //marketSegments: selectedMarketSegmentsOptions.map(segment => ({ name: segment.text, id: segment.key }))
       }))
       return response
     }

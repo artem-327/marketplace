@@ -24,10 +24,6 @@ const formValidation = () =>
 class ProductGroupsPopup extends Component {
   state = {
     selectedTagsOptions: []
-    /**
-     * Commented based on https://pm.artio.net/issues/34033#note-22
-     */
-    //selectedMarketSegmentsOptions: []
   }
 
   componentDidMount() {
@@ -39,16 +35,6 @@ class ProductGroupsPopup extends Component {
           value: d.id
         }
       })
-      /**
-       * Commented based on https://pm.artio.net/issues/34033#note-22
-       */
-      // selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
-      //   return {
-      //     key: d.id,
-      //     text: d.name,
-      //     value: d.id
-      //   }
-      // })
     })
   }
 
@@ -65,16 +51,6 @@ class ProductGroupsPopup extends Component {
             value: d.id
           }
         })
-        /**
-         * Commented based on https://pm.artio.net/issues/34033#note-22
-         */
-        // selectedMarketSegmentsOptions: getSafe(() => this.props.popupValues.rawData.marketSegments, []).map(d => {
-        //   return {
-        //     key: d.id,
-        //     text: d.name,
-        //     value: d.id
-        //   }
-        // })
       })
     }
   }
@@ -87,17 +63,6 @@ class ProductGroupsPopup extends Component {
     const newOptions = options.filter(el => value.some(v => el.value === v))
     this.setState({ selectedTagsOptions: newOptions })
   }
-  /**
-   * Commented based on https://pm.artio.net/issues/34033#note-22
-   */
-  // handleMarketSegmentsSearchChange = debounce((_, { searchQuery }) => {
-  //   this.props.searchMarketSegments(searchQuery)
-  // }, 250)
-
-  // handleMarketSegmentsChange = (value, options) => {
-  //   const newOptions = options.filter(el => value.some(v => el.value === v))
-  //   this.setState({ selectedMarketSegmentsOptions: newOptions })
-  // }
 
   render() {
     const {
@@ -114,25 +79,14 @@ class ProductGroupsPopup extends Component {
       searchedMarketSegmentsLoading,
       searchedMarketSegments
     } = this.props
-    const { selectedTagsOptions } = this.state //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
+    const { selectedTagsOptions } = this.state
 
     const initialFormValues = {
       name: getSafe(() => popupValues.name, ''),
       tags: getSafe(() => popupValues.tags.props.ids, '')
-      /**
-       * Commented based on https://pm.artio.net/issues/34033#note-22
-       */
-      // marketSegments: getSafe(() => popupValues.marketSegments.props.ids, '')
     }
 
     const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
-    /**
-     * Commented based on https://pm.artio.net/issues/34033#note-22
-     */
-    // const allMarketSegmentsOptions = uniqueArrayByKey(
-    //   searchedMarketSegments.concat(selectedMarketSegmentsOptions),
-    //   'key'
-    // )
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
@@ -284,17 +238,6 @@ const mapStateToProps = state => {
           value: d.id
         }))
       : []
-    /**
-     * Commented based on https://pm.artio.net/issues/34033#note-22
-     */
-    // searchedMarketSegments: getSafe(() => state.productsAdmin.searchedMarketSegments.length, false)
-    //   ? state.productsAdmin.searchedMarketSegments.map(d => ({
-    //       key: d.id,
-    //       text: d.name,
-    //       value: d.id
-    //     }))
-    //   : [],
-    // searchedMarketSegmentsLoading: getSafe(() => state.productsAdmin.searchedMarketSegmentsLoading, false)
   }
 }
 

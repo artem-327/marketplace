@@ -54,7 +54,6 @@ export default function reducers(state = initialState, action) {
         ...state,
         editTrig: !state.editTrig,
         popupValues: payload.data,
-        //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
 
         ...(payload.data
           ? {
@@ -97,7 +96,6 @@ export default function reducers(state = initialState, action) {
         packagingGroups: action.payload.data
       }
     }
-    /* CAS DELETE PRODUCT */
 
     case AT.PRODUCTS_CAS_DELETE_PRODUCT_PENDING: {
       return {
@@ -232,19 +230,8 @@ export default function reducers(state = initialState, action) {
     case AT.PRODUCTS_SEARCH_CAS_PRODUCT_FULFILLED: {
       return {
         ...state,
-        // searchedCasProducts: payload.concat(state.searchedCasProducts),
         searchedCasProducts: uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
       }
-      // return {
-      //   ...state,
-      //   searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
-      //     if (listIndex === action.payload.index) {
-      //       return action.payload.data
-      //     } else {
-      //       return list
-      //     }
-      //   })
-      // }
     }
     case AT.PRODUCTS_SEARCH_MANUFACTURERS_PENDING: {
       return {
