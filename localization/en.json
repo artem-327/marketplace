@@ -212,7 +212,7 @@
   "navigation.company-inventory": "Company Inventory",
   "navigation.alerts": "Notifications",
   "navigation.alerts.allNotifications": "All Notifications",
-  "navigation.alerts.shippingQuoteRequest": "Shipping Quote Requests",
+  "navigation.alerts.shippingQuoteRequest": "Shipping Quotes",
   "navigation.alerts.companyGenericProductRequests": "Product Requests",
   "navigation.alerts.disputes": "Order Disputes",
   "navigation.alerts.warehouseVerification": "Warehouse Verification",
