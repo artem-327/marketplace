@@ -48,3 +48,8 @@ export const deleteArray = (arr) => ({
   type: AT.ALERTS_DELETE_ARRAY,
   payload: api.deleteArray(arr)
 })
+
+export const getNextImmediate = () => ({
+  type: AT.ALERTS_GET_NEXT_IMMEDIATE,
+  payload: api.getNextImmediate()
+})

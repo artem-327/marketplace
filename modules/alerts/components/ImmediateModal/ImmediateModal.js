@@ -1,6 +1,6 @@
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { injectIntl, FormattedMessage } from 'react-intl'
-
 //Components
 import ImmediateAcceptModal from './ImmediateAcceptModal'
 import ImmediateRejectModal from './ImmediateRejectModal'
@@ -13,9 +13,19 @@ import ImmediateAppealModal from './ImmediateAppealModal'
  */
 const ImmediateModal = props => {
   const {
-    modalType
+    modalType,
+    nextImmediate,
+    getNextImmediate
   } = props
   
+  useEffect(() => {
+    getNextImmediate()
+  }, [])
+
+  useEffect(() => {
+    console.log(nextImmediate)
+  }, [nextImmediate])
+
   return (
     <>
       { modalType === "accept" && <ImmediateAcceptModal /> }
@@ -26,11 +36,15 @@ const ImmediateModal = props => {
 }
 
 ImmediateModal.propTypes = {
-  modalType: PropTypes.string
+  modalType: PropTypes.string,
+  nextImmediate: PropTypes.object,
+  getNextImmediate: PropTypes.func
 }
 
 ImmediateModal.defaultProps = {
-  modalType: "appeal"
+  modalType: "appeal",
+  nextImmediate: {},
+  getNextImmediate: () => {}
 }
 
 export default injectIntl(ImmediateModal)

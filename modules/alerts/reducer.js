@@ -6,7 +6,8 @@ export const initialState = {
   loadingCategories: false,
   categories: [],
   tableHandlersFilters: null,
-  countUnseen: 0
+  countUnseen: 0,
+  nextImmediate: {}
 }
 
 export default function reducers(state = initialState, action) {
@@ -83,6 +84,20 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         type: payload
+      }
+    }
+
+    case AT.ALERTS_GET_NEXT_IMMEDIATE_FULFILLED: {
+      return {
+        ...state,
+        nextImmediate: payload
+      }
+    }
+
+    case AT.ALERTS_GET_NEXT_IMMEDIATE_PENDING:
+    case AT.ALERTS_GET_NEXT_IMMEDIATE_REJECTED: {
+      return {
+        ...state
       }
     }
 

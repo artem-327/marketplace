@@ -25,7 +25,7 @@ import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
-import ImmediateModal from '../modules/alerts/components/ImmediateModal/ImmediateModal'
+import ImmediateModal from '../modules/alerts/components/ImmediateModal/ImmediateModalContainer'
 
 import CreateMenu from './CreateMenu'
 import { Messages } from '../modules/messages'
