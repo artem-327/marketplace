@@ -278,10 +278,6 @@ const ShippingQuoteRequest = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {}
-}
-
-export default connect(mapStateToProps, { ...Actions, openPopupOperations })(
+export default connect(null, { ...Actions, openPopupOperations })(
   injectIntl(withToastManager(ShippingQuoteRequest))
 )

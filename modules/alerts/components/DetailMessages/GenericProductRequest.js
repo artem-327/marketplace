@@ -63,10 +63,6 @@ const GenericProductRequest = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {}
-}
-
-export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadAttachmentPdf })(
+export default connect(null, { ...Actions, downloadAttachment, downloadAttachmentPdf })(
   injectIntl(withToastManager(GenericProductRequest))
 )
