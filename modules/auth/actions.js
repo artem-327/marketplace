@@ -200,7 +200,7 @@ export const searchCountries = searchQuery => {
       async response => {
         await dispatch({
           type: AT.AUTH_SEARCH_COUNTRIES_FULFILLED,
-          payload: response
+          payload: response.data
         })
       }
     )
@@ -226,7 +226,7 @@ export const searchProvinces = countryId => {
       async response => {
         await dispatch({
           type: AT.AUTH_SEARCH_PROVINCES_FULFILLED,
-          payload: response
+          payload: response.data
         })
       }
     )
@@ -280,7 +280,7 @@ export const agreeWithTOS = () => {
       async response => {
         await dispatch({
           type: AT.AGREE_WITH_TOS_FULFILLED,
-          payload: response
+          payload: response.data
         })
       }
     )
