@@ -367,6 +367,9 @@ const AddEditEchoProduct = props => {
     selectedCompanyOptions: []
   })
 
+  let initResetForm = () => {}
+  let initFormikProps = { touched: [], validateForm: () => {}, submitForm: () => {}, values: [], setSubmitting: () => {} }
+
   useEffect(() => {
     const {
       hazardClasses,
@@ -387,31 +390,31 @@ const AddEditEchoProduct = props => {
     if (props.addForm) {
       // Sidebar just opened - Add
       setInitialState(null, { editTab: 0 })
-      resetForm()
+      initResetForm()
     } else {
       // Sidebar just opened - Edit
-      props.loadEditEchoProduct(props.popupValues.id, props.editTab, true)
+      if (props.popupValues?.id) props.loadEditEchoProduct(props.popupValues.id, props.editTab, true)
     }
   }, [])
 
   useEffect(() => {
     validateSaveOrSwitchToErrors(() => {
       setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
-      resetForm()
+      initResetForm()
     })
   }, [props.addForm])
 
   useEffect(() => {
     const { popupValues, editTab } = props
     validateSaveOrSwitchToErrors(() => {
-      props.loadEditEchoProduct(popupValues.id, editTab, true)
+      if (popupValues?.id) props.loadEditEchoProduct(popupValues.id, editTab, true)
     })
   }, [props.editForm])
 
   useEffect(() => {
     const { popupValues, editTab } = props
     validateSaveOrSwitchToErrors(() => {
-      props.loadEditEchoProduct(popupValues.id, editTab, false)
+      if (popupValues?.id) props.loadEditEchoProduct(popupValues.id, editTab, false)
     })
   }, [props.editInitTrig])
 
@@ -421,7 +424,7 @@ const AddEditEchoProduct = props => {
       200
     )
     setInitialState(props.popupValues, { editTab: props.editTab })
-    resetForm()
+    initResetForm()
   }, [props.popupValues])
 
   const setInitialState = (popupValues, additionalStates) => {
@@ -431,7 +434,7 @@ const AddEditEchoProduct = props => {
       selectedCompanyOptions = []
 
     if (popupValues) {
-      codesList = popupValues.mfrProductCodes.map(code => ({
+      codesList = popupValues.mfrProductCodes?.map(code => ({
         text: code,
         value: code
       }))
@@ -773,7 +776,7 @@ const AddEditEchoProduct = props => {
   }, 500)
 
   const validateSaveOrSwitchToErrors = async callback => {
-    const { touched, validateForm, submitForm, values, setSubmitting } = formikProps
+    const { touched, validateForm, submitForm, values, setSubmitting } = initFormikProps
 
     if (Object.keys(touched).length || state.changedForm) {
       // Form edited and not saved yet
@@ -2316,8 +2319,8 @@ const AddEditEchoProduct = props => {
       }}
       render={formikProps => {
         let { touched, validateForm, resetForm, values, submitForm } = formikProps
-        resetForm = resetForm
-        formikProps = formikProps
+        initResetForm = resetForm
+        initFormikProps = formikProps
 
         return (
           <>
