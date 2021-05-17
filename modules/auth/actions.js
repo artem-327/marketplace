@@ -126,17 +126,17 @@ export function login(username, password) {
 }
 
 export function getVersion() {
-  return async dispatch => {
-    await dispatch({
+  return dispatch => {
+    dispatch({
       type: AT.GET_VERSION_PENDING
     })
-    await api
+    api
     .getVersion()
     .then(
       async response => {
         await dispatch({
           type: AT.GET_VERSION_FULFILLED,
-          payload: response
+          payload: response.data
         })
       }
     )
@@ -254,7 +254,7 @@ export const updateCompany = (id, payload) => {
       async response => {
         await dispatch({
           type: AT.UPDATE_COMPANY_FULFILLED,
-          payload: response
+          payload: response.data
         })
       }
     )
@@ -306,7 +306,7 @@ export const updateCompanyDetails = (companyId, request) => {
         async response =>
           await dispatch({
             type: AT.UPDATE_COMPANY_DETAILS_FULFILLED,
-            payload: response
+            payload: response.data
           })
       )
       .catch(
