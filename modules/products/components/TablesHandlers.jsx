@@ -41,7 +41,7 @@ const textsTable = {
 }
 
 const TablesHandlers = props => {
-  const [state, setState] = useState(null)
+  const [state, setState] = useState({})
 
   useEffect(() => {
     const { tableHandlersFilters, currentTab, datagrid } = props
@@ -71,13 +71,14 @@ const TablesHandlers = props => {
 
   useEffect(() => {
     props.handleVariableSave('tableHandlersFilters', state)
+    props.datagrid.clear()
     const filter = state[props.currentTab]
     if (filter) {
       handleFiltersValue(filter)
     } else {
       handleFiltersValue(null)
     }
-  }, [state])
+  }, [state, props.currentTab])
 
   const handleFiltersValue = debounce(filter => {
     const { datagrid } = props

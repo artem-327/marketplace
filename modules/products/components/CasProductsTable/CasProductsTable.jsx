@@ -146,7 +146,7 @@ const transformHazardClasses = classes => {
           key={i}
           content={b.description}
           trigger={
-            <Label size='tiny' key={i}>
+            <Label size='tiny'>
               {b.classCode}
             </Label>
           }
