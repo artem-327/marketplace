@@ -27,8 +27,8 @@ import { initialValues, validationSchema } from '../constants/validation'
 
 import { withToastManager } from 'react-toast-notifications'
 
-import Logo from '~/assets/images/login/logo-bluetrade.svg'
-import Icon from '~/assets/images/login/icon-bluetrade.svg'
+import Logo from '~/assets/images/login/logo-bluepallet.svg'
+import Icon from '~/assets/images/login/icon-bluepallet.svg'
 //Constants
 import { URL_TERMS } from '../../../constants'
 
