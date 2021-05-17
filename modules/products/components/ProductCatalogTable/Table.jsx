@@ -40,126 +40,121 @@ const FileTextIcon = styled(FileText)`
   line-height: 20px;
 `
 
-class ProductCatalogTable extends Component {
-  constructor(props) {
-    super(props)
+const ProductCatalogTable = props => {
 
-    this.state = {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 250,
-          sortPath: 'CompanyGenericProduct.name',
-          allowReordering: false
-        },
-        {
-          name: 'publishedStatus',
-          title: (
-            <Popup
-              size='small'
-              header={
-                <FormattedMessage
-                  id='global.productStatusIndicator'
-                  defaultMessage='Status indicator if Company Product will be shown on Marketplace'
-                />
-              }
-              trigger={
-                <div>
-                  <FileTextIcon />
-                </div>
-              } // <div> has to be there otherwise popup will be not shown
+  const columns = [
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='global.productName' defaultMessage='Product Name'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 250,
+      sortPath: 'CompanyGenericProduct.name',
+      allowReordering: false
+    },
+    {
+      name: 'publishedStatus',
+      title: (
+        <Popup
+          size='small'
+          header={
+            <FormattedMessage
+              id='global.productStatusIndicator'
+              defaultMessage='Status indicator if Company Product will be shown on Marketplace'
             />
-          ),
-          caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
-          width: 40,
-          align: 'center'
-        },
-        {
-          name: 'code',
-          title: (
-            <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.code'
-        },
-        {
-          name: 'manufacturerName',
-          title: (
-            <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.manufacturer.name'
-        },
-        {
-          name: 'sds',
-          title: (
-            <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150
-        },
-        {
-          name: 'sdsVersionNumber',
-          title: (
-            <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.sdsVersionNumber'
-        },
-        {
-          name: 'sdsRevisionDate',
-          title: (
-            <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.sdsRevisionDate'
-        },
-        {
-          name: 'productGroup',
-          title: (
-            <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.productGroup.name'
-        },
-        {
-          name: 'company',
-          title: (
-            <FormattedMessage id='global.company' defaultMessage='Company'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CompanyGenericProduct.company.name'
-        }
-      ]
+          }
+          trigger={
+            <div>
+              <FileTextIcon />
+            </div>
+          } // <div> has to be there otherwise popup will be not shown
+        />
+      ),
+      caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
+      width: 40,
+      align: 'center'
+    },
+    {
+      name: 'code',
+      title: (
+        <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.code'
+    },
+    {
+      name: 'manufacturerName',
+      title: (
+        <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.manufacturer.name'
+    },
+    {
+      name: 'sds',
+      title: (
+        <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150
+    },
+    {
+      name: 'sdsVersionNumber',
+      title: (
+        <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.sdsVersionNumber'
+    },
+    {
+      name: 'sdsRevisionDate',
+      title: (
+        <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.sdsRevisionDate'
+    },
+    {
+      name: 'productGroup',
+      title: (
+        <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.productGroup.name'
+    },
+    {
+      name: 'company',
+      title: (
+        <FormattedMessage id='global.company' defaultMessage='Company'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CompanyGenericProduct.company.name'
     }
-  }
+  ]
 
-  getActions = row => {
+  const getActions = row => {
     const {
       datagrid,
       intl: { formatMessage },
       openEditEchoProduct,
       openEditEchoAltNamesPopup,
       deleteCompanyGenericProduct
-    } = this.props
+    } = props
 
     return [
       ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
@@ -172,7 +167,7 @@ class ProductCatalogTable extends Component {
           id: 'admin.deleteCompanyGenericProduct',
           defaultMessage: 'Delete Company Generic Product'
         }),
-        disabled: () => this.props.editedId === row.id,
+        disabled: () => props.editedId === row.id,
         callback: () => {
           confirm(
             formatMessage({
@@ -199,18 +194,18 @@ class ProductCatalogTable extends Component {
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     const {
       editEchoProductChangeTab,
       intl: { formatMessage }
-    } = this.props
+    } = props
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
             onContentClick={() => editEchoProductChangeTab(0, true, { id: row.id })}
             leftContent={
@@ -250,7 +245,7 @@ class ProductCatalogTable extends Component {
         ),
         sds:
           row.attachments && row.attachments.length ? (
-            <Button as='a' onClick={() => this.downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
+            <Button as='a' onClick={() => downloadAttachment(row.attachments[0].name, row.attachments[0].id)}>
               <Icon name='download' />
               {row.attachments[0].name}
             </Button>
@@ -265,7 +260,7 @@ class ProductCatalogTable extends Component {
     })
   }
 
-  getMimeType = documentName => {
+  const getMimeType = documentName => {
     const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
     switch (documentExtension) {
       case 'doc':
@@ -306,9 +301,9 @@ class ProductCatalogTable extends Component {
     }
   }
 
-  prepareLinkToAttachment = async (documentName, documentId) => {
-    let downloadedFile = await this.props.downloadAttachment(documentId)
-    const mimeType = this.getMimeType(documentName)
+  const prepareLinkToAttachment = async (documentName, documentId) => {
+    let downloadedFile = await props.downloadAttachment(documentId)
+    const mimeType = getMimeType(documentName)
 
     const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
@@ -318,43 +313,39 @@ class ProductCatalogTable extends Component {
     return element
   }
 
-  viewAttachment = async (documentName, documentId) => {
-    const element = await this.prepareLinkToAttachment(documentName, documentId)
+  const viewAttachment = async (documentName, documentId) => {
+    const element = await prepareLinkToAttachment(documentName, documentId)
 
     element.target = '_blank'
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
 
-  downloadAttachment = async (documentName, documentId) => {
-    const element = await this.prepareLinkToAttachment(documentName, documentId)
+  const downloadAttachment = async (documentName, documentId) => {
+    const element = await prepareLinkToAttachment(documentName, documentId)
 
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
 
-  render() {
-    const { datagrid, rows, filterValue, editedId } = this.props
+  const { datagrid, rows, filterValue, editedId } = props
 
-    let { columns } = this.state
-
-    return (
-      <Fragment>
-        <div className='flex stretched listings-wrapper'>
-          <ProdexTable
-            tableName='admin_product-catalog'
-            {...datagrid.tableProps}
-            columns={columns}
-            filterValue={filterValue}
-            loading={datagrid.loading}
-            rows={this.getRows(rows)}
-            editingRowId={editedId}
-          />
-        </div>
-      </Fragment>
-    )
-  }
+  return (
+    <Fragment>
+      <div className='flex stretched listings-wrapper'>
+        <ProdexTable
+          tableName='admin_product-catalog'
+          {...datagrid.tableProps}
+          columns={columns}
+          filterValue={filterValue}
+          loading={datagrid.loading}
+          rows={getRows(rows)}
+          editingRowId={editedId}
+        />
+      </div>
+    </Fragment>
+  )
 }
 
 const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
