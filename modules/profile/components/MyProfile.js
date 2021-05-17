@@ -265,7 +265,7 @@ const mapStateToProps = state => {
           lastLoginAt:
             state.auth.identity.lastLoginAt &&
             getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null),
-          avatar: popupValues.avatar,
+          avatar: popupValues.avatarUrl,
           ownAvatar: popupValues.ownAvatar
         }
       : null,
