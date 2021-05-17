@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { injectIntl, FormattedMessage } from 'react-intl'
 //Components
 import ImmediateAcceptModal from './ImmediateAcceptModal'
 import ImmediateRejectModal from './ImmediateRejectModal'
@@ -47,4 +46,4 @@ ImmediateModal.defaultProps = {
   getNextImmediate: () => {}
 }
 
-export default injectIntl(ImmediateModal)
+export default ImmediateModal
