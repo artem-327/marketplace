@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
@@ -12,36 +11,31 @@ import { openPopup, deleteProductGroups } from '../../actions'
 import { withDatagrid } from '../../../datagrid'
 import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 
-class ProductGroupsTable extends Component {
-  constructor(props) {
-    super(props)
+const ProductGroupsTable = props => {
+  const columns =
+    [
+      {
+        name: 'name',
+        title: (
+          <FormattedMessage id='product.groups.name' defaultMessage='Group Name'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        sortPath: 'ProductGroup.name',
+        allowReordering: false
+      },
+      {
+        name: 'tags',
+        title: (
+          <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
+            {text => text}
+          </FormattedMessage>
+        )
+      }
+    ]  
 
-    this.state = {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='product.groups.name' defaultMessage='Group Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'ProductGroup.name',
-          allowReordering: false
-        },
-        {
-          name: 'tags',
-          title: (
-            <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
-              {text => text}
-            </FormattedMessage>
-          )
-        }
-      ]
-    }
-  }
-
-  getActions = () => {
-    const { intl, openPopup, deleteProductGroups, datagrid } = this.props
+  const getActions = () => {
+    const { intl, openPopup, deleteProductGroups, datagrid } = props
 
     const { formatMessage } = intl
     return [
@@ -69,56 +63,52 @@ class ProductGroupsTable extends Component {
               console.error(e)
             }
           }),
-        disabled: row => this.props.editedId === row.id
+        disabled: row => props.editedId === row.id
       }
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
-            onContentClick={() => this.props.openPopup(row)}
+            onContentClick={() => props.openPopup(row)}
           />
         )
       }
     })
   }
 
-  render() {
-    const {
-      intl,
-      loading,
-      rows,
-      datagrid,
-      filterValue,
-      openPopup,
-      deleteProductGroups,
-      editedId,
-      toastManager
-    } = this.props
+  const {
+    intl,
+    loading,
+    rows,
+    datagrid,
+    filterValue,
+    openPopup,
+    deleteProductGroups,
+    editedId,
+    toastManager
+  } = props
 
-    const { formatMessage } = intl
-    const { columns } = this.state
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          tableName={'product_group'}
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          loading={datagrid.loading || loading}
-          columns={columns}
-          rows={this.getRows(rows)}
-          editingRowId={editedId}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        tableName={'product_group'}
+        {...datagrid.tableProps}
+        filterValue={filterValue}
+        loading={datagrid.loading || loading}
+        columns={columns}
+        rows={getRows(rows)}
+        editingRowId={editedId}
+      />
+    </div>
+  )
 }
 const mapDispatchToProps = {
   openPopup,

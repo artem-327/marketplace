@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
@@ -18,24 +18,21 @@ import * as Actions from '../actions'
 
 import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
 
-const CustomGridColumn = styled(GridColumn)`
-  padding: 0 32px 0 32px !important;
-`
-class Products extends Component {
-  componentWillUnmount() {
-    const { currentAddForm, currentEditForm, currentEdit2Form, closeAddPopup } = this.props
+const Products = props => {
+  useEffect(() => {
+    const { currentAddForm, currentEditForm, currentEdit2Form, closeAddPopup } = props
     if (currentAddForm || currentEditForm || currentEdit2Form) closeAddPopup()
-  }
+  }, [])
 
-  handleFilterChange = () => {}
+  const handleFilterChange = () => {}
 
-  renderContent = () => {
-    const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
+  const renderContent = () => {
+    const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = props
 
     const tables = {
       'cas-products': <CasProductsTable />,
       'product-catalog': <ProductCatalogTable />,
-      'product-groups': <ProductGroupsTable handleFilterChange={this.handleFilterChange} />
+      'product-groups': <ProductGroupsTable handleFilterChange={handleFilterChange} />
     }
 
     const addForms = {
@@ -54,7 +51,7 @@ class Products extends Component {
     }
 
     const importForm = {
-      'product-catalog': <ProductImportPopup companyGenericProduct={true} />
+      'product-catalog': <ProductImportPopup />
     }
 
     return (
@@ -68,8 +65,8 @@ class Products extends Component {
     )
   }
 
-  getApiConfig = () => {
-    const { currentTab, companyProductUnmappedOnly } = this.props
+  const getApiConfig = () => {
+    const { currentTab, companyProductUnmappedOnly } = props
     const datagridApiMap = {
       'cas-products': {
         url: '/prodex/api/cas-products/datagrid',
@@ -116,29 +113,27 @@ class Products extends Component {
     return datagridApiMap[currentTab]
   }
 
-  render() {
-    const { currentTab, currentAddForm, currentEditForm } = this.props
+  const { currentTab, currentAddForm, currentEditForm } = props
 
-    const sidebars = {
-      'product-catalog': <AddEditEchoProduct />
-    }
-
-    return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
-        <Container fluid className='flex stretched'>
-          <>
-            <div style={{ padding: '20px 30px' }}>
-              <TablesHandlers currentTab={currentTab} />
-            </div>
-            <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              {this.renderContent()}
-            </div>
-          </>
-        </Container>
-        {(currentAddForm || currentEditForm) && sidebars[currentTab]}
-      </DatagridProvider>
-    )
+  const sidebars = {
+    'product-catalog': <AddEditEchoProduct />
   }
+
+  return (
+    <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
+      <Container fluid className='flex stretched'>
+        <>
+          <div style={{ padding: '20px 30px' }}>
+            <TablesHandlers currentTab={currentTab} />
+          </div>
+          <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
+            {renderContent()}
+          </div>
+        </>
+      </Container>
+      {(currentAddForm || currentEditForm) && sidebars[currentTab]}
+    </DatagridProvider>
+  )
 }
 
 const mapStateToProps = state => {

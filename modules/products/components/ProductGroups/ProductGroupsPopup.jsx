@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
@@ -21,199 +21,177 @@ const formValidation = () =>
     })
   )
 
-class ProductGroupsPopup extends Component {
-  state = {
-    selectedTagsOptions: []
-  }
+const ProductGroupsPopup = props => {
+  const [selectedTagsOptions, setSelectedTagsOptions] = useState([])
 
-  componentDidMount() {
-    this.setState({
-      selectedTagsOptions: getSafe(() => this.props.popupValues.rawData.tags, []).map(d => {
+  useEffect(() => {
+    setSelectedTagsOptions(
+      getSafe(() => props.popupValues.rawData.tags, []).map(d => {
         return {
           key: d.id,
           text: d.name,
           value: d.id
         }
       })
-    })
-  }
+    )
+  }, [props.popupValues])
 
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.popupValues &&
-      ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
-    ) {
-      this.setState({
-        selectedTagsOptions: getSafe(() => this.props.popupValues.rawData.tags, []).map(d => {
-          return {
-            key: d.id,
-            text: d.name,
-            value: d.id
-          }
-        })
-      })
-    }
-  }
-
-  handleTagsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchTags(searchQuery)
+  const handleTagsSearchChange = debounce((_, { searchQuery }) => {
+    props.searchTags(searchQuery)
   }, 250)
 
-  handleTagsChange = (value, options) => {
+  const handleTagsChange = (value, options) => {
     const newOptions = options.filter(el => value.some(v => el.value === v))
-    this.setState({ selectedTagsOptions: newOptions })
+    setSelectedTagsOptions(newOptions)
   }
 
-  render() {
-    const {
-      closePopup,
-      popupValues,
-      rowId,
-      putProductGroups,
-      postProductGroups,
-      toastManager,
-      intl: { formatMessage },
-      datagrid,
-      searchedTags,
-      searchedTagsLoading,
-      searchedMarketSegmentsLoading,
-      searchedMarketSegments
-    } = this.props
-    const { selectedTagsOptions } = this.state
+  const {
+    closePopup,
+    popupValues,
+    rowId,
+    putProductGroups,
+    postProductGroups,
+    toastManager,
+    intl: { formatMessage },
+    datagrid,
+    searchedTags,
+    searchedTagsLoading,
+    searchedMarketSegmentsLoading,
+    searchedMarketSegments
+  } = props
 
-    const initialFormValues = {
-      name: getSafe(() => popupValues.name, ''),
-      tags: getSafe(() => popupValues.tags.props.ids, '')
-    }
+  const initialFormValues = {
+    name: getSafe(() => popupValues.name, ''),
+    tags: getSafe(() => popupValues.tags.props.ids, '')
+  }
 
-    const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
+  const allTagsOptions = uniqueArrayByKey(searchedTags.concat(selectedTagsOptions), 'key')
 
-    return (
-      <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
-        <Modal.Header>
-          {popupValues ? (
-            <FormattedMessage id='pruduct.groups.edit' defaultMessage='Edit Product Group' />
-          ) : (
-            <FormattedMessage id='pruduct.groups.add' defaultMessage='Add Product Group' />
-          )}
-        </Modal.Header>
-        <Modal.Content>
-          <Form
-            enableReinitialize
-            initialValues={initialFormValues}
-            validationSchema={formValidation()}
-            onReset={closePopup}
-            onSubmit={async (values, { setSubmitting }) => {
-              const request = {}
-              const propsToInclude = ['tags', 'name'] //, 'marketSegments'  commented based on https://pm.artio.net/issues/34033#note-22
-              propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
+  return (
+    <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
+      <Modal.Header>
+        {popupValues ? (
+          <FormattedMessage id='pruduct.groups.edit' defaultMessage='Edit Product Group' />
+        ) : (
+          <FormattedMessage id='pruduct.groups.add' defaultMessage='Add Product Group' />
+        )}
+      </Modal.Header>
+      <Modal.Content>
+        <Form
+          enableReinitialize
+          initialValues={initialFormValues}
+          validationSchema={formValidation()}
+          onReset={closePopup}
+          onSubmit={async (values, { setSubmitting }) => {
+            const request = {}
+            const propsToInclude = ['tags', 'name'] //, 'marketSegments'  commented based on https://pm.artio.net/issues/34033#note-22
+            propsToInclude.forEach(prop => (values[prop] ? (request[prop] = values[prop]) : null))
 
-              try {
-                if (popupValues) await putProductGroups(rowId, request, selectedTagsOptions)
-                //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
-                else await postProductGroups(request)
-              } catch (err) {
-                console.error(err)
-              } finally {
-                setSubmitting(false)
-                closePopup()
-              }
-            }}>
-            {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {
-              return (
-                <>
-                  <FormGroup data-test='operations_tag_name_inp'>
-                    <Input
-                      name='name'
-                      type='text'
-                      label={
-                        <>
-                          <FormattedMessage id='operations.name' defaultMessage='Name'>
-                            {text => text}
-                          </FormattedMessage>
-                          <Required />
-                        </>
-                      }
-                      fieldProps={{ width: 8 }}
-                    />
-                    <FormikDropdown
-                      fieldProps={{ width: 8 }}
-                      label={
-                        <>
-                          <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
-                            {text => text}
-                          </FormattedMessage>
-                        </>
-                      }
-                      name='tags'
-                      options={allTagsOptions || []}
-                      inputProps={{
-                        loading: searchedTagsLoading,
-                        search: true,
-                        icon: 'search',
-                        selection: true,
-                        multiple: true,
-                        noResultsMessage: formatMessage({
-                          id: 'global.startTypingToSearch',
-                          defaultMessage: 'Start typing to begin search'
-                        }),
-                        onSearchChange: this.handleTagsSearchChange,
-                        onChange: (_, { value }) => this.handleTagsChange(value, allTagsOptions)
-                      }}
-                    />
-                    {/*commented based on https://pm.artio.net/issues/34033#note-22*/}
-                    {false && (
+            try {
+              if (popupValues) await putProductGroups(rowId, request, selectedTagsOptions)
+              //, selectedMarketSegmentsOptions  commented based on https://pm.artio.net/issues/34033#note-22
+              else await postProductGroups(request)
+            } catch (err) {
+              console.error(err)
+            } finally {
+              setSubmitting(false)
+              closePopup()
+            }
+          }}>
+          {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {
+            return (
+              <>
+                <FormGroup data-test='operations_tag_name_inp'>
+                  <Input
+                    name='name'
+                    type='text'
+                    label={
                       <>
-                        <FormikDropdown
-                          fieldProps={{ width: 5 }}
-                          label={
-                            <>
-                              <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
-                                {text => text}
-                              </FormattedMessage>
-                            </>
-                          }
-                          name='marketSegments'
-                          options={allMarketSegmentsOptions || []}
-                          inputProps={{
-                            loading: searchedMarketSegmentsLoading,
-                            search: true,
-                            icon: 'search',
-                            selection: true,
-                            multiple: true,
-                            noResultsMessage: formatMessage({
-                              id: 'global.startTypingToSearch',
-                              defaultMessage: 'Start typing to begin search'
-                            }),
-                            onSearchChange: this.handleMarketSegmentsSearchChange,
-                            onChange: (_, { value }) => this.handleMarketSegmentsChange(value, allMarketSegmentsOptions)
-                          }}
-                        />
+                        <FormattedMessage id='operations.name' defaultMessage='Name'>
+                          {text => text}
+                        </FormattedMessage>
+                        <Required />
                       </>
-                    )}
-                  </FormGroup>
+                    }
+                    fieldProps={{ width: 8 }}
+                  />
+                  <FormikDropdown
+                    fieldProps={{ width: 8 }}
+                    label={
+                      <>
+                        <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
+                          {text => text}
+                        </FormattedMessage>
+                      </>
+                    }
+                    name='tags'
+                    options={allTagsOptions || []}
+                    inputProps={{
+                      loading: searchedTagsLoading,
+                      search: true,
+                      icon: 'search',
+                      selection: true,
+                      multiple: true,
+                      noResultsMessage: formatMessage({
+                        id: 'global.startTypingToSearch',
+                        defaultMessage: 'Start typing to begin search'
+                      }),
+                      onSearchChange: handleTagsSearchChange,
+                      onChange: (_, { value }) => handleTagsChange(value, allTagsOptions)
+                    }}
+                  />
+                  {/*commented based on https://pm.artio.net/issues/34033#note-22*/}
+                  {false && (
+                    <>
+                      <FormikDropdown
+                        fieldProps={{ width: 5 }}
+                        label={
+                          <>
+                            <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
+                              {text => text}
+                            </FormattedMessage>
+                          </>
+                        }
+                        name='marketSegments'
+                        options={[]}
+                        inputProps={{
+                          loading: searchedMarketSegmentsLoading,
+                          search: true,
+                          icon: 'search',
+                          selection: true,
+                          multiple: true,
+                          noResultsMessage: formatMessage({
+                            id: 'global.startTypingToSearch',
+                            defaultMessage: 'Start typing to begin search'
+                          }),
+                          onSearchChange: () => {},
+                          onChange: (_, { value }) => {}
+                        }}
+                      />
+                    </>
+                  )}
+                </FormGroup>
 
-                  <div style={{ textAlign: 'right' }}>
-                    <Button.Reset data-test='operations_tag_reset_btn'>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button.Reset>
-                    <Button.Submit data-test='operations_tag_submit_btn'>
-                      <FormattedMessage id='global.save' defaultMessage='Save'>
-                        {text => text}
-                      </FormattedMessage>
-                    </Button.Submit>
-                  </div>
-                  <ErrorFocus />
-                </>
-              )
-            }}
-          </Form>
-        </Modal.Content>
-      </Modal>
-    )
-  }
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset data-test='operations_tag_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Reset>
+                  <Button.Submit data-test='operations_tag_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>
+                      {text => text}
+                    </FormattedMessage>
+                  </Button.Submit>
+                </div>
+                <ErrorFocus />
+              </>
+            )
+          }}
+        </Form>
+      </Modal.Content>
+    </Modal>
+  )
 }
 
 const mapDispatchToProps = {
