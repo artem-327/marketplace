@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
 
 // Components
 import { GridRow, GridColumn } from 'semantic-ui-react'

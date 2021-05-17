@@ -2,23 +2,21 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
-import { withAuth } from '~/hocs'
-import { FormattedMessage } from 'react-intl'
+import { withAuth } from '../../../hocs'
 import styled from 'styled-components'
 
 import CasProductsTable from './CasProductsTable/CasProductsTable'
 import ProductCatalogTable from './ProductCatalogTable/Table'
 import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
 import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
-import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
+import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopup'
 import CasProductsSidebar from './CasProductsTable/CasProductsSidebar'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
 import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
 import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
 import * as Actions from '../actions'
 
-import { getSafe } from '~/utils/functions'
-import { DatagridProvider, withDatagrid, Datagrid } from '~/modules/datagrid'
+import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
 
 const CustomGridColumn = styled(GridColumn)`
   padding: 0 32px 0 32px !important;
@@ -28,6 +26,8 @@ class Products extends Component {
     const { currentAddForm, currentEditForm, currentEdit2Form, closeAddPopup } = this.props
     if (currentAddForm || currentEditForm || currentEdit2Form) closeAddPopup()
   }
+
+  handleFilterChange = () => {}
 
   renderContent = () => {
     const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = this.props
@@ -122,10 +122,6 @@ class Products extends Component {
     const sidebars = {
       'product-catalog': <AddEditEchoProduct />
     }
-
-    //! ! Temporary commented
-    //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isOperator, false)))
-    //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>

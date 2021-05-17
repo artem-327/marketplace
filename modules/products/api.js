@@ -1,6 +1,6 @@
-import api from '~/api'
+import api from '../../api'
 
-import { generateQueryString } from '~/utils/functions'
+import { generateQueryString } from '../../utils/functions'
 
 export default {
   getHazardClasses: () => api.get('/prodex/api/hazard-classes'),

@@ -1,11 +1,11 @@
 import { Component } from 'react'
-import confirm from '~/components/Confirmable/confirm'
+import confirm from '../../../../components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import {
   openPopup,
   openEditAltNamesCasPopup,
@@ -14,7 +14,7 @@ import {
   getPackagingGroupsDataRequest,
   deleteCasProduct
 } from '../../actions'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 
 class CasProductsTable extends Component {
   constructor(props) {

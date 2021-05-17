@@ -1,7 +1,7 @@
 import * as AT from './action-types'
 import api from './api'
-import { Datagrid } from '~/modules/datagrid'
-import { getSafe } from '~/utils/functions'
+import { Datagrid } from '../datagrid'
+import { getSafe } from '../../utils/functions'
 
 export function openPopup(data) {
   return {

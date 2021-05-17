@@ -4,13 +4,13 @@ import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import confirm from '~/components/Confirmable/confirm'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import { generateToastMarkup, getSafe } from '../../../../utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import { openPopup, deleteProductGroups } from '../../actions'
-import { withDatagrid } from '~/modules/datagrid'
-import { ArrayToFirstItem } from '~/components/formatted-messages/'
+import { withDatagrid } from '../../../datagrid'
+import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 
 class ProductGroupsTable extends Component {
   constructor(props) {

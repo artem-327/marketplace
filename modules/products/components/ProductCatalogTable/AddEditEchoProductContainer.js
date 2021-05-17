@@ -1,6 +1,6 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import { connect } from 'react-redux'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 //Actions
 import {
   closePopup,
@@ -21,10 +21,10 @@ import {
   searchProductGroups,
   getDocumentTypes,
   searchCompany
-} from '~/modules/products/actions'
+} from '../../../products/actions'
 
 import { Header } from 'semantic-ui-react'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 
 import { injectIntl } from 'react-intl'
 

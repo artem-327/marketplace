@@ -13,7 +13,7 @@ import {
   updateCompanyGenericProductsAltName,
   deleteCompanyGenericProductsAltName
 } from '../../actions'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import styled from 'styled-components'
 
 const StyledModalContent = styled(Modal.Content)`

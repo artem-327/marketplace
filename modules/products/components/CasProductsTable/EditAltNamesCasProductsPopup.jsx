@@ -27,7 +27,7 @@ import {
 
 import { Formik } from 'formik'
 import { Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import styled from 'styled-components'
 
 const StyledModalContent = styled(Modal.Content)`

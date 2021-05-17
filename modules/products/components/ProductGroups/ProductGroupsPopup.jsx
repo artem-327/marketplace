@@ -7,12 +7,12 @@ import * as Yup from 'yup'
 import { Form, Input, Button, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import debounce from 'lodash/debounce'
 
-import { generateToastMarkup, getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
-import { withDatagrid } from '~/modules/datagrid'
+import { generateToastMarkup, getSafe, uniqueArrayByKey } from '../../../../utils/functions'
+import { errorMessages } from '../../../../constants/yupValidation'
+import { withDatagrid } from '../../../datagrid'
 import { closePopup, putProductGroups, searchTags, postProductGroups, searchMarketSegments } from '../../actions'
-import { Required } from '~/components/constants/layout'
-import ErrorFocus from '~/components/error-focus'
+import { Required } from '../../../../components/constants/layout'
+import ErrorFocus from '../../../../components/error-focus'
 
 const formValidation = () =>
   Yup.lazy(values =>
