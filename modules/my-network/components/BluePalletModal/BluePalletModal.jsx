@@ -18,12 +18,12 @@ import {
   FooterInfo
 } from './BluePalletModal.styles'
 // Icons
-import Logo from '~/assets/images/nav/logo-bluetrade.png'
-import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
-import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg'
-import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
-import IconSimple from '~/assets/images/blue-pallet/target.svg'
-import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
+import Logo from '../../../../assets/images/nav/logo-bluetrade.png'
+import BluePalletLogo from '../../../../assets/images/blue-pallet/trade-pass-logo-only.svg'
+import BluePalletCircle from '../../../../assets/images/blue-pallet/blue-pallet-circle.svg'
+import IconSafe from '../../../../assets/images/blue-pallet/shield-fill-check.svg'
+import IconSimple from '../../../../assets/images/blue-pallet/target.svg'
+import IconSecure from '../../../../assets/images/blue-pallet/shield-lock-fill.svg'
 import * as Actions from '../../../inventory/actions'
 /**
  * Modal allow connect between companies.
