@@ -653,7 +653,7 @@ class MyListings extends Component {
       isProductInfoOpen,
       closePopup,
       broadcastChange,
-      systemCompanyName
+      applicationName
     } = this.props
     let title
 
@@ -678,9 +678,9 @@ class MyListings extends Component {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
           id: 'myInventory.allSubtitle',
-          defaultMessage: 'My Network + Blue Trade'
+          defaultMessage: 'My Network + BlueTrade'
         }, {
-          companyName: systemCompanyName
+          companyName: applicationName
         }),
         value: 'GLOBAL_RULES'
       },
@@ -710,8 +710,8 @@ class MyListings extends Component {
       },
       {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'Blue Trade' }, {
-          companyName: systemCompanyName
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BlueTrade' }, {
+          companyName: applicationName
         }),
         subtitle: formatMessage({
           id: 'myInventory.bluePalletDirectSubtitle',

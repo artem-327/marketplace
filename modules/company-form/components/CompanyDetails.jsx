@@ -152,7 +152,7 @@ const CompanyDetails = props => {
             <GridRow>
               <GridColumnTradePassId width={16}>
                 <Input
-                  label={<FormattedMessage id='company.myTradePassId' defaultMessage='My Trade Pass ID' />}
+                  label={<FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />}
                   name='vellociBusinessId'
                   inputProps={{
                     readOnly: true
@@ -165,10 +165,10 @@ const CompanyDetails = props => {
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name' />
+        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name and Phone Number' />
       </GridRowSectionDescription>
       <GridRow>
-        <GridColumn width={16}>
+        <GridColumn width={8}>
           <Input
             label={
               <>
@@ -196,6 +196,19 @@ const CompanyDetails = props => {
                 defaultMessage: 'Business Name'
               })
             }}
+          />
+        </GridColumn>
+        <GridColumn width={8}>
+          <PhoneNumber
+            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+            name='companyPhone'
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched}
+            errors={errors}
+            touched={touched}
+            isSubmitting={isSubmitting}
+            clearable
           />
         </GridColumn>
       </GridRow>

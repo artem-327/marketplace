@@ -62,15 +62,12 @@ const Checkout = props => {
     intl: { formatMessage },
     loading,
     isThirdPartyConnectionException,
-    systemCompanyName
+    applicationName
   } = props
 
   // Similar to call componentDidMount:
   useEffect(() => {
     const fetchCheckout = async (freight) => {
-      const { paymentProcessor } = props
-      props.getDeliveryAddresses()
-      props.getPayments(paymentProcessor)
       props.getIdentity()
       const { value } = await props.getCart()
       const initVal = value.cartItems.map(item => ({
@@ -135,7 +132,7 @@ const Checkout = props => {
   return (
     <>
       <Head>
-        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' }, { companyName: systemCompanyName })}</title>
+        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' }, { companyName: applicationName })}</title>
       </Head>
       <ContainerMain fluid>
         <HeaderRow itemsCount={cartItems.length} />
@@ -269,7 +266,7 @@ Checkout.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

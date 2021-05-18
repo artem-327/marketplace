@@ -55,7 +55,12 @@ const formValidation = Yup.object().shape({
 })
 
 class MyProfile extends Component {
+  state = {
+    avatarTime: ''
+  }
+
   componentDidMount() {
+    this.setState({ avatarTime: Date.now() })
     this.props.getUserMeData()
     // this.props.getCurrencies()
     this.props.getLanguages()
@@ -173,6 +178,7 @@ class MyProfile extends Component {
                       try {
                         await saveAvatarPicture(files[0])
                         getIdentity()
+                        this.setState({ avatarTime: Date.now() })
                       } catch (error) {
                         console.error(error)
                       }
@@ -194,9 +200,9 @@ class MyProfile extends Component {
                   }
                   uploadedContent={
                     <div>
-                      {popupValues && (
+                      {popupValues && popupValues.avatar && (
                         <img
-                          src={popupValues.avatar}
+                          src={`${popupValues.avatar}?t=${this.state.avatarTime}`}
                         />
                       )}
                     </div>
@@ -265,7 +271,7 @@ const mapStateToProps = state => {
           lastLoginAt:
             state.auth.identity.lastLoginAt &&
             getSafe(() => moment(state.auth.identity.lastLoginAt).toDate().toLocaleString(), null),
-          avatar: popupValues.avatar,
+          avatar: popupValues.avatarUrl,
           ownAvatar: popupValues.ownAvatar
         }
       : null,

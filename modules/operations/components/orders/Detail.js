@@ -604,7 +604,8 @@ class Detail extends Component {
       openPopup,
       resolveDisputeReject,
       resolveDisputeCredit,
-      resolveDisputeAccept
+      resolveDisputeAccept,
+      downloadDisputeAttachment
     } = this.props
 
     const { activeIndexes, documentsPopupProduct } = this.state
@@ -618,10 +619,11 @@ class Detail extends Component {
         <ModalResolveDispute
           orderId={order?.id}
           disputeReasonComment={order?.disputeReasonComment}
+          disputeAttachments={order?.disputeAttachments}
           open={isOpenPopup}
           loading={loading}
           onClose={closePopup}
-          actions={{ resolveDisputeReject, resolveDisputeCredit, resolveDisputeAccept }}
+          actions={{ resolveDisputeReject, resolveDisputeCredit, resolveDisputeAccept, downloadDisputeAttachment }}
         />
         {this.state.openDocumentsPopup && (
           <StyledModal

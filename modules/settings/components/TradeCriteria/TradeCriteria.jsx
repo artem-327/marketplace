@@ -67,7 +67,7 @@ const TradeCriteria = ({
                 <DivDescription>
                   <FormattedMessage
                     id='settings.tradeCriteria.description'
-                    defaultMessage='Trade Criteria are critical business factors that Trade Pass will use to pre-evaluate your potential customers and partners. Using proprietary technology, Trade Pass will verify these customers/partners exceed, meet, or are below your threshold for conducting business.'
+                    defaultMessage='Trade Criteria are critical business factors that TradePass will use to pre-evaluate your potential customers and partners. Using proprietary technology, TradePass will verify these customers/partners exceed, meet, or are below your threshold for conducting business.'
                   />
                 </DivDescription>
                 {dropdowns?.length

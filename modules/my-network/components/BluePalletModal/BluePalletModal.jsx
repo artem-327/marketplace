@@ -32,7 +32,7 @@ import * as Actions from '../../../inventory/actions'
  */
 const BluePalletModal = props => {
   const [value, setValue] = useState('')
-  const { open, onClose, systemCompanyName } = props
+  const { open, onClose, applicationName } = props
 
   return (
     <ModalCustom
@@ -74,16 +74,16 @@ const BluePalletModal = props => {
         <ContentMainTitle as='h3'>
           <FormattedMessage
             id='bluePallet.whatIs'
-            defaultMessage='What is Blue Trade?'
-            values={{ companyName: systemCompanyName }}
+            defaultMessage='What is BlueTrade?'
+            values={{ companyName: applicationName }}
           />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='Blue Trade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through Blue Trade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that Blue Trade transactions are safe, secure, simple, and reliable.'
+            defaultMessage='BlueTrade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through BlueTrade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that BlueTrade transactions are safe, secure, simple, and reliable.'
             values={{
-              companyName: systemCompanyName
+              companyName: applicationName
             }}
           />
         </AnswerBlock>
@@ -95,7 +95,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='Trade Pass Verified Buyers' />
+                <FormattedMessage id='bluePallet.verifiedBuyers' defaultMessage='TradePass Verified Buyers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -121,7 +121,7 @@ const BluePalletModal = props => {
             <ListBlock>
               <List.Item>
                 <Image src={BluePalletLogo} />
-                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='Trade Pass Verified Sellers' />
+                <FormattedMessage id='bluePallet.verifiedSellers' defaultMessage='TradePass Verified Sellers' />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -141,9 +141,9 @@ const BluePalletModal = props => {
         <FooterInfo>
           <FormattedMessage
             id='bluePallet.footerInfo'
-            defaultMessage='Blue Trade only displays inventory of {companyName} Members. Blue Trade does not manufacture, distribute, or possess any products listed on the Blue Trade Marketplace. Blue Trade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            defaultMessage='BlueTrade only displays inventory of {companyName} Members. BlueTrade does not manufacture, distribute, or possess any products listed on the BlueTrade Marketplace. BlueTrade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
             values={{
-              companyName: systemCompanyName
+              companyName: applicationName
             }}
           />
         </FooterInfo>
@@ -164,7 +164,7 @@ BluePalletModal.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    systemCompanyName: store?.auth?.identity?.appInfo?.systemCompanyName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
   }
 }
 

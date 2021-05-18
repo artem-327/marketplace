@@ -209,7 +209,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { disabled, offer, item, hideFobPrice, filter, asModal, treeData } = this.props
+    const { disabled, item, hideFobPrice, asModal, treeData } = this.props
     const {
       model: { rule }
     } = item

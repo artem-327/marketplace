@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 import { Formik } from 'formik'
 import { Header, FormGroup, Dimmer, Loader, Segment, Form } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui-fixed-validation'
+import { Input, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { ChevronDown } from 'react-feather'
 
@@ -18,6 +18,7 @@ import { PhoneNumber } from '../../../../../phoneNumber'
 import { Required } from '../../../../../../components/constants/layout'
 import ErrorFocus from '../../../../../../components/error-focus'
 import BasicButton from '../../../../../../components/buttons/BasicButton'
+import { TimeInput } from '../../../../../../components/custom-formik'
 
 // Styles
 import {
@@ -178,6 +179,49 @@ const WarehouseSidebar = props => {
                         placeholder: formatMessage({
                           id: 'settings.customers.enterEmailAddress',
                           defaultMessage: 'Enter Email Address'
+                        })
+                      }}
+                    />
+                  </FormGroup>
+                  <FormGroup data-test='settings_customers_popup_notes_inp'>
+                    <TimeInput
+                      label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                      name='readyTime'
+                    />
+                    <TimeInput
+                      label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                      name='closeTime'
+                    />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Checkbox
+                      label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                      name='liftGate'
+                      inputProps={{ 'data-test': 'settings_customers_popup_liftGate_inp' }}
+                    />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Checkbox
+                      label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+                      name='forkLift'
+                      inputProps={{ 'data-test': 'settings_customers_popup_forklift_inp' }}
+                    />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Checkbox
+                      label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                      name='callAhead'
+                      inputProps={{ 'data-test': 'settings_customers_popup_callAhead_inp' }}
+                    />
+                  </FormGroup>
+                  <FormGroup widths='equal' data-test='settings_customers_popup_emailPhone_inp'>
+                    <TextArea
+                      name='deliveryNotes'
+                      label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'settings.warehouses.writeDeliveryNotesHere',
+                          defaultMessage: 'Write Delivery Notes Here'
                         })
                       }}
                     />

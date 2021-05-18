@@ -12,6 +12,7 @@
     "@devexpress/dx-react-grid-bootstrap4": "^1.11.0",
     "@material-ui/core": "^3.9.4",
     "@material-ui/icons": "^3.0.2",
+    "@next/bundle-analyzer": "^10.2.0",
     "@zeit/next-css": "^0.2.1-canary.4",
     "@zeit/next-sass": "^0.2.1-canary.4",
     "axios": "^0.21.1",
@@ -91,7 +92,8 @@
   "scripts": {
     "dev": "node --max-old-space-size=8192 server.js",
     "build": "next build",
-    "start-s": "next start",
+    "build:review": "APP_ENV=review next build",
+    "next:start": "next start",
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch",

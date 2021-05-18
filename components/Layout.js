@@ -276,7 +276,7 @@ class Layout extends Component {
       useGravatar,
       gravatarSrc,
       companyName,
-      isEchoOperator,
+      isOperator,
       isOrderOperator,
       renderCopyright,
       openGlobalAddForm,
@@ -288,7 +288,7 @@ class Layout extends Component {
       buttonActionsDetailRow,
       isOpenInviteModal,
       triggerModal,
-      systemCompanyName
+      applicationName
     } = this.props
 
     const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
@@ -327,8 +327,8 @@ class Layout extends Component {
         <CopyrightContainer>
           <FormattedMessage
             id='global.copyright'
-            defaultMessage={`Copyright ${moment().format('YYYY')} {companyName}`}
-            values={{ currentYear: moment().format('YYYY'), companyName: systemCompanyName }}
+            defaultMessage={`Copyright {currentYear} {companyName}`}
+            values={{ currentYear: moment().format('YYYY'), companyName: applicationName }}
           />
         </CopyrightContainer>
       )
@@ -337,7 +337,7 @@ class Layout extends Component {
       <MainContainer fluid className={mainClass}>
         <Head>
           <title>
-            {systemCompanyName} / {title}
+            {applicationName} / {title}
           </title>
         </Head>
 
@@ -426,7 +426,7 @@ class Layout extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {auth && auth.identity && !auth.identity.isAdmin && !isEchoOperator && !isOrderOperator && (
+              {auth && auth.identity && !auth.identity.isAdmin && !isOperator && !isOrderOperator && (
                 <>
                   <Menu.Item
                     onClick={() => Router.push('/cart')}
@@ -481,7 +481,7 @@ class Layout extends Component {
             className='ui fluid container page-wrapper flex column stretched'>
             {!this.state.fatalError ? children : <ErrorComponent />}
           </ContentContainer>
-          {copyrightContainer}
+          {renderCopyright ? copyrightContainer : null}
         </FlexContainer>
 
         {takeover ? (
@@ -558,7 +558,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     auth: state.auth,
-    systemCompanyName: state?.auth?.identity?.appInfo?.systemCompanyName,
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     identity: getSafe(() => state.auth.identity, {}),
     profile: state.profile,
     collapsedMenu: state.layout.collapsedMenu,
@@ -585,7 +585,7 @@ const mapStateToProps = state => {
         'false'
       ).toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isEchoOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+    isOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Operator'),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),
