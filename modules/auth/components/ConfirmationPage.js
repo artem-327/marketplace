@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
-import Logo from '~/assets/images/login/logo-bluetrade.svg'
+import Logo from '~/assets/images/login/logo-bluepallet.svg'
 
 import { addressValidationSchema, errorMessages, einValidation, phoneValidation } from '~/constants/yupValidation'
 
@@ -153,7 +153,7 @@ class ConfirmationPage extends Component {
       searchProvinces
     } = this.props
     const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-    const companyName = getSafe(() => identity?.appInfo?.applicationName, 'BlueTrade')
+    const companyName = getSafe(() => identity?.appInfo?.applicationName, 'BluePallet')
 
     let { formatMessage } = intl
 

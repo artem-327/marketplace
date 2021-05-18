@@ -349,3 +349,10 @@ export function orderResolutionAccept(orderId, ordersType) {
     payload: Api.orderResolutionAccept(orderId, ordersType)
   }
 }
+
+export function downloadDisputeAttachment(orderId, attachmentId) {
+  return {
+    teyp: AT.DOWNLOAD_DISPUTE_ATTACHMENT,
+    payload: Api.downloadDisputeAttachment(orderId, attachmentId)
+  }
+}
