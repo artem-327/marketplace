@@ -1169,7 +1169,7 @@ const AddEditEchoProduct = props => {
             <>
               {values.elements && values.elements.length
                 ? values.elements.map((element, index) => (
-                    <GridRowCustom>
+                    <GridRowCustom key={index}>
                       <GridColumnMixtures
                         width={2}
                         data-test='admin_product_popup_proprietary'
@@ -2336,7 +2336,7 @@ const AddEditEchoProduct = props => {
               <HighSegment basic>
                 <MenuCustom pointing secondary>
                   {tabs.map((tab, i) => (
-                    <Menu.Item onClick={() => tabChanged(i)} active={editTab === i}>
+                    <Menu.Item onClick={() => tabChanged(i)} active={editTab === i} key={i}>
                       {formatMessage(tab.text)}
                     </Menu.Item>
                   ))}

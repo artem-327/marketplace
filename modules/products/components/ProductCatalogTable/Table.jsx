@@ -199,11 +199,12 @@ const ProductCatalogTable = props => {
       editEchoProductChangeTab,
       intl: { formatMessage }
     } = props
-    return rows.map(row => {
+    return rows.map((row, _i) => {
       return {
         ...row,
         name: (
           <ActionCell
+            key={_i}
             row={row}
             getActions={getActions}
             content={row.name}

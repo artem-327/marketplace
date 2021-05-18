@@ -96,11 +96,12 @@ class UnitOfMeasureTable extends Component {
   }
 
   getRows = rows => {
-    return rows.map(row => {
+    return rows.map((row, _i) => {
       return {
         ...row,
         name: (
           <ActionCell
+            key={_i}
             row={row}
             getActions={this.getActions}
             content={row.name}

@@ -69,11 +69,12 @@ const ProductGroupsTable = props => {
   }
 
   const getRows = rows => {
-    return rows.map(row => {
+    return rows.map((row, _i) => {
       return {
         ...row,
         name: (
           <ActionCell
+            key={_i}
             row={row}
             getActions={getActions}
             content={row.name}
@@ -117,11 +118,12 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
   return {
-    rows: datagrid.rows.map(row => ({
+    rows: datagrid.rows.map((row, _i) => ({
       ...row,
       rawData: row,
       tags: (
         <ArrayToFirstItem
+          key={_i}
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
           rowItems={3}
           ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
