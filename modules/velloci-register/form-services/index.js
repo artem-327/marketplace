@@ -96,8 +96,8 @@ export const getValidationSchema = () =>
               }
             : null
           return Yup.object().shape({
-            firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-            lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+            firstName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
+            lastName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
             email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
             phoneNumber: phoneValidation(10).required(requiredMessage),
             dateOfBirth: Yup.string()
