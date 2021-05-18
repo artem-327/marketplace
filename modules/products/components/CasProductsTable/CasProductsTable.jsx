@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, useEffect } from 'react'
 import confirm from '../../../../components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'
@@ -16,43 +16,38 @@ import {
 } from '../../actions'
 import { withDatagrid } from '../../../datagrid'
 
-class CasProductsTable extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      columns: [
-        {
-          name: 'casIndexName',
-          title: (
-            <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 375,
-          sortPath: 'CasProduct.casIndexName',
-          allowReordering: false
-        },
-        {
-          name: 'casNumber',
-          title: (
-            <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 150,
-          sortPath: 'CasProduct.casNumber'
-        }
-      ]
+const CasProductsTable = props => {
+  const columns = [
+    {
+      name: 'casIndexName',
+      title: (
+        <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 375,
+      sortPath: 'CasProduct.casIndexName',
+      allowReordering: false
+    },
+    {
+      name: 'casNumber',
+      title: (
+        <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
+          {text => text}
+        </FormattedMessage>
+      ),
+      width: 150,
+      sortPath: 'CasProduct.casNumber'
     }
-  }
-  componentDidMount() {
-    this.props.getHazardClassesDataRequest()
-    this.props.getPackagingGroupsDataRequest()
-  }
+  ]
 
-  getActions = () => {
-    const { datagrid, intl, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = this.props
+  useEffect(() => {
+    props.getHazardClassesDataRequest()
+    props.getPackagingGroupsDataRequest()
+  }, [])
+
+  const getActions = () => {
+    const { datagrid, intl, openPopup, openEditAltNamesCasPopup, deleteCasProduct } = props
 
     const { formatMessage } = intl
     return [
@@ -84,48 +79,47 @@ class CasProductsTable extends Component {
               console.error(e)
             }
           }),
-        disabled: row => this.props.editedId === row.id
+        disabled: row => props.editedId === row.id
       }
     ]
   }
 
-  getRows = rows => {
-    return rows.map(row => {
+  const getRows = rows => {
+    return rows.map((row, _i) => {
       const { hazardClassesLabeled, ...rest } = row
       return {
         ...row,
         casIndexName: (
           <ActionCell
+            key={_i}
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.casIndexName}
-            onContentClick={() => this.props.openPopup(rest)}
+            onContentClick={() => props.openPopup(rest)}
           />
         )
       }
     })
   }
 
-  render() {
-    const { datagrid, rows, editedId } = this.props
+  const { datagrid, rows, editedId } = props
 
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          {...datagrid.tableProps}
-          tableName='admin_cas_products'
-          columns={this.state.columns}
-          rows={this.getRows(rows)}
-          defaultSorting={{
-            columnName: 'casIndexName',
-            sortPath: 'CasProduct.casIndexName',
-            direction: 'asc'
-          }}
-          editingRowId={editedId}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        {...datagrid.tableProps}
+        tableName='admin_cas_products'
+        columns={columns}
+        rows={getRows(rows)}
+        defaultSorting={{
+          columnName: 'casIndexName',
+          sortPath: 'CasProduct.casIndexName',
+          direction: 'asc'
+        }}
+        editingRowId={editedId}
+      />
+    </div>
+  )
 }
 
 const mapDispatchToProps = {
