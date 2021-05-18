@@ -1718,6 +1718,18 @@ class Detail extends Component {
                             <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
+                          {!!order.frsId && (
+                            <>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.frsId' defaultMessage='FRS ID' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.frsId}</GridDataColumn>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.epaRegion' defaultMessage='EPA Region' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.shippingAddressEpaRegion}</GridDataColumn>
+                            </>
+                          )}
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.shipToAddress' defaultMessage='Ship To Address' />
                           </GridDataColumn>
