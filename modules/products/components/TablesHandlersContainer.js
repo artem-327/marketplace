@@ -1,28 +1,34 @@
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
-//Services
-import { getSafe } from '../../../utils/functions'
 //Actions
 import * as Actions from '../actions'
 import { openImportPopup } from '../../settings/actions'
+//Selectors
+import {
+  makeGetTableHandlersFilters,
+  makeGetSearchedCompanies,
+  makeGetSearchedCompaniesByName,
+  makeGetSearchedCompaniesLoading,
+  makeGetCompanyProductUnmappedOnly
+} from '../selectors'
 
+const makeMapStateToProps = () => {
+  const getTableHandlersFilters = makeGetTableHandlersFilters()
+  const getSearchedCompanies = makeGetSearchedCompanies()
+  const getSearchedCompaniesByName = makeGetSearchedCompaniesByName()
+  const getSearchedCompaniesLoading = makeGetSearchedCompaniesLoading()
+  const getCompanyProductUnmappedOnly = makeGetCompanyProductUnmappedOnly()
 
-const mapStateToProps = state => {
+  const mapStateToProps = state => {
     return {
-      tableHandlersFilters: state.productsAdmin.tableHandlersFilters,
-      searchedCompanies: state.productsAdmin.searchedCompanies.map(d => ({
-        key: d.id,
-        value: d.id,
-        text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-      })),
-      searchedCompaniesByName: state.productsAdmin.searchedCompanies.map(d => ({
-        key: d.id,
-        value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
-        text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-      })),
-      searchedCompaniesLoading: state.productsAdmin.searchedCompaniesLoading,
-      companyProductUnmappedOnly: state.productsAdmin.companyProductUnmappedOnly
+      tableHandlersFilters: getTableHandlersFilters(state),
+      searchedCompanies: getSearchedCompanies(state),
+      searchedCompaniesByName: getSearchedCompaniesByName(state),
+      searchedCompaniesLoading: getSearchedCompaniesLoading(state),
+      companyProductUnmappedOnly: getCompanyProductUnmappedOnly(state)
     }
+  }
+  return mapStateToProps
 }
-  
-export default connect(mapStateToProps, { ...Actions, openImportPopup })(TablesHandlers)
+
+export default connect(makeMapStateToProps, { ...Actions, openImportPopup })(TablesHandlers)

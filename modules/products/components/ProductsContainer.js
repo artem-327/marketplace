@@ -1,16 +1,32 @@
 import { connect } from 'react-redux'
 import Products from './Products'
 import * as Actions from '../actions'
+import {
+  makeGetAuth,
+  makeGetIsOpenImportPopup,
+  makeGetCurrentEdit2Form,
+  makeGetCurrentEditForm,
+  makeGetCurrentAddForm
+} from '../selectors'
 
-const mapStateToProps = state => {
+const makeMapStateToProps = () => {
+  const getAuth = makeGetAuth()
+  const getIsOpenImportPopup = makeGetIsOpenImportPopup()
+  const getCurrentEdit2Form = makeGetCurrentEdit2Form()
+  const getCurrentEditForm = makeGetCurrentEditForm()
+  const getCurrentAddForm = makeGetCurrentAddForm()
+
+  const mapStateToProps = state => {
     return {
       ...state.productsAdmin,
-      auth: state.auth,
-      isOpenImportPopup: state.settings.isOpenImportPopup,
-      currentEdit2Form: state.productsAdmin.currentEdit2Form,
-      currentEditForm: state.productsAdmin.currentEditForm,
-      currentAddForm: state.productsAdmin.currentAddForm
+      auth: getAuth(state),
+      isOpenImportPopup: getIsOpenImportPopup(state),
+      currentEdit2Form: getCurrentEdit2Form(state),
+      currentEditForm: getCurrentEditForm(state),
+      currentAddForm: getCurrentAddForm(state)
     }
   }
-  
-  export default connect(mapStateToProps, Actions)(Products)
+  return mapStateToProps
+}
+
+export default connect(makeMapStateToProps, Actions)(Products)

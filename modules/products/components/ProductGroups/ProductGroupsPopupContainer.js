@@ -1,7 +1,12 @@
 import { connect } from 'react-redux'
 import ProductGroupsPopup from './ProductGroupsPopup'
 import { closePopup, putProductGroups, searchTags, postProductGroups, searchMarketSegments } from '../../actions'
-import { getSafe } from '../../../../utils/functions'
+import {
+    makeGetRowId,
+    makeGetPopupValues,
+    makeGetSearchedTagsLoading,
+    makeGetSearchedTags
+} from '../../selectors'
 
 const mapDispatchToProps = {
     closePopup,
@@ -11,21 +16,21 @@ const mapDispatchToProps = {
     searchMarketSegments
 }
 
-const mapStateToProps = state => {
-    const { popupValues } = state.productsAdmin
+const makeMapStateToProps = () => {
+    const getRowId = makeGetRowId()
+    const getPopupValues = makeGetPopupValues()
+    const getSearchedTagsLoading = makeGetSearchedTagsLoading()
+    const getSearchedTags = makeGetSearchedTags()
 
-    return {
-        rowId: getSafe(() => popupValues.id),
-        popupValues: getSafe(() => popupValues, ''),
-        searchedTagsLoading: state.productsAdmin.searchedTagsLoading,
-        searchedTags: getSafe(() => state.productsAdmin.searchedTags.length, false)
-        ? state.productsAdmin.searchedTags.map(d => ({
-            key: d.id,
-            text: d.name,
-            value: d.id
-            }))
-        : []
+    const mapStateToProps = state => {
+        return {
+            rowId: getRowId(state),
+            popupValues: getPopupValues(state),
+            searchedTagsLoading: getSearchedTagsLoading(state),
+            searchedTags: getSearchedTags(state)
+        }
     }
+    return mapStateToProps
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductGroupsPopup)  
+export default connect(makeMapStateToProps, mapDispatchToProps)(ProductGroupsPopup)  
