@@ -1,18 +1,12 @@
 import { Fragment, Component } from 'react'
-import { connect } from 'react-redux'
 import moment from 'moment/moment'
 import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { withDatagrid } from '../../../datagrid'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 import { getSafe } from '../../../../utils/functions'
-import { downloadAttachment } from '../../../inventory/actions'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
-//Actions
-import * as Actions from '../../actions'
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 import { echoRowActions } from './constants'
 import { FileText, MoreVertical } from 'react-feather'
 import styled from 'styled-components'
@@ -349,22 +343,4 @@ const ProductCatalogTable = props => {
   )
 }
 
-const mapStateToProps = ({ admin, productsAdmin }, { datagrid }) => {
-  const editedId =
-    (!!productsAdmin.currentAddForm || !!productsAdmin.currentEditForm) && productsAdmin.popupValues
-      ? productsAdmin.popupValues.id
-      : -1
-
-  return {
-    editedId,
-    filterValue: productsAdmin.filterValue,
-    rows: datagrid.rows.map(c => ({
-      ...c,
-      company: getSafe(() => c.company, [])
-    }))
-  }
-}
-
-export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, downloadAttachment })(injectIntl(ProductCatalogTable))
-)
+export default injectIntl(ProductCatalogTable)

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 
 import {
   Modal,
@@ -17,17 +16,9 @@ import {
 } from 'semantic-ui-react'
 import { FieldArray } from 'formik'
 import { FormattedMessage } from 'react-intl'
-import {
-  closeEditPopup,
-  getAlternativeProductNames,
-  postNewProductName,
-  updateProductName,
-  deleteProductName
-} from '../../actions'
 
 import { Formik } from 'formik'
 import { Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '../../../../utils/functions'
 import styled from 'styled-components'
 
 const StyledModalContent = styled(Modal.Content)`
@@ -270,20 +261,4 @@ const EditAltNamesCasProductsPopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeEditPopup,
-  getAlternativeProductNames,
-  postNewProductName,
-  updateProductName,
-  deleteProductName
-}
-
-const mapStateToProps = state => {
-  return {
-    popupValues: state.productsAdmin.popupValues,
-    altCasNamesRows: getSafe(() => state.productsAdmin.altCasNamesRows.data, []),
-    loading: getSafe(() => state.productsAdmin.loading, false)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditAltNamesCasProductsPopup)
+export default EditAltNamesCasProductsPopup

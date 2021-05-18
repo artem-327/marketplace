@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -8,13 +7,11 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { GridRow, GridColumn } from 'semantic-ui-react'
 import { Input, Button, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Required } from '../../../../../components/constants/layout'
-import CasProductSection from '../CasProductSection/CasProductSection'
+import CasProductSection from '../CasProductSection/CasProductSectionContainer'
 
 // Styles
 import { GridStyled } from './CasProductsSidebarContent.styles'
 
-// Actions
-import { getHazardClassesDataRequest } from '../../../actions'
 
 // Constants
 import {
@@ -165,8 +162,4 @@ CasProductsSidebarContent.propTypes = {}
 
 CasProductsSidebarContent.defaultProps = {}
 
-function mapStateToProps(store) {
-  return {}
-}
-
-export default injectIntl(connect(mapStateToProps, { getHazardClassesDataRequest })(CasProductsSidebarContent))
+export default injectIntl(CasProductsSidebarContent)

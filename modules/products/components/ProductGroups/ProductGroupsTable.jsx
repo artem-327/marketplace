@@ -1,15 +1,10 @@
-import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 
-import { generateToastMarkup, getSafe } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import { openPopup, deleteProductGroups } from '../../actions'
-import { withDatagrid } from '../../../datagrid'
-import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 
 const ProductGroupsTable = props => {
   const columns =
@@ -111,33 +106,5 @@ const ProductGroupsTable = props => {
     </div>
   )
 }
-const mapDispatchToProps = {
-  openPopup,
-  deleteProductGroups
-}
 
-const mapStateToProps = (state, { handleFilterChange, datagrid }) => {
-  return {
-    rows: datagrid.rows.map((row, _i) => ({
-      ...row,
-      rawData: row,
-      tags: (
-        <ArrayToFirstItem
-          key={_i}
-          values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
-          rowItems={3}
-          ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}
-          tags={true}
-          onTagClick={handleFilterChange}
-        />
-      )
-    })),
-    filterValue: state.productsAdmin.filterValue,
-    editedId: state.productsAdmin.editedId,
-    loading: state.productsAdmin.loading
-  }
-}
-
-export default withDatagrid(
-  connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(ProductGroupsTable)))
-)
+export default injectIntl(withToastManager(ProductGroupsTable))

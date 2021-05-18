@@ -1,20 +1,9 @@
-import { Component, useEffect } from 'react'
+import { useEffect } from 'react'
 import confirm from '../../../../components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Popup, Label } from 'semantic-ui-react'
-import { connect } from 'react-redux'
 
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import {
-  openPopup,
-  openEditAltNamesCasPopup,
-  closeConfirmPopup,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
-  deleteCasProduct
-} from '../../actions'
-import { withDatagrid } from '../../../datagrid'
 
 const CasProductsTable = props => {
   const columns = [
@@ -122,44 +111,4 @@ const CasProductsTable = props => {
   )
 }
 
-const mapDispatchToProps = {
-  openPopup,
-  openEditAltNamesCasPopup,
-  closeConfirmPopup,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
-  deleteCasProduct
-}
-
-const transformHazardClasses = classes => {
-  if (!classes || !classes.length) return
-  return (
-    <Label.Group color='blue'>
-      {classes.map((b, i) => (
-        <Popup
-          key={i}
-          content={b.description}
-          trigger={
-            <Label size='tiny'>
-              {b.classCode}
-            </Label>
-          }
-        />
-      ))}
-    </Label.Group>
-  )
-}
-
-const mapStateToProps = (state, { datagrid }) => {
-  return {
-    editedId: state.productsAdmin.editedId,
-    rows: datagrid.rows.map(d => {
-      return {
-        ...d,
-        hazardClassesLabeled: transformHazardClasses(d.hazardClasses)
-      }
-    })
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(CasProductsTable)))
+export default injectIntl(CasProductsTable)

@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup, Form } from 'semantic-ui-react'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { Formik, FieldArray } from 'formik'
 
 import { FormattedMessage } from 'react-intl'
 
-import {
-  closePopup,
-  getAlternativeCompanyGenericProductsNames,
-  postNewCompanyGenericProductsAltName,
-  updateCompanyGenericProductsAltName,
-  deleteCompanyGenericProductsAltName
-} from '../../actions'
-import { getSafe } from '../../../../utils/functions'
 import styled from 'styled-components'
 
 const StyledModalContent = styled(Modal.Content)`
@@ -257,20 +248,4 @@ const EditAltNamesEchoProductPopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closePopup,
-  getAlternativeCompanyGenericProductsNames,
-  postNewCompanyGenericProductsAltName,
-  updateCompanyGenericProductsAltName,
-  deleteCompanyGenericProductsAltName
-}
-
-const mapStateToProps = state => {
-  return {
-    popupValues: getSafe(() => state.productsAdmin.popupValues, ''),
-    productAltNames: getSafe(() => state.productsAdmin.altEchoNamesRows, []),
-    loading: getSafe(() => state.productsAdmin.loading, false)
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditAltNamesEchoProductPopup)
+export default EditAltNamesEchoProductPopup

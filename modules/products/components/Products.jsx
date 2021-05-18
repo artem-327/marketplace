@@ -1,20 +1,17 @@
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import TablesHandlers from './TablesHandlers'
+import TablesHandlers from './TablesHandlersContainer'
 import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
 import { withAuth } from '../../../hocs'
-import styled from 'styled-components'
 
-import CasProductsTable from './CasProductsTable/CasProductsTable'
-import ProductCatalogTable from './ProductCatalogTable/Table'
-import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
-import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopup'
+import CasProductsTable from './CasProductsTable/CasProductsTableContainer'
+import ProductCatalogTable from './ProductCatalogTable/TableContainer'
+import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopupContainer'
+import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopupContainer'
 import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopup'
-import CasProductsSidebar from './CasProductsTable/CasProductsSidebar'
+import CasProductsSidebar from './CasProductsTable/CasProductsSidebarContainer'
 import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
-import ProductGroupsTable from './ProductGroups/ProductGroupsTable'
-import ProductGroupsPopup from './ProductGroups/ProductGroupsPopup'
-import * as Actions from '../actions'
+import ProductGroupsTable from './ProductGroups/ProductGroupsTableContainer'
+import ProductGroupsPopup from './ProductGroups/ProductGroupsPopupContainer'
 
 import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
 
@@ -136,15 +133,4 @@ const Products = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    ...state.productsAdmin,
-    auth: state.auth,
-    isOpenImportPopup: state.settings.isOpenImportPopup,
-    currentEdit2Form: state.productsAdmin.currentEdit2Form,
-    currentEditForm: state.productsAdmin.currentEditForm,
-    currentAddForm: state.productsAdmin.currentAddForm
-  }
-}
-
-export default withDatagrid(withAuth(connect(mapStateToProps, Actions)(Products)))
+export default withDatagrid(withAuth(Products))

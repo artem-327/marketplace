@@ -1,15 +1,9 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import styled from 'styled-components'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
-//Actions
-import * as Actions from '../actions'
-import { openImportPopup } from '../../settings/actions'
-//Services
-import { getSafe } from '../../../utils/functions'
 //Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { withDatagrid } from '../../datagrid'
@@ -159,24 +153,4 @@ const TablesHandlers = props => {
   
 }
 
-const mapStateToProps = state => {
-  return {
-    tableHandlersFilters: state.productsAdmin.tableHandlersFilters,
-    searchedCompanies: state.productsAdmin.searchedCompanies.map(d => ({
-      key: d.id,
-      value: d.id,
-      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-    })),
-    searchedCompaniesByName: state.productsAdmin.searchedCompanies.map(d => ({
-      key: d.id,
-      value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
-      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-    })),
-    searchedCompaniesLoading: state.productsAdmin.searchedCompaniesLoading,
-    companyProductUnmappedOnly: state.productsAdmin.companyProductUnmappedOnly
-  }
-}
-
-export default withDatagrid(
-  connect(mapStateToProps, { ...Actions, openImportPopup })(injectIntl(TablesHandlers))
-)
+export default withDatagrid(injectIntl(TablesHandlers))

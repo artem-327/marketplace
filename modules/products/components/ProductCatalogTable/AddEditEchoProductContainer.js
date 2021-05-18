@@ -26,8 +26,6 @@ import {
 import { Header } from 'semantic-ui-react'
 import { getSafe } from '../../../../utils/functions'
 
-import { injectIntl } from 'react-intl'
-
 const mapDispatchToProps = {
   loadFile,
   addAttachment,
@@ -112,4 +110,4 @@ const mapStateToProps = ({ productsAdmin }, props) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct)))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(AddEditEchoProduct))

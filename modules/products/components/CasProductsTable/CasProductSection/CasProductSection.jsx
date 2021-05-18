@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe } from '../../../../../utils/functions'
@@ -149,10 +148,4 @@ CasProductSection.defaultProps = {
   label: ''
 }
 
-function mapStateToProps(store) {
-  return {
-    hazardClasses: store.productsAdmin.hazardClasses
-  }
-}
-
-export default injectIntl(connect(mapStateToProps, {  })(CasProductSection))
+export default injectIntl(CasProductSection)

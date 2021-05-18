@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { connect } from 'react-redux'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -10,7 +9,6 @@ import debounce from 'lodash/debounce'
 import { generateToastMarkup, getSafe, uniqueArrayByKey } from '../../../../utils/functions'
 import { errorMessages } from '../../../../constants/yupValidation'
 import { withDatagrid } from '../../../datagrid'
-import { closePopup, putProductGroups, searchTags, postProductGroups, searchMarketSegments } from '../../actions'
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
 
@@ -194,31 +192,6 @@ const ProductGroupsPopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closePopup,
-  putProductGroups,
-  searchTags,
-  postProductGroups,
-  searchMarketSegments
-}
-
-const mapStateToProps = state => {
-  const { popupValues } = state.productsAdmin
-
-  return {
-    rowId: getSafe(() => popupValues.id),
-    popupValues: getSafe(() => popupValues, ''),
-    searchedTagsLoading: state.productsAdmin.searchedTagsLoading,
-    searchedTags: getSafe(() => state.productsAdmin.searchedTags.length, false)
-      ? state.productsAdmin.searchedTags.map(d => ({
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }))
-      : []
-  }
-}
-
 export default withDatagrid(
-  injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ProductGroupsPopup)))
+  injectIntl(withToastManager(ProductGroupsPopup))
 )

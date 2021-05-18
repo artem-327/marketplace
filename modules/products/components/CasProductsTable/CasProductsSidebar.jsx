@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -10,8 +9,7 @@ import { ChevronDown } from 'react-feather'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 import BasicButton from '../../../../components/buttons/BasicButton'
-import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContent'
-import { withDatagrid } from '../../../datagrid'
+import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContentContainer'
 
 // Styles
 import {
@@ -28,7 +26,6 @@ import {
 
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
-import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
 
 const CasProductsSidebar = props => {
   const { popupValues, updating } = props
@@ -120,15 +117,4 @@ CasProductsSidebar.propTypes = {}
 
 CasProductsSidebar.defaultProps = {}
 
-function mapStateToProps(store) {
-  return {
-    popupValues: store.productsAdmin.popupValues,
-    updating: store.productsAdmin.updating
-  }
-}
-
-export default withDatagrid(injectIntl(connect(mapStateToProps, {
-  closeAddPopup,
-  postNewCasProductRequest,
-  updateCasProductRequest
-})(CasProductsSidebar)))
+export default injectIntl(CasProductsSidebar)
