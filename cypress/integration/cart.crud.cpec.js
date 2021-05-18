@@ -146,7 +146,6 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Delete item in shopping card", () => {
-        cy.wait(10000)
         cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.get('div[class*="CustomHeader"]').should("have.length", "2")
@@ -171,7 +170,6 @@ context("Shopping cart CRUD", () => {
     })
 
     it("Place an order", () => {
-        cy.wait(10000)
         cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.contains("button", "Proceed to Checkout").click()
@@ -201,7 +199,7 @@ context("Shopping cart CRUD", () => {
         cy.get("div.radio:visible").first().click()
         cy.contains("button", "Use this Payment Method").click()
 
-        cy.contains("Own Freight", { timeout: 60000 }).click()
+        cy.contains("Own Freight").click({ timeout: 60000 })
         cy.contains("button", "Use this Freight", { timeout: 60000 }).click()
 
         cy.contains("Place Order").should('be.visible')

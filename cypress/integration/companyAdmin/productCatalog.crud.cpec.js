@@ -7,6 +7,7 @@ context("Company Product Catalog CRUD", () => {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/company-products/datagrid?type=ALL").as("productLoading")
+        cy.intercept("POST", "/prodex/api/company-products").as("productCreate")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.deleteWholeCart(token)
@@ -44,8 +45,6 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("kilograms").click()
         })
 
-        cy.enterText("#field_input_packageWeight", "5")
-
         cy.get("div[id='field_dropdown_nmfcNumber']")
             .children("input")
             .type("15", { force: true })
@@ -72,7 +71,13 @@ context("Company Product Catalog CRUD", () => {
             cy.contains("paper bags").click()
         })
 
+        cy.enterText("#field_input_packageWeight", "5")
+
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
+        cy.wait("@productCreate")
+        cy.wait("@productCreate").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
+        })
         cy.waitForUI()
 
         cy.reload()
