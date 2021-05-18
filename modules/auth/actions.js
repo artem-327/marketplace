@@ -1,9 +1,13 @@
-import * as AT from './action-types'
-import * as api from './api'
-import { setAuth, unsetAuth, authorize } from '../../utils/auth'
 import Router from 'next/router'
-import { ROLES_ENUM } from '../../utils/constants'
+//Action Types
+import * as AT from './action-types'
+//API
+import * as api from './api'
+//Functions
+import { setAuth, unsetAuth, authorize } from '../../utils/auth'
 import { getSafe } from '../../utils/functions'
+//Constants
+import { ROLES_ENUM } from '../../utils/constants'
 import { currency } from '../../constants/index'
 
 export function getIdentity() {
@@ -98,8 +102,6 @@ export function login(username, password) {
             }
           }
         }
-        // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
-        // user is first login as companyAdmin then redirect to settings
 
         if (
           identity &&
@@ -120,14 +122,28 @@ export function login(username, password) {
         return authPayload
       }
     })
-    // dispatch(triggerAgreementModal(true))
   }
 }
 
 export function getVersion() {
-  return {
-    type: AT.GET_VERSION,
-    payload: api.getVersion()
+  return dispatch => {
+    dispatch({
+      type: AT.GET_VERSION_PENDING
+    })
+    api
+      .getVersion()
+      .then(async response => {
+        await dispatch({
+          type: AT.GET_VERSION_FULFILLED,
+          payload: response.data
+        })
+      })
+      .catch(async err => {
+        await dispatch({
+          type: AT.GET_VERSION_REJECTED,
+          error: err
+        })
+      })
   }
 }
 
@@ -149,23 +165,6 @@ export const resetPasswordRequest = email => ({
   }
 })
 
-// export function registration(email, password, firstName, middleName, lastName) {
-//   return {
-//     type: AT.REGISTRATION,
-//     payload: axios({
-//       method: 'post',
-//       url: "/api/users",
-//       data: {
-//         email: email,
-//         password: password,
-//         firstname: firstName,
-//         middlename: middleName,
-//         lastname: lastName
-//       }
-//     })
-//   }
-// }
-
 export const reviewCompany = values => {
   delete values.address.availableCountries
   delete values.address.availableProvinces
@@ -186,21 +185,95 @@ export const setCompanyElligible = () => ({
   }
 })
 
-export const searchCountries = searchQuery => ({
-  type: AT.AUTH_SEARCH_COUNTRIES,
-  payload: api.searchCountries(searchQuery)
-})
+export const searchCountries = searchQuery => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.AUTH_SEARCH_COUNTRIES_REJECTED
+    })
+    await api
+      .searchCountries(searchQuery)
+      .then(async response => {
+        await dispatch({
+          type: AT.AUTH_SEARCH_COUNTRIES_FULFILLED,
+          payload: response.data
+        })
+      })
+      .catch(async err => {
+        await dispatch({
+          type: AT.AUTH_SEARCH_COUNTRIES_REJECTED,
+          error: err
+        })
+      })
+  }
+}
 
-export const searchProvinces = countryId => ({
-  type: AT.AUTH_SEARCH_PROVINCES,
-  payload: api.searchProvinces(countryId)
-})
+export const searchProvinces = countryId => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.AUTH_SEARCH_PROVINCES_PENDING
+    })
+    await api
+      .searchProvinces(countryId)
+      .then(async response => {
+        await dispatch({
+          type: AT.AUTH_SEARCH_PROVINCES_FULFILLED,
+          payload: response.data
+        })
+      })
+      .catch(async err => {
+        await dispatch({
+          type: AT.AUTH_SEARCH_PROVINCES_REJECTED,
+          error: err
+        })
+      })
+  }
+}
 
 export const updateIdentity = payload => ({ type: AT.UPDATE_IDENTITY, payload })
 
-export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })
+export const updateCompany = (id, payload) => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.UPDATE_COMPANY_PENDING
+    })
+    await api
+      .updateCompany(id, payload)
+      .then(async response => {
+        await dispatch({
+          type: AT.UPDATE_COMPANY_FULFILLED,
+          payload: response.data
+        })
+      })
+      .catch(async err => {
+        await dispatch({
+          type: AT.UPDATE_COMPANY_REJECTED,
+          error: err
+        })
+      })
+  }
+}
 
-export const agreeWithTOS = () => ({ type: AT.AGREE_WITH_TOS, payload: api.agreeWithTOS() })
+export const agreeWithTOS = () => {
+  return async dispatch => {
+    await dispatch({
+      type: AT.AGREE_WITH_TOS_PENDING
+    })
+    await api
+      .agreeWithTOS()
+      .then(async response => {
+        await dispatch({
+          type: AT.AGREE_WITH_TOS_FULFILLED,
+          payload: response.data
+        })
+      })
+      .catch(async err => {
+        await dispatch({
+          type: AT.AGREE_WITH_TOS_REJECTED,
+          error: err
+        })
+      })
+  }
+}
 
 export const updateCompanyDetails = (companyId, request) => {
   return async dispatch => {
