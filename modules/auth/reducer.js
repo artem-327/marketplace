@@ -4,7 +4,6 @@ import * as AT from './action-types'
 import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../settings/action-types'
 import { SET_PREFERRED_LANGUAGE_FULFILLED } from '../settings/action-types'
-import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '../profile/action-types'
 //Functions
 import { getSafe } from '../../utils/functions'
 //Constants
