@@ -4,7 +4,14 @@ var withCss = require('@zeit/next-css')
 var path = require('path')
 var Dotenv = require('dotenv-webpack')
 
-module.exports = withSass(
+const bundleAnalyzer = require('@next/bundle-analyzer')({
+  analyzerMode: 'static',
+  enabled: process.env.ANALYZE === 'true',
+  generateStatsFile: true,
+  statsOptions: { source: false }
+});
+
+const customConfig = bundleAnalyzer(withSass(
   withCss({
     webpack: function (config) {
       config.module.rules.push({
@@ -40,4 +47,6 @@ module.exports = withSass(
       return config
     }
   })
-)
+));
+
+module.exports = Object.assign({}, customConfig);

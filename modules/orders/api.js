@@ -147,5 +147,9 @@ export default {
     api
       .patch(`/prodex/api/${ordersType}-orders/${orderId}/dispute-resolution-reopen`)
       .then(res => res.data)
-      .catch(e => console.error(e))
+      .catch(e => console.error(e)),
+  downloadDisputeAttachment: (orderId, attachmentId) =>
+    api.get(`/prodex/api/purchase-orders/${orderId}/attachments/download-dispute-attachment/${attachmentId}`, {
+      responseType: 'blob'
+    })
 }
