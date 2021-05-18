@@ -7,7 +7,9 @@ import { Provider } from 'react-redux'
 import { findByTestAttr, mountWithIntl, checkProps, storeFactory } from '../../../../test/testUtils'
 //Components
 import InviteModal from './InviteModal'
-//Redux state
+//Reducer
+import myNetworkReducer from '../../reducer'
+
 import { initialState } from '../../reducer'
 
 //mock entire module for destructuring useState on import
@@ -45,7 +47,7 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setProps = { ...defaultProps, ...props }
-  const store = storeFactory(initialState)
+  const store = storeFactory(myNetworkReducer, initialState)
   //It needs te be used mountWithIntl because in the component is react-intl.
   //Shallow method is used to render the single component that we are testing. It does not render child components.
   //The method renders the full DOM including the child components of the parent component that we are running the tests.
@@ -74,7 +76,7 @@ describe('renders InviteModal with default props', () => {
     //Often this is useful when you want to clean up a mock's usage data between two assertions.
     mockSetValue.mockClear()
     //All state from reducer.js in my-network folder.
-    store = storeFactory()
+    store = storeFactory(myNetworkReducer, initialState)
 
     wrapper = setup()
   })
@@ -90,13 +92,6 @@ describe('renders InviteModal with default props', () => {
   })
 
   test('search button simulate click', () => {
-    //Finds specific semantic Input from component.
-    const searchButton = findByTestAttr(wrapper, 'component-my-network-invite-modal-search-button')
-    //Simulates click event on the button.
-    searchButton.simulate('click', { preventDefault() {} })
-  })
-
-  test('click search button change loading props to true', () => {
     //Finds specific semantic Input from component.
     const searchButton = findByTestAttr(wrapper, 'component-my-network-invite-modal-search-button')
     //Simulates click event on the button.

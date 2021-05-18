@@ -72,11 +72,6 @@ export const connectionsStatuses = statuses => ({
 
 export const search = id => {
   return async dispatch => {
-    if (!id)
-      await dispatch({
-        type: AT.SEARCH_REJECTED,
-        error: "Doesn't exist id for API request"
-      })
     await dispatch({
       type: AT.SEARCH_PENDING
     })

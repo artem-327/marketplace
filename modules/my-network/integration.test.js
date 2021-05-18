@@ -1,66 +1,46 @@
+import moxios from 'moxios'
+import api from '../../api'
 import { storeFactory } from '../../test/testUtils'
 import { initialState } from './reducer'
-import { SEARCH_REJECTED, SEARCH_FULFILLED } from './action-types'
-
 import { search } from './actions'
+import myNetworkReducer from './reducer'
 
-const id = 1
-const initState = { ...initialState }
-describe('search action dispatcher', () => {
-  describe('no id ', () => {
-    let store
-    beforeEach(() => {
-      store = storeFactory(initState)
+describe('search TradePass connection', () => {
+  let store
+  beforeEach(() => {
+    moxios.install(api)
+    store = storeFactory(myNetworkReducer, initialState)
+  })
+  afterEach(() => {
+    moxios.uninstall()
+  })
+  test('get `connectedCompany` from reducer state after succesfully call action `search`', () => {
+    moxios.wait(() => {
+      const request = moxios.requests.mostRecent()
+      request.respondWith({
+        status: 200,
+        response: 'some values'
+      })
     })
-
-    test('updates state correctly for unsuccessfull search', async () => {
-      await store.dispatch(search(''))
-      const newState = store.getState()
-      const expectedState = {
-        ...initState,
-        loading: false,
-        isError: true
-      }
-      expect(newState).toEqual(expectedState)
-    })
-    test('updates state correctly for successfull search', async () => {
-      await store.dispatch(search(id))
-      const newState = store.getState()
-      const expectedState = {
-        ...initState,
-        loading: false,
-        companyNetworkConnection: { connectedCompany: null },
-        isError: false
-      }
-      expect(newState).toEqual(expectedState)
+    return store.dispatch(search(1)).then(() => {
+      const connectedCompany = store.getState()?.companyNetworkConnection
+      expect(connectedCompany).toEqual({ connectedCompany: 'some values' })
     })
   })
-  describe('with some id ', () => {
-    let store
-    beforeEach(() => {
-      store = storeFactory(initState)
+  test('get `true` in `isError` from reducer state after unsuccesfully call action `search`', () => {
+    const errorResp = {
+      status: 400,
+      response: new Error('Error: Request failed with status code 400')
+    }
+
+    moxios.wait(() => {
+      let request = moxios.requests.mostRecent()
+      request.respondWith(errorResp)
     })
 
-    test('updates state correctly for unsuccessfull search', async () => {
-      await store.dispatch(search(0))
-      const newState = store.getState()
-      const expectedState = {
-        ...initState,
-        loading: false,
-        isError: true
-      }
-      expect(newState).toEqual(expectedState)
-    })
-    test('updates state correctly for successfull search', async () => {
-      await store.dispatch(search(id))
-      const newState = store.getState()
-      const expectedState = {
-        ...initState,
-        loading: false,
-        companyNetworkConnection: { connectedCompany: 'some values' },
-        isError: false
-      }
-      expect(newState).toEqual(expectedState)
+    return store.dispatch(search()).then(() => {
+      const isError = store.getState()?.isError
+      expect(isError).toBeTruthy()
     })
   })
 })

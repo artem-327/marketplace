@@ -110,9 +110,11 @@
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "fetch-mock": "^9.11.0",
     "gulp": "^3.0.0",
     "jest": "^26.6.3",
     "moxios": "^0.4.0",
+    "redux-mock-store": "^1.5.4",
     "semantic-ui": "^2.4.2"
   },
   "browserslist": [

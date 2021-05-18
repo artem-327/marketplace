@@ -107,7 +107,7 @@ customAxios.interceptors.response.use(
       })
     } else {
       try {
-        Message.checkForMessages(error.response)
+        Message?.checkForMessages(error?.response)
       } catch (error) {
         console.error(error)
       }
