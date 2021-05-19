@@ -681,6 +681,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.DOWNLOAD_DISPUTE_ATTACHMENT_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+
     default:
       return state
   }

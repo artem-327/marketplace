@@ -3,14 +3,12 @@ export const SubmitFile = async (values, { setSubmitting }, props) => {
     intl: { formatMessage },
     uploadInsuranceDocument,
     getInsuranceDocuments,
-    onUpload,
     closePopup
   } = props
 
   try {
     await uploadInsuranceDocument(values.file, values.documentId)
     getInsuranceDocuments()
-    onUpload()
     closePopup()
   } catch (e) {
     console.error(e)

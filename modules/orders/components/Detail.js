@@ -1718,14 +1718,22 @@ class Detail extends Component {
                             <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
+                          {!!order.frsId && (
+                            <>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.frsId' defaultMessage='FRS ID' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.frsId}</GridDataColumn>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.epaRegion' defaultMessage='EPA Region' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.shippingAddressEpaRegion}</GridDataColumn>
+                            </>
+                          )}
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.shipToAddress' defaultMessage='Ship To Address' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToAddress}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
@@ -1734,14 +1742,18 @@ class Detail extends Component {
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToEmail}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                         </GridData>
                       </GridColumn>
                       <GridColumn>
                         <GridData columns={2}>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.carrier' defaultMessage='Carrier' />
                           </GridDataColumn>

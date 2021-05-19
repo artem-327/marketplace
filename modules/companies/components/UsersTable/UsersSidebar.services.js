@@ -69,7 +69,7 @@ export const getBranchesOptions = branches => {
 export const switchUser = async (props, state) => {
   const { popupValues } = props
   const [comp, user] = await Promise.all([
-    popupValues.company ? props.initSearchCompany(popupValues.company.id) : props.searchCompany('', 30),
+    popupValues.company ? props.initSearchCompany(popupValues.company.id) : { value: [] },
     props.getUser(popupValues.id)
   ])
   let selectedSellMarketSegmentsOptions = []
@@ -116,7 +116,6 @@ export const switchUser = async (props, state) => {
       buyMarketSegments: getSafe(() => user.value.buyMarketSegments, [])
     })
   } else {
-    props.searchCompany('', 30)
     state.setBranches([])
     state.setSelectedCompany([])
     state.setSelectedSellMarketSegmentsOptions(selectedSellMarketSegmentsOptions)
