@@ -19,7 +19,9 @@ export const initialState = {
   measureTypes: [],
   unitsOfMeasures: [],
   hazardClasses: [],
+  hazardClassesLoading: false,
   packagingGroups: [],
+  packagingGroupsLoading: false,
   unNumbersFiltered: [],
   companiesRows: [],
   countries: [],
@@ -347,17 +349,35 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_HAZARD_CLASSES_PENDING: {
+      return { ...state, hazardClassesLoading: true }
+    }
+
+    case AT.ADMIN_GET_HAZARD_CLASSES_REJECTED: {
+      return { ...state, hazardClassesLoading: false }
+    }
+
     case AT.ADMIN_GET_HAZARD_CLASSES_FULFILLED: {
       return {
         ...state,
-        hazardClasses: action.payload
+        hazardClasses: action.payload,
+        hazardClassesLoading: false
       }
+    }
+
+    case AT.ADMIN_GET_PACKAGING_GROUPS_PENDING: {
+      return { ...state, packagingGroupsLoading: true }
+    }
+
+    case AT.ADMIN_GET_PACKAGING_GROUPS_REJECTED: {
+      return { ...state, packagingGroupsLoading: false }
     }
 
     case AT.ADMIN_GET_PACKAGING_GROUPS_FULFILLED: {
       return {
         ...state,
-        packagingGroups: action.payload
+        packagingGroups: action.payload,
+        packagingGroupsLoading: false
       }
     }
 

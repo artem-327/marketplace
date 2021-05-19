@@ -68,9 +68,6 @@ const Checkout = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     const fetchCheckout = async (freight) => {
-      const { paymentProcessor } = props
-      props.getDeliveryAddresses()
-      props.getPayments(paymentProcessor)
       props.getIdentity()
       const { value } = await props.getCart()
       const initVal = value.cartItems.map(item => ({
