@@ -2704,6 +2704,8 @@
   "order.contactNumber": "Contact Number",
   "order.contactEmail": "Contact E-Mail",
   "order.shipTo": "Ship To",
+  "order.frsId": "FRS ID",
+  "order.epaRegion": "EPA Region",
   "order.shipToAddress": "Ship To Address",
   "order.shipDate": "Ship Date",
   "order.deliveryDate": "Delivery Date",
