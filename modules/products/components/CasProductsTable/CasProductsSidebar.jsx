@@ -14,13 +14,13 @@ import {
   FormCustom,
   SidebarFlex,
   CustomHighSegment,
-  CasDivTitle,
-  CasDivHeader,
+  DivTitle,
+  DivHeader,
   DivFlexContent,
   DivBottomSidebar,
   DimmerSidebarOpened,
-  CasSegmentCustomContent
-} from '../../styles'
+  SegmentCustomContent
+} from './CasProductsSidebar.styles'
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
 
@@ -56,26 +56,26 @@ const CasProductsSidebar = props => {
                 <CustomHighSegment
                   onClick={() => props.closeAddPopup()}
                   basic>
-                  <CasDivTitle>
-                    <CasDivHeader>
+                  <DivTitle>
+                    <DivHeader>
                       {props.popupValues ? (
                         <FormattedMessage id='casProduct.editCasProduct' defaultMessage='Edit CAS Product' />
                       ) : (
                         <FormattedMessage id='casProduct.addCasProduct' defaultMessage='Add CAS Product' />
                       )}
-                    </CasDivHeader>
+                    </DivHeader>
                     <div>
                       <ChevronDown />
                     </div>
-                  </CasDivTitle>
+                  </DivTitle>
                 </CustomHighSegment>
               </div>
               <DivFlexContent style={{ padding: '16px' }}>
-                <CasSegmentCustomContent basic>
+                <SegmentCustomContent basic>
                   <CasProductsSidebarContent
                     formikProps={formikProps}
                   />
-                </CasSegmentCustomContent>
+                </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>
                 <BasicButton
