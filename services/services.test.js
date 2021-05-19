@@ -2,7 +2,7 @@ import { getObjectWithoutEmptyElements } from './index'
 /**
  * @test {getObjectWithoutEmptyElements }
  */
-describe('getObjectWithoutEmptyElements: (obj: object) => any', () => {
+describe('`services` function getObjectWithoutEmptyElements', () => {
   test('works only for first level of object! Function returns the same object, if parameter is object with "", null, undefined in second and next levels', () => {
     expect(
       getObjectWithoutEmptyElements({ id: 1, name: { firstName: 'Mirek', middleName: '', surName: 'Kerim' } })

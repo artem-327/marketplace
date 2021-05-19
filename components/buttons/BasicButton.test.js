@@ -32,7 +32,7 @@ const setup = (props = {}) => {
 /**
  * @test {BasicButton }
  */
-describe('BasicButton: (props: any): JSX.Element', () => {
+describe('`BasicButton` render component', () => {
   test('does not throw warning with expected props', () => {
     checkProps(BasicButton, defaultProps)
   })

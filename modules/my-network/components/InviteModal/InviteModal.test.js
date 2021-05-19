@@ -68,7 +68,7 @@ const setup = (props = {}) => {
   return wrapper
 }
 
-describe('renders InviteModal with default props', () => {
+describe('`My Network` renders InviteModal', () => {
   let wrapper, store
   //Function allows us to setup some variables or functions for all bellow tests in `describe` statement (function).
   beforeEach(() => {

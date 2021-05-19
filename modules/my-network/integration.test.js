@@ -5,7 +5,7 @@ import { initialState } from './reducer'
 import { search } from './actions'
 import myNetworkReducer from './reducer'
 
-describe('search TradePass connection', () => {
+describe('`My Network` integration', () => {
   let store
   beforeEach(() => {
     moxios.install(api)

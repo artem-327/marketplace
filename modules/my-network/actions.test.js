@@ -12,7 +12,7 @@ import * as types from './action-types'
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
-describe('search TradePass connection', () => {
+describe('`My Network` actions', () => {
   let store
 
   beforeEach(() => {
