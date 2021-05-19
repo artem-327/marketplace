@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
+// Services
 import { getSafe } from '../../../../../utils/functions'
-
 // Components
 import { GridRow, GridColumn } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
-
 // Styles
 import {
   DivHeaderRow,

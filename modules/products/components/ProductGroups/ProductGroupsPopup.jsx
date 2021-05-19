@@ -2,22 +2,15 @@ import { useState, useEffect } from 'react'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import * as Yup from 'yup'
 import { Form, Input, Button, Dropdown as FormikDropdown } from 'formik-semantic-ui-fixed-validation'
 import debounce from 'lodash/debounce'
-
-import { generateToastMarkup, getSafe, uniqueArrayByKey } from '../../../../utils/functions'
-import { errorMessages } from '../../../../constants/yupValidation'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
-
-const formValidation = () =>
-  Yup.lazy(values =>
-    Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
-    })
-  )
+// Services
+import { generateToastMarkup, getSafe, uniqueArrayByKey } from '../../../../utils/functions'
+import { withDatagrid } from '../../../datagrid'
+import { productGroupsPoprupFormValidation } from '../../services'
 
 const ProductGroupsPopup = props => {
   const [selectedTagsOptions, setSelectedTagsOptions] = useState([])
@@ -78,7 +71,7 @@ const ProductGroupsPopup = props => {
         <Form
           enableReinitialize
           initialValues={initialFormValues}
-          validationSchema={formValidation()}
+          validationSchema={productGroupsPoprupFormValidation()}
           onReset={closePopup}
           onSubmit={async (values, { setSubmitting }) => {
             const request = {}
@@ -96,7 +89,7 @@ const ProductGroupsPopup = props => {
               closePopup()
             }
           }}>
-          {({ values, setFieldValue, setFieldTouched, errors, touched, isSubmitting }) => {
+          {(props) => {
             return (
               <>
                 <FormGroup data-test='operations_tag_name_inp'>
@@ -105,9 +98,7 @@ const ProductGroupsPopup = props => {
                     type='text'
                     label={
                       <>
-                        <FormattedMessage id='operations.name' defaultMessage='Name'>
-                          {text => text}
-                        </FormattedMessage>
+                        <FormattedMessage id='operations.name' defaultMessage='Name' />
                         <Required />
                       </>
                     }
@@ -117,9 +108,7 @@ const ProductGroupsPopup = props => {
                     fieldProps={{ width: 8 }}
                     label={
                       <>
-                        <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
-                          {text => text}
-                        </FormattedMessage>
+                        <FormattedMessage id='product.groups.tags' defaultMessage='Tags' />
                       </>
                     }
                     name='tags'
@@ -145,9 +134,7 @@ const ProductGroupsPopup = props => {
                         fieldProps={{ width: 5 }}
                         label={
                           <>
-                            <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment'>
-                              {text => text}
-                            </FormattedMessage>
+                            <FormattedMessage id='product.groups.marketSegment' defaultMessage='Market Segment' />
                           </>
                         }
                         name='marketSegments'
@@ -172,14 +159,10 @@ const ProductGroupsPopup = props => {
 
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_tag_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </Button.Reset>
                   <Button.Submit data-test='operations_tag_submit_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.save' defaultMessage='Save' />
                   </Button.Submit>
                 </div>
                 <ErrorFocus />

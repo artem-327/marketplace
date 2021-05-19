@@ -2,48 +2,11 @@ import { useEffect, useState } from 'react'
 import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup, Form } from 'semantic-ui-react'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { Formik, FieldArray } from 'formik'
-
 import { FormattedMessage } from 'react-intl'
-
-import styled from 'styled-components'
-
-const StyledModalContent = styled(Modal.Content)`
-  max-height: calc(80vh - 10em);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 30px;
-`
-
-const initialFormValues = {
-  productAltNames: [{}]
-}
-
-const nameValidation = (index, val, vals) => {
-  if (val.length >= 3) {
-    // length is ok, check if name already exists
-    if (vals.find((o, i) => o.alternativeName === val && i !== index)) {
-      // name already exists
-      return {
-        color: 'red',
-        description: <FormattedMessage id='settings.duplicateName' defaultMessage='Duplicate name!' />,
-        canSave: false
-      }
-    } else {
-      return {
-        color: 'green',
-        description: <FormattedMessage id='settings.clickToSave' defaultMessage='Click to save' />,
-        canSave: true
-      }
-    }
-  } else {
-    //too short string
-    return {
-      color: 'red',
-      description: <FormattedMessage id='settings.nameTooShort' defaultMessage='Name too short!' />,
-      canSave: false
-    }
-  }
-}
+// Services
+import { nameValidation } from '../../services'
+// Styles
+import { StyledModalContent } from '../../styles'
 
 const EditAltNamesEchoProductPopup = props => {
   const [initialState, setInitialState] = useState({
@@ -114,7 +77,7 @@ const EditAltNamesEchoProductPopup = props => {
   return (
     <Formik
       enableReinitialize
-      initialValues={{ ...initialFormValues, ...initialState }}
+      initialValues={initialState}
       onReset={closePopup}
       onSubmit={() => {}}>
       {({ values, errors, setFieldValue, isSubmitting, setSubmitting }) => (
@@ -236,9 +199,7 @@ const EditAltNamesEchoProductPopup = props => {
           <Modal.Actions>
             <div>
               <Button.Reset data-test='settings_product_alt_name_reset_btn'>
-                <FormattedMessage id='global.close' defaultMessage='Close'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.close' defaultMessage='Close' />
               </Button.Reset>
             </div>
           </Modal.Actions>

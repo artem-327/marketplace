@@ -1,52 +1,40 @@
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import { removeEmpty } from '../../../../utils/functions'
-import { verifyEchoProduct } from '../../../admin/api' // No need to be an action
-import { DateInput } from '../../../../components/custom-formik'
-import { PhoneNumber } from '../../../phoneNumber'
-import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import {
-  Form,
-  Button,
-  Dropdown as FormikDropdown,
-  Input,
-  Checkbox,
-  TextArea
-} from 'formik-semantic-ui-fixed-validation'
+import { Dropdown as FormikDropdown, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import {
   Menu,
   Grid,
   GridRow,
   GridColumn,
-  Segment,
   Header,
   Dropdown,
-  Icon,
   Dimmer,
   Loader,
-  Sidebar,
-  FormGroup
 } from 'semantic-ui-react'
-import { FieldArray, Field } from 'formik'
-
-import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
-import { errorMessages, dateValidation, phoneValidation } from '../../../../constants/yupValidation'
-import { getSafe } from '../../../../utils/functions'
-import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
+import { FieldArray } from 'formik'
+import { ChevronDown } from 'react-feather'
 import debounce from 'lodash/debounce'
-import { uniqueArrayByKey } from '../../../../utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
+// Services
+import { getSafe } from '../../../../utils/functions'
+import { uniqueArrayByKey } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
-import { Required, Or } from '../../../../components/constants/layout'
-import { AttachmentManager } from '../../../attachments'
-import { UploadCloud, ChevronDown, Paperclip } from 'react-feather'
-import ErrorFocus from '../../../../components/error-focus'
-//Components
+import { removeEmpty } from '../../../../utils/functions'
+import { verifyEchoProduct } from '../../../admin/api' // No need to be an action
+import { AddEditEchoProductPopupValidationScheme } from '../../services'
+// Components
 import BasicButton from '../../../../components/buttons/BasicButton'
-
-//Styles
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+import { AttachmentManager } from '../../../attachments'
+import ErrorFocus from '../../../../components/error-focus'
+import { Required, Or } from '../../../../components/constants/layout'
+import { PhoneNumber } from '../../../phoneNumber'
+import { DateInput } from '../../../../components/custom-formik'
+// Constants
+import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
+// Styles
 import { DimmerBottomSidebarOpend } from '../../../../styles/global.style-components'
 import {
   SegmentCustomContent,
@@ -76,104 +64,6 @@ import {
 } from '../../styles'
 
 
-Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
-  return this.test('unique', message, function (value) {
-    if (!value || !value[propertyName]) {
-      return true
-    }
-
-    const { path } = this
-    const options = [...this.parent]
-    const currentIndex = options.indexOf(value)
-
-    const subOptions = options.slice(0, currentIndex)
-
-    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
-      throw this.createError({
-        path: `${path}.${propertyName}`,
-        message
-      })
-    }
-
-    return true
-  })
-})
-
-const validationScheme = Yup.object().shape({
-  code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  productGroup: Yup.number().required(errorMessages.minOneGroup),
-  company: Yup.number().required(errorMessages.minOneCompany),
-  emergencyPhone: phoneValidation(10),
-  elements: Yup.array().of(
-    Yup.object()
-      .uniqueProperty(
-        'casProduct',
-        errorMessages.unique('CAS Product has to be unique')
-      )
-      .shape({
-        name: Yup.string()
-          .trim()
-          .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
-            const { proprietary } = this.parent
-            if (proprietary) {
-              return value !== null && value !== ''
-            }
-            return true
-          }),
-        casProduct: Yup.string()
-          .nullable()
-          .trim()
-          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
-            const { proprietary } = this.parent
-            if (!proprietary) {
-              return parseInt(value)
-            }
-            return true
-          }),
-        assayMin: Yup.string()
-          .test('v', errorMessages.minUpToMax, function (v) {
-            const { assayMax: v2 } = this.parent
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
-            return Number(v) <= v2
-          })
-          .test('v', errorMessages.minimum(0), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) >= 0
-          })
-          .test('v', errorMessages.maximum(100), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) <= 100
-          })
-          .test('v', errorMessages.mustBeNumber, function (v) {
-            return v === null || v === '' || !isNaN(v)
-          }),
-        assayMax: Yup.string()
-          .test('v', errorMessages.maxAtLeastMin, function (v) {
-            const { assayMin: v2 } = this.parent
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
-            return Number(v) >= v2
-          })
-          .test('v', errorMessages.minimum(0), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) >= 0
-          })
-          .test('v', errorMessages.maximum(100), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) <= 100
-          })
-          .test('v', errorMessages.mustBeNumber, function (v) {
-            return v === null || v === '' || !isNaN(v)
-          })
-      })
-  ),
-  sdsIssuedDate: dateValidation(false),
-  sdsRevisionDate: dateValidation(false),
-  tdsIssuedDate: dateValidation(false),
-  tdsRevisionDate: dateValidation(false)
-})
 
 const AddEditEchoProduct = props => {
   const [state, setState] = useState({
@@ -2136,7 +2026,7 @@ const AddEditEchoProduct = props => {
     <CustomForm
       enableReinitialize
       initialValues={getInitialFormValues()}
-      validationSchema={validationScheme}
+      validationSchema={AddEditEchoProductPopupValidationScheme}
       onSubmit={async (values, { setSubmitting }) => {
         submitForm(values, setSubmitting, closePopup)
       }}

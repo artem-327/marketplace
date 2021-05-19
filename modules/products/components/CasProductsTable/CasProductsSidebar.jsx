@@ -5,12 +5,10 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Formik } from 'formik'
 import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { ChevronDown } from 'react-feather'
-
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContentContainer'
-
 // Styles
 import {
   FormCustom,
@@ -23,7 +21,6 @@ import {
   DimmerSidebarOpened,
   CasSegmentCustomContent
 } from '../../styles'
-
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
 
@@ -85,7 +82,7 @@ const CasProductsSidebar = props => {
                   noborder
                   onClick={() => props.closeAddPopup()}
                   data-test='cas_product_sidebar_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                 </BasicButton>
                 <BasicButton
                   onClick={() => {
@@ -101,7 +98,7 @@ const CasProductsSidebar = props => {
                     })
                   }}
                   data-test='cas_product_sidebar_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.save' defaultMessage='Save' />
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>

@@ -2,17 +2,13 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 // Components
 import { GridRow, GridColumn } from 'semantic-ui-react'
-import { Input, Button, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Required } from '../../../../../components/constants/layout'
 import CasProductSection from '../CasProductSection/CasProductSectionContainer'
-
 // Styles
 import { GridStyled } from '../../../styles'
-
-
 // Constants
 import {
   GROUP_EPA,

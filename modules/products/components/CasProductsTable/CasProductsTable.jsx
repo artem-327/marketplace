@@ -1,34 +1,14 @@
 import { useEffect } from 'react'
-import confirm from '../../../../components/Confirmable/confirm'
 import { injectIntl, FormattedMessage } from 'react-intl'
-
+// Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
+// Constants
+import { casProductsTableColumns } from '../../constants'
 
 const CasProductsTable = props => {
-  const columns = [
-    {
-      name: 'casIndexName',
-      title: (
-        <FormattedMessage id='global.indexName' defaultMessage='Index Name'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 375,
-      sortPath: 'CasProduct.casIndexName',
-      allowReordering: false
-    },
-    {
-      name: 'casNumber',
-      title: (
-        <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CasProduct.casNumber'
-    }
-  ]
 
   useEffect(() => {
     props.getHazardClassesDataRequest()
@@ -80,7 +60,6 @@ const CasProductsTable = props => {
         ...row,
         casIndexName: (
           <ActionCell
-            key={_i}
             row={row}
             getActions={getActions}
             content={row.casIndexName}
@@ -98,7 +77,7 @@ const CasProductsTable = props => {
       <ProdexTable
         {...datagrid.tableProps}
         tableName='admin_cas_products'
-        columns={columns}
+        columns={casProductsTableColumns}
         rows={getRows(rows)}
         defaultSorting={{
           columnName: 'casIndexName',

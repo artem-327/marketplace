@@ -1,56 +1,22 @@
 import { useEffect } from 'react'
+import { Container } from 'semantic-ui-react'
+// Components
 import TablesHandlers from './TablesHandlersContainer'
-import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
+// Services
 import { withAuth } from '../../../hocs'
-
-import CasProductsTable from './CasProductsTable/CasProductsTableContainer'
-import ProductCatalogTable from './ProductCatalogTable/TableContainer'
-import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopupContainer'
-import EditAltNamesEchoProductPopup from './ProductCatalogTable/EditAltNamesEchoProductPopupContainer'
-import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopup'
-import CasProductsSidebar from './CasProductsTable/CasProductsSidebarContainer'
-import AddEditEchoProduct from './ProductCatalogTable/AddEditEchoProductContainer'
-import ProductGroupsTable from './ProductGroups/ProductGroupsTableContainer'
-import ProductGroupsPopup from './ProductGroups/ProductGroupsPopupContainer'
-
 import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
+// Constants
+import { tables, addForms, editForms, importForm, edit2Forms, sidebars } from '../constants'
 
 const Products = props => {
+  const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = props
+
   useEffect(() => {
     const { currentAddForm, currentEditForm, currentEdit2Form, closeAddPopup } = props
     if (currentAddForm || currentEditForm || currentEdit2Form) closeAddPopup()
   }, [])
 
-  const handleFilterChange = () => {}
-
   const renderContent = () => {
-    const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = props
-
-    const tables = {
-      'cas-products': <CasProductsTable />,
-      'product-catalog': <ProductCatalogTable />,
-      'product-groups': <ProductGroupsTable handleFilterChange={handleFilterChange} />
-    }
-
-    const addForms = {
-      'cas-products': <CasProductsSidebar />,
-      'product-groups': <ProductGroupsPopup />
-    }
-
-    const editForms = {
-      'cas-products': <CasProductsSidebar />,
-      'product-groups': <ProductGroupsPopup />
-    }
-
-    const edit2Forms = {
-      'cas-products': <EditAltNamesCasProductsPopup />,
-      'product-catalog': <EditAltNamesEchoProductPopup />
-    }
-
-    const importForm = {
-      'product-catalog': <ProductImportPopup />
-    }
-
     return (
       <>
         {currentAddForm && addForms[currentTab]}
@@ -108,12 +74,6 @@ const Products = props => {
     }
 
     return datagridApiMap[currentTab]
-  }
-
-  const { currentTab, currentAddForm, currentEditForm } = props
-
-  const sidebars = {
-    'product-catalog': <AddEditEchoProduct />
   }
 
   return (

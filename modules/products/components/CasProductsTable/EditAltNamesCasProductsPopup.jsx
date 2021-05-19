@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
-
 import {
   Modal,
   Table,
   TableCell,
   TableHeaderCell,
-  FormGroup,
-  Header,
   Dropdown as SDropdown,
   FormField,
   Message,
@@ -16,41 +13,13 @@ import {
 } from 'semantic-ui-react'
 import { FieldArray } from 'formik'
 import { FormattedMessage } from 'react-intl'
-
 import { Formik } from 'formik'
 import { Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
+// Services
+import { nameValidation } from '../../services'
+// Styles
 import { StyledModalContent } from '../../styles'
 
-const initialFormValues = {
-  casAlternativeNames: [{}]
-}
-
-const nameValidation = (index, val, vals) => {
-  if (val.length >= 3) {
-    // length is ok, check if name already exists
-    if (vals.find((o, i) => o.alternativeName === val && i !== index)) {
-      // name already exists
-      return {
-        color: 'red',
-        description: <FormattedMessage id='admin.duplicateName' defaultMessage='Duplicate Name!' />,
-        canSave: false
-      }
-    } else {
-      return {
-        color: 'green',
-        description: <FormattedMessage id='admin.clickToSave' defaultMessage='Click to save!' />,
-        canSave: true
-      }
-    }
-  } else {
-    //too short string
-    return {
-      color: 'red',
-      description: <FormattedMessage id='admin.nameTooShort' defaultMessage='Name too short!' />,
-      canSave: false
-    }
-  }
-}
 
 const EditAltNamesCasProductsPopup = props => {
   const [initialState, setInitialState] = useState({
@@ -112,7 +81,7 @@ const EditAltNamesCasProductsPopup = props => {
   return (
     <Formik
       enableReinitialize
-      initialValues={{ ...initialFormValues, ...initialState }}
+      initialValues={{ ...initialState }}
       onReset={closeEditPopup}
       onSubmit={() => {}}>
       {({ values, errors, setFieldValue }) => (
@@ -242,9 +211,7 @@ const EditAltNamesCasProductsPopup = props => {
           <Modal.Actions>
             <div>
               <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'>
-                <FormattedMessage id='global.close' defaultMessage='Close'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.close' defaultMessage='Close' />
               </Button.Reset>
             </div>
           </Modal.Actions>

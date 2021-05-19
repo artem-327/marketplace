@@ -1,122 +1,21 @@
 import { Fragment, Component } from 'react'
 import moment from 'moment/moment'
-import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { Button, Dropdown, Icon } from 'semantic-ui-react'
+import { Popup } from 'semantic-ui-react'
+// Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
+// Services
 import { getSafe } from '../../../../utils/functions'
-import { Button, Dropdown, Icon } from 'semantic-ui-react'
+import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { echoRowActions } from './constants'
-import { Popup } from 'semantic-ui-react'
-import { Circle, FileTextIcon } from '../../styles'
+// Styles
+import { Circle } from '../../styles'
+// Constants
+import { echoRowActions, productCatalogTableColumns } from './constants'
 
 const ProductCatalogTable = props => {
-
-  const columns = [
-    {
-      name: 'name',
-      title: (
-        <FormattedMessage id='global.productName' defaultMessage='Product Name'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 250,
-      sortPath: 'CompanyGenericProduct.name',
-      allowReordering: false
-    },
-    {
-      name: 'publishedStatus',
-      title: (
-        <Popup
-          size='small'
-          header={
-            <FormattedMessage
-              id='global.productStatusIndicator'
-              defaultMessage='Status indicator if Company Product will be shown on Marketplace'
-            />
-          }
-          trigger={
-            <div>
-              <FileTextIcon />
-            </div>
-          } // <div> has to be there otherwise popup will be not shown
-        />
-      ),
-      caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
-      width: 40,
-      align: 'center'
-    },
-    {
-      name: 'code',
-      title: (
-        <FormattedMessage id='global.productCode' defaultMessage='Product Code'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.code'
-    },
-    {
-      name: 'manufacturerName',
-      title: (
-        <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.manufacturer.name'
-    },
-    {
-      name: 'sds',
-      title: (
-        <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150
-    },
-    {
-      name: 'sdsVersionNumber',
-      title: (
-        <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.sdsVersionNumber'
-    },
-    {
-      name: 'sdsRevisionDate',
-      title: (
-        <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.sdsRevisionDate'
-    },
-    {
-      name: 'productGroup',
-      title: (
-        <FormattedMessage id='global.productGroup' defaultMessage='Product Group'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.productGroup.name'
-    },
-    {
-      name: 'company',
-      title: (
-        <FormattedMessage id='global.company' defaultMessage='Company'>
-          {text => text}
-        </FormattedMessage>
-      ),
-      width: 150,
-      sortPath: 'CompanyGenericProduct.company.name'
-    }
-  ]
 
   const getActions = row => {
     const {
@@ -309,7 +208,7 @@ const ProductCatalogTable = props => {
         <ProdexTable
           tableName='admin_product-catalog'
           {...datagrid.tableProps}
-          columns={columns}
+          columns={productCatalogTableColumns}
           filterValue={filterValue}
           loading={datagrid.loading}
           rows={getRows(rows)}

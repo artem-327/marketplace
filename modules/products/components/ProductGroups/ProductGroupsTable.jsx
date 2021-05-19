@@ -1,34 +1,14 @@
 import { injectIntl } from 'react-intl'
-import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-
-import confirm from '../../../../components/Confirmable/confirm'
+// Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
+// Constants
+import { productGroupsTableColumns } from '../../constants'
 
 const ProductGroupsTable = props => {
-  const columns =
-    [
-      {
-        name: 'name',
-        title: (
-          <FormattedMessage id='product.groups.name' defaultMessage='Group Name'>
-            {text => text}
-          </FormattedMessage>
-        ),
-        sortPath: 'ProductGroup.name',
-        allowReordering: false
-      },
-      {
-        name: 'tags',
-        title: (
-          <FormattedMessage id='product.groups.tags' defaultMessage='Tags'>
-            {text => text}
-          </FormattedMessage>
-        )
-      }
-    ]  
-
   const getActions = () => {
     const { intl, openPopup, deleteProductGroups, datagrid } = props
 
@@ -99,7 +79,7 @@ const ProductGroupsTable = props => {
         {...datagrid.tableProps}
         filterValue={filterValue}
         loading={datagrid.loading || loading}
-        columns={columns}
+        columns={productGroupsTableColumns}
         rows={getRows(rows)}
         editingRowId={editedId}
       />

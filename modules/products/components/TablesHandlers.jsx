@@ -3,27 +3,15 @@ import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from
 import { debounce } from 'lodash'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
-//Components
+// Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
-import { withDatagrid } from '../../datagrid'
-//Styles
 import { CustomRowDiv } from '../../companies/constants'
+// Services
+import { withDatagrid } from '../../datagrid'
+// Styles
 import { PositionHeaderSettings, DivColumn } from '../styles'
-
-const textsTable = {
-  'cas-products': {
-    BtnAddText: 'products.casProducts.buttonAdd',
-    SearchText: 'products.casProducts.search'
-  },
-  'product-catalog': {
-    BtnAddText: 'products.productCatalog.buttonAdd',
-    SearchText: 'products.productCatalog.search'
-  },
-  'product-groups': {
-    BtnAddText: 'products.productGroups.buttonAdd',
-    SearchText: 'products.productGroups.search'
-  }
-}
+// Constants
+import { textsTable } from '../constants'
 
 const TablesHandlers = props => {
   const [state, setState] = useState({})
@@ -130,7 +118,7 @@ const TablesHandlers = props => {
                 onClick={() => openPopup()}
                 data-test='products_open_popup_btn'>
                 <PlusCircle />
-                <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
+                <FormattedMessage id={item.BtnAddText} />
               </Button>
             </DivColumn>
           )}

@@ -25,7 +25,7 @@ const getFilterValue = state => state?.productsAdmin?.filterValue
 const getEditedId = state => state?.productsAdmin?.editedId
 const getLoading = state => state?.productsAdmin?.loading
 const getRowId = state => getSafe(() => state?.productsAdmin?.popupValues?.id)
-const getPopupValues = state => getSafe(() => state?.productsAdmin?.popupValues, '')
+const getPopupValues = state => getSafe(() => state?.productsAdmin?.popupValues, {})
 const getSearchedTagsLoading = state => state?.productsAdmin?.searchedTagsLoading
 const getSearchedTags = state => getSafe(() => state?.productsAdmin?.searchedTags?.length, false)
   ? state?.productsAdmin?.searchedTags.map(d => ({
