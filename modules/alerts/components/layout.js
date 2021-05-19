@@ -94,7 +94,7 @@ export const UserImage = styled(Image)`
 
 export const UserName = styled(Header)`
   .bootstrapiso h3& {
-    margin: 0;
+    margin: auto 0;
     padding: 0;
     font-size: 14px;
     font-weight: 500;
