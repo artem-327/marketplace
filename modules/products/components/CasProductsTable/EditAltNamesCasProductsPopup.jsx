@@ -19,14 +19,7 @@ import { FormattedMessage } from 'react-intl'
 
 import { Formik } from 'formik'
 import { Input, Button, Dropdown, Field } from 'formik-semantic-ui-fixed-validation'
-import styled from 'styled-components'
-
-const StyledModalContent = styled(Modal.Content)`
-  max-height: calc(80vh - 10em);
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 30px;
-`
+import { StyledModalContent } from '../../styles'
 
 const initialFormValues = {
   casAlternativeNames: [{}]

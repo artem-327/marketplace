@@ -5,9 +5,7 @@ import { verifyEchoProduct } from '../../../admin/api' // No need to be an actio
 import { DateInput } from '../../../../components/custom-formik'
 import { PhoneNumber } from '../../../phoneNumber'
 import * as Yup from 'yup'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import {
   Form,
   Button,
@@ -30,14 +28,12 @@ import {
   Sidebar,
   FormGroup
 } from 'semantic-ui-react'
-import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 import { errorMessages, dateValidation, phoneValidation } from '../../../../constants/yupValidation'
 import { getSafe } from '../../../../utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
-import styled from 'styled-components'
 import debounce from 'lodash/debounce'
 import { uniqueArrayByKey } from '../../../../utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
@@ -52,206 +48,33 @@ import BasicButton from '../../../../components/buttons/BasicButton'
 
 //Styles
 import { DimmerBottomSidebarOpend } from '../../../../styles/global.style-components'
+import {
+  SegmentCustomContent,
+  DivTitleColumn,
+  PaperclipIcon,
+  DivBrowseFile,
+  GridColumnMixtures,
+  GridColumnLabelTextArea,
+  GridColumnForm,
+  DivHeader,
+  GridRowCustom,
+  DivIconChevronDown,
+  DivBottomSidebar,
+  MenuCustom,
+  MyContainer,
+  FlexSidebar,
+  FlexTabs,
+  FlexContent,
+  GraySegment,
+  HighSegment,
+  CustomTextarea,
+  DivIcon,
+  IconStyled,
+  DivCircleIcon,
+  DivReadOnlyValues,
+  CustomForm
+} from '../../styles'
 
-const SegmentCustomContent = styled(Segment)`
-  padding-top: 0px !important;
-  width: 900px !important;
-  padding: 30px !important;
-`
-
-const DivTitleColumn = styled.div`
-  color: #000000de;
-  font-size: 14px;
-`
-
-const PaperclipIcon = styled(Paperclip)`
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-`
-
-const DivBrowseFile = styled.div`
-  display: flex;
-  align-items: center;
-  place-content: center;
-  color: #20273a;
-  padding: 6px;
-`
-
-const GridColumnMixtures = styled(GridColumn)`
-  padding: 3px 10px !important;
-`
-
-const GridColumnLabelTextArea = styled(GridColumn)`
-  padding: 3px 0px !important;
-  color: #000000de !important;
-  font-size: 14px;
-`
-
-const GridColumnForm = styled(GridColumn)`
-  padding: 6px 14px !important;
-  ${({ color }) => (color ? color : null)};
-`
-
-const DivHeader = styled.div`
-  background-color: #edeef2;
-  padding: 5px 10px;
-  color: #404040;
-  font-size: 14px;
-`
-
-const GridRowCustom = styled(GridRow)`
-  padding: 0px !important;
-`
-
-const DivIconChevronDown = styled.div`
-  align-self: center;
-  position: absolute;
-  right: 20px;
-  cursor: pointer;
-`
-
-const DivBottomSidebar = styled.div`
-  text-align: right;
-  z-index: 1;
-  padding: 10px 25px;
-  margin-top: 0px;
-  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-  background-color: #ffffff;
-`
-
-export const MenuCustom = styled(Menu)`
-  padding-left: 30px !important;
-  margin: 0 !important;
-`
-
-export const MyContainer = styled.div`
-  margin: 0 15px 0 0;
-  text-align: center;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 10px 0 15px 0;
-  font-weight: bold;
-  font-size: 1.1rem;
-`
-
-export const FlexSidebar = styled(Sidebar)`
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff !important;
-  top: 80px !important;
-  padding-bottom: 80px;
-  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  z-index: 1000 !important;
-  text-align: left;
-  padding-bottom: 0px !important;
-
-  &.ui.visible.bottom.overlay.sidebar {
-    height: 89% !important;
-  }
-  .field {
-    font-size: 1em !important;
-    line-height: 1.29 !important;
-    font-weight: normal;
-    > label {
-      font-size: 1em !important;
-      color: #404040;
-    }
-    > textarea,
-    > .ui.input input,
-    > .ui.dropdown {
-      min-height: 32px;
-      font-size: 1em;
-      line-height: 1.29;
-      border: solid 1px #dee2e6;
-      background-color: #fdfdfd;
-      &.disabled {
-        opacity: 1;
-        color: #cecfd4;
-      }
-      > .default.text {
-        margin: 0 0 0 0.64285714em;
-      }
-    }
-  }
-`
-
-export const FlexTabs = styled.div`
-  height: 100%;
-  margin: 0;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 10px 0 15px 0;
-  font-weight: 400;
-  font-size: 1.1rem;
-
-  > .tab-menu,
-  > .tab-menu > .tab {
-    height: 100%;
-  }
-`
-
-export const FlexContent = styled.div`
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  align-self: center;
-`
-
-export const GraySegment = styled(Segment)`
-  background-color: #ededed !important;
-`
-
-export const HighSegment = styled(Segment)`
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 1;
-`
-
-const CustomTextarea = styled(TextareaAutosize)`
-  resize: vertical !important;
-  background-color: #fdfdfd !important;
-`
-
-const DivIcon = styled.div`
-  margin-right: 8px;
-`
-
-const IconStyled = styled(Icon)` 
-  &.small.icon {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    color: #848893;
-    
-    &.delete {
-      color: #f16844;
-    }
-  }
-`
-
-const DivCircleIcon = styled.div`
-  margin: 10.5px auto 10.5px -3px;
-  width: 18px;
-  height: 18px; 
-  border-radius: 9px;
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-  cursor: pointer;
-`
-
-const DivReadOnlyValues = styled.div`
-  border-radius: 3px;
-  border: solid 1px #dee2e6;
-  background-color: #edeef2;
-  font-size: 14px;
-  padding: 9.5px 15px;
-  line-height: 1.29;
-  color: #848893;
-`
-
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-`
 
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
-import styled from 'styled-components'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 //Components
@@ -9,15 +8,7 @@ import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { withDatagrid } from '../../datagrid'
 //Styles
 import { CustomRowDiv } from '../../companies/constants'
-
-const PositionHeaderSettings = styled.div`
-  position: relative;
-  z-index: 602;
-`
-
-const DivColumn = styled.div`
-  margin-right: 9px !important;
-`
+import { PositionHeaderSettings, DivColumn } from '../styles'
 
 const textsTable = {
   'cas-products': {

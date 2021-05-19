@@ -11,10 +11,10 @@ import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import {
   DivHeaderRow,
   DivHeaderCaption,
-  GridStyled,
+  CasGridStyled,
   GridDropdownOptions,
   CheckboxStyled
-} from './CasProductSection.styles'
+} from '../../../styles'
 
 const CasProductSection = props => {
   const {
@@ -45,7 +45,7 @@ const CasProductSection = props => {
       </DivHeaderRow>
 
       {toggleValue && (
-        <GridStyled>
+        <CasGridStyled>
           {items.map((row, rowIndex) => (
             <GridRow columns={row.length} key={rowIndex}>
               {row.map((item, itemIndex) => {
@@ -126,7 +126,7 @@ const CasProductSection = props => {
               })}
             </GridRow>
           ))}
-        </GridStyled>
+        </CasGridStyled>
       )}
     </div>
   )

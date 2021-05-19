@@ -10,7 +10,7 @@ import { Required } from '../../../../../components/constants/layout'
 import CasProductSection from '../CasProductSection/CasProductSectionContainer'
 
 // Styles
-import { GridStyled } from './CasProductsSidebarContent.styles'
+import { GridStyled } from '../../../styles'
 
 
 // Constants

@@ -8,31 +8,8 @@ import { getSafe } from '../../../../utils/functions'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import { echoRowActions } from './constants'
-import { FileText, MoreVertical } from 'react-feather'
-import styled from 'styled-components'
 import { Popup } from 'semantic-ui-react'
-
-const Circle = styled.div`
-  width: 14px;
-  height: 14px;
-  margin: 3px;
-  border-radius: 7px;
-  background-color: #84c225;
-  &.red {
-    background-color: #f16844;
-  }
-`
-
-const FileTextIcon = styled(FileText)`
-  display: block;
-  width: 20px;
-  height: 20px;
-  margin: 0 auto;
-  vertical-align: top;
-  font-size: 20px;
-  color: #848893;
-  line-height: 20px;
-`
+import { Circle, FileTextIcon } from '../../styles'
 
 const ProductCatalogTable = props => {
 
