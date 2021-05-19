@@ -254,7 +254,7 @@ class Navigation extends Component {
   render() {
     const {
       isAdmin,
-      isEchoOperator,
+      isOperator,
       isOrderOperator,
       auth,
       takeover,
@@ -334,7 +334,7 @@ class Navigation extends Component {
 
     return (
       <div className='flex-wrapper'>
-        {(!isAdmin && !isEchoOperator && !isOrderOperator) || takeover ? (
+        {(!isAdmin && !isOperator && !isOrderOperator) || takeover ? (
           <>
             <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
               <>
@@ -626,7 +626,7 @@ class Navigation extends Component {
                 }
                 text={
                   <>
-                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My Trade Pass' />
+                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
                     {settings ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
@@ -645,7 +645,7 @@ class Navigation extends Component {
                           to='/settings/my-tradepass'
                           tab='my-tradepass'
                           dataTest='navigation_settings_my_trade_pass_drpdn'>
-                          {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My Trade Pass' })}
+                          {formatMessage({ id: 'navigation.myTradePass', defaultMessage: 'My TradePass' })}
                         </Dropdown.Item>
                         <Dropdown.Item
                           as={MenuLink}
@@ -839,7 +839,7 @@ class Navigation extends Component {
                 </DropdownItem>
               </>
             )}
-            {(isAdmin || isEchoOperator || isOrderOperator) && (
+            {(isAdmin || isOperator || isOrderOperator) && (
               <>
                 <DropdownItem
                   icon={<Archive size={22} />}
@@ -982,7 +982,7 @@ export default withAuth(
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         collapsedMenu: store?.layout?.collapsedMenu,
-        isEchoOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Echo Operator'),
+        isOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Operator'),
         companiesTabsNames: store?.companiesAdmin?.tabsNames,
         productsTabsNames: store?.productsAdmin?.tabsNames,
         alertTab: store?.alerts?.topMenuTab,

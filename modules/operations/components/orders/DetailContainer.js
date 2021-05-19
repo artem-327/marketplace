@@ -8,7 +8,7 @@ import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { downloadAttachment } from '~/modules/inventory/actions'
-import { downloadPdf } from '~/modules/orders/actions'
+import { downloadPdf, downloadDisputeAttachment } from '~/modules/orders/actions'
 
 function actionRequired(data) {
   // return statuses code
@@ -271,4 +271,4 @@ function mapStateToProps(state, ownProps) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadPdf })(Detail)
+export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadPdf, downloadDisputeAttachment })(Detail)

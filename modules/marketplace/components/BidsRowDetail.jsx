@@ -165,8 +165,8 @@ const BidsRowDetail = props => {
               <Form>
                 <GridStyled>
                   {histories.map((r, index) => {
-                    const UserIcon = r.createdBy.avatar
-                      ? (<Image src={r.createdBy.avatar} avatar size='small' />)
+                    const UserIcon = r.createdBy.avatarUrl
+                      ? (<Image src={r.createdBy.avatarUrl} avatar size='small' />)
                       : DefaultIcon
 
                     return (
