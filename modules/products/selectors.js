@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect'
+import { Header } from 'semantic-ui-react'
 //Services
 import { getSafe } from '../../utils/functions'
 
@@ -8,12 +9,12 @@ const getCurrentEdit2Form = state => state?.productsAdmin?.currentEdit2Form
 const getCurrentEditForm = state => state?.productsAdmin?.currentEditForm
 const getCurrentAddForm = state => state?.productsAdmin?.currentAddForm
 const getTableHandlersFilters = state => state?.productsAdmin?.tableHandlersFilters
-const getSearchedCompanies = state => state?.productsAdmin?.searchedCompanies.map(d => ({
+const getSearchedCompanies = state => state?.productsAdmin?.searchedCompanies?.map(d => ({
     key: d.id,
     value: d.id,
     text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
   }))
-const getSearchedCompaniesByName = state => state?.productsAdmin?.searchedCompanies.map(d => ({
+const getSearchedCompaniesByName = state => state?.productsAdmin?.searchedCompanies?.map(d => ({
     key: d.id,
     value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
     text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
@@ -33,6 +34,58 @@ const getSearchedTags = state => getSafe(() => state?.productsAdmin?.searchedTag
       value: d.id
       }))
   : []
+const getAltEchoNamesRows = state => getSafe(() => state?.productsAdmin?.altEchoNamesRows, [])
+const getCatEditedId = state => (!!state?.productsAdmin?.currentAddForm || !!state?.productsAdmin?.currentEditForm) && state?.productsAdmin?.popupValues
+  ? state?.productsAdmin?.popupValues?.id
+  : -1
+const getEditEchoProductEditTab = state => state?.productsAdmin?.editEchoProductEditTab
+const getEditEchoProductInitTrig = state => state?.productsAdmin?.editEchoProductInitTrig
+const getPackagingGroups = state => getSafe(() => state?.productsAdmin?.packagingGroups?.length, false)
+  ? state?.productsAdmin?.packagingGroups?.map((pGroup, id) => {
+      return {
+        key: id,
+        text: pGroup.groupCode,
+        value: pGroup.id,
+        content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
+      }
+    })
+  : []
+const getHazardClasses = state => getSafe(() => state?.productsAdmin?.hazardClasses?.length, false)
+  ? state?.productsAdmin?.hazardClasses?.map((d, id) => {
+      return {
+        key: id,
+        text: d.classCode,
+        value: d.id,
+        content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+  : []
+const getSearchedManufacturersLoading = state => state?.productsAdmin?.searchedManufacturersLoading
+const getSearchedManufacturers = state => state?.productsAdmin?.searchedManufacturers
+const getSearchedCasProducts = state => state?.productsAdmin?.searchedCasProducts
+const getUnNumbersFiltered = state => getSafe(() => state?.productsAdmin?.unNumbersFiltered?.length, false)
+  ? state?.productsAdmin?.unNumbersFiltered?.map((d, id) => {
+      return {
+        key: d.id,
+        text: d.unNumberCode,
+        value: d.id,
+        content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
+      }
+    })
+  : []
+const getUnNumbersFetching = state => state?.productsAdmin?.unNumbersFetching
+const getDocumentTypes = state => state?.productsAdmin?.documentTypes
+const getSearchedProductGroups = state => getSafe(() => state?.productsAdmin?.searchedProductGroups?.length, false)
+  ? state?.productsAdmin?.searchedProductGroups?.map(d => ({
+      key: d.id,
+      text: d.name,
+      value: d.id
+    }))
+  : []
+const getSearchedProductGroupsLoading = state => state?.productsAdmin?.searchedProductGroupsLoading
+const getUpdating = state => state?.productsAdmin?.updating
+const getAltCasNamesRows = state => getSafe(() => state?.productsAdmin?.altCasNamesRows?.data, [])
+const getCasHazardClasses = state => state?.productsAdmin?.hazardClasses
 
 export const makeGetAuth = () => {
   return createSelector([getAuth], auth => auth)
@@ -84,4 +137,55 @@ export const makeGetSearchedTagsLoading = () => {
 }
 export const makeGetSearchedTags = () => {
   return createSelector([getSearchedTags], searchedTags => searchedTags)
+}
+export const makeGetAltEchoNamesRows = () => {
+  return createSelector([getAltEchoNamesRows], productAltNames => productAltNames)
+}
+export const makeGetCatEditedId = () => {
+  return createSelector([getCatEditedId], editedId => editedId)
+}
+export const makeGetEditEchoProductEditTab = () => {
+  return createSelector([getEditEchoProductEditTab], editTab => editTab)
+}
+export const makeGetEditEchoProductInitTrig = () => {
+  return createSelector([getEditEchoProductInitTrig], editInitTrig => editInitTrig)
+}
+export const makeGetPackagingGroups = () => {
+  return createSelector([getPackagingGroups], packagingGroups => packagingGroups)
+}
+export const makeGetHazardClasses = () => {
+  return createSelector([getHazardClasses], hazardClasses => hazardClasses)
+}
+export const makeGetSearchedManufacturersLoading = () => {
+  return createSelector([getSearchedManufacturersLoading], searchedManufacturersLoading => searchedManufacturersLoading)
+}
+export const makeGetSearchedManufacturers = () => {
+  return createSelector([getSearchedManufacturers], searchedManufacturers => searchedManufacturers)
+}
+export const makeGetSearchedCasProducts = () => {
+  return createSelector([getSearchedCasProducts], searchedCasProducts => searchedCasProducts)
+}
+export const makeGetUnNumbersFiltered = () => {
+  return createSelector([getUnNumbersFiltered], unNumbersFiltered => unNumbersFiltered)
+}
+export const makeGetUnNumbersFetching = () => {
+  return createSelector([getUnNumbersFetching], unNumbersFetching => unNumbersFetching)
+}
+export const makeGetDocumentTypes = () => {
+  return createSelector([getDocumentTypes], documentTypes => documentTypes)
+}
+export const makeGetSearchedProductGroups = () => {
+  return createSelector([getSearchedProductGroups], searchedProductGroups => searchedProductGroups)
+}
+export const makeGetSearchedProductGroupsLoading = () => {
+  return createSelector([getSearchedProductGroupsLoading], searchedProductGroupsLoading => searchedProductGroupsLoading)
+}
+export const makeGetUpdating = () => {
+  return createSelector([getUpdating], updating => updating)
+}
+export const makeGetAltCasNamesRows = () => {
+  return createSelector([getAltCasNamesRows], altCasNamesRows => altCasNamesRows)
+}
+export const makeGetCasHazardClasses = () => {
+  return createSelector([getCasHazardClasses], hazardClasses => hazardClasses)
 }

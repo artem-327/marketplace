@@ -8,23 +8,30 @@ import {
   updateProductName,
   deleteProductName
 } from '../../actions'
-
+import { makeGetPopupValues, makeGetAltCasNamesRows, makeGetLoading } from '../../selectors'
 
 const mapDispatchToProps = {
-    closeEditPopup,
-    getAlternativeProductNames,
-    postNewProductName,
-    updateProductName,
-    deleteProductName
-  }
-  
+  closeEditPopup,
+  getAlternativeProductNames,
+  postNewProductName,
+  updateProductName,
+  deleteProductName
+}
+
+const makeMapStateToProps = () => {
+  const getPopupValues = makeGetPopupValues()
+  const getAltCasNamesRows = makeGetAltCasNamesRows()
+  const getLoading = makeGetLoading()
+
   const mapStateToProps = state => {
     return {
-      popupValues: state.productsAdmin.popupValues,
-      altCasNamesRows: getSafe(() => state.productsAdmin.altCasNamesRows.data, []),
-      loading: getSafe(() => state.productsAdmin.loading, false)
+      popupValues: getPopupValues(state),
+      altCasNamesRows: getAltCasNamesRows(state),
+      loading: getLoading(state)
     }
   }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(EditAltNamesCasProductsPopup)
+  return mapStateToProps
+}
+
+export default connect(makeMapStateToProps, mapDispatchToProps)(EditAltNamesCasProductsPopup)
   

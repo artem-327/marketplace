@@ -7,24 +7,34 @@ import {
   updateCompanyGenericProductsAltName,
   deleteCompanyGenericProductsAltName
 } from '../../actions'
-import { getSafe } from '../../../../utils/functions'
-
+import {
+  makeGetPopupValues,
+  makeGetAltEchoNamesRows,
+  makeGetLoading
+} from '../../selectors'
 
 const mapDispatchToProps = {
-    closePopup,
-    getAlternativeCompanyGenericProductsNames,
-    postNewCompanyGenericProductsAltName,
-    updateCompanyGenericProductsAltName,
-    deleteCompanyGenericProductsAltName
-  }
-  
+  closePopup,
+  getAlternativeCompanyGenericProductsNames,
+  postNewCompanyGenericProductsAltName,
+  updateCompanyGenericProductsAltName,
+  deleteCompanyGenericProductsAltName
+}
+
+const makeMapStateToProps = () => {
+  const getPopupValues = makeGetPopupValues()
+  const getAltEchoNamesRows = makeGetAltEchoNamesRows()
+  const getLoading = makeGetLoading()
+
   const mapStateToProps = state => {
     return {
-      popupValues: getSafe(() => state.productsAdmin.popupValues, ''),
-      productAltNames: getSafe(() => state.productsAdmin.altEchoNamesRows, []),
-      loading: getSafe(() => state.productsAdmin.loading, false)
+      popupValues: getPopupValues(state),
+      productAltNames: getAltEchoNamesRows(state),
+      loading: getLoading(state)
     }
   }
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(EditAltNamesEchoProductPopup)
+  return mapStateToProps
+}
+
+export default connect(makeMapStateToProps, mapDispatchToProps)(EditAltNamesEchoProductPopup)
   

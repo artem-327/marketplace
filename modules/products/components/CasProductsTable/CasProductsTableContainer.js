@@ -10,45 +10,51 @@ import {
   deleteCasProduct
 } from '../../actions'
 import { withDatagrid } from '../../../datagrid'
+import { makeGetEditedId } from '../../selectors'
 
 const transformHazardClasses = classes => {
-    if (!classes || !classes.length) return
-    return (
-      <Label.Group color='blue'>
-        {classes.map((b, i) => (
-          <Popup
-            key={i}
-            content={b.description}
-            trigger={
-              <Label size='tiny'>
-                {b.classCode}
-              </Label>
-            }
-          />
-        ))}
-      </Label.Group>
-    )
+  if (!classes || !classes.length) return
+  return (
+    <Label.Group color='blue'>
+      {classes.map((b, i) => (
+        <Popup
+          key={i}
+          content={b.description}
+          trigger={
+            <Label size='tiny'>
+              {b.classCode}
+            </Label>
+          }
+        />
+      ))}
+    </Label.Group>
+  )
 }
 
 const mapDispatchToProps = {
-    openPopup,
-    openEditAltNamesCasPopup,
-    closeConfirmPopup,
-    getHazardClassesDataRequest,
-    getPackagingGroupsDataRequest,
-    deleteCasProduct
+  openPopup,
+  openEditAltNamesCasPopup,
+  closeConfirmPopup,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest,
+  deleteCasProduct  
 }
 
-const mapStateToProps = (state, { datagrid }) => {
+const makeMapStateToProps = () => {
+  const getEditedId = makeGetEditedId()
+  const mapStateToProps = (state, { datagrid }) => {
     return {
-        editedId: state.productsAdmin.editedId,
-        rows: datagrid.rows.map(d => {
+      editedId: getEditedId(state),
+      rows: datagrid.rows.map(d => {
         return {
-            ...d,
-            hazardClassesLabeled: transformHazardClasses(d.hazardClasses)
+          ...d,
+          hazardClassesLabeled: transformHazardClasses(d.hazardClasses)
         }
-        })
+      })
     }
+  }
+  return mapStateToProps
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(CasProductsTable))
+
+export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(CasProductsTable))

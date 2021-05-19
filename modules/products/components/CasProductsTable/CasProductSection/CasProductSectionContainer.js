@@ -1,10 +1,16 @@
 import { connect } from 'react-redux'
 import CasProductSection from './CasProductSection'
+import { makeGetCasHazardClasses } from '../../../selectors'
 
-function mapStateToProps(store) {
+const makeMapStateToProps = () => {
+  const getCasHazardClasses = makeGetCasHazardClasses()
+
+  const mapStateToProps = (state) => {
     return {
-      hazardClasses: store.productsAdmin.hazardClasses
+      hazardClasses: getCasHazardClasses(state)
     }
+  }
+  return mapStateToProps
 }
 
-export default connect(mapStateToProps, {  })(CasProductSection)
+export default connect(makeMapStateToProps, {  })(CasProductSection)
