@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, createRef } from 'react'
 import { Button, Input, Dropdown, Popup } from 'semantic-ui-react'
 import BasicButton from '../../../components/buttons/BasicButton'
 import { debounce } from 'lodash'
@@ -40,11 +40,14 @@ const CustomDiv = styled.div`
   }
 `
 
-const TablesHandlers = props => {
-  // Stores previos values for compating with current value
-  const prevCurrentTab = usePrevious(props.currentTab)
+const filtersValuesRef = createRef() // Needed ref for useEffect/return function to access the latest state
 
+const TablesHandlers = props => {
+  // Stores previos values for comparing with 'undefined' type to
+  const prevCurrentTab = usePrevious(props.currentTab)
   const [filtersValues, setFiltersValues ] = useState({})
+  filtersValuesRef.current = filtersValues  // Needed ref for useEffect/return function to access the latest state
+
   const {
     intl: { formatMessage },
     currentTab,
@@ -53,10 +56,7 @@ const TablesHandlers = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    const { tableHandlersFilters } = props
-    let { currentTab } = props
-
-    currentTab = null
+    const { tableHandlersFilters, currentTab } = props
     handleFiltersValue({ category: currentTab })
 
     if (tableHandlersFilters) {
@@ -81,24 +81,11 @@ const TablesHandlers = props => {
     }
 
     return () => {
-      console.log('!!!!!!!!!! return componentDidMount')
+      // Needed to use ref here to access the latest state
+      props.handleVariableSave('tableHandlersFilters', filtersValuesRef.current)
     }
 
   }, [])  // If [] is empty then is similar as componentDidMount.
-
-  /*
-  componentWillUnmount() {
-    this.props.handleVariableSave('tableHandlersFilters', this.state)
-  }
-  */
-
-  useEffect(() => {
-    console.log('!!!!!!!!!! useEffect filtersValues')
-
-    return () => {
-      console.log('!!!!!!!!!! useEffect filtersValues return', filtersValues)
-    }
-  }, [filtersValues])
 
   useEffect(() => {
     if (typeof prevCurrentTab !== 'undefined') {  // To avoid call on 'componentDidMount'
@@ -174,8 +161,6 @@ const TablesHandlers = props => {
   }
 
   const filterValue = filtersValues[currentTab]
-
-  console.log('!!!!!!!!!! render filtersValues', filtersValues)
 
   return (
     <CustomDiv>
