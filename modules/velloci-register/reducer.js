@@ -33,6 +33,7 @@ export const initialState = {
     loading: false
   },
   emailPopup: {
+    beneficialOwnersNotified: false,
     isOpen: false,
     isUpdating: false
   },
@@ -301,12 +302,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_PENDING: {
-      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: true } }
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: true, beneficialOwnersNotified: false } }
     }
 
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_REJECTED:
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_FULFILLED: {
-      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: false } }
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: false, beneficialOwnersNotified: true } }
     }
 
     case AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS_PENDING: {

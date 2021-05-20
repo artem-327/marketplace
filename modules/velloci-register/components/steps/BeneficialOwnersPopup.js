@@ -14,94 +14,10 @@ import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
+import { EmailConfirmation } from '~/modules/velloci-register/components/EmailConfirmation'
 import ErrorFocus from '~/components/error-focus'
 import { errorMessages, multipleEmails } from '~/constants/yupValidation'
-import styled from 'styled-components'
-
-const StyledModal = styled(Modal)`
-  .ui.modal {
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-
-    > .actions {
-      background: #ffffff;
-    }
-  }
-
-  .ui.button {
-    font-size: 1em;
-    margin: 0 0.357142857em;
-    color: #848893;
-    background-color: #ffffff;
-    border: solid 1px #dee2e6;
-    min-width: 80px;
-  }
-
-  .ui.primary.button {
-    color: #ffffff;
-    background-color: #2599d5;
-    border: none;
-  }
-
-  .ui.grid {
-    margin: 30px 0 30px 25px;
-    padding: 0;
-
-    .row {
-      padding: 5px 0;
-      &.header {
-        padding: 2px 0;
-      }
-
-      .column {
-        padding: 0 5px;
-        .field {
-          margin: 0;
-          .ui.input {
-            height: 40px;
-          }
-        }
-      }
-
-      .ui.button {
-        min-width: 40px;
-        height: 40px;
-        border-radius: 3px;
-      }
-
-      .ui.button.delete {
-        padding: 0;
-        border: solid 1px #f16844;
-        background-color: #fff0ed;
-        color: #f16844;
-        line-height: 1.11;
-        font-size: 18px;
-
-        .icon {
-          margin: 0 10px;
-          width: 18px;
-          height: 20px;
-          color: #f16844;
-          line-height: 1.11;
-          font-size: 18px;
-        }
-      }
-
-      .ui.button.add {
-        margin: 0;
-        padding-left: 17px;
-        padding-right: 17px;
-        border: solid 1px #2599d5;
-        background-color: #ddf1fc;
-        font-size: 14px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        color: #2599d5;
-      }
-    }
-  }
-`
+import { StyledModal } from '../styles'
 
 const initialFormValues = {
   invitations: [{ name: '', email: '' }]
@@ -123,7 +39,8 @@ const formValidation = () =>
 
 class BeneficialOwnersPopupPopup extends Component {
   state = {
-    companyId: null
+    companyId: null,
+    showConfirmation: false
   }
 
   componentDidMount() {
@@ -141,11 +58,21 @@ class BeneficialOwnersPopupPopup extends Component {
 
   render() {
     const {
+      activeStep,
       closeEmailPopup,
-      inviteBeneficialOwners,
       emailPopup,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      inviteBeneficialOwners,
+      nextStep
     } = this.props
+
+    if (this.state.showConfirmation) {
+      return <EmailConfirmation
+        activeStep={activeStep}
+        nextStep={nextStep}
+        onClose={() => closeEmailPopup()}
+      />
+    }
 
     return (
       <Formik
@@ -158,7 +85,8 @@ class BeneficialOwnersPopupPopup extends Component {
 
           try {
             await inviteBeneficialOwners(values, companyId)
-            closeEmailPopup()
+            // closeEmailPopup()
+            this.setState({ showConfirmation: true });
           } catch (e) {
             console.error(e)
           }

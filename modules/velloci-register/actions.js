@@ -7,9 +7,10 @@ export const countBeneficialOwners = number => ({ type: AT.COUNT_BENEFICIAL_OWNE
 export const cleareActiveStep = () => ({ type: AT.CLEARE_ACTIVE_STEP })
 export const postRegisterVelloci = (body, companyId, files) => {
   return async dispatch => {
-    return api.postRegisterVelloci(body, companyId).then(() => {
-      dispatch(postUploadDocuments(files, companyId))
-    })
+    // return api.postRegisterVelloci(body, companyId).then(() => {
+    //   dispatch(postUploadDocuments(files, companyId))
+    // })
+    return api.postRegisterVelloci(body, companyId)
   }
 }
 export const postUploadDocuments = (files, companyId) => ({

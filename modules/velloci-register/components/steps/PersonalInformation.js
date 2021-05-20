@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow, Header } from 'semantic-ui-react'
+import { Button, Grid, GridColumn, GridRow, Icon, Popup } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -16,6 +16,7 @@ import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { roles } from '../../../../components/settings/constants'
+import { LeftAlignedDiv } from '../styles'
 
 const GridPersonalInformation = styled(Grid)`
   margin: 14px 16px !important;
@@ -44,26 +45,17 @@ const GridRowTitle = styled.div`
 `
 
 function PersonalInformation({
+  countBeneficialOwners,
   formikProps,
   intl: { formatMessage },
   numberBeneficialOwners,
   businessRoles,
   registerBeneficialOwner
 }) {
+  const { values } = formikProps;
+
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
-    let businessRolesOptions =
-      businessRoles && businessRoles.data && businessRoles.data.length
-        ? businessRoles.data.map(el => ({
-            key: el,
-            value: el,
-            text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-          }))
-        : []
-
-    if (i > 0) businessRolesOptions = businessRolesOptions?.filter(role => role?.key !== 'controlling_officer')
-    if (i === 0 && formikProps?.values?.verifyPersonalInformation[0]?.businessRole !== 'controlling_officer')
-      formikProps.setFieldValue('verifyPersonalInformation[0].businessRole', 'controlling_officer')
     forms.push(
       <GridPersonalInformation key={i}>
         {i > 0 && (
@@ -258,36 +250,6 @@ function PersonalInformation({
               }}
             />
           </ColumnCustom>
-          {!registerBeneficialOwner && (
-            <ColumnCustom>
-              <Dropdown
-                options={businessRolesOptions}
-                fieldProps={{
-                  'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
-                }}
-                inputProps={{
-                  placeholder: formatMessage({
-                    id: 'global.businessName',
-                    defaultMessage: 'Business Name'
-                  }),
-                  search: true,
-                  selection: true,
-                  disabled: i === 0,
-                  loading: businessRoles && businessRoles.loading
-                }}
-                name={`verifyPersonalInformation[${i}].businessRole`}
-                label={
-                  <>
-                    {formatMessage({
-                      id: 'velloci.personalInfo.businessRole',
-                      defaultMessage: 'Business Role'
-                    })}
-                    {<Required />}
-                  </>
-                }
-              />
-            </ColumnCustom>
-          )}
           <ColumnCustom>
             <Input
               name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
@@ -339,6 +301,52 @@ function PersonalInformation({
             />
           </ColumnCustom>
         </GridRow>
+        {values?.ownerInformation?.isOtherBeneficialOwner && (
+          <GridRow>
+            <GridColumn>
+              <LeftAlignedDiv>
+                {numberBeneficialOwners > 0 && (
+                  <Popup
+                    trigger={
+                      <a href={`#form${numberBeneficialOwners}`}>
+                        <Button
+                          style={{ float: 'right !important', marginLeft: '10px !important', marginRight: '0px !important' }}
+                          type='button'
+                          negative
+                          onClick={() => {
+                            countBeneficialOwners(numberBeneficialOwners - 1)
+                          }}
+                          icon>
+                          <Icon name='minus' />
+                        </Button>
+                      </a>
+                    }
+                    content={
+                      <FormattedMessage id='settings.removeBeneficialOwner' defaultMessage='Remove beneficial owner' />
+                    }
+                  />
+                )}
+                <Popup
+                  trigger={
+                    <a href={`#form${numberBeneficialOwners}`}>
+                      <Button
+                        type='button'
+                        style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
+                        positive
+                        onClick={() => {
+                          countBeneficialOwners(numberBeneficialOwners + 1)
+                        }}
+                        icon>
+                        <Icon name='plus' />
+                      </Button>
+                    </a>
+                  }
+                  content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
+                />
+              </LeftAlignedDiv>
+            </GridColumn>
+          </GridRow>
+        )}
       </GridPersonalInformation>
     )
   }
@@ -346,13 +354,15 @@ function PersonalInformation({
 }
 
 PersonalInformation.propTypes = {
-  formikProps: PropTypes.object,
   businessRoles: PropTypes.object,
+  countBeneficialOwners: PropTypes.func,
+  formikProps: PropTypes.object,
   numberBeneficialOwners: PropTypes.number,
   registerBeneficialOwner: PropTypes.booleanValue
 }
 
 PersonalInformation.defaultProps = {
+  countBeneficialOwners: () => {},
   formikProps: {},
   businessRoles: {},
   numberBeneficialOwners: 0,

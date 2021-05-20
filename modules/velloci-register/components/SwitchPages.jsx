@@ -1,8 +1,7 @@
 //Components
-import CompanyVerification from './steps/CompanyVerification'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
-import FormationDocument from './steps/FormationDocument'
+import MarketingMaterials from './steps/MarketingMaterials'
 import OwnerInformation from './steps/OwnerInformation'
 import PersonalInformation from './steps/PersonalInformation'
 import TermsAndConditions from './steps/TermsAndConditions'
@@ -14,30 +13,33 @@ export const switchPages = props => {
 
   switch (props.activeStep) {
     case 0: {
-      return <CompanyVerification formikProps={props.formikProps} appInfo={props.appInfo} />
+      return <TermsAndConditions formikProps={props.formikProps} />
     }
     case 1: {
-      return (
-        <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
-      )
+      return <BusinessInfo formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
     }
     case 2: {
-      return <BusinessInfo formikProps={props.formikProps} />
+      return <ControlPerson formikProps={props.formikProps} />
     }
     case 3: {
-      return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
+      return <OwnerInformation
+        countBeneficialOwners={props.countBeneficialOwners}
+        formikProps={props.formikProps}
+        numberBeneficialOwners={props.numberBeneficialOwners}
+      />
     }
     case 4: {
-      return <OwnerInformation formikProps={props.formikProps} countBeneficialOwners={props.countBeneficialOwners} />
-    }
-    case 5: {
       return (
         <PersonalInformation
+          countBeneficialOwners={props.countBeneficialOwners}
           formikProps={props.formikProps}
           businessRoles={props.businessRoles}
           numberBeneficialOwners={props.numberBeneficialOwners}
         />
       )
+    }
+    case 5: {
+      return <MarketingMaterials formikProps={props.formikProps} />
     }
     case 6: {
       return <TermsAndConditions formikProps={props.formikProps} />
