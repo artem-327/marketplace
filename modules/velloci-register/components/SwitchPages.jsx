@@ -14,18 +14,17 @@ export const switchPages = props => {
 
   switch (props.activeStep) {
     case 0: {
-      return <CompanyVerification formikProps={props.formikProps} appInfo={props.appInfo} />
+      return <TermsAndConditions formikProps={props.formikProps} />
     }
     case 1: {
-      return (
-        <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
-      )
+      return <BusinessInfo formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
     }
     case 2: {
-      return <BusinessInfo formikProps={props.formikProps} />
+      return <ControlPerson formikProps={props.formikProps} />
     }
     case 3: {
       return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
+      // return <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
     }
     case 4: {
       return <OwnerInformation formikProps={props.formikProps} countBeneficialOwners={props.countBeneficialOwners} />

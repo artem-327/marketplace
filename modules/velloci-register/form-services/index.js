@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import moment from 'moment'
 //Components
 import {
+  stringValidation,
   errorMessages,
   addressValidationSchema,
   einValidation,
@@ -12,10 +13,12 @@ import {
 import Router from 'next/router'
 //Services
 import { getObjectWithoutEmptyElements } from '~/services'
-import { getSafe, removeEmpty } from '~/utils/functions'
+import { getSafe } from '~/utils/functions'
 import { getStringISODate } from '~/components/date-format'
 import { titleForms } from '../constants'
 import { isEmptyObject } from '../../../services'
+
+const FINAL_STEP = 6;
 
 /**
  * Function validates values from VellociRegister form.
@@ -29,8 +32,8 @@ export const getValidationSchema = () =>
     const minLengthErr = minLength(minLengthValue)
 
     return Yup.object().shape({
-      controlPerson: Yup.lazy(() => {
-        const taxNumber = values.controlPerson.isEin
+      businessInfo: Yup.lazy(() => {
+        const taxNumber = values.businessInfo.isEin
           ? { ein: einValidation() }
           : {
               ssn: Yup.string()
@@ -39,7 +42,11 @@ export const getValidationSchema = () =>
                 .required(errorMessages.requiredMessage)
             }
         return Yup.object().shape({
-          isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
+          phoneNumber: phoneValidation(10).required(requiredMessage),
+          email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
+          url: websiteValidationNotRequired(),
+          address: addressValidationSchema(),
+          dba: Yup.string(invalidString).typeError(invalidString),
           entityType: Yup.string().typeError(invalidString).required(errorMessages.requiredMessage),
           legalBusinessName: Yup.string(invalidString)
             .typeError(invalidString)
@@ -49,16 +56,33 @@ export const getValidationSchema = () =>
           naicsCode: Yup.number()
             .typeError(errorMessages.requiredMessage)
             .required(errorMessages.requiredMessage)
-            .positive(errorMessages.positive)
+            .positive(errorMessages.positive),
+          companyType: stringValidation(),
+          markets: stringValidation()
         })
       }),
-      businessInfo: Yup.lazy(() => {
+      controlPerson: Yup.lazy(() => {
         return Yup.object().shape({
-          phoneNumber: phoneValidation(10).required(requiredMessage),
+          isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
+          isBeneficialOwner: Yup.boolean().required().oneOf([true, false], errorMessages.requiredMessage),
+          isNotBeneficialOwner: Yup.boolean().required().oneOf([true, false], errorMessages.requiredMessage),
+          firstName: stringValidation(),
+          lastName: stringValidation(),
           email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
-          url: websiteValidationNotRequired(),
+          phoneNumber: phoneValidation(10).required(requiredMessage),
+          dateOfBirth: Yup.string()
+              .test('min-age', errorMessages.aboveAge(18), val => moment().diff(getStringISODate(val), 'years') >= 18)
+              .concat(dateValidation(true)),
           address: addressValidationSchema(),
-          dba: Yup.string(invalidString).typeError(invalidString)
+          businessRole: Yup.string()
+              .trim()
+              .min(3, errorMessages.minLength(3))
+              .required(errorMessages.requiredMessage),
+          socialSecurityNumber: Yup.string()
+            .trim()
+            .min(9, errorMessages.minLength(9))
+            .max(9, errorMessages.maxLength(9))
+            .required(errorMessages.requiredMessage),
         })
       }),
       companyFormationDocument: Yup.lazy(() => {
@@ -145,7 +169,7 @@ export const getValidationSchema = () =>
  */
 export const getBody = values => {
   const { controlPerson, businessInfo, ownerInformation, verifyPersonalInformation } = values
-  let tinNumber = getSafe(() => controlPerson.isEin, false) ? controlPerson.ein : controlPerson.ssn
+  let tinNumber = getSafe(() => businessInfo.isEin, false) ? businessInfo.ein : businessInfo.ssn
   let beneficialOwners = getSafe(() => verifyPersonalInformation.length, false)
     ? verifyPersonalInformation.map((val, i) => {
         const obj = {
@@ -184,13 +208,13 @@ export const getBody = values => {
   let result = {
     dba: getSafe(() => businessInfo.dba, ''),
     email: getSafe(() => businessInfo.email, ''),
-    entityType: getSafe(() => controlPerson.entityType, ''),
+    entityType: getSafe(() => businessInfo.entityType, ''),
     legalAddress: getSafe(() => businessInfo.address.streetAddress, ''),
     legalCity: getSafe(() => businessInfo.address.city, ''),
-    legalName: getSafe(() => controlPerson.legalBusinessName, ''),
+    legalName: getSafe(() => businessInfo.legalBusinessName, ''),
     provinceId: getSafe(() => businessInfo.address.province, ''),
     legalZipCode: getSafe(() => businessInfo.address.zip, ''),
-    naicsCode: getSafe(() => controlPerson.naicsCode, ''),
+    naicsCode: getSafe(() => businessInfo.naicsCode, ''),
     phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
     tinNumber: getSafe(() => tinNumber, ''),
     controller,
@@ -213,9 +237,14 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
   formikProps
     .validateForm()
     .then(errors => {
-      if (errors[titleForms[activeStep]] || activeStep === 6) {
+      console.log('@@@SUBMIT FORM: ', errors);
+      if (errors[titleForms[activeStep]] && activeStep !== FINAL_STEP) {
+        formikProps.setErrors({})
+      }
+
+      if (errors[titleForms[activeStep]] || activeStep === FINAL_STEP) {
         formikProps.handleSubmit()
-      } else if ((_.isEmpty(errors) && activeStep !== 6) || (!errors[titleForms[activeStep]] && activeStep !== 6)) {
+      } else if ((_.isEmpty(errors) && activeStep !== FINAL_STEP) || (!errors[titleForms[activeStep]] && activeStep !== FINAL_STEP)) {
         nextStep(activeStep + 1)
         mainContainer.current.scroll({ top: 0, left: 0, behavior: 'smooth' })
         formikProps.setErrors({})
@@ -233,7 +262,7 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
  * @param {object} selfFormikProps The object of formik props.
  */
 export const handleSubmit = async (values, props, selfFormikProps) => {
-  if (props.activeStep !== 6) return
+  if (props.activeStep !== FINAL_STEP) return
 
   try {
     props?.loadSubmitButton(true)
@@ -249,14 +278,14 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
     }
 
     if (
-      props?.naicsCode !== values?.controlPerson?.naicsCode &&
+      props?.naicsCode !== values?.businessInfo?.naicsCode &&
       props?.companyId &&
       typeof props?.companyRequestBody === 'object' &&
       !isEmptyObject(props?.companyRequestBody)
     ) {
       const companyRequestBody = {
         ...props?.companyRequestBody,
-        naicsCode: values?.controlPerson?.naicsCode
+        naicsCode: values?.businessInfo?.naicsCode
       }
       await props?.updateCompany(props?.companyId, companyRequestBody)
     }

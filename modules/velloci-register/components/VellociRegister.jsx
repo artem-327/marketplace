@@ -2,10 +2,10 @@
 import { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import _ from 'lodash'
 import PropTypes from 'prop-types'
 //Components
 import SetupIndicator from './SetupIndicator'
+import SetupIndicatorMobile from './SetupIndicatorMobile'
 import FormRectangle from './FormRectangle'
 import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
 //Hooks
@@ -67,11 +67,15 @@ const VellociRegister = props => {
     // if [] has some variables, then is similar as componentDidUpdate:
   }, [props.numberBeneficialOwners, prevNumberBeneficialOwners])
 
+  const { activeStep } = props;
+
   return (
-    <Grid>
-      <GridColumn>
-        <GridRow>
-          <SetupIndicator activeStep={props.activeStep} />
+    <Grid columns='equal' padded stackable>
+      <GridRow>
+        <GridColumn width={4} only='large screen'>
+          <SetupIndicator activeStep={activeStep} />
+        </GridColumn>
+        <GridColumn>
           <Formik
             onSubmit={values => handleSubmit(values, props, selfFormikProps)}
             validateOnChange={true}
@@ -81,31 +85,36 @@ const VellociRegister = props => {
               selfFormikProps = formikProps
               return (
                 <Form>
-                  <Grid verticalAlign='middle' centered>
-                    <FormRectangle
-                      formikProps={formikProps}
-                      title={titleIds[props.activeStep]}
-                      subtitle={subtitleIds[props.activeStep]}
-                      prevStep={props.prevStep}
-                      submitForm={submitForm}
-                      activeStep={props.activeStep}
-                      numberBeneficialOwners={props.numberBeneficialOwners}
-                      countBeneficialOwners={props.countBeneficialOwners}
-                      isLoadingSubmitButton={props.isLoadingSubmitButton}
-                      openEmailPopup={props.openEmailPopup}
-                      nextStep={props.nextStep}
-                      mainContainer={props.mainContainer}>
-                      {switchPages({ ...props, formikProps })}
-                    </FormRectangle>
+                  <Grid>
+                    <Grid.Row>
+                      <Grid.Column only='tablet mobile'>
+                        <SetupIndicatorMobile activeStep={activeStep} />
+                      </Grid.Column>
+                    </Grid.Row>
                   </Grid>
+                  <FormRectangle
+                    formikProps={formikProps}
+                    title={titleIds[activeStep]}
+                    subtitle={subtitleIds[activeStep]}
+                    prevStep={props.prevStep}
+                    submitForm={submitForm}
+                    activeStep={activeStep}
+                    numberBeneficialOwners={props.numberBeneficialOwners}
+                    countBeneficialOwners={props.countBeneficialOwners}
+                    isLoadingSubmitButton={props.isLoadingSubmitButton}
+                    openEmailPopup={props.openEmailPopup}
+                    nextStep={props.nextStep}
+                    mainContainer={props.mainContainer}>
+                    {switchPages({ ...props, formikProps })}
+                  </FormRectangle>
                   <ErrorFocus />
                   {props.emailPopup.isOpen && <BeneficialOwnersPopup />}
                 </Form>
               )
             }}
           />
-        </GridRow>
-      </GridColumn>
+        </GridColumn>
+      </GridRow>
     </Grid>
   )
 }

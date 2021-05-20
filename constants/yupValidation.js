@@ -390,3 +390,7 @@ export const tagValidate = () =>
     .test('time', errorMessages.invalidHashtag, t => {
       return !t || t.charAt(0) === '@'
     })
+
+export const stringValidation = () => (
+  Yup.lazy(() => Yup.string().required(errorMessages.requiredMessage))
+)

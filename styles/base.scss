@@ -1,8 +1,10 @@
+$colorPrimary: #3bbef6 !important;
+$grey: #979797 !important;
+
 @import 'isobs.scss';
 @import url(./fonts/Icons.css);
+@import 'setupIndicatorMobile.scss';
 @import url(./fonts/MyFontsWebfontsKit.css);
-
-$grey: #979797 !important;
 
 @media only screen and (max-width: 767px) {
   .ui.container {
@@ -671,6 +673,14 @@ div.page-wrapper {
   .ui.loading.segment:before {
     background: #f8f9fb;
   }
+}
+
+.active-navigation {
+  left: 240px !important;
+}
+
+.hidden-navigation {
+  left: 0;
 }
 
 .sui-error-message {

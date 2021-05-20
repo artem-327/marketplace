@@ -49,6 +49,7 @@ import { getCompanyLogo } from '../modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import classNames from 'classnames';
 
 import ErrorComponent from '../components/error'
 import moment from 'moment'
@@ -78,6 +79,8 @@ const ReturnToAdmin = styled(LogOut)`
   margin-left: 10px;
   vertical-align: bottom;
 `
+
+const menuDisallowList = ['registration'];
 
 class Layout extends Component {
   state = {
@@ -288,7 +291,8 @@ class Layout extends Component {
       buttonActionsDetailRow,
       isOpenInviteModal,
       triggerModal,
-      applicationName
+      applicationName,
+      currentModule
     } = this.props
 
     const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
@@ -333,6 +337,9 @@ class Layout extends Component {
         </CopyrightContainer>
       )
 
+    const hideNavigation = menuDisallowList.some(val => val === currentModule);
+    const sideNavigationClass = classNames({ 'hidden-navigation': hideNavigation }, { 'active-navigation': !hideNavigation });
+
     return (
       <MainContainer fluid className={mainClass}>
         <Head>
@@ -341,30 +348,32 @@ class Layout extends Component {
           </title>
         </Head>
 
-        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
-          <LeftMenuContainer fluid>
-            <PerfectScrollbar ref={this.navigationPS}>
-              <LogoImage
-                src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
-              />
+        {!hideNavigation &&
+          <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
+            <LeftMenuContainer fluid>
+              <PerfectScrollbar ref={this.navigationPS}>
+                <LogoImage
+                  src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
+                />
 
-              <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
-            </PerfectScrollbar>
-            {false ? (
-              <Container className='bottom'>
-                <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                  <Sidebar />
-                  {formatMessage({
-                    id: 'global.collapseMenu',
-                    defaultMessage: 'Collapse Menu'
-                  })}
-                </Menu.Item>
-              </Container>
-            ) : null}
-          </LeftMenuContainer>
-        </LeftMenu>
+                <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
+              </PerfectScrollbar>
+              {false ? (
+                <Container className='bottom'>
+                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                    <Sidebar />
+                    {formatMessage({
+                      id: 'global.collapseMenu',
+                      defaultMessage: 'Collapse Menu'
+                    })}
+                  </Menu.Item>
+                </Container>
+              ) : null}
+            </LeftMenuContainer>
+          </LeftMenu>
+        }
 
-        <TopMenu fixed='top' size='large' borderless className='topbar'>
+        <TopMenu fixed='top' size='large' borderless className={`topbar ${sideNavigationClass}`}>
           <TopMenuContainer>
             <MainTitle as='h1'>{title}</MainTitle>
 
@@ -471,7 +480,7 @@ class Layout extends Component {
 
         {profile && profile.profilePopup && <Profile />}
         <Settings role='user' scrolling={false} />
-        <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
+        <FlexContainer className={`${copyrightClassName} ${sideNavigationClass}`} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>
