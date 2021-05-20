@@ -2,255 +2,106 @@ import * as AT from './action-types'
 import api from './api'
 import { Datagrid } from '../datagrid'
 import { getSafe } from '../../utils/functions'
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 
-export function openPopup(data) {
-  return {
-    type: AT.PRODUCTS_OPEN_POPUP,
-    payload: { data }
-  }
-}
 
-export function closeAddPopup() {
-  return {
-    type: AT.PRODUCTS_CLOSE_ADD_POPUP
-  }
-}
-
-export function closePopup() {
-  return {
-    type: AT.PRODUCTS_CLOSE_POPUP
-  }
-}
-
-export function openEditAltNamesCasPopup(value) {
+export const openPopup = createAction('PRODUCTS_OPEN_POPUP', (data=null) => {return {data}})
+export const closeAddPopup = createAction('PRODUCTS_CLOSE_ADD_POPUP')
+export const closePopup = createAction('PRODUCTS_CLOSE_POPUP')
+export const openEditAltNamesCasPopup = createAction('PRODUCTS_OPEN_EDIT_2_POPUP', value => {
   const data = {
     casIndexName: value.casIndexName,
     casNumber: value.casNumber,
     id: value.id
   }
-  return {
-    type: AT.PRODUCTS_OPEN_EDIT_2_POPUP,
-    payload: { data }
-  }
-}
-
-export function closeConfirmPopup() {
-  return {
-    type: AT.PRODUCTS_CLOSE_CONFIRM_POPUP
-  }
-}
-
-export function getHazardClassesDataRequest() {
-  return {
-    type: AT.PRODUCTS_GET_HAZARD_CLASSES,
-    payload: api.getHazardClasses()
-  }
-}
-
-export function getPackagingGroupsDataRequest() {
-  return {
-    type: AT.PRODUCTS_GET_PACKAGING_GROUPS,
-    payload: api.getPackagingGroups()
-  }
-}
-
-export const deleteCasProduct = id => {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_CAS_DELETE_PRODUCT,
-      payload: api.deleteCasProduct(id)
-    })
-    Datagrid.removeRow(id)
-  }
-}
-
-export function postNewCasProductRequest(values) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_POST_NEW_CAS_PRODUCT,
-      payload: api.postNewCasProduct(values)
-    })
-    Datagrid.loadData()
-    dispatch(closePopup())
-  }
-}
-
-export function updateCasProductRequest(id, values) {
-  return {
-    type: AT.PRODUCTS_UPDATE_CAS_PRODUCT,
-    payload: api.updateCasProduct(id, values)
-  }
-}
-
-export function closeEditPopup() {
-  return {
-    type: AT.PRODUCTS_CLOSE_EDIT_POPUP
-  }
-}
-
-export function getAlternativeProductNames(value) {
-  return {
-    type: AT.PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES,
-    payload: api.getAlternativeProductNames(value)
-  }
-}
-
-export function postNewProductName(productId, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_POST_NEW_PRODUCT_NAME,
-      payload: api.postNewProductName(productId, value)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
-export function updateProductName(productId, id, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_UPDATE_PRODUCT_NAME,
-      payload: api.updateProductName(id, value)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
-export function deleteProductName(productId, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_DELETE_PRODUCT_NAME,
-      payload: api.deleteProductName(id)
-    })
-    await dispatch(getAlternativeProductNames(productId))
-  }
-}
-
+  return { data }
+})
+export const closeConfirmPopup = createAction('PRODUCTS_CLOSE_CONFIRM_POPUP')
+export const getHazardClassesDataRequest = createAsyncAction('PRODUCTS_GET_HAZARD_CLASSES', () => api.getHazardClasses())
+export const getPackagingGroupsDataRequest = createAsyncAction('PRODUCTS_GET_PACKAGING_GROUPS', () => api.getPackagingGroups())
+export const deleteCasProduct = createAsyncAction('PRODUCTS_CAS_DELETE_PRODUCT', async (id) => {
+  const response = await api.deleteCasProduct(id)
+  Datagrid.removeRow(id)
+  return response
+})
+export const postNewCasProductRequest = createAsyncAction('PRODUCTS_POST_NEW_CAS_PRODUCT', async (values) => {
+  const response = await api.postNewCasProduct(values)
+  Datagrid.loadData()
+  closePopup()
+  return response
+})
+export const updateCasProductRequest = createAsyncAction('PRODUCTS_UPDATE_CAS_PRODUCT', (id, values) => api.updateCasProduct(id, values))
+export const closeEditPopup = createAction('PRODUCTS_CLOSE_EDIT_POPUP')
+export const getAlternativeProductNames = createAsyncAction('PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES', (value) => api.getAlternativeProductNames(value))
+export const postNewProductName = createAsyncAction('PRODUCTS_POST_NEW_PRODUCT_NAME', async (productId, value) => {
+  const response = await api.postNewProductName(productId, value)
+  await getAlternativeProductNames(productId)
+  return response
+})
+export const updateProductName = createAsyncAction('PRODUCTS_UPDATE_PRODUCT_NAME', async (productId, id, value) => {
+  const response = await api.updateProductName(id, value)
+  await getAlternativeProductNames(productId)
+  return response
+})
+export const deleteProductName = createAsyncAction('PRODUCTS_DELETE_PRODUCT_NAME', async (productId, id) => {
+  const response = await api.deleteProductName(id)
+  await getAlternativeProductNames(productId)
+  return response
+})
 export function openEditEchoProduct(id, editTab, force = false) {
   return async dispatch => {
     dispatch(editEchoProductChangeTab(editTab, force, { id }))
   }
 }
-
-export function editEchoProductChangeTab(editTab, force = false, data = null) {
-  return {
-    type: AT.PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB,
-    payload: { editTab, force, data }
-  }
-}
-
-export function openEditEchoAltNamesPopup(value) {
+export const editEchoProductChangeTab = createAction('PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB', (editTab, force = false, data = null) => {
+  return { editTab, force, data }
+})
+export const openEditEchoAltNamesPopup = createAction('PRODUCTS_OPEN_EDIT_2_POPUP', value => {
   const data = {
     name: value.name,
     code: value.code,
     id: value.id
   }
-  return {
-    type: AT.PRODUCTS_OPEN_EDIT_2_POPUP,
-    payload: { ...data }
-  }
-}
-
-export function deleteCompanyGenericProduct(echoProductId) {
-  return {
-    type: AT.PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT,
-    async payload() {
-      const response = await api.deleteCompanyGenericProduct(echoProductId)
-      Datagrid.removeRow(echoProductId)
-      return response
-    }
-  }
-}
-
-export const searchCasProduct = (pattern, index) => ({
-  type: AT.PRODUCTS_SEARCH_CAS_PRODUCT,
-  payload: api.searchCasProduct(pattern)
+  return { ...data }
 })
-
-export function putCompanyGenericProducts(id, values) {
-  return {
-    type: AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT,
-    payload: api.putCompanyGenericProducts(id, values)
-  }
-}
-
-export function postCompanyGenericProducts(values) {
-  return {
-    type: AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT,
-    payload: api.postCompanyGenericProducts(values)
-  }
-}
-
-export function searchManufacturers(text, limit = false) {
-  return {
-    type: AT.PRODUCTS_SEARCH_MANUFACTURERS,
-    payload: api.searchManufacturers(text, limit)
-  }
-}
-
-export function loadFile(attachment) {
-  return {
-    type: AT.PRODUCTS_LOAD_FILE,
-    payload: api.loadFile(attachment)
-  }
-}
-
-export function addAttachment(attachment, type, additionalParams = {}) {
-  return {
-    type: AT.PRODUCTS_ADD_ATTACHMENT,
-    async payload() {
-      const data = await api.addAttachment(attachment, type, additionalParams)
-      return data
-    }
-  }
-}
-
-export function linkAttachment(isLot, echoId, attachmentIds) {
-  return {
-    type: AT.PRODUCTS_LINK_ATTACHMENT,
-    async payload() {
-      if (Array.isArray(attachmentIds)) {
-        async function asyncForEach(array, callback) {
-          for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array)
-          }
-        }
-
-        await asyncForEach(attachmentIds, async (attachment, index) => {
-          await api.linkAttachment(echoId, attachment.id)
-        })
-      } else {
-        await api.linkAttachment(echoId, attachmentIds)
+export const deleteCompanyGenericProduct = createAsyncAction('PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT', async (echoProductId) => {
+  const response = await api.deleteCompanyGenericProduct(echoProductId)
+  Datagrid.removeRow(echoProductId)
+  return response
+})
+export const searchCasProduct = createAsyncAction('PRODUCTS_SEARCH_CAS_PRODUCT', (pattern, index) => api.searchCasProduct(pattern))
+export const putCompanyGenericProducts = createAsyncAction('PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT', (id, values) => api.putCompanyGenericProducts(id, values))
+export const postCompanyGenericProducts = createAsyncAction('PRODUCTS_POST_COMPANY_GENERIC_PRODUCT', (values) => api.postCompanyGenericProducts(values))
+export const searchManufacturers = createAsyncAction('PRODUCTS_SEARCH_MANUFACTURERS', (text, limit = false) => api.searchManufacturers(text, limit))
+export const loadFile = createAsyncAction('PRODUCTS_LOAD_FILE', (attachment) => api.loadFile(attachment))
+export const addAttachment = createAsyncAction('PRODUCTS_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
+  const data = await api.addAttachment(attachment, type, additionalParams)
+  return data
+})
+export const linkAttachment = createAsyncAction('PRODUCTS_LINK_ATTACHMENT', async (isLot, echoId, attachmentIds) => {
+  if (Array.isArray(attachmentIds)) {
+    const asyncForEach = async (array, callback) => {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
       }
-
-      return true
     }
-  }
-}
 
-export function removeAttachmentLink(isLot, echoId, aId) {
-  return {
-    type: AT.PRODUCTS_REMOVE_ATTACHMENT_LINK,
-    payload: api.removeAttachmentLink(echoId, aId)
+    await asyncForEach(attachmentIds, async (attachment, index) => {
+      await api.linkAttachment(echoId, attachment.id)
+    })
+  } else {
+    await api.linkAttachment(echoId, attachmentIds)
   }
-}
 
-export function removeAttachment(aId) {
-  return async dispatch => {
-    await dispatch({ type: AT.PRODUCTS_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
-  }
-}
-
-export function getCompanyGenericProduct(id) {
-  return {
-    type: AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT,
-    async payload() {
-      const response = await api.getCompanyGenericProduct(id)
-      Datagrid.updateRow(id, () => response.data)
-      return response
-    }
-  }
-}
-
+  return true
+})
+export const removeAttachmentLink = createAsyncAction('PRODUCTS_REMOVE_ATTACHMENT_LINK', (isLot, echoId, aId) => api.removeAttachmentLink(echoId, aId))
+export const removeAttachment = createAsyncAction('PRODUCTS_REMOVE_ATTACHMENT', (aId) => api.removeAttachment(aId))
+export const getCompanyGenericProduct = createAsyncAction('PRODUCTS_GET_COMPANY_GENERIC_PRODUCT', async (id) => {
+  const response = await api.getCompanyGenericProduct(id)
+  Datagrid.updateRow(id, () => response.data)
+  return response
+})
 export function loadEditEchoProduct(id, editTab) {
   return async dispatch => {
     // get newest data
@@ -278,17 +129,8 @@ export function loadEditEchoProduct(id, editTab) {
     await dispatch(editEchoProductChangeTab(editTab, false, formData))
   }
 }
-
-export function getUnNumbersByString(value) {
-  return {
-    type: AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING,
-    payload: api.getUnNumbersByString(value)
-  }
-}
-
-export const searchTags = tag => ({
-  type: AT.PRODUCTS_SEARCH_TAGS,
-  payload: api.searchTags({
+export const getUnNumbersByString = createAsyncAction('PRODUCTS_GET_UN_NUMBERS_BY_STRING', (value) => api.getUnNumbersByString(value))
+export const searchTags = createAsyncAction('PRODUCTS_SEARCH_TAGS', (tag) => api.searchTags({
     orFilters: [
       {
         operator: 'LIKE',
@@ -299,13 +141,9 @@ export const searchTags = tag => ({
     pageNumber: 0,
     pageSize: 50
   })
-})
-
-export const getDocumentTypes = () => ({ type: AT.PRODUCTS_GET_DOCUMENT_TYPES, payload: api.getDocumentTypes() })
-
-export const searchMarketSegments = segment => ({
-  type: AT.PRODUCTS_SEARCH_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
+)
+export const getDocumentTypes = createAsyncAction('PRODUCTS_GET_DOCUMENT_TYPES', () => api.getDocumentTypes())
+export const searchMarketSegments = createAsyncAction('PRODUCTS_SEARCH_MARKET_SEGMENTS', (segment) => api.searchMarketSegments({
     orFilters: [
       {
         operator: 'LIKE',
@@ -316,98 +154,51 @@ export const searchMarketSegments = segment => ({
     pageNumber: 0,
     pageSize: 50
   })
+)
+export const getAlternativeCompanyGenericProductsNames = 
+  createAsyncAction('PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES', (value) => api.getAlternativeCompanyGenericProductsNames(value))
+export const postNewCompanyGenericProductsAltName = createAsyncAction('PRODUCTS_POST_NEW_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME', async (productId, value) => {
+  const response = await api.postNewCompanyGenericProductsAltName(productId, value)
+  await getAlternativeCompanyGenericProductsNames(productId)
+  return response
 })
-
-export function getAlternativeCompanyGenericProductsNames(value) {
-  return {
-    type: AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES,
-    payload: api.getAlternativeCompanyGenericProductsNames(value)
-  }
-}
-
-export function postNewCompanyGenericProductsAltName(productId, value) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_POST_NEW_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.postNewCompanyGenericProductsAltName(productId, value)
-    })
-    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
-  }
-}
-
-export function updateCompanyGenericProductsAltName(productId, id, value) {
-  return async dispatch => {
-    const response = await dispatch({
-      type: AT.PRODUCTS_UPDATE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.updateCompanyGenericProductsAltName(id, value)
-    })
-    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
-  }
-}
-
-export function deleteCompanyGenericProductsAltName(productId, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME,
-      payload: api.deleteCompanyGenericProductsAltName(id)
-    })
-    await dispatch(getAlternativeCompanyGenericProductsNames(productId))
-  }
-}
-
-export function postProductGroups(request) {
-  return {
-    type: AT.PRODUCTS_GROUPS_CREATE,
-    async payload() {
-      const response = await api.postProductGroups(request)
-      Datagrid.loadData()
-      return response
-    }
-  }
-}
-
-export function putProductGroups(id, request, selectedTagsOptions) {
-  return {
-    type: AT.PRODUCTS_GROUPS_UPDATE,
-    async payload() {
-      const response = await api.putProductGroups(id, request)
-      Datagrid.updateRow(id, () => ({
-        name: request.name,
-        tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
-        id: id
-      }))
-      return response
-    }
-  }
-}
-
-export function deleteProductGroups(id) {
-  return {
-    type: AT.PRODUCTS_GROUPS_DELETE,
-    async payload() {
-      await api.deleteProductGroups(id)
-      Datagrid.loadData()
-    }
-  }
-}
-
-export const searchProductGroups = val => ({
-  type: AT.PRODUCTS_SEARCH_PRODUCT_GROUPS,
-  payload: api.searchProductGroups({
+export const updateCompanyGenericProductsAltName = createAsyncAction('PRODUCTS_UPDATE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME', async (productId, id, value) => {
+  const response = await api.updateCompanyGenericProductsAltName(id, value)
+  await getAlternativeCompanyGenericProductsNames(productId)
+  return response
+})
+export const deleteCompanyGenericProductsAltName = createAsyncAction('PRODUCTS_DELETE_COMPANY_GENERIC_PRODUCT_ALTERNATIVE_NAME', async (productId, id) => {
+  const response = await api.deleteCompanyGenericProductsAltName(id)
+  await getAlternativeCompanyGenericProductsNames(productId)
+  return response
+})
+export const postProductGroups = createAsyncAction('PRODUCTS_GROUPS_CREATE', async (request) => {
+  const response = await api.postProductGroups(request)
+  Datagrid.loadData()
+  return response
+})
+export const putProductGroups = createAsyncAction('PRODUCTS_GROUPS_UPDATE', async (id, request, selectedTagsOptions) => {
+  const response = await api.putProductGroups(id, request)
+  Datagrid.updateRow(id, () => ({
+    name: request.name,
+    tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
+    id: id
+  }))
+  return response
+})
+export const deleteProductGroups = createAsyncAction('PRODUCTS_GROUPS_DELETE', async (id) => {
+  const response = await api.deleteProductGroups(id)
+  Datagrid.loadData()
+  return response
+})
+export const searchProductGroups = createAsyncAction('PRODUCTS_SEARCH_PRODUCT_GROUPS', (val) => api.searchProductGroups({
     orFilters: [{ operator: 'LIKE', path: 'ProductGroup.name', values: [`%${val}%`] }],
     pageNumber: 0,
     pageSize: 50
   })
+)
+export const searchCompany = createAsyncAction('PRODUCTS_SEARCH_COMPANY', (companyText, limit) => api.searchCompany(companyText, limit))
+export const handleVariableSave = createAction('PRODUCTS_HANDLE_VARIABLE_CHANGE', (variable, value) => {
+  return { variable, value }
 })
 
-export const searchCompany = (companyText, limit) => ({
-  type: AT.PRODUCTS_SEARCH_COMPANY,
-  payload: api.searchCompany(companyText, limit)
-})
-
-export function handleVariableSave(variable, value) {
-  return {
-    type: AT.PRODUCTS_HANDLE_VARIABLE_CHANGE,
-    payload: { variable, value }
-  }
-}
