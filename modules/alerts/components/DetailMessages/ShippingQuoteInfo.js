@@ -11,11 +11,10 @@ import moment from 'moment'
 import { currency } from '~/constants/index'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import BasicButton from '../../../../components/buttons/BasicButton'
-import { DetailMessage, StyledGrid } from '../layout'
 
 import { Grid, GridRow, GridColumn, Segment, List, Button } from 'semantic-ui-react'
 
-import { TableSegment, ListTable } from '../Alerts.styles'
+import { TableSegment, ListTable, DetailMessage, StyledGrid } from '../Alerts.styles'
 
 const DivSimpleText = styled.div`
   color: #20273a;
@@ -123,7 +122,7 @@ const ShippingQuoteInfo = props => {
             const packagingUnit = getSafe(() => item.packagingUnit.nameAbbreviation, '')
             const packagingType = getSafe(() => item.packagingType.name, '')
             return (
-              <GridRow>
+              <GridRow key={index}>
                 <GridColumn width={16}>
                   <DivProductName>
                     {`${item.pkgAmount} x ${item.packagingSize} ${packagingUnit} ${packagingType} ${item.product}`}

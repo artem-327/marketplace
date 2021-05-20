@@ -8,11 +8,9 @@ import styled from 'styled-components'
 import { ArrowRight } from 'react-feather'
 import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 
-import { DetailMessage, StyledGrid } from '../layout'
-
 import { Grid, GridRow, GridColumn, Segment, List, Input, Button } from 'semantic-ui-react'
 
-import { TableSegment, ListTable } from '../Alerts.styles'
+import { TableSegment, ListTable, DetailMessage, StyledGrid } from '../Alerts.styles'
 
 const AddressRow = styled.div`
   display: flex;
@@ -148,9 +146,9 @@ const ShippingQuoteRequest = props => {
         <GridRow>
           <GridColumn width={16}>
             <TableSegment>
-              {row.info.items.map(item => {
+              {row.info.items.map((item, index) => {
                 return (
-                  <ListTable divided relaxed horizontal size='large'>
+                  <ListTable divided relaxed horizontal size='large' key={index}>
                     {
                       [
                         {

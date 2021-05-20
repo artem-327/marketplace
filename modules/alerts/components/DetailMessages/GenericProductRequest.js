@@ -6,9 +6,8 @@ import { generateToastMarkup, getSafe } from '~/utils/functions'
 import * as Actions from '../../actions'
 import { FileText } from 'react-feather'
 import { downloadAttachment, downloadAttachmentPdf } from '~/modules/inventory/actions'
-import { DetailMessage, StyledGrid } from '../layout'
 import { GridRow, GridColumn } from 'semantic-ui-react'
-import { GridAttachments, RowDocument } from '../Alerts.styles'
+import { GridAttachments, RowDocument, DetailMessage, StyledGrid } from '../Alerts.styles'
 import { downloadFile } from '../Alerts.services'
 
 const GenericProductRequest = props => {
