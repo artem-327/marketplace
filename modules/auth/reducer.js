@@ -164,7 +164,7 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
-    case "PROFILE_UPDATE_MY_PROFILE_FULFILLED":
+    case 'PROFILE_UPDATE_MY_PROFILE_FULFILLED':
     case AT.UPDATE_IDENTITY: {
       return {
         ...state,

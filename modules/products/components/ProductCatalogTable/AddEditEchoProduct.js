@@ -2,10 +2,10 @@ import { Component } from 'react'
 import * as React from 'react'
 
 import moment from 'moment'
-import { removeEmpty } from '~/utils/functions'
-import { verifyEchoProduct } from '~/modules/admin/api' // No need to be an action
-import { DateInput } from '~/components/custom-formik'
-import { PhoneNumber } from '~/modules/phoneNumber'
+import { removeEmpty } from '../../../../utils/functions'
+import { verifyEchoProduct } from '../../../../modules/admin/api' // No need to be an action
+import { DateInput } from '../../../../components/custom-formik'
+import { PhoneNumber } from '../../../../modules/phoneNumber'
 import * as Yup from 'yup'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -35,20 +35,20 @@ import {
 import TextareaAutosize from 'react-autosize-textarea'
 import { FieldArray, Field } from 'formik'
 
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import { errorMessages, dateValidation, phoneValidation } from '~/constants/yupValidation'
-import { getSafe } from '~/utils/functions'
+import UploadAttachment from '../../../../modules/inventory/components/upload/UploadAttachment'
+import { errorMessages, dateValidation, phoneValidation } from '../../../../constants/yupValidation'
+import { getSafe } from '../../../../utils/functions'
 import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
 import styled from 'styled-components'
 import debounce from 'lodash/debounce'
-import { uniqueArrayByKey } from '~/utils/functions'
+import { uniqueArrayByKey } from '../../../../utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
-import confirm from '~/components/Confirmable/confirm'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { Required, Or } from '~/components/constants/layout'
-import { AttachmentManager } from '~/modules/attachments'
+import confirm from '../../../../components/Confirmable/confirm'
+import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
+import { Required, Or } from '../../../../components/constants/layout'
+import { AttachmentManager } from '../../../../modules/attachments'
 import { UploadCloud, ChevronDown, Paperclip } from 'react-feather'
-import ErrorFocus from '~/components/error-focus'
+import ErrorFocus from '../../../../components/error-focus'
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 
@@ -218,14 +218,14 @@ const DivIcon = styled.div`
   margin-right: 8px;
 `
 
-const IconStyled = styled(Icon)` 
+const IconStyled = styled(Icon)`
   &.small.icon {
     margin: 0;
     width: 100%;
     height: 100%;
     vertical-align: middle;
     color: #848893;
-    
+
     &.delete {
       color: #f16844;
     }
@@ -235,7 +235,7 @@ const IconStyled = styled(Icon)`
 const DivCircleIcon = styled.div`
   margin: 10.5px auto 10.5px -3px;
   width: 18px;
-  height: 18px; 
+  height: 18px;
   border-radius: 9px;
   border: solid 1px #dee2e6;
   background-color: #ffffff;
@@ -534,15 +534,17 @@ class AddEditEchoProduct extends React.Component {
                   caprop65: getSafe(() => element.casProduct.caprop65, ''),
                   reach: getSafe(() => element.casProduct.reach, '')
                 })),
-              [{
-                name: '',
-                casProduct: '',
-                assayMin: '',
-                assayMax: '',
-                proprietary: false,
-                caprop65: '',
-                reach: ''
-              }]
+              [
+                {
+                  name: '',
+                  casProduct: '',
+                  assayMin: '',
+                  assayMax: '',
+                  proprietary: false,
+                  caprop65: '',
+                  reach: ''
+                }
+              ]
             ),
             emergencyCompanyName: getSafe(() => popupValues.emergencyCompanyName, ''),
             emergencyContactName: getSafe(() => popupValues.emergencyContactName, ''),
@@ -707,15 +709,17 @@ class AddEditEchoProduct extends React.Component {
       initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [{
-        name: '',
-        casProduct: '',
-        assayMin: '',
-        assayMax: '',
-        proprietary: false,
-        caprop65: '',
-        reach: ''
-      }]
+      initialValues.elements = [
+        {
+          name: '',
+          casProduct: '',
+          assayMin: '',
+          assayMax: '',
+          proprietary: false,
+          caprop65: '',
+          reach: ''
+        }
+      ]
     }
     return initialValues
   }
@@ -1250,9 +1254,10 @@ class AddEditEchoProduct extends React.Component {
                               onSearchChange: this.handleSearchChange,
                               dataindex: index,
                               onChange: (_, { value }) => {
-                                const  casItem = getSafe(
+                                const casItem = getSafe(
                                   () => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'),
-                                  []).find(el => el.id === value)
+                                  []
+                                ).find(el => el.id === value)
                                 if (casItem) {
                                   formikProps.setFieldValue(`elements[${index}].caprop65`, casItem.caprop65)
                                   formikProps.setFieldValue(`elements[${index}].reach`, casItem.reach)
@@ -1294,13 +1299,12 @@ class AddEditEchoProduct extends React.Component {
                         <DivReadOnlyValues>
                           {values.elements[index].proprietary ? (
                             'N/A'
+                          ) : values.elements[index].caprop65 === true ? (
+                            <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                          ) : values.elements[index].caprop65 === false ? (
+                            <FormattedMessage id='global.no' defaultMessage='No' />
                           ) : (
-                            values.elements[index].caprop65 === true
-                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                              : (values.elements[index].caprop65 === false
-                                ? <FormattedMessage id='global.no' defaultMessage='No' />
-                                : 'N/A'
-                              )
+                            'N/A'
                           )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
@@ -1309,13 +1313,12 @@ class AddEditEchoProduct extends React.Component {
                         <DivReadOnlyValues>
                           {values.elements[index].proprietary ? (
                             'N/A'
-                          ) :(
-                            values.elements[index].reach === true
-                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                              : (values.elements[index].reach === false
-                                ? <FormattedMessage id='global.no' defaultMessage='No' />
-                                : 'N/A'
-                              )
+                          ) : values.elements[index].reach === true ? (
+                            <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                          ) : values.elements[index].reach === false ? (
+                            <FormattedMessage id='global.no' defaultMessage='No' />
+                          ) : (
+                            'N/A'
                           )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
@@ -1327,12 +1330,12 @@ class AddEditEchoProduct extends React.Component {
                               arrayHelpers.remove(index)
                               this.setState({ changedForm: true })
                             }}
-                            data-test={`settings_product_popup_remove_${index}_btn`}
-                          >
-                            <IconStyled name='delete' size='small'  />
+                            data-test={`settings_product_popup_remove_${index}_btn`}>
+                            <IconStyled name='delete' size='small' />
                           </DivCircleIcon>
-                          ) : ''
-                        }
+                        ) : (
+                          ''
+                        )}
                       </GridColumnMixtures>
                     </GridRowCustom>
                   ))
@@ -1353,9 +1356,8 @@ class AddEditEchoProduct extends React.Component {
                       })
                       this.setState({ changedForm: true })
                     }}
-                    data-test='settings_product_popup_add_btn'
-                  >
-                    <IconStyled name='plus' size='small'  />
+                    data-test='settings_product_popup_add_btn'>
+                    <IconStyled name='plus' size='small' />
                   </DivCircleIcon>
                 </GridColumnMixtures>
               </GridRowCustom>
@@ -2367,7 +2369,9 @@ class AddEditEchoProduct extends React.Component {
                         {formatMessage(tab.text)}
                       </Menu.Item>
                     ))}
-                    <DivIconChevronDown onClick={() => closePopup()}><ChevronDown /></DivIconChevronDown>
+                    <DivIconChevronDown onClick={() => closePopup()}>
+                      <ChevronDown />
+                    </DivIconChevronDown>
                   </MenuCustom>
                 </HighSegment>
 

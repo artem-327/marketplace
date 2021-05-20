@@ -4,24 +4,24 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Divider, Segment, Button, Icon, Modal, FormGroup } from 'semantic-ui-react'
 
 import { RelaxedRow } from './styledComponents'
-import { FormattedUnit } from '~/components/formatted-messages'
+import { FormattedUnit } from '../../components/formatted-messages'
 import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
 
 import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 import * as Yup from 'yup'
-import { currency } from '~/constants/index'
+import { currency } from '../../constants/index'
 import {
   getPackagingGroupsDataRequest,
   getHazardClassesDataRequest,
   getUnNumbersByString,
   addUnNumber
-} from '~/modules/admin/actions'
-import { getCart } from '~/modules/purchase-order/actions'
-import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
-import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '~/utils/functions'
-import { freightClassValidation } from '~/constants/yupValidation'
+} from '../../modules/admin/actions'
+import { getCart } from '../../modules/purchase-order/actions'
+import { getNmfcNumbersByString, addNmfcNumber } from '../../modules/settings/actions'
+import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '../../utils/functions'
+import { freightClassValidation } from '../../constants/yupValidation'
 import styled from 'styled-components'
 
 import {
@@ -30,7 +30,7 @@ import {
   ItemDescriptionGrid,
   SummaryGrid,
   BottomUnpaddedColumn
-} from '~/modules/cart/components/StyledComponents'
+} from '../../modules/cart/components/StyledComponents'
 import { TopUnpaddedColumn } from '../../modules/cart/components/StyledComponents'
 
 const BlueText = styled.label`

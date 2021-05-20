@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { FormattedNumber } from 'react-intl'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getLocaleDateFormat } from '../../../components/date-format'
 
 export const operators = {
   CONTAINS: 'CONTAINS',

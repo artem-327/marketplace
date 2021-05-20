@@ -1,5 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import { companyDatagridColumns } from '~/constants/index'
 
 export const defaultTabs = [
   { name: 'Units of Measure', id: 1, type: 'units-of-measure' },

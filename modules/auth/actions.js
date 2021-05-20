@@ -135,23 +135,19 @@ export function getVersion() {
       type: AT.GET_VERSION_PENDING
     })
     api
-    .getVersion()
-    .then(
-      async response => {
+      .getVersion()
+      .then(async response => {
         await dispatch({
           type: AT.GET_VERSION_FULFILLED,
           payload: response.data
         })
-      }
-    )
-    .catch(
-      async err => {
+      })
+      .catch(async err => {
         await dispatch({
           type: AT.GET_VERSION_REJECTED,
           error: err
         })
-      }
-    )
+      })
   }
 }
 
@@ -199,23 +195,19 @@ export const searchCountries = searchQuery => {
       type: AT.AUTH_SEARCH_COUNTRIES_REJECTED
     })
     await api
-    .searchCountries(searchQuery)
-    .then(
-      async response => {
+      .searchCountries(searchQuery)
+      .then(async response => {
         await dispatch({
           type: AT.AUTH_SEARCH_COUNTRIES_FULFILLED,
           payload: response.data
         })
-      }
-    )
-    .catch(
-      async err => {
+      })
+      .catch(async err => {
         await dispatch({
           type: AT.AUTH_SEARCH_COUNTRIES_REJECTED,
           error: err
         })
-      }
-    )
+      })
   }
 }
 
@@ -225,23 +217,19 @@ export const searchProvinces = countryId => {
       type: AT.AUTH_SEARCH_PROVINCES_PENDING
     })
     await api
-    .searchProvinces(countryId)
-    .then(
-      async response => {
+      .searchProvinces(countryId)
+      .then(async response => {
         await dispatch({
           type: AT.AUTH_SEARCH_PROVINCES_FULFILLED,
           payload: response.data
         })
-      }
-    )
-    .catch(
-      async err => {
+      })
+      .catch(async err => {
         await dispatch({
           type: AT.AUTH_SEARCH_PROVINCES_REJECTED,
           error: err
         })
-      }
-    )
+      })
   }
 }
 
@@ -253,23 +241,19 @@ export const updateCompany = (id, payload) => {
       type: AT.UPDATE_COMPANY_PENDING
     })
     await api
-    .updateCompany(id, payload)
-    .then(
-      async response => {
+      .updateCompany(id, payload)
+      .then(async response => {
         await dispatch({
           type: AT.UPDATE_COMPANY_FULFILLED,
           payload: response.data
         })
-      }
-    )
-    .catch(
-      async err => {
+      })
+      .catch(async err => {
         await dispatch({
           type: AT.UPDATE_COMPANY_REJECTED,
           error: err
         })
-      }
-    )
+      })
   }
 }
 
@@ -279,23 +263,19 @@ export const agreeWithTOS = () => {
       type: AT.AGREE_WITH_TOS_PENDING
     })
     await api
-    .agreeWithTOS()
-    .then(
-      async response => {
+      .agreeWithTOS()
+      .then(async response => {
         await dispatch({
           type: AT.AGREE_WITH_TOS_FULFILLED,
           payload: response.data
         })
-      }
-    )
-    .catch(
-      async err => {
+      })
+      .catch(async err => {
         await dispatch({
           type: AT.AGREE_WITH_TOS_REJECTED,
           error: err
         })
-      }
-    )
+      })
   }
 }
 

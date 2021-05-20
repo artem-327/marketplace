@@ -13,7 +13,14 @@ import { CustomButton } from './BasicButton.styles'
 const BasicButton = props => {
   const { noBorder, margin, type, disabled, onClick, ...rest } = props
   return (
-    <CustomButton $noBorder={noBorder} $margin={margin} type={type} disabled={disabled} onClick={onClick} {...rest}>
+    <CustomButton
+      $noBorder={noBorder}
+      $margin={margin}
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      {...rest}
+      data-test='component-basicbutton'>
       {props.children}
     </CustomButton>
   )
