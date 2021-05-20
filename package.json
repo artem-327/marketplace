@@ -10,7 +10,7 @@
     "@devexpress/dx-react-core": "^1.11.0",
     "@devexpress/dx-react-grid": "^1.11.0",
     "@devexpress/dx-react-grid-bootstrap4": "^1.11.0",
-    "@material-ui/core": "^3.9.4",
+    "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^3.0.2",
     "@next/bundle-analyzer": "^10.2.0",
     "@zeit/next-css": "^0.2.1-canary.4",
@@ -98,16 +98,22 @@
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch",
-    "docs": "jsdoc -c ./jsdoc.json"
+    "docs": "jsdoc -c ./jsdoc.json",
+    "cypress:test": "npx cypress run --headed -b chrome --reporter junit",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.0",
+    "cypress": "^8.3.1",
+    "cypress-file-upload": "^5.0.8",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^4.2.0",
     "gulp": "^3.0.0",
+    "mocha": "^9.0.3",
+    "mocha-junit-reporter": "^2.0.0",
     "semantic-ui": "^2.4.2"
   },
   "browserslist": [

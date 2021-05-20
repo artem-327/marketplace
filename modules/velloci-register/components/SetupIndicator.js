@@ -1,60 +1,69 @@
-import { Component } from 'react'
 import PropTypes from 'prop-types'
 // @ts-ignore
 import { FormattedMessage } from 'react-intl'
+import classNames from 'classnames';
 //Components
-import { setupPages } from '../constants'
+import { setupIndicatorSteps } from '../constants'
 //Styles
-import { Rectangle, Title, Content, OvalEmpty, OvalFocus, Icons } from './styles'
+import { Rectangle, Title, HorizontalRule, HVCenteredContentContainer, StepIncomplete, StepComplete, StepCurrent, Icons, IconRow } from './styles'
+import TradePassLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg';
 
-class SetupIndicator extends Component {
-  getIcons = () => {
-    const { activeStep } = this.props
+const SetupIndicator = ({ activeStep }) => {
+  if (!setupIndicatorSteps.length) {
+    return null
+  }
 
-    return (
+  return (
+    <Rectangle>
       <Icons>
-        {setupPages.map((_, index) => {
-          if (index <= activeStep) {
-            return <OvalFocus key={index} />
-          } else {
-            return <OvalEmpty key={index} />
+        {setupIndicatorSteps.map((val, i) => {
+          const { text, type } = val;
+
+          switch (type) {
+            case 'heading':
+              return (
+                <Title>
+                  <FormattedMessage id={text} defaultMessage='Title' />
+                </Title>
+              )
+            case 'step':
+              const { step } = val;
+              const hidden = val?.hidden
+              const tail = classNames({ 'tail': val?.tail });
+
+              if (hidden) {
+                return <></>
+              }
+
+              return (
+                <>
+                {step === activeStep &&
+                  <IconRow key={`setup-indicator-${i}`}>
+                    <StepCurrent className={tail} key={i} />
+                    <span><FormattedMessage id={text} defaultMessage={text} /></span>
+                  </IconRow>
+                }
+                {step > activeStep &&
+                  <IconRow key={`setup-indicator-${i}`}>
+                    <StepIncomplete className={tail} key={i} />
+                    <span><FormattedMessage id={text} defaultMessage={text} /></span>
+                  </IconRow>
+                }
+                {step < activeStep &&
+                  <IconRow key={`setup-indicator-${i}`}>
+                    <StepComplete className={tail} key={i} />
+                    <span><FormattedMessage id={text} defaultMessage={text} /></span>
+                  </IconRow>
+                }
+                {tail && <div style={{ padding: '.5rem 0' }}><HorizontalRule /></div>}
+                </>
+              )
           }
         })}
+        <HVCenteredContentContainer><img style={{ padding: '1rem' }} src={TradePassLogo} alt="TradePass Logo" /></HVCenteredContentContainer>
       </Icons>
-    )
-  }
-
-  render() {
-    const { activeStep = 0 } = this.props
-    if (!setupPages.length) return
-    else {
-      return (
-        <Rectangle>
-          <div>
-            <Title>
-              <FormattedMessage
-                id={setupPages ? setupPages[activeStep].title : 'global.title'}
-                defaultMessage={'Title'}>
-                {
-                  // @ts-ignore
-                  text => text
-                }
-              </FormattedMessage>
-            </Title>
-            <Content>
-              <FormattedMessage id={setupPages[activeStep].content} defaultMessage={'Content'}>
-                {
-                  // @ts-ignore
-                  text => text
-                }
-              </FormattedMessage>
-            </Content>
-          </div>
-          {this.getIcons()}
-        </Rectangle>
-      )
-    }
-  }
+    </Rectangle>
+  )
 }
 
 SetupIndicator.propTypes = {

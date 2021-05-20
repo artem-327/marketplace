@@ -2,12 +2,14 @@
 import { useEffect } from 'react'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import _ from 'lodash'
 import PropTypes from 'prop-types'
 //Components
 import SetupIndicator from './SetupIndicator'
+import SetupIndicatorMobile from './SetupIndicatorMobile'
 import FormRectangle from './FormRectangle'
 import BeneficialOwnersPopup from './steps/BeneficialOwnersPopup'
+import MarketingMaterial from './steps/MarketingMaterial'
+import RiskTolerance from './steps/RiskTolerance'
 //Hooks
 import { usePrevious } from '../../../hooks'
 //Services
@@ -17,6 +19,12 @@ import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
+import { FormattedMessage } from 'react-intl'
+import {
+  DivTitleText,
+  DivTitleRectangleForm,
+  DivRectangleForm
+} from './styles'
 
 // Global variable to store global state
 let selfFormikProps = {} //TODO specify type
@@ -67,45 +75,91 @@ const VellociRegister = props => {
     // if [] has some variables, then is similar as componentDidUpdate:
   }, [props.numberBeneficialOwners, prevNumberBeneficialOwners])
 
-  return (
+  const { activeStep, finalStep, mainContainer, nextStep } = props;
+  const beneficialOwnersNotified = props?.emailPopup?.beneficialOwnersNotified;
+
+  const MobileIndicator = ({ activeStep }) => (
     <Grid>
-      <GridColumn>
-        <GridRow>
-          <SetupIndicator activeStep={props.activeStep} />
-          <Formik
-            onSubmit={values => handleSubmit(values, props, selfFormikProps)}
-            validateOnChange={true}
-            initialValues={props.initialValues}
-            validationSchema={getValidationSchema()}
-            render={formikProps => {
-              selfFormikProps = formikProps
-              return (
-                <Form>
-                  <Grid verticalAlign='middle' centered>
-                    <FormRectangle
-                      formikProps={formikProps}
-                      title={titleIds[props.activeStep]}
-                      subtitle={subtitleIds[props.activeStep]}
-                      prevStep={props.prevStep}
-                      submitForm={submitForm}
-                      activeStep={props.activeStep}
-                      numberBeneficialOwners={props.numberBeneficialOwners}
-                      countBeneficialOwners={props.countBeneficialOwners}
-                      isLoadingSubmitButton={props.isLoadingSubmitButton}
-                      openEmailPopup={props.openEmailPopup}
-                      nextStep={props.nextStep}
-                      mainContainer={props.mainContainer}>
-                      {switchPages({ ...props, formikProps })}
-                    </FormRectangle>
-                  </Grid>
-                  <ErrorFocus />
-                  {props.emailPopup.isOpen && <BeneficialOwnersPopup />}
-                </Form>
-              )
-            }}
-          />
-        </GridRow>
-      </GridColumn>
+      <Grid.Row>
+        <Grid.Column only='tablet mobile'>
+          <SetupIndicatorMobile activeStep={activeStep} />
+        </Grid.Column>
+      </Grid.Row>
+    </Grid> 
+  )
+
+  const ModuleTitle = ({ activeStep, className }) => (
+    <DivRectangleForm activeStep={activeStep}>
+      <DivTitleRectangleForm className={className}>
+        <DivTitleText data-test="onboarding-module-title" className="onboarding-module-title">
+          <FormattedMessage id={titleIds[activeStep]} defaultMessage='Title' />
+        </DivTitleText>
+      </DivTitleRectangleForm>
+    </DivRectangleForm>
+  )
+
+  return (
+    <Grid columns='equal' padded stackable>
+      <GridRow>
+        <GridColumn width={4} only='large screen'>
+          <SetupIndicator activeStep={activeStep} />
+        </GridColumn>
+        <GridColumn>
+          {activeStep !== 5 && activeStep !== 7 &&
+            <Formik
+              onSubmit={values => handleSubmit(values, props, selfFormikProps, beneficialOwnersNotified)}
+              validateOnChange={true}
+              initialValues={props.initialValues}
+              validationSchema={beneficialOwnersNotified ? getValidationSchema(true) : getValidationSchema()}
+              render={formikProps => {
+                selfFormikProps = formikProps
+                return (
+                  <>
+                    <MobileIndicator activeStep={activeStep} />
+                    <Form style={{ background: '#fff', border: 'solid 1px #dee2e6' }}>
+                      <ModuleTitle activeStep={activeStep} />
+                      <FormRectangle
+                        beneficialOwnersNotified={beneficialOwnersNotified}
+                        formikProps={formikProps}
+                        title={titleIds[activeStep]}
+                        subtitle={subtitleIds[activeStep]}
+                        prevStep={props.prevStep}
+                        submitForm={submitForm}
+                        activeStep={activeStep}
+                        finalStep={finalStep}
+                        numberBeneficialOwners={props.numberBeneficialOwners}
+                        countBeneficialOwners={props.countBeneficialOwners}
+                        isLoadingSubmitButton={props.isLoadingSubmitButton}
+                        openEmailPopup={props.openEmailPopup}
+                        nextStep={props.nextStep}
+                        mainContainer={mainContainer}
+                        selfFormikProps={selfFormikProps}>
+                        {switchPages({ ...props, formikProps })}
+                      </FormRectangle>
+                      <ErrorFocus />
+                      {props.emailPopup.isOpen &&
+                        <BeneficialOwnersPopup formikProps={formikProps} nextStep={nextStep} selfFormikProps={selfFormikProps} />
+                      }
+                    </Form>
+                  </>
+                )
+              }}
+            />
+          }
+          {activeStep === 5 &&
+            <MarketingMaterial {...props}>
+              <MobileIndicator activeStep={activeStep} />
+              <ModuleTitle className="module-title" activeStep={activeStep} />
+            </MarketingMaterial>
+          }
+          {activeStep === 7 &&
+            <RiskTolerance {...props}>
+              <MobileIndicator activeStep={activeStep} />
+              <ModuleTitle className="module-title" activeStep={activeStep} />
+            </RiskTolerance>
+          }
+        </GridColumn>
+      </GridRow>
     </Grid>
   )
 }
@@ -114,6 +168,7 @@ VellociRegister.propTypes = {
   nextStep: PropTypes.func,
   prevStep: PropTypes.func,
   activeStep: PropTypes.number,
+  finalStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
   isLoadingSubmitButton: PropTypes.bool,
@@ -144,6 +199,7 @@ VellociRegister.defaultProps = {
   nextStep: () => {},
   prevStep: () => {},
   activeStep: 0,
+  finalStep: 8,
   countBeneficialOwners: () => {},
   numberBeneficialOwners: 0,
   isLoadingSubmitButton: false,

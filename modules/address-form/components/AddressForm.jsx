@@ -262,6 +262,7 @@ class AddressForm extends Component {
           <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
             <Input
               inputProps={{
+                'data-test': `${prefix}-street-address`,
                 onFocus: e => (e.target.autocomplete = null),
                 list: datalistName,
                 onChange: this.handleChange,
@@ -329,7 +330,7 @@ class AddressForm extends Component {
               }))}
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),
-                'data-test': 'address_form_province_drpdn',
+                'data-test': `${prefix}-state-province`,
                 search: true,
                 disabled: !this.state.hasProvinces,
                 loading: provincesAreFetching,
@@ -345,6 +346,7 @@ class AddressForm extends Component {
           <DatalistGroup widths='equal'>
             <Input
               inputProps={{
+                'data-test': `${prefix}-city`,
                 onFocus: e => (e.target.autocomplete = null),
                 list: datalistName,
                 onChange: this.handleChange,
@@ -365,7 +367,7 @@ class AddressForm extends Component {
               onChange={this.handleChange}
               additionalInputProps={{
                 icon: null,
-                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' })
+                placeholder: formatMessage({ id: 'global.address.enterZipCode' })
               }}
               name={fields.zip}
               required={required}

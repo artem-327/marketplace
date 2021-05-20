@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow, Header } from 'semantic-ui-react'
+import { Button, Grid, GridColumn, GridRow, Icon, Popup } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -16,6 +16,7 @@ import { DateInput } from '~/components/custom-formik'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { roles } from '../../../../components/settings/constants'
+import { AddOwnersButtonDiv } from '../styles'
 
 const GridPersonalInformation = styled(Grid)`
   margin: 14px 16px !important;
@@ -44,28 +45,23 @@ const GridRowTitle = styled.div`
 `
 
 function PersonalInformation({
+  countBeneficialOwners,
   formikProps,
   intl: { formatMessage },
   numberBeneficialOwners,
   businessRoles,
   registerBeneficialOwner
 }) {
+  const { values } = formikProps;
+
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
-    let businessRolesOptions =
-      businessRoles && businessRoles.data && businessRoles.data.length
-        ? businessRoles.data.map(el => ({
-            key: el,
-            value: el,
-            text: el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
-          }))
-        : []
-
-    if (i > 0) businessRolesOptions = businessRolesOptions?.filter(role => role?.key !== 'controlling_officer')
-    if (i === 0 && formikProps?.values?.verifyPersonalInformation[0]?.businessRole !== 'controlling_officer')
-      formikProps.setFieldValue('verifyPersonalInformation[0].businessRole', 'controlling_officer')
     forms.push(
-      <GridPersonalInformation key={i}>
+      <GridPersonalInformation
+        className="verify-personal-information"
+        data-test="verify-personal-information"
+        key={i}
+      >
         {i > 0 && (
           <GridRowTitle id={`form${i}`}>
             <GridColumn>
@@ -77,8 +73,8 @@ function PersonalInformation({
             </GridColumn>
           </GridRowTitle>
         )}
-        <GridRow columns={3}>
-          <ColumnCustom>
+        <GridRow columns={2}>
+          <ColumnCustom className="m-b-padding" computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].firstName`}
               label={
@@ -96,11 +92,11 @@ function PersonalInformation({
                   defaultMessage: 'Enter first name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_first_name_inpt'
+                'data-test': `verify-personal-information-first-name-${i}`
               }}
             />
           </ColumnCustom>
-          <ColumnCustom>
+          <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].middleName`}
               label={formatMessage({
@@ -113,11 +109,13 @@ function PersonalInformation({
                   defaultMessage: 'Enter middle name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_middle_name_inpt'
+                'data-test': `verify-personal-information-middle-name-${i}`
               }}
             />
           </ColumnCustom>
-          <ColumnCustom>
+        </GridRow>
+        <GridRow>
+          <ColumnCustom computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].lastName`}
               label={
@@ -135,14 +133,13 @@ function PersonalInformation({
                   defaultMessage: 'Enter last name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_last_name_inpt'
+                'data-test': `verify-personal-information-last-name-${i}`
               }}
             />
           </ColumnCustom>
         </GridRow>
-
         <GridRow columns={2}>
-          <ColumnCustom>
+          <ColumnCustom className="m-b-padding" computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].email`}
               label={
@@ -160,11 +157,11 @@ function PersonalInformation({
                   defaultMessage: 'Enter email address'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_personal_email_address_inpt'
+                'data-test': `verify-personal-information-email-address-${i}`
               }}
             />
           </ColumnCustom>
-          <ColumnCustom>
+          <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
             <PhoneNumber
               name={`verifyPersonalInformation[${i}].phoneNumber`}
               values={formikProps.values}
@@ -236,7 +233,7 @@ function PersonalInformation({
           </GridColumn>
         </GridRow>
         <GridRow columns={registerBeneficialOwner ? 2 : 3}>
-          <ColumnCustom>
+          <ColumnCustom className="m-b-padding" computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].businessTitle`}
               label={
@@ -254,41 +251,11 @@ function PersonalInformation({
                   defaultMessage: 'Enter Business Title'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_business_title_inpt'
+                'data-test': `verify-personal-information-business-title-${i}`
               }}
             />
           </ColumnCustom>
-          {!registerBeneficialOwner && (
-            <ColumnCustom>
-              <Dropdown
-                options={businessRolesOptions}
-                fieldProps={{
-                  'data-test': 'settings_velloci_registration_personal_info_business_role_inpt'
-                }}
-                inputProps={{
-                  placeholder: formatMessage({
-                    id: 'global.businessName',
-                    defaultMessage: 'Business Name'
-                  }),
-                  search: true,
-                  selection: true,
-                  disabled: i === 0,
-                  loading: businessRoles && businessRoles.loading
-                }}
-                name={`verifyPersonalInformation[${i}].businessRole`}
-                label={
-                  <>
-                    {formatMessage({
-                      id: 'velloci.personalInfo.businessRole',
-                      defaultMessage: 'Business Role'
-                    })}
-                    {<Required />}
-                  </>
-                }
-              />
-            </ColumnCustom>
-          )}
-          <ColumnCustom>
+          <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
               label={
@@ -306,13 +273,13 @@ function PersonalInformation({
                   defaultMessage: '123456789'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_social_security_number_inpt'
+                'data-test': `verify-personal-information-ssn-${i}`
               }}
             />
           </ColumnCustom>
         </GridRow>
         <GridRow>
-          <ColumnCustom width={6}>
+          <ColumnCustom computer={8} tablet={8} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].businessOwnershipPercentage`}
               label={
@@ -334,11 +301,59 @@ function PersonalInformation({
                 type: 'text',
                 pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
                 maxLength: '3',
-                'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
+                'data-test': `verify-personal-information-ownership-percentage-${i}`
               }}
             />
           </ColumnCustom>
         </GridRow>
+        {values?.ownerInformation?.isOtherBeneficialOwner && (
+          <GridRow>
+            <GridColumn>
+              <AddOwnersButtonDiv className="toggle-owner-buttons">
+                {numberBeneficialOwners > 0 && (
+                  <Popup
+                    trigger={
+                      <a href={`#form${numberBeneficialOwners}`}>
+                        <Button
+                          className="btn-remove-owner"
+                          data-test={`verify-personal-information-remove-owner-${i}`}
+                          type='button'
+                          onClick={() => {
+                            countBeneficialOwners(numberBeneficialOwners - 1)
+                          }}
+                          icon
+                        >
+                          <Icon name='minus' />
+                          <FormattedMessage id='settings.removeOwner' />
+                        </Button>
+                      </a>
+                    }
+                    content={<FormattedMessage id='settings.removeOwner' defaultMessage='Remove Owner' />}
+                  />
+                )}
+                <Popup
+                  trigger={
+                    <a href={`#form${numberBeneficialOwners}`}>
+                      <Button
+                        className="btn-add-owner"
+                        data-test={`verify-personal-information-add-owner-${i}`}
+                        type='button'
+                        onClick={() => {
+                          countBeneficialOwners(numberBeneficialOwners + 1)
+                        }}
+                        icon
+                      >
+                        <Icon name='plus' />
+                        <FormattedMessage id='settings.addOwner' />
+                      </Button>
+                    </a>
+                  }
+                  content={<FormattedMessage id='settings.addOwner' defaultMessage='Add Owner' />}
+                />
+              </AddOwnersButtonDiv>
+            </GridColumn>
+          </GridRow>
+        )}
       </GridPersonalInformation>
     )
   }
@@ -346,13 +361,15 @@ function PersonalInformation({
 }
 
 PersonalInformation.propTypes = {
-  formikProps: PropTypes.object,
   businessRoles: PropTypes.object,
+  countBeneficialOwners: PropTypes.func,
+  formikProps: PropTypes.object,
   numberBeneficialOwners: PropTypes.number,
   registerBeneficialOwner: PropTypes.booleanValue
 }
 
 PersonalInformation.defaultProps = {
+  countBeneficialOwners: () => {},
   formikProps: {},
   businessRoles: {},
   numberBeneficialOwners: 0,

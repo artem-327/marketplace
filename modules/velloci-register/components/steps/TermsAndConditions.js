@@ -8,8 +8,9 @@ const GridTermsAndConditions = styled(Grid)`
   margin: 14px 16px !important;
 `
 
-const SpanBold = styled.span`
-  font-weight: bold;
+const StyledSpan = styled.span`
+  color: #989898;
+  font-style: italic;
 `
 
 const GridColumnCheckbox = styled(GridColumn)`
@@ -25,8 +26,8 @@ const LabelCheckbox = styled.label`
 `
 
 const LinkLabelCheckbox = styled.a`
-  padding-left: 8px;
-  color: #2599d5;
+  color: #3bbef6;
+  font-weight: bold;
 `
 
 const GridRowCheckbox = styled(GridRow)`
@@ -39,121 +40,85 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
     <GridTermsAndConditions>
       <GridRowCheckbox>
         <GridColumn>
-          <SpanBold>
-            <FormattedMessage
-              id='velloci.termsAndConditions.title'
-              defaultMessage="Please review and accept the following terms and conditions to finish registration"
-            />
-          </SpanBold>
+          <StyledSpan>
+            <FormattedMessage id='velloci.termsAndConditions.electronicComunications' />
+          </StyledSpan>
         </GridColumn>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_electronic_comunications_chckb'
-            }}
-            name='termsAndConditions.electronicComunications'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-1">
+          <Checkbox name='termsAndConditions.electronicComunications'/>
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.electronicComunications'
-              defaultMessage='I agree that I have read, understood, and consent to the '>
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href='https://velloci.com/ecc' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.electronicComunications.link'
-                      defaultMessage='Electronic Communications Agreement'
-                    />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox
+              data-test="legal-agreements-electronic-communications-agreement"
+              href='https://www.bluepallet.io/eca'
+              target='_blank'
+            >
+              <FormattedMessage
+                id='velloci.termsAndConditions.electronicComunications.link'
+                defaultMessage='Electronic Communications Agreement'
+              />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_privacy_policy_chckb'
-            }}
-            name='termsAndConditions.privacyPolicy'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-2">
+          <Checkbox name='termsAndConditions.privacyPolicy' />
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.privacyPolicy'
-              defaultMessage="I agree that I have read, understood, and consent to the ">
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href='https://velloci.com/privacy_policy.pdf' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.privacyPolicy.link'
-                      defaultMessage='Privacy Policy '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://velloci.com/end_user_tos.pdf' target='_blank'>
-                    <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox
+              data-test="legal-agreements-privacy-policy"
+              href='https://www.bluepallet.io/privacy'
+              target='_blank'
+            >
+              <FormattedMessage
+                id='velloci.termsAndConditions.privacyPolicy.link'
+                defaultMessage='Privacy Policy '
+              />
+            </LinkLabelCheckbox>
+            <FormattedMessage id='global.and' defaultMessage='and ' />{' '}
+            <LinkLabelCheckbox
+              data-test="legal-agreements-terms-of-use"
+              href='https://www.bluepallet.io/terms'
+              target='_blank'
+            >
+              <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_deposit_account_chckb'
-            }}
-            name='termsAndConditions.depositAccountAgreement'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-3">
+          <Checkbox name='termsAndConditions.depositAccountAgreement' />
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.depositAccountAgreement'
-              defaultMessage="I agree that I have read, understood, and consent to the bank's ">
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href='https://silamoney.com/evolve-bank-deposit-agreement/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.depositAccountAgreement.link'
-                      defaultMessage='Deposit Account Agreement '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://silamoney.com/terms-of-service/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.serviceTerms.link'
-                      defaultMessage='Service terms '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://silamoney.com/privacy-policy/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.privacyPolicy.link'
-                      defaultMessage='Privacy Policy'
-                    />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox
+              data-test="legal-agreements-sila-bank-deposit-account-agreement"
+              href='https://silamoney.com/evolve-bank-deposit-agreement/'
+              target='_blank'
+            >
+              <FormattedMessage id='velloci.termsAndConditions.depositAccountAgreement.link' />
+            </LinkLabelCheckbox>{', '}
+            <LinkLabelCheckbox
+              data-test="legal-agreements-sila-terms-of-service"
+              href='https://silamoney.com/terms-of-service/'
+              target='_blank'
+            >
+              <FormattedMessage id='velloci.termsAndConditions.serviceTerms.link' />
+            </LinkLabelCheckbox>{', '}
+            <FormattedMessage id='global.and' defaultMessage='and ' />{' '}
+            <LinkLabelCheckbox
+              data-test="legal-agreements-sila-privacy-policy"
+              href='https://silamoney.com/privacy-policy/'
+              target='_blank'
+            >
+              <FormattedMessage id='velloci.termsAndConditions.privacyPolicy.link' />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_true_complete_chckb'
-            }}
-            name='termsAndConditions.trueComplete'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-4">
+          <Checkbox name='termsAndConditions.trueComplete' />
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.trueComplete'

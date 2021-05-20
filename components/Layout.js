@@ -21,6 +21,7 @@ import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
 import Logo from '../assets/images/nav/logo-bluepallet.svg'
 import LogoSmall from '../assets/images/nav/logo4x.png'
+import { TradePassLogo } from '../components/constants/layout'
 import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
@@ -50,6 +51,7 @@ import { getCompanyLogo } from '../modules/company-form/actions'
 import { withToastManager } from 'react-toast-notifications'
 
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import classNames from 'classnames';
 
 import ErrorComponent from '../components/error'
 import moment from 'moment'
@@ -79,6 +81,8 @@ const ReturnToAdmin = styled(LogOut)`
   margin-left: 10px;
   vertical-align: bottom;
 `
+
+const menuDisallowList = ['registration'];
 
 class Layout extends Component {
   state = {
@@ -289,7 +293,8 @@ class Layout extends Component {
       buttonActionsDetailRow,
       isOpenInviteModal,
       triggerModal,
-      applicationName
+      applicationName,
+      currentModule
     } = this.props
 
     const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
@@ -334,6 +339,9 @@ class Layout extends Component {
         </CopyrightContainer>
       )
 
+    const hideNavigation = menuDisallowList.some(val => val === currentModule);
+    const sideNavigationClass = classNames({ 'hidden-navigation': hideNavigation }, { 'active-navigation': !hideNavigation });
+
     return (
       <MainContainer fluid className={mainClass}>
         <Head>
@@ -342,137 +350,141 @@ class Layout extends Component {
           </title>
         </Head>
 
-        <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
-          <LeftMenuContainer fluid>
-            <PerfectScrollbar ref={this.navigationPS}>
-              <LogoImage
-                src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
-              />
+        {!hideNavigation &&
+          <LeftMenu vertical fixed='left' inverted size='large' borderless className={collapsedMenu ? 'collapsed' : ''}>
+            <LeftMenuContainer fluid>
+              <PerfectScrollbar ref={this.navigationPS}>
+                <LogoImage
+                  src={!collapsedMenu ? (hasLogo && useCompanyLogo ? this.getCompanyLogo() : Logo) : LogoSmall}
+                />
 
-              <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
-            </PerfectScrollbar>
-            {false ? (
-              <Container className='bottom'>
-                <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
-                  <Sidebar />
-                  {formatMessage({
-                    id: 'global.collapseMenu',
-                    defaultMessage: 'Collapse Menu'
-                  })}
-                </Menu.Item>
-              </Container>
-            ) : null}
-          </LeftMenuContainer>
-        </LeftMenu>
-
-        <TopMenu fixed='top' size='large' borderless className='topbar'>
-          <TopMenuContainer>
-            <MainTitle as='h1'>{title}</MainTitle>
-
-            <Menu.Menu position='right' className='black' style={{ flexFlow: 'row-reverse nowrap' }}>
-              <Dropdown key='user-menu' className='user-menu-wrapper' item icon={icon} direction='left'>
-                <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
-                  <Dropdown.Item>
-                    <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
-                    {getSafe(() => auth.identity.jobTitle, '')}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={Menu.Item}
-                    onClick={() => openProfilePopup()}
-                    data-test='navigation_menu_user_my_profile_drpdn'>
+                <NavigationMenu takeover={takeover} collapsed={collapsedMenu} navigationPS={this.navigationPS} />
+              </PerfectScrollbar>
+              {false ? (
+                <Container className='bottom'>
+                  <Menu.Item as='a' onClick={() => toggleMenu()} data-test='navigation_menu_collapse_lnk'>
+                    <Sidebar />
                     {formatMessage({
-                      id: 'global.myProfile',
-                      defaultMessage: 'My Profile'
+                      id: 'global.collapseMenu',
+                      defaultMessage: 'Collapse Menu'
                     })}
-                  </Dropdown.Item>
-                  {getSafe(() => auth.identity.isAdmin, false) && takeover && (
+                  </Menu.Item>
+                </Container>
+              ) : null}
+            </LeftMenuContainer>
+          </LeftMenu>
+        }
+
+        <TopMenu fixed='top' size='large' borderless className={`topbar ${sideNavigationClass}`}>
+          <TopMenuContainer>
+            {!hideNavigation && <MainTitle as='h1'>{title}</MainTitle>}
+            {hideNavigation && <TradePassLogo src={Logo} />}
+            {!hideNavigation &&
+              <Menu.Menu position='right' className='black' style={{ flexFlow: 'row-reverse nowrap' }}>
+                <Dropdown key='user-menu' className='user-menu-wrapper' item icon={icon} direction='left'>
+                  <Dropdown.Menu data-test='navigation_menu_user_drpdn'>
+                    <Dropdown.Item>
+                      <Dropdown.Header>{getSafe(() => auth.identity.name, '')}</Dropdown.Header>
+                      {getSafe(() => auth.identity.jobTitle, '')}
+                    </Dropdown.Item>
                     <Dropdown.Item
                       as={Menu.Item}
-                      onClick={() => takeOverCompanyFinish()}
-                      data-test='navigation_menu_user_return_to_admin_drpdn'>
+                      onClick={() => openProfilePopup()}
+                      data-test='navigation_menu_user_my_profile_drpdn'>
                       {formatMessage({
-                        id: 'global.returnToAdmin',
-                        defaultMessage: 'Return To Admin'
+                        id: 'global.myProfile',
+                        defaultMessage: 'My Profile'
                       })}
                     </Dropdown.Item>
-                  )}
-                  {(!getSafe(() => auth.identity.isAdmin, false) ||
-                    takeover ||
-                    !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
+                    {getSafe(() => auth.identity.isAdmin, false) && takeover && (
+                      <Dropdown.Item
+                        as={Menu.Item}
+                        onClick={() => takeOverCompanyFinish()}
+                        data-test='navigation_menu_user_return_to_admin_drpdn'>
+                        {formatMessage({
+                          id: 'global.returnToAdmin',
+                          defaultMessage: 'Return To Admin'
+                        })}
+                      </Dropdown.Item>
+                    )}
+                    {(!getSafe(() => auth.identity.isAdmin, false) ||
+                      takeover ||
+                      !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
+                      <Menu.Item
+                        onClick={() => triggerSystemSettingsModal(true)}
+                        data-test='navigation_menu_settings_lnk'>
+                        {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                      </Menu.Item>
+                    )}
+                    <Dropdown.Item
+                      as={Menu.Item}
+                      onClick={() => window.open(URL_TERMS)}
+                      data-test='navigation_menu_user_terms_of_service_drpdn'>
+                      {formatMessage({
+                        id: 'global.termsOfService',
+                        defaultMessage: 'Terms of Service'
+                      })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={Menu.Item}
+                      onClick={() => Router.push('/auth/logout')}
+                      data-test='navigation_menu_user_logout_drpdn'
+                      className='logout'>
+                      <Icon className='power thick' />
+                      {formatMessage({
+                        id: 'global.logout',
+                        defaultMessage: 'Logout'
+                      })}
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+                {auth && auth.identity && !auth.identity.isAdmin && !isOperator && !isOrderOperator && (
+                  <>
                     <Menu.Item
-                      onClick={() => triggerSystemSettingsModal(true)}
-                      data-test='navigation_menu_settings_lnk'>
-                      {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                      onClick={() => Router.push('/cart')}
+                      data-test='navigation_menu_cart'
+                      className='item-cart'>
+                      <MiniCart />
                     </Menu.Item>
-                  )}
-                  <Dropdown.Item
-                    as={Menu.Item}
-                    onClick={() => window.open(URL_TERMS)}
-                    data-test='navigation_menu_user_terms_of_service_drpdn'>
-                    {formatMessage({
-                      id: 'global.termsOfService',
-                      defaultMessage: 'Terms of Service'
-                    })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={Menu.Item}
-                    onClick={() => Router.push('/auth/logout')}
-                    data-test='navigation_menu_user_logout_drpdn'
-                    className='logout'>
-                    <Icon className='power thick' />
-                    {formatMessage({
-                      id: 'global.logout',
-                      defaultMessage: 'Logout'
-                    })}
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-              {auth && auth.identity && !auth.identity.isAdmin && !isOperator && !isOrderOperator && (
-                <>
-                  <Menu.Item
-                    onClick={() => Router.push('/cart')}
-                    data-test='navigation_menu_cart'
-                    className='item-cart'>
-                    <MiniCart />
-                  </Menu.Item>
+                    <Menu.Item
+                      onClick={() => Router.push('/alerts')}
+                      data-test='navigation_notifications'
+                      className='item-cart'>
+                      <NotificationsIcon />
+                    </Menu.Item>
+                    {
+                      /* DT-293 temporary disabled */ false && (
+                        <Menu.Item
+                          onClick={() => Router.push('/marketplace/holds')}
+                          data-test='navigation_marketplace'
+                          className='item-cart'>
+                          <HoldIcon />
+                        </Menu.Item>
+                      )
+                    }
+                    {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager || isUserAdmin) && (
+                      <Menu.Item>
+                        <CreateMenu />
+                      </Menu.Item>
+                    )}
+                  </>
+                )}
+                {auth && auth.identity && auth.identity.isAdmin && (
                   <Menu.Item
                     onClick={() => Router.push('/alerts')}
                     data-test='navigation_notifications'
                     className='item-cart'>
                     <NotificationsIcon />
                   </Menu.Item>
-                  {
-                    /* DT-293 temporary disabled */ false && (
-                      <Menu.Item
-                        onClick={() => Router.push('/marketplace/holds')}
-                        data-test='navigation_marketplace'
-                        className='item-cart'>
-                        <HoldIcon />
-                      </Menu.Item>
-                    )
-                  }
-                  {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager || isUserAdmin) && (
-                    <Menu.Item>
-                      <CreateMenu />
-                    </Menu.Item>
-                  )}
-                </>
-              )}
-              {auth && auth.identity && auth.identity.isAdmin && (
-                <Menu.Item
-                  onClick={() => Router.push('/alerts')}
-                  data-test='navigation_notifications'
-                  className='item-cart'>
-                  <NotificationsIcon />
-                </Menu.Item>
-              )}
-            </Menu.Menu>
+                )}
+              </Menu.Menu>
+            }
           </TopMenuContainer>
         </TopMenu>
 
         {profile && profile.profilePopup && <Profile />}
         <Settings role='user' scrolling={false} />
-        <FlexContainer className={copyrightClassName} onScroll={this.trackScrolling}>
+        <FlexContainer className={`${copyrightClassName} ${sideNavigationClass}`} onScroll={this.trackScrolling}>
           <TopMenuContainer fluid>
             <Messages />
           </TopMenuContainer>

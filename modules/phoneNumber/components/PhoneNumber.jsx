@@ -257,6 +257,7 @@ export default class PhoneNumber extends Component {
                   value={phoneCountryCode}
                 />
                 <StyledInputMask
+                  data-test="phone-number-input"
                   background={background}
                   name={name}
                   className='phone-num'

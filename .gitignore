@@ -47,4 +47,5 @@ yarn-error.log*
 /.idea
 /Docs
 
-
+cypress/videos
+cypress/results
