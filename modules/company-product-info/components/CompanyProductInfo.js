@@ -32,8 +32,7 @@ export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  top: 80px !important;
-  padding-bottom: 80px;
+  padding-top: 80px !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 1000 !important;
   text-align: left;
@@ -405,7 +404,7 @@ class CompanyProductInfo extends Component {
       {this.getTextarea({
         id: 'global.recommendedUse',
         defaultMessage: 'Recommended Uses',
-        name: `${prefix}recommendedUse`
+        name: prefix === 'casProduct.' ? `${prefix}recommendedUses` : `${prefix}recommendedUse`
       })}
       {this.getInput({
         id: 'global.usesAdvisedAgainst',
@@ -997,7 +996,7 @@ class CompanyProductInfo extends Component {
             {this.getTextarea({
               id: 'global.reportableQuantity',
               defaultMessage: 'Reportable Quantity',
-              name: `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantities`
+              name: this.state.companyGenericProductGrouping === 'dot' ? `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantity` : `companyGenericProduct.${this.state.companyGenericProductGrouping}ReportableQuantities`
             })}
             {this.getTextarea({
               id: 'global.environmentalHazards',

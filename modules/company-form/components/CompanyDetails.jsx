@@ -152,7 +152,7 @@ const CompanyDetails = props => {
             <GridRow>
               <GridColumnTradePassId width={16}>
                 <Input
-                  label={<FormattedMessage id='company.myTradePassId' defaultMessage='My Trade Pass ID' />}
+                  label={<FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />}
                   name='vellociBusinessId'
                   inputProps={{
                     readOnly: true

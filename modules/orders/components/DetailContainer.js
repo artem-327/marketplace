@@ -173,6 +173,13 @@ function prepareDetail(data, type) {
     }),
     shipToEmail: data.shippingAddressContactEmail,
     shipToPhone: data.shippingAddressContactPhone,
+    frsId: data.shippingAddressEpaFrsId
+      ? (
+        data.shippingAddressEpaFacilityUrl
+          ? (<a href={data.shippingAddressEpaFacilityUrl} target='_blank'>{data.shippingAddressEpaFrsId}</a>)
+          : data.shippingAddressEpaFrsId
+      ) : '',
+    epaRegion: data.shippingAddressEpaRegion,
     subtotal: (
       <FormattedNumber
         minimumFractionDigits={2}

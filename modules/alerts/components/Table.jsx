@@ -23,6 +23,7 @@ import Link from 'next/link'
 import { COLUMNS } from './Table.constants'
 
 const StyledNotification = styled.div`
+  margin: auto 0;
   &.clickable {
     cursor: pointer;
 
@@ -37,14 +38,21 @@ const StyledAlertHeader = styled.span`
 `
 
 const DivUser = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   width: 200px;
-  min-width: 200px
+  min-width: 200px;
 `
 
 const DivNotificationRow = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+`
+
+const DivVerticalyAligned = styled.div`
+  margin: auto 0;
 `
 
 const Table = props => {
@@ -106,6 +114,8 @@ const Table = props => {
         || r.nameOfUser || getSafe(() => r.info.requestedBy.company.cfDisplayName, false)
         || getSafe(() => r.info.buyerCompanyName, false)
 
+      const isSenderData = r.sender && (r.sender.name || r.sender.avatarUrl)
+
       return {
         ...r,
         clsName: read + (selected ? ' selected' : '') + (open ? ' open' : '') + (recent ? ' recent' : ''),
@@ -116,11 +126,23 @@ const Table = props => {
                 {getSafe(() => r.relatedCompany.avatarUrl, false) && (
                   <UserImage src={r.relatedCompany.avatarUrl} bordered />
                 )}
-                <UserName as='h3'>{r.nameOfUser}</UserName>
-                <UserCompany as='h4'>
-                  {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
-                  getSafe(() => r.info.buyerCompanyName, false)}
-                </UserCompany>
+                <DivVerticalyAligned>
+                  <UserName as='h3'>{r.nameOfUser}</UserName>
+                  <UserCompany as='h4'>
+                    {getSafe(() => r.info.requestedBy.company.cfDisplayName, false) ||
+                    getSafe(() => r.info.buyerCompanyName, false)}
+                  </UserCompany>
+                </DivVerticalyAligned>
+              </DivUser>
+            )}
+            {!isUserData && !!isSenderData && (
+              <DivUser>
+                {getSafe(() => r.sender.avatarUrl, false) && (
+                  <UserImage src={r.sender.avatarUrl} bordered />
+                )}
+                <DivVerticalyAligned>
+                  <UserName as='h3'>{r.sender.name}</UserName>
+                </DivVerticalyAligned>
               </DivUser>
             )}
             {notificationText(r.rawData)}

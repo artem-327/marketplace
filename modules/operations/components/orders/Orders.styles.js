@@ -14,6 +14,6 @@ export const FormFieldCustom = styled(Form.Field)`
   }
 `
 
-export const DivReasonText = styled.div`
+export const DivMarginBottom = styled.div`
   padding-bottom: 30px;
 `

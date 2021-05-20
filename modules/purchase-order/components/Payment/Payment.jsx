@@ -7,8 +7,11 @@ import { getSafe } from '~/utils/functions'
 import { currency } from '~/constants/index'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
+//Actions
+import { getPayments } from '../../actions'
+
 //Components
-import { Grid, GridColumn, Radio } from 'semantic-ui-react'
+import { Grid, GridColumn, Radio, Dimmer, Loader } from 'semantic-ui-react'
 import RowComponent from '../RowComponent/RowComponent'
 import {
   DivSectionCollapsedWrapper,
@@ -37,7 +40,10 @@ const Payment = props => {
     setSummaryButtonCaption,
     payments,
     value,
-    isThirdPartyConnectionException
+    isThirdPartyConnectionException,
+    paymentProcessor,
+    getPayments,
+    isFetching
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -49,6 +55,11 @@ const Payment = props => {
           {text => text}
         </FormattedMessage>
       )
+      try {
+        if (payments.length === 0) getPayments(paymentProcessor)
+      } catch (e) {
+        console.error(e)
+      }
     }
   }, [isExpanded])
 
@@ -75,6 +86,9 @@ const Payment = props => {
         sectionState.accepted || isExpanded ? (
           isExpanded ? (
             <GridExpandedSection overflow={'overflow: auto;'} $psscroll={true} maxheight='605px'>
+              <Dimmer inverted active={isFetching}>
+                <Loader />
+              </Dimmer>
               <PerfectScrollbar className='ui grid'>
                 {!getSafe(() => payments.length, false) && isThirdPartyConnectionException ? (
                   <Grid.Row>
@@ -135,7 +149,10 @@ Payment.propTypes = {}
 Payment.defaultProps = {}
 
 function mapStateToProps(store, props) {
-  return {}
+  return {
+    paymentProcessor: getSafe(() => store.auth.identity.company.paymentProcessor, ''),
+    isFetching: store.cart.isFetching
+  }
 }
 
-export default injectIntl(connect(mapStateToProps, {})(Payment))
+export default injectIntl(connect(mapStateToProps, { getPayments })(Payment))

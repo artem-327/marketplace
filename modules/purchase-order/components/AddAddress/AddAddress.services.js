@@ -65,6 +65,7 @@ export const handleSubmit = async (props, formikProps) => {
       }
       if (getSafe(() => payload.deliveryAddress.warehouse, false)) delete payload.deliveryAddress.warehouse
       if (getSafe(() => payload.deliveryAddress.taxId, false)) delete payload.deliveryAddress.taxId
+      if (getSafe(() => payload.deliveryAddress.isBroadcasted, false)) delete payload.deliveryAddress.isBroadcasted
     } else {
       payload = {
         ...values,
@@ -74,6 +75,7 @@ export const handleSubmit = async (props, formikProps) => {
           country: JSON.parse(values.address.country).countryId
         }
       }
+      if (getSafe(() => payload.isBroadcasted, false)) delete payload.isBroadcasted
     }
     removeEmpty(payload)
 

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
@@ -44,18 +44,14 @@ const ShippingInformation = props => {
     item,
     intl: { formatMessage },
     hazardClasses,
+    hazardClassesLoading,
     packagingGroups,
+    packagingGroupsLoading,
     unNumbersFiltered,
     unNumbersFetching,
     nmfcNumbersFetching,
     nmfcNumbersFiltered
   } = props
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-    if (hazardClasses.length === 0) props.getHazardClassesDataRequest()
-    if (packagingGroups.length === 0) props.getPackagingGroupsDataRequest()
-  }, [])  // If [] is empty then is similar as componentDidMount.
 
   let disabled = !edittingHazmatInfo
   let unNumberOptions = [...unNumberInitOptions, ...unNumbersFiltered].filter(
@@ -69,7 +65,15 @@ const ShippingInformation = props => {
     <ModalStyled
       open={openModal}
       size='tiny'
-      onOpen={() => onHazmatPopup(item, setNmfcNumberInitOptions, setUnNumberInitOptions, setOpenModal)}
+      onOpen={() => {
+        try {
+          if (hazardClasses.length === 0) props.getHazardClassesDataRequest()
+          if (packagingGroups.length === 0) props.getPackagingGroupsDataRequest()
+        } catch (e) {
+          console.error(e)
+        }
+        onHazmatPopup(item, setNmfcNumberInitOptions, setUnNumberInitOptions, setOpenModal)}
+      }
       onClose={() => {
         if (loadCartRequired) props.getCart()
         setEdittingHazmatInfo(false)
@@ -125,6 +129,7 @@ const ShippingInformation = props => {
                       }}
                       inputProps={{
                         disabled,
+                        loading: packagingGroupsLoading,
                         clearable: true,
                         selection: true,
                         search: true,
@@ -143,6 +148,7 @@ const ShippingInformation = props => {
                       }))}
                       inputProps={{
                         disabled,
+                        loading: hazardClassesLoading,
                         search: true,
                         clearable: true,
                         style: { background: disabled ? '#dee2e6' : null }
@@ -241,12 +247,21 @@ ShippingInformation.defaultProps = {
 }
 
 function mapStateToProps(store) {
-  const { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching } = store.admin
+  const {
+    packagingGroups,
+    hazardClasses,
+    unNumbersFiltered,
+    unNumbersFetching,
+    hazardClassesLoading,
+    packagingGroupsLoading
+  } = store.admin
   const { nmfcNumbersFetching, nmfcNumbersFiltered } = store.settings
 
   return {
     packagingGroups,
+    packagingGroupsLoading,
     hazardClasses,
+    hazardClassesLoading,
     unNumbersFiltered: unNumbersFiltered.map(d => {
       return {
         key: d.id,
