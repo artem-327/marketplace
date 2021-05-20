@@ -15,6 +15,10 @@ import {
   CheckboxStyled
 } from '../../../styles'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductSection / CasProductSection
+ */
 const CasProductSection = props => {
   const {
     intl: { formatMessage },

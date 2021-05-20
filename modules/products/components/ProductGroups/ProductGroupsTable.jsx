@@ -9,6 +9,10 @@ import confirm from '../../../../components/Confirmable/confirm'
 // Constants
 import { productGroupsTableColumns } from '../../constants'
 
+/**
+ * @Component
+ * @category Products - Components / ProductGroups / ProductGroupsTable
+ */
 const ProductGroupsTable = props => {
   const {
     loading,

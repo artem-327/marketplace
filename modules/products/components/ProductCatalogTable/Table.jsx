@@ -11,11 +11,16 @@ import ActionCell from '../../../../components/table/ActionCell'
 import { getSafe } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat } from '../../../../components/date-format'
+import { getMimeType } from '../../../../components/getMimeType'
 // Styles
 import { Circle } from '../../styles'
 // Constants
 import { echoRowActions, productCatalogTableColumns } from './constants'
 
+/**
+ * @Component
+ * @category Products - Components / ProductCatalogTable / Table
+ */
 const ProductCatalogTable = props => {
   const {
     datagrid,
@@ -131,47 +136,11 @@ const ProductCatalogTable = props => {
     })
   }
 
-  const getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-    switch (documentExtension) {
-      case 'doc':
-        return 'application/msword'
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      case 'ppt':
-        return 'application/vnd.ms-powerpoint'
-      case 'pptx':
-        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      case 'xls':
-        return 'application/vnd.ms-excel'
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      case 'pdf':
-        return 'application/pdf'
-      case '7z':
-        return 'application/x-7z-compressed'
-      case 'zip':
-        return 'application/zip'
-      case 'tar':
-        return 'application/x-tar'
-      case 'rar':
-        return 'application/x-rar-compressed'
-      case 'xml':
-        return 'application/xml'
-      default:
-        return 'text/plain'
-    }
-  }
-
+  /**
+   * Prepare Download Attachment Link
+   * @category Products - Product Catalog Table
+   * @method
+   */
   const prepareLinkToAttachment = async (documentName, documentId) => {
     let downloadedFile = await props.downloadAttachment(documentId)
     const mimeType = getMimeType(documentName)
@@ -184,14 +153,11 @@ const ProductCatalogTable = props => {
     return element
   }
 
-  const viewAttachment = async (documentName, documentId) => {
-    const element = await prepareLinkToAttachment(documentName, documentId)
-
-    element.target = '_blank'
-    document.body.appendChild(element) // Required for this to work in FireFox
-    element.click()
-  }
-
+  /**
+   * Download Attachment
+   * @category Products - Product Catalog Table
+   * @method
+   */
   const downloadAttachment = async (documentName, documentId) => {
     const element = await prepareLinkToAttachment(documentName, documentId)
 

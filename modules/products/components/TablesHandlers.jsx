@@ -14,6 +14,10 @@ import { PositionHeaderSettings, DivColumn } from '../styles'
 // Constants
 import { textsTable } from '../constants'
 
+/**
+ * @Component
+ * @category Products - Components / TablesHandlers
+ */
 const TablesHandlers = props => {
   const [state, setState] = useState({})
 

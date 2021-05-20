@@ -9,6 +9,10 @@ import { nameValidation } from '../../services'
 // Styles
 import { StyledModalContent } from '../../styles'
 
+/**
+ * @Component
+ * @category Products - Components / ProductCatalogTable / EditAltNamesEchoProductPopup
+ */
 const EditAltNamesEchoProductPopup = props => {
   const [initialState, setInitialState] = useState({
     productAltNames: []
@@ -22,6 +26,11 @@ const EditAltNamesEchoProductPopup = props => {
     init()
   }, [])
 
+  /**
+   * Fetch Data
+   * @category Products - Add/Edit Product Catalog Alt Names
+   * @method
+   */
   const processFetchedData = () => {
     setInitialState({
       productAltNames: props.productAltNames.map(d => {
@@ -35,10 +44,20 @@ const EditAltNamesEchoProductPopup = props => {
     })        
   }
 
+  /**
+   * Add Ald Name
+   * @category Products - Add/Edit Product Catalog Alt Names
+   * @method
+   */
   const handleAddName = arrayHelpers => {
     arrayHelpers.insert(0, { id: null, alternativeName: '', color: 'grey', description: '', canSave: false })
   }
 
+  /**
+   * Delete Alt Name
+   * @category Products - Add/Edit Product Catalog Alt Names
+   * @method
+   */
   const handleDeleteName = async (productId, arrayHelpers, val, index, setSubmitting) => {
     setSubmitting(true)
     try {
@@ -52,6 +71,11 @@ const EditAltNamesEchoProductPopup = props => {
     setSubmitting(false)
   }
 
+  /**
+   * Save Alt Names
+   * @category Products - Add/Edit Product Catalog Alt Names
+   * @method
+   */
   const handleSaveName = async (productId, val, index, setSubmitting) => {
     setSubmitting(true)
     let name = val.alternativeName.trim()

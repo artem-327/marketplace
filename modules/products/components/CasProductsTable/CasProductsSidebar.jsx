@@ -24,6 +24,10 @@ import {
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductsSidebar
+ */
 const CasProductsSidebar = props => {
   const { popupValues, updating } = props
 

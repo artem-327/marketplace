@@ -29,7 +29,7 @@
       "./components/date-format",
       "./modules/admin/components/Carriers",
       "./modules/company-form/components",
-      "./modules/products/components/CasProductsTable",
+      "./modules/products",
       "./modules/purchase-order",
       "./modules/warehouse-credentials"
     ],

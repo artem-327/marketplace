@@ -13,6 +13,10 @@ import { generateToastMarkup, getSafe, uniqueArrayByKey } from '../../../../util
 import { withDatagrid } from '../../../datagrid'
 import { productGroupsPoprupFormValidation } from '../../services'
 
+/**
+ * @Component
+ * @category Products - Components / ProductGroups / ProductGroupsPopup
+ */
 const ProductGroupsPopup = props => {
   const [selectedTagsOptions, setSelectedTagsOptions] = useState([])
 

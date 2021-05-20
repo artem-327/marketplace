@@ -21,7 +21,10 @@ import { nameValidation } from '../../services'
 // Styles
 import { StyledModalContent } from '../../styles'
 
-
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / EditAltNamesCasProductsPopup
+ */
 const EditAltNamesCasProductsPopup = props => {
   const [initialState, setInitialState] = useState({
     casAlternativeNames: []
@@ -36,6 +39,11 @@ const EditAltNamesCasProductsPopup = props => {
     init()
   }, [])
 
+  /**
+   * Fetch Data
+   * @category Products - Add/Edit CAS Products Alt Names
+   * @method
+   */
   const processFetchedData = () => {
     setInitialState({
       casAlternativeNames: props.altCasNamesRows.map(d => {
@@ -49,10 +57,20 @@ const EditAltNamesCasProductsPopup = props => {
     })
   }
 
+  /**
+   * Add Alt Name
+   * @category Products - Add/Edit CAS Products Alt Names
+   * @method
+   */
   const handleAddName = arrayHelpers => {
     arrayHelpers.insert(0, { id: null, alternativeName: '', color: 'grey', description: '', canSave: false })
   }
 
+  /**
+   * Delete Alt Name
+   * @category Products - Add/Edit CAS Products Alt Names
+   * @method
+   */
   const handleDeleteName = async (productId, arrayHelpers, val, index) => {
     if (val.id === null) {
       arrayHelpers.remove(index)
@@ -62,6 +80,11 @@ const EditAltNamesCasProductsPopup = props => {
     }
   }
 
+  /**
+   * Save Alt Names
+   * @category Products - Add/Edit CAS Products Alt Names
+   * @method
+   */
   const handleSaveName = async (productId, val, index) => {
     let name = val.alternativeName.trim()
     if (name.length < 3) return

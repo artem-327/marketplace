@@ -64,8 +64,10 @@ import {
   CustomForm
 } from '../../styles'
 
-
-
+/**
+ * @Component
+ * @category Products - Components / ProductCatalogTable / AddEditEchoProduct
+ */
 const AddEditEchoProduct = props => {
   const [state, setState] = useState({
     isLoading: false,
@@ -81,8 +83,19 @@ const AddEditEchoProduct = props => {
     selectedCompanyOptions: []
   })
 
+  /**
+   * Initialize ResetForm to prevent undefined in  useEffect()
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   let initResetForm = () => {}
-  let initFormikProps = { touched: [], validateForm: () => {}, submitForm: () => {}, values: [], setSubmitting: () => {} }
+  
+  /**
+   * Initialize FormikProps to prevent undefined in  useEffect()
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  let initFormikProps = { touched: [], validateForm: () => {}, submitForm: (values, setSubmitting, callback) => {}, values: [], setSubmitting: () => {} }
 
   useEffect(() => {
     const {
@@ -141,6 +154,11 @@ const AddEditEchoProduct = props => {
     initResetForm()
   }, [props.popupValues])
 
+  /**
+   * Set Initial State
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
       unNumberInitOptions = [],
@@ -187,6 +205,11 @@ const AddEditEchoProduct = props => {
     })
   }
 
+  /**
+   * Initialize Form Values
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const getInitialFormValues = () => {
     const { popupValues } = state
     let initialValues = {
@@ -419,10 +442,20 @@ const AddEditEchoProduct = props => {
     return initialValues
   }
 
+  /**
+   * Change Tabs
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const tabChanged = index => {
     setState({...state, editTab: index })
   }
 
+  /**
+   * Get Date In Locale Format
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const getDateInLocaleFormat = value => {
     let date = moment(value)
     if (date.isValid()) {
@@ -489,6 +522,11 @@ const AddEditEchoProduct = props => {
     }, 250)
   }, 500)
 
+  /**
+   * Valediate Switch to Save or Errors
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const validateSaveOrSwitchToErrors = async callback => {
     const { touched, validateForm, submitForm, values, setSubmitting } = initFormikProps
 
@@ -530,6 +568,11 @@ const AddEditEchoProduct = props => {
     }
   }
 
+  /**
+   * Get Date in ISO Format
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const getDateInIsoFormat = value => {
     if (!value) return ''
     let date = getStringISODate(value)
@@ -541,6 +584,11 @@ const AddEditEchoProduct = props => {
     }
   }
 
+  /**
+   * Form Submit
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const submitForm = async (values, setSubmitting, callback) => {
     const {
       putCompanyGenericProducts,
@@ -813,6 +861,11 @@ const AddEditEchoProduct = props => {
     />
   )
 
+  /**
+   * Render Mixtures
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const renderMixtures = formikProps => {
     const {
       closePopup,
@@ -1054,6 +1107,11 @@ const AddEditEchoProduct = props => {
     )
   }
 
+  /**
+   * Render Edit
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const renderEdit = formikProps => {
     let codesList = state.codesList
     const { selectedProductGroupsOptions, selectedCompanyOptions } = state
@@ -1340,6 +1398,11 @@ const AddEditEchoProduct = props => {
     )
   }
 
+  /**
+   * Render Info
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const renderInfo = formikProps => {
     return (
       <Grid>
@@ -1802,6 +1865,11 @@ const AddEditEchoProduct = props => {
     )
   }
 
+  /**
+   * Render Transportation
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
   const renderTransportation = formikProps => {
     return (
       <>

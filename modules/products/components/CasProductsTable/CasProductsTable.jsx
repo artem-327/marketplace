@@ -9,6 +9,10 @@ import confirm from '../../../../components/Confirmable/confirm'
 // Constants
 import { casProductsTableColumns } from '../../constants'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductsTable
+ */
 const CasProductsTable = props => {
 
   useEffect(() => {

@@ -9,6 +9,10 @@ import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
 // Constants
 import { tables, addForms, editForms, importForm, edit2Forms, sidebars } from '../constants'
 
+/**
+ * @Component
+ * @category Products - Components / Products
+ */
 const Products = props => {
   const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = props
 
@@ -29,6 +33,11 @@ const Products = props => {
     )
   }
 
+  /**
+   * Get Api Config
+   * @category Products - Products
+   * @method
+   */
   const getApiConfig = () => {
     const datagridApiMap = {
       'cas-products': {

@@ -22,6 +22,10 @@ import {
   PROPERTIES_FILTER
 } from './CasProductsSidebarContent.constants'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductsSidebarContent / CasProductsSidebarContent
+ */
 const CasProductsSidebarContent = props => {
   const {
     intl: { formatMessage },
