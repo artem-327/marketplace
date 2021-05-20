@@ -157,9 +157,13 @@ const FormRectangle = props => {
   return (
     <>
       {children}
-      <DivButtonsBottom className={`oboarding-nav-buttons ${emailButtonActiveClass}`}>
+      <DivButtonsBottom
+        className={`oboarding-nav-buttons ${emailButtonActiveClass}`}
+        data-test="button-row"
+      >
         <ButtonSubmit
           className="btn-next"
+          data-test="button-next"
           disabled={isLoadingSubmitButton}
           loading={isLoadingSubmitButton}
           type='button'
@@ -173,12 +177,12 @@ const FormRectangle = props => {
           />
         </ButtonSubmit>
         {!registerBeneficialOwner && activeStep > 0 && activeStep !== 5 && (
-          <ButtonBack className="btn-back" type='button' onClick={() => prevStep(activeStep - 1)} basic>
+          <ButtonBack data-test="button-back" className="btn-back" type='button' onClick={() => prevStep(activeStep - 1)} basic>
             <FormattedMessage id='global.back' defaultMessage='Back' />
           </ButtonBack>
         )}
         {showEmailButton && (
-          <ButtonBack className="btn-email" type='button' onClick={openEmailPopup} basic>
+          <ButtonBack data-test="button-email" className="btn-email" type='button' onClick={openEmailPopup} basic>
             <FormattedMessage id='global.email' defaultMessage='Email' />
           </ButtonBack>
         )}

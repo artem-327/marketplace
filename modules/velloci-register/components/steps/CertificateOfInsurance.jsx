@@ -110,7 +110,14 @@ const CertificateOfInsurance = props => {
                     </GridRow>
                     <GridRow>
                         <GridColumn computer={12} tablet={12} mobile={16}>
-                            <ButtonSemantic className="full-width" basic icon as='label'>
+                            <ButtonSemantic
+                                as="label"
+                                basic
+                                className="full-width"
+                                data-test="certificate-of-insurance-browse-files"
+                                icon
+                                role="button"
+                            >
                                 <PaperclipIcon size='15' />
                                 <FormattedMessage id='company.browseFileHere' defaultMessage='Browse file here' />
                                 <InputHidden
@@ -168,7 +175,7 @@ const CertificateOfInsurance = props => {
                                     id: 'insurance.selectInsuranceType',
                                     defaultMessage: 'Select Insurance Type'
                                     }),
-                                'data-test': 'company_form_select_federal_certification_drpdn'
+                                'data-test': 'certificate-of-insurance-dropdown'
                                 }}
                             />
                         </GridColumn>
@@ -196,6 +203,7 @@ const CertificateOfInsurance = props => {
                             <Button
                                 id="coi-upload"
                                 className="s-full-width btn-primary-color"
+                                data-test="certificate-of-insurance-add-another"
                                 disabled={!values?.certificateOfInsurance?.documentId || isFileEmpty(values?.certificateOfInsurance?.file)}
                                 onClick={() => {
                                     coiDocumentUploaded(true)

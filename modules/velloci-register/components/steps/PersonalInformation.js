@@ -57,7 +57,11 @@ function PersonalInformation({
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
     forms.push(
-      <GridPersonalInformation className="verify-personal-information" key={i}>
+      <GridPersonalInformation
+        className="verify-personal-information"
+        data-test="verify-personal-information"
+        key={i}
+      >
         {i > 0 && (
           <GridRowTitle id={`form${i}`}>
             <GridColumn>
@@ -88,7 +92,7 @@ function PersonalInformation({
                   defaultMessage: 'Enter first name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_first_name_inpt'
+                'data-test': `verify-personal-information-first-name-${i}`
               }}
             />
           </ColumnCustom>
@@ -105,7 +109,7 @@ function PersonalInformation({
                   defaultMessage: 'Enter middle name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_middle_name_inpt'
+                'data-test': `verify-personal-information-middle-name-${i}`
               }}
             />
           </ColumnCustom>
@@ -129,7 +133,7 @@ function PersonalInformation({
                   defaultMessage: 'Enter last name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_last_name_inpt'
+                'data-test': `verify-personal-information-last-name-${i}`
               }}
             />
           </ColumnCustom>
@@ -153,7 +157,7 @@ function PersonalInformation({
                   defaultMessage: 'Enter email address'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_personal_email_address_inpt'
+                'data-test': `verify-personal-information-email-address-${i}`
               }}
             />
           </ColumnCustom>
@@ -245,7 +249,7 @@ function PersonalInformation({
                   defaultMessage: 'Enter Business Title'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_business_title_inpt'
+                'data-test': `verify-personal-information-business-title-${i}`
               }}
             />
           </ColumnCustom>
@@ -267,7 +271,7 @@ function PersonalInformation({
                   defaultMessage: '123456789'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_personal_info_social_security_number_inpt'
+                'data-test': `verify-personal-information-ssn-${i}`
               }}
             />
           </ColumnCustom>
@@ -295,7 +299,7 @@ function PersonalInformation({
                 type: 'text',
                 pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
                 maxLength: '3',
-                'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
+                'data-test': `verify-personal-information-ownership-percentage-${i}`
               }}
             />
           </ColumnCustom>
@@ -310,6 +314,7 @@ function PersonalInformation({
                       <a href={`#form${numberBeneficialOwners}`}>
                         <Button
                           className="btn-remove-owner"
+                          data-test={`verify-personal-information-remove-owner-${i}`}
                           type='button'
                           onClick={() => {
                             countBeneficialOwners(numberBeneficialOwners - 1)
@@ -329,6 +334,7 @@ function PersonalInformation({
                     <a href={`#form${numberBeneficialOwners}`}>
                       <Button
                         className="btn-add-owner"
+                        data-test={`verify-personal-information-add-owner-${i}`}
                         type='button'
                         onClick={() => {
                           countBeneficialOwners(numberBeneficialOwners + 1)

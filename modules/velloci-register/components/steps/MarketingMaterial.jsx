@@ -144,10 +144,11 @@ const MarketingMaterial = props => {
                                             }
                                             name='name'
                                             inputProps={{
-                                            placeholder: formatMessage({
-                                                id: 'company.enterLegalBusinessName',
-                                                defaultMessage: 'Enter Legal Business Name'
-                                            })
+                                                placeholder: formatMessage({
+                                                    id: 'company.enterLegalBusinessName',
+                                                    defaultMessage: 'Enter Legal Business Name'
+                                                }),
+                                                'data-test': 'marketing-material-business-name'
                                             }}
                                         />
                                         </GridColumn>
@@ -202,7 +203,8 @@ const MarketingMaterial = props => {
                                                 }
                                                 name='email'
                                                 inputProps={{
-                                                placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' })
+                                                    placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' }),
+                                                    'data-test': 'marketing-material-email-address'
                                                 }}
                                             />
                                         </GridColumn>
@@ -250,7 +252,8 @@ const MarketingMaterial = props => {
                                                 placeholder: formatMessage({
                                                     id: `company.enter.${el}Url`,
                                                     defaultMessage: `Enter ${el} URL`
-                                                })
+                                                }),
+                                                'data-test': `marketing-material-${el}`
                                             }}
                                             />
                                         </GridColumn>
