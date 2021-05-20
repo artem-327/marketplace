@@ -125,33 +125,32 @@ const AddEditEchoProduct = props => {
   }, [])
 
   useEffect(() => {
-    validateSaveOrSwitchToErrors(() => {
-      setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
-      initResetForm()
-    })
+    if (props.addForm) {
+      validateSaveOrSwitchToErrors(() => {
+        setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
+        initResetForm()
+      })
+    }
   }, [props.addForm])
 
   useEffect(() => {
     const { popupValues, editTab } = props
-    validateSaveOrSwitchToErrors(() => {
-      if (popupValues?.id) props.loadEditEchoProduct(popupValues.id, editTab, true)
-    })
+    if(props.editForm && popupValues) {
+      validateSaveOrSwitchToErrors(() => {
+        if (popupValues?.id) props.loadEditEchoProduct(popupValues.id, editTab, true)
+      })
+    }
   }, [props.editForm])
 
   useEffect(() => {
-    const { popupValues, editTab } = props
-    validateSaveOrSwitchToErrors(() => {
-      if (popupValues?.id) props.loadEditEchoProduct(popupValues.id, editTab, false)
-    })
-  }, [props.editInitTrig])
-
-  useEffect(() => {
-    props.searchManufacturers(
-      getSafe(() => props.popupValues.manufacturer.name, ''),
-      200
-    )
-    setInitialState(props.popupValues, { editTab: props.editTab })
-    initResetForm()
+    if(props.editForm && props.popupValues) {
+      props.searchManufacturers(
+        getSafe(() => props.popupValues.manufacturer.name, ''),
+        200
+      )
+      setInitialState(props.popupValues, { editTab: props.editTab })
+      initResetForm()
+    }
   }, [props.popupValues])
 
   /**
