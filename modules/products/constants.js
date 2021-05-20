@@ -11,12 +11,22 @@ import ProductGroupsPopup from './components/ProductGroups/ProductGroupsPopupCon
 import AddEditEchoProduct from './components/ProductCatalogTable/AddEditEchoProductContainer'
 
 
+/**
+ * Default Tabs of tabNames in reducer
+ * @category Profile
+ * @constant
+ */
 export const defaultTabs = [
   { name: 'CAS Products', id: 0, type: 'cas-products' },
   { name: 'Product Catalog', id: 1, type: 'product-catalog' },
   { name: 'Product Groups', id: 2, type: 'product-groups' }
 ]
 
+/**
+ * textTable value in components / TablesHanders
+ * @category Profile
+ * @constant
+ */
 export const textsTable = {
   'cas-products': {
     BtnAddText: 'products.casProducts.buttonAdd',
@@ -32,35 +42,70 @@ export const textsTable = {
   }
 }
 
+/**
+ * tables value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const tables = {
   'cas-products': <CasProductsTable />,
   'product-catalog': <ProductCatalogTable />,
   'product-groups': <ProductGroupsTable handleFilterChange={()=>{}} />
 }
 
+/**
+ * addForms value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const addForms = {
   'cas-products': <CasProductsSidebar />,
   'product-groups': <ProductGroupsPopup />
 }
 
+/**
+ * editForms value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const editForms = {
   'cas-products': <CasProductsSidebar />,
   'product-groups': <ProductGroupsPopup />
 }
 
+/**
+ * edit2Forms value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const edit2Forms = {
   'cas-products': <EditAltNamesCasProductsPopup />,
   'product-catalog': <EditAltNamesEchoProductPopup />
 }
 
+/**
+ * importForm value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const importForm = {
   'product-catalog': <ProductImportPopup />
 }
 
+/**
+ * sidebars value in components / Products
+ * @category Profile
+ * @constant
+ */
 export const sidebars = {
   'product-catalog': <AddEditEchoProduct />
 }
 
+/**
+ * productGroupsTableColumns value in components / ProductGroups / ProductGroupsTable
+ * @category Profile
+ * @constant
+ */
 export const productGroupsTableColumns =
 [
   {
@@ -79,6 +124,11 @@ export const productGroupsTableColumns =
   }
 ]  
 
+/**
+ * productGroupsTableColumns value in components / CasProductsTable / CasProductsTable
+ * @category Profile
+ * @constant
+ */
 export const casProductsTableColumns = [
   {
     name: 'casIndexName',
