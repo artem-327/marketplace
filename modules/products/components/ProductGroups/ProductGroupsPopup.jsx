@@ -180,7 +180,7 @@ const ProductGroupsPopup = props => {
 
 ProductGroupsPopup.propTypes = {
   closePopup: PropTypes.func,
-  popupValues: PropTypes.object,
+  popupValues: PropTypes.any,
   rowId: PropTypes.number,
   putProductGroups: PropTypes.func,
   postProductGroups: PropTypes.func,
@@ -193,7 +193,7 @@ ProductGroupsPopup.propTypes = {
 
 ProductGroupsPopup.defaultProps = {
   closePopup: () => {},
-  popupValues: {},
+  popupValues: null,
   rowId: null,
   putProductGroups: () => {},
   postProductGroups: () => {},

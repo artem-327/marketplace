@@ -139,8 +139,8 @@ TablesHandlers.propTypes = {
   currentTab: PropTypes.string,
   tableHandlersFilters: PropTypes.object,
   datagrid: PropTypes.object,
-  handleVariableSave: PropTypes.func,
   openPopup: PropTypes.func,
+  handleVariableSave: PropTypes.func,
   isOpenImportPopup: PropTypes.bool,
   intl: PropTypes.object
 }
@@ -149,8 +149,8 @@ TablesHandlers.defaultProps = {
   currentTab: '',
   tableHandlersFilters: null,
   datagrid: {},
-  handleVariableSave: () => {},
   openPopup: () => {},
+  handleVariableSave: () => {},
   isOpenImportPopup: false,
   intl: {}
 }

@@ -62,7 +62,7 @@ const CasProductsSidebar = props => {
                   basic>
                   <DivTitle>
                     <DivHeader>
-                      {props.popupValues ? (
+                      {popupValues ? (
                         <FormattedMessage id='casProduct.editCasProduct' defaultMessage='Edit CAS Product' />
                       ) : (
                         <FormattedMessage id='casProduct.addCasProduct' defaultMessage='Add CAS Product' />
@@ -118,7 +118,7 @@ CasProductsSidebar.propTypes = {
   closeAddPopup: PropTypes.func,
   postNewCasProductRequest: PropTypes.func,
   updateCasProductRequest: PropTypes.func,
-  popupValues: PropTypes.object,
+  popupValues: PropTypes.any,
   updating: PropTypes.bool
 }
 
@@ -126,7 +126,7 @@ CasProductsSidebar.defaultProps = {
   closeAddPopup: () => {},
   postNewCasProductRequest: () => {},
   updateCasProductRequest: () => {},
-  popupValues: {},
+  popupValues: null,
   updating: false
 }
 
