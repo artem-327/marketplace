@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Components
 import ProdexTable from '../../../../components/table'
@@ -88,6 +89,32 @@ const CasProductsTable = props => {
       />
     </div>
   )
+}
+
+CasProductsTable.propTypes = {
+  openPopup: PropTypes.func,
+  openEditAltNamesCasPopup: PropTypes.func,
+  closeConfirmPopup: PropTypes.func,
+  getHazardClassesDataRequest: PropTypes.func,
+  getPackagingGroupsDataRequest: PropTypes.func,
+  deleteCasProduct: PropTypes.func,
+  editedId: PropTypes.number,
+  rows: PropTypes.array,
+  datagrid: PropTypes.array,
+  intl: PropTypes.object
+}
+
+CasProductsTable.defaultProps = {
+  openPopup: () => {},
+  openEditAltNamesCasPopup: () => {},
+  closeConfirmPopup: () => {},
+  getHazardClassesDataRequest: () => {},
+  getPackagingGroupsDataRequest: () => {},
+  deleteCasProduct: () => {},
+  editedId: 0,
+  rows: [],
+  datagrid: [],
+  intl: {}
 }
 
 export default injectIntl(CasProductsTable)

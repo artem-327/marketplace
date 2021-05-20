@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { Modal, Table, TableCell, TableHeaderCell, FormField, Message, Icon, Popup, Form } from 'semantic-ui-react'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { Formik, FieldArray } from 'formik'
@@ -207,6 +208,28 @@ const EditAltNamesEchoProductPopup = props => {
       )}
     </Formik>
   )
+}
+
+EditAltNamesEchoProductPopup.propTypes = {
+  closePopup: PropTypes.func,
+  getAlternativeCompanyGenericProductsNames: PropTypes.func,
+  postNewCompanyGenericProductsAltName: PropTypes.func,
+  updateCompanyGenericProductsAltName: PropTypes.func,
+  deleteCompanyGenericProductsAltName: PropTypes.func,
+  popupValues: PropTypes.object,
+  productAltNames: PropTypes.array,
+  loading: PropTypes.bool
+}
+
+EditAltNamesEchoProductPopup.defaultProps = {
+  closePopup: () => {},
+  getAlternativeCompanyGenericProductsNames: () => {},
+  postNewCompanyGenericProductsAltName: () => {},
+  updateCompanyGenericProductsAltName: () => {},
+  deleteCompanyGenericProductsAltName: () => {},
+  popupValues: {},
+  productAltNames: [],
+  loading: false
 }
 
 export default EditAltNamesEchoProductPopup

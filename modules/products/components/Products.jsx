@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Container } from 'semantic-ui-react'
 // Components
 import TablesHandlers from './TablesHandlersContainer'
@@ -29,7 +30,6 @@ const Products = props => {
   }
 
   const getApiConfig = () => {
-    const { currentTab, companyProductUnmappedOnly } = props
     const datagridApiMap = {
       'cas-products': {
         url: '/prodex/api/cas-products/datagrid',
@@ -91,6 +91,24 @@ const Products = props => {
       {(currentAddForm || currentEditForm) && sidebars[currentTab]}
     </DatagridProvider>
   )
+}
+
+Products.propTypes = {
+  currentTab: PropTypes.string,
+  currentEdit2Form: PropTypes.bool,
+  currentAddForm: PropTypes.bool,
+  currentEditForm: PropTypes.bool,
+  isOpenImportPopup: PropTypes.bool,
+  closeAddPopup: PropTypes.func
+}
+
+Products.defaultProps = {
+  currentTab: '',
+  currentEdit2Form: null,
+  currentAddForm: null,
+  currentEditForm: null,
+  isOpenImportPopup: false,
+  closeAddPopup: () => {}
 }
 
 export default withDatagrid(withAuth(Products))

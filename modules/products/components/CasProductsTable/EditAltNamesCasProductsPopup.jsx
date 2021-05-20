@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import {
   Modal,
   Table,
@@ -219,6 +220,28 @@ const EditAltNamesCasProductsPopup = props => {
       )}
     </Formik>
   )
+}
+
+EditAltNamesCasProductsPopup.propTypes = {
+  closeEditPopup: PropTypes.func,
+  getAlternativeProductNames: PropTypes.func,
+  postNewProductName: PropTypes.func,
+  updateProductName: PropTypes.func,
+  deleteProductName: PropTypes.func,
+  popupValues: PropTypes.object,
+  altCasNamesRows: PropTypes.array,
+  loading: PropTypes.bool
+}
+
+EditAltNamesCasProductsPopup.defaultProps = {
+  closeEditPopup: () => {},
+  getAlternativeProductNames: () => {},
+  postNewProductName: () => {},
+  updateProductName: () => {},
+  deleteProductName: () => {},
+  popupValues: {},
+  altCasNamesRows: [],
+  loading: false
 }
 
 export default EditAltNamesCasProductsPopup

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { Header, Menu, Button, Input, Grid, GridRow, GridColumn, Dropdown } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
@@ -75,8 +76,7 @@ const TablesHandlers = props => {
       currentTab,
       openPopup,
       intl: { formatMessage },
-      openImportPopup,
-      handleFilterChange
+      openImportPopup
     } = props
 
     const item = textsTable[currentTab]
@@ -128,8 +128,27 @@ const TablesHandlers = props => {
     )
   }
 
-  return <PositionHeaderSettings>{renderHandler()}</PositionHeaderSettings>
-  
+  return <PositionHeaderSettings>{renderHandler()}</PositionHeaderSettings>  
+}
+
+TablesHandlers.propTypes = {
+  currentTab: PropTypes.string,
+  tableHandlersFilters: PropTypes.object,
+  datagrid: PropTypes.object,
+  handleVariableSave: PropTypes.func,
+  openPopup: PropTypes.func,
+  isOpenImportPopup: PropTypes.bool,
+  intl: PropTypes.object
+}
+
+TablesHandlers.defaultProps = {
+  currentTab: '',
+  tableHandlersFilters: null,
+  datagrid: {},
+  handleVariableSave: () => {},
+  openPopup: () => {},
+  isOpenImportPopup: false,
+  intl: {}
 }
 
 export default withDatagrid(injectIntl(TablesHandlers))

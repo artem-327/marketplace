@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Dropdown as FormikDropdown, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -2102,6 +2103,88 @@ const AddEditEchoProduct = props => {
       }}
     />
   )
+}
+
+AddEditEchoProduct.propTypes = {
+  loadFile: PropTypes.func,
+  addAttachment: PropTypes.func,
+  linkAttachment: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  removeAttachmentLink: PropTypes.func,
+  closePopup: PropTypes.func,
+  searchCasProduct: PropTypes.func,
+  putCompanyGenericProducts: PropTypes.func,
+  postCompanyGenericProducts: PropTypes.func,
+  searchManufacturers: PropTypes.func,
+  editEchoProductChangeTab: PropTypes.func,
+  loadEditEchoProduct: PropTypes.func,
+  getHazardClassesDataRequest: PropTypes.func,
+  getPackagingGroupsDataRequest: PropTypes.func,
+  getUnNumbersByString: PropTypes.func,
+  searchProductGroups: PropTypes.func,
+  getDocumentTypes: PropTypes.func,
+  searchCompany: PropTypes.func,
+  addForm: PropTypes.bool,
+  editForm: PropTypes.bool,
+  popupValues: PropTypes.object,
+  editTab: PropTypes.number,
+  editInitTrig: PropTypes.bool,
+  packagingGroups: PropTypes.array,
+  hazardClasses: PropTypes.array,
+  searchedManufacturersLoading: PropTypes.bool,
+  searchedManufacturers: PropTypes.array,
+  searchedCasProducts: PropTypes.array,
+  isLoading: PropTypes.bool,
+  unNumbersFiltered: PropTypes.array,
+  unNumbersFetching: PropTypes.bool,
+  listDocumentTypes: PropTypes.array,
+  searchedProductGroups: PropTypes.array,
+  searchedProductGroupsLoading: PropTypes.bool,
+  searchedCompany: PropTypes.array,
+  searchedCompanyLoading: PropTypes.bool,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+AddEditEchoProduct.defaultProps = {
+  loadFile: () => {},
+  addAttachment: () => {},
+  linkAttachment: () => {},
+  removeAttachment: () => {},
+  removeAttachmentLink: () => {},
+  closePopup: () => {},
+  searchCasProduct: () => {},
+  putCompanyGenericProducts: () => {},
+  postCompanyGenericProducts: () => {},
+  searchManufacturers: () => {},
+  editEchoProductChangeTab: () => {},
+  loadEditEchoProduct: () => {},
+  getHazardClassesDataRequest: () => {},
+  getPackagingGroupsDataRequest: () => {},
+  getUnNumbersByString: () => {},
+  searchProductGroups: () => {},
+  getDocumentTypes: () => {},
+  searchCompany: () => {},
+  addForm: null,
+  editForm: null,
+  popupValues: {},
+  editTab: 0,
+  editInitTrig: false,
+  packagingGroups: [],
+  hazardClasses: [],
+  searchedManufacturersLoading: false,
+  searchedManufacturers: [],
+  searchedCasProducts: [],
+  isLoading: false,
+  unNumbersFiltered: [],
+  unNumbersFetching: false,
+  listDocumentTypes: [],
+  searchedProductGroups: [],
+  searchedProductGroupsLoading: false,
+  searchedCompany: [],
+  searchedCompanyLoading: false,
+  datagrid: {},
+  intl: {}
 }
 
 export default injectIntl(AddEditEchoProduct)

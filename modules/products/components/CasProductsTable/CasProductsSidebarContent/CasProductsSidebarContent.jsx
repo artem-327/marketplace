@@ -154,8 +154,16 @@ const CasProductsSidebarContent = props => {
   )
 }
 
-CasProductsSidebarContent.propTypes = {}
+CasProductsSidebarContent.propTypes = {
+  getHazardClassesDataRequest: PropTypes.func,
+  intl: PropTypes.object,
+  formikProps: PropTypes.object
+}
 
-CasProductsSidebarContent.defaultProps = {}
+CasProductsSidebarContent.defaultProps = {
+  getHazardClassesDataRequest: () => {},
+  intl: {},
+  formikProps: {}
+}
 
 export default injectIntl(CasProductsSidebarContent)

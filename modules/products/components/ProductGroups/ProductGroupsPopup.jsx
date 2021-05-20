@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -42,13 +43,11 @@ const ProductGroupsPopup = props => {
     rowId,
     putProductGroups,
     postProductGroups,
-    toastManager,
     intl: { formatMessage },
     datagrid,
     searchedTags,
     searchedTagsLoading,
-    searchedMarketSegmentsLoading,
-    searchedMarketSegments
+    searchedMarketSegmentsLoading
   } = props
 
   const initialFormValues = {
@@ -173,6 +172,32 @@ const ProductGroupsPopup = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+ProductGroupsPopup.propTypes = {
+  closePopup: PropTypes.func,
+  popupValues: PropTypes.object,
+  rowId: PropTypes.number,
+  putProductGroups: PropTypes.func,
+  postProductGroups: PropTypes.func,
+  datagrid: PropTypes.object,
+  searchedTags: PropTypes.array,
+  searchedTagsLoading: PropTypes.bool,
+  searchedMarketSegmentsLoading: PropTypes.bool,
+  intl: PropTypes.object
+}
+
+ProductGroupsPopup.defaultProps = {
+  closePopup: () => {},
+  popupValues: {},
+  rowId: null,
+  putProductGroups: () => {},
+  postProductGroups: () => {},
+  datagrid: {},
+  searchedTags: [],
+  searchedTagsLoading: false,
+  searchedMarketSegmentsLoading: false,
+  intl: {}
 }
 
 export default withDatagrid(

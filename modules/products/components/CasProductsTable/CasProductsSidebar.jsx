@@ -110,8 +110,20 @@ const CasProductsSidebar = props => {
   )
 }
 
-CasProductsSidebar.propTypes = {}
+CasProductsSidebar.propTypes = {
+  closeAddPopup: PropTypes.func,
+  postNewCasProductRequest: PropTypes.func,
+  updateCasProductRequest: PropTypes.func,
+  popupValues: PropTypes.object,
+  updating: PropTypes.bool
+}
 
-CasProductsSidebar.defaultProps = {}
+CasProductsSidebar.defaultProps = {
+  closeAddPopup: () => {},
+  postNewCasProductRequest: () => {},
+  updateCasProductRequest: () => {},
+  popupValues: {},
+  updating: false
+}
 
 export default injectIntl(CasProductsSidebar)

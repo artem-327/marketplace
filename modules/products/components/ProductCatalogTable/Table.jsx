@@ -1,4 +1,5 @@
-import { Fragment, Component } from 'react'
+import { Fragment } from 'react'
+import PropTypes from 'prop-types'
 import moment from 'moment/moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Dropdown, Icon } from 'semantic-ui-react'
@@ -16,16 +17,19 @@ import { Circle } from '../../styles'
 import { echoRowActions, productCatalogTableColumns } from './constants'
 
 const ProductCatalogTable = props => {
+  const {
+    datagrid,
+    openEditEchoProduct,
+    openEditEchoAltNamesPopup,
+    deleteCompanyGenericProduct,
+    editEchoProductChangeTab, 
+    rows, 
+    filterValue, 
+    editedId,
+    intl: { formatMessage }
+  } = props
 
   const getActions = row => {
-    const {
-      datagrid,
-      intl: { formatMessage },
-      openEditEchoProduct,
-      openEditEchoAltNamesPopup,
-      deleteCompanyGenericProduct
-    } = props
-
     return [
       ...echoRowActions((row, i) => openEditEchoProduct(row.id, i, true)),
       {
@@ -65,10 +69,6 @@ const ProductCatalogTable = props => {
   }
 
   const getRows = rows => {
-    const {
-      editEchoProductChangeTab,
-      intl: { formatMessage }
-    } = props
     return rows.map((row, _i) => {
       return {
         ...row,
@@ -200,8 +200,6 @@ const ProductCatalogTable = props => {
     element.click()
   }
 
-  const { datagrid, rows, filterValue, editedId } = props
-
   return (
     <Fragment>
       <div className='flex stretched listings-wrapper'>
@@ -217,6 +215,30 @@ const ProductCatalogTable = props => {
       </div>
     </Fragment>
   )
+}
+
+ProductCatalogTable.propTypes = {
+  datagrid: PropTypes.object,
+  openEditEchoProduct: PropTypes.func,
+  openEditEchoAltNamesPopup: PropTypes.func,
+  deleteCompanyGenericProduct: PropTypes.func,
+  editEchoProductChangeTab: PropTypes.func,
+  rows: PropTypes.array,
+  filterValue: PropTypes.string,
+  editedId: PropTypes.number,
+  intl: PropTypes.object
+}
+
+ProductCatalogTable.defaultProps = {
+  datagrid: {},
+  openEditEchoProduct: () => {},
+  openEditEchoAltNamesPopup: () => {},
+  deleteCompanyGenericProduct: () => {},
+  editEchoProductChangeTab: () => {},
+  rows: [],
+  filterValue: '',
+  editedId: null,
+  intl: {}
 }
 
 export default injectIntl(ProductCatalogTable)

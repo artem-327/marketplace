@@ -1,4 +1,5 @@
 import { injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 import { withToastManager } from 'react-toast-notifications'
 // Components
 import ProdexTable from '../../../../components/table'
@@ -9,9 +10,18 @@ import confirm from '../../../../components/Confirmable/confirm'
 import { productGroupsTableColumns } from '../../constants'
 
 const ProductGroupsTable = props => {
-  const getActions = () => {
-    const { intl, openPopup, deleteProductGroups, datagrid } = props
+  const {
+    loading,
+    rows,
+    datagrid,
+    filterValue,
+    openPopup,
+    deleteProductGroups,
+    editedId,
+    intl
+  } = props
 
+  const getActions = () => {
     const { formatMessage } = intl
     return [
       { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
@@ -60,18 +70,6 @@ const ProductGroupsTable = props => {
     })
   }
 
-  const {
-    intl,
-    loading,
-    rows,
-    datagrid,
-    filterValue,
-    openPopup,
-    deleteProductGroups,
-    editedId,
-    toastManager
-  } = props
-
   return (
     <div className='flex stretched listings-wrapper'>
       <ProdexTable
@@ -85,6 +83,28 @@ const ProductGroupsTable = props => {
       />
     </div>
   )
+}
+
+ProductGroupsTable.propTypes = {
+  loading: PropTypes.bool,
+  rows: PropTypes.array,
+  datagrid: PropTypes.object,
+  filterValue: PropTypes.string,
+  openPopup: PropTypes.func,
+  deleteProductGroups: PropTypes.func,
+  editedId: PropTypes.number,
+  intl: PropTypes.object
+}
+
+ProductGroupsTable.defaultProps = {
+  loading: false,
+  rows: [],
+  datagrid: {},
+  filterValue: '',
+  openPopup: () => {},
+  deleteProductGroups: () => {},
+  editedId: null,
+  intl: {}
 }
 
 export default injectIntl(withToastManager(ProductGroupsTable))
