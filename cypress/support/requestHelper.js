@@ -326,7 +326,7 @@ Cypress.Commands.add("createProductOffer", (token, companyProduct, warehouse) =>
         headers: {
             authorization: "Bearer " + token
         },
-        body: {"acceptBids": true,"companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse}
+        body: {"acceptBids": true,"companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse, "shared":true}
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
