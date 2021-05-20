@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow, LabelGroup } from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
+import { HeadingContainer, LeftCenteredContentContainer, PaddedListItem, StyledTextContainer } from '../styles'
 //Components
 import {
   Rectangle,
@@ -54,11 +55,14 @@ const GridRowCategories = styled(GridRow)`
   padding-top: 0px !important;
 `
 
-function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficialOwners }) {
+function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficialOwners, numberBeneficialOwners }) {
   return (
     <GridOwnerInformation>
       <GridRow>
         <GridColumn>
+          <StyledTextContainer style={{ paddingBlockEnd: '.5rem' }}>
+            <FormattedMessage id='onboarding.outline.beneficial.ownership' />
+          </StyledTextContainer>
           <Rectangle style={{ margin: '0px' }}>
             <CustomDivContent style={{ display: 'flex', color: '#848893', padding: '0px' }}>
               <div>
@@ -74,62 +78,16 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
           </Rectangle>
         </GridColumn>
       </GridRow>
-
-      <GridRowTitle>
-        <GridColumn>
-          <FormattedMessage id='velloci.ownerInformation.controlPerson' defaultMessage='CONTROL PERSON' />
-        </GridColumn>
-      </GridRowTitle>
       <GridRow>
         <GridColumn>
-          <lable>
+          <HeadingContainer>
             <FormattedMessage
-              id='velloci.ownerInformation.beneficialOwner'
-              defaultMessage='Are you the beneficial owner?'
+              id='velloci.ownerInformation.otherBeneficialOwners'
+              defaultMessage='OTHER BENEFICIAL OWNERS'
             />
-          </lable>
-          <DivCheckboxes>
-            <Checkbox
-              label={formatMessage({
-                id: 'global.yes',
-                defaultMessage: 'Yes'
-              })}
-              inputProps={{
-                onChange: () => {
-                  formikProps.setFieldValue('ownerInformation.isBeneficialOwner', true)
-                  formikProps.setFieldValue('ownerInformation.isNotBeneficialOwner', false)
-                },
-                radio: true,
-                'data-test': 'settings_velloci_registration_owner_information_isBeneficialOwner_chckbx'
-              }}
-              name='ownerInformation.isBeneficialOwner'
-            />
-            <Checkbox
-              label={formatMessage({
-                id: 'global.no',
-                defaultMessage: 'No'
-              })}
-              inputProps={{
-                onChange: () => {
-                  formikProps.setFieldValue('ownerInformation.isBeneficialOwner', false)
-                  formikProps.setFieldValue('ownerInformation.isNotBeneficialOwner', true)
-                },
-                radio: true,
-                'data-test': 'settings_velloci_registration_owner_information_isNotBeneficialOwner_chckbx'
-              }}
-              name='ownerInformation.isNotBeneficialOwner'
-            />
-          </DivCheckboxes>
+          </HeadingContainer>
         </GridColumn>
       </GridRow>
-      <GridRowTitle>
-        <GridColumn>
-          <FormattedMessage
-            id='velloci.ownerInformation.otherBeneficialOwners'
-            defaultMessage='OTHER BENEFICIAL OWNERS'
-          />
-        </GridColumn>
-      </GridRowTitle>
       <GridRow>
         <GridColumn>
           <RectangleWarning style={{ margin: '0px' }}>
@@ -153,12 +111,12 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
       </GridRow>
       <GridRow>
         <GridColumn>
-          <lable>
+          <label>
             <FormattedMessage
               id='velloci.ownerInformation.otherBeneficialOwner'
               defaultMessage='Are there any other Beneficial Owners?'
             />
-          </lable>
+          </label>
           <DivCheckboxes>
             <Checkbox
               label={formatMessage({
@@ -170,7 +128,6 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
                   formikProps.setFieldValue('ownerInformation.isOtherBeneficialOwner', true)
                   formikProps.setFieldValue('ownerInformation.isNotOtherBeneficialOwner', false)
                 },
-                radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isOtherBeneficialOwner_chckbx'
               }}
               name='ownerInformation.isOtherBeneficialOwner'
@@ -189,7 +146,6 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
                   setFieldValue('ownerInformation.isNotOtherBeneficialOwner', true)
                   countBeneficialOwners(0)
                 },
-                radio: true,
                 'data-test': 'settings_velloci_registration_owner_information_isNotOtherBeneficialOwner_chckbx'
               }}
               name='ownerInformation.isNotOtherBeneficialOwner'
@@ -197,58 +153,43 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
           </DivCheckboxes>
         </GridColumn>
       </GridRow>
-      <GridRowTitle>
-        <GridColumn>
-          <FormattedMessage
-            id='velloci.ownerInformation.completeNow'
-            defaultMessage='COMPLETE NOW OR EMAIL BENEFICIAL OWNERS'
-          />
-        </GridColumn>
-      </GridRowTitle>
       <GridRow>
         <GridColumn>
-          <lable>
+          <HeadingContainer>
+            <FormattedMessage
+              id='velloci.ownerInformation.completeNow'
+              defaultMessage='COMPLETE NOW OR EMAIL BENEFICIAL OWNERS'
+            />
+          </HeadingContainer>
+        </GridColumn>
+      </GridRow>
+      <GridRow>
+        <GridColumn>
+          <label>
             <FormattedMessage
               id='velloci.ownerInformation.wouldComplete'
               defaultMessage='Would you like to complete this form for the remaining beneficial owners or email them a link to complete?'
             />
-          </lable>
-          <lable>
+          </label>
+          <label>
             <FormattedMessage id='velloci.ownerInformation.needInfo' defaultMessage="Here is the info you'll need:" />
-          </lable>
+          </label>
         </GridColumn>
       </GridRow>
-
-      <GridRow style={{ display: 'flex !important' }}>
-        <GridColumnCategories>
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.legalName' defaultMessage='Legal Name' />
-          </DivCategories>
-
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.incomeType' defaultMessage='Income Type' />
-          </DivCategories>
-
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.ssn' defaultMessage='SSN' />
-          </DivCategories>
-        </GridColumnCategories>
+      <GridRow>
+        <GridColumn>
+          <LeftCenteredContentContainer>
+            <ul style={{ padding: 0 }}>
+                <PaddedListItem><span><FormattedMessage id='onboarding.legal.name' /></span></PaddedListItem>
+                <PaddedListItem><span><FormattedMessage id='onboarding.contact.information' /></span></PaddedListItem>
+                <PaddedListItem><span><FormattedMessage id='onboarding.income.type' /></span></PaddedListItem>
+                <PaddedListItem><span><FormattedMessage id='onboarding.occupation' /></span></PaddedListItem>
+                <PaddedListItem><span><FormattedMessage id='onboarding.ssn' /></span></PaddedListItem>
+                <PaddedListItem><span><FormattedMessage id='order.address' /></span></PaddedListItem>
+            </ul>
+          </LeftCenteredContentContainer>
+        </GridColumn>
       </GridRow>
-      <GridRowCategories style={{ display: 'flex !important' }}>
-        <GridColumnCategories>
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.contactInfo' defaultMessage='Contact Info' />
-          </DivCategories>
-
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.occupation' defaultMessage='Occupation' />
-          </DivCategories>
-
-          <DivCategories>
-            <FormattedMessage id='velloci.ownerInformation.address' defaultMessage='Address' />
-          </DivCategories>
-        </GridColumnCategories>
-      </GridRowCategories>
 
       <GridRow>
         <GridColumn>

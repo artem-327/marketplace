@@ -390,3 +390,39 @@ export const tagValidate = () =>
     .test('time', errorMessages.invalidHashtag, t => {
       return !t || t.charAt(0) === '@'
     })
+
+export const stringValidation = () => (
+  Yup.lazy(() => Yup.string().required(errorMessages.requiredMessage))
+)
+
+export const fileValidation = () => (
+  Yup.lazy(() => (
+    Yup.object().shape({
+      file: Yup
+        .mixed()
+        .required('File is required!')
+        .test('File test', 'File is required!', value => {
+          return Boolean(value?.name)
+        }),
+      documentId: Yup.string().required(errorMessages.requiredMessage)
+    })
+  ))
+)
+
+// export const fileValidation = () => (
+//   Yup.lazy(() => {
+//     return Yup.object().shape({
+//       file: Yup
+//         .mixed()
+//         .required('File is required!')
+//         .test('File test', 'File is required!', (value) => {
+//           let arr = []
+//           for (const prop in value) {
+//             arr.push(prop)
+//           }
+
+//           return arr.length > 0
+//         })
+//     })
+//   })
+// )

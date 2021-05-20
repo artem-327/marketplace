@@ -1,6 +1,9 @@
-import { Button, Popup, Icon } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { applicationSubmitted, loadSubmitButton, postRegisterVelloci } from '../actions'
+import { getIdentity, updateCompany } from '../../auth/actions'
 import { FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
+import classNames from 'classnames';
 //Services
 import { getSafe } from '../../../utils/functions'
 //Styles
@@ -16,125 +19,134 @@ import {
   DivRectangleForm
 } from './styles'
 
-const FormRectangle = ({
-  children,
-  formikProps,
-  title,
-  subtitle,
-  prevStep,
-  activeStep,
-  submitForm,
-  countBeneficialOwners,
-  numberBeneficialOwners,
-  isLoadingSubmitButton,
-  openEmailPopup,
-  nextStep,
-  registerBeneficialOwner,
-  mainContainer
-}) => {
+const FormRectangle = props => {
+  const {
+    applicationSubmitted,
+    beneficialOwnersNotified,
+    children,
+    formikProps,
+    title,
+    subtitle,
+    prevStep,
+    activeStep,
+    finalStep,
+    submitForm,
+    countBeneficialOwners,
+    numberBeneficialOwners,
+    isLoadingSubmitButton,
+    openEmailPopup,
+    nextStep,
+    registerBeneficialOwner,
+    mainContainer,
+    selfFormikProps
+  } = props
+
+  /**
+   * if on step 3 (OwnerInformation) and there are no other BOs,
+   * skip to the next major section (Marketing Material)
+   */
+  const determineNextStep = () => {
+    if (activeStep === 3 && !formikProps?.values?.ownerInformation?.isOtherBeneficialOwner) {
+      return activeStep + 1
+    }
+
+    return activeStep
+  }
+
+  const valididateOwners = () => {
+    const owners = formikProps?.values?.verifyPersonalInformation.map(owner => {
+      delete owner['businessRole']
+      delete owner['middleName']
+      return owner
+    })
+
+    for (let i = 0; i < owners.length; i++) {
+      const objectValues = Object.values(owners[i])
+
+      for (let j = 0; j < objectValues.length; j++) {
+        if (!objectValues[j] || objectValues[j] === '') {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+  
+  const submitEarly = (activeStep === 3 && formikProps?.values?.ownerInformation?.isNotOtherBeneficialOwner) ||
+                      (activeStep === 4 && valididateOwners())
+
+  const override = {
+    extraProps: {
+      getIdentity: props?.getIdentity,
+      loadSubmitButton: props?.loadSubmitButton,
+      postRegisterVelloci: props?.postRegisterVelloci,
+      updateCompany: props?.updateCompany
+    },
+    selfFormikProps,
+    beneficialOwnersNotified
+  }
+
+  const handleClick = () => {
+    switch (activeStep) {
+      case finalStep: {
+        applicationSubmitted(true)
+        return
+      }
+      default: {
+        submitForm(
+          formikProps,
+          determineNextStep(),
+          nextStep,
+          mainContainer,
+          submitEarly ? override : null
+        )
+      }
+    }
+  }
+
   const { values } = formikProps
+
+  const showEmailButton = activeStep === 3 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false)
+  const emailButtonActiveClass = classNames({ 'btn-email-active': showEmailButton })
+
   return (
-    <DivRectangleForm activeStep={activeStep}>
-      <DivTitleRectangleForm>
-        <DivTitleText>
-          <FormattedMessage id={title} defaultMessage='Title'>
-            {text => text}
-          </FormattedMessage>
-        </DivTitleText>
-        {subtitle ? (
-          <DivSubtitleText>
+    <>
+      <DivRectangleForm activeStep={activeStep}>
+        <DivTitleRectangleForm>
+          <DivTitleText className="onboarding-module-title">
+            <FormattedMessage id={title} defaultMessage='Title' />
+          </DivTitleText>
+        </DivTitleRectangleForm>
+        {children}
+        <DivButtonsBottom className={`oboarding-nav-buttons ${emailButtonActiveClass}`}>
+          <ButtonSubmit
+            className="btn-next"
+            disabled={isLoadingSubmitButton}
+            loading={isLoadingSubmitButton}
+            type='button'
+            onClick={handleClick}
+            primary>
             <FormattedMessage
-              id={subtitle}
-              defaultMessage={`Subtitle`}
-              values={{
-                percentage: (
-                  <SpanSubtitleValue>
-                    <FormattedMessage id='global.25percentage' defaultMessage={'25%'} />
-                  </SpanSubtitleValue>
-                )
-              }}
-            />
-          </DivSubtitleText>
-        ) : null}
-      </DivTitleRectangleForm>
-      {children}
-      {activeStep === 5 && (
-        <RightAlignedDiv>
-          {numberBeneficialOwners > 0 && (
-            <Popup
-              trigger={
-                <a href={`#form${numberBeneficialOwners}`}>
-                  <Button
-                    style={{ float: 'right !important', marginLeft: '10px !important', marginRight: '0px !important' }}
-                    type='button'
-                    negative
-                    onClick={() => {
-                      countBeneficialOwners(numberBeneficialOwners - 1)
-                    }}
-                    icon>
-                    <Icon name='minus' />
-                  </Button>
-                </a>
+              id={
+                registerBeneficialOwner ? 'global.send' : activeStep === finalStep ? 'marketplace.submit' : 'global.next'
               }
-              content={
-                <FormattedMessage id='settings.removeBeneficialOwner' defaultMessage='Remove beneficial owner' />
-              }
+              defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === finalStep ? 'Submit' : 'Next'}
             />
+          </ButtonSubmit>
+          {!registerBeneficialOwner && activeStep > 0 && (
+            <ButtonBack className="btn-back" type='button' onClick={() => prevStep(activeStep - 1)} basic>
+              <FormattedMessage id='global.back' defaultMessage='Back' />
+            </ButtonBack>
           )}
-
-          {values.ownerInformation && values.ownerInformation.isOtherBeneficialOwner && (
-            <Popup
-              trigger={
-                <a href={`#form${numberBeneficialOwners}`}>
-                  <Button
-                    type='button'
-                    style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
-                    positive
-                    onClick={() => {
-                      countBeneficialOwners(numberBeneficialOwners + 1)
-                    }}
-                    icon>
-                    <Icon name='plus' />
-                  </Button>
-                </a>
-              }
-              content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
-            />
+          {showEmailButton && (
+            <ButtonBack className="btn-email" type='button' onClick={openEmailPopup} basic>
+              <FormattedMessage id='global.email' defaultMessage='Email' />
+            </ButtonBack>
           )}
-        </RightAlignedDiv>
-      )}
-
-      <DivButtonsBottom>
-        <ButtonSubmit
-          disabled={isLoadingSubmitButton}
-          loading={isLoadingSubmitButton}
-          type='button'
-          onClick={() => submitForm(formikProps, activeStep, nextStep, mainContainer)}
-          primary>
-          <FormattedMessage
-            id={
-              registerBeneficialOwner ? 'global.send' : activeStep === 6 ? 'velloci.submitApplication' : 'global.next'
-            }
-            defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === 6 ? 'Submit Application' : 'Next'}>
-            {text => text}
-          </FormattedMessage>
-        </ButtonSubmit>
-        {!registerBeneficialOwner && activeStep > 0 ? (
-          <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
-            <FormattedMessage id='global.back' defaultMessage='Back'>
-              {text => text}
-            </FormattedMessage>
-          </ButtonBack>
-        ) : null}
-        {activeStep === 4 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false) ? (
-          <ButtonBack type='button' onClick={openEmailPopup} basic>
-            <FormattedMessage id='global.email' defaultMessage='Email'>
-              {text => text}
-            </FormattedMessage>
-          </ButtonBack>
-        ) : null}
-      </DivButtonsBottom>
-    </DivRectangleForm>
+        </DivButtonsBottom>
+      </DivRectangleForm>
+    </>
   )
 }
 
@@ -145,10 +157,12 @@ FormRectangle.propTypes = {
   subtitle: PropTypes.string,
   submitForm: PropTypes.func,
   activeStep: PropTypes.number,
+  finalStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
   openEmailPopup: PropTypes.func,
-  mainContainer: PropTypes.object
+  mainContainer: PropTypes.object,
+  selfFormikProps: PropTypes.object
 }
 
 FormRectangle.defaultProps = {
@@ -157,11 +171,21 @@ FormRectangle.defaultProps = {
   subtitle: '',
   submitForm: () => {},
   activeStep: 0,
+  finalStep: 8,
   countBeneficialOwners: () => {},
   numberBeneficialOwners: 0,
   openEmailPopup: () => {},
   registerBeneficialOwner: false,
-  mainContainer: {}
+  mainContainer: {},
+  selfFormikProps: {}
 }
 
-export default FormRectangle
+const mapDispatchToProps = {
+  applicationSubmitted,
+  loadSubmitButton,
+  postRegisterVelloci,
+  getIdentity,
+  updateCompany
+}
+
+export default connect(null, mapDispatchToProps)(FormRectangle)

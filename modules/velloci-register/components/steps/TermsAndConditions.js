@@ -8,8 +8,9 @@ const GridTermsAndConditions = styled(Grid)`
   margin: 14px 16px !important;
 `
 
-const SpanBold = styled.span`
-  font-weight: bold;
+const StyledSpan = styled.span`
+  color: #989898;
+  font-style: italic;
 `
 
 const GridColumnCheckbox = styled(GridColumn)`
@@ -39,12 +40,9 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
     <GridTermsAndConditions>
       <GridRowCheckbox>
         <GridColumn>
-          <SpanBold>
-            <FormattedMessage
-              id='velloci.termsAndConditions.title'
-              defaultMessage="Please review and accept the following terms and conditions to finish registration"
-            />
-          </SpanBold>
+          <StyledSpan>
+            <FormattedMessage id='onboarding.legal.agreements.info' />
+          </StyledSpan>
         </GridColumn>
       </GridRowCheckbox>
       <GridRowCheckbox>

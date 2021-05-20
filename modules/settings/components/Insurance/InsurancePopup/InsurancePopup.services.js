@@ -1,4 +1,4 @@
-export const SubmitFile = async (values, { setSubmitting }, props) => {
+export const SubmitFile = async (values, { setSubmitting }, props, additionalActions = null) => {
   const {
     intl: { formatMessage },
     uploadInsuranceDocument,
@@ -14,5 +14,9 @@ export const SubmitFile = async (values, { setSubmitting }, props) => {
     console.error(e)
   } finally {
     setSubmitting(false)
+    if (additionalActions) {
+      const { activeStep, nextStep } = additionalActions
+      nextStep(activeStep + 1)
+    }
   }
 }

@@ -1,107 +1,23 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal, Grid, GridRow, GridColumn, Icon, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal as SemanticModal, Grid, GridRow, GridColumn, Icon, Dimmer, Loader } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
 import * as Actions from '../../actions'
+import { getIdentity, updateCompany } from '../../../auth/actions'
 
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+import { HVCenteredContentContainer } from '../styles';
+
 import { getSafe } from '~/utils/functions'
-import { AddressForm } from '~/modules/address-form'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { Required } from '~/components/constants/layout'
-import { removeEmpty } from '~/utils/functions'
+import { sendRequest } from '../../form-services'
+import { Modal } from '~/modules/velloci-register/components/Modal'
 import ErrorFocus from '~/components/error-focus'
 import { errorMessages, multipleEmails } from '~/constants/yupValidation'
-import styled from 'styled-components'
-
-const StyledModal = styled(Modal)`
-  .ui.modal {
-    border-top: 1px solid #dee2e6;
-    box-shadow: 0 0 0 0 transparent;
-
-    > .actions {
-      background: #ffffff;
-    }
-  }
-
-  .ui.button {
-    font-size: 1em;
-    margin: 0 0.357142857em;
-    color: #848893;
-    background-color: #ffffff;
-    border: solid 1px #dee2e6;
-    min-width: 80px;
-  }
-
-  .ui.primary.button {
-    color: #ffffff;
-    background-color: #2599d5;
-    border: none;
-  }
-
-  .ui.grid {
-    margin: 30px 0 30px 25px;
-    padding: 0;
-
-    .row {
-      padding: 5px 0;
-      &.header {
-        padding: 2px 0;
-      }
-
-      .column {
-        padding: 0 5px;
-        .field {
-          margin: 0;
-          .ui.input {
-            height: 40px;
-          }
-        }
-      }
-
-      .ui.button {
-        min-width: 40px;
-        height: 40px;
-        border-radius: 3px;
-      }
-
-      .ui.button.delete {
-        padding: 0;
-        border: solid 1px #f16844;
-        background-color: #fff0ed;
-        color: #f16844;
-        line-height: 1.11;
-        font-size: 18px;
-
-        .icon {
-          margin: 0 10px;
-          width: 18px;
-          height: 20px;
-          color: #f16844;
-          line-height: 1.11;
-          font-size: 18px;
-        }
-      }
-
-      .ui.button.add {
-        margin: 0;
-        padding-left: 17px;
-        padding-right: 17px;
-        border: solid 1px #2599d5;
-        background-color: #ddf1fc;
-        font-size: 14px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        color: #2599d5;
-      }
-    }
-  }
-`
+import { StyledModal } from '../styles'
 
 const initialFormValues = {
   invitations: [{ name: '', email: '' }]
@@ -123,7 +39,8 @@ const formValidation = () =>
 
 class BeneficialOwnersPopupPopup extends Component {
   state = {
-    companyId: null
+    companyId: null,
+    showConfirmation: false
   }
 
   componentDidMount() {
@@ -141,11 +58,43 @@ class BeneficialOwnersPopupPopup extends Component {
 
   render() {
     const {
+      activeStep,
       closeEmailPopup,
-      inviteBeneficialOwners,
       emailPopup,
-      intl: { formatMessage }
+      formikProps,
+      intl: { formatMessage },
+      inviteBeneficialOwners,
+      nextStep
     } = this.props
+
+    if (this.state.showConfirmation) {
+      const override = {
+        extraProps: {
+          getIdentity: this.props?.getIdentity,
+          loadSubmitButton: this.props?.loadSubmitButton,
+          postRegisterVelloci: this.props?.postRegisterVelloci,
+          updateCompany: this.props?.updateCompany
+        },
+        selfFormikProps: this.props?.selfFormikProps,
+        beneficialOwnersNotified: this.props?.emailPopup?.beneficialOwnersNotified
+      }
+
+      return (
+        <Modal
+          buttonText='global.next'
+          handleClick={() => {
+            nextStep(activeStep + 2) // skip over registration of BOs and go directly to Marketing Material
+            sendRequest(formikProps?.values, override?.extraProps, override?.selfFormikProps, override?.beneficialOwnersNotified)
+            closeEmailPopup()
+          }}
+          title='onboarding.email.sent'
+        >
+          <HVCenteredContentContainer style={{ marginBlockEnd: '4rem' }}>
+              <FormattedMessage id='onboarding.emails.sent.beneficial.owners' />
+          </HVCenteredContentContainer>
+        </Modal>
+      )
+    }
 
     return (
       <Formik
@@ -158,7 +107,8 @@ class BeneficialOwnersPopupPopup extends Component {
 
           try {
             await inviteBeneficialOwners(values, companyId)
-            closeEmailPopup()
+            // closeEmailPopup()
+            this.setState({ showConfirmation: true });
           } catch (e) {
             console.error(e)
           }
@@ -167,14 +117,14 @@ class BeneficialOwnersPopupPopup extends Component {
         {formikProps => {
           const { values, setFieldValue, isSubmitting, handleSubmit } = formikProps
           return (
-            <StyledModal onClose={() => closeEmailPopup()} open centered={true} size='small'>
+            <StyledModal className="invite-beneficial-owners-modal" onClose={() => closeEmailPopup()} open centered={true} size='small'>
               <Dimmer inverted active={emailPopup.isUpdating || isSubmitting}>
                 <Loader />
               </Dimmer>
-              <Modal.Header>
+              <SemanticModal.Header>
                 <FormattedMessage id='velloci.emailPopup.header' defaultMessage='Invite Beneficial Owners' />
-              </Modal.Header>
-              <Modal.Content scrolling>
+              </SemanticModal.Header>
+              <SemanticModal.Content scrolling>
                 <Grid>
                   <GridRow className='header'>
                     <GridColumn width={7}>{formatMessage({ id: 'global.name', defaultMessage: 'Name' })}</GridColumn>
@@ -236,24 +186,20 @@ class BeneficialOwnersPopupPopup extends Component {
                     <GridColumn width={2}></GridColumn>
                   </GridRow>
                 </Grid>
-              </Modal.Content>
-              <Modal.Actions>
+              </SemanticModal.Content>
+              <SemanticModal.Actions className="actions-buttons">
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='beneficial_owner_emails_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </Button.Reset>
                   <Button.Submit
                     data-test='beneficial_owner_emails_submit_btn'
                     onClick={handleSubmit}
                     disabled={emailPopup.isUpdating || isSubmitting}>
-                    <FormattedMessage id='global.save' defaultMessage='Save'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.save' defaultMessage='Save' />
                   </Button.Submit>
                 </div>
-              </Modal.Actions>
+              </SemanticModal.Actions>
               <ErrorFocus />
             </StyledModal>
           )
@@ -268,4 +214,10 @@ const mapStateToProps = store => ({
   companyId: getSafe(() => store.auth.identity.company.id, 0)
 })
 
-export default injectIntl(connect(mapStateToProps, { ...Actions })(BeneficialOwnersPopupPopup))
+const mapDispatchToProps = {
+  ...Actions,
+  getIdentity,
+  updateCompany
+}
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(BeneficialOwnersPopupPopup))

@@ -1,8 +1,13 @@
-import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow, Button } from 'semantic-ui-react'
-import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Checkbox, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+import { Required } from '~/components/constants/layout'
+import { AddressForm } from '~/modules/address-form'
+import { PhoneNumber } from '~/modules/phoneNumber'
+import { DateInput } from '~/components/custom-formik'
+import { HeadingContainer } from '../styles'
+import { Info } from 'react-feather'
 //Components
 import {
   Rectangle,
@@ -10,18 +15,11 @@ import {
   CustomDivInTitle,
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
-import { Required } from '~/components/constants/layout'
+
+import { StyledTextContainer } from '../styles'
 
 const GridControlPerson = styled(Grid)`
   margin: 14px 16px !important;
-`
-
-const GridControlPersonBusinessType = styled(Grid)`
-  margin: 0px !important;
-`
-
-const GridRowBusinessType = styled(Grid.Row)`
-  padding-bottom: 0px !important;
 `
 
 const CheckboxControlPerson = styled(Checkbox)`
@@ -30,255 +28,338 @@ const CheckboxControlPerson = styled(Checkbox)`
   }
 `
 
-const ButtonOrCustom = styled(Button.Group)`
-  .ui.button {
-    background-color: #ffffff !important;
-    color: #20273a !important;
-    font-weight: bold !important;
-  }
-  .ui.active.button {
-    background-color: #20273a !important;
-    color: #ffffff !important;
-  }
-`
-
-const DivBusinessTypeTitle = styled.div`
-  font-weight: bold;
-`
-
-const DivRectangleBusinessType = styled.div`
-  border-radius: 4px;
-  border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  padding-bottom: 16px;
-  overflow: inherit !important;
-`
-
-const SpanEstablishedLabel = styled.span`
-  color: #848893;
-`
-
 const DivRectangle = styled(Rectangle)`
   margin: 0px;
   background-color: #f8f9fb;
   border: solid 1px #dee2e6;
 `
 
-function ControlPerson({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
+const DivCheckboxes = styled.div`
+  display: flex;
+  padding: 10px 0px;
+  .field {
+    padding-right: 20px !important;
+  }
+`
+
+function ControlPerson({ formikProps, intl: { formatMessage } }) {
   return (
-    <GridControlPerson>
-      <GridRow>
-        <GridColumn>
-          <DivRectangle>
-            <CustomDivTitle>
-              <CustomDivInTitle>
-                <FormattedMessage
-                  id='velloci.controlPerson.infoTitle'
-                  defaultMessage='Please confirm that you will be the control person'
-                />
-              </CustomDivInTitle>
-            </CustomDivTitle>
-            <CustomDivContent style={{ color: '#848893', padding: '10px' }}>
+    <>
+      <GridControlPerson>
+        <GridRow>
+          <GridColumn>
+            <StyledTextContainer style={{ paddingBlockEnd: '.5rem' }}>
+              <FormattedMessage id='onboarding.control.person.confirm' />
+            </StyledTextContainer>
+            <Rectangle style={{ margin: '0px' }}>
+              <CustomDivContent style={{ display: 'flex', color: '#848893', padding: '0px' }}>
+                <div>
+                  <Info size={20} style={{ color: '#2599d5' }} />
+                </div>
+                <CustomDivInTitle>
+                  <FormattedMessage id='velloci.controlPerson.infoContent' />
+                </CustomDivInTitle>
+              </CustomDivContent>
+            </Rectangle>
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn>
+            <CheckboxControlPerson
+              inputProps={{
+                'data-test': 'settings_velloci_registration_control_person_chckb'
+              }}
+              label={formatMessage({
+                id: 'velloci.controlPerson.checkboxLabel',
+                defaultMessage: 'I will be the Control Person of this bank account'
+              })}
+              name='controlPerson.isControlPerson'
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn>
+            <label>
               <FormattedMessage
-                id='velloci.controlPerson.infoContent'
-                defaultMessage='A control person is a single individual with significant responsibility to control, manage or direct legal entity customer, including an executive Officer or senior manager (e.g. a Chief Executive Officer, Chief Financial Officer, Chief Operating Officer, Managing Member, General Partner, President, Vice President or Treasurer); or any other individual who regularly performs similar functions.'
+                id='onboarding.beneficial.owner.twenty.five'
+                defaultMessage='Do you own 25% or more of the company (Beneficial Owner)?'
               />
-              <br />
-              <br />
-              <FormattedMessage
-                id='velloci.controlPerson.infoContent2'
-                defaultMessage='If this does not apply to you, you will not be able to continue. Please get the person who will be the Control Person  of this account to continue.'
+            </label>
+            <DivCheckboxes>
+              <Checkbox
+                label={formatMessage({
+                  id: 'global.yes',
+                  defaultMessage: 'Yes'
+                })}
+                inputProps={{
+                  onChange: () => {
+                    formikProps.setFieldValue('controlPerson.isBeneficialOwner', true)
+                    formikProps.setFieldValue('controlPerson.isNotBeneficialOwner', false)
+                  },
+                  'data-test': 'settings_velloci_registration_control_person_isBeneficialOwner_chckbx'
+                }}
+                name='controlPerson.isBeneficialOwner'
               />
-            </CustomDivContent>
-          </DivRectangle>
-        </GridColumn>
-      </GridRow>
-      <GridRow>
-        <GridColumn>
-          <CheckboxControlPerson
-            inputProps={{
-              'data-test': 'settings_velloci_registration_control_person_chckb'
-            }}
-            label={formatMessage({
-              id: 'velloci.controlPerson.checkboxLabel',
-              defaultMessage: 'I will be the Control Person of this bank account'
-            })}
-            name='controlPerson.isControlPerson'
-          />
-        </GridColumn>
-      </GridRow>
-
-      <DivBusinessTypeTitle>
-        <FormattedMessage id='velloci.controlPerson.businessType' defaultMessage='Business Type' />
-      </DivBusinessTypeTitle>
-
-      <GridRow>
-        <GridColumn>
-          <DivRectangleBusinessType>
-            <GridControlPersonBusinessType>
-              <GridRowBusinessType>
-                <Grid.Column>
-                  <Dropdown
-                    options={entityTypes && entityTypes.data && entityTypes.data.length ? entityTypes.data : []}
-                    fieldProps={{
-                      'data-test': 'settings_velloci_registration_control_person_drpdwn'
-                    }}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: 'velloci.controlPerson.kindBusiness.placeholder',
-                        defaultMessage: 'Pick one'
-                      }),
-                      search: true,
-                      selection: true,
-                      loading: entityTypes && entityTypes.loading
-                    }}
-                    name='controlPerson.entityType'
-                    label={
-                      <>
-                        {formatMessage({
-                          id: 'velloci.controlPerson.kindBusiness',
-                          defaultMessage: 'What kind of business are you opening this account for?'
-                        })}
-                        {<Required />}
-                      </>
-                    }
-                  />
-                </Grid.Column>
-              </GridRowBusinessType>
-              <GridRowBusinessType>
-                <Grid.Column width={8}>
-                  <Input
-                    name='controlPerson.legalBusinessName'
-                    label={
-                      <>
-                        {formatMessage({
-                          id: 'velloci.controlPerson.legalBusinessName',
-                          defaultMessage: 'Legal Business Name'
-                        })}
-                        {<Required />}
-                      </>
-                    }
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: 'velloci.controlPerson.legalBusinessName.placeholder',
-                        defaultMessage: 'Enter Business Name'
-                      }),
-                      type: 'text',
-                      'data-test': 'settings_velloci_registration_control_person_legal_business_name_inpt'
-                    }}
-                  />
-                </Grid.Column>
-              </GridRowBusinessType>
-              <GridRowBusinessType>
-                <Grid.Column width={8}>
-                  <FormattedMessage id='velloci.controlPerson.tax' defaultMessage='Tax Identification Number' />
+              <Checkbox
+                label={formatMessage({
+                  id: 'global.no',
+                  defaultMessage: 'No'
+                })}
+                inputProps={{
+                  onChange: () => {
+                    formikProps.setFieldValue('controlPerson.isBeneficialOwner', false)
+                    formikProps.setFieldValue('controlPerson.isNotBeneficialOwner', true)
+                  },
+                  'data-test': 'settings_velloci_registration_control_person_isNotBeneficialOwner_chckbx'
+                }}
+                name='controlPerson.isNotBeneficialOwner'
+              />
+            </DivCheckboxes>
+          </GridColumn>
+        </GridRow>
+      </GridControlPerson>
+      <GridControlPerson>
+        <GridRow className="m-no-padding">
+          <GridColumn>
+            <HeadingContainer>
+              <FormattedMessage id='onboarding.verify.personal.information' />
+            </HeadingContainer>
+          </GridColumn>
+        </GridRow>
+        <GridRow columns={2}>
+          <GridColumn className="m-padding" computer={8} tablet={8} mobile={16}>
+            <Input
+              name='controlPerson.firstName'
+              label={
+                <>
+                  {formatMessage({
+                    id: 'global.firstName',
+                    defaultMessage: 'First Name'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'velloci.personalInfo.firstName.placeholder',
+                  defaultMessage: 'Enter first name'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_first_name_inpt'
+              }}
+            />
+          </GridColumn>
+          <GridColumn className="m-t-padding" computer={8} tablet={8} mobile={16}>
+            <Input
+              name='controlPerson.middleName'
+              label={formatMessage({
+                id: 'global.middleName',
+                defaultMessage: 'Middle Name'
+              })}
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'velloci.personalInfo.middleName.placeholder',
+                  defaultMessage: 'Enter middle name'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_middle_name_inpt'
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn computer={8} laptop={8} mobile={16}>
+            <Input
+              name='controlPerson.lastName'
+              label={
+                <>
+                  {formatMessage({
+                    id: 'global.lastName',
+                    defaultMessage: 'Last Name'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'velloci.personalInfo.lastName.placeholder',
+                  defaultMessage: 'Enter last name'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_last_name_inpt'
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow columns={2}>
+          <GridColumn className="m-b-padding" computer={8} tablet={8} mobile={16}>
+            <Input
+              name='controlPerson.email'
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.businessInfo.emailAddress',
+                    defaultMessage: 'Email Address'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'global.enterEmailAddress',
+                  defaultMessage: 'Enter email address'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_personal_email_address_inpt'
+              }}
+            />
+          </GridColumn>
+          <GridColumn className="m-t-padding" computer={8} tablet={8} mobile={16}>
+            <PhoneNumber
+              name='controlPerson.phoneNumber'
+              values={formikProps.values}
+              label={
+                <>
+                  <FormattedMessage id='global.phoneNumber' />
                   <Required />
-                  <ButtonOrCustom widths={8}>
-                    <Button
-                      onClick={e => {
-                        formikProps.setFieldValue('controlPerson.isEin', true)
-                        formikProps.setFieldValue('controlPerson.isSsn', false)
-                      }}
-                      active={formikProps.values.controlPerson.isEin}
-                      data-test='settings_velloci_registration_control_person_ein_btn'>
-                      <FormattedMessage id='velloci.controlPerson.ein' defaultMessage='EIN' />
-                    </Button>
-                    <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                    <Button
-                      onClick={e => {
-                        formikProps.setFieldValue('controlPerson.isEin', false)
-                        formikProps.setFieldValue('controlPerson.isSsn', true)
-                      }}
-                      active={formikProps.values.controlPerson.isSsn}
-                      data-test='settings_velloci_registration_control_person_ssn_btn'>
-                      <FormattedMessage id='velloci.controlPerson.ssn' defaultMessage='SSN' />
-                    </Button>
-                  </ButtonOrCustom>
-                </Grid.Column>
-              </GridRowBusinessType>
-              <GridRowBusinessType columns={2}>
-                <Grid.Column width={8}>
-                  <Input
-                    name={formikProps.values.controlPerson.isEin ? 'controlPerson.ein' : 'controlPerson.ssn'}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: `velloci.controlPerson.${
-                          formikProps.values.controlPerson.isEin ? 'ein' : 'ssn'
-                        }.placeholder`,
-                        defaultMessage: `Enter ${formikProps.values.controlPerson.isEin ? 'EIN' : 'SSN'}`
-                      }),
-                      type: 'text',
-                      'data-test': `settings_velloci_registration_control_person_legal_${
-                        formikProps.values.controlPerson.isEin ? 'ein' : 'ssn'
-                      }_inpt`
-                    }}
+                </>
+              }
+              setFieldValue={formikProps.setFieldValue}
+              setFieldTouched={formikProps.setFieldTouched}
+              errors={formikProps.errors}
+              touched={formikProps.touched}
+              isSubmitting={formikProps.isSubmitting}
+              setErrors={formikProps.setErrors}
+              placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn>
+            <DateInput
+              inputProps={{ fluid: true }}
+              label={
+                <>
+                  {formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+                  {<Required />}
+                </>
+              }
+              name='controlPerson.dateOfBirth'
+              inputOnly
+              addSeparator
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn>
+          <AddressForm
+            prefix='controlPerson'
+            values={formikProps.values}
+            displayHeader={false}
+            required={true}
+            searchEnabled={true}
+            setFieldValue={formikProps.setFieldValue}>
+              <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
+                <CustomDivTitle>
+                  <Info size={20} style={{ color: '#2599d5' }} />
+                  <CustomDivInTitle style={{ color: '#2599d5' }}>
+                    <FormattedMessage
+                      id='velloci.personalInfo.infoTitle'
+                      defaultMessage='Which address should I use?'
+                    />
+                  </CustomDivInTitle>
+                </CustomDivTitle>
+                <CustomDivContent style={{ color: '#848893', padding: '4px 30px' }}>
+                  <FormattedMessage
+                    id='velloci.personalInfo.infoContent'
+                    defaultMessage='This is typically the address you have listed on your government issued license or identification card.'
                   />
-                </Grid.Column>
-                <Grid.Column width={5} textAlign='center'>
-                  <SpanEstablishedLabel>
+                </CustomDivContent>
+              </Rectangle>
+            </AddressForm>
+          </GridColumn>
+        </GridRow>
+        {formikProps?.values?.controlPerson?.isBeneficialOwner &&
+          <GridRow>
+            <GridColumn>
+              <Input
+                name='controlPerson.businessOwnershipPercentage'
+                label={
+                  <>
                     {formatMessage({
-                      id: 'velloci.controlPerson.establishedUs',
-                      defaultMessage: 'Established in the US?'
+                      id: 'velloci.personalInfo.businessOwnershipPercentage',
+                      defaultMessage: 'Business Ownership Percentage'
                     })}
-                  </SpanEstablishedLabel>
-                  <Checkbox
-                    inputProps={{
-                      toggle: true,
-                      'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
-                    }}
-                    name='controlPerson.isEstablishedUs'
-                  />
-                </Grid.Column>
-              </GridRowBusinessType>
-
-              <GridRowBusinessType columns={2}>
-                <Grid.Column width={8}>
-                  <Dropdown
-                    options={naicsCodes.data}
-                    fieldProps={{
-                      'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
-                    }}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: 'velloci.controlPerson.industryType.placeholder',
-                        defaultMessage: 'Select industry type'
-                      }),
-                      search: true,
-                      selection: true,
-                      loading: naicsCodes?.loading,
-                      disabled: naicsCodes?.loading
-                    }}
-                    name='controlPerson.naicsCode'
-                    label={
-                      <>
-                        {formatMessage({
-                          id: 'velloci.controlPerson.industryType',
-                          defaultMessage: 'Your Industry Type'
-                        })}
-                        {<Required />}
-                      </>
-                    }
-                  />
-                </Grid.Column>
-              </GridRowBusinessType>
-            </GridControlPersonBusinessType>
-          </DivRectangleBusinessType>
-        </GridColumn>
-      </GridRow>
-    </GridControlPerson>
+                    {<Required />}
+                  </>
+                }
+                inputProps={{
+                  label: '%',
+                  labelPosition: 'right',
+                  placeholder: formatMessage({
+                    id: 'velloci.personalInfo.businessOwnershipPercentage.placeholder',
+                    defaultMessage: 'xx'
+                  }),
+                  type: 'text',
+                  pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
+                  maxLength: '3',
+                  'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
+                }}
+              />
+            </GridColumn>
+          </GridRow>
+        }
+        <GridRow>
+          <GridColumn>
+            <Input
+              name='controlPerson.businessTitle'
+              label={
+                <>
+                  {formatMessage({
+                    id: 'onboarding.business.role',
+                    defaultMessage: 'Business Role (Title)'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'onboarding.enter.business.role',
+                  defaultMessage: 'Enter business role'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_business_role_inpt'
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+        <GridRow>
+          <GridColumn>
+            <Input
+              name='controlPerson.socialSecurityNumber'
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.socialSecurityNumber',
+                    defaultMessage: 'Social Security Number'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'onboarding.ssn.placeholder',
+                  defaultMessage: 'xxx-xx-xxxx'
+                }),
+                type: 'text',
+                'data-test': 'settings_velloci_registration_control_person_social_security_number_inpt'
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+      </GridControlPerson>
+    </>
   )
-}
-
-ControlPerson.propTypes = {
-  formikProps: PropTypes.object,
-  entityTypes: PropTypes.object,
-  naicsCodes: PropTypes.object
-}
-
-ControlPerson.defaultProps = {
-  formikProps: {},
-  entityTypes: {},
-  naicsCodes: { data: [] }
 }
 
 export default injectIntl(ControlPerson)
