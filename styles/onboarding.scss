@@ -1,0 +1,182 @@
+.ui.button.basic.btn-primary-color,
+.ui.button.btn-primary-color {
+    background-color: $colorPrimary;
+    color: #fff !important;
+}
+
+.coi {
+    .full-width {
+        display: block;
+        width: 100%;
+    }
+
+    #coi-upload[disabled] {
+        opacity: .15 !important;
+    }
+}
+
+.ownership-certifications {
+    .btn-browse-files {
+        width: 100%;
+    }
+
+    .ui.button.btn-save[disabled] {
+        opacity: .15 !important;
+    }
+}
+
+.setup-indicator-mobile {
+    .module-grouping {
+        padding: 0;
+    }
+
+    .MuiStepper-root {
+        padding: 1rem 0 !important;
+        border: solid 1px #dee2e6;
+        border-bottom: none;
+    }
+    
+    .MuiStepIcon-root.MuiStepIcon-active, .MuiStepIcon-root.MuiStepIcon-completed {
+        color: $colorPrimary;
+    }
+    
+    .MuiStepLabel-label.MuiStepLabel-alternativeLabel {
+        font-size: .7rem;
+    }
+}
+
+.verify-personal-information {
+    .btn-add-owner,
+    .btn-remove-owner {
+        background: #fff;
+        border: 1px solid $colorPrimary;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .ui.modal > .actions.actions-buttons {
+        padding: 1rem !important;
+    }
+}
+
+@media screen and (max-width: 52.75em) {
+    .coi {
+        &-info {
+            margin: 1.5rem 0 0 0;
+        }
+
+        // .s-full-width {
+        //     display: block;
+        //     width: 100%;
+        // }
+    }
+}
+
+@media only screen and (max-width: 26.25em) {
+    .ui.button.basic.btn-primary-color,
+    .ui.button.btn-primary-color {
+        width: 100% !important;
+    }
+
+    .m-padding {
+        padding: 1rem;
+    }
+
+    .m-b-padding {
+        padding: 0 0 1rem 0;
+    }
+
+    .m-t-padding {
+        padding: 1rem 0 0 0;
+    }
+
+    .m-no-padding {
+        padding: 0 !important;
+    }
+
+    .onboarding-module-title {
+        padding: 1rem !important;
+    }
+
+    .oboarding-nav-buttons {
+        display: flex;
+        margin: 0 0 2rem 0 !important;
+        justify-content: space-evenly;
+
+        .btn-next {
+            order: 2;
+        }
+
+        .btn-email {
+            order: 0;
+        }
+
+        button {
+            margin: 0 !important;
+        }
+    }
+
+    .btn-email-active {
+        flex-wrap: wrap;
+
+        .btn-back {
+            order: 0;
+        }
+
+        .btn-next {
+            margin: 0 0 1rem 0 !important;
+            order: 0;
+            width: 80%;
+        }
+    }
+    
+    .invite-beneficial-owners-modal {
+        .scrolling.content .ui.grid {
+            margin: 0 !important;
+        }
+
+        .ui.button.delete {
+            margin: 0;
+        }
+    }
+
+    .marketing-material {
+        .btn-save {
+            width: 100%;
+        }
+    }
+
+    .onboarding-container {
+        padding-top: 0;
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ui.stackable.grid > .row > .column.time-indicator {
+            padding: 0 !important;
+        }
+    }
+
+    .risk-tolerance {
+        .btn-save {
+            margin: 0 0 1rem 0 !important;
+        }
+    }
+
+    .verify-personal-information {
+        .toggle-owner-buttons {
+            justify-content: space-between;
+
+            button {
+                font-size: .95rem !important;
+            }
+
+            button > i {
+                display: none;
+            }
+        }
+
+    }
+}

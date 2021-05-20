@@ -2,6 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
   activeStep: 0,
+  finalStep: 8,
   loading: false,
   numberBeneficialOwners: 0,
   entityTypes: {
@@ -33,6 +34,7 @@ export const initialState = {
     loading: false
   },
   emailPopup: {
+    beneficialOwnersNotified: false,
     isOpen: false,
     isUpdating: false
   },
@@ -44,7 +46,8 @@ export const initialState = {
     data: null,
     loading: false
   },
-  isLoadingSubmitButton: false
+  isLoadingSubmitButton: false,
+  applicationSubmitted: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -322,12 +325,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_PENDING: {
-      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: true } }
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: true, beneficialOwnersNotified: false } }
     }
 
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_REJECTED:
     case AT.VELLOCI_INVITE_BENEFICIAL_OWNERS_FULFILLED: {
-      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: false } }
+      return { ...state, emailPopup: { ...state.emailPopup, isUpdating: false, beneficialOwnersNotified: true } }
     }
 
     case AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS_PENDING: {
@@ -348,6 +351,9 @@ export default function reducer(state = initialState, action) {
     }
     case AT.VELLOCI_CHECK_MAGIC_TOKEN_FULFILLED: {
       return { ...state, magicToken: { ...state.magicToken, loading: false, data: payload } }
+    }
+    case AT.VELLOCI_APPLICATION_SUBMITTED: {
+      return { ...state, applicationSubmitted: true }
     }
 
     default:
