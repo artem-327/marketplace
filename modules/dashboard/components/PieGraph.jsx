@@ -1,122 +1,27 @@
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
-import { Button } from 'semantic-ui-react'
 //components
 import { currency } from '../../../constants/index'
 import { getSafe } from '../../../utils/functions'
-//style
-import styled from 'styled-components'
+//styles
+import {
+  RectanglePieGraph,
+  DivPieGraphHeader,
+  DivPieGraphTitle,
+  DivPieGraphCircle,
+  DivPieGraphLegend,
+  DivRowLegend,
+  DivTextLegend,
+  DivNumberLegend,
+  DivValueLegend,
+  DivOval,
+  DivOvalLegend,
+  DivAfterNumberLegend,
+  DivTitle
+} from '../styles'
 
 const COLORS = ['#2599d5', '#ffc65d', '#4cc3da', '#96d3b7', '#f16844']
-
-const RectanglePieGraph = styled.div`
-  width: 100%;
-  height: 500px;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-`
-
-const DivPieGraphHeader = styled.div`
-  width: 100%;
-  height: 50px;
-  border-bottom: solid 1px #dee2e6;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 23px;
-`
-
-const DivPieGraphTitle = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  color: #20273a;
-`
-
-const ButtonViewAll = styled(Button)`
-  width: 80px;
-  height: 32px;
-  border-radius: 3px !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
-  border: solid 1px #dee2e6 !important;
-  background-color: #ffffff !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  line-height: 1.54 !important;
-  text-align: center !important;
-  color: #848893 !important;
-  padding: 0 !important;
-`
-
-const DivPieGraphCircle = styled.div`
-  height: 55%;
-  width: 100%;
-`
-
-const DivPieGraphLegend = styled.div`
-  width: 100%;
-  font-size: 14px;
-  line-height: 2.14;
-  color: #848893;
-  padding: 0 25px;
-`
-
-const DivRowLegend = styled.div`
-  display: flex;
-`
-
-const DivTextLegend = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
-
-const DivNumberLegend = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 2.14;
-  color: #242424;
-`
-
-const DivValueLegend = styled.div`
-  display: flex;
-`
-
-const DivOval = styled.div`
-  margin-right: 9px;
-  width: 14px;
-  height: 14px;
-  border-radius: 7px;
-  background-color: #2599d5;
-  color: #fff;
-`
-
-const DivOvalLegend = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const DivAfterNumberLegend = styled.div`
-  margin-left: 5px;
-  font-size: 14px;
-  line-height: 2.14;
-  color: #848893;
-`
-
-const DivTitle = styled.div`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #20273a;
-  &:hover {
-    overflow: visible;
-  }
-`
 
 const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }) => {
 

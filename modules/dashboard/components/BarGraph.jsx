@@ -1,26 +1,8 @@
 import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area, ResponsiveContainer } from 'recharts'
 import { FormattedMessage } from 'react-intl'
-//styled
-import styled from 'styled-components'
-
-const DivGraph = styled.div`
-  margin: 10px;
-`
-
-const GraphTitle = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-`
-const GraphSubTitle = styled.div`
-  font-size: 12px;
-  font-style: italic;
-  text-align: center;
-  color: #848893;
-  margin-bottom: 10px;
-`
+//Styles
+import { DivGraph, GraphTitle, GraphSubTitle } from '../styles'
 
 const CustomTooltip = ({ payload, label, active, unitsCurrency }) => {
   if (active) {

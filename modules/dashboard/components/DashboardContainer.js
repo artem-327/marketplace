@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import Dashboard from './Dashboard'
-import { getSafe } from '../../../utils/functions'
 import { getDashboardData, getDailyStatistics } from '../actions'
 import {
   makeGetIsAdmin,
