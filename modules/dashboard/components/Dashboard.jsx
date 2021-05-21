@@ -3,22 +3,21 @@ import { number, array, bool } from 'prop-types'
 import { injectIntl } from 'react-intl'
 import { Menu, Grid, Popup, Input, Button, Image } from 'semantic-ui-react'
 import { Package, DollarSign, User, Layers, Coffee, Activity, BarChart2 } from 'react-feather'
-//components
+// Components
 import PieGraph from './PieGraph'
 import LineGraph from './LineGraph'
 import BarGraph from './BarGraph'
 import SummaryRectangle from './SummaryRectangle'
+import Tutorial from '../../tutorial/Tutorial'
 import PartnersIcon from '../../../assets/images/dashboard/partners.svg'
 import UsersIcon from '../../../assets/images/dashboard/users.svg'
 import ProductOrdersIcon from '../../../assets/images/dashboard/product_orders.svg'
 import InventoryIcon from '../../../assets/images/dashboard/inventory.svg'
 import SalesIcon from '../../../assets/images/dashboard/sales.svg'
 import ProductsIcon from '../../../assets/images/dashboard/products.svg'
-//styles
+// Styles
 import moment from 'moment'
 import 'react-calendar/dist/Calendar.css'
-import { currency } from '../../../constants'
-import Tutorial from '../../tutorial/Tutorial'
 import {
   CustomGrid,
   UpperCaseText,
@@ -33,8 +32,13 @@ import {
   RightChartControl,
   GraphTypeSwitch
 } from '../styles'
+// Constants
+import { currency } from '../../../constants'
 
-
+/**
+ * @category Dashboard - Dashboard
+ * @component
+ */
 const Dashboard = props => {
   const [state, setState] = useState({
     activeTab: 0,
@@ -219,7 +223,6 @@ const Dashboard = props => {
       false
     ],
     companiesCount: [formatMessage({ id: 'dashboard.companiesCount', defaultMessage: '# of Companies' }), false],
-    //productOfferCount: [formatMessage({id: 'dashboard.productOffersCount', defaultMessage: '# of Product Offers'}), false],
     usersCount: [formatMessage({ id: 'dashboard.usersCount', defaultMessage: '# of Users' }), false],
     sales: [formatMessage({ id: 'dashboard.sales', defaultMessage: 'Sales' }), false],
     totalProductOfferValue: [

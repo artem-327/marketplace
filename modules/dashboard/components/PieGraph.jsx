@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
-//components
+// Components
 import { currency } from '../../../constants/index'
 import { getSafe } from '../../../utils/functions'
-//styles
+// Styles
 import {
   RectanglePieGraph,
   DivPieGraphHeader,
@@ -20,9 +20,14 @@ import {
   DivAfterNumberLegend,
   DivTitle
 } from '../styles'
+// Constants
+import { COLORS } from '../constants'
 
-const COLORS = ['#2599d5', '#ffc65d', '#4cc3da', '#96d3b7', '#f16844']
 
+/**
+ * @category Dashboard - PieGraph
+ * @component
+ */
 const PieGraph = ({ innerRadius, isCurrency, valueLegend, data, title, titleId }) => {
 
   const slicedData = data.slice(0, 5)

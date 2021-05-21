@@ -1,6 +1,9 @@
 import { connect } from 'react-redux'
+// Component
 import Dashboard from './Dashboard'
+// Actions
 import { getDashboardData, getDailyStatistics } from '../actions'
+// Selectors
 import {
   makeGetIsAdmin,
   makeGetTakeover,

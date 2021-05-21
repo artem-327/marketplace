@@ -3,9 +3,13 @@ import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 import { DatesRangeInput } from 'semantic-ui-calendar-react'
 import { ChevronLeft, ChevronRight } from 'react-feather'
-//styles
+// Styles
 import { DivFlex, ButtonLeftArrows, ButtonRightArrows } from '../styles'
 
+/**
+ * @category Dashboard - DashboardHandler
+ * @component
+ */
 const DashboardHandler = () => {
   const [datesRange, setDatesRange] = useState('')
 

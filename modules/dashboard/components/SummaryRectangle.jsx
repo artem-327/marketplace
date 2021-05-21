@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Router from 'next/router'
-//services
+// Services
 import { getSafe } from '../../../utils/functions'
-//styles
+// Styles
 import {
   RectangleSummary,
   RectangleSummaryHeader,
@@ -18,6 +18,10 @@ import {
 } from '../styles'
 
 
+/**
+ * @category Dashboard - SummaryRectangle
+ * @component
+ */
 const SummaryRectangle = ({
   icon,
   data,
