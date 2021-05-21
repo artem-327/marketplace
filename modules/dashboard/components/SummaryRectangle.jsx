@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react'
 //styled
 import styled from 'styled-components'
 //components
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../utils/functions'
 import Router from 'next/router'
 
 const RectangleSummary = styled.div`

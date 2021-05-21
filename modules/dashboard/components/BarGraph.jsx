@@ -22,7 +22,7 @@ const GraphSubTitle = styled.div`
   margin-bottom: 10px;
 `
 
-function CustomTooltip({ payload, label, active, unitsCurrency }) {
+const CustomTooltip = ({ payload, label, active, unitsCurrency }) => {
   if (active) {
     return (
       <div

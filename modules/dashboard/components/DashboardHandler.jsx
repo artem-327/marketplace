@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Grid } from 'semantic-ui-react'
 import { DatesRangeInput } from 'semantic-ui-calendar-react'
@@ -32,41 +32,35 @@ const ButtonRightArrows = styled(Button)`
   padding: 0 !important;
 `
 
-class DashboardHandler extends Component {
-  state = {
-    datesRange: ''
+const DashboardHandler = () => {
+  const [datesRange, setDatesRange] = useState('')
+
+  const handleChange = (event, { value }) => {
+    setDatesRange(value)
   }
 
-  handleChange = (event, { name, value }) => {
-    if (this.state.hasOwnProperty(name)) {
-      this.setState({ [name]: value })
-    }
-  }
-
-  render() {
-    return (
-      <Grid.Row>
-        <Grid.Column width={8}>
-          <DivFlex>
-            <DatesRangeInput
-              name='datesRange'
-              placeholder='From - To'
-              value={this.state.datesRange}
-              iconPosition='left'
-              onChange={this.handleChange}
-              popupPosition='bottom left'
-            />
-            <ButtonLeftArrows type='button'>
-              <ChevronLeft />
-            </ButtonLeftArrows>
-            <ButtonRightArrows type='button'>
-              <ChevronRight />
-            </ButtonRightArrows>
-          </DivFlex>
-        </Grid.Column>
-      </Grid.Row>
-    )
-  }
+  return (
+    <Grid.Row>
+      <Grid.Column width={8}>
+        <DivFlex>
+          <DatesRangeInput
+            name='datesRange'
+            placeholder='From - To'
+            value={datesRange}
+            iconPosition='left'
+            onChange={handleChange}
+            popupPosition='bottom left'
+          />
+          <ButtonLeftArrows type='button'>
+            <ChevronLeft />
+          </ButtonLeftArrows>
+          <ButtonRightArrows type='button'>
+            <ChevronRight />
+          </ButtonRightArrows>
+        </DivFlex>
+      </Grid.Column>
+    </Grid.Row>
+  )
 }
 
 DashboardHandler.propTypes = {}

@@ -3,8 +3,8 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts'
 import { Button } from 'semantic-ui-react'
 //components
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import { currency } from '../../../constants/index'
+import { getSafe } from '../../../utils/functions'
 //style
 import styled from 'styled-components'
 
