@@ -1,4 +1,3 @@
-import * as AT from './action-types'
 import api from './api'
 import { Datagrid } from '../datagrid'
 import { getSafe } from '../../utils/functions'
@@ -48,11 +47,7 @@ export const deleteProductName = createAsyncAction('PRODUCTS_DELETE_PRODUCT_NAME
   await getAlternativeProductNames(productId)
   return response
 })
-export function openEditEchoProduct(id, editTab, force = false) {
-  return async dispatch => {
-    dispatch(editEchoProductChangeTab(editTab, force, { id }))
-  }
-}
+export const openEditEchoProduct = createAction('PRODUCTS_OPEN_EDIT_ECHO_COMPANY', (id, editTab, force = false) => {editEchoProductChangeTab(editTab, force, { id })})
 export const editEchoProductChangeTab = createAction('PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB', (editTab, force = false, data = null) => {
   return { editTab, force, data }
 })

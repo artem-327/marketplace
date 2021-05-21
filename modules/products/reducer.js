@@ -1,6 +1,52 @@
-import * as AT from './action-types'
+import typeToReducer from 'type-to-reducer'
 import { defaultTabs } from './constants'
 import { uniqueArrayByKey } from '../../utils/functions'
+import {
+  openPopup,
+  closeAddPopup,
+  closePopup,
+  openEditAltNamesCasPopup,
+  closeConfirmPopup,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest,
+  deleteCasProduct,
+  postNewCasProductRequest,
+  updateCasProductRequest,
+  closeEditPopup,
+  getAlternativeProductNames,
+  postNewProductName,
+  updateProductName,
+  deleteProductName,
+  openEditEchoProduct,
+  editEchoProductChangeTab,
+  openEditEchoAltNamesPopup,
+  deleteCompanyGenericProduct,
+  searchCasProduct,
+  putCompanyGenericProducts,
+  postCompanyGenericProducts,
+  searchManufacturers,
+  loadFile,
+  addAttachment,
+  linkAttachment,
+  removeAttachmentLink,
+  removeAttachment,
+  getCompanyGenericProduct,
+  loadEditEchoProduct,
+  getUnNumbersByString,
+  searchTags,
+  getDocumentTypes,
+  searchMarketSegments,
+  getAlternativeCompanyGenericProductsNames,
+  postNewCompanyGenericProductsAltName,
+  updateCompanyGenericProductsAltName,
+  deleteCompanyGenericProductsAltName,
+  postProductGroups,
+  putProductGroups,
+  deleteProductGroups,
+  searchProductGroups,
+  searchCompany,
+  handleVariableSave
+} from './actions'
 
 export const initialState = {
   editTrig: false,
@@ -45,16 +91,14 @@ export const initialState = {
   tableHandlersFilters: null
 }
 
-export default function reducers(state = initialState, action) {
-  const { payload } = action
-
-  switch (action.type) {
-    case AT.PRODUCTS_OPEN_POPUP: {
+export default typeToReducer(
+  {    
+    [openPopup]: (state, { payload }) => {
       return {
         ...state,
         editTrig: !state.editTrig,
         popupValues: payload.data,
-
+    
         ...(payload.data
           ? {
               currentAddForm: null,
@@ -65,150 +109,216 @@ export default function reducers(state = initialState, action) {
               currentEditForm: null
             }),
         currentEdit2Form: null
+
       }
-    }
-    case AT.PRODUCTS_OPEN_EDIT_2_POPUP: {
+    },
+    [closeAddPopup]: state => {
+      return {
+        ...state,
+        currentAddForm: null,
+        currentEditForm: null,
+        currentEdit2Form: null
+      }
+    },
+    [closePopup]: state => {
+      return {
+        ...state,
+        currentAddForm: null,
+        currentEditForm: null,
+        currentEdit2Form: null
+      }
+    },
+    [openEditAltNamesCasPopup]: (state, { payload }) => {
       return {
         ...state,
         currentEdit2Form: true,
         currentAddForm: null,
         currentEditForm: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: action.payload
+        popupValues: payload
       }
-    }
-    case AT.PRODUCTS_CLOSE_CONFIRM_POPUP: {
+    },
+    [closeConfirmPopup]: state => {
       return {
         ...state,
         deleteRowById: null,
         confirmMessage: null
       }
-    }
-    case AT.PRODUCTS_GET_HAZARD_CLASSES_FULFILLED: {
+    },
+    [getHazardClassesDataRequest.pending]: state => {
+      return {
+        ...state
+      }
+    },
+    [getHazardClassesDataRequest.rejected]: state => {
+      return {
+        ...state
+      }
+    },
+    [getHazardClassesDataRequest.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        hazardClasses: action.payload.data
+        hazardClasses: payload.data
       }
-    }
-    case AT.PRODUCTS_GET_PACKAGING_GROUPS_FULFILLED: {
+    },
+    [getPackagingGroupsDataRequest.pending]: state => {
+      return {
+        ...state
+      }
+    },
+    [getPackagingGroupsDataRequest.rejected]: state => {
+      return {
+        ...state
+      }
+    },
+    [getPackagingGroupsDataRequest.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        packagingGroups: action.payload.data
+        packagingGroups: payload.data
       }
-    }
-
-    case AT.PRODUCTS_CAS_DELETE_PRODUCT_PENDING: {
+    },
+    [deleteCasProduct.pending]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.PRODUCTS_CAS_DELETE_PRODUCT_FULFILLED: {
+    },
+    [deleteCasProduct.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteCasProduct.fulfilled]: (state, {payload}) => {
       return {
         ...state,
         casProductsRows: state.casProductsRows.filter(row => row.id !== payload),
         loading: false
       }
-    }
-
-    case AT.PRODUCTS_CAS_DELETE_PRODUCT_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    case AT.PRODUCTS_CLOSE_ADD_POPUP: {
-      return {
-        ...state,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null
-      }
-    }
-
-    case AT.PRODUCTS_CLOSE_POPUP: {
-      return {
-        ...state,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null
-      }
-    }
-    case AT.PRODUCTS_CLOSE_EDIT_POPUP: {
-      return {
-        ...state,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null
-      }
-    }
-    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_PENDING:
-    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_PENDING: {
+    },
+    [postNewCasProductRequest.pending]: state => {
       return {
         ...state,
         updating: true
       }
-    }
-    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_REJECTED:
-    case AT.PRODUCTS_POST_NEW_CAS_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_REJECTED:
-    case AT.PRODUCTS_UPDATE_CAS_PRODUCT_FULFILLED: {
+    },
+    [postNewCasProductRequest.rejected]: state => {
       return {
         ...state,
         updating: false
       }
-    }
-    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_PENDING:
-    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_PENDING:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_PENDING:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_PENDING:
-    case AT.PRODUCTS_LINK_ATTACHMENT_PENDING:
-    case AT.PRODUCTS_ADD_ATTACHMENT_PENDING:
-    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_PENDING:
-    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_PENDING:
-    case AT.PRODUCTS_DELETE_PRODUCT_NAME_PENDING:
-    case AT.PRODUCTS_UPDATE_PRODUCT_NAME_PENDING:
-    case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_PENDING:
-    case AT.PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_PENDING: {
+    },
+    [postNewCasProductRequest.fulfilled]: state => {
+      return {
+        ...state,
+        updating: false
+      }
+    },
+    [updateCasProductRequest.pending]: state => {
+      return {
+        ...state,
+        updating: true
+      }
+    },
+    [updateCasProductRequest.rejected]: state => {
+      return {
+        ...state,
+        updating: false
+      }
+    },
+    [updateCasProductRequest.fulfilled]: state => {
+      return {
+        ...state,
+        updating: false
+      }
+    },
+    [closeEditPopup]: state => {
+      return {
+        ...state,
+        currentAddForm: null,
+        currentEditForm: null,
+        currentEdit2Form: null
+      }
+    },
+    [getAlternativeProductNames.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-    case AT.PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_FULFILLED: {
-      return {
-        ...state,
-        altCasNamesRows: action.payload,
-        loading: false
-      }
-    }
-    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_REJECTED:
-    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_GET_COMPANY_GENERIC_PRODUCT_REJECTED:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_FULFILLED:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_REJECTED:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_FULFILLED:
-    case AT.PRODUCTS_REMOVE_ATTACHMENT_LINK_REJECTED:
-    case AT.PRODUCTS_LINK_ATTACHMENT_FULFILLED:
-    case AT.PRODUCTS_LINK_ATTACHMENT_REJECTED:
-    case AT.PRODUCTS_ADD_ATTACHMENT_FULFILLED:
-    case AT.PRODUCTS_ADD_ATTACHMENT_REJECTED:
-    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_POST_COMPANY_GENERIC_PRODUCT_REJECTED:
-    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_FULFILLED:
-    case AT.PRODUCTS_PUT_COMPANY_GENERIC_PRODUCT_REJECTED:
-    case AT.PRODUCTS_DELETE_PRODUCT_NAME_REJECTED:
-    case AT.PRODUCTS_UPDATE_PRODUCT_NAME_REJECTED:
-    case AT.PRODUCTS_POST_NEW_PRODUCT_NAME_REJECTED:
-    case AT.PRODUCTS_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED: {
+    },
+    [getAlternativeProductNames.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-    case AT.PRODUCTS_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB: {
+    },
+    [getAlternativeProductNames.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        altCasNamesRows: payload,
+        loading: false
+      }
+    },
+    [postNewProductName.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [postNewProductName.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [postNewProductName.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [updateProductName.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [updateProductName.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [updateProductName.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteProductName.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [deleteProductName.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteProductName.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [openEditEchoProduct]: state => {
+      return {
+        ...state
+      }
+    },
+    [editEchoProductChangeTab]: (state, {payload}) => {
       return {
         ...state,
         editEchoProductEditTab: payload.editTab,
@@ -225,61 +335,230 @@ export default function reducers(state = initialState, action) {
             }),
         currentEdit2Form: null
       }
-    }
-
-    case AT.PRODUCTS_SEARCH_CAS_PRODUCT_FULFILLED: {
+    },
+    [openEditEchoAltNamesPopup]: (state, {payload}) => {
+      return {
+        ...state,
+        currentEdit2Form: true,
+        currentAddForm: null,
+        currentEditForm: null,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
+        popupValues: payload
+      }
+    },
+    [searchCasProduct.pending]: state => {
+      return {
+        ...state
+      }
+    },
+    [searchCasProduct.rejected]: state => {
+      return {
+        ...state
+      }
+    },
+    [searchCasProduct.fulfilled]: (state, {payload}) => {
       return {
         ...state,
         searchedCasProducts: uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
       }
-    }
-    case AT.PRODUCTS_SEARCH_MANUFACTURERS_PENDING: {
+    },
+    [putCompanyGenericProducts.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [putCompanyGenericProducts.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [putCompanyGenericProducts.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [postCompanyGenericProducts.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [postCompanyGenericProducts.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [postCompanyGenericProducts.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [searchManufacturers.pending]: state => {
       return {
         ...state,
         searchedManufacturersLoading: true
       }
-    }
-    case AT.PRODUCTS_SEARCH_MANUFACTURERS_FULFILLED: {
+    },
+    [searchManufacturers.rejected]: state => {
       return {
         ...state,
-        searchedManufacturers: action.payload.data.map(manufacturer => ({
+        searchedManufacturersLoading: false
+      }
+    },
+    [searchManufacturers.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        searchedManufacturers: payload.data.map(manufacturer => ({
           key: manufacturer.id,
           value: manufacturer.id,
           text: manufacturer.name
         })),
         searchedManufacturersLoading: false
       }
-    }
-    case AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING_PENDING: {
+    },
+    [addAttachment.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [addAttachment.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [addAttachment.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [linkAttachment.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [linkAttachment.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [linkAttachment.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [removeAttachmentLink.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [removeAttachmentLink.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [removeAttachmentLink.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [removeAttachment.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [removeAttachment.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [removeAttachment.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [getCompanyGenericProduct.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [getCompanyGenericProduct.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [getCompanyGenericProduct.fulfilled]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [getUnNumbersByString.pending]: state => {
       return {
         ...state,
         unNumbersFetching: true
       }
-    }
-    case AT.PRODUCTS_GET_UN_NUMBERS_BY_STRING_FULFILLED: {
+    },
+    [getUnNumbersByString.rejected]: state => {
+      return {
+        ...state,
+        unNumbersFetching: false
+      }
+    },
+    [getUnNumbersByString.fulfilled]: (state, {payload}) => {
       return {
         ...state,
         unNumbersFetching: false,
-        unNumbersFiltered: action.payload
+        unNumbersFiltered: payload
       }
-    }
-    case AT.PRODUCTS_SEARCH_TAGS_PENDING: {
-      return { ...state, searchedTagsLoading: true }
-    }
-    case AT.PRODUCTS_SEARCH_TAGS_REJECTED: {
-      return { ...state, searchedTagsLoading: false }
-    }
-    case AT.PRODUCTS_SEARCH_TAGS_FULFILLED: {
+    },
+    [searchTags.pending]: state => {
+      return { 
+        ...state, 
+        searchedTagsLoading: true 
+      }
+    },
+    [searchTags.rejected]: state => {
+      return { 
+        ...state, 
+        searchedTagsLoading: false 
+      }
+    },
+    [searchTags.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        searchedTags: action.payload,
+        searchedTags: payload,
         searchedTagsLoading: false
       }
-    }
-    case AT.PRODUCTS_GET_DOCUMENT_TYPES_FULFILLED: {
+    },
+    [getDocumentTypes.pending]: state => {
+      return { ...state }
+    },
+    [getDocumentTypes.rejected]: state => {
+      return { ...state }
+    },
+    [getDocumentTypes.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        documentTypes: action.payload.data.map(docType => {
+        documentTypes: payload.data.map(docType => {
           return {
             ...docType,
             value: docType.id,
@@ -287,99 +566,167 @@ export default function reducers(state = initialState, action) {
           }
         })
       }
-    }
-    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_PENDING: {
-      return { ...state, searchedMarketSegmentsLoading: true }
-    }
-    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_REJECTED: {
-      return { ...state, searchedMarketSegmentsLoading: false }
-    }
-    case AT.PRODUCTS_SEARCH_MARKET_SEGMENTS_FULFILLED: {
+    },
+    [getDocumentTypes.pending]: state => {
+      return { 
+        ...state 
+      }
+    },
+    [getDocumentTypes.rejected]: state => {
+      return { 
+        ...state 
+      }
+    },
+    [getDocumentTypes.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        searchedMarketSegments: action.payload,
+        documentTypes: payload.data.map(docType => {
+          return {
+            ...docType,
+            value: docType.id,
+            text: docType.name
+          }
+        })
+      }
+    },
+    [searchMarketSegments.pending]: state => {
+      return { 
+        ...state, 
+        searchedMarketSegmentsLoading: true 
+      }
+    },
+    [searchMarketSegments.rejected]: state => {
+      return { 
+        ...state, 
+        searchedMarketSegmentsLoading: false 
+      }
+    },
+    [searchMarketSegments.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        searchedMarketSegments: payload,
         searchedMarketSegmentsLoading: false
       }
-    }
-    case AT.PRODUCTS_GET_ALTERNATIVE_COMPANY_GENERIC_PRODUCT_NAMES_FULFILLED: {
+    },
+    [getAlternativeCompanyGenericProductsNames.pending]: state => {
       return {
         ...state,
-        altEchoNamesRows: action.payload,
-        loading: false
+        loading: true
       }
-    }
-    case AT.PRODUCTS_GROUPS_CREATE_PENDING: {
-      return { ...state, loading: true }
-    }
-    case AT.PRODUCTS_GROUPS_CREATE_REJECTED: {
-      return { ...state, loading: false }
-    }
-    case AT.PRODUCTS_GROUPS_CREATE_FULFILLED: {
-      return {
-        ...state,
-        productGroup: action.payload,
-        loading: false
-      }
-    }
-    case AT.PRODUCTS_GROUPS_UPDATE_PENDING: {
-      return { ...state, loading: true }
-    }
-    case AT.PRODUCTS_GROUPS_UPDATE_REJECTED: {
-      return { ...state, loading: false }
-    }
-    case AT.PRODUCTS_GROUPS_UPDATE_FULFILLED: {
-      return {
-        ...state,
-        productGroup: action.payload,
-        loading: false
-      }
-    }
-    case AT.PRODUCTS_GROUPS_DELETE_PENDING: {
-      return { ...state, loading: true }
-    }
-    case AT.PRODUCTS_GROUPS_DELETE_REJECTED: {
-      return { ...state, loading: false }
-    }
-    case AT.PRODUCTS_GROUPS_DELETE_FULFILLED: {
+    },
+    [getAlternativeCompanyGenericProductsNames.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_PENDING: {
-      return { ...state, searchedProductGroupsLoading: true }
-    }
-    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_REJECTED: {
-      return { ...state, searchedProductGroupsLoading: false }
-    }
-    case AT.PRODUCTS_SEARCH_PRODUCT_GROUPS_FULFILLED: {
+    },
+    [getAlternativeCompanyGenericProductsNames.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        searchedProductGroups: action.payload,
+        altEchoNamesRows: payload,
+        loading: false
+      }
+    },
+    [postProductGroups.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [postProductGroups.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [postProductGroups.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        productGroup: payload,
+        loading: false
+      }
+    },
+    [putProductGroups.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [putProductGroups.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [putProductGroups.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        productGroup: payload,
+        loading: false
+      }
+    },
+    [deleteProductGroups.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [deleteProductGroups.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteProductGroups.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [searchProductGroups.pending]: state => {
+      return { 
+        ...state, 
+        searchedProductGroupsLoading: true 
+      }
+    },
+    [searchProductGroups.rejected]: state => {
+      return { 
+        ...state, 
+        searchedProductGroupsLoading: false 
+      }
+    },
+    [searchProductGroups.fulfilled]: (state, {payload}) => {
+      return {
+        ...state,
+        searchedProductGroups: payload,
         searchedProductGroupsLoading: false
       }
-    }
-    case AT.PRODUCTS_SEARCH_COMPANY_PENDING: {
-      return { ...state, searchedCompaniesLoading: true }
-    }
-    case AT.PRODUCTS_SEARCH_COMPANY_REJECTED: {
-      return { ...state, searchedCompaniesLoading: false }
-    }
-    case AT.PRODUCTS_SEARCH_COMPANY_FULFILLED: {
+    },
+    [searchCompany.pending]: state => {
+      return { ...state, 
+        searchedCompaniesLoading: true 
+      }
+    },
+    [searchCompany.rejected]: state => {
+      return { 
+        ...state, 
+        searchedCompaniesLoading: false 
+      }
+    },
+    [searchCompany.fulfilled]: (state, {payload}) => {
       return {
         ...state,
-        searchedCompanies: action.payload,
+        searchedCompanies: payload,
         searchedCompaniesLoading: false
       }
-    }
-    case AT.PRODUCTS_HANDLE_VARIABLE_CHANGE: {
+    },
+    [handleVariableSave]: (state, {payload}) => {
       return {
         ...state,
         [payload.variable]: payload.value
       }
     }
-    default: {
-      return state
-    }
-  }
-}
+  },
+
+  initialState
+)
