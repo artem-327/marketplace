@@ -334,7 +334,9 @@ export const generateCheckboxes = (data, values, groupName = null, error) => {
  * @return {array} Array objects for dropdown options.
  */
 export const searchCompanies = debounce((text, props) => {
-  props.searchCompany(text, 5)
+  if (text && text.length > 1) {
+    props.searchCompany(text, 5)
+  }
 }, 250)
 
 
