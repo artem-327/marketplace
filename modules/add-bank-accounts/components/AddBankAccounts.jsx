@@ -72,17 +72,13 @@ const AddBankAccounts = ({
     }
   }, [ready, open, error])
 
-  if ((!vellociToken && !vellociBusinessId && !loading) || error) {
-    return <ErrorPage type='forbidden' status='403' logout />
-  } else {
-    return (
-      <Grid verticalAlign='middle' centered>
-        <Dimmer active={loading} inverted>
-          <Loader size='large' />
-        </Dimmer>
-      </Grid>
-    )
-  }
+  return (
+    <Grid verticalAlign='middle' centered>
+      <Dimmer active={loading} inverted>
+        <Loader size='large' />
+      </Dimmer>
+    </Grid>
+  )
 }
 
 const mapStateToProps = ({ addBankAccounts }) => ({
