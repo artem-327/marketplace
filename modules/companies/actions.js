@@ -1,3 +1,4 @@
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import * as AT from './action-types'
 import * as api from './api'
 import Router from 'next/router'
@@ -5,29 +6,14 @@ import { Datagrid } from '~/modules/datagrid'
 
 import { updateIdentity } from '~/modules/auth/actions'
 
-export function udpateEnabled(id, enabled) {
-  return {
-    type: AT.COMPANIES_ENABLED_COMPANY,
-    payload: api.udpateEnabled(id, enabled)
-  }
-}
-
-export function openSidebar(data, currentTab) {
-  return {
-    type: AT.COMPANIES_OPEN_POPUP,
-    payload: { data, currentTab }
-  }
-}
-
-export function openEditCompany(id, formData) {
-  return async dispatch => {
-    dispatch(openSidebar(formData, 'companies'))
-    // const data = await api.getCompany(id)
-    // dispatch(openSidebar(data))
-  }
-}
-
-export const deleteCompany = id => ({ type: AT.COMPANIES_DELETE_COMPANIES, payload: api.deleteCompany(id) })
+export const udpateEnabled = createAsyncAction('COMPANIES_ENABLED_COMPANY', (id, enabled) =>
+  api.udpateEnabled(id, enabled)
+)
+export const openSidebar = createAction('COMPANIES_OPEN_POPUP', (data, currentTab) => ({ data, currentTab }))
+export const openEditCompany = createAction('COMPANIES_OPEN_POPUP', (id, data) => ({ data, currentTab: 'companies' }))
+export const deleteCompany = createAsyncAction('COMPANIES_DELETE_COMPANIES',  id =>
+  api.deleteCompany(id)
+)
 
 export const takeOverCompany = id => {
   return async dispatch => {
@@ -37,191 +23,111 @@ export const takeOverCompany = id => {
   }
 }
 
-export const resendWelcomeEmail = userId => {
-  return {
-    type: AT.RESEND_WELCOME_EMAIL,
-    payload: api.resendWelcomeEmail(userId)
-  }
-}
+export const resendWelcomeEmail = createAsyncAction('RESEND_WELCOME_EMAIL',  userId =>
+  api.resendWelcomeEmail(userId)
+)
 
-export function closePopup() {
-  return {
-    type: AT.COMPANIES_CLOSE_POPUP
-  }
-}
+export const closePopup = createAction('COMPANIES_CLOSE_POPUP')
 
-export function updateCompany(id, formData) {
-  return async dispatch => {
-    //await dispatch(udpateEnabled(id, formData.enabled))
-    //delete formData.enabled
-    let response = await api.updateCompany(id, formData)
-    dispatch({
-      type: AT.COMPANIES_UPDATE_COMPANY,
-      response
-    })
+export const updateCompany = createAsyncAction('COMPANIES_UPDATE_COMPANY', (id, formData) =>
+  api.updateCompany(id, formData)
+)
 
-    /* Called when uploaded logo
-          Datagrid.updateRow(id, () => response)
-          */
+export const createCompany = createAsyncAction('COMPANIES_CREATE_COMPANY', formData =>
+  api.createCompany(formData)
+)
 
-    // dispatch(updateIdentity(response))
-    dispatch(closePopup())
-    return response
-    // dispatch(getCompanies())
-  }
-}
+export const getCountries = createAsyncAction('COMPANIES_GET_COUNTRIES', () => api.getCountries())
 
-export function createCompany(formData) {
-  return async dispatch => {
-    //const enabled = formData.enabled
-    //delete formData.enabled
-    let response = await api.createCompany(formData)
-    await dispatch({
-      type: AT.COMPANIES_CREATE_COMPANY,
-      response
-    })
+export const getPrimaryBranchProvinces = createAsyncAction(
+  'COMPANIES_GET_PRIMARY_BRANCH_PROVINCES',
+  id => api.getProvinces(id)
+)
 
-    /* Called when uploaded logo
-      Datagrid.clear()
-      Datagrid.loadData()
-      */
-    //await dispatch(udpateEnabled(response.id, enabled))
-    dispatch(closePopup())
-    return response
-  }
-}
+export const getMailingBranchProvinces = createAsyncAction(
+  'COMPANIES_GET_MAILING_BRANCH_PROVINCES',
+  id => api.getProvinces(id)
+)
 
-export function getCountries() {
-  return (dispatch, getState) => {
-    const { admin } = getState()
-    admin.countries.length === 0 &&
-      dispatch({
-        type: AT.COMPANIES_GET_COUNTRIES,
-        async payload() {
-          const countries = await api.getCountries()
+export const getAddressSearchPrimaryBranch = createAsyncAction(
+  'COMPANIES_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH',
+  body => api.getAddressSearch(body)
+)
 
-          return { countries }
+export const getAddressSearchMailingBranch = createAsyncAction(
+  'COMPANIES_GET_ADDRESSES_SEARCH_MAILING_BRANCH',
+  body => api.getAddressSearch(body)
+)
+
+export const reRegisterP44 = createAsyncAction('COMPANIES_RE_REGISTER_P44', id =>
+  api.reRegisterP44(id)
+)
+export const deleteUser = createAsyncAction('COMPANIES_DELETE_USER',  id => api.deleteUser(id))
+export const getUser = createAsyncAction('COMPANIES_GET_USER',  id => api.getUser(id))
+export const getUsersMe = createAsyncAction('COMPANIES_GET_USERS_ME',  () => api.getUsersMe())
+
+export const userSwitchEnableDisable = createAsyncAction(
+  'COMPANIES_USER_SWITCH_ENABLE_DISABLE',
+  (id, row) => {
+    Datagrid.updateRow(id, () => ({...row, enabled: !row.enabled}))
+    return api.userSwitchEnableDisable(id)
+  })
+
+export const getUserRoles = createAsyncAction('COMPANIES_GET_USER_ROLES',  () => api.getUserRoles())
+
+export const getAdminRoles = createAsyncAction('COMPANIES_GET_ADMIN_ROLES',  () =>
+  api.getAdminRoles()
+)
+
+export const postNewUserRequest = createAsyncAction('COMPANIES_POST_NEW_USER', data =>
+  api.postNewUserRequest(data)
+)
+
+export const submitUserEdit = createAsyncAction('COMPANIES_EDIT_USER',  (id, data) =>
+  api.submitUserEdit(id, data)
+)
+
+export const searchCompany = createAsyncAction('COMPANIES_SEARCH_COMPANY',  (companyText, limit) =>
+  api.searchCompany(companyText, limit)
+)
+
+export const searchCompanyFilter = createAsyncAction(
+  'COMPANIES_SEARCH_COMPANY_FILTER',
+  (companyText, limit) => api.searchCompany(companyText, limit)
+)
+
+export const initSearchCompany = createAsyncAction('COMPANIES_INIT_SEARCH_COMPANY',  id =>
+  api.getCompanyInfo(id)
+)
+
+export const searchSellMarketSegments = createAsyncAction(
+  'COMPANIES_SEARCH_SELL_MARKET_SEGMENTS',
+  segment => api.searchMarketSegments({
+    orFilters: [
+      {
+        operator: 'LIKE',
+        path: 'MarketSegment.name',
+        values: [segment.toString()]
+      }
+    ],
+    pageNumber: 0,
+    pageSize: 50
+  })
+)
+
+export const searchBuyMarketSegments = createAsyncAction(
+  'COMPANIES_SEARCH_BUY_MARKET_SEGMENTS',
+  segment => api.searchMarketSegments({
+      orFilters: [
+        {
+          operator: 'LIKE',
+          path: 'MarketSegment.name',
+          values: [segment.toString()]
         }
-      })
-  }
-}
-
-export function getPrimaryBranchProvinces(id) {
-  return {
-    type: AT.COMPANIES_GET_PRIMARY_BRANCH_PROVINCES,
-    payload: api.getProvinces(id)
-  }
-}
-
-export function getMailingBranchProvinces(id) {
-  return {
-    type: AT.COMPANIES_GET_MAILING_BRANCH_PROVINCES,
-    payload: api.getProvinces(id)
-  }
-}
-
-export function getAddressSearchPrimaryBranch(body) {
-  return {
-    type: AT.COMPANIES_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH,
-    payload: api.getAddressSearch(body)
-  }
-}
-
-export function getAddressSearchMailingBranch(body) {
-  return {
-    type: AT.COMPANIES_GET_ADDRESSES_SEARCH_MAILING_BRANCH,
-    payload: api.getAddressSearch(body)
-  }
-}
-
-export function reRegisterP44(id) {
-  return {
-    type: AT.COMPANIES_RE_REGISTER_P44,
-    payload: api.reRegisterP44(id)
-  }
-}
-
-export const deleteUser = id => ({
-  type: AT.COMPANIES_DELETE_USER,
-  payload: api.deleteUser(id)
-})
-
-export const getUser = id => ({ type: AT.COMPANIES_GET_USER, payload: api.getUser(id) })
-export const getUsersMe = () => ({ type: AT.COMPANIES_GET_USERS_ME, payload: api.getUsersMe() })
-
-export const userSwitchEnableDisable = (id, row) => {
-  Datagrid.updateRow(id, () => ({ ...row, enabled: !row.enabled }))
-  return { type: AT.COMPANIES_USER_SWITCH_ENABLE_DISABLE, payload: api.userSwitchEnableDisable(id) }
-}
-
-export const getUserRoles = () => ({
-  type: AT.COMPANIES_GET_USER_ROLES,
-  payload: api.getUserRoles()
-})
-
-export const getAdminRoles = () => ({
-  type: AT.COMPANIES_GET_ADMIN_ROLES,
-  payload: api.getAdminRoles()
-})
-
-export const postNewUserRequest = data => ({
-  type: AT.COMPANIES_POST_NEW_USER,
-  payload: api.postNewUserRequest(data)
-})
-
-export const submitUserEdit = (id, data) => ({
-  type: AT.COMPANIES_EDIT_USER,
-  payload: api.submitUserEdit(id, data)
-})
-
-export const searchCompany = (companyText, limit) => ({
-  type: AT.COMPANIES_SEARCH_COMPANY,
-  payload: api.searchCompany(companyText, limit)
-})
-
-export const searchCompanyFilter = (companyText, limit) => ({
-  type: AT.COMPANIES_SEARCH_COMPANY_FILTER,
-  payload: api.searchCompany(companyText, limit)
-})
-
-export const initSearchCompany = id => ({
-  type: AT.COMPANIES_INIT_SEARCH_COMPANY,
-  payload: api.getCompanyInfo(id)
-})
-
-export const searchSellMarketSegments = segment => ({
-  type: AT.COMPANIES_SEARCH_SELL_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'MarketSegment.name',
-        values: [segment.toString()]
-      }
-    ],
+      ],
     pageNumber: 0,
     pageSize: 50
   })
-})
+)
 
-export const searchBuyMarketSegments = segment => ({
-  type: AT.COMPANIES_SEARCH_BUY_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'MarketSegment.name',
-        values: [segment.toString()]
-      }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
-})
-
-export function saveFilters(filters) {
-  return {
-    type: AT.COMPANIES_SAVE_FILTERS,
-    payload: filters
-  }
-}
+export const saveFilters = createAction('COMPANIES_SAVE_FILTERS', filters => filters)

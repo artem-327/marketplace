@@ -7,7 +7,6 @@ import {
   closePopup,
   updateCompany,
   createCompany,
-  getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   getAddressSearchPrimaryBranch,
@@ -140,17 +139,8 @@ class AddEditCompanySidebar extends Component {
     companyLogo: null
   }
 
-  // componentDidMount() {
-  //   this.props.getCountries()
-  // }
-
   formValidationNew = () =>
     Yup.lazy(values => {
-      // let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
-      // let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-      //   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-      //   values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-      //   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
       let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
         ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
         : ''
@@ -207,88 +197,11 @@ class AddEditCompanySidebar extends Component {
       return validation
     })
 
-  handlePrimaryBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value)
-    if (country.hasProvinces) {
-      this.props.getPrimaryBranchProvinces(country.id)
-    }
-    this.setState({
-      primaryBranchHasProvinces: country.hasProvinces,
-      primaryBranchProvinceValidation: provinceObjectRequired(country.hasProvinces)
-    })
-  }
-
-  handleMailingBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value)
-    if (country.hasProvinces) {
-      this.props.getMailingBranchProvinces(country.id)
-    }
-    this.setState({
-      mailingBranchHasProvinces: country.hasProvinces,
-      mailingBranchProvinceValidation: provinceObjectRequired(country.hasProvinces)
-    })
-  }
-
   handleAccordionChange = (e, { name }) => {
     let { accordionActive } = this.state
     accordionActive[name] = !accordionActive[name]
     this.setState({ accordionActive })
   }
-
-  // handleAddressSelectPrimaryBranch = (d, values, setFieldValue) => {
-  //   const i = this.props.AddressSuggestPrimaryBranchOptions.indexOf(d.value)
-  //   if (i >= 0) {
-  //     setFieldValue('primaryBranch.address.streetAddress', this.props.AddressSuggestPrimaryBranchData[i].streetAddress)
-  //     setFieldValue('primaryBranch.address.city', this.props.AddressSuggestPrimaryBranchData[i].city)
-  //     setFieldValue('primaryBranch.address.zip', this.props.AddressSuggestPrimaryBranchData[i].zip && this.props.AddressSuggestPrimaryBranchData[i].zip.zip)
-  //     setFieldValue('primaryBranch.address.country', this.props.AddressSuggestPrimaryBranchData[i].country.id)
-  //     setFieldValue('primaryBranch.address.province', this.props.AddressSuggestPrimaryBranchData[i].province ? this.props.AddressSuggestPrimaryBranchData[i].province.id : '')
-  //     this.setState({ primaryBranchHasProvinces: this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces })
-  //     if (this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces) this.props.getPrimaryBranchProvinces(this.props.AddressSuggestPrimaryBranchData[i].country.id)
-  //   }
-  //   else {
-  //     let newValues = { ...values.primaryBranch.address, [d.name.split('.')[2]]: d.value }
-
-  //     const body = {
-  //       city: newValues.city,
-  //       countryId: newValues.country,
-  //       provinceId: newValues.province,
-  //       streetAddress: newValues.streetAddress,
-  //       zip: newValues.zip
-  //     }
-  //     removeEmpty(body)
-  //     if (Object.entries(body).length === 0) return
-  //     this.props.getAddressSearchPrimaryBranch(body)
-  //   }
-  // }
-
-  // handleAddressSelectMailingBranch = (d, values, setFieldValue) => {
-  //   const i = this.props.AddressSuggestMailingBranchOptions.indexOf(d.value)
-
-  //   if (i >= 0) {
-  //     setFieldValue('mailingBranch.address.streetAddress', this.props.AddressSuggestMailingBranchData[i].streetAddress)
-  //     setFieldValue('mailingBranch.address.city', this.props.AddressSuggestMailingBranchData[i].city)
-  //     setFieldValue('mailingBranch.address.zip', this.props.AddressSuggestMailingBranchData[i].zip && this.props.AddressSuggestMailingBranchData[i].zip.zip)
-  //     setFieldValue('mailingBranch.address.country', this.props.AddressSuggestMailingBranchData[i].country.id)
-  //     setFieldValue('mailingBranch.address.province', this.props.AddressSuggestMailingBranchData[i].province ? this.props.AddressSuggestMailingBranchData[i].province.id : '')
-  //     this.setState({ MailingBranchHasProvinces: this.props.AddressSuggestMailingBranchData[i].country.hasProvinces })
-  //     if (this.props.AddressSuggestMailingBranchData[i].country.hasProvinces) this.props.getMailingBranchProvinces(this.props.AddressSuggestMailingBranchData[i].country.id)
-  //   }
-  //   else {
-  //     let newValues = { ...values.mailingBranch.address, [d.name.split('.')[2]]: d.value }
-
-  //     const body = {
-  //       city: newValues.city,
-  //       countryId: newValues.country,
-  //       provinceId: newValues.province,
-  //       streetAddress: newValues.streetAddress,
-  //       zip: newValues.zip
-  //     }
-  //     removeEmpty(body)
-  //     if (Object.entries(body).length === 0) return
-  //     this.props.getAddressSearchMailingBranch(body)
-  //   }
-  // }
 
   selectLogo = (logo, isNew = true) => {
     this.setState({ companyLogo: logo, shouldUpdateLogo: isNew })
@@ -304,12 +217,7 @@ class AddEditCompanySidebar extends Component {
       popupValues,
       updateCompany,
       createCompany,
-      // countriesDropDown,
-      // primaryBranchProvinces,
-      // mailingBranchProvinces,
       intl,
-      // AddressSuggestPrimaryBranchInput,
-      // AddressSuggestMailingBranchInput,
       postCompanyLogo,
       deleteCompanyLogo,
       datagrid,
@@ -323,11 +231,6 @@ class AddEditCompanySidebar extends Component {
     let { accordionActive, companyLogo } = this.state
 
     const { formatMessage } = intl
-    // const {
-    //   initialState,
-    //   primaryBranchHasProvinces,
-    //   mailingBranchHasProvinces
-    // } = this.state
 
     return (
       <Formik
@@ -374,6 +277,7 @@ class AddEditCompanySidebar extends Component {
               }
               datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!this.state.companyLogo }))
               actions.setSubmitting(false)
+              closePopup()
             } else {
               let branches = ['primaryBranch', 'mailingBranch']
 
@@ -414,6 +318,7 @@ class AddEditCompanySidebar extends Component {
                   datagrid.clear()
                   datagrid.loadData()
                   actions.setSubmitting(false)
+                  closePopup()
                 }
                 reader.readAsBinaryString(this.state.companyLogo)
               } else {
@@ -421,6 +326,7 @@ class AddEditCompanySidebar extends Component {
                 datagrid.clear()
                 datagrid.loadData()
                 actions.setSubmitting(false)
+                closePopup()
               }
             }
           } catch (err) {
@@ -748,7 +654,6 @@ const mapDispatchToProps = {
   closePopup,
   updateCompany,
   createCompany,
-  getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   addZip,
