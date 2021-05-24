@@ -1,4 +1,10 @@
+import typeToReducer from 'type-to-reducer'
 import * as AT from './action-types'
+
+import {
+  getDashboardData,
+  getDailyStatistics
+} from './actions'
 
 export const initialState = {
   data: null,
@@ -6,52 +12,48 @@ export const initialState = {
   loading: false
 }
 
-export default function reducer(state = initialState, action) {
-  const { payload, type } = action
 
-  switch (type) {
-    case AT.GET_DASHBOARD_DATA_PENDING: {
+export default typeToReducer(
+  {
+    [getDashboardData.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-    case AT.GET_DASHBOARD_DATA_FULFILLED: {
+    },
+    [getDashboardData.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         loading: false,
         data: payload.data
       }
-    }
-    case AT.GET_DASHBOARD_DATA_REJECTED: {
+    },
+    [getDashboardData.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.GET_DAILY_STATISTICS_PENDING: {
+    },
+    [getDailyStatistics.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-    case AT.GET_DAILY_STATISTICS_FULFILLED: {
+    },
+    [getDailyStatistics.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         loading: false,
         dailyStats: payload.data
       }
-    }
-    case AT.GET_DAILY_STATISTICS_REJECTED: {
+    },
+    [getDailyStatistics.rejected]: state => {
       return {
         ...state,
         loading: false
       }
     }
+  },
 
-    default: {
-      return state
-    }
-  }
-}
+  initialState
+)
