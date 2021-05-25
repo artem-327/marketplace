@@ -24,5 +24,8 @@ export default {
       .catch(err => console.error(err.message)),
 
   addVellociAcount: (magicToken, metadata) =>
-    api.post(`/prodex/api/payments/bank-accounts/velloci/add/magic-token?token=${magicToken}`, metadata)
+    axios
+      .post(`/prodex/api/payments/bank-accounts/velloci/add/magic-token?token=${magicToken}`, metadata)
+      .then(response => response.data)
+      .catch(err => console.error(err.message)),
 }
