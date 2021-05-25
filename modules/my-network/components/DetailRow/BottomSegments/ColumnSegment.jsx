@@ -21,7 +21,7 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
       return (
         <Grid.Row key={i}>
           <GridColumnDetail>
-            <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage='Title' />
+            <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={key} />
             <DivValue $minHeight='19px' fontSize='14px' $color={blueValue ? '#00c7f9' : null} lineHeight='1.42857'> {data[key]}</DivValue>
           </GridColumnDetail>
         </Grid.Row>
