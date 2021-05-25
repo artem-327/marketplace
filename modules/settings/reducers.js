@@ -1733,6 +1733,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        vellociToken: '',
         isThirdPartyConnectionException:
           getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }
