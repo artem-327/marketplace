@@ -61,10 +61,14 @@ import { usePrevious } from '../../../../hooks'
 // Constants
 import { FREIGHT_TYPES } from '../Checkout.constants'
 
+// Actions
+import { getManualQuoteById } from '../../actions'
+
 const FreightSelection = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded = usePrevious(props.isExpanded)
   const [isOpenConfirmPopup, setIsOpenConfirmPopup] = useState(false)
+  const [manualQuoteVal, setManualQuoteVal] = useState('')
 
   const {
     isExpanded,
@@ -78,7 +82,9 @@ const FreightSelection = props => {
     fixedFreightId,
     cart,
     intl: { formatMessage },
-    shippingQuotesAreFetching
+    shippingQuotesAreFetching,
+    manualQuoteById,
+    getManualQuoteById
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -105,7 +111,11 @@ const FreightSelection = props => {
     <RowComponent
       {...props}
       header={<FormattedMessage id='checkout.header.freightSelection' defaultMessage='4. Freight Selection' />}
-      onSubmitClick={() => props.onSubmitClick()}
+      onSubmitClick={async () =>{ 
+        await getManualQuoteById(manualQuoteVal)
+        console.log(manualQuoteById)
+        // props.onSubmitClick()
+      }}
       submitButtonCaption={
         allAccepted ? (
           <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
@@ -117,7 +127,7 @@ const FreightSelection = props => {
           </FormattedMessage>
         )
       }
-      submitButtonDisabled={!value}
+      submitButtonDisabled={!value && !manualQuoteVal}
       content={
         <>
           {sectionState.accepted || isExpanded ? (
@@ -287,17 +297,9 @@ const FreightSelection = props => {
                           </DivLabel>
                           <Input
                             fluid
-                            onChange={(_, { value }) =>
-                              onValueChange({
-                                freightType: FREIGHT_TYPES.ECHO,
-                                carrierName: value,
-                                cfEstimatedSubtotal: '',
-                                estimatedDeliveryDate: '',
-                                quoteId: value
-                              })
-                            }
+                            onChange={ (_, { value }) => setManualQuoteVal(value) }
                             name='shipmentQuoteId'
-                            value={value && value.quoteId ? value.quoteId : ''}
+                            value={manualQuoteVal}
                             disabled={isOwn}
                             placeholder={formatMessage({
                               id: 'cart.enterShippingQuoteId',
@@ -367,12 +369,20 @@ const FreightSelection = props => {
   )
 }
 
-FreightSelection.propTypes = {}
-
-FreightSelection.defaultProps = {}
-
-function mapStateToProps(store, props) {
-  return {}
+FreightSelection.propTypes = {
+  getManualQuoteById: PropTypes.func,
+  manualQuoteById: PropTypes.object
 }
 
-export default injectIntl(connect(mapStateToProps, {})(FreightSelection))
+FreightSelection.defaultProps = {
+  getManualQuoteById: () => {},
+  manualQuoteById: {}
+}
+
+function mapStateToProps(store, props) {
+  return {
+    manualQuoteById: store?.cart?.manualQuoteById
+  }
+}
+
+export default injectIntl(connect(mapStateToProps, {getManualQuoteById})(FreightSelection))
