@@ -188,12 +188,6 @@ class Settings extends Component {
   async componentDidMount() {
     const { isCompanyAdmin, addTab, tabsNames, getIdentity, renderCopyright, currentTab } = this.props
 
-    try {
-      await getIdentity()
-    } catch (error) {
-      console.error(error)
-    }
-
     if (isCompanyAdmin) addTab(companyDetailsTab)
 
     let queryTab =

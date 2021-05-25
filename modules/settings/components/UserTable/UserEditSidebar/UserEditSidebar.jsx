@@ -17,7 +17,8 @@ import {
   getCompanyDetails,
   getUsersDataRequest,
   getCompanyUser,
-  getUser
+  getUser,
+  getRoles
 } from '../../../actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
 import { getIdentity } from '../../../../auth/actions'
@@ -63,6 +64,7 @@ const UserEditSidebar = props => {
   const {
     closeSidebar,
     userRoles,
+    userRolesLoading,
     currencies,
     intl: { formatMessage },
     updating,
@@ -95,6 +97,7 @@ const UserEditSidebar = props => {
         await getUser(sidebarValues?.id)
         await getCompanyUser(sidebarValues?.id)
       }
+      if (!userRoles.length) props.getRoles()
       if (companyId !== null) {
         const { value } = await props.getCompanyDetails(companyId)
         let branches = uniqueArrayByKey(
@@ -124,7 +127,7 @@ const UserEditSidebar = props => {
       this.props.searchBuyMarketSegments('')
     }
     */
-    if (!!openGlobalAddForm) getUsersDataRequest()
+    //if (!!openGlobalAddForm) getUsersDataRequest()
   }, []) // If [] is empty then is similar as componentDidMount.
 
   {
@@ -159,7 +162,7 @@ const UserEditSidebar = props => {
             size='small'
             closeIcon={!!openGlobalAddForm}
             onClose={() => !!openGlobalAddForm && openGlobalAddForm('')}> */}
-              <Dimmer inverted active={updating || loading}>
+              <Dimmer inverted active={updating || loading || userRolesLoading}>
                 <Loader />
               </Dimmer>
               <div>
@@ -556,7 +559,8 @@ const mapDispatchToProps = {
   getIdentity,
   getUsersDataRequest,
   getCompanyUser,
-  getUser
+  getUser,
+  getRoles
 }
 
 const mapStateToProps = state => {
@@ -569,6 +573,7 @@ const mapStateToProps = state => {
     editTrig: settings.editTrig,
     updating: settings.updating,
     userRoles: settings.roles,
+    userRolesLoading: settings.rolesLoading,
     userSettings: settings?.userSettings,
     sidebarValues: settings?.sidebarValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
