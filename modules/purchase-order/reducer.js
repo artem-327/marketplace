@@ -27,7 +27,7 @@ export const initialState = {
   manualShipmentRequested: false,
   manualShipmentPending: false,
   manualShipmentError: false,
-  manualQuoteById: {},
+  manualQuoteById: null,
   preFilledValues: null,
   sidebar: {
     isOpen: false,
@@ -576,14 +576,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         manualQuoteById: action.payload,
-        loading: true
+        loading: false
       }
     }
 
     case AT.GET_MANUAL_QUOTE_BY_ID_REJECTED: {
       return {
         ...state,
-        loading: true
+        manualQuoteById: null,
+        loading: false
       }
     }
 

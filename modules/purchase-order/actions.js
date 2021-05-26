@@ -90,7 +90,7 @@ export const requestManualShipment = params => ({
   payload: api.requestManualShipment(generateQueryString(params))
 })
 
-export const getManualQuoteById = id => ({
+export const getManualQuoteById = (id) => ({
   type: AT.GET_MANUAL_QUOTE_BY_ID,
   payload: api.getManualQuoteById(id)
 })
