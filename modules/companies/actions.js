@@ -68,10 +68,8 @@ export const getUsersMe = createAsyncAction('COMPANIES_GET_USERS_ME',  () => api
 
 export const userSwitchEnableDisable = createAsyncAction(
   'COMPANIES_USER_SWITCH_ENABLE_DISABLE',
-  (id, row) => {
-    Datagrid.updateRow(id, () => ({...row, enabled: !row.enabled}))
-    return api.userSwitchEnableDisable(id)
-  })
+  id => api.userSwitchEnableDisable(id)
+)
 
 export const getUserRoles = createAsyncAction('COMPANIES_GET_USER_ROLES',  () => api.getUserRoles())
 
