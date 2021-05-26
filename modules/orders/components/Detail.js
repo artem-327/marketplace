@@ -731,8 +731,8 @@ class Detail extends Component {
             </Button>
           ),
           documentType: getSafe(() => row.documentType.name, 'N/A'),
-          documentDate: row.expirationDate
-            ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+          documentDate: row.issuedAt
+            ? getSafe(() => moment(row.issuedAt).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
           documentIssuer: getSafe(() => row.issuer, 'N/A'),
           download: (
