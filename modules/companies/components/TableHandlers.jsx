@@ -62,7 +62,7 @@ const TablesHandlers = props => {
     const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
     if (tableHandlersFilters) {
-      initFilterValues(tableHandlersFilters, props)
+      initFilterValues(tableHandlersFilters, state, setState, props)
     } else {
       let filterValue = state[currentTab]
       handleFiltersValue(filterValue, props)

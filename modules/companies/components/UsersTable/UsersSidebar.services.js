@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
+import { errorMessages, phoneValidation } from '../../../../constants/yupValidation'
 import { currencyId } from '../../../../constants/index'
 import { getSafe, removeEmpty, uniqueArrayByKey } from '../../../../utils/functions'
 import { debounce } from 'lodash'

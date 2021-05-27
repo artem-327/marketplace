@@ -1,7 +1,7 @@
 import { debounce } from 'lodash'
 
 
-export const initFilterValues = (tableHandlersFilters, props) => {
+export const initFilterValues = (tableHandlersFilters, state, setState, props) => {
   const { currentTab } = props
   if (currentTab === '') return
 

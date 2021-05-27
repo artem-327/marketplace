@@ -53,12 +53,9 @@ const UsersSidebar = props => {
     closePopup,
     userRoles,
     adminRoles,
-    currencies,
     intl: { formatMessage },
-    //searchedCompaniesOptions,
     searchedCompanies,
     searchedCompaniesLoading,
-    isSuperAdmin,
     updating,
     searchedSellMarketSegmentsLoading,
     searchedSellMarketSegments,
@@ -92,10 +89,6 @@ const UsersSidebar = props => {
     } else {
       setPopupValues(null)
     }
-    // Commented by https://pm.artio.net/issues/34033#note-9
-    //props.searchSellMarketSegments('')
-    //props.searchBuyMarketSegments('')
-
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
