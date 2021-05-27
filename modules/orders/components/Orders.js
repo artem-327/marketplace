@@ -137,9 +137,7 @@ class Orders extends Component {
         {
           name: 'documentNumber',
           title: (
-            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
           ),
           width: 150,
           actions: this.getActions()
@@ -147,36 +145,28 @@ class Orders extends Component {
         {
           name: 'type',
           title: (
-            <FormattedMessage id='order.related.type' defaultMessage='Type'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.type' defaultMessage='Type' />
           ),
           width: 150
         },
         {
           name: 'issuedAt',
           title: (
-            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
           ),
           width: 120
         },
         {
           name: 'issuerCompanyName',
           title: (
-            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
           ),
           width: 100
         },
         {
           name: 'download',
           title: (
-            <FormattedMessage id='order.related.download' defaultMessage='Download'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.download' defaultMessage='Download' />
           ),
           width: 100,
           align: 'center'
@@ -186,45 +176,35 @@ class Orders extends Component {
         {
           name: 'documentNumber',
           title: (
-            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
           ),
           width: 150
         },
         {
           name: 'type',
           title: (
-            <FormattedMessage id='order.related.type' defaultMessage='Type'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.type' defaultMessage='Type' />
           ),
           width: 150
         },
         {
           name: 'issuedAt',
           title: (
-            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
           ),
           width: 120
         },
         {
           name: 'issuerCompanyName',
           title: (
-            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
           ),
           width: 100
         },
         {
           name: 'cfPriceTotal',
           title: (
-            <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total' />
           ),
           width: 100,
           align: 'center'
@@ -300,9 +280,7 @@ class Orders extends Component {
       {
         name: 'orderId',
         title: (
-          <FormattedMessage id='order.orderId' defaultMessage='Order ID'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.orderId' defaultMessage='Order ID' />
         ),
         width: 200,
         sortPath: 'Order.id',
@@ -311,9 +289,7 @@ class Orders extends Component {
       {
         name: 'customerName',
         title: (
-          <FormattedMessage id='order.vendor' defaultMessage='Vendor'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.vendor' defaultMessage='Vendor' />
         ),
         width: 220,
         sortPath: 'Order.sellerCompanyName'
@@ -321,9 +297,7 @@ class Orders extends Component {
       {
         name: 'date',
         title: (
-          <FormattedMessage id='order.date' defaultMessage='Order Date'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.date' defaultMessage='Order Date' />
         ),
         width: 150,
         sortPath: 'Order.createdAt'
@@ -331,27 +305,21 @@ class Orders extends Component {
       {
         name: 'shippingStatus',
         title: (
-          <FormattedMessage id='orders.deliveryStatus' defaultMessage='Delivery Status'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='orders.deliveryStatus' defaultMessage='Delivery Status' />
         ),
         width: 160
       },
       {
         name: 'orderStatus',
         title: (
-          <FormattedMessage id='orders.orderStatus' defaultMessage='Order Status'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='orders.orderStatus' defaultMessage='Order Status' />
         ),
         width: 170
       },
       {
         name: 'orderTotal',
         title: (
-          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
         ),
         width: 150,
         align: 'right',
@@ -361,9 +329,7 @@ class Orders extends Component {
         name: 'expand',
         title: <div></div>,
         caption: (
-          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='alerts.column.expand' defaultMessage='Expand' />
         ),
         align: 'center',
         width: 50
@@ -414,9 +380,7 @@ class Orders extends Component {
               attachments: row.attachments,
               type: 'order',
               header: (
-                <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
               )
             })
           }>
@@ -520,9 +484,7 @@ class Orders extends Component {
                 type: 'item',
                 header: (
                   <>
-                    <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR ' />
                     <StyledHeader>{item.companyGenericProductName}</StyledHeader>
                   </>
                 )
@@ -915,9 +877,7 @@ class Orders extends Component {
             <CustomDivAddedMewDocument>
               <CustomCheckCircle />
               <CustomDivTextAddedMewDocument>
-                <FormattedMessage id='related.documents.addedNewDocument' defaultMessage='New document has been added'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='related.documents.addedNewDocument' defaultMessage='New document has been added' />
               </CustomDivTextAddedMewDocument>
             </CustomDivAddedMewDocument>
           </Rectangle>
@@ -927,9 +887,7 @@ class Orders extends Component {
             <CustomDivAddedMewDocument>
               <CustomCheckCircleRed />
               <CustomDivTextAddedMewDocument>
-                <FormattedMessage id='related.documents.unlinkDocument' defaultMessage='Document has been unlinked'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='related.documents.unlinkDocument' defaultMessage='Document has been unlinked' />
               </CustomDivTextAddedMewDocument>
             </CustomDivAddedMewDocument>
           </RectangleRed>
@@ -1005,16 +963,12 @@ class Orders extends Component {
         {this.state.openModalAccounting && (
           <StyledModal size='small' closeIcon={false} centered={true} open={true}>
             <Modal.Header>
-              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents'>
-                {text => text}
-              </FormattedMessage>
+              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents' />
             </Modal.Header>
             <Modal.Content scrolling>{this.getContent()}</Modal.Content>
             <Modal.Actions>
               <Button basic onClick={() => this.closePopup()}>
-                <FormattedMessage id='global.close' defaultMessage='Close'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.close' defaultMessage='Close' />
               </Button>
             </Modal.Actions>
           </StyledModal>
@@ -1048,9 +1002,7 @@ class Orders extends Component {
                   })
                   this.closePopup()
                 }}>
-                <FormattedMessage id='global.close' defaultMessage='Close'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.close' defaultMessage='Close' />
               </Button>
             </Modal.Actions>
           </StyledModal>

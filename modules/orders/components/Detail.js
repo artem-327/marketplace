@@ -1,6 +1,6 @@
 import { Component } from 'react'
-import '~/components/AddInventory.scss'
-import Spinner from '~/components/Spinner/Spinner'
+import '../../../components/AddInventory.scss'
+import Spinner from '../../../components/Spinner/Spinner'
 import {
   Grid,
   Segment,
@@ -39,18 +39,17 @@ import SaleReturnShipping from './components/SaleReturnShipping'
 import PurchaseOrderShipping from './components/PurchaseOrderShipping'
 import SaleAttachingProductOffer from './components/SaleAttachingProductOffer'
 
-import confirm from '~/components/Confirmable/confirm'
+import confirm from '../../../components/Confirmable/confirm'
 import moment from 'moment/moment'
-import { FormattedPhone } from '~/components/formatted-messages/'
+import { FormattedPhone } from '../../../components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '~/utils/functions'
+import { getSafe, generateToastMarkup, uniqueArrayByKey } from '../../../utils/functions'
 import { injectIntl, FormattedNumber } from 'react-intl'
-import { currency } from '~/constants/index'
-import { AttachmentManager } from '~/modules/attachments'
-import ProdexGrid from '~/components/table'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { AttachmentManager } from '../../attachments'
+import ProdexGrid from '../../../components/table'
+import { getLocaleDateFormat } from '../../../components/date-format'
 import TransactionInfo from './components/TransactionInfo'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import UploadAttachment from '../../inventory/components/upload/UploadAttachment'
 
 import {
   Rectangle,
@@ -58,7 +57,7 @@ import {
   CustomDivInTitle,
   CustomDivTitle,
   InfoIcon
-} from '~/modules/cart/components/StyledComponents'
+} from '../../cart/components/StyledComponents'
 //Components
 import ModalOrderResolution from './components/ModalOrderResolution'
 
@@ -439,45 +438,35 @@ class Detail extends Component {
       {
         name: 'documentName',
         title: (
-          <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #' />
         ),
         width: 150
       },
       {
         name: 'documentType',
         title: (
-          <FormattedMessage id='order.detail.documents.type' defaultMessage='Type'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.detail.documents.type' defaultMessage='Type' />
         ),
         width: 150
       },
       {
         name: 'documentDate',
         title: (
-          <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date' />
         ),
         width: 150
       },
       {
         name: 'documentIssuer',
         title: (
-          <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer' />
         ),
         width: 150
       },
       {
         name: 'download',
         title: (
-          <FormattedMessage id='global.download' defaultMessage='Download'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.download' defaultMessage='Download' />
         ),
         width: 150,
         align: 'center'
@@ -603,7 +592,7 @@ class Detail extends Component {
           linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
         })
       }
-      let response = ''
+      let response = {}
       if (getSafe(() => this.props.router.query.type, false) === 'sales') {
         response = await getSaleOrder(order.id)
       } else {
@@ -630,7 +619,7 @@ class Detail extends Component {
     }
     try {
       await unlinkAttachmentToOrder(query)
-      let response = ''
+      let response = {}
       if (getSafe(() => this.props.router.query.type, false) === 'sales') {
         response = await getSaleOrder(order.id)
       } else {
@@ -731,8 +720,8 @@ class Detail extends Component {
             </Button>
           ),
           documentType: getSafe(() => row.documentType.name, 'N/A'),
-          documentDate: row.expirationDate
-            ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+          documentDate: row.issuedAt
+            ? getSafe(() => moment(row.issuedAt).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
           documentIssuer: getSafe(() => row.issuer, 'N/A'),
           download: (
@@ -894,18 +883,14 @@ class Detail extends Component {
             open={true}>
             <Modal.Header>
               <>
-                <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR '>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='order.relatedDocumentsFor' defaultMessage='RELATED DOCUMENTS FOR ' />
                 <StyledHeader>{documentsPopupProduct}</StyledHeader>
               </>
             </Modal.Header>
             <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
             <Modal.Actions>
               <Button basic onClick={() => this.setState({ openDocumentsPopup: false })}>
-                <FormattedMessage id='global.close' defaultMessage='Close'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.close' defaultMessage='Close' />
               </Button>
             </Modal.Actions>
           </StyledModal>
@@ -1412,9 +1397,7 @@ class Detail extends Component {
                           trigger={
                             <CustomButton type='button' floated='right'>
                               <PlusIcon size='18' />
-                              <FormattedMessage id='global.addDocument' defaultMessage='Add Document'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.addDocument' defaultMessage='Add Document' />
                             </CustomButton>
                           }
                           returnSelectedRows={rows => this.attachDocumentsManager(rows)}
@@ -1423,7 +1406,7 @@ class Detail extends Component {
                     </GridRow>
                     <GridRow>
                       <GridColumn style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
-                        <ProdexGrid
+                        <ProdexGrid 
                           displayRowActionsOverBorder
                           removeFlexClass={true}
                           loading={loadingRelatedDocuments}

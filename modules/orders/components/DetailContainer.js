@@ -3,11 +3,10 @@ import Detail from './Detail'
 import * as Actions from '../actions'
 import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
-import { getSafe, getFormattedAddress } from '~/utils/functions'
+import { getSafe, getFormattedAddress } from '../../../utils/functions'
 import { FormattedNumber } from 'react-intl'
-import { ArrayToMultiple } from '~/components/formatted-messages'
-import { currency, currencyUSSymbol } from '~/constants/index'
-import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
+import { currency, currencyUSSymbol } from '../../../constants/index'
+import { downloadAttachment, addAttachment } from '../../inventory/actions'
 
 function actionRequired(data) {
   // return statuses code

@@ -1,17 +1,17 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import { loadFile, addAttachment } from '~/modules/inventory/actions'
+import { loadFile, addAttachment } from '../../../inventory/actions'
 import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from 'semantic-ui-react'
 import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import confirm from '~/components/Confirmable/confirm'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+import confirm from '../../../../components/Confirmable/confirm'
 import styled from 'styled-components'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages } from '../../../../constants/yupValidation'
 
 const ModalBody = styled(ModalContent)`
   padding: 0 1.5rem 1.5rem !important;

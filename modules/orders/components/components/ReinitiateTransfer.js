@@ -1,14 +1,13 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import { loadFile, addAttachment } from '~/modules/inventory/actions'
 import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import * as val from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages } from '../../../../constants/yupValidation'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
 `

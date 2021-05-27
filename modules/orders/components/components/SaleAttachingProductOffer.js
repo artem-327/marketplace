@@ -23,12 +23,11 @@ import { FieldArray } from 'formik'
 import moment from 'moment'
 
 import * as Actions from '../../actions'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import confirm from '~/components/Confirmable/confirm'
-import { loadFile, addAttachment } from '~/modules/inventory/actions'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe, generateToastMarkup } from '../../../../utils/functions'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+import confirm from '../../../../components/Confirmable/confirm'
+import { loadFile, addAttachment } from '../../../inventory/actions'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 import { UploadCloud } from 'react-feather'
 
 const UploadCloudIcon = styled(UploadCloud)`

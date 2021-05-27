@@ -21,18 +21,17 @@ import moment from 'moment'
 import { AlertCircle } from 'react-feather'
 import { debounce } from 'lodash'
 //Components
-import { errorMessages, dateValidation } from '~/constants/yupValidation'
-import { DateInput } from '~/components/custom-formik'
-import { currency } from '~/constants/index'
-import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
-import '~/modules/purchase-order/styles/PurchaseOrder.scss'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { getSafe } from '~/utils/functions'
-import FreightLabel from '~/components/freight'
+import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
+import { DateInput } from '../../../../components/custom-formik'
+import { currency } from '../../../../constants/index'
+import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
+import '../../../purchase-order/styles/PurchaseOrder.scss'
+import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
+import { getSafe } from '../../../../utils/functions'
+import FreightLabel from '../../../../components/freight'
 //Actions
 import * as Actions from '../../actions'
 //Styled
-import { CustomMessage } from '~/modules/cart/components/StyledComponents'
 import styled from 'styled-components'
 
 const FREIGHT_TYPES = {
@@ -327,9 +326,7 @@ class SaleReturnShipping extends Component {
                                   <FormattedMessage
                                     id='cart.requestShippingQuote'
                                     defaultMessage='Request Shipping Quote'
-                                    tagName='span'>
-                                    {text => text}
-                                  </FormattedMessage>
+                                    tagName='span' />
                                 </CustomButton>
                               </Grid.Column>
                             </Grid.Row>
@@ -417,16 +414,12 @@ class SaleReturnShipping extends Component {
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button basic fluid onClick={() => this.props.closePopup()}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <CustomSubmitButton primary fluid type='submit'>
-                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' />
                             </CustomSubmitButton>
                           </Grid.Column>
                         </GridRowLine>

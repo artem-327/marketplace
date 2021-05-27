@@ -5,15 +5,14 @@ import { withRouter } from 'next/router'
 import moment from 'moment/moment'
 
 import Orders from './Orders'
-import * as OrdersHelper from '~/components/helpers/Orders'
+import * as OrdersHelper from '../../../components/helpers/Orders'
 import * as Actions from '../actions'
-import { withDatagrid } from '~/modules/datagrid'
-import { applyFilter } from '~/modules/filter/actions'
-import { ArrayToMultiple } from '~/components/formatted-messages'
-import { currency } from '~/constants/index'
-import { downloadAttachment, downloadAttachmentPdf } from '~/modules/inventory/actions'
-import { getLocaleDateFormat } from '~/components/date-format'
-import { getSafe } from '~/utils/functions'
+import { withDatagrid } from '../../datagrid'
+import { applyFilter } from '../../filter/actions'
+import { currency } from '../../../constants/index'
+import { downloadAttachment, downloadAttachmentPdf } from '../../inventory/actions'
+import { getLocaleDateFormat } from '../../../components/date-format'
+import { getSafe } from '../../../utils/functions'
 
 const filterAttachments = (a, type) => {
   if (!a) return []

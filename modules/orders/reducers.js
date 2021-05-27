@@ -405,7 +405,7 @@ export default function reducer(state = initialState, action) {
     case AT.ORDER_APPLY_FILTER: {
       return {
         ...state,
-        datagridFilter: payload,
+        datagridFilter: action.payload,
         datagridFilterUpdate: !state.datagridFilterUpdate
       }
     }

@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { OrderSegment, OrderList } from '~/modules/orders/components/Detail'
+import { OrderSegment, OrderList } from '../../../orders/components/Detail'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 
 const SmallerTextColumn = styled(GridColumn)`
   .page-wrapper .segment .grid > .row > & {

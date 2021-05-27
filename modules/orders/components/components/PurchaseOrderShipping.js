@@ -11,13 +11,13 @@ import { debounce } from 'lodash'
 //Actions
 import * as Actions from '../../actions'
 //Components
-import { getSafe } from '~/utils/functions'
-import { errorMessages, dateValidation } from '~/constants/yupValidation'
-import { DateInput } from '~/components/custom-formik'
-import { currency } from '~/constants/index'
-import ShippingQuote from '~/modules/purchase-order/components/ShippingQuote'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import FreightLabel from '~/components/freight'
+import { getSafe } from '../../../../utils/functions'
+import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
+import { DateInput } from '../../../../components/custom-formik'
+import { currency } from '../../../../constants/index'
+import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
+import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
+import FreightLabel from '../../../../components/freight'
 
 //Styled
 import styled from 'styled-components'
@@ -315,9 +315,7 @@ class PurchaseOrderShipping extends Component {
                                   <FormattedMessage
                                     id='cart.requestShippingQuote'
                                     defaultMessage='Request Shipping Quote'
-                                    tagName='span'>
-                                    {text => text}
-                                  </FormattedMessage>
+                                    tagName='span' />
                                 </CustomButton>
                               </Grid.Column>
                             </Grid.Row>
@@ -428,16 +426,12 @@ class PurchaseOrderShipping extends Component {
                           <Grid.Column width={10}></Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <Button basic fluid onClick={() => this.props.closePopup()}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
                             <CustomSubmitButton primary fluid type='submit'>
-                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' />
                             </CustomSubmitButton>
                           </Grid.Column>
                         </GridRowLine>

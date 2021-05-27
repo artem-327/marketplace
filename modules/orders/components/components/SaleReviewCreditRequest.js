@@ -7,9 +7,9 @@ import styled from 'styled-components'
 import moment from 'moment'
 import * as val from 'yup'
 import * as Actions from '../../actions'
-import { errorMessages } from '~/constants/yupValidation'
-import { downloadAttachment } from '~/modules/inventory/actions'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import { errorMessages } from '../../../../constants/yupValidation'
+import { downloadAttachment } from '../../../inventory/actions'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -250,16 +250,12 @@ class SaleReviewCreditRequest extends Component {
                                 onClick={() => {
                                   this.setState({ counter: true })
                                 }}>
-                                <FormattedMessage id='global.counter' defaultMessage='Counter' tagName='span'>
-                                  {text => text}
-                                </FormattedMessage>
+                                <FormattedMessage id='global.counter' defaultMessage='Counter' tagName='span' />
                               </Button>
                             </Grid.Column>
                             <Grid.Column floated='right' width={3}>
                               <Button color='blue' fluid type='button' onClick={this.acceptRequestCredit}>
-                                <FormattedMessage id='global.accept' defaultMessage='Accept' tagName='span'>
-                                  {text => text}
-                                </FormattedMessage>
+                                <FormattedMessage id='global.accept' defaultMessage='Accept' tagName='span' />
                               </Button>
                             </Grid.Column>
                           </Grid.Row>
@@ -370,9 +366,7 @@ class SaleReviewCreditRequest extends Component {
                                     resetForm()
                                     this.props.closePopup()
                                   }}>
-                                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                                    {text => text}
-                                  </FormattedMessage>
+                                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
                                 </Button>
                               </Grid.Column>
                               <Grid.Column floated='right'>
@@ -386,16 +380,12 @@ class SaleReviewCreditRequest extends Component {
                                   <FormattedMessage
                                     id='global.returnReview'
                                     defaultMessage='Return to review'
-                                    tagName='span'>
-                                    {text => text}
-                                  </FormattedMessage>
+                                    tagName='span' />
                                 </Button>
                               </Grid.Column>
                               <Grid.Column floated='right'>
                                 <Button primary fluid type='submit'>
-                                  <FormattedMessage id='global.send' defaultMessage='Send' tagName='span'>
-                                    {text => text}
-                                  </FormattedMessage>
+                                  <FormattedMessage id='global.send' defaultMessage='Send' tagName='span' />
                                 </Button>
                               </Grid.Column>
                             </ButtonsRow>

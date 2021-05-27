@@ -9,10 +9,10 @@ import { withToastManager } from 'react-toast-notifications'
 import * as val from 'yup'
 import { Check } from 'react-feather'
 
-import { generateToastMarkup } from '~/utils/functions'
-import { errorMessages } from '~/constants/yupValidation'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import { getSafe } from '~/utils/functions'
+import { generateToastMarkup } from '../../../../utils/functions'
+import { errorMessages } from '../../../../constants/yupValidation'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+import { getSafe } from '../../../../utils/functions'
 //Styles
 import { PaperclipIcon } from '../../../company-form/components/AddCertifications/AddCertifications.styles'
 import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/DetailRow.style'
@@ -326,16 +326,12 @@ class PurchaseRequestCreditDelivery extends Component {
                                 resetForm()
                                 this.props.closePopup()
                               }}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
                             </BasicButton>
                           </Grid.Column>
                           <Grid.Column floated='right' width={4}>
                             <BasicButton margin='0px !important' type='submit'>
-                              <FormattedMessage id='global.send' defaultMessage='Send' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.send' defaultMessage='Send' tagName='span' />
                             </BasicButton>
                           </Grid.Column>
                         </Grid.Row>

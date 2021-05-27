@@ -5,7 +5,7 @@ import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'se
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -207,9 +207,7 @@ class PurchaseRejectDelivery extends Component {
                                 resetForm()
                                 this.props.closePopup()
                               }}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
@@ -222,9 +220,7 @@ class PurchaseRejectDelivery extends Component {
                               }
                               primary
                               fluid>
-                              <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.confirm' defaultMessage='Confirm' tagName='span' />
                             </Button>
                           </Grid.Column>
                         </Grid.Row>

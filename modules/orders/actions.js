@@ -237,7 +237,7 @@ export const getGroupedProductOffers = (orderId, orderItemsId) => ({
   async payload() {
     let res = []
     if (orderItemsId && orderItemsId.length > 1) {
-      async function asyncForEach(array, callback) {
+      const asyncForEach = async (array, callback) => {
         for (let index = 0; index < array.length; index++) {
           await callback(array[index], index, array)
         }
