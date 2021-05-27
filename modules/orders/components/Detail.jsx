@@ -760,7 +760,7 @@ const Detail = props => {
           </div>
         </CustomDivAddDocument>
         <ProdexGrid
-          loading={false}
+          loading={props.loadingRelatedDocuments}
           tableName='related_orders'
           columns={columnsRelatedOrdersDetailDocuments}
           rows={rowsDocuments}

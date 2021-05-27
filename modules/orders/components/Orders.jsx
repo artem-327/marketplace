@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useState } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
@@ -121,115 +121,135 @@ const CustomDivTextAddedMewDocument = styled.div`
   color: #848893;
 `
 
-class Orders extends Component {
-  constructor(props) {
-    super(props)
+const Orders = props => {
 
-    this.state = {
-      sorting: {
-        sortDirection: '',
-        sortPath: ''
+  const [state, setState] = useState({
+    sorting: {
+      sortDirection: '',
+      sortPath: ''
+    },
+    LastEndpointType: '',
+    openModal: false,
+    documentType: '',
+    openUploadAttachment: false,
+    relatedDocumentsTypeDropdown: [],
+    documentFiles: [],
+    isAddedNewDocument: false,
+    isOpenManager: false,
+    relatedDocumentType: [],
+    row: '',
+    isUnlinkDocument: false,
+    replaceExisting: false,
+    replaceRow: '',
+    openModalAccounting: false,
+    openRelatedPopup: false,
+    relatedPopupParams: {},
+    expandedRowIds: [],
+    filterDocumentType: 0
+  })
+
+  const getActions = () => {
+    const {
+      intl: { formatMessage }
+    } = props
+    return [
+      {
+        text: formatMessage({
+          id: 'global.replaceExisting',
+          defaultMessage: 'Replace Existing'
+        }),
+        callback: row => replaceExiting(row)
       },
-      LastEndpointType: '',
-
-      openModal: false,
-      columnsRelatedOrders: [
-        {
-          name: 'documentNumber',
-          title: (
-            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
-          ),
-          width: 150,
-          actions: this.getActions()
-        },
-        {
-          name: 'type',
-          title: (
-            <FormattedMessage id='order.related.type' defaultMessage='Type' />
-          ),
-          width: 150
-        },
-        {
-          name: 'issuedAt',
-          title: (
-            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
-          ),
-          width: 120
-        },
-        {
-          name: 'issuerCompanyName',
-          title: (
-            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
-          ),
-          width: 100
-        },
-        {
-          name: 'download',
-          title: (
-            <FormattedMessage id='order.related.download' defaultMessage='Download' />
-          ),
-          width: 100,
-          align: 'center'
-        }
-      ],
-      columnsAccountingDocuments: [
-        {
-          name: 'documentNumber',
-          title: (
-            <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
-          ),
-          width: 150
-        },
-        {
-          name: 'type',
-          title: (
-            <FormattedMessage id='order.related.type' defaultMessage='Type' />
-          ),
-          width: 150
-        },
-        {
-          name: 'issuedAt',
-          title: (
-            <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
-          ),
-          width: 120
-        },
-        {
-          name: 'issuerCompanyName',
-          title: (
-            <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
-          ),
-          width: 100
-        },
-        {
-          name: 'cfPriceTotal',
-          title: (
-            <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total' />
-          ),
-          width: 100,
-          align: 'center'
-        }
-      ],
-      documentType: '',
-      openUploadAttachment: false,
-      relatedDocumentsTypeDropdown: [],
-      documentFiles: [],
-      isAddedNewDocument: false,
-      isOpenManager: false,
-      relatedDocumentType: [],
-      row: '',
-      isUnlinkDocument: false,
-      replaceExisting: false,
-      replaceRow: '',
-      openModalAccounting: false,
-      openRelatedPopup: false,
-      relatedPopupParams: {},
-      expandedRowIds: [],
-      filterDocumentType: 0
-    }
+      {
+        text: formatMessage({
+          id: 'global.unlink',
+          defaultMessage: 'Unlink'
+        }),
+        callback: row => handleUnlink(row)
+      }
+    ]
   }
+  
+  const columnsRelatedOrders = [
+    {
+      name: 'documentNumber',
+      title: (
+        <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
+      ),
+      width: 150,
+      actions: getActions()
+    },
+    {
+      name: 'type',
+      title: (
+        <FormattedMessage id='order.related.type' defaultMessage='Type' />
+      ),
+      width: 150
+    },
+    {
+      name: 'issuedAt',
+      title: (
+        <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
+      ),
+      width: 120
+    },
+    {
+      name: 'issuerCompanyName',
+      title: (
+        <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
+      ),
+      width: 100
+    },
+    {
+      name: 'download',
+      title: (
+        <FormattedMessage id='order.related.download' defaultMessage='Download' />
+      ),
+      width: 100,
+      align: 'center'
+    }
+  ]
+  
+  const columnsAccountingDocuments = [
+    {
+      name: 'documentNumber',
+      title: (
+        <FormattedMessage id='order.related.documentNumber' defaultMessage='Document #' />
+      ),
+      width: 150
+    },
+    {
+      name: 'type',
+      title: (
+        <FormattedMessage id='order.related.type' defaultMessage='Type' />
+      ),
+      width: 150
+    },
+    {
+      name: 'issuedAt',
+      title: (
+        <FormattedMessage id='order.related.issuedAt' defaultMessage='Document Date' />
+      ),
+      width: 120
+    },
+    {
+      name: 'issuerCompanyName',
+      title: (
+        <FormattedMessage id='order.related.issuerCompanyName' defaultMessage='Issuer' />
+      ),
+      width: 100
+    },
+    {
+      name: 'cfPriceTotal',
+      title: (
+        <FormattedMessage id='order.related.cfPriceTotal' defaultMessage='Total' />
+      ),
+      width: 100,
+      align: 'center'
+    }
+  ]
 
-  getMimeType = documentName => {
+  const getMimeType = documentName => {
     const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
 
     switch (documentExtension) {
@@ -271,11 +291,11 @@ class Orders extends Component {
     }
   }
 
-  failedWrapper = value => {
+  const failedWrapper = value => {
     return <span style={{ color: '#DB2828' }}>{value}</span>
   }
 
-  getColumns = () => {
+  const getColumns = () => {
     return [
       {
         name: 'orderId',
@@ -337,16 +357,16 @@ class Orders extends Component {
     ]
   }
 
-  getRows = () => {
-    const { currentTab, router } = this.props
+  const getRows = () => {
+    const { currentTab, router } = props
     let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
-    return this.props.rows.map(row => ({
+    return props.rows.map(row => ({
       ...row,
       orderId: (
         <ActionCell
           row={row}
-          getActions={this.getActionsByRow}
+          getActions={getActionsByRow}
           content={row.id}
           onContentClick={e => {
             e.stopPropagation()
@@ -365,8 +385,8 @@ class Orders extends Component {
           }
         />
       ),
-      globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
-      paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
+      globalStatus: row.globalStatus === 'Failed' ? failedWrapper(row.globalStatus) : row.globalStatus,
+      paymentStatus: row.paymentStatus === 'Failed' ? failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl: '',
       sds: '',
       cofA: '',
@@ -374,7 +394,7 @@ class Orders extends Component {
         <a
           href='#'
           onClick={e =>
-            this.openRelatedPopup(e, {
+            openRelatedPopup(e, {
               rowRawData: row.rawData,
               parentId: row.id,
               attachments: row.attachments,
@@ -402,14 +422,14 @@ class Orders extends Component {
         disputeResolutionStatus: '',
         bl:
           item.bl && item.bl.length ? (
-            <a href='#' onClick={() => this.downloadAttachment(item.bl[0].name, item.bl[0].id)}>
+            <a href='#' onClick={() => downloadAttachment(item.bl[0].name, item.bl[0].id)}>
               <Icon name='file' className='positive' />
             </a>
           ) : (
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(
+                openDocumentManager(
                   e,
                   {
                     rowRawData: row.rawData,
@@ -425,14 +445,14 @@ class Orders extends Component {
           ),
         sds:
           item.sds && item.sds.length ? (
-            <a href='#' onClick={() => this.downloadAttachment(item.sds[0].name, item.sds[0].id)}>
+            <a href='#' onClick={() => downloadAttachment(item.sds[0].name, item.sds[0].id)}>
               <Icon name='file' className='positive' />
             </a>
           ) : (
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(
+                openDocumentManager(
                   e,
                   {
                     rowRawData: row.rawData,
@@ -448,14 +468,14 @@ class Orders extends Component {
           ),
         cofA:
           item.cofA && item.cofA.length ? (
-            <a href='#' onClick={() => this.downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
+            <a href='#' onClick={() => downloadAttachment(item.cofA[0].name, item.cofA[0].id)}>
               <Icon name='file' className='positive' />
             </a>
           ) : (
             <a
               href='#'
               onClick={e =>
-                this.openDocumentManager(
+                openDocumentManager(
                   e,
                   {
                     rowRawData: row.rawData,
@@ -477,7 +497,7 @@ class Orders extends Component {
           <a
             href='#'
             onClick={e =>
-              this.openRelatedPopup(e, {
+              openRelatedPopup(e, {
                 rowRawData: row.rawData,
                 parentId: item.rawData.id,
                 attachments: item.attachments,
@@ -494,63 +514,65 @@ class Orders extends Component {
           </a>
         )
       })),
-      expand: this.state.expandedRowIds.some(id => id === row.id) ? (
+      expand: state.expandedRowIds.some(id => id === row.id) ? (
         <ChevronUp size={16} style={{ cursor: 'pointer' }} />
       ) : (
         <ChevronDown size={16} style={{ cursor: 'pointer' }} />
       ),
-      clsName: this.state.expandedRowIds.some(id => id === row.id) ? ' open' : ''
+      clsName: state.expandedRowIds.some(id => id === row.id) ? ' open' : ''
     }))
   }
 
-  openRelatedPopup(e, params) {
+  const openRelatedPopup = (e, params) => {
     e.stopPropagation()
-    this.setState({
+    setState({
+      ...state,
       openRelatedPopup: true,
       relatedPopupParams: params
     })
   }
 
-  openDocumentManager(e, params, relatedDocumentType) {
+  const openDocumentManager = (e, params, relatedDocumentType) => {
     e.stopPropagation()
-    this.setState({
+    setState({
+      ...state,
       isOpenManager: true,
       relatedPopupParams: params,
       relatedDocumentType
     })
   }
 
-  async openModalWindow(orderId) {
-    this.setState({ openModalAccounting: true })
-    await this.props.getRelatedOrders(orderId)
+  const openModalWindow = async (orderId) => {
+    setState({ ...state, openModalAccounting: true })
+    await props.getRelatedOrders(orderId)
   }
 
-  componentDidMount() {
-    const { getDocumentTypes, listDocumentTypes } = this.props
+  const componentDidMount = () => {
+    const { getDocumentTypes, listDocumentTypes } = props
     if (listDocumentTypes && !listDocumentTypes.length) {
       getDocumentTypes()
     }
   }
 
-  downloadAttachment = async (documentName, documentId) => {
-    const element = await this.prepareLinkToAttachment(documentId)
+  const downloadAttachment = async (documentName, documentId) => {
+    const element = await prepareLinkToAttachment(documentId)
 
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
 
-  prepareLinkToAttachment = async documentId => {
+  const prepareLinkToAttachment = async documentId => {
     let downloadedFile = null
-    const { openModalAccounting } = this.state
+    const { openModalAccounting } = state
     if (openModalAccounting) {
-      downloadedFile = await this.props.downloadAttachmentPdf(documentId)
+      downloadedFile = await props.downloadAttachmentPdf(documentId)
     } else {
-      downloadedFile = await this.props.downloadAttachment(documentId)
+      downloadedFile = await props.downloadAttachment(documentId)
     }
 
-    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && this.getMimeType(fileName)
+    const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && getMimeType(fileName)
     const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
     let fileURL = URL.createObjectURL(file)
@@ -559,7 +581,7 @@ class Orders extends Component {
     return element
   }
 
-  extractFileName = contentDispositionValue => {
+  const extractFileName = contentDispositionValue => {
     var filename = ''
     if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
       var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
@@ -571,22 +593,23 @@ class Orders extends Component {
     return filename
   }
 
-  closePopup = () => {
-    this.setState({
+  const closePopup = () => {
+    setState({
+      ...state,
       openModal: false,
       openModalAccounting: false,
       openRelatedPopup: false
     })
-    this.props.clearRelatedOrders()
+    props.clearRelatedOrders()
   }
 
-  handleUnlink = async row => {
-    const { unlinkAttachmentToOrder, removeLinkAttachmentToOrderItem, datagrid } = this.props
+  const handleUnlink = async row => {
+    const { unlinkAttachmentToOrder, removeLinkAttachmentToOrderItem, datagrid } = props
     const { parentId, relatedPopupType } = row
 
     const {
       relatedPopupParams: { rowRawData }
-    } = this.state
+    } = state
 
     if (relatedPopupType === 'order') {
       const query = {
@@ -611,7 +634,8 @@ class Orders extends Component {
 
           datagrid.updateRow(parentId, () => newRow)
 
-          this.setState(prevState => ({
+          setState(prevState => ({
+            ...state,
             relatedPopupParams: {
               ...prevState.relatedPopupParams,
               attachments: attachments,
@@ -649,7 +673,8 @@ class Orders extends Component {
         }
         datagrid.updateRow(rowRawData.id, () => newRow)
 
-        this.setState(prevState => ({
+        setState(prevState => ({
+          ...state,
           relatedPopupParams: {
             ...prevState.relatedPopupParams,
             attachments: itemAttachments,
@@ -664,17 +689,17 @@ class Orders extends Component {
     }
   }
 
-  attachDocumentsManager = async newDocuments => {
-    const { linkAttachmentToOrder, linkAttachmentToOrderItem, datagrid } = this.props
-    const { replaceExisting, replaceRow } = this.state
+  const attachDocumentsManager = async newDocuments => {
+    const { linkAttachmentToOrder, linkAttachmentToOrderItem, datagrid } = props
+    const { replaceExisting, replaceRow } = state
 
     if (replaceExisting && replaceRow) {
-      await this.handleUnlink(replaceRow)
-      this.setState({ replaceExisting: false, replaceRow: '' })
+      await handleUnlink(replaceRow)
+      setState({ ...state, replaceExisting: false, replaceRow: '' })
     }
     const {
       relatedPopupParams: { rowRawData, parentId, attachments, type }
-    } = this.state
+    } = state
 
     const docArray = uniqueArrayByKey(newDocuments, 'id')
 
@@ -694,7 +719,8 @@ class Orders extends Component {
         }
         datagrid.updateRow(rowRawData.id, () => newRow)
 
-        this.setState(prevState => ({
+        setState(prevState => ({
+          ...state,
           relatedPopupParams: {
             ...prevState.relatedPopupParams,
             attachments: newAttachments,
@@ -729,7 +755,8 @@ class Orders extends Component {
         }
         datagrid.updateRow(rowRawData.id, () => newRow)
 
-        this.setState(prevState => ({
+        setState(prevState => ({
+          ...state,
           relatedPopupParams: {
             ...prevState.relatedPopupParams,
             attachments: newAttachments,
@@ -745,17 +772,17 @@ class Orders extends Component {
     }
   }
 
-  replaceExiting = row => {
-    this.setState({ isOpenManager: true, replaceExisting: true, replaceRow: row })
+  const replaceExiting = row => {
+    setState({ ...state, isOpenManager: true, replaceExisting: true, replaceRow: row })
   }
 
-  getContent = () => {
-    const { relatedOrders, loadRelatedOrders } = this.props
+  const getContent = () => {
+    const { relatedOrders, loadRelatedOrders } = props
     const rowsRelatedOrders = relatedOrders.reduce((ordersList, order) => {
       if (order) {
         ordersList.push({
           documentNumber: (
-            <Button as='a' onClick={() => this.downloadAttachment(order.documentNumber, order.id)}>
+            <Button as='a' onClick={() => downloadAttachment(order.documentNumber, order.id)}>
               <Icon name='download' />
               {order.documentNumber}
             </Button>
@@ -779,43 +806,21 @@ class Orders extends Component {
     }, [])
     return (
       <ProdexGrid
-        loading={this.state.submitting || loadRelatedOrders}
+        loading={loadRelatedOrders}
         hideSettingsIcon={true}
         tableName='related_orders'
-        columns={this.state.columnsAccountingDocuments}
+        columns={columnsAccountingDocuments}
         rows={rowsRelatedOrders}
       />
     )
   }
 
-  getActions = () => {
-    const {
-      intl: { formatMessage }
-    } = this.props
-    return [
-      {
-        text: formatMessage({
-          id: 'global.replaceExisting',
-          defaultMessage: 'Replace Existing'
-        }),
-        callback: row => this.replaceExiting(row)
-      },
-      {
-        text: formatMessage({
-          id: 'global.unlink',
-          defaultMessage: 'Unlink'
-        }),
-        callback: row => this.handleUnlink(row)
-      }
-    ]
-  }
-
-  getActionsByRow = () => {
+  const getActionsByRow = () => {
     const {
       currentTab,
       router,
       intl: { formatMessage }
-    } = this.props
+    } = props
 
     let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
@@ -833,23 +838,23 @@ class Orders extends Component {
           defaultMessage: 'Accounting Documents'
         }),
         disabled: row => row.accountingDocumentsCount === 0,
-        callback: row => this.openModalWindow(row.id)
+        callback: row => openModalWindow(row.id)
       }
     ]
   }
 
-  getRelatedDocumentsContent = () => {
+  const getRelatedDocumentsContent = () => {
     const {
       intl: { formatMessage },
       listDocumentTypes,
       documentTypesFetching
-    } = this.props
+    } = props
     let {
       relatedPopupParams: { rowRawData, parentId, attachments, type },
       isAddedNewDocument,
       isUnlinkDocument,
       filterDocumentType
-    } = this.state
+    } = state
 
     const filteredAttachments =
       filterDocumentType === 0 ? attachments : attachments.filter(a => a.documentType.id === filterDocumentType)
@@ -861,7 +866,7 @@ class Orders extends Component {
       issuedAt: getSafe(() => <FormattedDate value={attach.issuedAt.split('T')[0]} />, 'N/A'),
       issuerCompanyName: 'N/A',
       download: (
-        <a href='#' onClick={() => this.downloadAttachment(attach.name, attach.id)}>
+        <a href='#' onClick={() => downloadAttachment(attach.name, attach.id)}>
           <Icon name='file' className='positive' />
         </a>
       ),
@@ -904,11 +909,11 @@ class Orders extends Component {
                 value: 0
               }
             ].concat(listDocumentTypes)}
-            value={this.state.filterDocumentType}
+            value={state.filterDocumentType}
             selection
             loading={documentTypesFetching}
             onChange={(event, { name, value }) => {
-              this.setState({ [name]: value })
+              setState({ ...state, [name]: value })
             }}
             name='filterDocumentType'
             placeholder={formatMessage({
@@ -919,17 +924,17 @@ class Orders extends Component {
           <div>
             <AttachmentManager
               documentTypeIds={[]}
-              isOpenManager={this.state.isOpenManager}
+              isOpenManager={state.isOpenManager}
               asModal
-              returnSelectedRows={rows => this.attachDocumentsManager(rows)}
-              returnCloseAttachmentManager={val => this.setState({ isOpenManager: false })}
+              returnSelectedRows={rows => attachDocumentsManager(rows)}
+              returnCloseAttachmentManager={val => setState({ ...state, isOpenManager: false })}
             />
           </div>
         </CustomDivAddDocument>
         <ProdexGrid
-          loading={this.props.loadingRelatedDocuments}
+          loading={props.loadingRelatedDocuments}
           tableName='related_orders_documents'
-          columns={this.state.columnsRelatedOrders}
+          columns={columnsRelatedOrders}
           rows={rowsRelatedDocuments}
           columnActions='documentNumber'
         />
@@ -937,7 +942,7 @@ class Orders extends Component {
     )
   }
 
-  getRowDetail = ({ row }) => {
+  const getRowDetail = ({ row }) => {
     return (
       <DetailRow
         row={row}
@@ -948,124 +953,125 @@ class Orders extends Component {
     )
   }
 
-  toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
+  const toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }) => {
     return <></>
   }
 
-  render() {
-    const { isFetching, currentTab, datagrid, tutorialCompleted } = this.props
+  const { isFetching, currentTab, datagrid, tutorialCompleted } = props
 
-    const { relatedPopupParams } = this.state
-    let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
+  const { relatedPopupParams } = state
+  let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
 
-    return (
-      <div id='page' className='flex stretched scrolling'>
-        {this.state.openModalAccounting && (
-          <StyledModal size='small' closeIcon={false} centered={true} open={true}>
-            <Modal.Header>
-              <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents' />
-            </Modal.Header>
-            <Modal.Content scrolling>{this.getContent()}</Modal.Content>
-            <Modal.Actions>
-              <Button basic onClick={() => this.closePopup()}>
-                <FormattedMessage id='global.close' defaultMessage='Close' />
-              </Button>
-            </Modal.Actions>
-          </StyledModal>
-        )}
+  return (
+    <div id='page' className='flex stretched scrolling'>
+      {state.openModalAccounting && (
+        <StyledModal size='small' closeIcon={false} centered={true} open={true}>
+          <Modal.Header>
+            <FormattedMessage id='order.related.table' defaultMessage='Related Accounting Documents' />
+          </Modal.Header>
+          <Modal.Content scrolling>{getContent()}</Modal.Content>
+          <Modal.Actions>
+            <Button basic onClick={() => closePopup()}>
+              <FormattedMessage id='global.close' defaultMessage='Close' />
+            </Button>
+          </Modal.Actions>
+        </StyledModal>
+      )}
 
-        {this.state.openRelatedPopup && (
-          <StyledModal
-            size='small'
-            closeIcon={false}
-            onClose={() => {
-              this.setState({
-                openRelatedPopup: false,
-                isAddedNewDocument: false,
-                isUnlinkDocument: false,
-                isOpenManager: false
-              })
-            }}
-            centered={true}
-            open={true}>
-            <Modal.Header>{relatedPopupParams.header}</Modal.Header>
-            <Modal.Content scrolling>{this.getRelatedDocumentsContent()}</Modal.Content>
-            <Modal.Actions>
-              <Button
-                basic
-                onClick={() => {
-                  this.setState({
-                    openRelatedPopup: false,
-                    isAddedNewDocument: false,
-                    isUnlinkDocument: false,
-                    isOpenManager: false
-                  })
-                  this.closePopup()
-                }}>
-                <FormattedMessage id='global.close' defaultMessage='Close' />
-              </Button>
-            </Modal.Actions>
-          </StyledModal>
-        )}
+      {state.openRelatedPopup && (
+        <StyledModal
+          size='small'
+          closeIcon={false}
+          onClose={() => {
+            setState({
+              ...state,
+              openRelatedPopup: false,
+              isAddedNewDocument: false,
+              isUnlinkDocument: false,
+              isOpenManager: false
+            })
+          }}
+          centered={true}
+          open={true}>
+          <Modal.Header>{relatedPopupParams.header}</Modal.Header>
+          <Modal.Content scrolling>{getRelatedDocumentsContent()}</Modal.Content>
+          <Modal.Actions>
+            <Button
+              basic
+              onClick={() => {
+                setState({
+                  ...state,
+                  openRelatedPopup: false,
+                  isAddedNewDocument: false,
+                  isUnlinkDocument: false,
+                  isOpenManager: false
+                })
+                closePopup()
+              }}>
+              <FormattedMessage id='global.close' defaultMessage='Close' />
+            </Button>
+          </Modal.Actions>
+        </StyledModal>
+      )}
 
-        {!this.state.openRelatedPopup && this.state.isOpenManager && (
-          <AttachmentManager
-            documentTypeIds={this.state.relatedDocumentType}
-            isOpenManager={this.state.isOpenManager}
-            asModal
-            singleSelection={true}
-            lockedFileTypes={true}
-            returnSelectedRows={rows => this.attachDocumentsManager(rows)}
-            returnCloseAttachmentManager={val =>
-              this.setState({
-                isOpenManager: false,
-                relatedDocumentType: []
-              })
-            }
-          />
-        )}
+      {!state.openRelatedPopup && state.isOpenManager && (
+        <AttachmentManager
+          documentTypeIds={state.relatedDocumentType}
+          isOpenManager={state.isOpenManager}
+          asModal
+          singleSelection={true}
+          lockedFileTypes={true}
+          returnSelectedRows={rows => attachDocumentsManager(rows)}
+          returnCloseAttachmentManager={val =>
+            setState({
+              ...state,
+              isOpenManager: false,
+              relatedDocumentType: []
+            })
+          }
+        />
+      )}
 
-        {<Tutorial marginOrders isTutorial={false} isBusinessVerification={true} />}
-        <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
-          <TablesHandlers currentTab={currentTab} />
-        </Container>
-        <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
-          {isFetching ? (
-            <Spinner />
-          ) : (
-            <div className='flex stretched table-detail-rows-wrapper'>
-              <ProdexGrid
-                tableName={`orders_grid_${currentTab}`}
-                columns={this.getColumns()}
-                {...datagrid.tableProps}
-                loading={datagrid.loading}
-                rows={this.getRows()}
-                rowDetailType={true}
-                rowDetail={this.getRowDetail}
-                onRowClick={(_, row) => {
-                  if (row.root && row.orderItems.length) {
-                    let ids = this.state.expandedRowIds.slice()
-                    if (ids.includes(row.id)) {
-                      //ids.filter(id => id === row.id)
-                      this.setState({ expandedRowIds: ids.filter(id => id !== row.id) })
-                    } else {
-                      ids.push(row.id)
-                      this.setState({ expandedRowIds: ids })
-                    }
+      {<Tutorial marginOrders isTutorial={false} isBusinessVerification={true} />}
+      <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
+        <TablesHandlers currentTab={currentTab} />
+      </Container>
+      <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
+        {isFetching ? (
+          <Spinner />
+        ) : (
+          <div className='flex stretched table-detail-rows-wrapper'>
+            <ProdexGrid
+              tableName={`orders_grid_${currentTab}`}
+              columns={getColumns()}
+              {...datagrid.tableProps}
+              loading={datagrid.loading}
+              rows={getRows()}
+              rowDetailType={true}
+              rowDetail={getRowDetail}
+              onRowClick={(_, row) => {
+                if (row.root && row.orderItems.length) {
+                  let ids = state.expandedRowIds.slice()
+                  if (ids.includes(row.id)) {
+                    //ids.filter(id => id === row.id)
+                    setState({ ...state, expandedRowIds: ids.filter(id => id !== row.id) })
+                  } else {
+                    ids.push(row.id)
+                    setState({ ...state, expandedRowIds: ids })
                   }
-                }}
-                expandedRowIds={this.state.expandedRowIds}
-                onExpandedRowIdsChange={expandedRowIds => this.setState({ expandedRowIds })}
-                // onSortingChange={sorting => sorting.sortPath && this.setState({ sorting })}
-                defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
-                estimatedRowHeight={1000}
-              />
-            </div>
-          )}
-        </Container>
-      </div>
-    )
-  }
+                }
+              }}
+              expandedRowIds={state.expandedRowIds}
+              onExpandedRowIdsChange={expandedRowIds => setState({ ...state, expandedRowIds })}
+              // onSortingChange={sorting => sorting.sortPath && setState({ sorting })}
+              defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
+              estimatedRowHeight={1000}
+            />
+          </div>
+        )}
+      </Container>
+    </div>
+  )
 }
 
 export default injectIntl(withToastManager(Orders))
