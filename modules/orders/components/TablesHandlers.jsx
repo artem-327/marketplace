@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'
@@ -193,34 +193,32 @@ const validationSchema = Yup.lazy(values => {
   return Yup.object().shape({ ...validationObject })
 })
 
-class TablesHandlers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      purchase: {
-        status: 'all',
-        orderId: '',
-        dateFrom: '',
-        dateTo: ''
-      },
-      sales: {
-        status: 'all',
-        orderId: '',
-        dateFrom: '',
-        dateTo: ''
-      }
+const TablesHandlers = props => {
+  const [state, setState] = useState({
+    purchase: {
+      status: 'all',
+      orderId: '',
+      dateFrom: '',
+      dateTo: ''
+    },
+    sales: {
+      status: 'all',
+      orderId: '',
+      dateFrom: '',
+      dateTo: ''
     }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
-  }
+  })
 
-  componentDidMount() {
-    const { tableHandlersFilters, currentTab } = this.props
+  let formikProps = {}
+
+  useEffect(() => {
+    const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
 
     if (tableHandlersFilters) {
-      this.initFilterValues(tableHandlersFilters)
+      initFilterValues(tableHandlersFilters)
     } else {
-      let allFilters = this.state
+      let allFilters = state
 
       const statusSales = localStorage['orders-status-filter-sales']
       const statusPurchase = localStorage['orders-status-filter-purchase']
@@ -237,28 +235,26 @@ class TablesHandlers extends Component {
         }
       }
 
-      this.setState(allFilters)
-      this.handleFiltersValue(allFilters[currentTab])
+      setState(allFilters)
+      handleFiltersValue(allFilters[currentTab])
     }
-  }
 
-  componentWillUnmount() {
-    this.props.saveFilters(this.state)
-  }
+    return props.saveFilters(state)
+  }, [])
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab } = this.props
-      if (currentTab === '') return
-      const { setValues, setFieldTouched } = this.formikProps
+  useEffect(() => {
+    const { currentTab } = props
+    if (currentTab === '') return
 
-      let filterValue = this.state[currentTab]
-
-      const status = localStorage[`orders-status-filter-${currentTab}`]
-      filterValue = {
-        ...filterValue,
-        status: status ? status : filterValue.status
-      }
+    let filterValue = state[currentTab]
+    const status = localStorage[`orders-status-filter-${currentTab}`]
+    filterValue = {
+      ...filterValue,
+      status: status ? status : filterValue.status
+    }
+    
+    if(Object.keys(formikProps).length > 0) {
+      const { setValues, setFieldTouched } = formikProps
       setValues({
         dateFrom: filterValue.dateFrom,
         dateTo: filterValue.dateTo,
@@ -266,14 +262,15 @@ class TablesHandlers extends Component {
       })
       setFieldTouched('dateFrom', true, true)
 
-      this.setState({ [currentTab]: filterValue })
-      this.props.datagrid.clear()
-      this.handleFiltersValue(filterValue)
-    }
-  }
+      setState({ ...state, [currentTab]: filterValue })
+    }    
 
-  initFilterValues = initTableHandlersFilters => {
-    const { currentTab } = this.props
+    props.datagrid.clear()
+    handleFiltersValue(filterValue)
+  }, [props.currentTab])
+
+  const initFilterValues = initTableHandlersFilters => {
+    const { currentTab } = props
     if (currentTab === '') return
     const statusSales = localStorage['orders-status-filter-sales']
     const statusPurchase = localStorage['orders-status-filter-purchase']
@@ -289,24 +286,26 @@ class TablesHandlers extends Component {
         status: statusSales ? statusSales : initTableHandlersFilters.sales.status
       }
     }
+    setState(tableHandlersFilters)
 
-    const { setValues, setFieldTouched } = this.formikProps
-    this.setState(tableHandlersFilters)
+    if(Object.keys(formikProps).length > 0) {
+      const { setValues, setFieldTouched } = formikProps
 
-    setValues({
-      dateFrom: tableHandlersFilters[currentTab].dateFrom,
-      dateTo: tableHandlersFilters[currentTab].dateTo,
-      orderId: tableHandlersFilters[currentTab].orderId
-    })
-    setFieldTouched('dateFrom', true, true)
+      setValues({
+        dateFrom: tableHandlersFilters[currentTab].dateFrom,
+        dateTo: tableHandlersFilters[currentTab].dateTo,
+        orderId: tableHandlersFilters[currentTab].orderId
+      })
+      setFieldTouched('dateFrom', true, true)
+    }
 
-    this.handleFiltersValue(tableHandlersFilters[currentTab])
+    handleFiltersValue(tableHandlersFilters[currentTab])
   }
 
-  handleFiltersValue = value => {
-    const { datagrid } = this.props
-    const orderIdError = getSafe(() => this.formikProps.errors.orderId, false)
-    const dateFromError = getSafe(() => this.formikProps.errors.dateFrom, false)
+  const handleFiltersValue = value => {
+    const { datagrid } = props
+    const orderIdError = getSafe(() => formikProps.errors.orderId, false)
+    const dateFromError = getSafe(() => formikProps.errors.dateFrom, false)
 
     let filterValue = {
       status: getSafe(() => filters[value.status].filters, ''),
@@ -317,31 +316,32 @@ class TablesHandlers extends Component {
     datagrid.setSearch(filterValue, true, 'pageFilters')
   }
 
-  handleFilterChange = (e, data) => {
-    const { currentTab } = this.props
+  const handleFilterChange = (e, data) => {
+    const { currentTab } = props
     if (currentTab === '') return
 
-    this.setState({
+    setState({
+      ...state,
       [currentTab]: {
-        ...this.state[currentTab],
+        ...state[currentTab],
         [data.name]: data.value
       }
     })
     if (data.name === 'status') localStorage[`orders-status-filter-${currentTab}`] = data.value
 
     const filter = {
-      ...this.state[currentTab],
+      ...state[currentTab],
       [data.name]: data.value
     }
-    this.handleFiltersValue(filter)
+    handleFiltersValue(filter)
   }
 
-  renderHandler = () => {
+  const renderHandler = () => {
     const {
       currentTab,
       intl: { formatMessage }
-    } = this.props
-    const filterValue = this.state[currentTab]
+    } = props
+    const filterValue = state[currentTab]
 
     return (
       <Formik
@@ -350,7 +350,7 @@ class TablesHandlers extends Component {
         onSubmit={() => {}}
         validateOnChange={true}
         render={formikProps => {
-          this.formikProps = formikProps
+          formikProps = formikProps
 
           return (
             <>
@@ -365,7 +365,7 @@ class TablesHandlers extends Component {
                         defaultMessage: 'Search By Order ID'
                       }),
                       icon: 'search',
-                      onChange: this.handleFilterChange
+                      onChange: handleFilterChange
                     }}
                   />
                 </div>
@@ -380,7 +380,7 @@ class TablesHandlers extends Component {
                       text: formatMessage({ id: `orders.statusOptions.${name}` }),
                       value: name
                     }))}
-                    onChange={this.handleFilterChange}
+                    onChange={handleFilterChange}
                   />
                 </div>
               </div>
@@ -399,7 +399,7 @@ class TablesHandlers extends Component {
                         id: 'global.from',
                         defaultMessage: 'From'
                       }),
-                      onChange: this.handleFilterChange
+                      onChange: handleFilterChange
                     }}
                   />
                 </div>
@@ -414,7 +414,7 @@ class TablesHandlers extends Component {
                         id: 'global.to',
                         defaultMessage: 'To'
                       }),
-                      onChange: this.handleFilterChange
+                      onChange: handleFilterChange
                     }}
                   />
                 </div>
@@ -427,13 +427,11 @@ class TablesHandlers extends Component {
     )
   }
 
-  render() {
-    return (
-      <PositionHeaderSettings>
-        <CustomRowDiv>{this.renderHandler()}</CustomRowDiv>
-      </PositionHeaderSettings>
-    )
-  }
+  return (
+    <PositionHeaderSettings>
+      <CustomRowDiv>{renderHandler()}</CustomRowDiv>
+    </PositionHeaderSettings>
+  )
 }
 
 const mapStateToProps = state => {
