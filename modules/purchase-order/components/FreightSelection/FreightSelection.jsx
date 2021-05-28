@@ -61,6 +61,7 @@ import { usePrevious } from '../../../../hooks'
 // Constants
 import { FREIGHT_TYPES } from '../Checkout.constants'
 
+
 const FreightSelection = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded = usePrevious(props.isExpanded)
@@ -78,7 +79,9 @@ const FreightSelection = props => {
     fixedFreightId,
     cart,
     intl: { formatMessage },
-    shippingQuotesAreFetching
+    shippingQuotesAreFetching,
+    shipmentQuoteId,
+    setShipmentQuoteId
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -117,7 +120,7 @@ const FreightSelection = props => {
           </FormattedMessage>
         )
       }
-      submitButtonDisabled={!value}
+      submitButtonDisabled={!value && !shipmentQuoteId}
       content={
         <>
           {sectionState.accepted || isExpanded ? (
@@ -287,17 +290,9 @@ const FreightSelection = props => {
                           </DivLabel>
                           <Input
                             fluid
-                            onChange={(_, { value }) =>
-                              onValueChange({
-                                freightType: FREIGHT_TYPES.ECHO,
-                                carrierName: value,
-                                cfEstimatedSubtotal: '',
-                                estimatedDeliveryDate: '',
-                                quoteId: value
-                              })
-                            }
+                            onChange={ (_, { value }) => {setShipmentQuoteId(value); onValueChange(null);} }
                             name='shipmentQuoteId'
-                            value={value && value.quoteId ? value.quoteId : ''}
+                            value={shipmentQuoteId}
                             disabled={isOwn}
                             placeholder={formatMessage({
                               id: 'cart.enterShippingQuoteId',
@@ -371,8 +366,4 @@ FreightSelection.propTypes = {}
 
 FreightSelection.defaultProps = {}
 
-function mapStateToProps(store, props) {
-  return {}
-}
-
-export default injectIntl(connect(mapStateToProps, {})(FreightSelection))
+export default injectIntl(FreightSelection)

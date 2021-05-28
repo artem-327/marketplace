@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { errorMessages, dateValidation } from '../../../constants/yupValidation'
+import { errorMessages, dateValidation, websiteValidation } from '../../../constants/yupValidation'
 import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
 import moment from 'moment'
 const { requiredMessage } = errorMessages
@@ -18,6 +18,11 @@ export const INITIAL_VALUES = {
   dea: {
     issueDate: '',
     expDate: ''
+  },
+  epa: {
+    epaFacilityUrl: '',
+    epaFrsId: '',
+    epaRegion: ''
   },
   taxExempt: {
     certificateNumber: '',
@@ -42,6 +47,11 @@ export const VALIDATION_SCHEME = Yup.object().shape({
         val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
       )
     )
+  }),
+  epa: Yup.object().shape({
+    epaFacilityUrl: websiteValidation().required(requiredMessage),
+    epaFrsId: Yup.string(requiredMessage).required(requiredMessage),
+    epaRegion: Yup.string(requiredMessage).required(requiredMessage)
   }),
   taxExempt: Yup.object().shape({
     certificateNumber: Yup.string(requiredMessage).required(requiredMessage),

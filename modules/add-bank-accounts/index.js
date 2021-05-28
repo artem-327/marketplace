@@ -1,3 +1,3 @@
-import AddBankAccounts from './components/AddBankAccounts'
+import AddBankAccounts from './components/AddBankAccountsContainer'
 
 export default AddBankAccounts

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage } from 'react-intl'
 import { GridRow, List } from 'semantic-ui-react'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 
 import { StyledGrid, TableSegment, StyledList, DetailMessage, ColumnDetail } from './styles'
 

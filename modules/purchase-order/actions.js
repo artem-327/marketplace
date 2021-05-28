@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
-import { generateQueryString } from '~/utils/functions'
+import { generateQueryString } from '../../utils/functions'
 
 export const getProductOffer = (id, sellerId = null, isEdit = false) => ({
   type: AT.OFFER_FETCH,
@@ -88,6 +88,11 @@ export const postPurchaseOrder = values => ({ type: AT.POST_PURCHASE_ORDER, payl
 export const requestManualShipment = params => ({
   type: AT.REQUEST_MANUAL_SHIPMENT,
   payload: api.requestManualShipment(generateQueryString(params))
+})
+
+export const getManualQuoteById = (id) => ({
+  type: AT.GET_MANUAL_QUOTE_BY_ID,
+  payload: api.getManualQuoteById(id)
 })
 
 export const getIdentity = () => ({ type: AT.PURCHASE_GET_IDENTITY, payload: api.getIdentity() })

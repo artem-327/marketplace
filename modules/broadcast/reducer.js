@@ -1,5 +1,5 @@
 import typeToReducer from 'type-to-reducer'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 
 import {
   openBroadcast,

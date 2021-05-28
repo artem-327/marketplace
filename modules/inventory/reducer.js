@@ -1,7 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
-import moment from 'moment'
+import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 //Constants
 import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.constants'
 
@@ -363,7 +362,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING:
     case AT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
       return {
@@ -637,7 +635,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE: {
       return {
-        ...state,
+        ...state
         //isExportInventoryOpen: payload
       }
     }

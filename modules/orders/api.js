@@ -1,5 +1,5 @@
-import api from '~/api'
-import { generateQueryString } from '~/utils/functions'
+import api from '../../api'
+import { generateQueryString } from '../../utils/functions'
 
 export default {
   getAll: (endpointType, filter = {}) =>

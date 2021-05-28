@@ -37,7 +37,7 @@ import { openProfilePopup } from '../modules/profile/actions'
 import { agreeWithTOS } from '../modules/auth/actions'
 import { triggerSystemSettingsModal } from '../modules/settings/actions'
 
-import Profile from '../modules/profile/components/Profile'
+import Profile from '../modules/profile/components/ProfileContainer'
 import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '../utils/functions'

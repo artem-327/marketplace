@@ -1,9 +1,9 @@
 import { createContext, Component } from 'react'
 import { connect } from 'react-redux'
-import api from '~/api'
+import api from '../../api'
 import pt from 'prop-types'
-import { getSafe } from '~/utils/functions'
-import { renderCopyright, cleanRenderCopyright } from '~/modules/settings/actions'
+import { getSafe } from '../../utils/functions'
+import { renderCopyright, cleanRenderCopyright } from '../settings/actions'
 export const DatagridContext = createContext({})
 
 const CONSTANTS_INTERVALS = {

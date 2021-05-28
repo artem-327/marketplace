@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import { defaultTabs } from './constants'
-import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   tabsNames: defaultTabs,
@@ -36,7 +35,6 @@ export default function reducer(state = initialState, action) {
   const { payload } = action
 
   switch (action.type) {
-
     case AT.COMPANIES_OPEN_POPUP: {
       return {
         ...state,

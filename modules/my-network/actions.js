@@ -77,19 +77,17 @@ export const search = id => {
     })
     await api
       .search(id)
-      .then(
-        async response =>
-          await dispatch({
-            type: AT.SEARCH_FULFILLED,
-            payload: response.data
-          })
+      .then(response =>
+        dispatch({
+          type: AT.SEARCH_FULFILLED,
+          payload: response.data
+        })
       )
-      .catch(
-        async err =>
-          await dispatch({
-            type: AT.SEARCH_REJECTED,
-            error: err
-          })
+      .catch(err =>
+        dispatch({
+          type: AT.SEARCH_REJECTED,
+          error: err
+        })
       )
   }
 }

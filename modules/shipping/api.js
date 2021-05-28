@@ -1,5 +1,5 @@
-import api from '~/api'
-import { generateQueryString } from '~/utils/functions'
+import api from '../../api'
+import { generateQueryString } from '../../utils/functions'
 
 export const getQuotes = params => api.post('/prodex/api/shipment/', params).then(({ data }) => data)
 

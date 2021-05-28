@@ -3,10 +3,7 @@ import { connect } from 'react-redux'
 import moment from 'moment/moment'
 
 import Dashboard from './Dashboard'
-import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe } from '../../../utils/functions'
 import { getDashboardData, getDailyStatistics } from '../actions'
 
 function mapStateToProps(store) {

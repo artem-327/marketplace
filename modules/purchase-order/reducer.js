@@ -27,6 +27,7 @@ export const initialState = {
   manualShipmentRequested: false,
   manualShipmentPending: false,
   manualShipmentError: false,
+  manualQuoteById: null,
   preFilledValues: null,
   sidebar: {
     isOpen: false,
@@ -559,6 +560,31 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         cart: { ...state.cart, ...action.payload, cartItems }
+      }
+    }
+
+    /* GET_MANUAL_QUOTE_BY_ID */
+
+    case AT.GET_MANUAL_QUOTE_BY_ID_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_MANUAL_QUOTE_BY_ID_FULFILLED: {
+      return {
+        ...state,
+        manualQuoteById: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.GET_MANUAL_QUOTE_BY_ID_REJECTED: {
+      return {
+        ...state,
+        manualQuoteById: null,
+        loading: false
       }
     }
 

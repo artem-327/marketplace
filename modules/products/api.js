@@ -1,14 +1,13 @@
-import api from '~/api'
+import api from '../../api'
 
-import { generateQueryString } from '~/utils/functions'
+import { generateQueryString } from '../../utils/functions'
 
 export default {
   getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
   getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
   deleteCasProduct: id => api.delete(`/prodex/api/cas-products/id/${id}`).then(() => id),
   postNewCasProduct: value => api.post('/prodex/api/cas-products', value),
-  updateCasProduct: (id, value) => api.put(`/prodex/api/cas-products/id/${id}`, value)
-    .then(response => response.data),
+  updateCasProduct: (id, value) => api.put(`/prodex/api/cas-products/id/${id}`, value).then(response => response.data),
   getAlternativeProductNames: value => api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`),
   postNewProductName: (productId, value) =>
     api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value),

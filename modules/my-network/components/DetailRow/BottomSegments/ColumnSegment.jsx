@@ -3,8 +3,12 @@ import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 //Styles
 import { DivTitleBottomSegment, DivValue, GridColumnDetail, SegmentBottom } from '../DetailRow.style'
+//Services
+import { isEmptyObject } from '../../../../../services'
+
 /**
  * Segment shows Legal, Marketing and Verified Data
+ * @category My Network
  * @component
  */
 const ColumnSegment = ({ data, titleId, blueValue }) => (
@@ -12,7 +16,11 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleBottomSegment>
-          <FormattedMessage id={`myNetworks.detailRow.${titleId}`} defaultMessage='Title' />
+          <FormattedMessage
+            id={`myNetworks.detailRow.${titleId}`}
+            defaultMessage='Title'
+            data-test='component-column-segment-title'
+          />
         </DivTitleBottomSegment>
       </GridColumnDetail>
     </Grid.Row>
@@ -32,11 +40,13 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
 
 ColumnSegment.propTypes = {
   titleId: PropTypes.string,
-  data: PropTypes.object
+  blueValue: PropTypes.string,
+  data: PropTypes.object.isRequired
 }
 
 ColumnSegment.defaultProps = {
   titleId: '',
+  blueValue: '',
   data: null
 }
 
