@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
@@ -94,21 +94,23 @@ const GridColumnText = styled(GridColumn)`
   font-weight: bold !important;
 `
 
-class PurchaseOrderShipping extends Component {
-  state = {
+const PurchaseOrderShipping = props => {
+  const [state, setState] = useState({
     selectedShippingQuote: '',
     shipmentQuoteId: ''
-  }
+  })
 
-  componentDidMount() {
-    if (!this.props.order.cfWeightExceeded) {
+  let errors = {}
+
+  useEffect(() => {
+    if (!props.order.cfWeightExceeded) {
       let pickupDate = moment().add(1, 'minutes').format()
-      this.props.getShippingQuotes(this.props.orderId, pickupDate)
+      props.getShippingQuotes(props.orderId, pickupDate)
     }
-  }
+  }, [])
 
-  submitHandler = async (values, actions) => {
-    const { closePopup, order, orderId, shippingQuotes } = this.props
+  const submitHandler = async (values, actions) => {
+    const { closePopup, order, orderId, shippingQuotes } = props
 
     try {
       let formValues = {
@@ -120,13 +122,13 @@ class PurchaseOrderShipping extends Component {
 
       values.freightType === FREIGHT_TYPES.ECHO
         ? (formValues.quoteId = (order.cfWeightExceeded ||
-          !getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+          !getSafe(() => shippingQuotes.rates[state.selectedShippingQuote].quoteId, '')
             ? values.shipmentQuoteId
-            : getSafe(() => shippingQuotes.rates[this.state.selectedShippingQuote].quoteId, '')
+            : getSafe(() => shippingQuotes.rates[state.selectedShippingQuote].quoteId, '')
           ).trim())
         : null,
-        await this.props.purchaseShipmentOrder(orderId, formValues)
-      this.props.getPurchaseOrder(orderId)
+        await props.purchaseShipmentOrder(orderId, formValues)
+      props.getPurchaseOrder(orderId)
       closePopup()
     } catch (e) {
       console.error(e)
@@ -135,8 +137,8 @@ class PurchaseOrderShipping extends Component {
     }
   }
 
-  onDateChange = debounce(async (event, { name, value }) => {
-    if (!value || this.errors.pickupDate) return
+  const onDateChange = debounce(async (event, { name, value }) => {
+    if (!value || errors.pickupDate) return
     let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
     if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
       // if current date (today) is selected the pickupDate (datetime) is in past
@@ -144,20 +146,20 @@ class PurchaseOrderShipping extends Component {
     }
     pickupDate = pickupDate.format()
 
-    if (!this.props.order.cfWeightExceeded) {
+    if (!props.order.cfWeightExceeded) {
       try {
-        await this.props.getShippingQuotes(this.props.order.id, pickupDate)
+        await props.getShippingQuotes(props.order.id, pickupDate)
       } catch {
       } finally {
       }
     }
   }, 250)
 
-  requestManualShippingQuote = async () => {
-    const { order } = this.props
+  const requestManualShippingQuote = async () => {
+    const { order } = props
 
     try {
-      await this.props.getManualShippingQuote(order.id, {
+      await props.getManualShippingQuote(order.id, {
         destinationCountryId: order.shippingAddressCountryReference.id,
         destinationZIP: order.shippingAddressZip
       })
@@ -166,8 +168,8 @@ class PurchaseOrderShipping extends Component {
     }
   }
 
-  getInitialFormValues = () => {
-    const { order } = this.props
+  const getInitialFormValues = () => {
+    const { order } = props
 
     let initialValues = {
       pickupDate: getSafe(() => order.shipDate, ''),
@@ -185,7 +187,7 @@ class PurchaseOrderShipping extends Component {
     return initialValues
   }
 
-  validationSchema = () =>
+  const validationSchema = () =>
     Yup.lazy(values => {
       return Yup.object().shape({
         pickupDate: dateValidation(false).concat(
@@ -198,254 +200,253 @@ class PurchaseOrderShipping extends Component {
       })
     })
 
-  render() {
-    const {
-      intl: { formatMessage },
-      orderId,
-      order,
-      isSending,
-      shippingQuotesAreFetching,
-      shippingQuotes,
-      applicationName
-    } = this.props
+  
+  const {
+    intl: { formatMessage },
+    orderId,
+    order,
+    isSending,
+    shippingQuotesAreFetching,
+    shippingQuotes,
+    applicationName
+  } = props
 
-    const manualShipmentQuoteId = order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
+  const manualShipmentQuoteId = order.cfWeightExceeded || getSafe(() => !shippingQuotes.rates.length, false)
 
-    return (
-      <>
-        <Modal closeIcon onClose={() => this.props.closePopup()} open={true} size='small'>
-          <Dimmer
-            active={isSending || (shippingQuotesAreFetching && getSafe(() => !shippingQuotes.rates.length, false))}
-            inverted>
-            <Loader />
-          </Dimmer>
-          <Modal.Header>
-            <FormattedMessage id='order.orderShippingCap' defaultMessage='ORDER SHIPPING' />
-          </Modal.Header>
-          <ModalBody>
-            <Modal.Description>
-              <Form
-                validationSchema={this.validationSchema()}
-                enableReinitialize
-                validateOnChange={true}
-                initialValues={this.getInitialFormValues()}
-                onSubmit={this.submitHandler}
-                className='flex stretched'
-                style={{ padding: '0' }}>
-                {formikProps => {
-                  let { touched, validateForm, resetForm, values, setFieldValue, errors, handleChange } = formikProps
-                  const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
-                  this.errors = errors
-                  return (
-                    <>
-                      <CustomGrid>
-                        <Grid.Row>
-                          <Grid.Column width={8}>
-                            <DateInput
-                              inputProps={{
-                                //minDate: moment(),
-                                fluid: true,
-                                clearable: true,
-                                placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
-                                onChange: async (event, val) => {
-                                  await this.onDateChange(event, val)
-                                }
-                              }}
-                              label={
-                                <FormattedMessage
-                                  id='order.preferredPickupDate'
-                                  defaultMessage='Preferred pick-up date'
-                                />
+  return (
+    <>
+      <Modal closeIcon onClose={() => props.closePopup()} open={true} size='small'>
+        <Dimmer
+          active={isSending || (shippingQuotesAreFetching && getSafe(() => !shippingQuotes.rates.length, false))}
+          inverted>
+          <Loader />
+        </Dimmer>
+        <Modal.Header>
+          <FormattedMessage id='order.orderShippingCap' defaultMessage='ORDER SHIPPING' />
+        </Modal.Header>
+        <ModalBody>
+          <Modal.Description>
+            <Form
+              validationSchema={validationSchema()}
+              enableReinitialize
+              validateOnChange={true}
+              initialValues={getInitialFormValues()}
+              onSubmit={submitHandler}
+              className='flex stretched'
+              style={{ padding: '0' }}>
+              {formikProps => {
+                let { touched, validateForm, resetForm, values, setFieldValue, errors, handleChange } = formikProps
+                const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
+                errors = errors
+                return (
+                  <>
+                    <CustomGrid>
+                      <Grid.Row>
+                        <Grid.Column width={8}>
+                          <DateInput
+                            inputProps={{
+                              //minDate: moment(),
+                              fluid: true,
+                              clearable: true,
+                              placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
+                              onChange: async (event, val) => {
+                                await onDateChange(event, val)
                               }
-                              name='pickupDate'
-                            />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <FreightLabel
-                          echoFreight={echoFreight}
-                          setFieldValue={(fieldName, value) => {
-                            this.setState({ selectedShippingQuote: null })
-                            setFieldValue(fieldName, value)
-                            if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
-                          }}
-                        />
-                        {manualShipmentQuoteId ? (
-                          <>
-                            {order.cfWeightExceeded ? (
-                              <GridRow>
-                                <GridColumn computer={16}>
-                                  <FormattedMessage
-                                    id='order.weightLimitExceeded'
-                                    defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
-                                    values={{
-                                      companyName: applicationName
-                                    }}
-                                  />
-                                </GridColumn>
-                              </GridRow>
-                            ) : (
-                              <GridRow>
-                                <GridColumn computer={16}>
-                                  <Rectangle>
-                                    <CustomDivTitle>
-                                      <AlertCircle color='orange' size={18} />
-                                      <CustomDivInTitle>
-                                        <FormattedMessage
-                                          id='cart.noShippingQuotes.processManually.title'
-                                          defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
-                                        />
-                                      </CustomDivInTitle>
-                                    </CustomDivTitle>
-                                    <CustomDivContent>
-                                      <FormattedMessage
-                                        id='cart.noShippingQuotes.processManually'
-                                        defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
-                                        values={{
-                                          companyName: applicationName
-                                        }}
-                                      />
-                                    </CustomDivContent>
-                                  </Rectangle>
-                                </GridColumn>
-                              </GridRow>
-                            )}
-                            <Grid.Row>
-                              <Grid.Column width={6}>
-                                <CustomButton type='button' fluid onClick={() => this.requestManualShippingQuote()}>
-                                  <FormattedMessage
-                                    id='cart.requestShippingQuote'
-                                    defaultMessage='Request Shipping Quote'
-                                    tagName='span' />
-                                </CustomButton>
-                              </Grid.Column>
-                            </Grid.Row>
-                          </>
-                        ) : (
-                          <Grid.Row>
-                            <Grid.Column width={16}>
-                              <ShippingQuote
-                                selectionDisabled={!echoFreight}
-                                currency={currency}
-                                selectedShippingQuote={{ index: this.state.selectedShippingQuote }}
-                                handleQuoteSelect={index => {
-                                  this.setState({ selectedShippingQuote: index })
-                                  setFieldValue('shipmentQuoteId', '')
-                                }}
-                                selectedAddress={1}
-                                shippingQuotes={shippingQuotes}
-                                shippingQuotesAreFetching={shippingQuotesAreFetching}
+                            }}
+                            label={
+                              <FormattedMessage
+                                id='order.preferredPickupDate'
+                                defaultMessage='Preferred pick-up date'
                               />
+                            }
+                            name='pickupDate'
+                          />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <FreightLabel
+                        echoFreight={echoFreight}
+                        setFieldValue={(fieldName, value) => {
+                          setState({ ...state, selectedShippingQuote: null })
+                          setFieldValue(fieldName, value)
+                          if (value === 'OWN_FREIGHT') setFieldValue('shipmentQuoteId', '')
+                        }}
+                      />
+                      {manualShipmentQuoteId ? (
+                        <>
+                          {order.cfWeightExceeded ? (
+                            <GridRow>
+                              <GridColumn computer={16}>
+                                <FormattedMessage
+                                  id='order.weightLimitExceeded'
+                                  defaultMessage={`Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
+                                  values={{
+                                    companyName: applicationName
+                                  }}
+                                />
+                              </GridColumn>
+                            </GridRow>
+                          ) : (
+                            <GridRow>
+                              <GridColumn computer={16}>
+                                <Rectangle>
+                                  <CustomDivTitle>
+                                    <AlertCircle color='orange' size={18} />
+                                    <CustomDivInTitle>
+                                      <FormattedMessage
+                                        id='cart.noShippingQuotes.processManually.title'
+                                        defaultMessage={`We are sorry, but no matching Shipping Quotes were provided by logistics company.`}
+                                      />
+                                    </CustomDivInTitle>
+                                  </CustomDivTitle>
+                                  <CustomDivContent>
+                                    <FormattedMessage
+                                      id='cart.noShippingQuotes.processManually'
+                                      defaultMessage={`It was not possible to retrieve any automated shipping quotes for you order. Your shipping quote might need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Information about your order will be received by {companyName} team, who will send you an email with Quote Id.`}
+                                      values={{
+                                        companyName: applicationName
+                                      }}
+                                    />
+                                  </CustomDivContent>
+                                </Rectangle>
+                              </GridColumn>
+                            </GridRow>
+                          )}
+                          <Grid.Row>
+                            <Grid.Column width={6}>
+                              <CustomButton type='button' fluid onClick={() => requestManualShippingQuote()}>
+                                <FormattedMessage
+                                  id='cart.requestShippingQuote'
+                                  defaultMessage='Request Shipping Quote'
+                                  tagName='span' />
+                              </CustomButton>
                             </Grid.Column>
                           </Grid.Row>
-                        )}
+                        </>
+                      ) : (
                         <Grid.Row>
                           <Grid.Column width={16}>
-                            <Line />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <GridRow>
-                          <GridColumnText computer={16}>
-                            <FormattedMessage
-                              id='order.quoteReceived'
-                              defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
-                            />
-                          </GridColumnText>
-                        </GridRow>
-                        <Grid.Row>
-                          <GridColumn computer={8}>
-                            <Input
-                              inputProps={{
-                                placeholder: formatMessage({
-                                  id: 'cart.shipmentQuote.enter',
-                                  defaultMessage: 'Enter Shipment Quote'
-                                }),
-                                onChange: () => this.setState({ selectedShippingQuote: '' }),
-                                disabled: values.freightType === 'OWN_FREIGHT'
+                            <ShippingQuote
+                              selectionDisabled={!echoFreight}
+                              currency={currency}
+                              selectedShippingQuote={{ index: state.selectedShippingQuote }}
+                              handleQuoteSelect={index => {
+                                setState({ ...state, selectedShippingQuote: index })
+                                setFieldValue('shipmentQuoteId', '')
                               }}
-                              name='shipmentQuoteId'
-                              label={formatMessage({
-                                id: 'cart.shipmentQuote',
-                                defaultMessage: 'Shipment Quote'
-                              })}
-                            />
-                          </GridColumn>
-                        </Grid.Row>
-                        <Grid.Row>
-                          <Grid.Column width={16}>
-                            <TextArea
-                              inputProps={{
-                                placeholder: formatMessage({
-                                  id: 'order.pickupRemarks.enter',
-                                  defaultMessage: 'Enter Pick-up Remarks'
-                                })
-                              }}
-                              name='pickupRemarks'
-                              label={formatMessage({
-                                id: 'order.pickupRemarks',
-                                defaultMessage: 'Pick-up Remarks'
-                              })}
+                              selectedAddress={1}
+                              shippingQuotes={shippingQuotes}
+                              shippingQuotesAreFetching={shippingQuotesAreFetching}
                             />
                           </Grid.Column>
                         </Grid.Row>
-                        <Grid.Row>
-                          <Grid.Column width={16}>
-                            <TextArea
-                              inputProps={{
-                                placeholder: formatMessage({
-                                  id: 'order.deliveryRemarks.enter',
-                                  defaultMessage: 'Enter Delivery Remarks'
-                                })
-                              }}
-                              name='deliveryRemarks'
-                              label={formatMessage({
-                                id: 'order.deliveryRemarks',
-                                defaultMessage: 'Delivery Remarks'
-                              })}
-                            />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row>
-                          <Grid.Column width={8}>
-                            <Input
-                              inputProps={{
-                                placeholder: formatMessage({
-                                  id: 'order.shipperRefNo.enter',
-                                  defaultMessage: 'Enter Shipper Reference Number'
-                                })
-                              }}
-                              name='shipperRefNo'
-                              label={formatMessage({
-                                id: 'order.shipperRefNo',
-                                defaultMessage: 'Shipper Reference Number'
-                              })}
-                            />
-                          </Grid.Column>
-                        </Grid.Row>
-                        <Grid.Row></Grid.Row>
-                        <GridRowLine>
-                          <Grid.Column width={10}></Grid.Column>
-                          <Grid.Column floated='right' width={3}>
-                            <Button basic fluid onClick={() => this.props.closePopup()}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
-                            </Button>
-                          </Grid.Column>
-                          <Grid.Column floated='right' width={3}>
-                            <CustomSubmitButton primary fluid type='submit'>
-                              <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' />
-                            </CustomSubmitButton>
-                          </Grid.Column>
-                        </GridRowLine>
-                      </CustomGrid>
-                    </>
-                  )
-                }}
-              </Form>
-            </Modal.Description>
-          </ModalBody>
-        </Modal>
-      </>
-    )
-  }
+                      )}
+                      <Grid.Row>
+                        <Grid.Column width={16}>
+                          <Line />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <GridRow>
+                        <GridColumnText computer={16}>
+                          <FormattedMessage
+                            id='order.quoteReceived'
+                            defaultMessage='If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.'
+                          />
+                        </GridColumnText>
+                      </GridRow>
+                      <Grid.Row>
+                        <GridColumn computer={8}>
+                          <Input
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'cart.shipmentQuote.enter',
+                                defaultMessage: 'Enter Shipment Quote'
+                              }),
+                              onChange: () => setState({ ...state, selectedShippingQuote: '' }),
+                              disabled: values.freightType === 'OWN_FREIGHT'
+                            }}
+                            name='shipmentQuoteId'
+                            label={formatMessage({
+                              id: 'cart.shipmentQuote',
+                              defaultMessage: 'Shipment Quote'
+                            })}
+                          />
+                        </GridColumn>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column width={16}>
+                          <TextArea
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'order.pickupRemarks.enter',
+                                defaultMessage: 'Enter Pick-up Remarks'
+                              })
+                            }}
+                            name='pickupRemarks'
+                            label={formatMessage({
+                              id: 'order.pickupRemarks',
+                              defaultMessage: 'Pick-up Remarks'
+                            })}
+                          />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column width={16}>
+                          <TextArea
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'order.deliveryRemarks.enter',
+                                defaultMessage: 'Enter Delivery Remarks'
+                              })
+                            }}
+                            name='deliveryRemarks'
+                            label={formatMessage({
+                              id: 'order.deliveryRemarks',
+                              defaultMessage: 'Delivery Remarks'
+                            })}
+                          />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column width={8}>
+                          <Input
+                            inputProps={{
+                              placeholder: formatMessage({
+                                id: 'order.shipperRefNo.enter',
+                                defaultMessage: 'Enter Shipper Reference Number'
+                              })
+                            }}
+                            name='shipperRefNo'
+                            label={formatMessage({
+                              id: 'order.shipperRefNo',
+                              defaultMessage: 'Shipper Reference Number'
+                            })}
+                          />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row></Grid.Row>
+                      <GridRowLine>
+                        <Grid.Column width={10}></Grid.Column>
+                        <Grid.Column floated='right' width={3}>
+                          <Button basic fluid onClick={() => props.closePopup()}>
+                            <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
+                          </Button>
+                        </Grid.Column>
+                        <Grid.Column floated='right' width={3}>
+                          <CustomSubmitButton primary fluid type='submit'>
+                            <FormattedMessage id='global.save' defaultMessage='Save' tagName='span' />
+                          </CustomSubmitButton>
+                        </Grid.Column>
+                      </GridRowLine>
+                    </CustomGrid>
+                  </>
+                )
+              }}
+            </Form>
+          </Modal.Description>
+        </ModalBody>
+      </Modal>
+    </>
+  )
 }
 
 function mapStateToProps(state) {
@@ -459,30 +460,6 @@ function mapStateToProps(state) {
     isSending: orders.isSending,
     shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
     shippingQuotes: getSafe(() => orders.shippingQuotes, {})
-    /*
-    shippingQuotes: [ // ! ! temporary
-      {
-        "carrierName": "Carrier name 1",
-        "estimatedDeliveryDate": "2019-12-04T04:11:50.266Z",
-        "estimatedPrice": 100,
-        "fobPricePerLb": 10,
-        "freightPricePerLb": 51,
-        "quoteId": "Quote Id String 1",
-        "serviceType": "Service Type 1",
-        "totalPricePerLb": 11
-      },
-      {
-        "carrierName": "Carrier name 2",
-        "estimatedDeliveryDate": "2019-12-03T04:11:50.266Z",
-        "estimatedPrice": 200,
-        "fobPricePerLb": 20,
-        "freightPricePerLb": 52,
-        "quoteId": "Quote Id String 2",
-        "serviceType": "Service Type 2",
-        "totalPricePerLb": 22
-      }
-    ]
-    */
   }
 }
 

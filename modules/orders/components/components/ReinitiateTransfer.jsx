@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
@@ -25,111 +25,107 @@ const validationScheme = val.object().shape({
   paymentAccount: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
 })
 
-class ReinitiateTransfer extends Component {
-  state = {
-    allowTransfer: false
-  }
-
-  componentDidMount() {
-    if (this.props.paymentProcessor === 'DWOLLA') {
-      this.props.loadDwollaBankAccounts()
+const ReinitiateTransfer = props => {
+  
+  const [allowTransfer, setAllowTransfer] = useState(false)
+  
+  useEffect(() => {
+    if (props.paymentProcessor === 'DWOLLA') {
+      props.loadDwollaBankAccounts()
     } else {
-      this.props.loadVellociBankAccounts()
+      props.loadVellociBankAccounts()
     }
-  }
+  }, [])
 
-  render() {
-    const {
-      intl: { formatMessage },
-      bankAccounts,
-      bankAccountsLoading,
-      orderId,
-      isThirdPartyConnectionException
-    } = this.props
-    const { allowTransfer } = this.state
+  const {
+    intl: { formatMessage },
+    bankAccounts,
+    bankAccountsLoading,
+    orderId,
+    isThirdPartyConnectionException
+  } = props
 
-    return (
-      <>
-        <Modal closeIcon onClose={() => this.props.closeReinitiateTransfer()} open={true}>
-          <Dimmer active={bankAccountsLoading} inverted>
-            <Loader />
-          </Dimmer>
-          <Modal.Header>
-            <FormattedMessage id='order.reinitiateTransfer' defaultMessage='Reinitiate Transfer' />
-            <Subtitle as='h4'>
-              <FormattedMessage
-                id='order.reinitiateTransfer.subtitle'
-                defaultMessage='Please select another payment account and Transfer'
-              />
-            </Subtitle>
-          </Modal.Header>
-          <ModalBody>
-            <Modal.Description>
-              <Form
-                enableReinitialize
-                validateOnChange={false}
-                initialValues={{ ...initValues }}
-                validationSchema={validationScheme}
-                onSubmit={(values, actions) => {
-                  this.props
-                    .payOrder(orderId, values.paymentAccount)
-                    .then(r => {
-                      actions.setSubmitting(false)
-                      this.props.closeReinitiateTransfer()
-                    })
-                    .catch(e => {
-                      actions.setSubmitting(false)
-                    })
-                }}
-                className='flex stretched'
-                style={{ padding: '0' }}>
-                {({ values, submitForm }) => {
-                  return (
-                    <>
-                      <Grid>
-                        <Grid.Column width={6}>
-                          <Dropdown
-                            name='paymentAccount'
-                            options={bankAccounts}
-                            inputProps={{
-                              placeholder: formatMessage({
-                                id: 'order.reinitiateTransfer.dropdownPlaceholder',
-                                defaultMessage: '-- select payment account --'
-                              }),
-                              onChange: (e, { value }) => {
-                                if (value) this.setState({ allowTransfer: true })
-                                else this.setState({ allowTransfer: false })
-                              },
-                              clearable: true
-                            }}
+  return (
+    <>
+      <Modal closeIcon onClose={() => props.closeReinitiateTransfer()} open={true}>
+        <Dimmer active={bankAccountsLoading} inverted>
+          <Loader />
+        </Dimmer>
+        <Modal.Header>
+          <FormattedMessage id='order.reinitiateTransfer' defaultMessage='Reinitiate Transfer' />
+          <Subtitle as='h4'>
+            <FormattedMessage
+              id='order.reinitiateTransfer.subtitle'
+              defaultMessage='Please select another payment account and Transfer'
+            />
+          </Subtitle>
+        </Modal.Header>
+        <ModalBody>
+          <Modal.Description>
+            <Form
+              enableReinitialize
+              validateOnChange={false}
+              initialValues={{ ...initValues }}
+              validationSchema={validationScheme}
+              onSubmit={(values, actions) => {
+                props
+                  .payOrder(orderId, values.paymentAccount)
+                  .then(r => {
+                    actions.setSubmitting(false)
+                    props.closeReinitiateTransfer()
+                  })
+                  .catch(e => {
+                    actions.setSubmitting(false)
+                  })
+              }}
+              className='flex stretched'
+              style={{ padding: '0' }}>
+              {({ values, submitForm }) => {
+                return (
+                  <>
+                    <Grid>
+                      <Grid.Column width={6}>
+                        <Dropdown
+                          name='paymentAccount'
+                          options={bankAccounts}
+                          inputProps={{
+                            placeholder: formatMessage({
+                              id: 'order.reinitiateTransfer.dropdownPlaceholder',
+                              defaultMessage: '-- select payment account --'
+                            }),
+                            onChange: (e, { value }) => {
+                              if (value) setAllowTransfer(true)
+                              else setAllowTransfer(false)
+                            },
+                            clearable: true
+                          }}
+                        />
+                      </Grid.Column>
+                      <Grid.Column width={4}></Grid.Column>
+                      <Grid.Column floated='right' width={3}>
+                        <Button basic fluid onClick={() => props.closeReinitiateTransfer()}>
+                          <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
+                        </Button>
+                      </Grid.Column>
+                      <Grid.Column floated='right' width={3}>
+                        <Button primary fluid disabled={!allowTransfer}>
+                          <FormattedMessage
+                            id='order.reinitiateTransfer.transfer'
+                            defaultMessage='Transfer'
+                            tagName='span'
                           />
-                        </Grid.Column>
-                        <Grid.Column width={4}></Grid.Column>
-                        <Grid.Column floated='right' width={3}>
-                          <Button basic fluid onClick={() => this.props.closeReinitiateTransfer()}>
-                            <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
-                          </Button>
-                        </Grid.Column>
-                        <Grid.Column floated='right' width={3}>
-                          <Button primary fluid disabled={!allowTransfer}>
-                            <FormattedMessage
-                              id='order.reinitiateTransfer.transfer'
-                              defaultMessage='Transfer'
-                              tagName='span'
-                            />
-                          </Button>
-                        </Grid.Column>
-                      </Grid>
-                    </>
-                  )
-                }}
-              </Form>
-            </Modal.Description>
-          </ModalBody>
-        </Modal>
-      </>
-    )
-  }
+                        </Button>
+                      </Grid.Column>
+                    </Grid>
+                  </>
+                )
+              }}
+            </Form>
+          </Modal.Description>
+        </ModalBody>
+      </Modal>
+    </>
+  )
 }
 
 function mapStateToProps(state) {

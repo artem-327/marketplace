@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import {
   Modal,
@@ -85,8 +85,8 @@ const initValues = {
 }
 
 //TODO
-class SaleAttachingProductOffer extends Component {
-  state = {
+const SaleAttachingProductOffer = props => {
+  const [state, setState] = useState({
     activeTab: 0,
     allocated: [],
     sumAllocated: [],
@@ -96,45 +96,60 @@ class SaleAttachingProductOffer extends Component {
     sumPkgTotal: [],
     totalPkgAmount: 0,
     loadingGroupedProductOffer: false
-  }
+  })
 
-  async componentDidMount() {
-    this.setState({ loadingGroupedProductOffer: true })
-    const { getGroupedProductOffers, orderId, orderItemsId, orderItems } = this.props
-    try {
-      if (orderItemsId.length) await getGroupedProductOffers(orderId, orderItemsId)
-      getSafe(() => orderItems, []).forEach((item, tabIndex) => {
-        if (!item.attachments.length) return
-        else
-          item.attachments.forEach((attachment, index) =>
-            this.setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].attachments[0]`, {
-              id: attachment.id,
-              name: attachment.name,
-              linked: true,
-              isToOrderItem: true
-            })
-          )
-      })
-    } catch (error) {
-      console.error(error)
-    } finally {
-      this.setState({ loadingGroupedProductOffer: false })
+  let setFieldValue
+
+  useEffect(() => {
+    const init = async () => {
+      setState({ ...state, loadingGroupedProductOffer: true })
+      const { getGroupedProductOffers, orderId, orderItemsId, orderItems } = props
+      try {
+        if (orderItemsId.length) await getGroupedProductOffers(orderId, orderItemsId)
+        getSafe(() => orderItems, []).forEach((item, tabIndex) => {
+          if (!item.attachments.length) return
+          else
+            item.attachments.forEach((attachment, index) =>
+              setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].attachments[0]`, {
+                id: attachment.id,
+                name: attachment.name,
+                linked: true,
+                isToOrderItem: true
+              })
+            )
+        })
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setState({ ...state, loadingGroupedProductOffer: false })
+      }
     }
-  }
 
-  componentDidUpdate(oldProps) {
-    if (
-      getSafe(() => oldProps.groupedProductOffers.length, 0) < getSafe(() => this.props.groupedProductOffers.length, 0)
-    ) {
+    init()
+
+    const unmount = () => {
+      try {
+        props.getSaleOrder(props.orderId)
+        props.clearGroupedProductOffer()
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    return unmount
+  }, [])
+
+  useEffect(() => {
+    if(getSafe(() => props.groupedProductOffers.length, 0) > 0) {
       let sumAvailable = []
       let sumPkgTotal = []
       let available = []
       let sumAllocated = []
       let allocated = []
       let totalPkgAmount = 0
-      this.props.groupedProductOffers.forEach((offers, index) => {
+      props.groupedProductOffers.forEach((offers, index) => {
         if (offers && !offers.length) return
-        const pkgAmount = this.props.productOffersPkgAmount.get(offers[0] && offers[0].parentOffer)
+        const pkgAmount = props.productOffersPkgAmount.get(offers[0] && offers[0].parentOffer)
 
         if (pkgAmount) {
           sumAvailable.push(pkgAmount)
@@ -155,7 +170,7 @@ class SaleAttachingProductOffer extends Component {
 
         offers.forEach((offer, i) => {
           if (offer && offer.attachments && offer.attachments.length) {
-            this.setFieldValue(`tab[${index}].groupedOffer[${i}].attachments[0]`, {
+            setFieldValue(`tab[${index}].groupedOffer[${i}].attachments[0]`, {
               id: offer.attachments[0].id,
               name: offer.attachments[0].name,
               linked: true,
@@ -166,7 +181,8 @@ class SaleAttachingProductOffer extends Component {
 
         const pkgAllocated = offers.map(offer => offer.pkgAllocated)
         allocated.push(pkgAllocated)
-        this.setState({
+        setState({
+          ...state,
           sumAvailable,
           sumAllocated,
           available,
@@ -176,21 +192,12 @@ class SaleAttachingProductOffer extends Component {
         })
       })
     }
-  }
+  }, [getSafe(() => props.groupedProductOffers.length, 0)])
 
-  componentWillUnmount() {
+  const linkAttachment = async (orderItemId, files, setFieldValue, index) => {
     try {
-      this.props.getSaleOrder(this.props.orderId)
-      this.props.clearGroupedProductOffer()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  linkAttachment = async (orderItemId, files, setFieldValue, index) => {
-    try {
-      const response = await this.props.addAttachment(files[0], 1, {})
-      setFieldValue(`tab[${this.state.activeTab}].groupedOffer[${index}].attachments[0]`, {
+      const response = await props.addAttachment(files[0], 1, {})
+      setFieldValue(`tab[${state.activeTab}].groupedOffer[${index}].attachments[0]`, {
         id: response.value.data.id,
         name: response.value.data.name,
         linked: true,
@@ -201,33 +208,33 @@ class SaleAttachingProductOffer extends Component {
         attachmentId: response.value.data.id,
         orderItemId: orderItemId
       }
-      await this.props.linkAttachmentToOrderItem(query)
+      await props.linkAttachmentToOrderItem(query)
     } catch (error) {
       console.error(error)
     }
   }
 
-  removeAttachment = (orderItemId, file) => {
+  const removeAttachment = (orderItemId, file) => {
     const query = {
       attachmentId: file.id,
       orderItemId: orderItemId
     }
-    this.props.removeLinkAttachmentToOrderItem(query)
+    props.removeLinkAttachmentToOrderItem(query)
   }
 
-  renderTab(tabIndex, offers, setFieldValue, values) {
+  const renderTab = (tabIndex, offers, setFieldValue, values) => {
     if (!getSafe(() => offers.length, 0)) return <></>
 
     return (
-      <LotsTab active={this.state.activeTab === tabIndex}>
+      <LotsTab active={state.activeTab === tabIndex}>
         <Grid style={{ marginTop: '0.5em' }}>
           <Grid.Column width={14}>
             <FormattedMessage
               id='order.groupedOffer.item.amount'
               defaultMessage='Allocated packages: {allocated} / {amount}'
-              values={{ allocated: this.state.sumAllocated[tabIndex], amount: this.state.sumAvailable[tabIndex] }}
+              values={{ allocated: state.sumAllocated[tabIndex], amount: state.sumAvailable[tabIndex] }}
             />
-            {this.state.sumAvailable[tabIndex] !== this.state.sumAllocated[tabIndex] ? (
+            {state.sumAvailable[tabIndex] !== state.sumAllocated[tabIndex] ? (
               <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
             ) : null}
           </Grid.Column>
@@ -237,7 +244,7 @@ class SaleAttachingProductOffer extends Component {
           <Grid.Column width={1}>
             <Input
               name={`tab[${tabIndex}].productOfferId`}
-              inputProps={{ type: 'hidden', defaultValue: this.props.orderId }}
+              inputProps={{ type: 'hidden', defaultValue: props.orderId }}
             />
           </Grid.Column>
         </Grid>
@@ -285,13 +292,13 @@ class SaleAttachingProductOffer extends Component {
                             inputProps={{
                               onClick: (e, { checked }) => {
                                 setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].selected`, checked)
-                                const available = this.state.available
-                                const allocated = this.state.allocated
-                                const sumAvailable = this.state.sumAvailable
-                                const sumAllocated = this.state.sumAllocated
+                                const available = state.available
+                                const allocated = state.allocated
+                                const sumAvailable = state.sumAvailable
+                                const sumAllocated = state.sumAllocated
 
-                                const allocatedIndex = this.state.allocated[tabIndex][index]
-                                const availableIndex = this.state.available[tabIndex][index]
+                                const allocatedIndex = state.allocated[tabIndex][index]
+                                const availableIndex = state.available[tabIndex][index]
                                 setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
                                 let differenceNumber = 0
                                 if (sumAvailable[tabIndex] !== sumAllocated[tabIndex]) {
@@ -305,7 +312,7 @@ class SaleAttachingProductOffer extends Component {
                                   allocated[tabIndex][index] = differenceNumber
                                   //sumAvailable[tabIndex] = sumAvailable[tabIndex] - availableIndex
                                   sumAllocated[tabIndex] = sumAllocated[tabIndex] + differenceNumber
-                                  this.setState({ available, allocated, sumAllocated })
+                                  setState({ ...state, available, allocated, sumAllocated })
                                 } else {
                                   setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].allocated`, 0)
                                   setFieldValue(
@@ -317,7 +324,7 @@ class SaleAttachingProductOffer extends Component {
                                   allocated[tabIndex][index] = 0
                                   //sumAvailable[tabIndex] = sumAvailable[tabIndex] + allocatedIndex
                                   sumAllocated[tabIndex] = sumAllocated[tabIndex] - allocatedIndex
-                                  this.setState({ available, allocated, sumAllocated })
+                                  setState({ ...state, available, allocated, sumAllocated })
                                 }
                               },
                               id: `tab${tabIndex}_groupedOffer${index}`
@@ -327,8 +334,8 @@ class SaleAttachingProductOffer extends Component {
                         <Table.Cell>{offer.id}</Table.Cell>
                         <Table.Cell textAlign='center'>{offer.cfPkgTotal}</Table.Cell>
                         <Table.Cell textAlign='center'>
-                          {this.state.available[tabIndex] && this.state.available[tabIndex][index]
-                            ? this.state.available[tabIndex][index]
+                          {state.available[tabIndex] && state.available[tabIndex][index]
+                            ? state.available[tabIndex][index]
                             : 0}
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
@@ -340,22 +347,22 @@ class SaleAttachingProductOffer extends Component {
                                 ? false
                                 : true,
                               defaultValue:
-                                this.state.allocated &&
-                                this.state.allocated[tabIndex] &&
-                                this.state.allocated[tabIndex][index],
+                                state.allocated &&
+                                state.allocated[tabIndex] &&
+                                state.allocated[tabIndex][index],
                               max: offer.cfPkgTotal,
                               min: 0,
                               onChange: (e, { value }) => {
                                 value = parseInt(value)
 
-                                const available = this.state.available
-                                const allocated = this.state.allocated
-                                //const sumAvailable = this.state.sumAvailable
-                                const sumAllocated = this.state.sumAllocated
+                                const available = state.available
+                                const allocated = state.allocated
+                                //const sumAvailable = state.sumAvailable
+                                const sumAllocated = state.sumAllocated
 
-                                const allocatedIndex = this.state.allocated[tabIndex][index]
-                                const availableIndex = this.state.available[tabIndex][index]
-                                const difference = this.state.allocated[tabIndex][index] - value
+                                const allocatedIndex = state.allocated[tabIndex][index]
+                                const availableIndex = state.available[tabIndex][index]
+                                const difference = state.allocated[tabIndex][index] - value
 
                                 setFieldValue(`tab[${tabIndex}].groupedOffer[${index}].id`, offer.id)
 
@@ -371,7 +378,7 @@ class SaleAttachingProductOffer extends Component {
                                   allocated[tabIndex][index] = allocatedIndex - difference
                                   //sumAvailable[tabIndex] = sumAvailable[tabIndex] + difference
                                   sumAllocated[tabIndex] = sumAllocated[tabIndex] - difference
-                                  this.setState({ available, allocated, sumAllocated })
+                                  setState({ ...state, available, allocated, sumAllocated })
                                 }
                               }
                             }}
@@ -389,9 +396,9 @@ class SaleAttachingProductOffer extends Component {
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
                           <UploadAttachment
-                            {...this.props}
+                            {...props}
                             removeOrderItem={file => {
-                              this.removeAttachment(this.props.orderItemsId[tabIndex], file)
+                              removeAttachment(props.orderItemsId[tabIndex], file)
                             }}
                             attachments={getSafe(
                               () => values.tab[tabIndex].groupedOffer[index].attachments,
@@ -403,7 +410,7 @@ class SaleAttachingProductOffer extends Component {
                             filesLimit={1}
                             fileMaxSize={20}
                             onChange={files =>
-                              this.linkAttachment(this.props.orderItemsId[tabIndex], files, setFieldValue, index)
+                              linkAttachment(props.orderItemsId[tabIndex], files, setFieldValue, index)
                             }
                             data-test={`grouped_offer_${index}_attachments`}
                             emptyContent={
@@ -426,7 +433,7 @@ class SaleAttachingProductOffer extends Component {
         <Grid>
           <Grid.Column width={9}></Grid.Column>
           <Grid.Column floated='right' width={3}>
-            <Button basic fluid onClick={() => this.props.closePopup()}>
+            <Button basic fluid onClick={() => props.closePopup()}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
             </Button>
           </Grid.Column>
@@ -435,8 +442,8 @@ class SaleAttachingProductOffer extends Component {
               style={{ backgroundColor: '#2599d5', color: 'white' }}
               fluid
               disabled={
-                this.state.totalPkgAmount !==
-                this.state.sumAllocated.reduce((sum, allocated) => {
+                state.totalPkgAmount !==
+                state.sumAllocated.reduce((sum, allocated) => {
                   return sum + allocated
                 }, 0)
               }>
@@ -448,245 +455,245 @@ class SaleAttachingProductOffer extends Component {
     )
   }
 
-  render() {
-    const {
-      intl: { formatMessage },
-      closePopup,
-      groupedProductOffers,
-      toastManager,
-      orderId,
-      orderItemsId
-    } = this.props
-    return (
-      <Modal closeIcon onClose={() => closePopup()} open={true}>
-        <Dimmer active={this.state.loadingGroupedProductOffer} inverted>
-          <Loader />
-        </Dimmer>
-        <Modal.Header>
-          <FormattedMessage id='order.saleAttachingProductOffer' defaultMessage='ATTACHING PRODUCT OFFER' />
-        </Modal.Header>
-        <ModalBody>
-          <Modal.Description>
-            <Form
-              enableReinitialize
-              validateOnChange={false}
-              initialValues={{ ...initValues }}
-              onSubmit={(values, actions) => {
-                // check that all tabs have selected at least one item
-                let missingSelected = true
-                if (values && values.tab && values.tab.length) {
-                  values.tab.forEach(tab => {
-                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
-                      tab.groupedOffer.forEach(offer => {
-                        if (offer && offer.selected) {
-                          missingSelected = false
-                          return
-                        }
-                      })
-                    } else {
-                      return
-                    }
-                  })
-                }
+  
+  const {
+    intl: { formatMessage },
+    closePopup,
+    groupedProductOffers,
+    toastManager,
+    orderId,
+    orderItemsId
+  } = props
 
-                if (missingSelected) {
-                  toastManager.add(
-                    generateToastMarkup(
-                      <FormattedMessage id='errors.noSelected.header' defaultMessage='No Selected' />,
-                      <FormattedMessage
-                        id='errors.noSelected.content'
-                        defaultMessage='Please check that all order items have selected at least one.'
-                      />
-                    ),
-                    {
-                      appearance: 'error'
-                    }
-                  )
-                  actions.setSubmitting(false)
-                  return false
-                }
-                // check if any selected and allocated lot is without file
-                let missingFile = false
-                if (values && values.tab && values.tab.length) {
-                  values.tab.forEach(tab => {
-                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
-                      tab.groupedOffer.forEach(offer => {
-                        if (offer && offer.selected && (!offer.attachments || !offer.attachments.length)) {
-                          missingFile = true
-                        }
-                      })
-                    }
-                  })
-                }
-
-                let isSumInTabsCorrect = true
-                if (values && values.tab && values.tab.length) {
-                  values.tab.forEach((tab, index) => {
-                    if (this.state.sumAllocated[index] !== this.state.sumAvailable[index]) {
-                      isSumInTabsCorrect = false
-                      return
-                    }
-                  })
-                }
-
-                if (!isSumInTabsCorrect) {
-                  toastManager.add(
-                    generateToastMarkup(
-                      <FormattedMessage
-                        id='order.detail.error.incorect.packages.header'
-                        defaultMessage='Incorrect allocated packages'
-                      />,
-                      <FormattedMessage
-                        id='order.detail.error.incorect.packages.content'
-                        defaultMessage='Please, check all Order Item tabs and allocate correctly amount packages.'
-                        values={{ id: orderId }}
-                      />
-                    ),
-                    {
-                      appearance: 'error'
-                    }
-                  )
-                  actions.setSubmitting(false)
-                  return
-                }
-
-                const request = []
-                if (values && values.tab && values.tab.length) {
-                  values.tab.forEach(tab => {
-                    const tabRequest = []
-                    if (tab && tab.groupedOffer && tab.groupedOffer.length) {
-                      tab.groupedOffer.forEach(offer => {
-                        if (offer && offer.selected && offer.allocated) {
-                          tabRequest.push({
-                            pkgAmount: parseInt(offer.allocated),
-                            productOffer: parseInt(offer.id)
-                          })
-                        }
-                      })
-                    }
-                    if (tabRequest.length) {
-                      request.push(tabRequest)
-                    }
-                  })
-                }
-                // confirm to assign when missing attachment(s) for assigned lot(s)
-                if (missingFile) {
-                  confirm(
-                    formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
-                    formatMessage({
-                      id: 'confirm.missingCOfA.content',
-                      defaultMessage:
-                        'You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?'
+  return (
+    <Modal closeIcon onClose={() => closePopup()} open={true}>
+      <Dimmer active={state.loadingGroupedProductOffer} inverted>
+        <Loader />
+      </Dimmer>
+      <Modal.Header>
+        <FormattedMessage id='order.saleAttachingProductOffer' defaultMessage='ATTACHING PRODUCT OFFER' />
+      </Modal.Header>
+      <ModalBody>
+        <Modal.Description>
+          <Form
+            enableReinitialize
+            validateOnChange={false}
+            initialValues={{ ...initValues }}
+            onSubmit={(values, actions) => {
+              // check that all tabs have selected at least one item
+              let missingSelected = true
+              if (values && values.tab && values.tab.length) {
+                values.tab.forEach(tab => {
+                  if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                    tab.groupedOffer.forEach(offer => {
+                      if (offer && offer.selected) {
+                        missingSelected = false
+                        return
+                      }
                     })
-                  ).then(
-                    async () => {
-                      // confirm
-                      if (orderItemsId.length > 1) {
-                        orderItemsId.forEach(async (item, index) => {
-                          await this.props
-                            .patchAssignProductOffers(orderId, item, request[index])
-                            .then(r => {
-                              actions.setSubmitting(false)
-                              this.props.closePopup()
-                            })
-                            .catch(e => {
-                              actions.setSubmitting(false)
-                            })
+                  } else {
+                    return
+                  }
+                })
+              }
+
+              if (missingSelected) {
+                toastManager.add(
+                  generateToastMarkup(
+                    <FormattedMessage id='errors.noSelected.header' defaultMessage='No Selected' />,
+                    <FormattedMessage
+                      id='errors.noSelected.content'
+                      defaultMessage='Please check that all order items have selected at least one.'
+                    />
+                  ),
+                  {
+                    appearance: 'error'
+                  }
+                )
+                actions.setSubmitting(false)
+                return false
+              }
+              // check if any selected and allocated lot is without file
+              let missingFile = false
+              if (values && values.tab && values.tab.length) {
+                values.tab.forEach(tab => {
+                  if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                    tab.groupedOffer.forEach(offer => {
+                      if (offer && offer.selected && (!offer.attachments || !offer.attachments.length)) {
+                        missingFile = true
+                      }
+                    })
+                  }
+                })
+              }
+
+              let isSumInTabsCorrect = true
+              if (values && values.tab && values.tab.length) {
+                values.tab.forEach((tab, index) => {
+                  if (state.sumAllocated[index] !== state.sumAvailable[index]) {
+                    isSumInTabsCorrect = false
+                    return
+                  }
+                })
+              }
+
+              if (!isSumInTabsCorrect) {
+                toastManager.add(
+                  generateToastMarkup(
+                    <FormattedMessage
+                      id='order.detail.error.incorect.packages.header'
+                      defaultMessage='Incorrect allocated packages'
+                    />,
+                    <FormattedMessage
+                      id='order.detail.error.incorect.packages.content'
+                      defaultMessage='Please, check all Order Item tabs and allocate correctly amount packages.'
+                      values={{ id: orderId }}
+                    />
+                  ),
+                  {
+                    appearance: 'error'
+                  }
+                )
+                actions.setSubmitting(false)
+                return
+              }
+
+              const request = []
+              if (values && values.tab && values.tab.length) {
+                values.tab.forEach(tab => {
+                  const tabRequest = []
+                  if (tab && tab.groupedOffer && tab.groupedOffer.length) {
+                    tab.groupedOffer.forEach(offer => {
+                      if (offer && offer.selected && offer.allocated) {
+                        tabRequest.push({
+                          pkgAmount: parseInt(offer.allocated),
+                          productOffer: parseInt(offer.id)
                         })
-                      } else {
-                        await this.props
-                          .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
+                      }
+                    })
+                  }
+                  if (tabRequest.length) {
+                    request.push(tabRequest)
+                  }
+                })
+              }
+              // confirm to assign when missing attachment(s) for assigned lot(s)
+              if (missingFile) {
+                confirm(
+                  formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
+                  formatMessage({
+                    id: 'confirm.missingCOfA.content',
+                    defaultMessage:
+                      'You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?'
+                  })
+                ).then(
+                  async () => {
+                    // confirm
+                    if (orderItemsId.length > 1) {
+                      orderItemsId.forEach(async (item, index) => {
+                        await props
+                          .patchAssignProductOffers(orderId, item, request[index])
                           .then(r => {
                             actions.setSubmitting(false)
-                            this.props.closePopup()
+                            props.closePopup()
                           })
                           .catch(e => {
                             actions.setSubmitting(false)
                           })
-                      }
-                    },
-                    () => {
-                      // cancel
-                      actions.setSubmitting(false)
-                    }
-                  )
-                } else {
-                  if (orderItemsId.length > 1) {
-                    orderItemsId.forEach(async (item, index) => {
-                      await this.props
-                        .patchAssignProductOffers(orderId, item, request[index])
+                      })
+                    } else {
+                      await props
+                        .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
                         .then(r => {
                           actions.setSubmitting(false)
-                          this.props.closePopup()
+                          props.closePopup()
                         })
                         .catch(e => {
                           actions.setSubmitting(false)
                         })
-                    })
-                  } else {
-                    this.props
-                      .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
+                    }
+                  },
+                  () => {
+                    // cancel
+                    actions.setSubmitting(false)
+                  }
+                )
+              } else {
+                if (orderItemsId.length > 1) {
+                  orderItemsId.forEach(async (item, index) => {
+                    await props
+                      .patchAssignProductOffers(orderId, item, request[index])
                       .then(r => {
                         actions.setSubmitting(false)
-                        this.props.closePopup()
+                        props.closePopup()
                       })
                       .catch(e => {
                         actions.setSubmitting(false)
                       })
-                  }
+                  })
+                } else {
+                  props
+                    .patchAssignProductOffers(orderId, orderItemsId[0], request[0])
+                    .then(r => {
+                      actions.setSubmitting(false)
+                      props.closePopup()
+                    })
+                    .catch(e => {
+                      actions.setSubmitting(false)
+                    })
                 }
-              }}
-              className='flex stretched'
-              style={{ padding: '0' }}>
-              {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-                this.setFieldValue = setFieldValue
-                const panes = groupedProductOffers.map((offers, index) => {
-                  return {
-                    menuItem: (
-                      <Menu.Item
-                        key={`orderItem${index}`}
-                        onClick={(e, { index }) => {
-                          validateForm()
-                            .then(r => {
-                              // stop when errors found on current tab
-                              if (Object.keys(r).length && getSafe(() => !!r.tab[this.state.activeTab], false)) {
-                                submitForm() // show errors
-                                return false
-                              }
+              }
+            }}
+            className='flex stretched'
+            style={{ padding: '0' }}>
+            {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+              setFieldValue = setFieldValue
+              const panes = groupedProductOffers.map((offers, index) => {
+                return {
+                  menuItem: (
+                    <Menu.Item
+                      key={`orderItem${index}`}
+                      onClick={(e, { index }) => {
+                        validateForm()
+                          .then(r => {
+                            // stop when errors found on current tab
+                            if (Object.keys(r).length && getSafe(() => !!r.tab[state.activeTab], false)) {
+                              submitForm() // show errors
+                              return false
+                            }
 
-                              // if validation is correct - switch tabs
-                              this.setState({ activeTab: index })
-                            })
-                            .catch(e => {
-                              console.error('CATCH', e)
-                            })
-                        }}
-                        data-test={`order_grouped_offers_tab${index}`}>
-                        <FormattedMessage
-                          id='order.groupedOffer.orderItem'
-                          defaultMessage='Order Item {num}'
-                          values={{ num: index + 1 }}
-                        />
-                      </Menu.Item>
-                    ),
-                    pane: () => this.renderTab(index, offers, setFieldValue, values)
-                  }
-                })
-                return (
-                  <TabMenu
-                    menu={{ secondary: true, pointing: true }}
-                    panes={panes}
-                    renderActiveOnly={false}
-                    activeIndex={this.state.activeTab}
-                  />
-                )
-              }}
-            </Form>
-          </Modal.Description>
-        </ModalBody>
-      </Modal>
-    )
-  }
+                            // if validation is correct - switch tabs
+                            setState({ ...state, activeTab: index })
+                          })
+                          .catch(e => {
+                            console.error('CATCH', e)
+                          })
+                      }}
+                      data-test={`order_grouped_offers_tab${index}`}>
+                      <FormattedMessage
+                        id='order.groupedOffer.orderItem'
+                        defaultMessage='Order Item {num}'
+                        values={{ num: index + 1 }}
+                      />
+                    </Menu.Item>
+                  ),
+                  pane: () => renderTab(index, offers, setFieldValue, values)
+                }
+              })
+              return (
+                <TabMenu
+                  menu={{ secondary: true, pointing: true }}
+                  panes={panes}
+                  renderActiveOnly={false}
+                  activeIndex={state.activeTab}
+                />
+              )
+            }}
+          </Form>
+        </Modal.Description>
+      </ModalBody>
+    </Modal>
+  )
 }
 
 function mapStateToProps(state, { orderItems }) {

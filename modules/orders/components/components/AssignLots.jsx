@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { loadFile, addAttachment } from '../../../inventory/actions'
@@ -120,18 +120,18 @@ const validationScheme = val.object().shape({
   )
 })
 
-class AssignLots extends Component {
-  state = {
+const AssignLots = props => {
+  const [state, setState] = useState({
     activeTab: 0,
     allocated: [],
     poLots: []
-  }
+  })
 
-  componentDidMount() {
-    const { orderItems } = this.props
+  useEffect(() => {
+    const { orderItems } = props
 
     if (getSafe(() => orderItems.length, 0)) {
-      let allocated = this.state.allocated
+      let allocated = state.allocated
       let alreadyLoadedLots = []
       orderItems.forEach(orderItem => {
         const sumAllocated = orderItem.lots.reduce(function (sum, lot) {
@@ -139,34 +139,32 @@ class AssignLots extends Component {
         }, 0)
         allocated.push(sumAllocated)
         if (!alreadyLoadedLots.includes(orderItem.productOffer)) {
-          this.props.loadLotsToAssign(orderItem.productOffer)
+          props.loadLotsToAssign(orderItem.productOffer)
           alreadyLoadedLots.push(orderItem.productOffer)
         }
       })
-      this.setState({ allocated: allocated })
+      setState({ ...state, allocated: allocated })
     }
-  }
+  }, [])
 
-  componentDidUpdate(oldProps) {
-    if (getSafe(() => oldProps.poLots.length, 0) < getSafe(() => this.props.poLots.length, 0)) {
-      const availability = this.props.poLots.map(poLot => {
-        return {
-          id: poLot.id,
-          lots: poLot.lots.map(lot => {
-            return {
-              id: lot.id,
-              available: lot.available
-            }
-          })
-        }
-      })
-      this.setState({ poLots: availability })
-    }
-  }
+  useEffect(() => {
+    const availability = props.poLots.map(poLot => {
+      return {
+        id: poLot.id,
+        lots: poLot.lots.map(lot => {
+          return {
+            id: lot.id,
+            available: lot.available
+          }
+        })
+      }
+    })
+    setState({ ...state, poLots: availability })
+  }, [getSafe(() => props.poLots.length, 0)])
 
-  linkAttachment = (lotId, files, data) => {
+  const linkAttachment = (lotId, files, data) => {
     const { values, setFieldValue, lotNumber, productOfferId } = data
-    this.props.linkAttachment(lotId, files).then(r => {
+    props.linkAttachment(lotId, files).then(r => {
       const affectedOrderItems = values.tabLots.forEach((tab, tabIndex) => {
         if (tab.productOfferId === productOfferId) {
           const lotIndex = tab.lots.findIndex(lot => lot.lotNumber === lotNumber)
@@ -184,7 +182,7 @@ class AssignLots extends Component {
     })
   }
 
-  removeAttachment = (fileId, data) => {
+  const removeAttachment = (fileId, data) => {
     const { values, setFieldValue } = data
     values.tabLots.forEach((tab, tabIndex) => {
       const lotIndex = tab.lots.findIndex(lot => getSafe(() => lot.attachments[0].id, 0) === fileId)
@@ -192,12 +190,12 @@ class AssignLots extends Component {
         setFieldValue(`tabLots[${tabIndex}].lots[${lotIndex}].attachments`, [])
       }
     })
-    this.props.removeAttachment(fileId)
+    props.removeAttachment(fileId)
   }
 
-  renderTab(tabIndex, orderItem, lots, setFieldValue, values) {
-    const { poLots } = this.props
-    const statePoLots = this.state.poLots
+  const renderTab = (tabIndex, orderItem, lots, setFieldValue, values) => {
+    const { poLots } = props
+    const statePoLots = state.poLots
     let tabAvailability = []
     if (statePoLots.length)
       tabAvailability = getSafe(() => statePoLots.find(poLot => poLot.id === orderItem.productOffer).lots, [])
@@ -205,15 +203,15 @@ class AssignLots extends Component {
     if (!getSafe(() => poLots.length, 0)) return <></>
 
     return (
-      <LotsTab active={this.state.activeTab === tabIndex}>
+      <LotsTab active={state.activeTab === tabIndex}>
         <Grid style={{ marginTop: '0.5em' }}>
           <Grid.Column width={14}>
             <FormattedMessage
               id='order.assignLots.orderItem.amount'
               defaultMessage='Allocated packages: {allocated} / {amount}'
-              values={{ allocated: this.state.allocated[tabIndex], amount: orderItem.amount }}
+              values={{ allocated: state.allocated[tabIndex], amount: orderItem.amount }}
             />
-            {this.state.allocated[tabIndex] > orderItem.amount ? (
+            {state.allocated[tabIndex] > orderItem.amount ? (
               <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
             ) : null}
           </Grid.Column>
@@ -276,16 +274,16 @@ class AssignLots extends Component {
                             inputProps={{
                               onClick: (e, { checked }) => {
                                 setFieldValue(`tabLots[${tabIndex}].lots[${index}].selected`, checked)
-                                const stateAllocated = this.state.allocated
-                                const stateAvailability = this.state.poLots
-                                const needAmount = parseInt(
+                                const stateAllocated = state.allocated
+                                const stateAvailability = state.poLots
+                                const needAmount = (
                                   orderItem.amount - stateAllocated[tabIndex] > 0
                                     ? orderItem.amount - stateAllocated[tabIndex]
                                     : 0
                                 )
                                 if (checked) {
                                   const available = parseInt(
-                                    this.state.poLots
+                                    state.poLots
                                       .find(poLot => poLot.id === values.tabLots[tabIndex].productOfferId)
                                       .lots.find(lot => lot.id === values.tabLots[tabIndex].lots[index].id).available
                                   )
@@ -313,7 +311,7 @@ class AssignLots extends Component {
                                     }
                                   })
 
-                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
+                                  setState({ ...state, poLots: newAvailability, allocated: stateAllocated })
                                 } else {
                                   const allocated = values.tabLots[tabIndex].lots[index].allocated
                                   setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, 0)
@@ -339,7 +337,7 @@ class AssignLots extends Component {
                                     }
                                   })
 
-                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
+                                  setState({ ...state, poLots: newAvailability, allocated: stateAllocated })
                                 }
                               },
                               id: `tab${tabIndex}_lot${index}`
@@ -372,9 +370,9 @@ class AssignLots extends Component {
                                 }
 
                                 // manage allocated values
-                                let stateAllocated = this.state.allocated
-                                const allocNow = parseInt(value - values.tabLots[tabIndex].lots[index].allocated)
-                                const available = this.state.poLots
+                                let stateAllocated = state.allocated
+                                const allocNow = (value - values.tabLots[tabIndex].lots[index].allocated)
+                                const available = state.poLots
                                   .find(poLot => poLot.id === values.tabLots[tabIndex].productOfferId)
                                   .lots.find(lot => lot.id === values.tabLots[tabIndex].lots[index].id).available
                                 if (allocNow > available) {
@@ -386,7 +384,7 @@ class AssignLots extends Component {
                                   stateAllocated[tabIndex] += allocNow
 
                                   // manage availability
-                                  let stateAvailability = this.state.poLots
+                                  let stateAvailability = state.poLots
                                   const newAvailability = stateAvailability.map(po => {
                                     if (po.id === orderItem.productOffer) {
                                       return {
@@ -413,7 +411,7 @@ class AssignLots extends Component {
                                     setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, value)
                                   }
 
-                                  this.setState({ poLots: newAvailability, allocated: stateAllocated })
+                                  setState({ ...state, poLots: newAvailability, allocated: stateAllocated })
                                 }
                               }
                             }}
@@ -437,8 +435,8 @@ class AssignLots extends Component {
                         </Table.Cell>
                         <Table.Cell textAlign='center'>
                           <UploadAttachment
-                            {...this.props}
-                            removeAttachment={fileId => this.removeAttachment(fileId, { values, setFieldValue })}
+                            {...props}
+                            removeAttachment={fileId => removeAttachment(fileId, { values, setFieldValue })}
                             attachments={getSafe(
                               () => values.tabLots[tabIndex].lots[index].attachments,
                               lot.attachments
@@ -449,7 +447,7 @@ class AssignLots extends Component {
                             filesLimit={1}
                             fileMaxSize={20}
                             onChange={files =>
-                              this.linkAttachment(lot.id, files, {
+                              linkAttachment(lot.id, files, {
                                 values,
                                 setFieldValue,
                                 lotNumber: lot.lotNumber,
@@ -473,7 +471,7 @@ class AssignLots extends Component {
         <Grid>
           <Grid.Column width={10}></Grid.Column>
           <Grid.Column floated='right' width={3}>
-            <Button basic fluid onClick={() => this.props.closeAssignLots()}>
+            <Button basic fluid onClick={() => props.closeAssignLots()}>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
             </Button>
           </Grid.Column>
@@ -487,163 +485,162 @@ class AssignLots extends Component {
     )
   }
 
-  render() {
-    const { orderId, orderItems, intl, poLots } = this.props
 
-    let { formatMessage } = intl
+  const { orderId, orderItems, intl, poLots } = props
 
-    const tabLots = orderItems.map(orderItem => {
-      const productOffer = poLots.find(po => po.id === orderItem.productOffer)
-      return {
-        orderItemId: orderItem.id,
-        productOfferId: orderItem.productOffer,
-        lots: getSafe(
-          () =>
-            productOffer.lots.map(lot => {
-              const lotSelected = orderItem.lots.find(orderLot => orderLot.lotNumber === lot.lotNumber)
-              return {
-                ...lot,
-                selected: lotSelected ? true : false,
-                allocated: lotSelected ? lotSelected.amount : 0,
-                amount: orderItem.amount
-              }
-            }),
-          []
-        )
-      }
-    })
+  let { formatMessage } = intl
 
-    const lotsList = { tabLots }
+  const tabLots = orderItems.map(orderItem => {
+    const productOffer = poLots.find(po => po.id === orderItem.productOffer)
+    return {
+      orderItemId: orderItem.id,
+      productOfferId: orderItem.productOffer,
+      lots: getSafe(
+        () =>
+          productOffer.lots.map(lot => {
+            const lotSelected = orderItem.lots.find(orderLot => orderLot.lotNumber === lot.lotNumber)
+            return {
+              ...lot,
+              selected: lotSelected ? true : false,
+              allocated: lotSelected ? lotSelected.amount : 0,
+              amount: orderItem.amount
+            }
+          }),
+        []
+      )
+    }
+  })
 
-    return (
-      <>
-        <Modal closeIcon onClose={() => this.props.closeAssignLots()} open={true}>
-          <Modal.Header>
-            <FormattedMessage id='order.actionRequired' defaultMessage='Action Required' />
-            <Subtitle as='h4'>
-              <FormattedMessage
-                id='order.assignLots.subtitle'
-                defaultMessage='Assign lots and upload C of A for Sales Order #'
-              />
-              {orderId}
-            </Subtitle>
-          </Modal.Header>
-          <ModalBody>
-            <Modal.Description>
-              <Form
-                enableReinitialize
-                validateOnChange={false}
-                initialValues={{ ...initValues, ...lotsList }}
-                validationSchema={validationScheme}
-                onSubmit={(values, actions) => {
-                  const tabLots = values.tabLots
+  const lotsList = { tabLots }
 
-                  // check that all tabs have selected at least one lot
-                  const missingLots = values.tabLots.find(
-                    tab => typeof tab.lots.find(lot => lot.selected) === 'undefined'
-                  )
-                  if (missingLots) {
-                    actions.setSubmitting(false)
-                    return false
-                  }
+  return (
+    <>
+      <Modal closeIcon onClose={() => props.closeAssignLots()} open={true}>
+        <Modal.Header>
+          <FormattedMessage id='order.actionRequired' defaultMessage='Action Required' />
+          <Subtitle as='h4'>
+            <FormattedMessage
+              id='order.assignLots.subtitle'
+              defaultMessage='Assign lots and upload C of A for Sales Order #'
+            />
+            {orderId}
+          </Subtitle>
+        </Modal.Header>
+        <ModalBody>
+          <Modal.Description>
+            <Form
+              enableReinitialize
+              validateOnChange={false}
+              initialValues={{ ...initValues, ...lotsList }}
+              validationSchema={validationScheme}
+              onSubmit={(values, actions) => {
+                const tabLots = values.tabLots
 
-                  // check if any selected and allocated lot is without file
-                  const missingFile = !!values.tabLots.find(tab =>
-                    tab.lots.find(lot => lot.selected && lot.allocated && lot.attachments.length === 0)
-                  )
+                // check that all tabs have selected at least one lot
+                const missingLots = values.tabLots.find(
+                  tab => typeof tab.lots.find(lot => lot.selected) === 'undefined'
+                )
+                if (missingLots) {
+                  actions.setSubmitting(false)
+                  return false
+                }
 
-                  const orderItemId = this.props.orderItems[this.state.activeTab].id
+                // check if any selected and allocated lot is without file
+                const missingFile = !!values.tabLots.find(tab =>
+                  tab.lots.find(lot => lot.selected && lot.allocated && lot.attachments.length === 0)
+                )
 
-                  // confirm to assign when missing attachment(s) for assigned lot(s)
-                  if (missingFile) {
-                    confirm(
-                      formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
-                      formatMessage({
-                        id: 'confirm.missingCOfA.content',
-                        defaultMessage:
-                          'You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?'
-                      })
-                    ).then(
-                      async () => {
-                        // confirm
-                        await this.props
-                          .assignLots(orderId, tabLots)
-                          .then(r => {
-                            actions.setSubmitting(false)
-                            this.props.closeAssignLots()
-                          })
-                          .catch(e => {
-                            actions.setSubmitting(false)
-                          })
-                      },
-                      () => {
-                        // cancel
-                        actions.setSubmitting(false)
-                      }
-                    )
-                  } else {
-                    this.props
-                      .assignLots(orderId, tabLots)
-                      .then(r => {
-                        actions.setSubmitting(false)
-                        this.props.closeAssignLots()
-                      })
-                      .catch(e => {
-                        actions.setSubmitting(false)
-                      })
-                  }
-                }}
-                className='flex stretched'
-                style={{ padding: '0' }}>
-                {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-                  const panes = orderItems.map((orderItem, index) => {
-                    return {
-                      menuItem: (
-                        <Menu.Item
-                          key={`orderItem${index}`}
-                          onClick={(e, { index }) => {
-                            validateForm()
-                              .then(r => {
-                                // stop when errors found on current tab
-                                if (Object.keys(r).length && getSafe(() => !!r.tabLots[this.state.activeTab], false)) {
-                                  submitForm() // show errors
-                                  return false
-                                }
+                const orderItemId = props.orderItems[state.activeTab].id
 
-                                // if validation is correct - switch tabs
-                                this.setState({ activeTab: index })
-                              })
-                              .catch(e => {
-                                console.error('CATCH', e)
-                              })
-                          }}
-                          data-test={`order_assign_lots_tab${index}`}>
-                          <FormattedMessage
-                            id='order.assignLots.orderItem'
-                            defaultMessage='Order Item {num}'
-                            values={{ num: index + 1 }}
-                          />
-                        </Menu.Item>
-                      ),
-                      pane: () => this.renderTab(index, orderItem, tabLots[index].lots, setFieldValue, values)
+                // confirm to assign when missing attachment(s) for assigned lot(s)
+                if (missingFile) {
+                  confirm(
+                    formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
+                    formatMessage({
+                      id: 'confirm.missingCOfA.content',
+                      defaultMessage:
+                        'You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?'
+                    })
+                  ).then(
+                    async () => {
+                      // confirm
+                      await props
+                        .assignLots(orderId, tabLots)
+                        .then(r => {
+                          actions.setSubmitting(false)
+                          props.closeAssignLots()
+                        })
+                        .catch(e => {
+                          actions.setSubmitting(false)
+                        })
+                    },
+                    () => {
+                      // cancel
+                      actions.setSubmitting(false)
                     }
-                  })
-                  return (
-                    <TabMenu
-                      menu={{ secondary: true, pointing: true }}
-                      panes={panes}
-                      renderActiveOnly={false}
-                      activeIndex={this.state.activeTab}
-                    />
                   )
-                }}
-              </Form>
-            </Modal.Description>
-          </ModalBody>
-        </Modal>
-      </>
-    )
-  }
+                } else {
+                  props
+                    .assignLots(orderId, tabLots)
+                    .then(r => {
+                      actions.setSubmitting(false)
+                      props.closeAssignLots()
+                    })
+                    .catch(e => {
+                      actions.setSubmitting(false)
+                    })
+                }
+              }}
+              className='flex stretched'
+              style={{ padding: '0' }}>
+              {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                const panes = orderItems.map((orderItem, index) => {
+                  return {
+                    menuItem: (
+                      <Menu.Item
+                        key={`orderItem${index}`}
+                        onClick={(e, { index }) => {
+                          validateForm()
+                            .then(r => {
+                              // stop when errors found on current tab
+                              if (Object.keys(r).length && getSafe(() => !!r.tabLots[state.activeTab], false)) {
+                                submitForm() // show errors
+                                return false
+                              }
+
+                              // if validation is correct - switch tabs
+                              setState({ ...state, activeTab: index })
+                            })
+                            .catch(e => {
+                              console.error('CATCH', e)
+                            })
+                        }}
+                        data-test={`order_assign_lots_tab${index}`}>
+                        <FormattedMessage
+                          id='order.assignLots.orderItem'
+                          defaultMessage='Order Item {num}'
+                          values={{ num: index + 1 }}
+                        />
+                      </Menu.Item>
+                    ),
+                    pane: () => renderTab(index, orderItem, tabLots[index].lots, setFieldValue, values)
+                  }
+                })
+                return (
+                  <TabMenu
+                    menu={{ secondary: true, pointing: true }}
+                    panes={panes}
+                    renderActiveOnly={false}
+                    activeIndex={state.activeTab}
+                  />
+                )
+              }}
+            </Form>
+          </Modal.Description>
+        </ModalBody>
+      </Modal>
+    </>
+  )
 }
 
 function mapStateToProps(state) {
