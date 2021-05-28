@@ -35,39 +35,31 @@ const CompaniesTable = props => {
   )
 }
 
-const mapStateToProps = ({ admin, companiesAdmin }, { datagrid }) => {
-  return {
-    isOpenSidebar: companiesAdmin.isOpenSidebar,
-    companyListDataRequest: companiesAdmin.companyListDataRequest,
-    reRegisterP44Pending: companiesAdmin.reRegisterP44Pending,
-    editedId: companiesAdmin.editedId,
-    rows: datagrid.rows.map(c => ({
-      rawData: c,
-      ...c,
-      companyName: getSafe(() => c.name, ''),
-      dba: getSafe(() => c.dba, ''),
-      associations: getSafe(() => c.associations, ''),
-      hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
-      hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified',
-      hasVellociAccount: getSafe(() => c.vellociAccountStatus, false) === 'active',
-      primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
-        ? c.primaryBranch.deliveryAddress.address.streetAddress +
-          ', ' +
-          c.primaryBranch.deliveryAddress.address.city +
-          ', ' +
-          (c.primaryBranch.deliveryAddress.address.province
-            ? c.primaryBranch.deliveryAddress.address.province.name + ', '
-            : '') +
-          (c.primaryBranch.deliveryAddress.address.country ? c.primaryBranch.deliveryAddress.address.country.name : '')
-        : '',
-      primaryContact: getSafe(() => c.primaryUser.name, ''),
-      contactEmail: getSafe(() => c.primaryUser.email, ''),
-      reviewRequested: getSafe(() => c.reviewRequested, ''),
-      hasLogo: getSafe(() => c.hasLogo, ''),
-      enabled: getSafe(() => c.enabled, false),
-      p44CompanyId: getSafe(() => c.project44Id, '')
-    }))
+import {
+  makeGetCompaniesDatagridRows,
+  makeGetEditedId,
+  makeIsOpenSidebar,
+  makeCompanyListDataRequest,
+  makeReRegisterP44Pending
+} from '../selectors'
+
+const makeMapStateToProps = () => {
+  const getRows = makeGetCompaniesDatagridRows()
+  const getEditedId = makeGetEditedId()
+  const getIsOpenSidebar = makeIsOpenSidebar()
+  const getCompanyListDataRequest = makeCompanyListDataRequest()
+  const getReRegisterP44Pending = makeReRegisterP44Pending()
+
+  const mapStateToProps = (state, props) => {
+    return {
+      rows: getRows(props),
+      editedId: getEditedId(state),
+      isOpenSidebar: getIsOpenSidebar(state),
+      companyListDataRequest: getCompanyListDataRequest(state),
+      reRegisterP44Pending: getReRegisterP44Pending(state)
+    }
   }
+  return mapStateToProps
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))

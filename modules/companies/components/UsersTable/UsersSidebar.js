@@ -27,7 +27,9 @@ import {
   initSearchCompany,
   getUser,
   searchSellMarketSegments,
-  searchBuyMarketSegments
+  searchBuyMarketSegments,
+  getUserRoles,
+  getAdminRoles
 } from '../../actions'
 import {
   userFormValidation,
@@ -84,6 +86,12 @@ const UsersSidebar = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
+    try {
+      if (!props.userRoles.length) props.getUserRoles()
+      if (!props.adminRoles.length) props.getAdminRoles()
+    } catch (e) {
+      console.error(e)
+    }
     if (props.popupValues) {
       switchUser(props, state)
     } else {
@@ -415,7 +423,9 @@ const mapDispatchToProps = {
   initSearchCompany,
   getUser,
   searchSellMarketSegments,
-  searchBuyMarketSegments
+  searchBuyMarketSegments,
+  getUserRoles,
+  getAdminRoles
 }
 
 const mapStateToProps = state => {
