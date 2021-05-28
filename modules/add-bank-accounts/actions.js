@@ -1,4 +1,4 @@
-import * as AT from './action-types'
+import { createAsyncAction } from 'redux-promise-middleware-actions'
 import api from './api'
 /**
  * @param {string} eventName
@@ -7,43 +7,23 @@ import api from './api'
  * @apiType POST
  * @apiPath payments/bank-accounts/velloci/add/log/magic-token
  */
-export function onEventVelloci(eventName, metadata, magicToken) {
-  return {
-    type: AT.ON_EVENT_VELLOCI,
-    payload: api.onEventVelloci(eventName, metadata, magicToken)
-  }
-}
+export const onEventVelloci = createAsyncAction('ON_EVENT_VELLOCI', (eventName, metadata, magicToken) => api.onEventVelloci(eventName, metadata, magicToken))
 /**
  * @param {string} magicToken
  * @apiType GET
  * @apiPath payments/bank-accounts/velloci/add/token/magic-token
  */
-export function getVellociToken(magicToken) {
-  return {
-    type: AT.GET_VELLOCI_TOKEN,
-    payload: api.getVellociToken(magicToken)
-  }
-}
+export const getVellociToken = createAsyncAction('GET_VELLOCI_TOKEN', magicToken => api.getVellociToken(magicToken))
 /**
  * @param {string} magicToken
  * @apiType GET
  * @apiPath /users/me/magic-token
  */
-export function getVellociBusinessId(magicToken) {
-  return {
-    type: AT.GET_VELLOCI_BUSINESS_ID,
-    payload: api.getVellociBusinessId(magicToken)
-  }
-}
+export const getVellociBusinessId = createAsyncAction('GET_VELLOCI_BUSINESS_ID', magicToken => api.getVellociBusinessId(magicToken))
 /**
  * @param {string} magicToken
  * @param {object} metadata
  * @apiType POST
  * @apiPath payments/bank-accounts/velloci/add/magic-token
  */
-export function addVellociAcount(magicToken, metadata) {
-  return {
-    type: AT.ADD_VELLOCI_ACOUNT,
-    payload: api.addVellociAcount(magicToken, metadata)
-  }
-}
+export const addVellociAcount = createAsyncAction('ADD_VELLOCI_ACOUNT', (magicToken, metadata) => api.addVellociAcount(magicToken, metadata))

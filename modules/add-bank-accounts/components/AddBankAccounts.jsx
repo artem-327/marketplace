@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import { Grid, Dimmer, Loader } from 'semantic-ui-react'
@@ -8,8 +7,6 @@ import { usePlaidLink } from 'react-plaid-link'
 import { withToastManager } from 'react-toast-notifications'
 //Components
 import ErrorPage from '../../errors'
-//Actions
-import { getVellociToken, addVellociAcount, onEventVelloci, getVellociBusinessId } from '../actions'
 //Services
 import { getSafe, generateToastMarkup } from '../../../utils/functions'
 /**
@@ -85,20 +82,6 @@ const AddBankAccounts = ({
   }
 }
 
-const mapStateToProps = ({ addBankAccounts }) => ({
-  vellociToken: getSafe(() => addBankAccounts.vellociToken, ''),
-  vellociBusinessId: getSafe(() => addBankAccounts.vellociBusinessId, ''),
-  magicToken: getSafe(() => Router.router.query.token, ''),
-  loading: getSafe(() => addBankAccounts.loading, '')
-})
-
-const mapDispatchToProps = {
-  getVellociToken,
-  getVellociBusinessId,
-  addVellociAcount,
-  onEventVelloci
-}
-
 AddBankAccounts.propTypes = {
   getVellociToken: PropTypes.func,
   getVellociBusinessId: PropTypes.func,
@@ -123,4 +106,4 @@ AddBankAccounts.defaltProps = {
   toastManager: null
 }
 
-export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(AddBankAccounts))
+export default withToastManager(AddBankAccounts)
