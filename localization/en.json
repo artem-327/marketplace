@@ -2570,6 +2570,8 @@
   "shippingQuote.freightLb": "Freight/lb",
   "shippingQuote.totalPriceLb": "Total Price/lb",
   "shippingQuote.totalFreight": "Total Freight",
+  "shippingQuote.noExistManualQuoteId.title": "Failed to get shipping quote data",
+  "shippingQuote.noExistManualQuoteId.content": "Such Quote ID does not exist. Please check your manual quote id again!",
   "logistics.label.logisticsProvider": "Logistics Provider",
   "logistics.placeholder.logisticsProvider": "Select Logistics Provider",
   "logistics.label.apiKey": "API Key",
