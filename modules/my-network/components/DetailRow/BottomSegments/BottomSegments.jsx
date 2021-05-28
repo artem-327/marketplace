@@ -8,7 +8,9 @@ import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../D
  * @category My Network
  * @component
  */
-const BottomSegmentData = props => (
+const BottomSegmentData = props =>{
+  console.log(props)
+  return (
   <GridRowBottomSegment>
     <GridColumnDetail>
       <SegmentGroupHeader horizontal $noneBorder>
@@ -18,7 +20,7 @@ const BottomSegmentData = props => (
       </SegmentGroupHeader>
     </GridColumnDetail>
   </GridRowBottomSegment>
-)
+)}
 
 BottomSegmentData.propTypes = {
   legalData: PropTypes.object,
