@@ -1,313 +1,90 @@
 import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
-import * as OrdersHelper from '../../../components/helpers/Orders'
-import moment from 'moment/moment'
-import { getSafe, getFormattedAddress } from '../../../utils/functions'
-import { FormattedNumber } from 'react-intl'
-import { currency, currencyUSSymbol } from '../../../constants/index'
 import { downloadAttachment, addAttachment } from '../../inventory/actions'
 
-function actionRequired(data) {
-  // return statuses code
-  return getSafe(() => data.orderStatus.toString(), 0) + getSafe(() => data.shippingStatus.toString(), 0)
+import {
+  makeGetOrder,
+  makeGetEchoSupportPhone,
+  makeGetIsPaymentCancellable,
+  makeGetOpenedAssignLots,
+  makeGetOpenedReinitiateTransfer,
+  makeGetOpenedEnterTrackingIdShip,
+  makeGetOpenedEnterTrackingIdReturnShip,
+  makeGetOpenedPurchaseRejectDelivery,
+  makeGetOpenedPurchaseRequestCreditDelivery,
+  makeGetOpenedPurchaseReviewCreditRequest,
+  makeGetOpenedSaleReturnShipping,
+  makeGetOpenedSaleReviewCreditRequest,
+  makeGetOpenedPurchaseOrderShipping,
+  makeGetAction,
+  makeGetopendSaleAttachingProductOffer,
+  makeGetListDocumentTypes,
+  makeGetLoadingRelatedDocuments,
+  makeGetIsAdmin,
+  makeGetIsCompanyAdmin,
+  makeGetIsOrderProcessing,
+  makeGetIsThirdPartyConnectionException,
+  makeGetIsSending,
+  makeGetopenedDisputedRequest,
+  makeGetAppInfo
+} from './Detail.selectors'
+
+const makeMapStateToProps = () => {
+  const getOrder = makeGetOrder()
+  const getEchoSupportPhone = makeGetEchoSupportPhone()
+  const getIsPaymentCancellable = makeGetIsPaymentCancellable()
+  const getOpenedAssignLots = makeGetOpenedAssignLots()
+  const getOpenedReinitiateTransfer = makeGetOpenedReinitiateTransfer()
+  const getOpenedEnterTrackingIdShip = makeGetOpenedEnterTrackingIdShip()
+  const getOpenedEnterTrackingIdReturnShip = makeGetOpenedEnterTrackingIdReturnShip()
+  const getOpenedPurchaseRejectDelivery = makeGetOpenedPurchaseRejectDelivery()
+  const getOpenedPurchaseRequestCreditDelivery = makeGetOpenedPurchaseRequestCreditDelivery()
+  const getOpenedPurchaseReviewCreditRequest = makeGetOpenedPurchaseReviewCreditRequest()
+  const getOpenedSaleReturnShipping = makeGetOpenedSaleReturnShipping()
+  const getOpenedSaleReviewCreditRequest = makeGetOpenedSaleReviewCreditRequest()
+  const getOpenedPurchaseOrderShipping = makeGetOpenedPurchaseOrderShipping()
+  const getAction = makeGetAction()
+  const getopendSaleAttachingProductOffer = makeGetopendSaleAttachingProductOffer()
+  const getListDocumentTypes = makeGetListDocumentTypes()
+  const getLoadingRelatedDocuments = makeGetLoadingRelatedDocuments()
+  const getIsAdmin = makeGetIsAdmin()
+  const getIsCompanyAdmin = makeGetIsCompanyAdmin()
+  const getIsOrderProcessing = makeGetIsOrderProcessing()
+  const getIsThirdPartyConnectionException = makeGetIsThirdPartyConnectionException()
+  const getIsSending = makeGetIsSending()
+  const getopenedDisputedRequest = makeGetopenedDisputedRequest()
+  const getAppInfo = makeGetAppInfo()
+
+  const mapStateToProps = (state, ownProps) => {
+    return {
+      order: getOrder(state, ownProps),
+      echoSupportPhone: getEchoSupportPhone(state),
+      isPaymentCancellable: getIsPaymentCancellable(state),
+      openedAssignLots: getOpenedAssignLots(state),
+      openedReinitiateTransfer: getOpenedReinitiateTransfer(state),
+      openedEnterTrackingIdShip: getOpenedEnterTrackingIdShip(state),
+      openedEnterTrackingIdReturnShip: getOpenedEnterTrackingIdReturnShip(state),
+      openedPurchaseRejectDelivery: getOpenedPurchaseRejectDelivery(state),
+      openedPurchaseRequestCreditDelivery: getOpenedPurchaseRequestCreditDelivery(state),
+      openedPurchaseReviewCreditRequest: getOpenedPurchaseReviewCreditRequest(state),
+      openedSaleReturnShipping: getOpenedSaleReturnShipping(state),
+      openedSaleReviewCreditRequest: getOpenedSaleReviewCreditRequest(state),
+      openedPurchaseOrderShipping: getOpenedPurchaseOrderShipping(state),
+      action: getAction(state),
+      opendSaleAttachingProductOffer: getopendSaleAttachingProductOffer(state),
+      listDocumentTypes: getListDocumentTypes(state),
+      loadingRelatedDocuments: getLoadingRelatedDocuments(state),
+      isAdmin: getIsAdmin(state),
+      isCompanyAdmin: getIsCompanyAdmin(state),
+      isOrderProcessing: getIsOrderProcessing(state),
+      isThirdPartyConnectionException: getIsThirdPartyConnectionException(state),
+      isSending: getIsSending(state),
+      openedDisputedRequest: getopenedDisputedRequest(state),
+      appInfo: getAppInfo(state)
+    }
+  }
+  return mapStateToProps
 }
 
-function getReturnAddress(data) {
-  let returnAddr = ''
-  if (data.returnAddressStreet) {
-    returnAddr = data.returnAddressStreet + ', '
-  }
-  if (data.returnAddressCity) {
-    returnAddr += data.returnAddressCity + ', '
-  }
-  if (data.returnAddressCountry) {
-    returnAddr += data.returnAddressCountry
-  }
-  return returnAddr
-}
-
-function prepareDetail(data, type) {
-  if (typeof data.id === 'undefined') return {}
-
-  const subtotal = getSafe(() => data.cfPriceSubtotal, 0)
-  const totalPriceWithShipping = getSafe(() => data.cfPriceTotal, 0)
-  const orderItems = getSafe(() => data.orderItems, [])
-
-  let paymentNetDays = data.cfPaymentTerms && data.cfPaymentTerms.split(' ')
-  paymentNetDays = paymentNetDays.length ? parseInt(paymentNetDays[paymentNetDays.length - 1], 10) : 0
-
-  return {
-    ...data,
-    paymentTerms: data.paymentTerms,
-    paymentNetDays,
-    companyEin:
-      type === 'sales'
-        ? data.buyerCompanyTin
-          ? data.buyerCompanyTin
-          : 'N/A'
-        : data.sellerCompanyTin
-        ? data.sellerCompanyTin
-        : 'N/A',
-    acceptanceDate:
-      typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
-    amount: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={subtotal}
-      />
-    ),
-    buyerRejectionDate:
-      typeof data.buyerRejectionDate !== 'undefined' ? moment(data.buyerRejectionDate).toDate().toLocaleString() : null,
-    carrier: data.shippingCourierName ? data.shippingCourierName : 'N/A',
-    chemicalName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
-    confirmationDate:
-      typeof data.confirmationDate !== 'undefined' ? moment(data.confirmationDate).toDate().toLocaleString() : 'N/A',
-    contactEmail: data.sellerCompanyContactEmail ? data.sellerCompanyContactEmail : 'N/A',
-    contactNumber: data.sellerCompanyContactPhone ? data.sellerCompanyContactPhone : 'N/A',
-    createdBy: data.buyerName ? data.buyerName : 'N/A',
-    creditStatus: OrdersHelper.getCreditStatus(data.creditReviewStatus),
-    counterOrderId: getSafe(() => data.counterOrderId, 0),
-    deliveryDate:
-      typeof data.deliveryDate !== 'undefined' ? moment(data.deliveryDate).toDate().toLocaleString() : 'N/A',
-    echoFee: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={data.echoFee ? data.echoFee : 0}
-      />
-    ),
-    freight: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={data.shippingPrice ? data.shippingPrice : 0}
-      />
-    ),
-    cfTax: getSafe(() => data.cfTax > 0, '') ? (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={data.cfTax}
-      />
-    ) : null,
-    grossProfit: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0}
-      />
-    ), // ! ! TBD
-    id: data.id,
-    incoterms: 'FOB', // ! ! TBD
-    orderDate: data.orderDate && moment(data.orderDate).toDate().toLocaleString(),
-    orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
-    orderType: type === 'sales' ? 'Sales' : 'Purchase',
-    packaging: orderItems.map(d =>
-      d.packagingSize && d.packagingType && d.packagingUnit
-        ? d.packagingSize + ' ' + d.packagingUnit.name.toLowerCase() + ' ' + d.packagingType.name
-        : 'N/A'
-    ),
-    paymentInitiationDate:
-      typeof data.paymentInitiationDate !== 'undefined'
-        ? moment(data.paymentInitiationDate).toDate().toLocaleString()
-        : 'N/A',
-    paymentReceivedDate:
-      typeof data.paymentReceivedDate !== 'undefined'
-        ? moment(data.paymentReceivedDate).toDate().toLocaleString()
-        : 'N/A',
-    paymentSendDate:
-      typeof data.paymentSendDate !== 'undefined' ? moment(data.paymentSendDate).toDate().toLocaleString() : 'N/A',
-    paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
-    pickUpAddress: getFormattedAddress({
-      street: data.returnAddressStreet,
-      city: data.returnAddressCity,
-      zip: data.returnAddressZip,
-      province: data.returnAddressProvince,
-      country: data.returnAddressCountry
-    }),
-    productCode: orderItems.map(d => (d.companyGenericProductCode ? d.companyGenericProductCode : 'N/A')),
-    productName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
-    productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
-    proNumber: 'N/A', // ! ! TBD
-    quantityOrdered: orderItems.map(d =>
-      d.packagingSize && d.packagingUnit
-        ? `${Number.parseFloat(d.pkgAmount * d.packagingSize).toFixed(2)} ${d.packagingUnit.nameAbbreviation}`
-        : 'N/A'
-    ),
-    refundDate: typeof data.refundDate !== 'undefined' ? moment(data.refundDate).toDate().toLocaleString() : null,
-    returnDeliveryDate:
-      typeof data.returnDeliveryDate !== 'undefined' ? moment(data.returnDeliveryDate).toDate().toLocaleString() : null,
-    returnShipDate:
-      typeof data.returnShipDate !== 'undefined' ? moment(data.returnShipDate).toDate().toLocaleString() : null,
-    returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
-    returnTo: data.sellerCompanyName,
-    returnAddressName: data.returnAddressContactName,
-    returnAddressContactEmail: data.returnAddressContactEmail,
-    returnAddressContactPhone: data.returnAddressContactPhone,
-    returnAddress: getReturnAddress(data),
-    returnCourierName: data.returnCourierName,
-    reviewStatus: OrdersHelper.getReviewStatus(data.reviewStatus),
-    sellerRejectionDate:
-      typeof data.sellerRejectionDate !== 'undefined'
-        ? moment(data.sellerRejectionDate).toDate().toLocaleString()
-        : null,
-    service: 'N/A', // ! ! TBD
-    shipDate: typeof data.shipDate !== 'undefined' ? moment(data.shipDate).toDate().toLocaleString() : 'N/A',
-    shippingContact: data.sellerCompanyContactName ? data.sellerCompanyContactName : 'N/A',
-    shippingStatus: OrdersHelper.getShippingStatus(data.shippingStatus),
-    shipTo: data.shippingAddressContactName,
-    shipToAddress: getFormattedAddress({
-      street: data.shippingAddressStreet,
-      city: data.shippingAddressCity,
-      zip: data.shippingAddressZip,
-      province: data.shippingAddressProvince,
-      country: data.shippingAddressCountry
-    }),
-    shipToEmail: data.shippingAddressContactEmail,
-    shipToPhone: data.shippingAddressContactPhone,
-    frsId: data.shippingAddressEpaFrsId
-      ? (
-        data.shippingAddressEpaFacilityUrl
-          ? (<a href={data.shippingAddressEpaFacilityUrl} target='_blank'>{data.shippingAddressEpaFrsId}</a>)
-          : data.shippingAddressEpaFrsId
-      ) : '',
-    epaRegion: data.shippingAddressEpaRegion,
-    subtotal: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={subtotal}
-      />
-    ), //"$" + totalPrice.formatMoney(2),
-    terms: data.cfPaymentTerms ? data.cfPaymentTerms : 'N/A',
-    total: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-        value={totalPriceWithShipping}
-      />
-    ), //"$" + totalPriceWithShipping.formatMoney(2),
-    totalPkg: orderItems.map(d => d.pkgAmount),
-    unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
-    unitPrice: orderItems.map(d =>
-      d.pricePerUOM ? (
-        <FormattedNumber
-          minimumFractionDigits={3}
-          maximumFractionDigits={3}
-          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-          value={d.pricePerUOM}
-        />
-      ) : (
-        'N/A'
-      )
-    ),
-    itemTotal: orderItems.map(d =>
-      d.priceSubtotal ? (
-        <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
-          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-          value={d.priceSubtotal}
-        />
-      ) : (
-        'N/A'
-      )
-    ),
-    //<FormattedNumber style='currency' currency={currency} value={0} />, //"$" + getSafe(() => data.orderItems[0].price, 0).formatMoney(2),
-    // Vendor or Customer
-    paymentType: type === 'sales' ? 'Customer' : 'Vendor',
-    paymentAddress:
-      type === 'sales'
-        ? data.buyerCompanyAddressStreet +
-          ', ' +
-          data.buyerCompanyAddressCity +
-          ', ' +
-          data.buyerCompanyAddressZip +
-          ' ' +
-          data.buyerCompanyAddressCountry
-        : data.sellerCompanyAddressStreet +
-          ', ' +
-          data.sellerCompanyAddressCity +
-          ', ' +
-          data.sellerCompanyAddressZip +
-          ' ' +
-          data.sellerCompanyAddressCountry,
-    paymentEmail: type === 'sales' ? data.buyerCompanyContactEmail : data.sellerCompanyContactEmail,
-    paymentName: type === 'sales' ? data.buyerCompanyName : data.sellerCompanyName,
-    paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
-    paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName,
-    shippingTrackingCode: data.shippingTrackingCode ? data.shippingTrackingCode : '',
-    isTrackingNumberEditable: data.trackingNumberEditable ? data.trackingNumberEditable : false,
-    isReturnTrackingNumberEditable: data.returnTrackingNumberEditable ? data.returnTrackingNumberEditable : false,
-    returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
-    note: getSafe(() => data.note, ''),
-    attachments: getSafe(() => data.attachments, []),
-    brokerageFee:
-      data?.brokerageFee && +data.brokerageFee > 0 ? (
-        <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
-          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-          value={data.brokerageFee}
-        />
-      ) : null,
-    transactionFee:
-      data?.transactionFee && +data.transactionFee > 0 ? (
-        <FormattedNumber
-          minimumFractionDigits={2}
-          maximumFractionDigits={2}
-          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
-          value={data.transactionFee}
-        />
-      ) : null
-  }
-}
-
-function mapStateToProps(state, ownProps) {
-  const { orders } = state
-
-  if (ownProps.router.query.type !== orders.detailType) {
-    orders.detail = {}
-  }
-
-  return {
-    order: prepareDetail(orders.detail, ownProps.router.query.type),
-    echoSupportPhone: getSafe(
-      () => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value,
-      'N/A'
-    ),
-    isPaymentCancellable: getSafe(() => orders.detail.isPaymentCancellable, false),
-    openedAssignLots: orders.openedAssignLots,
-    openedReinitiateTransfer: orders.openedReinitiateTransfer,
-    openedEnterTrackingIdShip: orders.openedEnterTrackingIdShip,
-    openedEnterTrackingIdReturnShip: orders.openedEnterTrackingIdReturnShip,
-    openedPurchaseRejectDelivery: orders.openedPurchaseRejectDelivery,
-    openedPurchaseRequestCreditDelivery: orders.openedPurchaseRequestCreditDelivery,
-    openedPurchaseReviewCreditRequest: orders.openedPurchaseReviewCreditRequest,
-    openedSaleReturnShipping: orders.openedSaleReturnShipping,
-    openedSaleReviewCreditRequest: orders.openedSaleReviewCreditRequest,
-    openedPurchaseOrderShipping: orders.openedPurchaseOrderShipping,
-    action: actionRequired(orders.detail),
-    opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: orders.listDocumentTypes,
-    loadingRelatedDocuments: orders.loadingRelatedDocuments,
-    isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
-    isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
-    isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
-    isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false),
-    isSending: orders?.isSending,
-    openedDisputedRequest: orders?.openedDisputedRequest,
-    appInfo: state?.auth?.identity?.appInfo
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions, downloadAttachment, addAttachment })(Detail)
+export default connect(makeMapStateToProps, { ...Actions, downloadAttachment, addAttachment })(Detail)
