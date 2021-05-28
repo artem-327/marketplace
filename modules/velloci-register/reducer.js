@@ -79,6 +79,27 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.REGISTER_VELLOCI_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.REGISTER_VELLOCI_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.REGISTER_VELLOCI_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.UPLOAD_DOCUMENTS_PENDING: {
       return {
         ...state,
