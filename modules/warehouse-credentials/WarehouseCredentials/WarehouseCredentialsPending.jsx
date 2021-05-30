@@ -18,7 +18,7 @@ import { Input } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '../../../components/custom-formik'
 import { Required } from '../../../components/constants/layout'
 import { Download, FileText, Map } from 'react-feather'
-import { CustomRowDiv } from '../../companies/constants'
+import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 // Services
 import { injectIntl, FormattedMessage } from 'react-intl'
 import ProdexTable from '../../../components/table'
@@ -445,7 +445,7 @@ class WarehouseCredentialsPending extends Component {
     return (
       <>
         <PositionHeaderSettings>
-          <CustomRowDiv>
+          <DivCustomRow>
             <div>
               <div className='column'>
                 <SearchInput
@@ -458,7 +458,7 @@ class WarehouseCredentialsPending extends Component {
                 />
               </div>
             </div>
-          </CustomRowDiv>
+          </DivCustomRow>
         </PositionHeaderSettings>
         <div
           className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`}
