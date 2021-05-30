@@ -408,24 +408,26 @@ class Listings extends Component {
   }
 
   checkBuyAttempt = row => {
+    let skipBuy = false
     const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
     const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
     const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
     if (hasDea) {
       this.setState({ buyAttemptHasDea: row })
-      return
+      skipBuy = true
     }
     if (hasDhs) {
       this.setState({ buyAttemptHasDhs: row })
-      return
+      skipBuy = true
     }
 
     if (!this.props.buyEligible) {
       this.setState({ viewOnlyPopupOpen: true })
-      return
+      skipBuy = true
     }
 
+    if (skipBuy) return
     this.tableRowClicked(row.id, row?.sellerId)
   }
 

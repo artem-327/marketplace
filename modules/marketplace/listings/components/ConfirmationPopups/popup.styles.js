@@ -37,3 +37,24 @@ export const DivButtons = styled.div`
 export const DivButtonColumn = styled.div`
   margin: 0 5px;
 `
+
+export const DivHeader = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #404040;
+  margin: ${props => (props.margin ? props.margin : '')};
+`
+
+export const DivGreyText = styled.div`
+  line-height: 1.71;
+  color: #848893;
+  text-align: center;
+  margin: ${props => (props.margin ? props.margin : '')};
+`
+
+export const DivIconOuterCircle = styled.div`
+  padding: 10px;
+  background-color: rgba(0, 199, 249, 0.2);
+  border-radius: 50px;
+`
