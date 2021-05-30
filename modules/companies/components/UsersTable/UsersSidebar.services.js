@@ -8,7 +8,7 @@ import { Field as FormikField } from 'formik'
 
 /**
  * Validates values from form.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} props object with popupValues and module actions
  */
@@ -35,7 +35,7 @@ export const userFormValidation = (props) =>
 
 /**
  * Gets home's branches for dropdown options.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {{id: number, deliveryAddress: {cfName: string}}[]} branches
  * @return {{key: number, value: number, text: string}[]} Array objects for dropdown options.
@@ -45,7 +45,7 @@ const getHomeBranchesOptions = branches =>
 
 /**
  * Gets branches where warehouse === false for dropdown options.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {{id: number, deliveryAddress: {cfName: string}}[]} branches
  * @return {{key: number, value: number, text: string}[]} Array objects for dropdown options.
@@ -60,7 +60,7 @@ export const getBranchesOptions = branches => {
 
 /**
  * Process/set input form data.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} props object with popupValues and module actions
  * @param {object} state object with state / set state Hook functions
@@ -132,7 +132,7 @@ export const switchUser = async (props, state) => {
 
 /**
  * Submit function.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} values Formik object - values
  * @param {object} actions Formik object - actions
@@ -175,7 +175,7 @@ export const submitUser = async (values, actions, props, state) => {
 
 /**
  * Gets popup or initial values for form.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} popupValues
  * @return {TInitialValues} Object fields for form.
@@ -211,7 +211,7 @@ export const getInitialFormValues = popupValues => {
 
 /**
  * Handles Buy Market Segment dropdown search change.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} object with 'searchQuery' value
  * @param {object} props object with all props (actions, init data, ...)
@@ -223,7 +223,7 @@ export const handleSellMarketSegmentsSearchChange = debounce((_, { searchQuery }
 
 /**
  * Handles Buy Market Segment dropdown search change.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {object} object with 'searchQuery' value
  * @param {object} props object with all props (actions, init data, ...)
@@ -235,7 +235,7 @@ export const handleBuyMarketSegmentsSearchChange = debounce((_, { searchQuery },
 
 /**
  * Handles Sell Market Segment dropdown change.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {number} value
  * @param {{value: number}[]} options
@@ -249,7 +249,7 @@ export const handleSellMarketSegmentsChange = (value, options, state) => {
 
 /**
  * Handles Buy Market Segment dropdown change.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {number} value
  * @param {{value: number}[]} options
@@ -263,7 +263,7 @@ export const handleBuyMarketSegmentsChange = (value, options, state) => {
 
 /**
  * Returns Checkboxes section generated from the input parameters.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {array} data Array of all roles
  * @param {object} values Formik object - values
@@ -327,7 +327,7 @@ export const generateCheckboxes = (data, values, groupName = null, error) => {
 
 /**
  * Handles Company name dropdown search change.
- * @category Settings - Users
+ * @category Companies/Users
  * @method
  * @param {string} text with search company name value
  * @param {object} props object with all props (actions, init data, ...)

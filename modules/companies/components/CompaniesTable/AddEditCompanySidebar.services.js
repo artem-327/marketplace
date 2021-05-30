@@ -1,14 +1,24 @@
 import * as Yup from 'yup'
+
+// Constants
 import { INITIAL_FORM_VALUES } from './AddEditCompanySidebar.constants'
-import { getSafe, deepSearch, removeEmpty } from '~/utils/functions'
-import { provinceObjectRequired, errorMessages, minOrZeroLength } from '~/constants/yupValidation'
-import { addressValidationSchema, phoneValidation, websiteValidationNotRequired } from '~/constants/yupValidation'
 
+// Services
+import { getSafe, deepSearch, removeEmpty } from '../../../../utils/functions'
+import { errorMessages } from '../../../../constants/yupValidation'
+import {
+  addressValidationSchema,
+  phoneValidation,
+  websiteValidationNotRequired
+} from '../../../../constants/yupValidation'
 
-
-
-
-
+/**
+ * Gets popup or initial values for form.
+ * @category Companies/Companies
+ * @method
+ * @param {object} values
+ * @return {object} Object fields for form.
+ */
 export const getInitialFormValues = values => {
   return {
     ...INITIAL_FORM_VALUES,
@@ -17,7 +27,12 @@ export const getInitialFormValues = values => {
   }
 }
 
-
+/**
+ * Validates values from form.
+ * @category Companies/Companies
+ * @method
+ * @param {none}
+ */
 export const formValidationNew = () =>
   Yup.lazy(values => {
     let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
@@ -76,7 +91,14 @@ export const formValidationNew = () =>
     return validation
   })
 
-
+/**
+ * Handles Accordion Expand/collapse change.
+ * @category Companies/Companies
+ * @method
+ * @param {object} object with 'name' value
+ * @param {object} state object with state / set state Hook functions
+ * @return {none}
+ */
 export const handleAccordionChange = (e, { name }, state) => {
   let { accordionActive, setAccordionActive } = state
   setAccordionActive({
@@ -85,19 +107,42 @@ export const handleAccordionChange = (e, { name }, state) => {
   })
 }
 
-
+/**
+ * Handles added logo action
+ * @category Companies/Companies
+ * @method
+ * @param {object} logo file
+ * @param {object} isNew boolean value
+ * @param {object} state object with state / set state Hook functions
+ * @return {none}
+ */
 export const selectLogo = (logo, isNew = true, state) => {
   state.setCompanyLogo(logo)
   state.setShouldUpdateLogo(isNew)
 }
 
-
+/**
+ * Handles removing logo action
+ * @category Companies/Companies
+ * @method
+ * @param {object} state object with state / set state Hook functions
+ * @return {none}
+ */
 export const removeLogo = state => {
   state.setCompanyLogo(null)
   state.setShouldUpdateLogo(true)
 }
 
-
+/**
+ * Submit function.
+ * @category Companies/Companies
+ * @method
+ * @param {object} values Formik object - values
+ * @param {object} actions Formik object - actions
+ * @param {object} state object with state / set state Hook functions
+ * @param {object} props object with all props (actions, init data, ...)
+ * @return {none}
+ */
 export const submitCompany = async (values, actions, state, props) => {
   const {
     closePopup,

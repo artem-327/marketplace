@@ -1,5 +1,9 @@
 import { FormattedMessage } from 'react-intl'
 
+/**
+ * @category Companies/Users
+ * @constant {array} Table columns
+ */
 export const COLUMNS = [
   {
     name: 'name',

@@ -3,20 +3,15 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import get from 'lodash/get'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// Constants
-import { currencyId } from '~/constants/index'
 
 // Components
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Dimmer, Loader, Grid, GridRow, GridColumn, Modal, Form } from 'semantic-ui-react'
-import { CheckboxWithValue } from '~/components/custom-formik'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { Required } from '~/components/constants/layout'
-import ErrorFocus from '~/components/error-focus'
+import { PhoneNumber } from '../../../phoneNumber'
+import { Required } from '../../../../components/constants/layout'
+import ErrorFocus from '../../../../components/error-focus'
 
 // Services
 import {
@@ -44,8 +39,8 @@ import {
   generateCheckboxes,
   searchCompanies
 } from './UsersSidebar.services'
-import { removeEmpty, uniqueArrayByKey, getSafe } from '~/utils/functions'
-import { withDatagrid } from '~/modules/datagrid'
+import { uniqueArrayByKey, getSafe } from '../../../../utils/functions'
+import { withDatagrid } from '../../../datagrid'
 
 // Styles
 import { GridColumnWError, CustomSegment, ModalFixed } from './UsersSidebar.styles'

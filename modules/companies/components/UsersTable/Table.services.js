@@ -1,8 +1,16 @@
-import confirm from '~/components/Confirmable/confirm'
-import ActionCell from '~/components/table/ActionCell'
 import { Checkbox, Popup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
+// Components
+import confirm from '../../../../components/Confirmable/confirm'
+import ActionCell from '../../../../components/table/ActionCell'
+
+/**
+ * Return a row actions
+ * @category Companies/Users table
+ * @param {object} props
+ * @returns {array}
+ */
 export const getActions = props => {
   const { intl, datagrid, openSidebar, deleteUser, currentUserId } = props
 
@@ -34,6 +42,14 @@ export const getActions = props => {
   ]
 }
 
+/**
+ * Handle enable/disable company (endpoint call, data table update)
+ * @category Companies/Users table
+ * @param {integer} id
+ * @param {object} row
+ * @param {object} props
+ * @returns {none}
+ */
 const handleSwitchEnabled = async (id, row, props) => {
   try {
     await props.userSwitchEnableDisable(id, row)
@@ -43,6 +59,13 @@ const handleSwitchEnabled = async (id, row, props) => {
   }
 }
 
+/**
+ * Adjust rows, add actions to the rows
+ * @category Companies/Users table
+ * @param {array} rows
+ * @param {object} props
+ * @returns {array}
+ */
 export const getRows = (rows, props) => {
   return rows.map(r => {
     const { currentUserId } = props

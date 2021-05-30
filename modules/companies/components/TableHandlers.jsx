@@ -4,22 +4,9 @@ import { connect } from 'react-redux'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { openSidebar, searchCompanyFilter, saveFilters } from '../actions'
-import { openImportPopup } from '~/modules/settings/actions'
-import { withDatagrid } from '~/modules/datagrid'
-import ProductImportPopup from '~/modules/inventory/my-products/components/ProductImportPopup'
-import { CustomRowDiv } from '../constants'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
-
-//Hooks
-import { usePrevious } from '../../../hooks'
-
-import { TEXTS_TABLE } from './TablesHandlers.constants'
-
-import { PositionHeaderSettings } from './TablesHandlers.styles'
-
+// Services
+import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
 import {
   handleFilterChangeCompany,
   handleFilterChangeInputSearch,
@@ -27,6 +14,24 @@ import {
   initFilterValues,
   searchCompanies
 } from './TablesHandlers.services'
+
+// Actions
+import { openSidebar, searchCompanyFilter, saveFilters } from '../actions'
+import { openImportPopup } from '../../settings/actions'
+
+// Components
+import { withDatagrid } from '../../datagrid'
+import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopup'
+import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
+
+//Hooks
+import { usePrevious } from '../../../hooks'
+
+// Constants
+import { TEXTS_TABLE } from './TablesHandlers.constants'
+
+// Styles
+import { PositionHeaderSettings, DivCustomRow } from './TablesHandlers.styles'
 
 const stateValueRef = createRef() // Needed ref for useEffect/return function to access the latest state
 
@@ -99,7 +104,7 @@ const TablesHandlers = props => {
 
   return (
     <PositionHeaderSettings>
-      <CustomRowDiv>
+      <DivCustomRow>
         {isOpenImportPopup && <ProductImportPopup companies={true} />}
         <div>
           <div className='column'>
@@ -129,7 +134,7 @@ const TablesHandlers = props => {
                 value={filterValue.company}
                 loading={searchedCompaniesFilterLoading}
                 onSearchChange={(e, { searchQuery }) => {
-                  searchQuery.length > 0 && searchCompanies(searchQuery)
+                  searchQuery.length > 0 && searchCompanies(searchQuery, props)
                 }}
                 onChange={(e, data) => handleFilterChangeCompany(e, data, state, setState, props)}
               />
@@ -159,7 +164,7 @@ const TablesHandlers = props => {
           </div>
           <ColumnSettingButton divide={true} />
         </div>
-      </CustomRowDiv>
+      </DivCustomRow>
     </PositionHeaderSettings>
   )
 }

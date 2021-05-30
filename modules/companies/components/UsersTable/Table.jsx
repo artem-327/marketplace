@@ -1,10 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
-import ProdexTable from '~/components/table'
 import { injectIntl } from 'react-intl'
+
+// Components
+import ProdexTable from '../../../../components/table'
+import { withDatagrid } from '../../../datagrid'
+
+// Actions
 import { deleteUser, getUsersMe, userSwitchEnableDisable, openSidebar } from '../../actions'
-import { withDatagrid } from '~/modules/datagrid'
+
+// Constants
 import { COLUMNS } from './Table.constants'
+
+// Services
 import { getRows } from './Table.services'
 
 const UsersTable = props => {

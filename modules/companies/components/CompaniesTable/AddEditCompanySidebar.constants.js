@@ -1,3 +1,7 @@
+/**
+ * @category Companies/Companies
+ * @constant {object}
+ */
 export const INITIAL_FORM_VALUES = {
   name: '',
   enabled: false,

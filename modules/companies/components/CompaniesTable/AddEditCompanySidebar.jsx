@@ -1,41 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, Divider, Accordion, Icon, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import {
-  closePopup,
-  updateCompany,
-  createCompany,
-  getPrimaryBranchProvinces,
-  getMailingBranchProvinces,
-  getAddressSearchPrimaryBranch,
-  getAddressSearchMailingBranch
-} from '~/modules/companies/actions'
-import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
-import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
-
-// debug purposes only
-// import JSONPretty from 'react-json-pretty'
-
 import { cloneDeep } from 'lodash'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { validationSchema } from '~/modules/company-form/constants'
-import { CompanyForm } from '~/modules/company-form/'
-import { AddressForm } from '~/modules/address-form/'
-import { getSafe, deepSearch, removeEmpty } from '~/utils/functions'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
-import { BottomButtons } from '../../constants'
-import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '~/modules/admin/constants/layout'
-import ErrorFocus from '~/components/error-focus'
-//Actions
-import { getNaicsCodes } from '../../../velloci-register/actions'
-import { HeaderAccordion, SegmentCustom } from './AddEditCompanySidebar.styles'
 
+// Components
+import { validationSchema } from '../../../company-form/constants'
+import { CompanyForm } from '../../../company-form/'
+import { AddressForm } from '../../../address-form/'
+import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
+import { postCompanyLogo, deleteCompanyLogo } from '../../../company-form/actions'
+import { PhoneNumber } from '../../../phoneNumber'
+import { Required } from '../../../../components/constants/layout'
+import { withDatagrid } from '../../../datagrid'
+import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '../../../admin/constants/layout'
+import ErrorFocus from '../../../../components/error-focus'
+
+// Services
 import {
   getInitialFormValues,
   formValidationNew,
@@ -44,6 +28,23 @@ import {
   selectLogo,
   submitCompany
 } from './AddEditCompanySidebar.services'
+import { getSafe, deepSearch } from '../../../../utils/functions'
+
+// debug purposes only
+// import JSONPretty from 'react-json-pretty'
+
+//Actions
+import { getNaicsCodes } from '../../../velloci-register/actions'
+import { HeaderAccordion, SegmentCustom, DivBottomButtons } from './AddEditCompanySidebar.styles'
+import {
+  closePopup,
+  updateCompany,
+  createCompany,
+  getPrimaryBranchProvinces,
+  getMailingBranchProvinces,
+  getAddressSearchPrimaryBranch,
+  getAddressSearchMailingBranch
+} from '../../actions'
 
 const AddEditCompanySidebar = props => {
   const [accordionActive, setAccordionActive] = useState({
@@ -361,7 +362,7 @@ const AddEditCompanySidebar = props => {
                   )}
                 </Accordion>
               </FlexContent>
-              <BottomButtons>
+              <DivBottomButtons>
                 <div>
                   <Button.Reset data-test='admin_popup_company_cancel_btn' onClick={formikProps.handleReset}>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
@@ -377,7 +378,7 @@ const AddEditCompanySidebar = props => {
                     </FormattedMessage>
                   </Button.Submit>
                 </div>
-              </BottomButtons>
+              </DivBottomButtons>
             </FlexSidebar>
             <ErrorFocus />
           </Form>

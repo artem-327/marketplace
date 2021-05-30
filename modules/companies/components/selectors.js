@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import moment from 'moment'
 import { getSafe } from '../../../utils/functions'
 import { ArrayToFirstItem, FormattedPhone } from '../../../components/formatted-messages/'
-import { currency } from '~/constants/index'
+import { currency } from '../../../constants/index'
 
 const getDatagridRows = props => props?.datagrid?.rows
 

@@ -2,9 +2,8 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import * as AT from './action-types'
 import * as api from './api'
 import Router from 'next/router'
-import { Datagrid } from '~/modules/datagrid'
 
-import { updateIdentity } from '~/modules/auth/actions'
+import { updateIdentity } from '../auth/actions'
 
 export const udpateEnabled = createAsyncAction('COMPANIES_ENABLED_COMPANY', (id, enabled) =>
   api.udpateEnabled(id, enabled)

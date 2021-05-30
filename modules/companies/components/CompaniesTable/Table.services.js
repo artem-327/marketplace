@@ -3,13 +3,22 @@ import { RefreshCw } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
-import { ArrayToFirstItem } from '~/components/formatted-messages/'
-import ActionCell from '~/components/table/ActionCell'
+// Components
+import { ArrayToFirstItem } from '../../../../components/formatted-messages/'
+import ActionCell from '../../../../components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
 
+// Styles
 import { StyledReRegisterButton } from './Table.styles'
 
-import confirm from '~/components/Confirmable/confirm'
-
+/**
+ * Adjust rows, add actions to the rows
+ * @category Companies/Companies table
+ * @param {array} rows
+ * @param {object} state
+ * @param {object} props
+ * @returns {array}
+ */
 export const getRows = (rows, state, props) => {
   return rows.map(row => {
     return {
@@ -69,6 +78,13 @@ export const getRows = (rows, state, props) => {
   })
 }
 
+/**
+ * Handle enable/disable company (endpoint call, data table update)
+ * @category Companies/Companies table
+ * @param {object} row
+ * @param {object} props
+ * @returns {none}
+ */
 const handleEnabled = async (row, props) => {
   const { datagrid, udpateEnabled } = props
 
@@ -80,6 +96,14 @@ const handleEnabled = async (row, props) => {
   }
 }
 
+/**
+ * Handles Re-register P44 endpoint call, data table update
+ * @category Companies/Companies table
+ * @param {integer} id
+ * @param {object} state
+ * @param {object} props
+ * @returns {none}
+ */
 const reRegisterP44 = async (id, state, props) => {
   const { datagrid, reRegisterP44 } = props
   try {
@@ -91,6 +115,12 @@ const reRegisterP44 = async (id, state, props) => {
   }
 }
 
+/**
+ * Return a row actions
+ * @category Companies/Companies table
+ * @param {object} props
+ * @returns {array}
+ */
 const getActions = props => {
   const { datagrid, openEditCompany, deleteCompany, takeOverCompany, resendWelcomeEmail, intl } = props
 

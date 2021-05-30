@@ -1,17 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
-
 import { injectIntl } from 'react-intl'
-import { withDatagrid } from '~/modules/datagrid'
-import ProdexTable from '~/components/table'
-import { getSafe } from '~/utils/functions'
 
+// Components
+import { withDatagrid } from '../../../datagrid'
+import ProdexTable from '../../../../components/table'
+
+// Actions
 import * as Actions from '../../actions'
-import { reviewRequest } from '~/modules/admin/actions'
+import { reviewRequest } from '../../../admin/actions'
 
+// Constants
 import { COLUMNS } from './Table.constants'
 
+// Services
 import { getRows } from './Table.services'
 
 const CompaniesTable = props => {
