@@ -2,26 +2,15 @@ import { Component } from 'react'
 import { Header, Segment } from 'semantic-ui-react'
 import { string, array, func, number, node } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { RelaxedRow, HeaderTextRow } from './styledComponents'
-import { currency } from '~/constants/index'
+import { RelaxedRow } from './styledComponents'
+import { currency } from '../../constants/index'
 
 import {
-  CapitalizedText,
-  CartColumn,
-  SummaryColumn,
-  ContentSegment,
   VerticalUnpaddedColumn,
   StyledRow,
-  TopUnpaddedRow,
-  BottomUnpaddedRow,
-  ItemDescriptionGrid,
-  Item,
-  DescriptionValue,
-  TotalRow,
   SummaryGrid,
-  BottomUnpaddedColumn,
   TotalPriceRow
-} from '~/modules/cart/components/StyledComponents'
+} from '../../modules/cart/components/StyledComponents'
 
 export default class Summary extends Component {
   render() {

@@ -27,6 +27,10 @@ export async function getMeasureTypes() {
   return data
 }
 
+export function getAllUnitsOfMeasures() {
+  return api.get('/prodex/api/units')
+}
+
 export async function getHazardClasses() {
   const { data } = await api.get('/prodex/api/hazard-classes')
   return data
@@ -39,9 +43,9 @@ export async function getDataRequest(config, values) {
 
 export async function postNewRequest(config, values) {
   if (getSafe(() => config.api.post.typeQuery, false)) {
-    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`).then(response => response.data)
+    return await api.post(`${config.api.post.apiCall}${generateQueryString(values)}`)
   } else {
-    return await api.post(config.api.post.apiCall, values).then(response => response.data)
+    return await api.post(config.api.post.apiCall, values)
   }
 }
 
@@ -221,8 +225,7 @@ export const searchMarketSegments = filter =>
 export const udpateEnabled = (id, enabled) =>
   api.patch(`/prodex/api/companies/admin/id/${id}/enabled?enabled=${enabled}`)
 
-export const getLogisticsProviders = () =>
-  api.get('/prodex/api/logistics-providers').then(response => response.data)
+export const getLogisticsProviders = () => api.get('/prodex/api/logistics-providers').then(response => response.data)
 export const postNewLogisticsProvider = body =>
   api.post('/prodex/api/logistics-providers/stored', body).then(response => response.data)
 export const updateLogisticsProvider = (id, body) =>

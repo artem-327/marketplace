@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withDatagrid } from '../../../../../datagrid'
 import { Formik } from 'formik'
 import { Dimmer, Loader, Segment, Form, FormGroup, Divider } from 'semantic-ui-react'
-import { Button, Input } from 'formik-semantic-ui-fixed-validation'
+import { Button, Input, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { ChevronDown } from 'react-feather'
 
@@ -13,6 +13,7 @@ import BasicButton from '../../../../../../components/buttons/BasicButton'
 import { AddressForm } from '../../../../../address-form'
 import { PhoneNumber } from '../../../../../phoneNumber'
 import { Required } from "../../../../../../components/constants/layout"
+import { TimeInput } from '../../../../../../components/custom-formik'
 
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './MyCustomersSidebar.services'
@@ -155,6 +156,13 @@ const MyCustomersSidebar = props => {
                     displayHeader={false}
                     values={values}
                     setFieldValue={setFieldValue}
+                    initialZipCodes={[
+                      {
+                        key: values.zipID.toString(),
+                        value: values.billToAddress.address.zip,
+                        text: values.billToAddress.address.zip
+                      }
+                    ]}
                   />
 
                   <DivSectionHeader>
@@ -308,6 +316,49 @@ const MyCustomersSidebar = props => {
                                   placeholder: formatMessage({
                                     id: 'settings.customers.enterEmailAddress',
                                     defaultMessage: 'Enter Email Address'
+                                  })
+                                }}
+                              />
+                            </FormGroup>
+                            <FormGroup data-test='settings_customers_popup_notes_inp'>
+                              <TimeInput
+                                label={formatMessage({ id: 'global.readyTime', defaultMessage: 'Ready Time' })}
+                                name={`warehouseAddresses[${index}].readyTime`}
+                              />
+                              <TimeInput
+                                label={formatMessage({ id: 'global.closeTime', defaultMessage: 'Close Time' })}
+                                name={`warehouseAddresses[${index}].closeTime`}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.liftGate', defaultMessage: 'Lift Gate' })}
+                                name={`warehouseAddresses[${index}].liftGate`}
+                                inputProps={{ 'data-test': 'settings_customers_popup_liftGate_inp' }}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.forkLift', defaultMessage: 'Fork Lift' })}
+                                name={`warehouseAddresses[${index}].forkLift`}
+                                inputProps={{ 'data-test': 'settings_customers_popup_forklift_inp' }}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.callAhead', defaultMessage: 'Call Ahead' })}
+                                name={`warehouseAddresses[${index}].callAhead`}
+                                inputProps={{ 'data-test': 'settings_customers_popup_callAhead_inp' }}
+                              />
+                            </FormGroup>
+                            <FormGroup widths='equal' data-test='settings_customers_popup_emailPhone_inp'>
+                              <TextArea
+                                name={`warehouseAddresses[${index}].deliveryNotes`}
+                                label={formatMessage({ id: 'global.deliveryNotes', defaultMessage: 'Delivery Notes' })}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'settings.warehouses.writeDeliveryNotesHere',
+                                    defaultMessage: 'Write Delivery Notes Here'
                                   })
                                 }}
                               />

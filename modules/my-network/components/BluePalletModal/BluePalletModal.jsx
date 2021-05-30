@@ -1,16 +1,30 @@
 import { useState } from 'react'
+import { connect } from 'react-redux'
 import { Modal, Dimmer, Loader, List, Grid, Image } from 'semantic-ui-react'
 import { func, bool } from 'prop-types'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Styles
-import { ModalCustom, HeaderWrapper, ContentHeaderTitle, IconsWrapper, IconWrapper, IconBox, ContentMainTitle, ContentSubTitle, AnswerBlock, ListBlock, FooterInfo } from './BluePalletModal.styles'
+import {
+  ModalCustom,
+  HeaderWrapper,
+  ContentHeaderTitle,
+  IconsWrapper,
+  IconWrapper,
+  IconBox,
+  ContentMainTitle,
+  ContentSubTitle,
+  AnswerBlock,
+  ListBlock,
+  FooterInfo
+} from './BluePalletModal.styles'
 // Icons
-import Logo from '~/assets/images/nav/logo-bluepallet.png'
-import BluePalletLogo from '~/assets/images/blue-pallet/trade-pass-logo-only.svg'
-import BluePalletCircle from '~/assets/images/blue-pallet/blue-pallet-circle.svg'
-import IconSafe from '~/assets/images/blue-pallet/shield-fill-check.svg'
-import IconSimple from '~/assets/images/blue-pallet/target.svg'
-import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
+import Logo from '../../../../assets/images/nav/logo-bluetrade.png'
+import BluePalletLogo from '../../../../assets/images/blue-pallet/trade-pass-logo-only.svg'
+import BluePalletCircle from '../../../../assets/images/blue-pallet/blue-pallet-circle.svg'
+import IconSafe from '../../../../assets/images/blue-pallet/shield-fill-check.svg'
+import IconSimple from '../../../../assets/images/blue-pallet/target.svg'
+import IconSecure from '../../../../assets/images/blue-pallet/shield-lock-fill.svg'
+import * as Actions from '../../../inventory/actions'
 /**
  * Modal allow connect between companies.
  * @category My Network
@@ -18,10 +32,7 @@ import IconSecure from '~/assets/images/blue-pallet/shield-lock-fill.svg'
  */
 const BluePalletModal = props => {
   const [value, setValue] = useState('')
-  const {
-    open,
-    onClose
-  } = props
+  const { open, onClose, applicationName } = props
 
   return (
     <ModalCustom
@@ -36,7 +47,6 @@ const BluePalletModal = props => {
         <HeaderWrapper>
           <ContentHeaderTitle as='h2'>
             <Image src={Logo} />
-            <FormattedMessage id='bluePallet.direct' defaultMessage='Direct' />
           </ContentHeaderTitle>
           <IconsWrapper>
             <IconWrapper>
@@ -62,12 +72,19 @@ const BluePalletModal = props => {
       </Modal.Header>
       <Modal.Content>
         <ContentMainTitle as='h3'>
-          <FormattedMessage id='bluePallet.whatIs' defaultMessage='What is BluePallet Direct?' />
+          <FormattedMessage
+            id='bluePallet.whatIs'
+            defaultMessage='What is BlueTrade?'
+            values={{ companyName: applicationName }}
+          />
         </ContentMainTitle>
         <AnswerBlock>
           <FormattedMessage
             id='bluePallet.whatIs.answer'
-            defaultMessage='BluePallet Direct anonymously displays selected inventory on our direct feed for all qualified members on the BluePallet platform to view and purchase. Selling and buying inventory through BluePallet Direct comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that BluePallet direct transactions are safe, secure, simple, and reliable.'
+            defaultMessage='BlueTrade anonymously displays selected inventory on our direct feed for all qualified members on the {companyName} platform to view and purchase. Selling and buying inventory through BlueTrade comes with industry leading perks. Built in Supply side protections and buyer benefits ensures that BlueTrade transactions are safe, secure, simple, and reliable.'
+            values={{
+              companyName: applicationName
+            }}
           />
         </AnswerBlock>
         <Grid>
@@ -86,7 +103,10 @@ const BluePalletModal = props => {
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
-                <FormattedMessage id='bluePallet.anonymouslySell' defaultMessage='Anonymously Sell to our entire network of buyers' />
+                <FormattedMessage
+                  id='bluePallet.anonymouslySell'
+                  defaultMessage='Anonymously Sell to our entire network of buyers'
+                />
               </List.Item>
               <List.Item>
                 <Image src={BluePalletCircle} />
@@ -119,7 +139,13 @@ const BluePalletModal = props => {
           </Grid.Column>
         </Grid>
         <FooterInfo>
-          <FormattedMessage id='bluePallet.footerInfo' defaultMessage='BluePallet Direct only displays inventory of BluePallet Members. BluePallet Direct does not manufacture, distribute, or possess any products listed on the BluePallet Direct Marketplace. BluePallet Direct will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.' />
+          <FormattedMessage
+            id='bluePallet.footerInfo'
+            defaultMessage='BlueTrade only displays inventory of {companyName} Members. BlueTrade does not manufacture, distribute, or possess any products listed on the BlueTrade Marketplace. BlueTrade will facilitate transactions and returns as outlined SimpleTrade, Inc.’s Terms of use.'
+            values={{
+              companyName: applicationName
+            }}
+          />
         </FooterInfo>
       </Modal.Content>
     </ModalCustom>
@@ -136,4 +162,10 @@ BluePalletModal.defaultProps = {
   onClose: () => {}
 }
 
-export default injectIntl(BluePalletModal)
+function mapStateToProps(store) {
+  return {
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(BluePalletModal))

@@ -51,7 +51,7 @@ export const defaultValues = {
   dotVesselStowageLocation: '',
   dotVesselStowageOther: '',
   dotUnNumber: '',
-  elements: [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false }],
+  elements: [{ name: '', casProduct: '', assayMin: '', assayMax: '', proprietary: false, caprop65: '', reach: '' }],
   emergencyCompanyName: '',
   emergencyContactName: '',
   emergencyPhone: '',

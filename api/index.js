@@ -1,9 +1,9 @@
 import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
-import { Message } from '~/modules/messages'
-import { refreshToken } from '~/utils/auth'
-import { getSafe } from '~/utils/functions'
+import { Message } from '../modules/messages'
+import { refreshToken } from '../utils/auth'
+import { getSafe } from '../utils/functions'
 const customAxios = axios.create()
 //axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -52,7 +52,7 @@ customAxios.interceptors.response.use(
       return resetTokenAndReattemptRequest(error)
     }
 
-    if (status === 500) {
+    if (status === 500 && !config?.url?.includes('/prodex/api/payments/bank-accounts/velloci/add?publicToken')) {
       hasWindow && window.localStorage.setItem('errorStatus', '500')
       Router.push('/errors')
     }
@@ -107,7 +107,7 @@ customAxios.interceptors.response.use(
       })
     } else {
       try {
-        Message.checkForMessages(error.response)
+        Message?.checkForMessages(error?.response)
       } catch (error) {
         console.error(error)
       }

@@ -5,8 +5,10 @@ import { Formik } from 'formik'
 import moment from 'moment'
 import {
   approveDeaListCertificate,
+  approveEpaCertificate,
   approveTaxExemptCertificate,
   denyDeaListCertificate,
+  denyEpaCertificate,
   denyTaxExemptCertificate
 } from '../actions'
 import { debounce } from 'lodash'
@@ -41,7 +43,7 @@ import {
   FormArea,
   ButtonGroup
 } from './WarehouseCredentials.styles'
-import {config} from "../../admin/config";
+import { config } from '../../admin/config'
 
 class WarehouseCredentialsPending extends Component {
   state = {
@@ -77,11 +79,9 @@ class WarehouseCredentialsPending extends Component {
 
   handleChange = (e, branchId, { name, value }) => {
     let { formikData } = this.state
-    const parts = name.split(".")
-    if (!formikData[branchId])
-      formikData[branchId] = {}
-    if (!formikData[branchId][parts[0]])
-      formikData[branchId][parts[0]] = {}
+    const parts = name.split('.')
+    if (!formikData[branchId]) formikData[branchId] = {}
+    if (!formikData[branchId][parts[0]]) formikData[branchId][parts[0]] = {}
 
     formikData[branchId][parts[0]][parts[1]] = value
 
@@ -94,22 +94,30 @@ class WarehouseCredentialsPending extends Component {
 
     return rows.map(r => ({
       ...r,
+      key: r.id,
       warehouseName: r.name,
       branches: r.branches.map(branch => ({
+        key: `${r.id}_${branch.id}`,
         ...branch,
         branchName: (
           <>
             {expandedSubrowIds.includes(branch.id) ? <IconUp /> : <IconDown />}
             {branch.deliveryAddress.cfName}
-            {branch.deaListReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
-            </CertificationLabel>}
-            {branch.epaReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
-            </CertificationLabel>}
-            {branch.taxExemptReceiveVerify && <CertificationLabel className='pending'>
-              <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
-            </CertificationLabel>}
+            {branch.deaListReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
+              </CertificationLabel>
+            )}
+            {branch.epaReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
+              </CertificationLabel>
+            )}
+            {branch.taxExemptReceiveVerify && (
+              <CertificationLabel className='pending'>
+                <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
+              </CertificationLabel>
+            )}
           </>
         )
       }))
@@ -170,10 +178,12 @@ class WarehouseCredentialsPending extends Component {
     } = this.props
     const { formikData } = this.state
     let stateData = {}
-    if (`${branch.id}` in formikData)
-      stateData = formikData[branch.id]
+    if (`${branch.id}` in formikData) stateData = formikData[branch.id]
 
     const mergedValues = this.mergeInitialValues(INITIAL_VALUES, stateData)
+
+    const today = moment()
+    const tomorrow = moment().add(1, 'days')
 
     return (
       <Formik
@@ -207,7 +217,13 @@ class WarehouseCredentialsPending extends Component {
                   <FormArea>
                     <FormGroup widths='equal'>
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'deaIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: today,
+                          maxDate: today,
+                          id: `deaIssueDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='dea.issueDate'
                         label={
                           <>
@@ -217,7 +233,13 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'deaExpDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: tomorrow,
+                          minDate: tomorrow,
+                          id: `deaExpDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='dea.expDate'
                         label={
                           <>
@@ -254,6 +276,101 @@ class WarehouseCredentialsPending extends Component {
                               }
 
                               this.props.approveDeaListCertificate(branch.id, formikProps.values[formPart])
+                            })
+                            .catch(e => {
+                              console.error(e)
+                            })
+                        }>
+                        <FormattedMessage id='global.approve' defaultMessage='Approve' />
+                      </BasicButton>
+                    </ButtonGroup>
+                  </FormArea>
+                </>
+              )}
+              {branch.epaReceiveVerify && (
+                <>
+                  <CertHeader>
+                    <FormattedMessage
+                      id='warehouseCredentials.epaCertificate'
+                      defaultMessage='EPA Certificate'
+                    />
+                  </CertHeader>
+                  <Warehouse>
+                    <Map />
+                    <label>
+                      <FormattedMessage id='warehouseCredentials.warehouseAddress' defaultMessage='Warehouse Address' />
+                    </label>
+                    {getFormattedAddress({
+                      street: getSafe(() => branch.deliveryAddress.address.streetAddress, false),
+                      city: getSafe(() => branch.deliveryAddress.address.city, false),
+                      zip: getSafe(() => branch.deliveryAddress.address.zip.zip, false),
+                      country: getSafe(() => branch.deliveryAddress.address.country.name, false),
+                      province: getSafe(() => branch.deliveryAddress.address.province.name, false)
+                    })}
+                  </Warehouse>
+                  <FormArea>
+                    <FormGroup widths='equal'>
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.frsId' defaultMessage='FRS ID' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaFrsId'
+                      />
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.epaRegion' defaultMessage='EPA Region' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaRegion'
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal'>
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='warehouseCredentials.epaFacilityUrl' defaultMessage='Detailed Factory Report' />
+                            <Required />
+                          </>
+                        }
+                        inputProps={{ onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        name='epa.epaFacilityUrl'
+                        type='url'
+                      />
+                    </FormGroup>
+                    <ButtonGroup>
+                      <BasicButton $noBorder={true} onClick={() => this.props.denyEpaCertificate(branch.id)}>
+                        <FormattedMessage id='global.deny' defaultMessage='Deny' />
+                      </BasicButton>
+                      <BasicButton
+                        onClick={() =>
+                          validateForm()
+                            .then(r => {
+                              const formPart = 'epa'
+                              // stop when errors found
+                              if (Object.keys(r).length && Object.keys(r).includes(formPart)) {
+                                Object.keys(r[formPart]).forEach((key, index) => {
+                                  // setFieldTouched is necessary to show error when Formik has defined validation scheme
+                                  setFieldTouched(`${formPart}.${key}`, true)
+                                  setFieldError(
+                                    `${formPart}.${key}`,
+                                    formatMessage({
+                                      id: r[formPart][key].props.id,
+                                      defaultMessage: r[formPart][key].props.defaultMessage
+                                    })
+                                  )
+                                })
+                                //submitForm() // show errors
+                                return false
+                              }
+
+                              this.props.approveEpaCertificate(branch.id, formikProps.values[formPart])
                             })
                             .catch(e => {
                               console.error(e)
@@ -315,7 +432,13 @@ class WarehouseCredentialsPending extends Component {
                         name='taxExempt.certificateNumber'
                       />
                       <DateInput
-                        inputProps={{ maxDate: moment(), id: 'taxExemptIssueDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: today,
+                          maxDate: today,
+                          id: `taxExemptIssueDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='taxExempt.issueDate'
                         label={
                           <>
@@ -325,7 +448,13 @@ class WarehouseCredentialsPending extends Component {
                         }
                       />
                       <DateInput
-                        inputProps={{ minDate: moment().add(1, 'days'), id: 'taxExemptExpireDate', clearable: true, onChange: (e, data) => this.handleChange(e, branch.id, data) }}
+                        inputProps={{
+                          initialDate: tomorrow,
+                          minDate: tomorrow,
+                          id: `taxExemptExpireDate-${branch.key}`,
+                          clearable: true,
+                          onChange: (e, data) => this.handleChange(e, branch.id, data)
+                        }}
                         name='taxExempt.expDate'
                         label={
                           <>
@@ -428,7 +557,9 @@ class WarehouseCredentialsPending extends Component {
             </div>
           </CustomRowDiv>
         </PositionHeaderSettings>
-        <div className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`} style={{ padding: '10px 30px' }}>
+        <div
+          className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`}
+          style={{ padding: '10px 30px' }}>
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'
@@ -466,8 +597,10 @@ const mapDispatchToProps = {
   putEditWarehouse,
   downloadAttachment,
   approveDeaListCertificate,
+  approveEpaCertificate,
   approveTaxExemptCertificate,
   denyDeaListCertificate,
+  denyEpaCertificate,
   denyTaxExemptCertificate
 }
 

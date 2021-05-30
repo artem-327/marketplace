@@ -20,8 +20,6 @@ import {
  * @component
  */
 const InfoTab = ({ row }) => {
-  console.log('row')
-  console.log(row)
   return useMemo(() => {
     return (
       <SegmentGroupTab horizontal $noneBorder>

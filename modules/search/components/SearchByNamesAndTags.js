@@ -5,9 +5,9 @@ import PropTypes from 'prop-types'
 import { Grid, Input, Dropdown, Dimmer, Loader } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 //components
-import { Datagrid } from '~/modules/datagrid'
-import { withDatagrid } from '~/modules/datagrid'
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { Datagrid } from '../../datagrid'
+import { withDatagrid } from '../../datagrid'
+import { uniqueArrayByKey, getSafe } from '../../../utils/functions'
 //actions
 import { searchTags, searchProductOffersInventory, clearProductOffers } from '../actions'
 //stylesheet
@@ -125,7 +125,7 @@ class SearchByNamesAndTags extends Component {
       active,
       usedOptions
     })
-    this.setState({ active, usedOptions })
+    this.setState({ active, usedOptions, searchQuery: '' })
   }
 
   handleDeleteClick = (e, data) => {

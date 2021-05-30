@@ -1,12 +1,12 @@
 import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
-import * as OrdersHelper from '~/components/helpers/Orders'
+import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
 import { getSafe, getFormattedAddress } from '~/utils/functions'
 import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
-import { currency } from '~/constants/index'
+import { currency, currencyUSSymbol } from '~/constants/index'
 import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
 
 function actionRequired(data) {
@@ -56,8 +56,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={subtotal}
       />
     ),
@@ -78,8 +77,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={data.echoFee ? data.echoFee : 0}
       />
     ),
@@ -87,8 +85,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={data.shippingPrice ? data.shippingPrice : 0}
       />
     ),
@@ -96,8 +93,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={data.cfTax}
       />
     ) : null,
@@ -105,8 +101,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={data.totalPriceWithShipping ? data.totalPriceWithShipping : 0}
       />
     ), // ! ! TBD
@@ -178,12 +173,18 @@ function prepareDetail(data, type) {
     }),
     shipToEmail: data.shippingAddressContactEmail,
     shipToPhone: data.shippingAddressContactPhone,
+    frsId: data.shippingAddressEpaFrsId
+      ? (
+        data.shippingAddressEpaFacilityUrl
+          ? (<a href={data.shippingAddressEpaFacilityUrl} target='_blank'>{data.shippingAddressEpaFrsId}</a>)
+          : data.shippingAddressEpaFrsId
+      ) : '',
+    epaRegion: data.shippingAddressEpaRegion,
     subtotal: (
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={subtotal}
       />
     ), //"$" + totalPrice.formatMoney(2),
@@ -192,8 +193,7 @@ function prepareDetail(data, type) {
       <FormattedNumber
         minimumFractionDigits={2}
         maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
+        children={val => <>{`${val} ${currencyUSSymbol}`}</>}
         value={totalPriceWithShipping}
       />
     ), //"$" + totalPriceWithShipping.formatMoney(2),
@@ -204,8 +204,7 @@ function prepareDetail(data, type) {
         <FormattedNumber
           minimumFractionDigits={3}
           maximumFractionDigits={3}
-          style='currency'
-          currency={currency}
+          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
           value={d.pricePerUOM}
         />
       ) : (
@@ -217,8 +216,7 @@ function prepareDetail(data, type) {
         <FormattedNumber
           minimumFractionDigits={2}
           maximumFractionDigits={2}
-          style='currency'
-          currency={currency}
+          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
           value={d.priceSubtotal}
         />
       ) : (
@@ -253,7 +251,25 @@ function prepareDetail(data, type) {
     isReturnTrackingNumberEditable: data.returnTrackingNumberEditable ? data.returnTrackingNumberEditable : false,
     returnShippingTrackingCode: data.returnShippingTrackingCode ? data.returnShippingTrackingCode : '',
     note: getSafe(() => data.note, ''),
-    attachments: getSafe(() => data.attachments, [])
+    attachments: getSafe(() => data.attachments, []),
+    brokerageFee:
+      data?.brokerageFee && +data.brokerageFee > 0 ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
+          value={data.brokerageFee}
+        />
+      ) : null,
+    transactionFee:
+      data?.transactionFee && +data.transactionFee > 0 ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          children={val => <>{`${val} ${currencyUSSymbol}`}</>}
+          value={data.transactionFee}
+        />
+      ) : null
   }
 }
 
@@ -288,7 +304,10 @@ function mapStateToProps(state, ownProps) {
     isAdmin: getSafe(() => state.auth.identity.isAdmin, false),
     isCompanyAdmin: getSafe(() => state.auth.identity.isCompanyAdmin, false),
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),
-    isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false)
+    isThirdPartyConnectionException: getSafe(() => orders.isThirdPartyConnectionException, false),
+    isSending: orders?.isSending,
+    openedDisputedRequest: orders?.openedDisputedRequest,
+    appInfo: state?.auth?.identity?.appInfo
   }
 }
 

@@ -21,9 +21,19 @@
       "./styles",
       "./modules/settings/components/Locations",
       "./modules/settings/components/TradeCriteria",
-      "./modules/purchase-order/components/AddAddress",
+      "./modules/settings/components/MyTradePass",
       "./modules/my-network",
-      "./components/date-format"
+      "./modules/inventory/shared-listings",
+      "./modules/inventory/my-listings",
+      "./modules/inventory/my-products",
+      "./components/date-format",
+      "./modules/admin/components/Carriers",
+      "./modules/company-form/components",
+      "./modules/products/components/CasProductsTable",
+      "./modules/purchase-order",
+      "./modules/warehouse-credentials",
+      "./test",
+      "./modules/profile"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]
   },
@@ -33,9 +43,9 @@
     "monospaceLinks": false,
     "search": true,
     "better-docs": {
-      "name": "Echo System Documentation - Frontend",
+      "name": "BluePallet System Documentation - Frontend",
       "logo": "./assets/images/login/logo_login.png",
-      "title": "Echo System Documentation - Frontend"
+      "title": "BluePallet System Documentation - Frontend"
     }
   }
 }

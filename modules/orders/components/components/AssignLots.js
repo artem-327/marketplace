@@ -614,7 +614,7 @@ class AssignLots extends Component {
                                 this.setState({ activeTab: index })
                               })
                               .catch(e => {
-                                console.log('CATCH', e)
+                                console.error('CATCH', e)
                               })
                           }}
                           data-test={`order_assign_lots_tab${index}`}>

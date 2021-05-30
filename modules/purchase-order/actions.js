@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
-import { generateQueryString } from '~/utils/functions'
+import { generateQueryString } from '../../utils/functions'
 
 export const getProductOffer = (id, sellerId = null, isEdit = false) => ({
   type: AT.OFFER_FETCH,

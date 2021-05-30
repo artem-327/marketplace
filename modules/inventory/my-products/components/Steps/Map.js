@@ -234,8 +234,9 @@ const simpleCompanyProductList = {
     'palletLengthMapper',
     'palletMaxPkgsMapper',
     'palletMinPkgsMapper',
-    'palletSaleOnlyMapper',
+    //'palletSaleOnlyMapper',
     'palletWeightMapper',
+    'palletWeightUnitMapper',
     'palletWidthMapper'
   ]
 }

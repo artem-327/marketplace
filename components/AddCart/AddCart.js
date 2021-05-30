@@ -2,7 +2,7 @@ import { Component } from 'react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { object, func, boolean } from 'prop-types'
+import { object, bool } from 'prop-types'
 import moment from 'moment/moment'
 import {
   Sidebar,
@@ -18,22 +18,20 @@ import {
   Divider,
   Segment,
   List,
-  Popup,
   Menu,
   Table
 } from 'semantic-ui-react'
 
-import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
-import { errorMessages } from '~/constants/yupValidation'
-import { currency } from '~/constants'
-import { getSafe, formatAssay } from '~/utils/functions'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { FormattedUnit, UnitOfPackaging } from '../../components/formatted-messages'
+import { errorMessages } from '../../constants/yupValidation'
+import { currency } from '../../constants'
+import { getSafe, formatAssay } from '../../utils/functions'
+import { getLocaleDateFormat } from '../../components/date-format'
 import './AddCart.scss'
 // import file from '../../../../images/file.svg'
 import { tabsMarketPlace, companyGenericProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
 import _ from 'lodash'
 import { yesNoOptions } from '../../modules/company-product-info/constants'
-import { FlexTabs } from '~/modules/inventory/constants/layout'
 import { ChevronDown } from 'react-feather'
 import {
   Rectangle,
@@ -41,7 +39,7 @@ import {
   CustomDivInTitle,
   CustomDivTitle,
   InfoIcon
-} from '~/modules/cart/components/StyledComponents'
+} from '../../modules/cart/components/StyledComponents'
 
 const FlexContent = styled(Segment)`
   flex: 1;
@@ -1855,7 +1853,8 @@ class AddCart extends Component {
     let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
     const {
       sidebarChanged,
-      intl: { formatMessage }
+      intl: { formatMessage },
+      buyEnabled
     } = this.props
     const { activeTab } = this.state
     let { isOpen } = sidebar
@@ -1892,11 +1891,13 @@ class AddCart extends Component {
         ) : (
           <>
             <Menu pointing secondary>
-              {tabsMarketPlace.map((tab, i) => (
-                <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
-                  {formatMessage(tab.text)}
-                </Menu.Item>
-              ))}
+              {tabsMarketPlace.map((tab, i) =>
+                tab.key === 'buy' && !buyEnabled ? null : (
+                  <Menu.Item onClick={() => this.setState({ activeTab: i })} active={activeTab === i}>
+                    {formatMessage(tab.text)}
+                  </Menu.Item>
+                )
+              )}
             </Menu>
             {isOpen ? this.getContent() : null}
           </>
@@ -1909,7 +1910,8 @@ class AddCart extends Component {
 AddCart.propTypes = {
   offer: object,
   order: object,
-  openInfo: boolean
+  openInfo: bool,
+  buyEnabled: bool
   // id: number,
   // pkgAmount: number,
   // pricing: object,

@@ -1,5 +1,5 @@
 import { FormattedMessage } from 'react-intl'
-import { getSafe, getFormattedAddress } from '~/utils/functions'
+import { getSafe, getFormattedAddress } from '../utils/functions'
 
 export const otherPermissions = [
   { value: 'NONE', id: 'NONE', text: 'None' },
@@ -116,6 +116,33 @@ export const mapCompanyRows = companyRows =>
     enabled: getSafe(() => c.enabled, false)
   }))
 
+/**
+ * @constant {string}
+ */
 export const currencySymbol = '$'
+/**
+ * @constant {string}
+ */
+export const SUPPORT_EMAIL = 'support@bluepallet.io'
+/**
+ * @constant {string}
+ */
+export const SUPPORT_PHONE_NUMBER = '(312) 380-2440'
+/**
+ * @constant {string}
+ */
+export const ORDER_RESOLUTION_PHONE_NUMBER = '833-321-3246'
+/**
+ * @constant {string}
+ */
+export const currencyUSSymbol = 'US$'
 
-export const SUPPORT_EMAIL = 'support@echosystem.com'
+/**
+ * @constant {string}
+ */
+ export const URL_TERMS = 'https://www.bluepallet.io/terms'
+
+/**
+ * @constant {string}
+ */
+ export const URL_PRIVACY = 'https://www.bluepallet.io/privacy'

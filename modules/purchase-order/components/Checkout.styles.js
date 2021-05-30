@@ -24,8 +24,22 @@ export const DivScrollableContent = styled.div`
   overflow-y: auto;
 `
 
+export const DivTopButtonRow = styled.div`
+  padding: 15px 4px;
+`
+
+export const DivButtonContentWrapper = styled.div`
+  margin: auto -8px;
+  display: flex;
+  align-items: center;
+`
+
+export const SpanButtonText = styled.span`
+  padding-left: 10px;
+`
+
 export const ContainerCheckout = styled(SemanticContainer)`
-  padding: 30px 0;
+  padding: 15px 0;
 `
 
 export const GridSections = styled(Grid)`
@@ -104,11 +118,51 @@ export const DivTopPadding = styled.div`
 export const GridExpandedSection = styled(Grid)`
   ${({ overflow }) => overflow}
   &.ui.grid {
+    ${({ $psscroll }) => ($psscroll ? 'overflow: hidden !important;' : '')}
+    ${({ $psscroll }) => ($psscroll ? 'display: flex;' : '')}
+    ${({ $psscroll }) => ($psscroll ? 'flex-flow: column;' : '')}
     margin: 10px -20px;
     padding: 0;
     ${props => (props.maxheight ? 'max-height: ' + props.maxheight + ';' : '')}
 
-    > .row {
+    > .scrollbar-container {
+      ${({ $psscroll }) => ($psscroll ? 'flex: 1 1 auto;' : '')}
+      position: relative;
+      overflow: hidden;
+      display: ${({ $psscroll }) => ($psscroll ? 'flex' : 'block')};
+      ${({ $psscroll }) => ($psscroll ? 'flex-direction: row;' : '')}
+      width: ${({ $psscroll }) => ($psscroll ? 'auto' : '100%')};
+      height: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+
+      > .ps__rail-y {
+        position: absolute;
+        /*top: 2px !important;*/
+        left: auto !important;
+        right: 0 !important;
+        bottom: 2px;
+        width: 10px;
+        height: auto;
+        padding: 0 !important;
+
+        .ps__thumb-y {
+          position: absolute;
+          width: 6px;
+          margin: 0 auto;
+          border-radius: 3px;
+          background: #edeef2;
+        }
+      }
+      
+      > .ps__rail-y > .ps__thumb-y:hover,
+      &.ps--scrolling-y > .ps__rail-y > .ps__thumb-y {
+        background: #848893;
+      }
+    }
+
+    > .row,
+    > .scrollbar-container > .row {
       margin: 2.5px 20px;
       padding: 15px 5px;
 

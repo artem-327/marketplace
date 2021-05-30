@@ -82,7 +82,12 @@ export function getShippingStatus(shippingStatus) {
       return 'N/A'
   }
 }
-
+/**
+ * Returns string of status or null.
+ * @method
+ * @param {number} reviewStatus
+ * @returns {'Pending' | 'Accepted' | 'Rejected' | 'Credited' | 'Disputed' | 'N/A'}
+ */
 export function getReviewStatus(reviewStatus) {
   switch (reviewStatus) {
     case 1:
@@ -91,6 +96,10 @@ export function getReviewStatus(reviewStatus) {
       return 'Accepted'
     case 3:
       return 'Rejected'
+    case 4:
+      return 'Credited'
+    case 5:
+      return 'Disputed'
     default:
       return 'N/A'
   }
@@ -145,5 +154,26 @@ export function getReturnStatus(returnStatus) {
       return 'Delivered'
     default:
       return null
+  }
+}
+
+/**
+ * Returns string of status or null.
+ * @method
+ * @param {number} disputeReason
+ * @returns {'Pending' | 'Accepted by buyer' | 'Accepted by seller' | 'Accepted' | 'N/A'}
+ */
+export function getDisputeStatus(disputeReason) {
+  switch (disputeReason) {
+    case 1:
+      return 'Pending'
+    case 2:
+      return 'Accepted by buyer'
+    case 3:
+      return 'Accepted by seller'
+    case 4:
+      return 'Accepted'
+    default:
+      return 'N/A'
   }
 }

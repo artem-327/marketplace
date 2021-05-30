@@ -1,5 +1,4 @@
 import { FormattedMessage } from 'react-intl'
-import { companyDatagridColumns } from '~/constants/index'
 
 export const defaultTabs = [
   { name: 'Units of Measure', id: 1, type: 'units-of-measure' },
@@ -108,6 +107,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA',
+        pendingRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_REJECTED',
         apiCall: '/prodex/api/units'
       },
       update: {
@@ -204,6 +206,16 @@ export const config = {
         required: true
       },
       {
+        name: 'dimensionUnit',
+        title: (
+          <FormattedMessage id='global.dimensionUnit' defaultMessage='Dimension Unit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
+        required: true
+      },
+      {
         name: 'palletPkgMax',
         title: (
           <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max'>
@@ -223,6 +235,27 @@ export const config = {
         ),
         type: 'number',
         step: 1,
+        required: true
+      },
+      {
+        name: 'weight',
+        title: (
+          <FormattedMessage id='global.weight' defaultMessage='Weight'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'number',
+        step: 0.01,
+        required: true
+      },
+      {
+        name: 'weightUnit',
+        title: (
+          <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit'>
+            {text => text}
+          </FormattedMessage>
+        ),
+        type: 'text',
         required: true
       }
     ],
@@ -250,6 +283,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
+        pendingRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_PENDING',
+        fulfilledRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_REJECTED',
         apiCall: '/prodex/api/packaging-types'
       },
       update: {
@@ -321,6 +357,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
+        pendingRequest: 'ADMIN_POST_MANUFACTURERS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_MANUFACTURERS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_MANUFACTURERS_DATA_REJECTED',
         apiCall: '/prodex/api/manufacturers'
       },
       update: {
@@ -377,6 +416,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_GRADES_DATA',
+        pendingRequest: 'ADMIN_POST_GRADES_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_GRADES_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_GRADES_DATA_REJECTED',
         apiCall: '/prodex/api/product-grades'
       },
       update: {
@@ -433,6 +475,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_FORMS_DATA',
+        pendingRequest: 'ADMIN_POST_FORMS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_FORMS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_FORMS_DATA_REJECTED',
         apiCall: '/prodex/api/product-forms'
       },
       update: {
@@ -489,6 +534,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADMIN_POST_CONDITIONS_DATA',
+        pendingRequest: 'ADMIN_POST_CONDITIONS_DATA_PENDING',
+        fulfilledRequest: 'ADMIN_POST_CONDITIONS_DATA_FULFILLED',
+        rejectedRequest: 'ADMIN_POST_CONDITIONS_DATA_REJECTED',
         apiCall: '/prodex/api/product-conditions'
       },
       update: {
@@ -590,6 +638,9 @@ export const config = {
       },
       post: {
         typeRequest: 'ADD_ASSOCIATION',
+        pendingRequest: 'ADD_ASSOCIATION_PENDING',
+        fulfilledRequest: 'ADD_ASSOCIATION_FULFILLED',
+        rejectedRequest: 'ADD_ASSOCIATION_REJECTED',
         apiCall: '/prodex/api/associations',
         typeQuery: true
       },
@@ -613,7 +664,7 @@ export const config = {
         {text => text}
       </FormattedMessage>
     ),
-    searchText: 'admin.searchLogisticsProvider',
+    searchText: 'admin.searchLogisticsProvider'
   },
   carriers: {
     tableName: 'admin_carriers',
@@ -622,7 +673,7 @@ export const config = {
         {text => text}
       </FormattedMessage>
     ),
-    searchText: 'admin.searchCarrier',
+    searchText: 'admin.searchCarrier'
   },
 
   'admin-settings': {

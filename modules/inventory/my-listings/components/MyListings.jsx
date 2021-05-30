@@ -12,7 +12,19 @@ import {
   Sliders,
   ChevronDown
 } from 'react-feather'
-import { Container, Menu, Header, Modal, Checkbox, Popup, Button, Dropdown, Grid, Input } from 'semantic-ui-react'
+import {
+  Container,
+  Menu,
+  Header,
+  Modal,
+  Checkbox,
+  Popup,
+  Button,
+  Dropdown,
+  Grid,
+  Input,
+  Image
+} from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
@@ -28,7 +40,6 @@ import ProductImportPopup from '../../my-products/components/ProductImportPopup'
 import { getSafe, uniqueArrayByKey, generateToastMarkup } from '../../../../utils/functions'
 import Tutorial from '../../../tutorial/Tutorial'
 import SearchByNamesAndTags from '../../../search'
-import ExportInventory from '../../../export-inventory/components/ExportInventory'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 import { CustomRowDiv } from '../../constants/layout'
@@ -47,6 +58,8 @@ import {
 } from '../MyListings.constants'
 //Styles
 import { NetworkDropdown, NetworkChevronDown } from '../../../../components/Network'
+//Images
+import BluePalletLogoMini from '../../../../assets/images/blue-pallet/guest-copy-9@3x.png'
 
 const defaultHiddenColumns = [
   'productNumber',
@@ -375,6 +388,7 @@ class MyListings extends Component {
           name: 'network',
           title: ' ',
           width: 81,
+          minWidth: 81,
           allowReordering: false
         }
       ],
@@ -449,19 +463,11 @@ class MyListings extends Component {
   }
 
   componentWillUnmount() {
-    const {
-      isModalDetailOpen,
-      closeModalDetail,
-      isProductInfoOpen,
-      closePopup,
-      isExportInventoryOpen,
-      setExportModalOpenState
-    } = this.props
+    const { isModalDetailOpen, closeModalDetail, isProductInfoOpen, closePopup } = this.props
 
     this.props.handleVariableSave('myListingsFilters', this.state.filterValues)
     if (isModalDetailOpen) closeModalDetail()
     if (isProductInfoOpen) closePopup()
-    if (isExportInventoryOpen) setExportModalOpenState(false)
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -646,9 +652,8 @@ class MyListings extends Component {
       broadcastTemplates,
       isProductInfoOpen,
       closePopup,
-      isExportInventoryOpen,
-      setExportModalOpenState,
-      broadcastChange
+      broadcastChange,
+      applicationName
     } = this.props
     let title
 
@@ -670,12 +675,49 @@ class MyListings extends Component {
             </g>
           </svg>
         ),
-        title: formatMessage({ id: 'myInventory.network', defaultMessage: 'Network' }),
+        title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
-          id: 'myInventory.networkSubtitle',
-          defaultMessage: 'Your accepted Partners and invited Guests'
+          id: 'myInventory.allSubtitle',
+          defaultMessage: 'My Network + BlueTrade'
+        }, {
+          companyName: applicationName
         }),
         value: 'GLOBAL_RULES'
+      },
+      {
+        icon: (
+          <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+            <g fill='none' fill-rule='evenodd'>
+              <path
+                d='M0 0L24 0 24 24 0 24z'
+                transform='translate(-335 -691) translate(0 80) translate(315 525) translate(20 86)'
+              />
+              <path
+                fill='#848893'
+                fill-rule='nonzero'
+                d='M16.5 12c1.38 0 2.49-1.12 2.49-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 2.99-1.34 2.99-3S10.66 5 9 5C7.34 5 6 6.34 6 8s1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V18c0 .55.45 1 1 1h9c.55 0 1-.45 1-1v-1.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V18c0 .55.45 1 1 1h6v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z'
+                transform='translate(-335 -691) translate(0 80) translate(315 525) translate(20 86)'
+              />
+            </g>
+          </svg>
+        ),
+        title: formatMessage({ id: 'myInventory.myNetworkOnly', defaultMessage: 'My Network Only' }),
+        subtitle: formatMessage({
+          id: 'myInventory.myNetworkOnlySubtitle',
+          defaultMessage: "Members I'm Connected To"
+        }),
+        value: 'GLOBAL_RULES_NO_BROKERS'
+      },
+      {
+        icon: <Image size='mini' src={BluePalletLogoMini} />,
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BlueTrade' }, {
+          companyName: applicationName
+        }),
+        subtitle: formatMessage({
+          id: 'myInventory.bluePalletDirectSubtitle',
+          defaultMessage: 'Open Marketplace'
+        }),
+        value: 'GLOBAL_RULES_ONLY_BROKERS'
       },
       /*{
         icon: (
@@ -854,7 +896,7 @@ class MyListings extends Component {
           productStatusText = (
             <FormattedMessage
               id='myInventory.productStatus.unmapped'
-              defaultMessage="This Offer's Company Product is not mapped to Echo Product, so it will not be visible to other users at Marketplace."
+              defaultMessage="This Offer's Company Product is not mapped to Company Generic Product, so it will not be visible to other users at Marketplace."
             />
           )
           break
@@ -892,10 +934,9 @@ class MyListings extends Component {
                     {
                       isProductInfoOpen,
                       closePopup,
-                      isExportInventoryOpen,
-                      setExportModalOpenState,
                       modalDetailTrigger
-                    }
+                    },
+                    true // updateWarehouse
                   )
               }
             })}
@@ -908,32 +949,59 @@ class MyListings extends Component {
             content={r.productName}
             onContentClick={() => tableRowClickedProductOffer(r, { modalDetailTrigger }, BOOLEAN_TRUE, INDEX_TAB_EDIT)}
             rightAlignedContent={
-              r.expired || productStatusText ? (
-                <Popup
-                  size='small'
-                  inverted
-                  style={{
-                    fontSize: '12px',
-                    color: '#cecfd4',
-                    opacity: '0.9'
-                  }}
-                  header={
-                    <div>
-                      {r.expired && (
-                        <div>
-                          <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
-                        </div>
-                      )}
-                      {productStatusText && <div>{productStatusText}</div>}
-                    </div>
-                  }
-                  trigger={
-                    <div>
-                      <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
-                    </div>
-                  } // <div> has to be there otherwise popup will be not shown
-                />
-              ) : null
+              <>
+                {r.expired || productStatusText ? (
+                  <Popup
+                    size='small'
+                    inverted
+                    style={{
+                      fontSize: '12px',
+                      color: '#cecfd4',
+                      opacity: '0.9'
+                    }}
+                    header={
+                      <div>
+                        {r.expired && (
+                          <div>
+                            <FormattedMessage id='global.expiredProduct.tooltip' defaultMessage='Expired Product' />
+                          </div>
+                        )}
+                        {productStatusText && <div>{productStatusText}</div>}
+                      </div>
+                    }
+                    trigger={
+                      <div>
+                        <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
+                      </div>
+                    } // <div> has to be there otherwise popup will be not shown
+                  />
+                ) : null}
+                {r?.rawData?.minPkg > r?.rawData?.pkgAvailable ? (
+                  <Popup
+                    size='tiny'
+                    position='top center'
+                    inverted
+                    style={{
+                      fontSize: '12px',
+                      color: '#cecfd4',
+                      opacity: '0.9'
+                    }}
+                    header={
+                      <div>
+                        <FormattedMessage
+                          id='inventory.isBelowMin'
+                          defaultMessage='The available quantity is below the min quantity'
+                        />
+                      </div>
+                    }
+                    trigger={
+                      <div>
+                        <Warning className='title-icon' style={{ fontSize: '16px', color: '#f16844' }} />
+                      </div>
+                    } // <div> has to be there otherwise popup will be not shown
+                  />
+                ) : null}
+              </>
             }
           />
         ),
@@ -1132,8 +1200,6 @@ class MyListings extends Component {
       editedId,
       closeModalDetail,
       tutorialCompleted,
-      isExportInventoryOpen,
-      setExportModalOpenState,
       myListingsFilters,
       updatingDatagrid,
       activeInventoryFilter
@@ -1215,20 +1281,6 @@ class MyListings extends Component {
               </Menu.Item>
             ) : null*/}
             <div>
-              <div className='column'>
-                <Button
-                  className='light'
-                  size='large'
-                  primary
-                  onClick={() => setExportModalOpenState(true)}
-                  data-test='my_inventory_export_btn'>
-                  <CornerLeftUp />
-                  {formatMessage({
-                    id: 'myInventory.export',
-                    defaultMessage: 'Export'
-                  })}
-                </Button>
-              </div>
               <div className='column'>
                 <Button
                   className='light'
@@ -1318,7 +1370,6 @@ class MyListings extends Component {
                 isModalDetailOpen,
                 closeModalDetail,
                 (companyProduct, i) => {
-                  if (isExportInventoryOpen) setExportModalOpenState(false)
                   openPopup(companyProduct, i)
                 }
               ).map(a => ({
@@ -1338,7 +1389,6 @@ class MyListings extends Component {
           />
         </div>
         {isModalDetailOpen && <ModalDetailContainer inventoryGrid={this.props.datagrid} />}
-        {isExportInventoryOpen && <ExportInventory onClose={() => setExportModalOpenState(false)} />}
         {openFilterPopup && <InventoryFilter onClose={() => this.setState({ openFilterPopup: false })} />}
       </>
     )

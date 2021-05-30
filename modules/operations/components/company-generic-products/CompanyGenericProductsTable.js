@@ -1,19 +1,19 @@
 import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 
-import ProdexGrid from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
-import confirm from '~/components/Confirmable/confirm'
+import ProdexGrid from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../../modules/datagrid'
 
-import { getSafe } from '~/utils/functions'
-import { currency } from '~/constants/index'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getSafe } from '../../../../utils/functions'
+import { currency } from '../../../../constants/index'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 import moment from 'moment/moment'
 import styled from 'styled-components'
 import { Label, Icon, Modal, Button } from 'semantic-ui-react'
-import { downloadAttachment } from '~/modules/inventory/actions'
+import { downloadAttachment } from '../../../../modules/inventory/actions'
 
 import * as Actions from '../../actions'
 

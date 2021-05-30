@@ -4,6 +4,13 @@
       "styled-jsx/babel": {}
     }]
   ],
+  "env": {
+    "production": {
+      "plugins": [
+        ["react-remove-properties", {"properties": ["data-test"]}]
+      ]
+    }
+  },
   "plugins": [
     [
       "styled-components",
@@ -12,6 +19,20 @@
         "displayName": true,
         "preprocess": false
       }
+    ],
+    ["babel-plugin-import", {
+        "libraryName": "@material-ui/core",
+        "libraryDirectory": "",
+        "camel2DashComponentName": false
+      },
+      "core"
+    ],
+    ["babel-plugin-import", {
+        "libraryName": "@material-ui/icons",
+        "libraryDirectory": "",
+        "camel2DashComponentName": false
+      },
+      "icons"
     ]
   ]
 }

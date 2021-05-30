@@ -40,6 +40,8 @@ import { BottomButtons } from '../../constants'
 
 import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '~/modules/admin/constants/layout'
 import ErrorFocus from '~/components/error-focus'
+//Actions
+import { getNaicsCodes } from '../../../velloci-register/actions'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -68,6 +70,7 @@ const initialFormValues = {
   cin: '',
   dba: '',
   dunsNumber: '',
+  naicsCode: '',
   industryType: '',
   socialFacebook: '',
   socialInstagram: '',
@@ -118,7 +121,8 @@ const initialFormValues = {
 const getInitialFormValues = values => {
   return {
     ...initialFormValues,
-    ...(values !== null && { ...values })
+    ...(values !== null && { ...values }),
+    naicsCode: values?.naicsCategory?.naicsId
   }
 }
 
@@ -308,7 +312,10 @@ class AddEditCompanySidebar extends Component {
       // AddressSuggestMailingBranchInput,
       postCompanyLogo,
       deleteCompanyLogo,
-      datagrid
+      datagrid,
+      naicsCodes,
+      naicsCode,
+      getNaicsCodes
     } = this.props
 
     const { selectLogo, removeLogo } = this
@@ -330,7 +337,6 @@ class AddEditCompanySidebar extends Component {
         onSubmit={async (values, actions) => {
           try {
             if (popupValues) {
-
               let associations = []
               if (getSafe(() => values.associations[0].id, false)) {
                 associations = values.associations.map(assoc => assoc.id)
@@ -343,6 +349,7 @@ class AddEditCompanySidebar extends Component {
                 cin: getSafe(() => values.cin, ''),
                 dba: getSafe(() => values.dba, ''),
                 dunsNumber: getSafe(() => values.dunsNumber, ''),
+                naicsCode: values?.naicsCode,
                 enabled: getSafe(() => values.enabled, false),
                 industryType: getSafe(() => values.industryType, ''),
                 name: getSafe(() => values.name, ''),
@@ -362,24 +369,12 @@ class AddEditCompanySidebar extends Component {
 
               const data = await updateCompany(popupValues.id, newValues)
               if (this.state.shouldUpdateLogo) {
-                if (this.state.companyLogo) postCompanyLogo(data.id, companyLogo)
-                else deleteCompanyLogo(popupValues.id)
+                if (this.state.companyLogo) await postCompanyLogo(data.id, companyLogo)
+                else await deleteCompanyLogo(popupValues.id)
               }
               datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!this.state.companyLogo }))
+              actions.setSubmitting(false)
             } else {
-              if (
-                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
-                !deepSearch(
-                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
-                  val => val !== ''
-                )
-              ) {
-                delete values['mailingBranch']
-              } else {
-                if (values.mailingBranch.deliveryAddress.contactEmail !== '')
-                  values.mailingBranch.deliveryAddress.contactEmail = values.mailingBranch.deliveryAddress.contactEmail.trim()
-              }
-
               let branches = ['primaryBranch', 'mailingBranch']
 
               if (values.businessType) values.businessType = values.businessType.id
@@ -393,6 +388,19 @@ class AddEditCompanySidebar extends Component {
                 if (country) payload[branch].deliveryAddress.address.country = country
               })
 
+              if (
+                !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
+                !deepSearch(
+                  getSafe(() => values.mailingBranch.deliveryAddress, ''),
+                  val => val !== ''
+                )
+              ) {
+                delete payload['mailingBranch']
+              } else {
+                if (payload.mailingBranch.deliveryAddress.contactEmail !== '')
+                  payload.mailingBranch.deliveryAddress.contactEmail = payload.mailingBranch.deliveryAddress.contactEmail.trim()
+              }
+
               if (!payload.type) delete payload.type
               delete payload.enabled
               if (!payload.businessType) delete payload.businessType
@@ -403,22 +411,21 @@ class AddEditCompanySidebar extends Component {
                   const loadedLogo = btoa(reader.result)
                   const data = await createCompany(payload)
                   await postCompanyLogo(data.id, companyLogo)
-
                   datagrid.clear()
                   datagrid.loadData()
+                  actions.setSubmitting(false)
                 }
                 reader.readAsBinaryString(this.state.companyLogo)
               } else {
                 await createCompany(payload)
-
                 datagrid.clear()
                 datagrid.loadData()
+                actions.setSubmitting(false)
               }
             }
           } catch (err) {
-            console.error(err)
-          } finally {
             actions.setSubmitting(false)
+            console.error(err)
           }
         }}
         onReset={closePopup}
@@ -475,6 +482,8 @@ class AddEditCompanySidebar extends Component {
                       companyId={popupValues ? popupValues.id : null}
                       hasLogo={popupValues ? popupValues.hasLogo : false}
                       enableCheckbox={!!popupValues}
+                      naicsCodes={naicsCodes}
+                      getNaicsCodes={getNaicsCodes}
                     />
                     {!popupValues && (
                       <>
@@ -715,7 +724,10 @@ class AddEditCompanySidebar extends Component {
                         {text => text}
                       </FormattedMessage>
                     </Button.Reset>
-                    <Button.Submit data-test='admin_popup_company_save_btn' onClick={props.handleSubmit}>
+                    <Button.Submit
+                      data-test='admin_popup_company_save_btn'
+                      onClick={props.handleSubmit}
+                      disabled={isSubmitting}>
                       <FormattedMessage id='global.save' defaultMessage='Save'>
                         {text => text}
                       </FormattedMessage>
@@ -726,8 +738,8 @@ class AddEditCompanySidebar extends Component {
               <ErrorFocus />
             </Form>
           )
-        }}>
-      </Formik>
+        }}
+      />
     )
   }
 }
@@ -744,15 +756,18 @@ const mapDispatchToProps = {
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   postCompanyLogo,
-  deleteCompanyLogo
+  deleteCompanyLogo,
+  getNaicsCodes
 }
 
-const mapStateToProps = ({ companiesAdmin, zip }) => {
+const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {
   const popupValues = companiesAdmin.popupValues
   return {
     ...companiesAdmin,
     popupValues,
-    zip
+    zip,
+    naicsCodes: vellociRegister?.naicsCodes,
+    naicsCode: companiesAdmin?.naicsCategory?.naicsId
   }
 }
 

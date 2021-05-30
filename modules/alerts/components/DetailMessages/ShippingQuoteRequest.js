@@ -11,46 +11,13 @@ import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 
 import { DetailMessage, StyledGrid } from '../layout'
 
-import { Grid, GridRow, GridColumn, Segment, List, Input, Button } from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Segment, Input, Button, Table } from 'semantic-ui-react'
 
 const TableSegment = styled(Segment)`
   margin: 0;
 
   &.ui.segment {
     padding: 10px 15px;
-  }
-`
-
-const StyledList = styled(List)`
-  &.horizontal.divided:not(.celled) {
-    display: flex !important;
-    flex-flow: row;
-    justify-content: space-between;
-    margin: 0;
-    &:nth-child(n + 2) {
-      border-top: 1px solid rgba(34, 36, 38, 0.15);
-    }
-
-    > .item {
-      flex-grow: 1;
-      max-width: 150px;
-      padding: 10px 15px !important;
-
-      .header {
-        margin: 0;
-        padding: 0 0 3px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #848893;
-        line-height: 1.1666667;
-      }
-
-      .description {
-        font-size: 14px;
-        color: #20273a;
-        line-height: 1.2142857;
-      }
-    }
   }
 `
 
@@ -148,6 +115,81 @@ export const AddressGrid = styled(Grid)`
   }
 `
 
+const SpanIdValue = styled.span`
+  color: #20273a;
+  margin-left: 7px;
+  margin-right: 2px;
+`
+
+const TableStyled = styled(Table)`
+  .table-detail-rows-wrapper .table-responsive table.table,
+  &.ui.table {
+    border: none;
+
+    tbody {
+      tr {
+        border: none;
+        border-bottom: 1px solid #dde2e6 !important;
+        
+        &:first-child {
+          padding-top: 0px !important;
+        }
+        
+        &:last-child {
+          padding-bottom: 0px !important;
+          border-bottom: none !important;
+        }
+        
+        th,
+        td:not(.p-0):first-child,
+        td {
+          box-shadow: none !important;
+          background-color: #fff !important;
+          border: inherit !important;
+          border-left: 1px solid #dde2e6 !important;
+          border-radius: 0 !important;
+          
+          padding: inherit !important;
+          padding-right: 5px !important;
+          padding-left: 5px !important;
+                
+          &:first-child {         
+            border-left: none !important;
+            padding-left: 0px !important;
+            
+            &:before {
+              border-left: none !important;
+            }
+          }
+  
+          &:last-child {
+            padding-right: 0px !important;
+            
+            &:before {
+              border-right: none !important;
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+const DivCellContent = styled.div`
+  display: block;
+  flex-direction: column;
+`
+
+const DivCellHeader = styled.div`
+  font-size: 12px;
+  color: #848893;
+`
+
+const DivCellValue = styled.div`
+  font-size: 14px;
+  color: #20273a;
+`
+
 class ShippingQuoteRequest extends Component {
   displayAddress = ({ address, header, company }) => {
     return (
@@ -199,105 +241,111 @@ class ShippingQuoteRequest extends Component {
               </GridColumn>
             </GridRow>
           )}
-
           <GridRow>
             <GridColumn width={16}>
               <TableSegment>
-                {row.info.items.map(item => {
-                  return (
-                    <StyledList divided relaxed horizontal size='large'>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.product' defaultMessage='Product' />
-                          </List.Header>
-                          <List.Description as='span'>{item.product}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.grossWeightLbs} {'lbs'}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
-                          </List.Header>
-                          <List.Description as='span'>{item.nmfc}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
-                          </List.Header>
-                          <List.Description as='span'>{item.freightClass}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
-                          </List.Header>
-                          <List.Description as='span'>{item.maxPkgsPerPallet}</List.Description>
-                        </List.Content>
-                      </List.Item>
-
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.hazardous ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.stackable ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                      <List.Item>
-                        <List.Content>
-                          <List.Header as='label'>
-                            <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
-                          </List.Header>
-                          <List.Description as='span'>
-                            {item.freezeProtect ? (
-                              <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                            ) : (
-                              <FormattedMessage id='global.no' defaultMessage='No' />
-                            )}
-                          </List.Description>
-                        </List.Content>
-                      </List.Item>
-                    </StyledList>
-                  )
-                })}
+                <TableStyled>
+                  <Table.Body>
+                    {row.info.items.map((item, index) => {
+                      return (
+                        <Table.Row key={index}>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.product' defaultMessage='Product' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.product}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.grossWeightLbs} {'lbs'}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.nmfc}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.freightClass}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.maxPkgsPerPallet}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.hazardous ? (
+                                  <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                                ) : (
+                                  <FormattedMessage id='global.no' defaultMessage='No' />
+                                )}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.stackable ? (
+                                  <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                                ) : (
+                                  <FormattedMessage id='global.no' defaultMessage='No' />
+                                )}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <DivCellContent>
+                              <DivCellHeader>
+                                <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
+                              </DivCellHeader>
+                              <DivCellValue>
+                                {item.freezeProtect ? (
+                                  <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                                ) : (
+                                  <FormattedMessage id='global.no' defaultMessage='No' />
+                                )}
+                              </DivCellValue>
+                            </DivCellContent>
+                          </Table.Cell>
+                        </Table.Row>
+                      )
+                    })}
+                  </Table.Body>
+                </TableStyled>
               </TableSegment>
             </GridColumn>
           </GridRow>
@@ -333,12 +381,22 @@ class ShippingQuoteRequest extends Component {
               <GridRow>
                 <GridColumn>
                   <div style={{ float: 'right' }}>
-                    <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations()}>
+                    <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations(row)}>
                       <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
                         {text => text}
                       </FormattedMessage>
                       <ArrowRight size='18' style={{ marginLeft: '12px' }} />
                     </Button>
+                  </div>
+                </GridColumn>
+              </GridRow>
+              <GridRow>
+                <GridColumn width={16}>
+                  <div style={{ float: 'right' }}>
+                    <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
+                    <SpanIdValue>
+                      {getSafe(() => row.info.shippingQuoteRequestId, 'N/A')}
+                    </SpanIdValue>
                   </div>
                 </GridColumn>
               </GridRow>

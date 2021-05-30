@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import '~/components/AddInventory.scss'
 import Spinner from '~/components/Spinner/Spinner'
+import Link from 'next/link'
 import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
 import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
@@ -14,6 +15,10 @@ import { currency } from '~/constants/index'
 import ProdexGrid from '~/components/table'
 import { getLocaleDateFormat } from '~/components/date-format'
 import TransactionInfo from '~/modules/orders/components/components/TransactionInfo'
+import { Info } from 'react-feather'
+//Components
+import ModalResolveDispute from './ModalResolveDispute'
+import BasicButton from '../../../../components/buttons/BasicButton'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -592,8 +597,17 @@ class Detail extends Component {
       isDetailFetching,
       intl: { formatMessage },
       echoSupportPhone,
-      editTrackingCode
+      editTrackingCode,
+      closePopup,
+      isOpenPopup,
+      loading,
+      openPopup,
+      resolveDisputeReject,
+      resolveDisputeCredit,
+      resolveDisputeAccept,
+      downloadDisputeAttachment
     } = this.props
+
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = 'Sales'
 
@@ -602,6 +616,15 @@ class Detail extends Component {
 
     return (
       <div id='page' className='auto-scrolling'>
+        <ModalResolveDispute
+          orderId={order?.id}
+          disputeReasonComment={order?.disputeReasonComment}
+          disputeAttachments={order?.disputeAttachments}
+          open={isOpenPopup}
+          loading={loading}
+          onClose={closePopup}
+          actions={{ resolveDisputeReject, resolveDisputeCredit, resolveDisputeAccept, downloadDisputeAttachment }}
+        />
         {this.state.openDocumentsPopup && (
           <StyledModal
             size='Default'
@@ -629,13 +652,15 @@ class Detail extends Component {
         )}
         <div className='scroll-area'>
           <TopRow>
-            <a
-              onClick={() => this.props.openOrderDetail(null)}
-              style={{ cursor: 'pointer' }}
-              data-test='orders_detail_back_btn'>
-              <ArrowLeft />
-              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
-            </a>
+            <Link href='/operations/orders'>
+              <a
+                onClick={() => this.props.openOrderDetail(null)}
+                style={{ cursor: 'pointer' }}
+                data-test='orders_detail_back_btn'>
+                <ArrowLeft />
+                <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+              </a>
+            </Link>
             <div className='field'>
               <div>
                 <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
@@ -812,6 +837,28 @@ class Detail extends Component {
           ) : (
             <>
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
+              {order?.reviewStatus === 'Disputed' && order?.disputeResolutionStatus === 1 ? (
+                <Segment color={'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
+                  <Info />
+                  <Grid verticalAlign='middle' columns='equal'>
+                    <Grid.Column width={10}>
+                      <Header as='h3' color={'blue'} style={{ margin: '0 0 6px' }}>
+                        <FormattedMessage id='order.actionDisputed' defaultMessage='Order Dispute' />
+                      </Header>
+                      <FormattedMessage
+                        id='order.actionDisputed.text'
+                        defaultMessage='This order has been disputed by the buyer and needs to be resolved. When ready enter the resolution here.'
+                      />
+                    </Grid.Column>
+                    <Grid.Column width={6} textAlign='right'>
+                      <BasicButton onClick={() => openPopup()}>
+                        <FormattedMessage id='global.continue' defaultMessage='Continue' />
+                      </BasicButton>
+                    </Grid.Column>
+                  </Grid>
+                </Segment>
+              ) : null}
+
               <Divider hidden />
               <OrderAccordion
                 defaultActiveIndex={[0, 1]}
@@ -868,7 +915,7 @@ class Detail extends Component {
                                   <Table.Body>
                                     <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
+                                        <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData>

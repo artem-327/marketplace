@@ -19,14 +19,18 @@ import {
   StyledForm,
   BottomMargedRow,
   LoginField,
-  LoginButton
+  LoginButton,
+  DivTerms,
+  LinkLabel
 } from '../constants/layout'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import { withToastManager } from 'react-toast-notifications'
 
-import Logo from '~/assets/images/login/logo-bluepallet.png'
-import Icon from '~/assets/images/login/icon-bluepallet.png'
+import Logo from '~/assets/images/login/logo-bluepallet.svg'
+import Icon from '~/assets/images/login/icon-bluepallet.svg'
+//Constants
+import { URL_TERMS } from '../../../constants'
 
 class Password extends Component {
   render() {
@@ -84,7 +88,10 @@ class Password extends Component {
                     <LoginField>
                       <Input
                         name='securityCode'
-                        label={formatMessage({ id: 'verification.labels.securityCode', defaultMessage: 'Security Code' })}
+                        label={formatMessage({
+                          id: 'verification.labels.securityCode',
+                          defaultMessage: 'Security Code'
+                        })}
                       />
                     </LoginField>
                     <LoginField>
@@ -112,10 +119,29 @@ class Password extends Component {
                     </LoginField>
 
                     <LoginButton size='big' fluid>
-                      <FormattedMessage id='global.continue' defaultMessage='Continue'>
+                      <FormattedMessage id='global.signUp' defaultMessage='Sign up'>
                         {text => text}
                       </FormattedMessage>
                     </LoginButton>
+
+                    {!forgottenPassword && (
+                      <DivTerms>
+                        <FormattedMessage
+                          id='verification.termsText'
+                          defaultMessage='By signing up you agree to the Terms and Conditions'
+                          values={{
+                            terms: (
+                              <LinkLabel href={URL_TERMS} target='_blank'>
+                                <FormattedMessage
+                                  id='verification.termsAndConditions'
+                                  defaultMessage='Terms and Conditions'
+                                />
+                              </LinkLabel>
+                            )
+                          }}
+                        />
+                      </DivTerms>
+                    )}
                   </>
                 )
               }}

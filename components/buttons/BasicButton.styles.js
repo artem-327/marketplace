@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react'
 export const CustomButton = styled(Button)`
   min-width: 0;
   box-shadow: none !important;
-  border: ${props => (props.$noBorder ? 'none !important' : 'solid 1px #dee2e6 !important')};
+  border: ${props => (props.$noBorder ? 'none !important' : 'solid 1px #ededed !important')};
   color: ${props => (props.textcolor ? props.textcolor : '#20273a !important')};
   background-color: ${props => (props.background ? props.background : '#ffffff !important')};
   float: ${({ float }) => (float ? float : null)};
@@ -14,7 +14,7 @@ export const CustomButton = styled(Button)`
   align-items: center !important;
   justify-content: center !important;
   font-size: 14px !important;
-  margin: 0px 5px !important;
+  margin: ${props => (props.$margin ? props.$margin : '0px 5px !important')};
   &.ui.button[disabled] {
     opacity: 0.3 !important;
   }

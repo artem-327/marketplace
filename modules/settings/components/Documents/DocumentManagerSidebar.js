@@ -218,16 +218,18 @@ class DocumentManagerSidebar extends Component {
             if (edit) {
               await updateAttachment(values.id, { ...payload, type: values.documentType.id })
             } else {
-              values.files.forEach(async file => {
+
+              await values.files.reduce(async (acc, file) => {
+                await acc
                 await addAttachment(file, values.documentType.id, payload)
-              })
+              }, undefined)
             }
+            if (enableClose) closeSidebar()
+            onClose()
           } catch (e) {
             console.error(e)
           } finally {
             setSubmitting(false)
-            if (enableClose) closeSidebar()
-            onClose()
           }
         }}
         render={({ values, errors, submitForm, setFieldValue, isSubmitting }) => {

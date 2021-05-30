@@ -3,23 +3,23 @@ import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 're
 import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
 import styled, { withTheme } from 'styled-components'
 
-import Spinner from '~/components/Spinner/Spinner'
-import ProdexGrid from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { filterPresets } from '~/modules/filter/constants/filter'
-import { currency } from '~/constants/index'
-import { ArrayToFirstItem } from '~/components/formatted-messages'
+import Spinner from '../../../components/Spinner/Spinner'
+import ProdexGrid from '../../../components/table'
+import ActionCell from '../../../components/table/ActionCell'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
+import { filterPresets } from '../../../modules/filter/constants/filter'
+import { currency } from '../../../constants/index'
+import { ArrayToFirstItem } from '../../../components/formatted-messages'
 import Link from 'next/link'
 import { CheckCircle, ChevronDown, ChevronUp, ChevronRight } from 'react-feather'
-import { handleFiltersValue } from '~/modules/settings/actions'
+import { handleFiltersValue } from '../../../modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
-import { AttachmentManager } from '~/modules/attachments'
-import { uniqueArrayByKey } from '~/utils/functions'
-import Tutorial from '~/modules/tutorial/Tutorial'
+import { AttachmentManager } from '../../../modules/attachments'
+import { uniqueArrayByKey } from '../../../utils/functions'
+import Tutorial from '../../../modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'
 import { debounce } from 'lodash'
-import DetailRow from '~/components/detail-row'
+import DetailRow from '../../../components/detail-row'
 //Constants
 import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
 
@@ -435,6 +435,7 @@ class Orders extends Component {
         reviewStatus: '',
         creditStatus: '',
         paymentStatus: '',
+        disputeResolutionStatus: '',
         bl:
           item.bl && item.bl.length ? (
             <a href='#' onClick={() => this.downloadAttachment(item.bl[0].name, item.bl[0].id)}>

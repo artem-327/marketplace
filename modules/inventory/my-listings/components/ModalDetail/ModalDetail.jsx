@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Button, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Form, Label } from 'semantic-ui-react'
@@ -21,6 +22,7 @@ import {
 import { withToastManager } from 'react-toast-notifications'
 import { Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
 import moment from 'moment'
+import { Warning } from '@material-ui/icons'
 
 //Components
 import { DateInput } from '../../../../../components/custom-formik'
@@ -68,7 +70,8 @@ import {
   PricingIcon,
   GridColumnRequired,
   CustomGridColumn,
-  CustomGridRow
+  CustomGridRow,
+  DivFlex
 } from './ModalDetail.styles'
 //Constants
 import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
@@ -92,40 +95,36 @@ class ModalDetail extends Component {
     attachmentFiles: [],
     isOpenOptionalInformation: false,
     openedTdsList: false,
-    openedTdsSaveAs: false
+    openedTdsSaveAs: false,
+    isOverMinPkgs: false
   }
 
-  componentDidMount = async () => {
+  componentDidMount = () => {
     const {
       detailValues,
-      broadcastTemplates,
       getProductConditions,
       getProductForms,
       getProductGrades,
       getWarehouses,
-      getDocumentTypes,
       searchOrigins,
       searchManufacturers,
-      modalActiveTab,
-      getTemplates
+      modalActiveTab
     } = this.props
     if (detailValues) {
-      await this.loadProductOffer(detailValues.id) // Start editing, reload product offer
+      this.loadProductOffer(detailValues.id) // Start editing, reload product offer
     } else {
       searchOrigins('', 200)
     }
-    this.fetchIfNoData('listConditions', getProductConditions)
     this.fetchIfNoData('listForms', getProductForms)
     this.fetchIfNoData('listGrades', getProductGrades)
     this.fetchIfNoData('warehousesList', getWarehouses)
-    this.fetchIfNoData('listDocumentTypes', getDocumentTypes)
 
-    if (broadcastTemplates && !broadcastTemplates.length) {
-      getTemplates()
+    this.switchTab(modalActiveTab, detailValues)
+    if (detailValues?.minPkg) {
+      detailValues?.minPkg > detailValues?.pkgAvailable
+        ? this.setState({ isOverMinPkgs: true })
+        : this.setState({ isOverMinPkgs: false })
     }
-
-    searchManufacturers('', 200)
-    this.switchTab(modalActiveTab)
   }
 
   fetchIfNoData = (name, fn) => {
@@ -694,9 +693,10 @@ class ModalDetail extends Component {
       tdsTemplatesLoading,
       tdsTemplates,
       broadcastChange,
-      autocompleteData
+      autocompleteData,
+      applicationName
     } = this.props
-    const { openedTdsList, openedTdsSaveAs } = this.state
+    const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = this.state
 
     const optionsProduct = autocompleteData.map((el, i) => {
       const code = getSafe(() => el.intProductCode, '')
@@ -711,9 +711,24 @@ class ModalDetail extends Component {
         value: el.id
       }
     })
-
     const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
-      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+      if (opt.titleId && opt.titleText)
+        return {
+          ...opt,
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: applicationName }),
+          subtitle: formatMessage(
+            { id: opt.subtitleId, defaultMessage: opt.subtitleText },
+            { companyName: applicationName }
+          )
+        }
+      else
+        return {
+          ...opt,
+          subtitle: formatMessage(
+            { id: opt.subtitleId, defaultMessage: opt.subtitleText },
+            { companyName: applicationName }
+          )
+        }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -954,19 +969,59 @@ class ModalDetail extends Component {
                                                     id='addInventory.pkgsAvailable'
                                                     defaultMessage='PKGs Available'>
                                                     {text => (
-                                                      <label>
+                                                      <DivFlex>
                                                         {text}
                                                         <Required />
-                                                      </label>
+                                                        {isOverMinPkgs ? (
+                                                          <Popup
+                                                            size='tiny'
+                                                            position='top center'
+                                                            inverted
+                                                            style={{
+                                                              fontSize: '12px',
+                                                              color: '#cecfd4',
+                                                              opacity: '0.9'
+                                                            }}
+                                                            header={
+                                                              <div>
+                                                                <FormattedMessage
+                                                                  id='inventory.isBelowMin'
+                                                                  defaultMessage='The available quantity is below the min quantity'
+                                                                />
+                                                              </div>
+                                                            }
+                                                            trigger={
+                                                              <div>
+                                                                <Warning
+                                                                  className='title-icon'
+                                                                  style={{ fontSize: '16px', color: '#f16844' }}
+                                                                />
+                                                              </div>
+                                                            } // <div> has to be there otherwise popup will be not shown
+                                                          />
+                                                        ) : null}
+                                                      </DivFlex>
                                                     )}
                                                   </FormattedMessage>
+
                                                   <Input
                                                     name='edit.pkgAvailable'
                                                     inputProps={{
                                                       placeholder: '0',
                                                       type: 'number',
                                                       min: 1,
-                                                      fluid: true
+                                                      fluid: true,
+                                                      onChange: (e, { value }) => {
+                                                        value = parseInt(value)
+                                                        if (!isNaN(value)) {
+                                                          setFieldValue('edit.pkgAvailable', value)
+                                                          if (values?.edit?.minimum) {
+                                                            values.edit.minimum > value
+                                                              ? this.setState({ isOverMinPkgs: true })
+                                                              : this.setState({ isOverMinPkgs: false })
+                                                          }
+                                                        }
+                                                      }
                                                     }}
                                                   />
                                                 </FormField>
@@ -1002,9 +1057,15 @@ class ModalDetail extends Component {
                                                             setFieldValue,
                                                             validateForm
                                                           )
+
                                                           // It seems to do bug when created new inventory
                                                           // value is adding in handleSubmit
                                                           //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
+                                                        }
+                                                        if (values?.edit?.pkgAvailable && !isNaN(value)) {
+                                                          values.edit.pkgAvailable < value
+                                                            ? this.setState({ isOverMinPkgs: true })
+                                                            : this.setState({ isOverMinPkgs: false })
                                                         }
                                                       }
                                                     }}
@@ -1185,29 +1246,26 @@ class ModalDetail extends Component {
                                       </GridColumn>
                                     </CustomGridRow>
 
-                                    {/* It's not supported yet */}
-                                    {false && (
-                                      <CustomGridRow>
-                                        <GridColumn width={8}>
-                                          <FormField width={8}>
-                                            <FormattedMessage
-                                              id='myInventory.acceptBids'
-                                              defaultMessage='Accept bids on offer?'>
-                                              {text => <label>{text}</label>}
-                                            </FormattedMessage>
-                                            <Dropdown
-                                              name='edit.acceptBids'
-                                              options={OPTIONS_YES_NO}
-                                              inputProps={{
-                                                onChange: this.onChange,
-                                                'data-test': 'add_inventory_acceptBids',
-                                                fluid: true
-                                              }}
-                                            />
-                                          </FormField>
-                                        </GridColumn>
-                                      </CustomGridRow>
-                                    )}
+                                    <CustomGridRow>
+                                      <GridColumn width={8}>
+                                        <FormField width={8}>
+                                          <FormattedMessage
+                                            id='myInventory.acceptBids'
+                                            defaultMessage='Accept bids on offer?'>
+                                            {text => <label>{text}</label>}
+                                          </FormattedMessage>
+                                          <Dropdown
+                                            name='edit.acceptBids'
+                                            options={OPTIONS_YES_NO}
+                                            inputProps={{
+                                              onChange: this.onChange,
+                                              'data-test': 'add_inventory_acceptBids',
+                                              fluid: true
+                                            }}
+                                          />
+                                        </FormField>
+                                      </GridColumn>
+                                    </CustomGridRow>
                                     <CustomGridRow>
                                       <GridColumnOptionalInformation
                                         onClick={() =>
@@ -1728,31 +1786,33 @@ class ModalDetail extends Component {
                               ),
                               pane: (
                                 <Tab.Pane key='documents' style={{ padding: '16px' }}>
-                                  <DocumentTab
-                                    listDocumentTypes={listDocumentTypes}
-                                    values={values.documents}
-                                    setFieldValue={setFieldValue}
-                                    setFieldNameAttachments='documents.attachments'
-                                    dropdownName='documents.documentType'
-                                    removeAttachmentLink={removeAttachmentLinkProductOffer}
-                                    removeAttachment={removeAttachment}
-                                    addAttachment={addAttachment}
-                                    loadFile={loadFile}
-                                    changedForm={files =>
-                                      this.setState(prevState => ({
-                                        changedForm: true,
-                                        attachmentFiles: prevState.attachmentFiles.concat(files)
-                                      }))
-                                    }
-                                    idForm={getSafe(() => detailValues.id, 0)}
-                                    attachmentFiles={this.state.attachmentFiles}
-                                    removeAttachmentFromUpload={id => {
-                                      const attachmentFiles = this.state.attachmentFiles.filter(
-                                        attachment => attachment.id !== id
-                                      )
-                                      this.setState({ attachmentFiles })
-                                    }}
-                                  />
+                                  {this.state.activeTab === 2 ? (
+                                    <DocumentTab
+                                      listDocumentTypes={listDocumentTypes}
+                                      values={values.documents}
+                                      setFieldValue={setFieldValue}
+                                      setFieldNameAttachments='documents.attachments'
+                                      dropdownName='documents.documentType'
+                                      removeAttachmentLink={removeAttachmentLinkProductOffer}
+                                      removeAttachment={removeAttachment}
+                                      addAttachment={addAttachment}
+                                      loadFile={loadFile}
+                                      changedForm={files =>
+                                        this.setState(prevState => ({
+                                          changedForm: true,
+                                          attachmentFiles: prevState.attachmentFiles.concat(files)
+                                        }))
+                                      }
+                                      idForm={getSafe(() => detailValues.id, 0)}
+                                      attachmentFiles={this.state.attachmentFiles}
+                                      removeAttachmentFromUpload={id => {
+                                        const attachmentFiles = this.state.attachmentFiles.filter(
+                                          attachment => attachment.id !== id
+                                        )
+                                        this.setState({ attachmentFiles })
+                                      }}
+                                    />
+                                  ) : null}
                                 </Tab.Pane>
                               )
                             },
@@ -1787,6 +1847,7 @@ class ModalDetail extends Component {
                                         }
 
                                         // if validation is correct - switch tabs
+
                                         this.switchTab(3)
                                       })
                                       .catch(e => {
@@ -1807,15 +1868,17 @@ class ModalDetail extends Component {
                                   }
                                   key='priceBook'
                                   style={{ padding: '18px' }}>
-                                  <Broadcast
-                                    isPrepared={!this.state.broadcastLoading}
-                                    asModal={true}
-                                    saveBroadcast={this.state.saveBroadcast}
-                                    changedForm={this.changedForm}
-                                    close={this.props.closeModalDetail}
-                                    detailValues={detailValues}
-                                    inventoryGrid={datagrid}
-                                  />
+                                  {this.state.activeTab === 3 ? (
+                                    <Broadcast
+                                      isPrepared={!this.state.broadcastLoading}
+                                      asModal={true}
+                                      saveBroadcast={this.state.saveBroadcast}
+                                      changedForm={this.changedForm}
+                                      close={this.props.closeModalDetail}
+                                      detailValues={detailValues}
+                                      inventoryGrid={datagrid}
+                                    />
+                                  ) : null}
                                 </Tab.Pane>
                               )
                             },
@@ -1988,8 +2051,7 @@ class ModalDetail extends Component {
                                     () => {
                                       this.setState(state => ({
                                         ...state,
-                                        initValues: INIT_VALUES,
-                                        detailValues: null
+                                        detailValues: { ...state.detailValues, id: null }
                                       })) // confirm (New)
                                     },
                                     () => {
@@ -2020,4 +2082,10 @@ class ModalDetail extends Component {
   }
 }
 
-export default withToastManager(injectIntl(ModalDetail))
+function mapStateToProps(store) {
+  return {
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
+  }
+}
+
+export default connect(mapStateToProps, {})(withToastManager(injectIntl(ModalDetail)))

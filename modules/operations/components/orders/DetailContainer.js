@@ -8,7 +8,7 @@ import { FormattedNumber } from 'react-intl'
 import { ArrayToMultiple } from '~/components/formatted-messages'
 import { currency } from '~/constants/index'
 import { downloadAttachment } from '~/modules/inventory/actions'
-import { downloadPdf } from '~/modules/orders/actions'
+import { downloadPdf, downloadDisputeAttachment } from '~/modules/orders/actions'
 
 function actionRequired(data) {
   // return statuses code
@@ -30,7 +30,7 @@ function getReturnAddress(data) {
 }
 
 function prepareDetail(data, type = 'sales') {
-  if (typeof data.id === 'undefined') return {}
+  if (typeof data?.id === 'undefined') return {}
 
   const subtotal = getSafe(() => data.cfPriceSubtotal, 0)
   const totalPriceWithShipping = getSafe(
@@ -265,8 +265,10 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orderDetailData.isPaymentCancellable, false),
     action: actionRequired(orderDetailData),
     //! !opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: operations.listDocumentTypes
+    listDocumentTypes: operations.listDocumentTypes,
+    isOpenPopup: operations?.isOpenPopup,
+    loading: operations?.loading
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadPdf })(Detail)
+export default connect(mapStateToProps, { ...Actions, downloadAttachment, downloadPdf, downloadDisputeAttachment })(Detail)

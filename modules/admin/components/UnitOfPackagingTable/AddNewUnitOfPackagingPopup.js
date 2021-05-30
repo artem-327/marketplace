@@ -9,6 +9,8 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
+import {makeGetDimensionUnits, makeGetWeightUnits} from '../../selectors'
+import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
   val0: '',
@@ -17,22 +19,28 @@ const initialFormValues = {
   val3: '',
   val4: '',
   val5: '',
-  val6: ''
+  val6: '',
+  val7: '',
+  val8: '',
+  val9: ''
 }
 
 const formValidation = Yup.object().shape({
-  val0: Yup.string().trim().min(1, 'Too short'),
+  val0: Yup.string().trim().min(1, 'Too short').required('Required'),
   val1: Yup.number().required('Required'),
-  val2: Yup.number().required('Required'),
-  val3: Yup.number().required('Required'),
-  val4: Yup.number().required('Required'),
+  val2: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
+  val3: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
+  val4: Yup.number().moreThan(0, errorMessages.greaterThan(0)).required('Required'),
   val5: Yup.number().required('Required'),
-  val6: Yup.number().required('Required')
+  val6: Yup.number().integer(errorMessages.integer).min(1, errorMessages.minimum(1)).required('Required'),
+  val7: Yup.number().integer(errorMessages.integer).min(1, errorMessages.minimum(1)).required('Required'),
+  val8: Yup.number().min(0, errorMessages.minimum(0)).required('Required'),
+  val9: Yup.number().required('Required')
 })
 
 class AddNewUnitOfPackagingPopup extends Component {
   render() {
-    const { closeAddPopup, config, postNewRequest, measureOptions } = this.props
+    const { closeAddPopup, config, postNewRequest, measureOptions, dimensionUnits, weightUnits } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -51,8 +59,11 @@ class AddNewUnitOfPackagingPopup extends Component {
                 [config.edit[2].name]: parseFloat(values.val2),
                 [config.edit[3].name]: parseFloat(values.val3),
                 [config.edit[4].name]: parseFloat(values.val4),
-                [config.edit[5].name]: parseFloat(values.val5),
-                [config.edit[6].name]: parseFloat(values.val6)
+                [config.edit[5].name]: values.val5,
+                [config.edit[6].name]: parseFloat(values.val6),
+                [config.edit[7].name]: parseFloat(values.val7),
+                [config.edit[8].name]: parseFloat(values.val8),
+                [config.edit[9].name]: values.val9
               }
               try {
                 await postNewRequest(config, data)
@@ -117,20 +128,20 @@ class AddNewUnitOfPackagingPopup extends Component {
                 step={config.edit[4].step}
               />
             </FormGroup>
-            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_max_inp'>
-              <Input
-                inputProps={{ type: config.edit[5].type, step: config.edit[5].step }}
+            <FormGroup widths='equal'>
+              <Dropdown
                 label={
                   <>
                     {config.edit[5].title}
                     <Required />
                   </>
                 }
+                options={dimensionUnits}
                 name='val5'
-                step={config.edit[5].step}
+                inputProps={{ 'data-test': 'admin_add_pallet_pkg_dimension_unit' }}
               />
             </FormGroup>
-            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_min_inp'>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_max_inp'>
               <Input
                 inputProps={{ type: config.edit[6].type, step: config.edit[6].step }}
                 label={
@@ -141,6 +152,45 @@ class AddNewUnitOfPackagingPopup extends Component {
                 }
                 name='val6'
                 step={config.edit[6].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_min_inp'>
+              <Input
+                inputProps={{ type: config.edit[7].type, step: config.edit[7].step }}
+                label={
+                  <>
+                    {config.edit[7].title}
+                    <Required />
+                  </>
+                }
+                name='val7'
+                step={config.edit[7].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal' data-test='admin_add_pallet_pkg_weight'>
+              <Input
+                inputProps={{ type: config.edit[8].type, step: config.edit[8].step }}
+                label={
+                  <>
+                    {config.edit[8].title}
+                    <Required />
+                  </>
+                }
+                name='val8'
+                step={config.edit[8].step}
+              />
+            </FormGroup>
+            <FormGroup widths='equal'>
+              <Dropdown
+                label={
+                  <>
+                    {config.edit[9].title}
+                    <Required />
+                  </>
+                }
+                options={weightUnits}
+                name='val9'
+                inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
               />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
@@ -168,18 +218,25 @@ const mapDispatchToProps = {
   postNewRequest
 }
 
-const mapStateToProps = state => {
-  let cfg = state.admin.config['packaging-types']
-  return {
-    config: cfg,
-    measureOptions: state.admin.measureTypes.map(d => {
-      return {
-        id: d.id,
-        text: d.name,
-        value: d.id
-      }
-    })
+const makeMapStateToProps = () => {
+  const getDimensionUnits = makeGetDimensionUnits()
+  const getWeightUnits = makeGetWeightUnits()
+  const mapStateToProps = state => {
+    let cfg = state.admin.config['packaging-types']
+    return {
+      config: cfg,
+      measureOptions: state.admin.measureTypes.map(d => {
+        return {
+          id: d.id,
+          text: d.name,
+          value: d.id
+        }
+      }),
+      dimensionUnits: getDimensionUnits(state),
+      weightUnits: getWeightUnits(state)
+    }
   }
+  return mapStateToProps
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)
+export default connect(makeMapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)

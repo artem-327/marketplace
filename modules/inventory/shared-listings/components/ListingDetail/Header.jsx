@@ -27,7 +27,7 @@ import { getSafe } from '../../../../../utils/functions'
 
 // Services
 import { submitHandler } from './Header.services'
-import { updateMarkUp } from '../../../actions'
+import { updateMarkUp, getSharedProductOffer } from '../../../actions'
 
 /**
  * @category Inventory - Shared Listings
@@ -60,7 +60,7 @@ const Header = props => {
           <Grid.Row>
             <GridColumnDetail width={5} textAlign='center' verticalAlign='middle'>
               <DivRectangle>
-                <Image verticalAlign='middle' src={row?.owner?.base64Logo} fluid rounded size='tiny' />
+                <Image verticalAlign='middle' src={row?.owner?.logoUrl} fluid rounded size='tiny' />
               </DivRectangle>
             </GridColumnDetail>
             <GridColumnDetail width={11}>
@@ -82,9 +82,9 @@ const Header = props => {
                 </BasicButtonCustom>
                 <BasicButtonCustom
                   fluid
-                  onClick={() => console.log('click trade pass')}
+                  onClick={() => console.log('click TradePass')}
                   data-test='shared_listings_trade_pass_btn'>
-                  <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='Trade Pass' />
+                  <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='TradePass' />
                 </BasicButtonCustom> */}
               </DivButtons>
             </GridColumnDetail>
@@ -102,8 +102,8 @@ const Header = props => {
 
           <Grid.Row>
             <GridColumnDetail width={16}>
-              <TableSegment>
-                <StyledList divided relaxed horizontal size='large'>
+              <TableSegment $oldDesign={true}>
+                <StyledList divided relaxed horizontal size='large' $oldDesign={true}>
                   {priceColumns.map((p, i) => (
                     <List.Item key={i}>
                       <List.Content>
@@ -159,6 +159,7 @@ const Header = props => {
                 name='priceMultiplier'
                 placeholder={'Enter Markup'}
                 readOnly={!values.id || loadingMarkup}
+                disabled={loadingMarkup}
                 onChange={(e, data) => {
                   onChange({ ...values, priceMultiplier: data.value })
                 }}
@@ -200,11 +201,13 @@ function mapStateToProps(store) {
 }
 
 function areEqual(prevProps, nextProps) {
-  return prevProps?.row?.id === nextProps?.row?.id &&
+  return (
+    prevProps?.row?.id === nextProps?.row?.id &&
     prevProps?.values?.priceMultiplier === nextProps?.values?.priceMultiplier &&
     prevProps?.loadingMarkup === nextProps?.loadingMarkup
+  )
 }
 
-const MemoHeader =  memo(Header, areEqual)
+const MemoHeader = memo(Header, areEqual)
 
-export default connect(mapStateToProps, { updateMarkUp })(MemoHeader)
+export default connect(mapStateToProps, { updateMarkUp, getSharedProductOffer })(MemoHeader)

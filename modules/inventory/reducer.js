@@ -1,7 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
-import moment from 'moment'
+import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 //Constants
 import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.constants'
 
@@ -43,7 +42,7 @@ export const initialState = {
   datagridFilterReload: false,
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
-  isExportInventoryOpen: false,
+  //isExportInventoryOpen: false,
   tableHandlersFilters: null,
   isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
@@ -55,7 +54,7 @@ export const initialState = {
   broadcastOption: GLOBAL_RULES,
   activeTab: 0,
   isOpenPriceBookModal: false,
-  rowIdPriceBook: { id: null }
+  rowPriceBook: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -363,15 +362,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING:
     case AT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
       return {
         ...state,
         updatingDatagrid: true
-      }
-    }
-    case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
-      return {
-        ...state
       }
     }
 
@@ -640,8 +635,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE: {
       return {
-        ...state,
-        isExportInventoryOpen: payload
+        ...state
+        //isExportInventoryOpen: payload
       }
     }
 
@@ -710,10 +705,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenPriceBookModal: action?.payload?.isOpen,
-        rowIdPriceBook: { id: action?.payload?.rowIdPriceBook }
+        rowPriceBook: action?.payload?.rowPriceBook
       }
     }
 
+    case AT.INVENTORY_GET_SHARED_PRODUCT_OFFER_PENDING:
     case AT.INVENTORY_GET_MARKUP_PENDING:
     case AT.INVENTORY_UPDATE_MARKUP_PENDING: {
       return {
@@ -722,6 +718,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_GET_SHARED_PRODUCT_OFFER_FULFILLED:
+    case AT.INVENTORY_GET_SHARED_PRODUCT_OFFER_REJECTED:
     case AT.INVENTORY_GET_MARKUP_FULFILLED:
     case AT.INVENTORY_GET_MARKUP_REJECTED:
     case AT.INVENTORY_UPDATE_MARKUP_FULFILLED:

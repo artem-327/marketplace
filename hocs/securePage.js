@@ -72,5 +72,5 @@ const securePageHoc = Page =>
       )
     }
   }
-
-export default Page => securePageHoc(Page)
+const PageComponent = Page => securePageHoc(Page)
+export default PageComponent

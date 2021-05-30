@@ -1,5 +1,4 @@
 import * as AT from './action-types'
-import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   deleteRowById: null,
@@ -103,6 +102,22 @@ export default function reducer(state = initialState, action) {
         [payload.variable]: payload.value
       }
     }
+
+    case AT.MARKET_SEGMENTS_DELETE_MARKET_SEGMENTS_DATA_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.MARKET_SEGMENTS_DELETE_MARKET_SEGMENTS_DATA_FULFILLED:
+    case AT.MARKET_SEGMENTS_DELETE_MARKET_SEGMENTS_DATA_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }

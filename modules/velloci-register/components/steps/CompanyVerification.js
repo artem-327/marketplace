@@ -120,7 +120,7 @@ function CompanyVerification(props) {
             defaultMessage='Thank you for taking the time to register your business with {company}. Feel free to reach out to us at {email} or {phoneNumber} if you have any questions about this process, we are here to help.'
             values={{
               company: (
-                getSafe(() => props.appInfo.systemCompanyName, '')
+                getSafe(() => props.appInfo.applicationName, '')
               ),
               email: (
                 <CustomA href={`mailto: ${SUPPORT_EMAIL}`}>

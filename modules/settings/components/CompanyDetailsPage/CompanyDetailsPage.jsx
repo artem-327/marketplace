@@ -12,17 +12,11 @@ import CompanyDetails from '../../../company-form/components/CompanyDetails'
 import { Input, Button, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 
 // Styles
-import {
-  DivPage,
-  DivPageHeaderRow,
-  DivPageBottomButtons,
-  DivContent
-} from './CompanyDetailsPage.styles'
-
+import { DivPage, DivPageHeaderRow, DivPageBottomButtons, DivContent } from './CompanyDetailsPage.styles'
 
 // Services
 import { getInitialFormValues, handleSubmit } from './CompanyDetailsPage.services'
-import { validationSchema } from "../../../company-form/components/CompanyDetails.services"
+import { validationSchema } from '../../../company-form/components/CompanyDetails.services'
 import {
   deleteCompanyLogo,
   getCompanyLogo,
@@ -31,9 +25,10 @@ import {
   getManagementCertificationsDocs,
   getFederalOwnershipDocs
 } from '../../../company-form/actions'
-import { updateCompany } from '~/modules/auth/actions'
+import { updateCompanyDetails } from '~/modules/auth/actions'
 import { getIdentity } from '~/modules/auth/actions'
-import { handlerSubmitUserEditPopup, putEditWarehouse } from '../../actions'
+//Selectors
+import { makeGetCompany } from '../../../auth/selectors'
 
 let formikPropsSelf = {}
 
@@ -41,10 +36,7 @@ const CompanyDetailsPage = props => {
   const [companyLogo, setCompanyLogo] = useState(null)
   const [shouldUpdateLogo, setShouldUpdateLogo] = useState(false)
 
-  const {
-    hasLogo,
-    companyId
-  } = props
+  const { hasLogo, companyId } = props
 
   const state = { companyLogo, setCompanyLogo, shouldUpdateLogo, setShouldUpdateLogo }
 
@@ -54,28 +46,29 @@ const CompanyDetailsPage = props => {
       try {
         const companyLogo = await props.getCompanyLogo(props.companyId)
         if (companyLogo.value.data.size) setCompanyLogo(companyLogo.value.data)
-      } catch (e) { console.error(e) }
+      } catch (e) {
+        console.error(e)
+      }
     }
     props.getCompanyLegalDocs()
     props.getManagementCertificationsDocs()
     props.getFederalOwnershipDocs()
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) // If [] is empty then is similar as componentDidMount.
 
   return (
     <Formik
       onSubmit={(values, actions) => handleSubmit(values, actions, props, state)}
       initialValues={getInitialFormValues(props.company)}
-      validationSchema={validationSchema}
-    >
+      validationSchema={validationSchema}>
       {formikProps => {
         formikPropsSelf = formikProps
         const { values, errors, setFieldValue, setFieldTouched, touched, isSubmitting, submitForm } = formikProps
 
-        return(
+        return (
           <DivPage>
             <Form>
               <DivPageHeaderRow>
-                <FormattedMessage id='company.companyDetails' defaultMessage='Company Details'/>
+                <FormattedMessage id='company.companyDetails' defaultMessage='Company Details' />
               </DivPageHeaderRow>
               <DivContent>
                 <CompanyDetails
@@ -99,11 +92,7 @@ const CompanyDetailsPage = props => {
                 />
               </DivContent>
               <DivPageBottomButtons>
-                <Button
-                  basic
-                  disabled={isSubmitting}
-                  onClick={() => submitForm()}
-                >
+                <Button basic disabled={isSubmitting} onClick={() => submitForm()}>
                   <FormattedMessage id='global.save'>{text => text}</FormattedMessage>
                 </Button>
               </DivPageBottomButtons>
@@ -115,31 +104,37 @@ const CompanyDetailsPage = props => {
   )
 }
 
-function mapStateToProps({ settings, auth }) {
-  return {
-    ...settings,
-    isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
-    company: auth.identity ? auth.identity.company : null,
-    isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
-    isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
-    tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
-    documentsOwner: getSafe(() => settings.documentsOwner, []),
-    isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
-    companyId: getSafe(() => auth.identity.company.id, false),
-    companyName: getSafe(() => auth.identity.company.name, false),
-    hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
+const makeMapStateToProps = () => {
+  const getCompany = makeGetCompany()
+
+  const mapStateToProps = state => {
+    const { settings, auth } = state
+    return {
+      ...settings,
+      isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
+      company: getCompany(state),
+      isProductCatalogAdmin: getSafe(() => auth.identity.isProductCatalogAdmin, false),
+      isUserAdmin: getSafe(() => auth.identity.isUserAdmin, false),
+      tutorialCompleted: getSafe(() => auth.identity.tutorialCompleted, false),
+      documentsOwner: getSafe(() => settings.documentsOwner, []),
+      isClientCompanyAdmin: getSafe(() => auth.identity.isClientCompanyAdmin, false),
+      companyId: getSafe(() => auth.identity.company.id, false),
+      companyName: getSafe(() => auth.identity.company.name, false),
+      hasLogo: getSafe(() => auth.identity.company.hasLogo, false)
+    }
   }
+  return mapStateToProps
 }
 
-export default injectIntl(connect(mapStateToProps, {
-  deleteCompanyLogo,
-  getCompanyLogo,
-  postCompanyLogo,
-  getIdentity,
-  updateCompany,
-  getCompanyLegalDocs,
-  getManagementCertificationsDocs,
-  getFederalOwnershipDocs,
-  handlerSubmitUserEditPopup,
-  putEditWarehouse
-})(CompanyDetailsPage))
+export default injectIntl(
+  connect(makeMapStateToProps, {
+    deleteCompanyLogo,
+    getCompanyLogo,
+    postCompanyLogo,
+    getIdentity,
+    updateCompanyDetails,
+    getCompanyLegalDocs,
+    getManagementCertificationsDocs,
+    getFederalOwnershipDocs
+  })(CompanyDetailsPage)
+)

@@ -1,6 +1,5 @@
 import * as AT from './action-types'
-import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 import Router from 'next/router'
 
 const initialState = {
@@ -43,7 +42,8 @@ const initialState = {
   listDocumentTypes: [],
   loadingRelatedDocuments: false,
   tableHandlersFilters: null,
-  isThirdPartyConnectionException: false
+  isThirdPartyConnectionException: false,
+  openedDisputedRequest: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -189,7 +189,8 @@ export default function reducer(state = initialState, action) {
         openedSaleReviewCreditRequest: false,
         openedSaleReturnShipping: false,
         openedPurchaseOrderShipping: false,
-        opendSaleAttachingProductOffer: false
+        opendSaleAttachingProductOffer: false,
+        openedDisputedRequest: false
       }
 
     case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_PENDING:
@@ -632,6 +633,57 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         tableHandlersFilters: action.payload
+      }
+    }
+
+    /* ORDERS_RESOLUTION */
+    case AT.ORDERS_RESOLUTION_ACCEPT_PENDING: {
+      return {
+        ...state,
+        isSending: true
+      }
+    }
+
+    case AT.ORDERS_RESOLUTION_ACCEPT_FULFILLED: {
+      return {
+        ...state,
+        isSending: false,
+        detail: action.payload
+      }
+    }
+
+    case AT.ORDERS_RESOLUTION_ACCEPT_REJECTED: {
+      return {
+        ...state,
+        isSending: false
+      }
+    }
+
+    case AT.ORDERS_RESOLUTION_REOPEN_PENDING: {
+      return {
+        ...state,
+        isSending: true
+      }
+    }
+
+    case AT.ORDERS_RESOLUTION_REOPEN_FULFILLED: {
+      return {
+        ...state,
+        isSending: false,
+        detail: action.payload
+      }
+    }
+
+    case AT.ORDERS_RESOLUTION_REOPEN_REJECTED: {
+      return {
+        ...state,
+        isSending: false
+      }
+    }
+
+    case AT.DOWNLOAD_DISPUTE_ATTACHMENT_FULFILLED: {
+      return {
+        ...state
       }
     }
 

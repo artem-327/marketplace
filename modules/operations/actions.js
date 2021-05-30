@@ -144,22 +144,67 @@ export function deleteRequest(id) {
   }
 }
 
-export const searchManualQuoteRequest = name => ({
+export const searchManualQuoteRequest = val => {
+  const textValue = val.toString()
+  const number = parseInt(val)
+  let filters = [];
+
+  [
+    'ShippingQuoteRequest.requestingCompany.name',
+    'ShippingQuoteRequest.requestingUser.name',
+    'ShippingQuoteRequest.originCompany.name',
+    'ShippingQuoteRequest.destinationCity',
+    'ShippingQuoteRequest.destinationCountry',
+    'ShippingQuoteRequest.destinationProvince',
+    'ShippingQuoteRequest.destinationStreet',
+    'ShippingQuoteRequest.destinationZip',
+    'ShippingQuoteRequest.originCity',
+    'ShippingQuoteRequest.originCountry',
+    'ShippingQuoteRequest.originProvince',
+    'ShippingQuoteRequest.originStreet',
+    'ShippingQuoteRequest.originZip',
+    'ShippingQuoteRequest.originCompany.primaryBranch.deliveryAddress.addressName',
+    'ShippingQuoteRequest.requestingCompany.primaryBranch.deliveryAddress.addressName'
+  ].forEach(path => filters.push({
+    operator: 'LIKE',
+    path,
+    values: [`%${textValue}%`]
+  }))
+
+  if (!isNaN(number)) {
+    filters.push({
+      operator: 'LIKE',
+      path: 'ShippingQuoteRequest.id',
+      values: [`%${number}%`]
+    })
+  }
+
+  return {
   type: AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST,
   payload: api.searchManualQuoteRequest({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'ShippingQuoteRequest.requestingCompany.name',
-        values: [name.toString()]
-      },
-      {
-        operator: 'LIKE',
-        path: 'ShippingQuoteRequest.requestingUser.name',
-        values: [name.toString()]
-      }
-    ],
+    orFilters: filters,
     pageNumber: 0,
     pageSize: 50
   })
-})
+}}
+
+export function resolveDisputeAccept(orderId) {
+  return {
+    type: AT.RESOLVE_DISPUTE_ACCEPT,
+    payload: api.resolveDisputeAccept(orderId)
+  }
+}
+
+export function resolveDisputeCredit(orderId, amount) {
+  return {
+    type: AT.RESOLVE_DISPUTE_CREDIT,
+    payload: api.resolveDisputeCredit(orderId, amount)
+  }
+}
+
+export function resolveDisputeReject(orderId) {
+  return {
+    type: AT.RESOLVE_DISPUTE_REJECT,
+    payload: api.resolveDisputeReject(orderId)
+  }
+}

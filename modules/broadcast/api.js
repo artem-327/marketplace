@@ -1,4 +1,4 @@
-import api from '~/api'
+import api from '../../api'
 
 export const loadRules = id => api.get(`/prodex/api/broadcast-rules/${id}`).then(response => response.data)
 export const loadGeneralRules = () =>
@@ -16,6 +16,7 @@ export const saveRules = (id, rules) =>
   api
     .patch(`/prodex/api/product-offers/${id}/broadcast-option?option=CUSTOM_RULES`, rules)
     .then(response => response.data)
+    .catch(e => console.error(e))
 export const saveGeneralRules = rules => api.post('/prodex/api/broadcast-rules/general', rules)
 
 export const saveTemplate = payload =>

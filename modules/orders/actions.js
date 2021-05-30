@@ -335,3 +335,24 @@ export function saveFilters(filters) {
     payload: filters
   }
 }
+
+export function orderResolutionReopen(orderId, ordersType) {
+  return {
+    type: AT.ORDERS_RESOLUTION_REOPEN,
+    payload: Api.orderResolutionReopen(orderId, ordersType)
+  }
+}
+
+export function orderResolutionAccept(orderId, ordersType) {
+  return {
+    type: AT.ORDERS_RESOLUTION_ACCEPT,
+    payload: Api.orderResolutionAccept(orderId, ordersType)
+  }
+}
+
+export function downloadDisputeAttachment(orderId, attachmentId) {
+  return {
+    teyp: AT.DOWNLOAD_DISPUTE_ATTACHMENT,
+    payload: Api.downloadDisputeAttachment(orderId, attachmentId)
+  }
+}

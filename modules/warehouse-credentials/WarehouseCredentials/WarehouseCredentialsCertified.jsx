@@ -29,6 +29,7 @@ import {
   CertHeader,
   Warehouse,
   FileName,
+  EpaWrapper,
   DivDate,
   FormArea,
   ButtonGroup
@@ -79,15 +80,21 @@ class WarehouseCredentialsCertified extends Component {
           <>
             {expandedSubrowIds.includes(branch.id) ? <IconUp /> : <IconDown />}
             {branch.deliveryAddress.cfName}
-            {branch.deaListReceive && <CertificationLabel className='certified'>
-              <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
-            </CertificationLabel>}
-            {branch.epaReceive && <CertificationLabel className='certified'>
-              <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
-            </CertificationLabel>}
-            {branch.taxExemptReceive && <CertificationLabel className='certified'>
-              <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
-            </CertificationLabel>}
+            {branch.deaListReceive && (
+              <CertificationLabel className='certified'>
+                <FormattedMessage id='warehouseCertifications.dea' defaultMessage='DEA' />
+              </CertificationLabel>
+            )}
+            {branch.epaReceive && (
+              <CertificationLabel className='certified'>
+                <FormattedMessage id='warehouseCertifications.epa' defaultMessage='EPA' />
+              </CertificationLabel>
+            )}
+            {branch.taxExemptReceive && (
+              <CertificationLabel className='certified'>
+                <FormattedMessage id='warehouseCertifications.dhl' defaultMessage='DHL' />
+              </CertificationLabel>
+            )}
           </>
         )
       }))
@@ -148,8 +155,7 @@ class WarehouseCredentialsCertified extends Component {
     } = this.props
     const { formikData } = this.state
     let stateData = {}
-    if (`${branch.id}` in formikData)
-      stateData = formikData[branch.id]
+    if (`${branch.id}` in formikData) stateData = formikData[branch.id]
 
     const mergedValues = this.mergeInitialValues(INITIAL_VALUES, stateData)
 
@@ -173,17 +179,57 @@ class WarehouseCredentialsCertified extends Component {
               {getSafe(() => branch.deaListCertificateFile.name, '')}
 
               <div>
-                <label><FormattedMessage id='warehouseCredentials.issueDate' defaultMessage='Issue Date' /></label>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.issueDate' defaultMessage='Issue Date' />
+                </label>
                 {getSafe(() => moment(branch.deaListCertificateIssueDate).format(getLocaleDateFormat()), '')}
               </div>
 
               <div>
-                <label><FormattedMessage id='warehouseCredentials.expDate' defaultMessage='Exp. Date' /></label>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.expDate' defaultMessage='Exp. Date' />
+                </label>
                 {getSafe(() => moment(branch.deaListCertificateExpireDate).format(getLocaleDateFormat()), '')}
               </div>
 
               <Download className='download' />
             </FileName>
+          </>
+        )}
+        {branch.epaReceive && (
+          <>
+            <CertHeader>
+              <FormattedMessage
+                id='warehouseCredentials.epaCertificate'
+                defaultMessage='EPA Certificate'
+              />
+            </CertHeader>
+            <EpaWrapper
+              onClick={e => {
+                if (getSafe(() => branch.deaListCertificateFile.name, ''))
+                  this.downloadAttachment(branch.deaListCertificateFile.name, branch.deaListCertificateFile.id)
+              }}>
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.frsId' defaultMessage='FRS ID' />
+                </label>
+                {getSafe(() => branch.epaFrsId, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaRegion' defaultMessage='EPA Region' />
+                </label>
+                {getSafe(() => branch.epaRegion, '')}
+              </div>
+
+              <div>
+                <label>
+                  <FormattedMessage id='warehouseCredentials.epaFacilityUrl' defaultMessage='Detailed Factory Report' />
+                </label>
+                {getSafe(() => branch.epaFacilityUrl, '')}
+              </div>
+            </EpaWrapper>
           </>
         )}
         {branch.taxExemptReceive && (
@@ -210,10 +256,7 @@ class WarehouseCredentialsCertified extends Component {
             <FileName
               onClick={e => {
                 if (getSafe(() => branch.taxExemptCertificateFile.name, ''))
-                  this.downloadAttachment(
-                    branch.taxExemptCertificateFile.name,
-                    branch.taxExemptCertificateFile.id
-                  )
+                  this.downloadAttachment(branch.taxExemptCertificateFile.name, branch.taxExemptCertificateFile.id)
               }}
               className={getSafe(() => branch.taxExemptCertificateFile.name, '') && 'clickable'}>
               <FileText />
@@ -230,11 +273,7 @@ class WarehouseCredentialsCertified extends Component {
                     <FormattedMessage id='global.certificateNumber' defaultMessage='Certificate Number' />
                     <Required />
                   </label>
-                  <Input
-                    disabled={true}
-                    value={branch.taxExemptCertificateNumber}
-                    name='taxExempt.certificateNumber'
-                  />
+                  <Input disabled={true} value={branch.taxExemptCertificateNumber} name='taxExempt.certificateNumber' />
                 </FormField>
                 <FormField>
                   <label>
@@ -314,7 +353,9 @@ class WarehouseCredentialsCertified extends Component {
             </div>
           </CustomRowDiv>
         </PositionHeaderSettings>
-        <div className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`} style={{ padding: '10px 30px' }}>
+        <div
+          className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`}
+          style={{ padding: '10px 30px' }}>
           <ProdexTable
             {...datagrid.tableProps}
             tableName='warehouse_credentials_grid'

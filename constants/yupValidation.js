@@ -388,5 +388,5 @@ export const tagValidate = () =>
   Yup.string()
     .trim()
     .test('time', errorMessages.invalidHashtag, t => {
-      return !t || t.charAt(0) === '#'
+      return !t || t.charAt(0) === '@'
     })

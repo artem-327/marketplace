@@ -59,6 +59,8 @@ import {
   CustomDivTitle,
   InfoIcon
 } from '~/modules/cart/components/StyledComponents'
+//Components
+import ModalOrderResolution from './components/ModalOrderResolution'
 
 export const OrderSegment = styled(Segment)`
   width: calc(100% - 64px);
@@ -528,7 +530,8 @@ class Detail extends Component {
       !getSafe(() => prevState.attachmentRows.length, false) &&
       !getSafe(() => this.state.attachmentRows.length, false) &&
       !getSafe(() => prevProps.order.attachments.length, false) &&
-      getSafe(() => order.attachments.length, false)
+      getSafe(() => order.attachments.length, false) ||
+      (getSafe(() => order.id, 0) !== getSafe(() => prevProps.order.id, 0))
     ) {
       this.setState({
         attachmentRows: this.getRows(order.attachments)
@@ -862,7 +865,13 @@ class Detail extends Component {
       editReturnTrackingCode,
       isOrderProcessing,
       isCompanyAdmin,
-      isAdmin
+      isAdmin,
+      openedDisputedRequest,
+      isSending,
+      orderResolutionAccept,
+      orderResolutionReopen,
+      closePopup,
+      appInfo
     } = this.props
     const { activeIndexes, documentsPopupProduct } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
@@ -1145,6 +1154,18 @@ class Detail extends Component {
               <TransactionInfo echoSupportPhone={echoSupportPhone} order={order} />
               {isAdmin || isCompanyAdmin || isOrderProcessing ? (
                 <>
+                  {openedDisputedRequest ? (
+                    <ModalOrderResolution
+                      appInfo={appInfo}
+                      order={order}
+                      onClose={closePopup}
+                      loading={isSending}
+                      actions={{ orderResolutionAccept, orderResolutionReopen }}
+                      ordersType={
+                        this.props?.router?.query?.type === 'sales' ? 'sale' : this.props?.router?.query?.type
+                      }
+                    />
+                  ) : null}
                   {!counterOrderId ? <ActionsRequired order={order} ordersType={ordersType} /> : null}
                   {openedAssignLots ? <AssignLots /> : null}
                   {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
@@ -1246,7 +1267,7 @@ class Detail extends Component {
                           <GridDataColumn width={valColumn}>{order.acceptanceDate}</GridDataColumn>
                         </GridData>
                       </GridColumn>
-                      <GridColumn width={4} floated='right'>
+                      <GridColumn width={6} floated='right'>
                         <GridData>
                           <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
                             {ordersType === 'Sales' ? (
@@ -1264,10 +1285,26 @@ class Detail extends Component {
                                     {/* Commented based on https://bluepallet.atlassian.net/browse/DT-333 */}
                                     {/* <TableRowData>
                                       <Table.Cell>
-                                        <FormattedMessage id='order.echoFees' defaultMessage='Echo Fees' />
+                                        <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
                                       </Table.Cell>
                                       <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
                                     </TableRowData> */}
+                                    {order?.transactionFee ? (
+                                      <TableRowData>
+                                        <Table.Cell>
+                                          <FormattedMessage id='order.brokerageFee' defaultMessage='Transaction Fee' />
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>-{order.transactionFee}</Table.Cell>
+                                      </TableRowData>
+                                    ) : null}
+                                    {order?.brokerageFee ? (
+                                      <TableRowData>
+                                        <Table.Cell>
+                                          <FormattedMessage id='order.brokerageFee' defaultMessage='Brokerage Fee' />
+                                        </Table.Cell>
+                                        <Table.Cell textAlign='right'>-{order.brokerageFee}</Table.Cell>
+                                      </TableRowData>
+                                    ) : null}
                                   </Table.Body>
                                   <Table.Footer>
                                     <TableRowData>
@@ -1681,14 +1718,22 @@ class Detail extends Component {
                             <FormattedMessage id='order.shipTo' defaultMessage='Ship To' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipTo}</GridDataColumn>
+                          {!!order.frsId && (
+                            <>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.frsId' defaultMessage='FRS ID' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.frsId}</GridDataColumn>
+                              <GridDataColumn width={keyColumn} className='key'>
+                                <FormattedMessage id='order.epaRegion' defaultMessage='EPA Region' />
+                              </GridDataColumn>
+                              <GridDataColumn width={valColumn}>{order.shippingAddressEpaRegion}</GridDataColumn>
+                            </>
+                          )}
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.shipToAddress' defaultMessage='Ship To Address' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToAddress}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                           </GridDataColumn>
@@ -1697,14 +1742,18 @@ class Detail extends Component {
                             <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{order.shipToEmail}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                         </GridData>
                       </GridColumn>
                       <GridColumn>
                         <GridData columns={2}>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.shipDate' defaultMessage='Ship Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.shipDate}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.deliveryDate' defaultMessage='Delivery Date' />
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{order.deliveryDate}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.carrier' defaultMessage='Carrier' />
                           </GridDataColumn>

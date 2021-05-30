@@ -92,6 +92,11 @@ class Products extends Component {
                   operator: 'LIKE',
                   path: 'CompanyGenericProduct.company.cfDisplayName',
                   values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'CompanyGenericProduct.productGroup.name',
+                  values: [`%${v.searchInput}%`]
                 }
               ]
             : []
@@ -119,7 +124,7 @@ class Products extends Component {
     }
 
     //! ! Temporary commented
-    //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isEchoOperator, false)))
+    //if (!(getSafe(() => this.props.auth.identity.isAdmin, false) || getSafe(() => this.props.auth.identity.isOperator, false)))
     //      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     return (

@@ -58,8 +58,8 @@ export const LogoImage = styled(Image)`
 `
 
 export const LogoIcon = styled(Image)`
-  width: 100px;
-  margin: 0 auto 18px;
+  width: 124px;
+  margin: -25px auto -8px;
 `
 
 export const LoginHeader = styled.div`
@@ -135,4 +135,16 @@ export const VersionWrapper = styled.div`
   font-size: 12px;
   color: #848893;
   line-height: 49px;
+`
+
+export const DivTerms = styled.div`
+  font-size: 12px;
+  line-height: 1.17;
+  color: #404040;
+  text-align: center;
+  margin-top: 29px;
+`
+
+export const LinkLabel = styled.a`
+  color: #2599d5;
 `

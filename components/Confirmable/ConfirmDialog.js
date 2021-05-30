@@ -18,12 +18,16 @@ const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, op
       <ModalCustom.Content>{confirmation}</ModalCustom.Content>
 
       <ModalCustom.Actions>
-        <BasicButton noBorder onClick={cancel} data-test='confirm_dialog_cancel_btn'>
-          {cancelText}
-        </BasicButton>
-        <BasicButton onClick={proceed} data-test='confirm_dialog_proceed_btn'>
-          {proceedText}
-        </BasicButton>
+        {cancelText ? (
+          <BasicButton noBorder onClick={cancel} data-test='confirm_dialog_cancel_btn'>
+            {cancelText}
+          </BasicButton>
+        ) : null}
+        {proceedText ? (
+          <BasicButton onClick={proceed} data-test='confirm_dialog_proceed_btn'>
+            {proceedText}
+          </BasicButton>
+        ) : null}
       </ModalCustom.Actions>
     </ModalCustom>
   )

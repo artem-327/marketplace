@@ -114,8 +114,8 @@ export const Warehouse = styled.div`
   }
 
   > label {
-    display: block;
-    margin: 0;
+    display: block !important;
+    margin: 0 !important;
     font-size: 12px;
     color: #848893;
     line-height: 16px;
@@ -160,7 +160,7 @@ export const FileName = styled.div`
   > label,
   > div > label {
     display: block !important;
-    margin: 0;
+    margin: 0 !important;
     font-size: 12px;
     color: #848893;
     line-height: 16px;
@@ -194,6 +194,59 @@ export const FileName = styled.div`
 
     > label {
       cursor: pointer;
+    }
+  }
+`
+
+export const EpaWrapper = styled.div`
+  position: relative;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: 100%;
+  height: 60px;
+  margin: 0 0 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 3px;
+  padding: 12px 22px 14px 19px;
+  background-color: ${({ $bgColor }) => ($bgColor ? $bgColor : '#f8f9fb')};
+  font-size: 14px;
+  color: #20273a;
+  line-height: 18px;
+  
+  &:after {
+    content: "";
+    display: block;
+  }
+
+  > label,
+  > div > label {
+    display: block !important;
+    margin: 0;
+    font-size: 12px;
+    color: #848893;
+    line-height: 16px;
+  }
+  
+  > div {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: auto;
+    height: 34px;
+    margin: -1px 0;
+    border: 0 none;
+    padding: 0 20px 0 0;
+    background-color: transparent;
+    font-size: 14px;
+    color: #20273a;
+    line-height: 18px;
+    
+    &:last-child {
+      flex-shrink: 1;
+      overflow: hidden;
+      padding-right: 0;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 `

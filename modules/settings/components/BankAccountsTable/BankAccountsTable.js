@@ -225,7 +225,7 @@ export const bankAccountsConfig = {
   },
   pending_kyb: {
     registerButton: false,
-    addButton: false,
+    addButton: true,
     balance: false,
     searchField: false,
     accountStatus: true,
@@ -235,7 +235,7 @@ export const bankAccountsConfig = {
   },
   member_pending: {
     registerButton: false,
-    addButton: false,
+    addButton: true,
     balance: false,
     searchField: false,
     accountStatus: true,
@@ -297,7 +297,7 @@ class BankAccountsTable extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isReloadBankAcounts || (prevProps.isLoadingAddedAccounts && !this.props.isLoadingAddedAccounts)) {
+    if (this.props.isReloadBankAcounts || prevProps.isLoadingAddedAccounts !== this.props.isLoadingAddedAccounts) {
       await this.props.reloadBankAccounts(false)
       await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
       await this.props.getIdentity().then(resp => {
@@ -305,9 +305,6 @@ class BankAccountsTable extends Component {
           this.props.getDwollaAccBalance()
         getSafe(() => resp.value.identity.company.vellociAccountStatus, '') === 'verified' &&
           this.props.getVellociAccBalance()
-        if (getSafe(() => resp.value.identity.company.id, '')) {
-          this.props.getCompanyDetails(resp.value.identity.company.id)
-        }
       })
     }
   }

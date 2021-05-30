@@ -92,6 +92,7 @@ export const COLUMNS = [
     name: 'network',
     title: ' ',
     width: 81,
+    minWidth: 81,
     allowReordering: false
   }
 ]

@@ -1,3 +1,4 @@
+import { connect } from 'react-redux'
 import { Component } from 'react'
 import { number } from 'prop-types'
 
@@ -7,6 +8,7 @@ import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Router from 'next/router'
 import { FormattedMessage } from 'react-intl'
+import { getSafe } from '../../utils/functions'
 
 const PageWrapper = styled.div`
   position: relative;
@@ -36,7 +38,7 @@ const Footer = styled.p`
   margin: 40px 0 30px 0 !important;
 `
 
-export default class ErrorComponent extends Component {
+class ErrorComponent extends Component {
   render() {
     return (
       <Layout>
@@ -54,14 +56,16 @@ export default class ErrorComponent extends Component {
             </h1>
             <br />
             <Button size='massive' primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
-              <FormattedMessage id='error.backButtonText'>{text => text}</FormattedMessage>
+              <FormattedMessage id='error.backButtonText' values={{
+                companyName: getSafe(() => this.props.appInfo.applicationName, '')
+              }}>{text => text}</FormattedMessage>
             </Button>
           </Message>
           <Footer>
             <FormattedMessage
               id='error.footer'
               values={{
-                email: <a href='mailto:support@echosystem.com'>support@echosystem.com</a>
+                email: this.props?.appInfo?.supportEmail ? <a href={`mailto:${this.props.appInfo.supportEmail}`}>{this.props.appInfo.supportEmail}</a> : ''
               }}
             />
           </Footer>
@@ -78,3 +82,12 @@ ErrorComponent.propTypes = {
 ErrorComponent.defaultProps = {
   statusCode: null
 }
+
+const mapStateToProps = (state, props) => {
+  return {
+    appInfo: state.auth?.identity?.appInfo,
+    statusCode: props?.statusCode ? props.statusCode : null
+  }
+}
+
+export default connect(mapStateToProps, {})(ErrorComponent)

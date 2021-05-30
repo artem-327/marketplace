@@ -234,7 +234,8 @@ class ActionsRequired extends Component {
       isSending,
       openedPopup,
       sellEligible,
-      actionNeeded
+      actionNeeded,
+      disputeResolutionStatus
     } = this.props
     const repayUntil = moment(detail.orderDate)
     // Todo - when completing this refactor using ~/constants/backendObjects/ (OrderStatusEnum, ShippingStatusEnum)
@@ -242,15 +243,13 @@ class ActionsRequired extends Component {
 
     const textForConforming = !sellEligible ? 'order.confirm.sellElligible.notTrue' : 'order.confirm.accept.decline'
 
-    const requestCreditButton = orderCreditHistoryOpen
-      ? {
-          buttonType: 'primary',
-          className: 'outline',
-          onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
-          dataTest: 'orders_detail_requestCredit_btn',
-          text: 'order.requestCredit'
-        }
-      : null
+    const disputeButton = {
+      //ADD condition ? orderCreditHistoryOpen ?
+      buttonType: 'basic',
+      onClick: () => openPopupName('openedPurchaseRequestCreditDelivery'),
+      dataTest: 'orders_detail_dispute_btn',
+      text: 'order.dispute'
+    }
 
     return (
       <>
@@ -310,6 +309,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 1 && assignLotsRequired // Confirmed && Not shipped
               ? this.renderSegment(null, 11, null, 'order.ship.description', [
                   {
@@ -321,6 +321,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && creditReviewStatus === 1 && creditReviewStatus === 1 // CONFIRMED && PENDING && PENDING
               ? this.renderSegment(null, 11, null, 'order.reviewCreditRequestSales.description', [
                   {
@@ -332,6 +333,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+            {/* Do not show any buttons related to returning order. We do not support returning order at this moment https://bluepallet.atlassian.net/browse/DT-140?focusedCommentId=11885
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
               ? this.renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
                   {
@@ -341,7 +343,8 @@ class ActionsRequired extends Component {
                     text: 'order.returnShipmentSale'
                   }
                 ])
-              : null}
+              : null} */}
+
             {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
               ? this.renderSegment(null, 11, null, 'order.returnInTransit.description', [
                   {
@@ -350,6 +353,19 @@ class ActionsRequired extends Component {
                     dataTest: 'orders_detail_returnInTransit_btn',
                     text: 'order.returnInTransit',
                     loading: isSending
+                  }
+                ])
+              : null}
+
+            {orderStatus === 2 &&
+            (reviewStatus === 4 || reviewStatus === 3) &&
+            (disputeResolutionStatus === 1 || disputeResolutionStatus === 2) // Confirmed && Credited || Rejected && Pending || Accepted by buyer
+              ? this.renderSegment('orange', 11, null, 'order.reviewResolutionDispute.description', [
+                  {
+                    buttonType: 'basic',
+                    onClick: () => openPopupName('openedDisputedRequest'),
+                    dataTest: 'orders_detail_view_btn',
+                    text: 'order.view'
                   }
                 ])
               : null}
@@ -378,6 +394,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 1 // Pending
               ? this.renderSegment(null, 11, null, 'order.detail.status.pending', [
                   {
@@ -389,6 +406,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
               ? this.renderSegment(null, 11, null, 'order.shipFailed.description', [
                   {
@@ -399,6 +417,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && shippingStatus === 2 // Confirmed && In transit
               ? this.renderSegment(null, 11, null, 'order.transit.description', [
                   {
@@ -410,9 +429,9 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
-            {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 0 // Confirmed && Pending
+
+            {orderStatus === 2 && reviewStatus === 1 && disputeResolutionStatus === 0 && shippingStatus === 3 // Confirmed && Pending && none && Delivered
               ? this.renderSegment(null, 10, null, 'order.delivered.description', [
-                  requestCreditButton,
                   {
                     buttonType: 'primary',
                     onClick: this.acceptDelivery,
@@ -420,15 +439,17 @@ class ActionsRequired extends Component {
                     text: 'global.accept',
                     loading: isSending && !openedPopup
                   },
-                  {
-                    buttonType: 'danger',
-                    className: 'outline',
-                    onClick: () => openPopupName('openedPurchaseRejectDelivery'),
-                    dataTest: 'orders_detail_reject_btn',
-                    text: 'global.reject'
-                  }
+                  disputeButton
+                  // {
+                  //   buttonType: 'danger',
+                  //   className: 'outline',
+                  //   onClick: () => openPopupName('openedPurchaseRejectDelivery'),
+                  //   dataTest: 'orders_detail_reject_btn',
+                  //   text: 'global.reject'
+                  // }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 1 && creditReviewStatus === 2
               ? // Confirmed && PENDING && COUNTER_OFFER_PENDING
                 this.renderSegment(null, 11, null, 'order.reviewCreditRequestPurchase.description', [
@@ -440,6 +461,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus === 3 && returnStatus === 1 // Confirmed && Rejected && COUNTER_OFFER_PENDING
               ? this.renderSegment(null, 11, null, 'order.waitToReturn.description', [
                   {
@@ -451,6 +473,7 @@ class ActionsRequired extends Component {
                   }
                 ])
               : null}
+
             {orderStatus === 2 && reviewStatus !== 3 && (detail.paymentStatus === 5 || detail.paymentStatus === 4) // Confirmed && Rejected && (Failed || Canceled)
               ? this.renderSegment('red', 11, null, 'order.payment.failed.description', [
                   {
@@ -458,6 +481,19 @@ class ActionsRequired extends Component {
                     onClick: openReinitiateTransfer,
                     dataTest: 'orders_detail_reinitiate_transfer',
                     text: 'order.reinitiateTransfer'
+                  }
+                ])
+              : null}
+
+            {orderStatus === 2 &&
+            (reviewStatus === 4 || reviewStatus === 3) &&
+            (disputeResolutionStatus === 1 || disputeResolutionStatus === 3) // Confirmed && Credited || Rejected && Pending || Accepted by seller
+              ? this.renderSegment('orange', 11, null, 'order.reviewResolutionDispute.description', [
+                  {
+                    buttonType: 'basic',
+                    onClick: () => openPopupName('openedDisputedRequest'),
+                    dataTest: 'orders_detail_view_btn',
+                    text: 'order.view'
                   }
                 ])
               : null}
@@ -491,6 +527,7 @@ function mapStateToProps(state, ownProps) {
     shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
     reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
     creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
+    disputeResolutionStatus: getSafe(() => orders.detail.disputeResolutionStatus, 0),
     returnStatus: getSafe(() => orders.detail.returnStatus, 0),
     assignLotsRequired: false, // checkAssignLotsRequired(orders.detail),
     isSending: orders.isSending,

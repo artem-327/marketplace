@@ -109,7 +109,7 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        ordersStatusFilter: action.payload.filter.status,
+        ordersStatusFilter: action.payload.filter.status
       }
 
     case AT.OPERATIONS_OPEN_ORDER_DETAIL: {
@@ -196,6 +196,67 @@ export default function reducers(state = initialState, action) {
         ...state,
         searchedManQuotRequests: action.payload,
         searchedManQuotRequestsLoading: false
+      }
+    }
+
+    /* RESOLVE DISPUTE */
+    case AT.RESOLVE_DISPUTE_CREDIT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.RESOLVE_DISPUTE_CREDIT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.RESOLVE_DISPUTE_CREDIT_FULFILLED: {
+      return {
+        ...state,
+        orderDetailData: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.RESOLVE_DISPUTE_REJECT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.RESOLVE_DISPUTE_REJECT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.RESOLVE_DISPUTE_REJECT_FULFILLED: {
+      return {
+        ...state,
+        orderDetailData: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.RESOLVE_DISPUTE_ACCEPT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+    case AT.RESOLVE_DISPUTE_ACCEPT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+    case AT.RESOLVE_DISPUTE_ACCEPT_FULFILLED: {
+      return {
+        ...state,
+        orderDetailData: action.payload,
+        loading: false
       }
     }
 

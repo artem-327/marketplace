@@ -12,12 +12,15 @@ import {
 import Router from 'next/router'
 //Services
 import { getObjectWithoutEmptyElements } from '~/services'
-import { getSafe } from '~/utils/functions'
+import { getSafe, removeEmpty } from '~/utils/functions'
 import { getStringISODate } from '~/components/date-format'
 import { titleForms } from '../constants'
+import { isEmptyObject } from '../../../services'
 
 /**
  * Function validates values from VellociRegister form.
+ *  @category Velloci Register
+ * @method
  */
 export const getValidationSchema = () =>
   Yup.lazy(values => {
@@ -93,8 +96,8 @@ export const getValidationSchema = () =>
               }
             : null
           return Yup.object().shape({
-            firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-            lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+            firstName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
+            lastName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
             email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
             phoneNumber: phoneValidation(10).required(requiredMessage),
             dateOfBirth: Yup.string()
@@ -135,7 +138,8 @@ export const getValidationSchema = () =>
 
 /**
  * Function prepares values from form to request body for BE request.
- *
+ *  @category Velloci Register
+ * @method
  * @param {object} values The object of values from form.
  * @return {object} The new object prepared for BE request.
  */
@@ -193,11 +197,14 @@ export const getBody = values => {
     beneficialOwners,
     website: getSafe(() => businessInfo.url, '')
   }
+
   return getObjectWithoutEmptyElements(result)
 }
 
 /**
  * Function submit form or move user to the next page.
+ * @category Velloci Register
+ * @method
  * @param {object} formikProps The object of values from form.
  * @param {number} activeStep The index of active page.
  * @param {function} nextStep The redux action which moves user to the next page.
@@ -210,15 +217,17 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
         formikProps.handleSubmit()
       } else if ((_.isEmpty(errors) && activeStep !== 6) || (!errors[titleForms[activeStep]] && activeStep !== 6)) {
         nextStep(activeStep + 1)
-        mainContainer.current.scroll({top: 0, left: 0, behavior: 'smooth'})
+        mainContainer.current.scroll({ top: 0, left: 0, behavior: 'smooth' })
         formikProps.setErrors({})
       }
     })
-    .catch(err => console.log('catch', err))
+    .catch(err => console.error('catch', err))
 }
 
 /**
  * Function handle submit form and register Velloci.
+ *  @category Velloci Register
+ * @method
  * @param {object} values The object of values from form.
  * @param {object} props The props of velloci form.
  * @param {object} selfFormikProps The object of formik props.
@@ -227,7 +236,7 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
   if (props.activeStep !== 6) return
 
   try {
-    props.loadSubmitButton(true)
+    props?.loadSubmitButton(true)
     const body = getBody(values)
 
     const files = getSafe(() => values.companyFormationDocument.attachments, '')
@@ -237,6 +246,19 @@ export const handleSubmit = async (values, props, selfFormikProps) => {
       if (searchParams.has('companyId')) {
         companyId = Number(searchParams.get('companyId'))
       }
+    }
+
+    if (
+      props?.naicsCode !== values?.controlPerson?.naicsCode &&
+      props?.companyId &&
+      typeof props?.companyRequestBody === 'object' &&
+      !isEmptyObject(props?.companyRequestBody)
+    ) {
+      const companyRequestBody = {
+        ...props?.companyRequestBody,
+        naicsCode: values?.controlPerson?.naicsCode
+      }
+      await props?.updateCompany(props?.companyId, companyRequestBody)
     }
 
     await props.postRegisterVelloci(body, companyId, files)

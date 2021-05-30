@@ -2,19 +2,15 @@ import { Component } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Modal, Container, Icon, Button, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
-import Spinner from '~/components/Spinner/Spinner'
-import ProdexGrid from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import Spinner from '../../../../components/Spinner/Spinner'
+import ProdexGrid from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import { actions } from 'react-redux-form'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { filterPresets } from '~/modules/filter/constants/filter'
-import { currency } from '~/constants/index'
-import { ArrayToFirstItem } from '~/components/formatted-messages'
-import { handleFiltersValue } from '~/modules/settings/actions'
+import { getSafe } from '../../../../utils/functions'
+import { currency } from '../../../../constants/index'
+import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 import { withToastManager } from 'react-toast-notifications'
-import { Datagrid } from '~/modules/datagrid/DatagridProvider'
-import { AttachmentManager } from '~/modules/attachments'
-import { uniqueArrayByKey } from '~/utils/functions'
+
 import { ChevronDown, ChevronRight } from 'react-feather'
 
 const StyledModal = styled(Modal)`
@@ -679,6 +675,7 @@ class Orders extends Component {
 
   getActions = () => {
     const {
+      router,
       intl: { formatMessage }
     } = this.props
 
@@ -688,7 +685,10 @@ class Orders extends Component {
           id: 'orders.detail',
           defaultMessage: 'Detail'
         }),
-        callback: row => this.props.openOrderDetail(row.rawData)
+        callback: async row => {
+          await this.props.openOrderDetail(row.rawData)
+          await router.push(`/operations/orders/detail/${row.id}`)
+        }
       },
       {
         text: formatMessage({

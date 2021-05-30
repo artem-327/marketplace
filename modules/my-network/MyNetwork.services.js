@@ -44,7 +44,7 @@ export const getCriteriaLabel = criteria => {
   return (
     <DivCircles>
       {criteriaKeys.map((key, i) => {
-        return <DivCircle key={i} background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
+        return <DivCircle key={i} background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
       })}
     </DivCircles>
   )
@@ -62,8 +62,8 @@ export const getTradeCriteriaValues = criteria => {
     return {
       [key]: (
         <DivValueTradeCriteria>
-          <DivTextValueTradeCriteria>{criteria[key]?.actualValue}</DivTextValueTradeCriteria>
-          <DivCircle background={COLORS[criteria[key]?.match] ?? '#f8f9fb'} />
+          <DivTextValueTradeCriteria>{criteria[key]?.criteria_match_description}</DivTextValueTradeCriteria>
+          <DivCircle background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
         </DivValueTradeCriteria>
       )
     }
@@ -124,42 +124,43 @@ export const getRowDetail = (row, detailRow) => {
 
   let r = typeof row?.connectionId !== 'undefined' && detailRow?.connectionId === row?.connectionId ? detailRow : row
   let address = r?.connectedCompany?.primaryAddress
+  const comma = address?.streetAddress || address?.city ? ', ' : ''
 
   return {
     ...row,
     id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
       <DivMember key={row?.connectionId || row?.connectedCompany?.tradepassId}>
-        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.logo} />
+        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.avatarUrl} />
 
         <BMember>{row?.connectedCompany?.name}</BMember>
       </DivMember>
     ),
-    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logo} />,
-    address: `${address?.streetAddress} ${address?.city}, ${address?.province?.abbreviation} ${address?.country?.code}`,
+    logo: <Image verticalAlign='middle' size='small' spaced={true} src={row?.connectedCompany?.logoUrl} />,
+    address: address
+      ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
+          address?.country?.code || ''
+        }`
+      : '',
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
     connectionStatus: getStatusLabel(row?.status),
-    eligibilityCriteria: getCriteriaLabel(row?.criteria || row?.connectedCompany?.criteria),
+    eligibilityCriteria: getCriteriaLabel(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
-    tradeCriteria: getTradeCriteriaValues(row?.criteria || row?.connectedCompany?.criteria),
+    tradeCriteria: getTradeCriteriaValues(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
     legalData: {
       legalBusinessName: r?.connectedCompany?.name,
       ein: r?.connectedCompany?.tin,
       telephoneNumber: r?.connectedCompany?.phone,
       inBusinessSince: r?.connectedCompany?.inBusinessSince,
-      numberOfEmployees: r?.connectedCompany?.numberOfEmployees
-        ? {
-            numberOfEmployees: (
-              <FormattedNumber
-                minimumFractionDigits={0}
-                maximumFractionDigits={0}
-                value={r?.connectedCompany?.numberOfEmployees || 0}
-              />
-            )
-          }
-        : null
+      numberOfEmployees: r?.connectedCompany?.numberOfEmployees ? (
+        <FormattedNumber
+          minimumFractionDigits={0}
+          maximumFractionDigits={0}
+          value={r?.connectedCompany?.numberOfEmployees || 0}
+        />
+      ) : null
     },
     marketingData: {
       website: r?.connectedCompany?.website,

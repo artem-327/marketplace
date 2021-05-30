@@ -2,13 +2,12 @@ import PropTypes from 'prop-types'
 import { FormattedMessage } from 'react-intl'
 import { GridRow, List } from 'semantic-ui-react'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../utils/functions'
 
 import { StyledGrid, TableSegment, StyledList, DetailMessage, ColumnDetail } from './styles'
 
 function Header({ row, attributes, as }) {
-  if (!attributes.length)
-    return false
+  if (!attributes.length) return <div></div>
 
   return (
     <GridRow>

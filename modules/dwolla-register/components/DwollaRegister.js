@@ -1,4 +1,5 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
 import { Grid, GridColumn, GridRow, Segment, Header, Form, Button, Icon, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { Formik } from 'formik'
@@ -138,7 +139,8 @@ class DwollaRegister extends Component {
       businessClassifications,
       businessClassificationsLoading,
       isAdmin,
-      identity
+      identity,
+      applicationName
     } = this.props
 
     let selectedBusiness = businessClassifications.find(el => el.id === values.businessClassification)
@@ -165,7 +167,10 @@ class DwollaRegister extends Component {
                       <Header as='h2'>
                         <FormattedMessage
                           id='dwolla.thanksForJoining'
-                          defaultMessage='Thank you for joining the Echo Marketplace.'
+                          defaultMessage='Thank you for joining the {companyName} Marketplace.'
+                          values={{
+                            companyName: applicationName
+                          }}
                         />
                       </Header>
                     </GridColumn>
@@ -195,7 +200,8 @@ class DwollaRegister extends Component {
                             <a href='tel:(833)321-3246' target='_blank'>
                               (833)321-3246
                             </a>
-                          )
+                          ),
+                          companyName: applicationName
                         }}
                       />
                     </GridColumn>
@@ -518,7 +524,10 @@ class DwollaRegister extends Component {
                       <GridColumn>
                         <FormattedMessage
                           id='dwolla.controllerDesc1'
-                          defaultMessage='To assure compliance with US financial institution policies, Echo must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
+                          defaultMessage='To assure compliance with US financial institution policies, {companyName} must collect the information of at least one individual with significant responsibility for managing the legal entity listed above, such as:'
+                          values={{
+                            companyName: applicationName
+                          }}
                         />
                       </GridColumn>
                     </GridRow>
@@ -710,7 +719,8 @@ class DwollaRegister extends Component {
                               <a href='tel:(833) 321 3246' target='_blank'>
                                 (833) 321 3246
                               </a>
-                            )
+                            ),
+                            companyName: applicationName
                           }}
                         />
                         {/* <FormattedMessage id='dwolla.registrationCompleteDesc1' defaultMessage='Thanks for registering for your Dwolla Account. The verification process can take 24-48 hours. In the meantime you can add your Products, Warehouses, Branches, and other information in the Settings section of (web app name).' /> */}
@@ -759,7 +769,7 @@ class DwollaRegister extends Component {
         if (Object.keys(errors).length === 0) this.setState({ step: this.state.step + 1 })
         setTouched(errors)
       })
-      .catch(err => console.log('catch', err))
+      .catch(err => console.error('catch', err))
   }
 
   render() {
@@ -872,4 +882,10 @@ class DwollaRegister extends Component {
   }
 }
 
-export default injectIntl(DwollaRegister)
+function mapStateToProps(store) {
+  return {
+    applicationName: store?.auth?.identity?.appInfo?.applicationName
+  }
+}
+
+export default connect(mapStateToProps, {})(injectIntl(DwollaRegister))

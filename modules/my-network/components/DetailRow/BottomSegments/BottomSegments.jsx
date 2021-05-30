@@ -5,6 +5,7 @@ import ColumnSegment from './ColumnSegment'
 import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../DetailRow.style'
 /**
  * Segments shows Legal Data, Merketing Data and Verified Data
+ * @category My Network
  * @component
  */
 const BottomSegmentData = props => (
@@ -12,7 +13,7 @@ const BottomSegmentData = props => (
     <GridColumnDetail>
       <SegmentGroupHeader horizontal $noneBorder>
         {Object.keys(props).map((key, i) => {
-          return <ColumnSegment key={i} data={props[key]} titleId={key} />
+          return <ColumnSegment key={i} data={props[key]} titleId={key} blueValue={key === 'verifiedData'} />
         })}
       </SegmentGroupHeader>
     </GridColumnDetail>

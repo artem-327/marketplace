@@ -3,7 +3,7 @@ import { Grid, GridRow, Icon } from 'semantic-ui-react'
 import { Trash, PlusCircle } from 'react-feather'
 
 export const CustomGridRow = styled(GridRow)`
-  padding-top: 0px !important;
+  padding-top: 6px !important;
   padding-bottom: 0px !important;
 `
 
@@ -97,4 +97,11 @@ export const GridFields = styled(Grid)`
   > .row:first-child:nth-last-child(2) svg {
     display: none !important;
   }
+`
+
+export const DivFlex = styled.div`
+  display: flex;
+  margin: 0px !important;
+  font-size: 1em !important;
+  color: #404040 !important;
 `

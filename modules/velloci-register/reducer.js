@@ -154,22 +154,20 @@ export default function reducer(state = initialState, action) {
       let naicsOptions = []
       let firstChemical = []
       if (payload) {
-        Object.keys(payload).forEach(key => {
-          payload[key].forEach(obj => {
-            if (obj.code === 325 || obj.code === 4246) {
-              firstChemical.push({
-                key: obj.code,
-                text: obj.subcategory,
-                value: obj.code
-              })
-            } else {
-              naicsOptions.push({
-                key: obj.code,
-                text: obj.subcategory,
-                value: obj.code
-              })
-            }
-          })
+        payload.forEach(obj => {
+          if (obj.naicsId === 325 || obj.naicsId === 4246) {
+            firstChemical.push({
+              key: obj.naicsId,
+              text: obj.name,
+              value: obj.naicsId
+            })
+          } else {
+            naicsOptions.push({
+              key: obj.naicsId,
+              text: obj.name,
+              value: obj.naicsId
+            })
+          }
         })
       }
       if (naicsOptions.length && firstChemical.length) {

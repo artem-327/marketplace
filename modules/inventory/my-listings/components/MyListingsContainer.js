@@ -1,22 +1,22 @@
 import { connect } from 'react-redux'
 import MyListings from './MyListings'
 import * as Actions from '../../actions'
-import { getTemplates } from '~/modules/broadcast/actions'
-import { withDatagrid } from '~/modules/datagrid'
+import { getTemplates } from '../../../../modules/broadcast/actions'
+import { withDatagrid } from '../../../../modules/datagrid'
 // import { Label, Popup, List } from 'semantic-ui-react'
 
-import { openImportPopup } from '~/modules/settings/actions'
-import { openBroadcast, broadcastChange } from '~/modules/broadcast/actions'
-import { applyFilter } from '~/modules/filter/actions'
-import { openPopup, closePopup } from '~/modules/company-product-info/actions'
-import { setCompanyElligible } from '~/modules/auth/actions'
+import { openImportPopup } from '../../../../modules/settings/actions'
+import { openBroadcast, broadcastChange } from '../../../../modules/broadcast/actions'
+import { applyFilter } from '../../../../modules/filter/actions'
+import { openPopup, closePopup } from '../../../../modules/company-product-info/actions'
+import { setCompanyElligible } from '../../../../modules/auth/actions'
 import { FormattedNumber } from 'react-intl'
-import { currency } from '~/constants/index'
+import { currency } from '../../../../constants/index'
 
-import { FormattedUnit, ArrayToFirstItem, FormattedAssay } from '~/components/formatted-messages'
-import { getSafe } from '~/utils/functions'
+import { FormattedUnit, ArrayToFirstItem, FormattedAssay } from '../../../../components/formatted-messages'
+import { getSafe } from '../../../../utils/functions'
 import moment from 'moment/moment'
-import { getLocaleDateFormat } from '~/components/date-format'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   const detailValues = store.simpleAdd.detailValues
@@ -24,6 +24,7 @@ function mapStateToProps(store, { datagrid }) {
 
   return {
     ...store.simpleAdd,
+    applicationName: store?.auth?.identity?.appInfo?.applicationName,
     broadcastTemplates: store.broadcast.templates,
     advancedFilters: store.filter.inventory.appliedFilter,
     editedId,

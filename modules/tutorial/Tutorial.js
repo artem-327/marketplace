@@ -314,6 +314,7 @@ class Tutorial extends Component {
   render() {
     const { tutorialTab, isLoading } = this.state
     const {
+      marginDashboard,
       marginMarketplace,
       marginHolds,
       marginOrders,
@@ -325,10 +326,12 @@ class Tutorial extends Component {
       isBusinessVerification,
       isTutorial,
       vellociBusinessId,
-      marginGlobalPrice
+      marginGlobalPrice,
+      applicationName
     } = this.props
 
     let margin = '15px 32px 15px 32px'
+    if (marginDashboard) margin = '0'
     if (marginMarketplace) margin = '10px 0'
     if (marginHolds) margin = '0 0 14px 0'
     if (marginOrders) margin = '20px 32px 0 32px'
@@ -338,7 +341,8 @@ class Tutorial extends Component {
     const theme = {
       margin
     }
-    if (isMerchant || isOrderProcessing || isLoading) {
+
+    if (!(isCompanyAdmin || tutorialTab) || isLoading) {
       return null
     } else if (!isLoading && tutorialTab && !isBusinessVerification && isTutorial) {
       return (
@@ -380,7 +384,11 @@ class Tutorial extends Component {
               <Content>
                 <FormattedMessage
                   id='tutorial.businessVerification.content'
-                  defaultMessage='BluePallet is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, BluePallet must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'>
+                  defaultMessage='{companyName} is a secure marketplace where each participant is vetted and approved prior to being activated. Since the system can facilitate transactions over $6,000, {companyName} must comply with the anti-money laundering provisions outlined in the US Patriot Act. For these reasons, each participant company must pass our business verification requirements.'
+                  values={{
+                    companyName: applicationName
+                  }}
+                >
                   {text => text}
                 </FormattedMessage>
               </Content>
@@ -415,6 +423,7 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
 
   return {
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
     name: getSafe(() => state.auth.identity.name, ''),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),

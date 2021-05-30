@@ -3,10 +3,10 @@ export const SubmitFile = async (values, { setSubmitting }, props) => {
 
     if (props.popupValues.uploadedFile) {
       await props.removeAttachment(props.popupValues.uploadedFile.id)
-      await props.addAttachment(values.file, props.popupValues.docType.id, {})
+      await props.addAttachment(values.file, props.popupValues.docType.id, { isTemporary: false })
       props.onUpload()
     } else {
-      await props.addAttachment(values.file, props.popupValues.docType.id, {})
+      await props.addAttachment(values.file, props.popupValues.docType.id, { isTemporary: false })
       props.onUpload()
     }
   } catch (e) {

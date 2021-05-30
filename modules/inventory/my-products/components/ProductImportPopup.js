@@ -1,7 +1,20 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { Header, Modal, Grid, Icon, Step, ModalContent, Button, Checkbox, Dropdown } from 'semantic-ui-react'
+import {
+  Header,
+  Modal,
+  Grid,
+  Icon,
+  Step,
+  ModalContent,
+  Button,
+  Checkbox,
+  Dropdown,
+  Dimmer,
+  Loader,
+  Segment
+} from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/dist/client/router'
 
@@ -126,13 +139,22 @@ class ProductImportPopup extends Component {
       broadcastTemplates,
       companies,
       companyGenericProduct,
-      productOffer
+      productOffer,
+      loading,
+      applicationName
     } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap, isFinishPreview } = this.state
 
     const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
-      return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }) }
+      if (opt.titleId && opt.titleText)
+        return {
+          ...opt,
+          title: formatMessage({ id: opt.titleId, defaultMessage: opt.titleText }, { companyName: applicationName }),
+          subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: applicationName })
+        }
+      else
+        return { ...opt, subtitle: formatMessage({ id: opt.subtitleId, defaultMessage: opt.subtitleText }, { companyName: applicationName }) }
     }).concat([
       ...broadcastTemplates.map(template => {
         return {
@@ -207,7 +229,13 @@ class ProductImportPopup extends Component {
             </Step>
           </Step.Group>
         </Modal.Header>
-        <StyledModal>{this.steps[currentStep]}</StyledModal>
+
+        <StyledModal>
+          <Dimmer active={loading} inverted page={false}>
+            <Loader active={loading} />
+          </Dimmer>
+          {this.steps[currentStep]}
+        </StyledModal>
         <CheckboxContainer>
           <Checkbox
             label={formatMessage({
@@ -403,6 +431,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { companies, companyGenericProduct }) => {
   return {
+    applicationName: state?.auth?.identity?.appInfo?.applicationName,
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
@@ -425,7 +454,8 @@ const mapStateToProps = (state, { companies, companyGenericProduct }) => {
     broadcastTemplates: getSafe(() => state.broadcast.templates, []),
     broadcastOption: getSafe(() => state.simpleAdd.broadcastOption, null),
     companies: getSafe(() => companies, false),
-    companyGenericProduct: getSafe(() => companyGenericProduct, false)
+    companyGenericProduct: getSafe(() => companyGenericProduct, false),
+    loading: state?.settings?.loading
   }
 }
 

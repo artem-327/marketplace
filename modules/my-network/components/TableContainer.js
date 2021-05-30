@@ -3,14 +3,42 @@ import { connect } from 'react-redux'
 import Table from './Table'
 //HOC
 import { withDatagrid } from '../../datagrid'
-//Services
-import { getStatuses, getRowDetail } from '../MyNetwork.services'
 //Actions
 import { buttonActionsDetailRow, connectionsStatuses, getConnection, showBluePallet, hideBluePallet } from '../actions'
 import { getCompanyLogo } from '../../company-form/actions'
+//Selectors
+import {
+  makeGetLoadingMyNetwork,
+  makeGetModifiedRowsMyNetwork,
+  makeGetInviteDetailCompanyMyNetwork,
+  makeGetLoadingDetailRowMyNetwork
+} from '../selectors'
+import { makeGetQueryDatagrid, makeGetLoadingDatagrid, makeGetRowsDatagrid } from '../../datagrid/selectors'
 
-//Constants
-import { mockRows } from '../constants'
+const makeMapStateToProps = () => {
+  const getQueryDatagrid = makeGetQueryDatagrid()
+  const getLoadingDatagrid = makeGetLoadingDatagrid()
+  const getRowsDatagrid = makeGetRowsDatagrid()
+
+  const getLoadingMyNetwork = makeGetLoadingMyNetwork()
+  const getModifiedRowsMyNetwork = makeGetModifiedRowsMyNetwork()
+  const getInviteDetailCompanyMyNetwork = makeGetInviteDetailCompanyMyNetwork()
+  const getLoadingDetailRowMyNetwork = makeGetLoadingDetailRowMyNetwork()
+
+  const mapStateToProps = (state, props) => {
+    const rows = getRowsDatagrid(props)
+    const modifiedRows = getModifiedRowsMyNetwork(state, rows)
+
+    return {
+      rows: modifiedRows,
+      query: getQueryDatagrid(props),
+      loadingDatagrid: getLoadingDatagrid(props) || getLoadingMyNetwork(state),
+      inviteDetailCompany: getInviteDetailCompanyMyNetwork(state),
+      loadingDetailRow: getLoadingDetailRowMyNetwork(state)
+    }
+  }
+  return mapStateToProps
+}
 
 const mapDispatchToProps = {
   buttonActionsDetailRow,
@@ -20,17 +48,4 @@ const mapDispatchToProps = {
   showBluePallet
 }
 
-const mapStateToProps = ({ myNetwork }, { datagrid }) => {
-  const { rows } = datagrid
-
-  return {
-    datagrid,
-    loadingDatagrid: datagrid.loading,
-    statuses: getStatuses(mockRows),
-    rows: rows?.length ? rows.map(row => getRowDetail(row, myNetwork?.detailRow)) : [],
-    inviteDetailCompany: getRowDetail(myNetwork?.companyNetworkConnection),
-    loadingDetailRow: myNetwork?.loadingDetailRow
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(Table))
+export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(Table))

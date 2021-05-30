@@ -36,6 +36,7 @@ const FixyWrapper = styled.div`
   position: relative;
   transform: translateY(0);
   padding: 2.5em 1.5em 1.5em;
+  overflow: auto;
 `
 
 const ButtonsWrapper = styled(Grid)`
@@ -299,7 +300,7 @@ class Settings extends Component {
           this.handleSubmit(values)
         }}
         render={formikProps => {
-          let { values, resetForm } = formikProps
+          let { values, resetForm, isSubmitting } = formikProps
           this.resetForm = resetForm
           let allDisabled =
             systemSettings &&
@@ -310,8 +311,9 @@ class Settings extends Component {
               <Dimmer inverted active={loading}>
                 <Loader />
               </Dimmer>
-              {systemSettings && systemSettings.length
-                ? systemSettings.map(group => {
+              <FixyWrapper>
+                {systemSettings && systemSettings.length
+                  ? systemSettings.map(group => {
                     return (
                       <>
                         <StyledHeader as='h2' className='ui medium header'>
@@ -392,6 +394,7 @@ class Settings extends Component {
                     )
                   })
                 : null}
+              </FixyWrapper>
               <ButtonsWrapper isUserSettings={this.props.isUserSettings}>
                 <Grid.Column textAlign='right'>
                   <Popup
@@ -399,13 +402,14 @@ class Settings extends Component {
                     trigger={
                       <PopupTriggerWrapper>
                         <Button
-                          loading={loading}
+                          loading={loading || isSubmitting}
                           onClick={async () => {
                             this.setState({ clickedButton: true }, () => !allDisabled && formikProps.handleSubmit())
                             formikProps.resetForm(values)
                           }}
                           primary
-                          disabled={allDisabled}>
+                          type='button'
+                          disabled={allDisabled || isSubmitting}>
                           <FormattedMessage id='global.save' defaultMessage='Save'>
                             {text => text}
                           </FormattedMessage>
@@ -458,9 +462,7 @@ class Settings extends Component {
           <FormattedMessage id='settings.systemSettings' defaultMessage='System Settings' />
         </Modal.Header>
 
-        <FixyWrapper>
-          <Modal.Content scrolling={scrolling}>{getMarkup()}</Modal.Content>
-        </FixyWrapper>
+        <Modal.Content scrolling={scrolling}>{getMarkup()}</Modal.Content>
       </Modal>
     )
   }
