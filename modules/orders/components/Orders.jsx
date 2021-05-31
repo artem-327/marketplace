@@ -22,104 +22,20 @@ import { debounce } from 'lodash'
 import DetailRow from '../../../components/detail-row'
 //Constants
 import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
+// Styles
+import {
+  StyledModal,
+  StyledHeader,
+  RelatedDocumentsDropdown,
+  CustomDivAddDocument,
+  Rectangle,
+  RectangleRed,
+  CustomCheckCircleRed,
+  CustomCheckCircle,
+  CustomDivAddedMewDocument,
+  CustomDivTextAddedMewDocument
+} from './Orders.styles'
 
-const StyledModal = styled(Modal)`
-  > .header {
-    padding: 21px 30px !important;
-    font-size: 14px !important;
-    text-transform: uppercase;
-  }
-
-  > .content {
-    padding: 30px !important;
-    //margin: 30px 0;
-  }
-
-  > .actions {
-    background-color: #ffffff !important;
-    padding: 10px 5px !important;
-    button {
-      margin: 0 5px;
-      height: 40px;
-    }
-  }
-`
-
-const StyledHeader = styled.span`
-  color: #2599d5;
-`
-
-const RelatedDocumentsDropdown = styled(Dropdown)`
-  z-index: 601 !important;
-`
-
-const CustomDivAddDocument = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
-const Rectangle = styled.div`
-  height: 50px;
-  border-radius: 4px;
-  border: solid 1px #84c225;
-  background-color: #ffffff;
-  margin-bottom: 15px;
-  align-items: center;
-  display: flex;
-`
-
-const RectangleRed = styled.div`
-  height: 50px;
-  border-radius: 4px;
-  border: solid 1px #db2828;
-  background-color: #ffffff;
-  margin-bottom: 15px;
-  align-items: center;
-  display: flex;
-`
-
-const CustomCheckCircleRed = styled(CheckCircle)`
-  width: 24px;
-  height: 20px;
-  font-family: feathericon;
-  font-size: 24px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 0.83;
-  letter-spacing: normal;
-  color: #db2828;
-  margin: 0 10px 0 10px;
-`
-
-const CustomCheckCircle = styled(CheckCircle)`
-  width: 24px;
-  height: 20px;
-  font-family: feathericon;
-  font-size: 24px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 0.83;
-  letter-spacing: normal;
-  color: #84c225;
-  margin: 0 10px 0 10px;
-`
-
-const CustomDivAddedMewDocument = styled.div`
-  display: flex;
-`
-
-const CustomDivTextAddedMewDocument = styled.div`
-  font-size: 14px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.43;
-  letter-spacing: normal;
-  color: #848893;
-`
 
 const Orders = props => {
 

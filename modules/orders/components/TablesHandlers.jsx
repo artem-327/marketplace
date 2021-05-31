@@ -16,35 +16,11 @@ import * as Yup from 'yup'
 import { errorMessages, dateValidation, dateBefore } from '../../../constants/yupValidation'
 import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
-
-const PositionHeaderSettings = styled.div`
-  position: relative;
-  z-index: 602;
-`
-
-const CustomRowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: -5px -5px;
-  flex-wrap: wrap;
-
-  > div {
-    align-items: top;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .column {
-    margin: 5px 5px;
-  }
-
-  input,
-  .ui.dropdown {
-    height: 40px;
-  }
-`
+// Styles
+import {
+  PositionHeaderSettings,
+  CustomRowDiv
+} from './Orders.styles'
 
 const filters = {
   all: {
