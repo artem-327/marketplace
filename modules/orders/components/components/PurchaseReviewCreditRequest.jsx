@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -7,7 +6,6 @@ import styled from 'styled-components'
 import moment from 'moment'
 import * as val from 'yup'
 
-import * as Actions from '../../actions'
 import { errorMessages } from '../../../../constants/yupValidation'
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 
@@ -423,13 +421,4 @@ const PurchaseReviewCreditRequest = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { detail } = state.orders
-  return {
-    orderId: detail.id,
-    isSending: state.orders.isSending,
-    creditRequestHistory: detail.creditRequestHistory
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseReviewCreditRequest))
+export default injectIntl(PurchaseReviewCreditRequest)

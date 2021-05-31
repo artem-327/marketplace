@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, GridColumn, GridRow } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -449,18 +448,4 @@ const PurchaseOrderShipping = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { orders } = state
-  const { detail } = orders
-
-  return {
-    applicationName: state?.auth?.identity?.appInfo?.applicationName,
-    order: detail,
-    orderId: detail.id,
-    isSending: orders.isSending,
-    shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    shippingQuotes: getSafe(() => orders.shippingQuotes, {})
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseOrderShipping))
+export default injectIntl(PurchaseOrderShipping)

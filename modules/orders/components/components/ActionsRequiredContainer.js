@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import { getSafe } from '../../../../utils/functions'
 import ActionsRequired from './ActionsRequired'
 import {
     makeGetOrderStatus,

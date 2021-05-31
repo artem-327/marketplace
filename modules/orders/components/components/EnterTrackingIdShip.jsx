@@ -1,12 +1,7 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '../../../../utils/functions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-import { errorMessages } from '../../../../constants/yupValidation'
 import confirm from '../../../../components/Confirmable/confirm'
 const ModalBody = styled(ModalContent)`
   padding: 1.5rem !important;
@@ -120,12 +115,4 @@ const EnterTrackingIdShip = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { detail } = state.orders
-  return {
-    orderId: detail.id,
-    isSending: state.orders.isSending
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(EnterTrackingIdShip))
+export default injectIntl(EnterTrackingIdShip)

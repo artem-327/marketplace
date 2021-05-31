@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -237,12 +235,4 @@ const PurchaseRejectDelivery = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { detail } = state.orders
-  return {
-    orderId: detail.id,
-    isSending: state.orders.isSending
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(PurchaseRejectDelivery))
+export default injectIntl(PurchaseRejectDelivery)

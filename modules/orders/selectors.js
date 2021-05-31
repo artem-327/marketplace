@@ -61,6 +61,10 @@ const getOrderItems = state => state?.orders?.detail?.orderItems.map(orderItem =
         productOffer: orderItem.productOffer
     }
 })
+const getApplicationName = state => state?.auth?.identity?.appInfo?.applicationName
+const getShippingQuotesAreFetching = state => state?.orders?.shippingQuotesAreFetching
+const getShippingQuotes = state => getSafe(() => state.orders.shippingQuotes, {})
+const getCreditRequestHistory = state => state?.orders?.detail?.creditRequestHistory
 
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
@@ -110,3 +114,7 @@ export const makeGetSellEligible = () => createSelector([getSellEligible], sellE
 export const makeGetPoLots = () => createSelector([getPoLots], poLots => poLots)
 export const makeGetOrderId = () => createSelector([getOrderId], orderId => orderId)
 export const makeGetOrderItems = () => createSelector([getOrderItems], orderItems => orderItems)
+export const makeGetApplicationName = () => createSelector([getApplicationName], applicationName => applicationName)
+export const makeGetShippingQuotesAreFetching = () => createSelector([getShippingQuotesAreFetching], shippingQuotesAreFetching => shippingQuotesAreFetching)
+export const makeGetShippingQuotes = () => createSelector([getShippingQuotes], shippingQuotes => shippingQuotes)
+export const makeGetCreditRequestHistory = () => createSelector([getCreditRequestHistory], creditRequestHistory => creditRequestHistory)
