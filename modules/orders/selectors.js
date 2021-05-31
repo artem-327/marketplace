@@ -1,9 +1,7 @@
 import { createSelector } from 'reselect'
 import { getSafe } from '../../utils/functions'
-import { getOrderService } from './services'
 
 
-const getOrder = (state, ownProps) => getOrderService(state, ownProps)
 const getEchoSupportPhone = state => getSafe(() => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value, 'N/A')
 const getIsPaymentCancellable = state => getSafe(() => state.orders.detail.isPaymentCancellable, false)
 const getOpenedAssignLots = state => state?.orders?.openedAssignLots
@@ -37,7 +35,6 @@ const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders
 const getIsFetching = state => state?.orders?.isFetching
 const getTableHandlersFilters = state => state?.orders?.tableHandlersFilters
 
-export const makeGetOrder = () => createSelector([getOrder], order => order)
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
 export const makeGetOpenedAssignLots = () => createSelector([getOpenedAssignLots], openedAssignLots => openedAssignLots)

@@ -5,7 +5,7 @@ import { FormattedNumber } from 'react-intl'
 import { currency, currencyUSSymbol } from '../../constants/index'
 import { getLocaleDateFormat } from '../../components/date-format'
 
-export const getOrderService = (state, ownProps) => {
+export const getOrder = (state, ownProps) => {
     if (ownProps.router.query.type !== state.orders.detailType) {
       state.orders.detail = {}
     }

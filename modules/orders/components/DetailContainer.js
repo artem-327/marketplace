@@ -2,9 +2,9 @@ import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
 import { downloadAttachment, addAttachment } from '../../inventory/actions'
+import { getOrder } from '../services'
 
 import {
-  makeGetOrder,
   makeGetEchoSupportPhone,
   makeGetIsPaymentCancellable,
   makeGetOpenedAssignLots,
@@ -31,7 +31,6 @@ import {
 } from '../selectors'
 
 const makeMapStateToProps = () => {
-  const getOrder = makeGetOrder()
   const getEchoSupportPhone = makeGetEchoSupportPhone()
   const getIsPaymentCancellable = makeGetIsPaymentCancellable()
   const getOpenedAssignLots = makeGetOpenedAssignLots()
