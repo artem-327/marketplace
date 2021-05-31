@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import { defaultTabs } from './constants'
-import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   tabsNames: defaultTabs,
