@@ -44,7 +44,6 @@ const Orders = props => {
       sortDirection: '',
       sortPath: ''
     },
-    LastEndpointType: '',
     openModal: false,
     documentType: '',
     openUploadAttachment: false,

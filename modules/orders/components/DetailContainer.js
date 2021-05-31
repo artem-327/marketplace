@@ -28,7 +28,7 @@ import {
   makeGetIsSending,
   makeGetopenedDisputedRequest,
   makeGetAppInfo
-} from './Detail.selectors'
+} from '../selectors'
 
 const makeMapStateToProps = () => {
   const getOrder = makeGetOrder()

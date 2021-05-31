@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { OrderSegment, OrderList } from '../Detail'
+import { OrderSegment, OrderList } from '../Detail.styles'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'

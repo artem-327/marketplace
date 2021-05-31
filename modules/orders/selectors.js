@@ -27,6 +27,14 @@ const getIsThirdPartyConnectionException = state => getSafe(() => state.orders.i
 const getIsSending = state => state?.orders?.isSending
 const getopenedDisputedRequest = state => state?.orders?.openedDisputedRequest
 const getAppInfo = state => state?.auth?.identity?.appInfo
+const getIsOpen = state => state?.isOpen
+const getFilterData = state => state?.forms?.filter
+const getActiveStatus = state => state?.orders?.statusFilter
+const getDocumentTypesFetching = state => state?.orders?.documentTypesFetching
+const getTutorialCompleted = state => getSafe(() => state.auth.identity.tutorialCompleted, false)
+const getRelatedOrders = state => state?.orders?.relatedOrders
+const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders
+const getIsFetching = state => state?.orders?.isFetching
 
 export const makeGetOrder = () => createSelector([getOrder], order => order)
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
@@ -52,3 +60,11 @@ export const makeGetIsThirdPartyConnectionException = () => createSelector([getI
 export const makeGetIsSending = () => createSelector([getIsSending], isSending => isSending)
 export const makeGetopenedDisputedRequest = () => createSelector([getopenedDisputedRequest], openedDisputedRequest => openedDisputedRequest)
 export const makeGetAppInfo = () => createSelector([getAppInfo], appInfo => appInfo)
+export const makeGetIsOpen = () => createSelector([getIsOpen], isOpen => isOpen)
+export const makeGetFilterData = () => createSelector([getFilterData], filterData => filterData)
+export const makeGetActiveStatus = () => createSelector([getActiveStatus], activeStatus => activeStatus)
+export const makeGetDocumentTypesFetching = () => createSelector([getDocumentTypesFetching], documentTypesFetching => documentTypesFetching)
+export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => tutorialCompleted)
+export const makeGetRelatedOrders = () => createSelector([getRelatedOrders], relatedOrders => relatedOrders)
+export const makeGetLoadRelatedOrders = () => createSelector([getLoadRelatedOrders], loadRelatedOrders => loadRelatedOrders)
+export const makeGetIsFetching = () => createSelector([getIsFetching], isFetching => isFetching)
