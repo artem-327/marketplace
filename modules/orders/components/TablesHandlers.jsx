@@ -2,14 +2,11 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'
-import { debounce } from 'lodash'
-import styled from 'styled-components'
-import { withToastManager } from 'react-toast-notifications'
 import { DateInput } from '../../../components/custom-formik'
 import * as Actions from '../actions'
 import { withDatagrid } from '../../datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { generateToastMarkup, getSafe } from '../../../utils/functions'
+import { getSafe } from '../../../utils/functions'
 import moment from 'moment'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -21,120 +18,8 @@ import {
   PositionHeaderSettings,
   CustomRowDiv
 } from './Orders.styles'
-
-const filters = {
-  all: {
-    filters: []
-  },
-  draft: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Draft`]
-      }
-    ]
-  },
-  pending: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Pending`]
-      }
-    ]
-  },
-  inTransit: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`In Transit`]
-      }
-    ]
-  },
-  review: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Review`]
-      }
-    ]
-  },
-  credit: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Credit`]
-      }
-    ]
-  },
-  completed: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Completed`]
-      }
-    ]
-  },
-  toShip: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`To Ship`]
-      }
-    ]
-  },
-  returned: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Returned`]
-      }
-    ]
-  },
-  declined: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Declined`]
-      }
-    ]
-  },
-  cancelled: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Cancelled`]
-      }
-    ]
-  },
-  toReturn: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`To Return`]
-      }
-    ]
-  },
-  confirmed: {
-    filters: [
-      {
-        operator: 'EQUALS',
-        path: 'Order.cfGlobalStatus',
-        values: [`Confirmed`]
-      }
-    ]
-  }
-}
+// Constants
+import { filters } from '../constants'
 
 const validationSchema = Yup.lazy(values => {
   let validationObject = {
@@ -410,13 +295,4 @@ const TablesHandlers = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    ...state,
-    tableHandlersFilters: state.orders.tableHandlersFilters
-  }
-}
-
-export default withDatagrid(
-  withDatagrid(withToastManager(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers))))
-)
+export default withDatagrid(injectIntl(TablesHandlers))

@@ -35,6 +35,7 @@ const getTutorialCompleted = state => getSafe(() => state.auth.identity.tutorial
 const getRelatedOrders = state => state?.orders?.relatedOrders
 const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders
 const getIsFetching = state => state?.orders?.isFetching
+const getTableHandlersFilters = state => state?.orders?.tableHandlersFilters
 
 export const makeGetOrder = () => createSelector([getOrder], order => order)
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
@@ -68,3 +69,4 @@ export const makeGetTutorialCompleted = () => createSelector([getTutorialComplet
 export const makeGetRelatedOrders = () => createSelector([getRelatedOrders], relatedOrders => relatedOrders)
 export const makeGetLoadRelatedOrders = () => createSelector([getLoadRelatedOrders], loadRelatedOrders => loadRelatedOrders)
 export const makeGetIsFetching = () => createSelector([getIsFetching], isFetching => isFetching)
+export const makeGetTableHandlersFilters = () => createSelector([getTableHandlersFilters], tableHandlersFilters => tableHandlersFilters)

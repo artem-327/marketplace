@@ -1,24 +1,19 @@
 import { useState } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
-import styled, { withTheme } from 'styled-components'
+import { Modal, Container, Icon, Button } from 'semantic-ui-react'
 
 import Spinner from '../../../components/Spinner/Spinner'
 import ProdexGrid from '../../../components/table'
 import ActionCell from '../../../components/table/ActionCell'
-import { getSafe, generateToastMarkup } from '../../../utils/functions'
-import { filterPresets } from '../../../modules/filter/constants/filter'
+import { getSafe } from '../../../utils/functions'
 import { currency } from '../../../constants/index'
 import { ArrayToFirstItem } from '../../../components/formatted-messages'
-import Link from 'next/link'
 import { CheckCircle, ChevronDown, ChevronUp, ChevronRight } from 'react-feather'
-import { handleFiltersValue } from '../../../modules/settings/actions'
 import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '../../../modules/attachments'
 import { uniqueArrayByKey } from '../../../utils/functions'
 import Tutorial from '../../../modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'
-import { debounce } from 'lodash'
 import DetailRow from '../../../components/detail-row'
 //Constants
 import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
@@ -872,7 +867,7 @@ const Orders = props => {
     return <></>
   }
 
-  const { isFetching, currentTab, datagrid, tutorialCompleted } = props
+  const { isFetching, currentTab, datagrid, tutorialCompleted, tableHandlersFilters, saveFilters } = props
 
   const { relatedPopupParams } = state
   let ordersType = currentTab.charAt(0).toUpperCase() + currentTab.slice(1)
@@ -949,7 +944,7 @@ const Orders = props => {
 
       {<Tutorial marginOrders isTutorial={false} isBusinessVerification={true} />}
       <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
-        <TablesHandlers currentTab={currentTab} />
+        <TablesHandlers currentTab={currentTab} tableHandlersFilters={tableHandlersFilters} saveFilters={saveFilters} />
       </Container>
       <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
         {isFetching ? (
@@ -968,7 +963,6 @@ const Orders = props => {
                 if (row.root && row.orderItems.length) {
                   let ids = state.expandedRowIds.slice()
                   if (ids.includes(row.id)) {
-                    //ids.filter(id => id === row.id)
                     setState({ ...state, expandedRowIds: ids.filter(id => id !== row.id) })
                   } else {
                     ids.push(row.id)
@@ -978,7 +972,6 @@ const Orders = props => {
               }}
               expandedRowIds={state.expandedRowIds}
               onExpandedRowIdsChange={expandedRowIds => setState({ ...state, expandedRowIds })}
-              // onSortingChange={sorting => sorting.sortPath && setState({ sorting })}
               defaultSorting={{ columnName: 'orderId', sortPath: 'Order.id', direction: 'desc' }}
               estimatedRowHeight={1000}
             />

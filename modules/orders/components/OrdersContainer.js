@@ -20,7 +20,8 @@ import {
   makeGetRelatedOrders,
   makeGetLoadRelatedOrders,
   makeGetLoadingRelatedDocuments,
-  makeGetIsFetching
+  makeGetIsFetching,
+  makeGetTableHandlersFilters
 } from '../selectors'
 
 const makeMapStateToProps = () => {
@@ -34,6 +35,7 @@ const makeMapStateToProps = () => {
   const getLoadRelatedOrders = makeGetLoadRelatedOrders()
   const getLoadingRelatedDocuments = makeGetLoadingRelatedDocuments()
   const getIsFetching = makeGetIsFetching()
+  const getTableHandlersFilters = makeGetTableHandlersFilters()
 
   const mapStateToProps = (state, { router, datagrid, currentTab }) => {
     return {
@@ -47,7 +49,8 @@ const makeMapStateToProps = () => {
       relatedOrders: getRelatedOrders(state),
       loadRelatedOrders: getLoadRelatedOrders(state),
       loadingRelatedDocuments: getLoadingRelatedDocuments(state),
-      isFetching: getIsFetching(state)
+      isFetching: getIsFetching(state),
+      tableHandlersFilters: getTableHandlersFilters(state)
     }
   }
   return mapStateToProps
