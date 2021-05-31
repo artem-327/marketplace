@@ -67,7 +67,7 @@ const DhsPopup = props => {
                 type='button'
                 color='blue'
                 onClick={() => onAccept()}>
-                <FormattedMessage id='marketplace.iUnderstand' defaultMessage='I understand'>
+                <FormattedMessage id='marketplace.iAgree' defaultMessage='I agree'>
                   {text => text}
                 </FormattedMessage>
               </Button>

@@ -2607,6 +2607,7 @@
   "marketplace.tooltipConformingIcon": "Shows if Product Offer has set conforming attribute",
   "marketplace.tooltipExpired": "Shows if Product Offer is expired",
   "marketplace.iUnderstand": "I understand",
+  "marketplace.iAgree": "I agree",
   "marketplace.deaDescription": "This product contains a chemical that is designated by the DEA as a List II Chemical. Before checking out, please ensure that the facility you are using understands the {requirements} to store List II substances.",
   "marketplace.requirements": "requirements",
   "marketplace.dhsDescription": "This product is a {DhsChemicalOfInterest} and by adding this product to your order you are agreeing that your facility currently meets or will meet the regulatory standards to house this product within 60 days of receiving it. Please review this {cfats} document listing your facility's responsibilities for handling COIs.",
