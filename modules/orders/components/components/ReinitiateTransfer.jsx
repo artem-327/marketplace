@@ -1,9 +1,6 @@
-import { Component, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
+import { useEffect, useState } from 'react'
 import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { getSafe } from '../../../../utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -128,14 +125,4 @@ const ReinitiateTransfer = props => {
   )
 }
 
-function mapStateToProps(state) {
-  return {
-    orderId: state.orders.detail.id,
-    bankAccounts: state.orders.bankAccounts,
-    bankAccountsLoading: state.orders.bankAccountsLoading,
-    paymentProcessor: getSafe(() => state.auth.identity.company.paymentProcessor, ''),
-    isThirdPartyConnectionException: getSafe(() => state.orders.isThirdPartyConnectionException, '')
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(ReinitiateTransfer))
+export default injectIntl(ReinitiateTransfer)

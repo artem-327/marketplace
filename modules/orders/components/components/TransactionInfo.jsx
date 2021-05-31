@@ -1,5 +1,3 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
 import { OrderSegment, OrderList } from '../Detail.styles'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import styled from 'styled-components'
@@ -79,18 +77,4 @@ const TransactionInfo = props => {
   )
 }
 
-function mapStateToProps(store) {
-  return {
-    applicationName: store?.auth?.identity?.appInfo?.applicationName
-  }
-}
-
-TransactionInfo.defaultProps = {
-  order: {
-    buyerCompanyName: '',
-    dwollaTransfers: []
-  },
-  echoSupportPhone: ''
-}
-
-export default connect(mapStateToProps)(injectIntl(TransactionInfo))
+export default injectIntl(TransactionInfo)

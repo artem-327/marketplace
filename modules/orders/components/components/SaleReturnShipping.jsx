@@ -1,5 +1,4 @@
-import { Component, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import {
   Modal,
@@ -29,8 +28,6 @@ import '../../../purchase-order/styles/PurchaseOrder.scss'
 import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
 import { getSafe } from '../../../../utils/functions'
 import FreightLabel from '../../../../components/freight'
-//Actions
-import * as Actions from '../../actions'
 //Styled
 import styled from 'styled-components'
 
@@ -438,18 +435,4 @@ const SaleReturnShipping = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { orders } = state
-  const { detail } = orders
-
-  return {
-    applicationName: state?.auth?.identity?.appInfo?.applicationName,
-    order: detail,
-    orderId: detail.id,
-    isSending: orders.isSending,
-    shippingQuotesAreFetching: orders.shippingQuotesAreFetching,
-    shippingQuotes: orders.returnShipmentRates
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(injectIntl(SaleReturnShipping))
+export default injectIntl(SaleReturnShipping)

@@ -25,17 +25,17 @@ import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud, Link2 }
 import { FormattedMessage } from 'react-intl'
 import ActionsRequired from './components/ActionsRequiredContainer'
 import AssignLots from './components/AssignLotsContainer'
-import ReinitiateTransfer from './components/ReinitiateTransfer'
+import ReinitiateTransfer from './components/ReinitiateTransferContainer'
 import EnterTrackingIdShip from './components/EnterTrackingIdShipContainer'
 import EnterTrackingIdReturnShip from './components/EnterTrackingIdReturnShipContainer'
 
 import PurchaseRejectDelivery from './components/PurchaseRejectDeliveryContainer'
 import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDeliveryContainer'
 import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequestContainer'
-import SaleReviewCreditRequest from './components/SaleReviewCreditRequest'
-import SaleReturnShipping from './components/SaleReturnShipping'
+import SaleReviewCreditRequest from './components/SaleReviewCreditRequestContainer'
+import SaleReturnShipping from './components/SaleReturnShippingContainer'
 import PurchaseOrderShipping from './components/PurchaseOrderShippingContainer'
-import SaleAttachingProductOffer from './components/SaleAttachingProductOffer'
+import SaleAttachingProductOffer from './components/SaleAttachingProductOfferContainer'
 
 import confirm from '../../../components/Confirmable/confirm'
 import moment from 'moment/moment'
@@ -46,7 +46,7 @@ import { injectIntl, FormattedNumber } from 'react-intl'
 import { AttachmentManager } from '../../attachments'
 import ProdexGrid from '../../../components/table'
 import { getLocaleDateFormat } from '../../../components/date-format'
-import TransactionInfo from './components/TransactionInfo'
+import TransactionInfo from './components/TransactionInfoConatiner'
 
 import {
   Rectangle,

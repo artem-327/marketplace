@@ -1,5 +1,4 @@
-import { Component, useEffect, useState } from 'react'
-import { connect } from 'react-redux'
+import { useEffect, useState } from 'react'
 import {
   Modal,
   Dimmer,
@@ -22,11 +21,9 @@ import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 import moment from 'moment'
 
-import * as Actions from '../../actions'
 import { getSafe, generateToastMarkup } from '../../../../utils/functions'
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 import confirm from '../../../../components/Confirmable/confirm'
-import { loadFile, addAttachment } from '../../../inventory/actions'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import { UploadCloud } from 'react-feather'
 
@@ -696,44 +693,4 @@ const SaleAttachingProductOffer = props => {
   )
 }
 
-function mapStateToProps(state, { orderItems }) {
-  const { detail } = state.orders
-
-  const productOffersPkgAmount = new Map()
-  const items = getSafe(() => detail.orderItems, '')
-  if (items.length) {
-    items.forEach(item => {
-      if (item && item.productOffers && item.productOffers.length) {
-        item.productOffers.forEach(offer => {
-          productOffersPkgAmount.set(offer.id, offer.pkgAmount)
-        })
-      }
-    })
-  }
-  function myFunc(total, num) {
-    return total + num
-  }
-  return {
-    orderId: getSafe(() => detail.id, null),
-    orderItemsId: orderItems
-      .filter(item => {
-        if (item.productOffers.some(product => product.virtual)) return item.id
-      })
-      .map(orderItem => orderItem.id),
-    loadingGroupedProductOffer: getSafe(() => state.orders.loadingGroupedProductOffer, false),
-    groupedProductOffers: getSafe(() => state.orders.groupedProductOffers, false),
-    available: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
-      if (!Array.isArray(offer)) return
-      return offer.reduce((total, pkg) => total + pkg.pkgAvailable)
-    }),
-    allocated: getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
-      if (!Array.isArray(offer)) return
-      return offer.reduce((total, pkg) => total + pkg.pkgAllocated)
-    }),
-    productOffersPkgAmount
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions, addAttachment })(
-  withToastManager(injectIntl(SaleAttachingProductOffer))
-)
+export default withToastManager(injectIntl(SaleAttachingProductOffer))

@@ -1,6 +1,3 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -84,12 +81,4 @@ const SaleNewShipping = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { detail } = state.orders
-  return {
-    orderId: detail.id,
-    isSending: state.orders.isSending
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(SaleNewShipping)))
+export default withToastManager(injectIntl(SaleNewShipping))

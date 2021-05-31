@@ -65,6 +65,19 @@ const getApplicationName = state => state?.auth?.identity?.appInfo?.applicationN
 const getShippingQuotesAreFetching = state => state?.orders?.shippingQuotesAreFetching
 const getShippingQuotes = state => getSafe(() => state.orders.shippingQuotes, {})
 const getCreditRequestHistory = state => state?.orders?.detail?.creditRequestHistory
+const getBankAccounts = state => state?.orders?.bankAccounts
+const getBankAccountsLoading = state => state?.orders?.bankAccountsLoading
+const getPaymentProcessor = state => getSafe(() => state.auth.identity.company.paymentProcessor, '')
+const getLoadingGroupedProductOffer = state => getSafe(() => state.orders.loadingGroupedProductOffer, false)
+const getGroupedProductOffers = state => getSafe(() => state.orders.groupedProductOffers, false)
+const getAvailable = state => getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+    if (!Array.isArray(offer)) return
+    return offer.reduce((total, pkg) => total + pkg.pkgAvailable)
+})
+const getAllocated = state => getSafe(() => state.orders.groupedProductOffers, []).map(offer => {
+    if (!Array.isArray(offer)) return
+    return offer.reduce((total, pkg) => total + pkg.pkgAllocated)
+})
 
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
@@ -118,3 +131,10 @@ export const makeGetApplicationName = () => createSelector([getApplicationName],
 export const makeGetShippingQuotesAreFetching = () => createSelector([getShippingQuotesAreFetching], shippingQuotesAreFetching => shippingQuotesAreFetching)
 export const makeGetShippingQuotes = () => createSelector([getShippingQuotes], shippingQuotes => shippingQuotes)
 export const makeGetCreditRequestHistory = () => createSelector([getCreditRequestHistory], creditRequestHistory => creditRequestHistory)
+export const makeGetBankAccounts = () => createSelector([getBankAccounts], bankAccounts => bankAccounts)
+export const makeGetBankAccountsLoading = () => createSelector([getBankAccountsLoading], bankAccountsLoading => bankAccountsLoading)
+export const makeGetPaymentProcessor = () => createSelector([getPaymentProcessor], paymentProcessor => paymentProcessor)
+export const makeGetLoadingGroupedProductOffer = () => createSelector([getLoadingGroupedProductOffer], loadingGroupedProductOffer => loadingGroupedProductOffer)
+export const makeGetGroupedProductOffers = () => createSelector([getGroupedProductOffers], groupedProductOffers => groupedProductOffers)
+export const makeGetAvailable = () => createSelector([getAvailable], available => available)
+export const makeGetAllocated = () => createSelector([getAllocated], allocated => allocated)
