@@ -12,7 +12,6 @@ import { currency } from '~/constants/index'
 import { getSafe } from '~/utils/functions'
 //Actions
 import {
-  getUsersDataRequest,
   openSidebar,
   openPopup,
   handleOpenConfirmPopup,
@@ -121,10 +120,6 @@ class UsersTable extends Component {
     if (editedItem !== oldProps.editedItem) {
       datagrid.updateRow(editedItem.id, this.getEditedUser)
     }
-  }
-
-  componentDidMount() {
-    this.props.getUsersDataRequest()
   }
 
   getEditedUser = () => {
@@ -249,7 +244,6 @@ class UsersTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getUsersDataRequest,
   openSidebar,
   openPopup,
   openRolesPopup,
@@ -296,7 +290,7 @@ const userEnableDisableStatus = (r, currentUserId) => {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-  const currentUserId = state.settings.currentUser && state.settings.currentUser.id
+  const currentUserId = getSafe(() => state.auth.identity.id, null)
   return {
     primaryUserId: getSafe(() => state.auth.identity.company.primaryUser.id, ''),
     rows: datagrid.rows.map(user => {

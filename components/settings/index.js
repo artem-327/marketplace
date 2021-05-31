@@ -166,17 +166,35 @@ class Settings extends Component {
   }
 
   async componentDidMount() {
-    let { role } = this.props
-    let settings = await api.getSettings(role)
-    let settingsWithoutTradepass = settings?.filter(s => s.code !== 'TRADEPASS_CRITERIA')
-    let { systemSettings, validationSchema } = this.parseData(settingsWithoutTradepass)
+    if (!this.props.asModal) {
+      let {role} = this.props
+      let settings = await api.getSettings(role)
+      let settingsWithoutTradepass = settings?.filter(s => s.code !== 'TRADEPASS_CRITERIA')
+      let {systemSettings, validationSchema} = this.parseData(settingsWithoutTradepass)
 
-    this.setState({
-      fetching: false,
-      systemSettings,
-      validationSchema,
-      loading: false
-    })
+      this.setState({
+        fetching: false,
+        systemSettings,
+        validationSchema,
+        loading: false
+      })
+    }
+  }
+
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!prevProps.open && this.props.open) {
+      let { role } = this.props
+      let settings = await api.getSettings(role)
+      let settingsWithoutTradepass = settings?.filter(s => s.code !== 'TRADEPASS_CRITERIA')
+      let { systemSettings, validationSchema } = this.parseData(settingsWithoutTradepass)
+
+      this.setState({
+        fetching: false,
+        systemSettings,
+        validationSchema,
+        loading: false
+      })
+    }
   }
 
   parseData = systemSettings => {

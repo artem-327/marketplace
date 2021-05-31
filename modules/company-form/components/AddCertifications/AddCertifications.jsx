@@ -173,8 +173,8 @@ AddCertifications.defaultProps = {
 function mapStateToProps(state) {
   return {
     documentTypesFederalOwnershipCertifications:
-      getSafe(() => state.businessTypes.documentTypesFederalOwnershipCertifications, []),
-    documentTypesManagementCertifications: getSafe(() => state.businessTypes.documentTypesManagementCertifications, [])
+      getSafe(() => state.simpleAdd.documentTypesFederalOwnershipCertifications, []),
+    documentTypesManagementCertifications: getSafe(() => state.simpleAdd.documentTypesManagementCertifications, [])
   }
 }
 

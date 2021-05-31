@@ -75,7 +75,6 @@ const CompanyDetails = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     try {
-      if (!getSafe(() => props.documentTypesAll.length, false)) props.getDocumentTypes()
       if (!getSafe(() => props.naicsCodes.data.length, false)) props.getNaicsCodes()
       if (!getSafe(() => props.businessTypes.length, false)) props.getBusinessTypes()
       if (!getSafe(() => props.associations.length, false)) props.getAssociations({ filters: [], pageSize: 50 })
@@ -522,13 +521,13 @@ function mapStateToProps(state) {
     loading: getSafe(() => state.businessTypes.loading, false),
     deleting: getSafe(() => state.simpleAdd.updatingDatagrid, false),
     associations: getSafe(() => state.businessTypes.associations, []),
-    documentTypesLoading: getSafe(() => state.businessTypes.documentTypesLoading, false),
-    documentTypesAll: getSafe(() => state.businessTypes.documentTypesAll, []),
+    documentTypesAll: getSafe(() => state.simpleAdd.documentTypesAll, []),
+    documentTypesLoading: getSafe(() => state.simpleAdd.documentTypesFetching, false),
     documentTypesFederalOwnershipCertifications: getSafe(
-      () => state.businessTypes.documentTypesFederalOwnershipCertifications,
+      () => state.simpleAdd.documentTypesFederalOwnershipCertifications,
       []
     ),
-    documentTypesManagementCertifications: getSafe(() => state.businessTypes.documentTypesManagementCertifications, []),
+    documentTypesManagementCertifications: getSafe(() => state.simpleAdd.documentTypesManagementCertifications, []),
     companyLegalDocs: getSafe(() => state.businessTypes.companyLegalDocs, []),
     companyLegalDocsLoading: getSafe(() => state.businessTypes.companyLegalDocsLoading, false),
     managementCertificationsDocs: getSafe(() => state.businessTypes.managementCertificationsDocs, []),
