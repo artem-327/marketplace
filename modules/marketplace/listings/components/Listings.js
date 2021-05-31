@@ -595,16 +595,26 @@ class Listings extends Component {
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
         {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })} />}
-        {buyAttemptHasDea &&
+        {buyAttemptHasDea && !buyAttemptHasDhs &&
           <DeaPopup
             onCancel={() => this.setState({ buyAttemptHasDea: null })}
-            onAccept={() => this.tableRowClicked(buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)}
+            onAccept={() => {
+              this.tableRowClicked(buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)
+              this.setState({ buyAttemptHasDea: null })
+            }}
           />
         }
         {buyAttemptHasDhs &&
           <DhsPopup
-            onCancel={() => this.setState({ buyAttemptHasDhs: null })}
-            onAccept={() => this.tableRowClicked(buyAttemptHasDhs.id, buyAttemptHasDhs?.sellerId)}
+            onCancel={() => this.setState({ buyAttemptHasDhs: null, buyAttemptHasDea: null })}
+            onAccept={() => {
+              if (buyAttemptHasDea) {
+                this.setState({ buyAttemptHasDhs: null })
+              } else {
+                this.tableRowClicked(buyAttemptHasDhs.id, buyAttemptHasDhs?.sellerId)
+                this.setState({ buyAttemptHasDhs: null })
+              }
+            }}
           />
         }
       </Container>

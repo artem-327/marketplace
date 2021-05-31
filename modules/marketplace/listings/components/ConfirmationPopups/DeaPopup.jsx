@@ -57,10 +57,7 @@ const DeaPopup = props => {
               <Button
                 type='button'
                 color='blue'
-                onClick={() => {
-                  onAccept()
-                  onCancel()
-                }}>
+                onClick={() => onAccept()}>
                 <FormattedMessage id='marketplace.iUnderstand' defaultMessage='I understand'>
                   {text => text}
                 </FormattedMessage>
