@@ -1,7 +1,4 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
-import { loadFile, addAttachment } from '../../../inventory/actions'
 import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from 'semantic-ui-react'
 import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FieldArray } from 'formik'
@@ -643,21 +640,4 @@ const AssignLots = props => {
   )
 }
 
-function mapStateToProps(state) {
-  const { detail } = state.orders
-
-  return {
-    poLots: getSafe(() => detail.poLots, []),
-    orderId: detail.id,
-    orderItems: detail.orderItems.map(orderItem => {
-      return {
-        id: orderItem.id,
-        lots: orderItem.lots,
-        amount: orderItem.amount,
-        productOffer: orderItem.productOffer
-      }
-    })
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions, loadFile, addAttachment })(injectIntl(AssignLots))
+export default injectIntl(AssignLots)

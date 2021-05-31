@@ -51,6 +51,16 @@ const getOpenedPopup = state => state?.orders?.openedEnterTrackingIdShip |
     state?.orders?.opendSaleAttachingProductOffer
 const getActionNeeded = state => getSafe(() => state.orders.detail.actionNeeded, '')
 const getSellEligible = state => getSafe(() => state.auth.identity.company.sellEligible, false)
+const getPoLots = state => getSafe(() => state.orders.detail.poLots, [])
+const getOrderId = state => state?.orders?.detail?.id
+const getOrderItems = state => state?.orders?.detail?.orderItems.map(orderItem => {
+    return {
+        id: orderItem.id,
+        lots: orderItem.lots,
+        amount: orderItem.amount,
+        productOffer: orderItem.productOffer
+    }
+})
 
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
@@ -97,3 +107,6 @@ export const makeGetOrderCreditHistoryOpen = () => createSelector([getOrderCredi
 export const makeGetOpenedPopup = () => createSelector([getOpenedPopup], openedPopup => openedPopup)
 export const makeGetActionNeeded = () => createSelector([getActionNeeded], actionNeeded => actionNeeded)
 export const makeGetSellEligible = () => createSelector([getSellEligible], sellEligible => sellEligible)
+export const makeGetPoLots = () => createSelector([getPoLots], poLots => poLots)
+export const makeGetOrderId = () => createSelector([getOrderId], orderId => orderId)
+export const makeGetOrderItems = () => createSelector([getOrderItems], orderItems => orderItems)
