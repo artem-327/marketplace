@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../../utils/functions'
 import Logo from '../../../../../assets/images/marketplace/dea-logo.svg'
 
 // Styles

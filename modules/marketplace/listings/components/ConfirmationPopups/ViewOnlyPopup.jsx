@@ -2,7 +2,7 @@
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../../utils/functions'
 import Logo from '../../../../../assets/images/blue-pallet/blue-pallet-circle.svg'
 
 // Styles
