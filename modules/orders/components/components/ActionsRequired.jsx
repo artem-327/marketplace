@@ -1,12 +1,8 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe, generateToastMarkup } from '../../../../utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import moment from 'moment/moment'
 import confirm from '../../../../components/Confirmable/confirm'
-import { withToastManager } from 'react-toast-notifications'
 import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
 import styled from 'styled-components'
 
@@ -323,17 +319,6 @@ const ActionsRequired = props => {
                 }
               ])
             : null}
-          {/* Do not show any buttons related to returning order. We do not support returning order at this moment https://bluepallet.atlassian.net/browse/DT-140?focusedCommentId=11885
-          {orderStatus === 2 && reviewStatus === 3 && returnStatus === 0 // CONFIRMED && Rejected && null
-            ? renderSegment(null, 11, null, 'order.returnShipmentSale.description', [
-                {
-                  buttonType: 'primary',
-                  onClick: () => openPopupName('openedSaleReturnShipping'),
-                  dataTest: 'orders_detail_returnShipmentSale_btn',
-                  text: 'order.returnShipmentSale'
-                }
-              ])
-            : null} */}
 
           {orderStatus === 2 && returnStatus === 2 // Confirmed && IN_TRANSIT
             ? renderSegment(null, 11, null, 'order.returnInTransit.description', [
@@ -486,52 +471,4 @@ const ActionsRequired = props => {
   )
 }
 
-function checkAssignLotsRequired(data) {
-  const status = getSafe(
-    () =>
-      data.orderItems.filter(orderItem => {
-        return (
-          orderItem.amount ===
-          orderItem.lots.reduce(function (allocated, lot) {
-            return allocated + lot.amount
-          }, 0)
-        )
-      }).length === data.orderItems.length,
-    false
-  )
-  return status
-}
-
-function mapStateToProps(state, ownProps) {
-  const { orders } = state
-  return {
-    orderStatus: getSafe(() => orders.detail.orderStatus, 0),
-    shippingStatus: getSafe(() => orders.detail.shippingStatus, 0),
-    reviewStatus: getSafe(() => orders.detail.reviewStatus, 0),
-    creditReviewStatus: getSafe(() => orders.detail.creditReviewStatus, 0),
-    disputeResolutionStatus: getSafe(() => orders.detail.disputeResolutionStatus, 0),
-    returnStatus: getSafe(() => orders.detail.returnStatus, 0),
-    assignLotsRequired: false, // checkAssignLotsRequired(orders.detail),
-    isSending: orders.isSending,
-    fundingSourceId: '?', // ! ! which param? (string)
-
-    order: ownProps.order,
-    detail: orders.detail,
-    ordersType: ownProps.ordersType,
-    shippingTrackingCode: orders.detail.shippingTrackingCode ? orders.detail.shippingTrackingCode : '',
-    returnShippingTrackingCode: orders.detail.returnShippingTrackingCode
-      ? orders.detail.returnShippingTrackingCode
-      : '',
-    orderCreditHistoryOpen: getSafe(() => orders.detail.orderCreditHistoryOpen, false),
-    openedPopup:
-      orders.openedEnterTrackingIdShip |
-      orders.openedEnterTrackingIdReturnShip |
-      orders.openedPurchaseRejectDelivery |
-      orders.openedPurchaseRequestCreditDelivery |
-      orders.opendSaleAttachingProductOffer,
-    sellEligible: getSafe(() => state.auth.identity.company.sellEligible, false),
-    actionNeeded: getSafe(() => orders.detail.actionNeeded, '')
-  }
-}
-
-export default connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(ActionsRequired)))
+export default injectIntl(ActionsRequired)

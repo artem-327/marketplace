@@ -34,6 +34,23 @@ const getRelatedOrders = state => state?.orders?.relatedOrders
 const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders
 const getIsFetching = state => state?.orders?.isFetching
 const getTableHandlersFilters = state => state?.orders?.tableHandlersFilters
+const getOrderStatus = state => getSafe(() => state.orders.detail.orderStatus, 0)
+const getShippingStatus = state => getSafe(() => state.orders.detail.shippingStatus, 0)
+const getReviewStatus = state => getSafe(() => state.orders.detail.reviewStatus, 0)
+const getCreditReviewStatus = state => getSafe(() => state.orders.detail.creditReviewStatus, 0)
+const getDisputeResolutionStatus = state => getSafe(() => state.orders.detail.disputeResolutionStatus, 0)
+const getReturnStatus = state => getSafe(() => state.orders.detail.returnStatus, 0)
+const getDetail = state => state?.orders?.detail
+const getShippingTrackingCode = state => getSafe(() => state.orders.detail.shippingTrackingCode, '')
+const getReturnShippingTrackingCode = state => getSafe(() => state.orders.detail.returnShippingTrackingCode, '')
+const getOrderCreditHistoryOpen = state => getSafe(() => state.orders.detail.orderCreditHistoryOpen, false)
+const getOpenedPopup = state => state?.orders?.openedEnterTrackingIdShip |
+    state?.orders?.openedEnterTrackingIdReturnShip |
+    state?.orders?.openedPurchaseRejectDelivery |
+    state?.orders?.openedPurchaseRequestCreditDelivery |
+    state?.orders?.opendSaleAttachingProductOffer
+const getActionNeeded = state => getSafe(() => state.orders.detail.actionNeeded, '')
+const getSellEligible = state => getSafe(() => state.auth.identity.company.sellEligible, false)
 
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
@@ -67,3 +84,16 @@ export const makeGetRelatedOrders = () => createSelector([getRelatedOrders], rel
 export const makeGetLoadRelatedOrders = () => createSelector([getLoadRelatedOrders], loadRelatedOrders => loadRelatedOrders)
 export const makeGetIsFetching = () => createSelector([getIsFetching], isFetching => isFetching)
 export const makeGetTableHandlersFilters = () => createSelector([getTableHandlersFilters], tableHandlersFilters => tableHandlersFilters)
+export const makeGetOrderStatus = () => createSelector([getOrderStatus], orderStatus => orderStatus)
+export const makeGetShippingStatus = () => createSelector([getShippingStatus], shippingStatus => shippingStatus)
+export const makeGetReviewStatus = () => createSelector([getReviewStatus], reviewStatus => reviewStatus)
+export const makeGetCreditReviewStatus = () => createSelector([getCreditReviewStatus], creditReviewStatus => creditReviewStatus)
+export const makeGetDisputeResolutionStatus = () => createSelector([getDisputeResolutionStatus], disputeResolutionStatus => disputeResolutionStatus)
+export const makeGetReturnStatus = () => createSelector([getReturnStatus], returnStatus => returnStatus)
+export const makeGetDetail = () => createSelector([getDetail], detail => detail)
+export const makeGetShippingTrackingCode = () => createSelector([getShippingTrackingCode], shippingTrackingCode => shippingTrackingCode)
+export const makeGetReturnShippingTrackingCode = () => createSelector([getReturnShippingTrackingCode], returnShippingTrackingCode => returnShippingTrackingCode)
+export const makeGetOrderCreditHistoryOpen = () => createSelector([getOrderCreditHistoryOpen], orderCreditHistoryOpen => orderCreditHistoryOpen)
+export const makeGetOpenedPopup = () => createSelector([getOpenedPopup], openedPopup => openedPopup)
+export const makeGetActionNeeded = () => createSelector([getActionNeeded], actionNeeded => actionNeeded)
+export const makeGetSellEligible = () => createSelector([getSellEligible], sellEligible => sellEligible)

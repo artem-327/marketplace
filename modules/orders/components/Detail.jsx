@@ -23,7 +23,7 @@ import {
 } from 'semantic-ui-react'
 import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
-import ActionsRequired from './components/ActionsRequired'
+import ActionsRequired from './components/ActionsRequiredContainer'
 import AssignLots from './components/AssignLots'
 import ReinitiateTransfer from './components/ReinitiateTransfer'
 import EnterTrackingIdShip from './components/EnterTrackingIdShip'
