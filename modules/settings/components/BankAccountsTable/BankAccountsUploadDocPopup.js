@@ -60,7 +60,6 @@ class BankAccountsUploadDocPopup extends Component {
   closeUploadDocumentsPopup = async () => {
     try {
       this.props.getBankAccountsDataRequest()
-      this.props.getCurrentUser()
       const resp = await this.props.getIdentity()
       const hasDwollaAccount = getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified'
       if (hasDwollaAccount) this.props.getDwollaAccBalance()
