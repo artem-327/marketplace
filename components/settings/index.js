@@ -23,7 +23,7 @@ import * as Yup from 'yup'
 import { getSafe } from '../../utils/functions'
 import { typeToComponent, toYupSchema } from './constants'
 
-import { triggerSystemSettingsModal, getCurrentUser } from '../../modules/settings/actions'
+import { triggerSystemSettingsModal } from '../../modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -255,9 +255,7 @@ class Settings extends Component {
 
     try {
       settings = await api.updateSettings(role, payload)
-      await this.props.getCurrentUser()
       let { systemSettings } = this.parseData(settings.settingGroups)
-
       this.setState({ systemSettings })
       this.resetForm(this.parseInitialValues(systemSettings))
       this.props.getIdentity()
@@ -512,5 +510,5 @@ export default connect(
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  { triggerSystemSettingsModal, getCurrentUser, getIdentity }
+  { triggerSystemSettingsModal, getIdentity }
 )(injectIntl(Settings))

@@ -762,7 +762,7 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   const paymentProcessor = getSafe(() => company.paymentProcessor, 'DWOLLA')
 
-  const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
+  const preferredBankAccountId = get(state, 'auth.identity.company.preferredBankAccountId', '')
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
 
