@@ -56,15 +56,6 @@ const LotsTab = styled(TabPane)`
   }
 `
 
-const Subtitle = styled(Header)`
-  margin-top: 1em;
-  font-weight: 400;
-`
-
-const TableWrapper = styled(Segment)`
-  padding: 1em 2em 3em !important;
-`
-
 const DivIcon = styled.div`
   display: flex !important;
 `
