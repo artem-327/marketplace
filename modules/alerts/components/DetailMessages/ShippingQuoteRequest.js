@@ -10,7 +10,7 @@ import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 
 import { Grid, GridRow, GridColumn, Segment, Table, Input, Button } from 'semantic-ui-react'
 
-import { TableSegment, ListTable, DetailMessage, StyledGrid } from '../Alerts.styles'
+import { TableSegment, DetailMessage, StyledGrid } from '../Alerts.styles'
 
 const AddressRow = styled.div`
   display: flex;
@@ -182,7 +182,7 @@ const DivCellValue = styled.div`
 `
 
 const ShippingQuoteRequest = props => {
-  displayAddress = ({ address, header, company }) => {
+  const displayAddress = ({ address, header, company }) => {
     return (
       <AddressGrid>
         <GridRow>
@@ -240,170 +240,64 @@ const ShippingQuoteRequest = props => {
                   {row.info.items.map((item, index) => {
                     return (
                       <Table.Row key={index}>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.product' defaultMessage='Product' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.product}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.grossWeightLbs} {'lbs'}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.nmfc}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.freightClass}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.maxPkgsPerPallet}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.hazardous ? (
-                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                              ) : (
-                                <FormattedMessage id='global.no' defaultMessage='No' />
-                              )}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.stackable ? (
-                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                              ) : (
-                                <FormattedMessage id='global.no' defaultMessage='No' />
-                              )}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
-                        <Table.Cell>
-                          <DivCellContent>
-                            <DivCellHeader>
-                              <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
-                            </DivCellHeader>
-                            <DivCellValue>
-                              {item.freezeProtect ? (
-                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                              ) : (
-                                <FormattedMessage id='global.no' defaultMessage='No' />
-                              )}
-                            </DivCellValue>
-                          </DivCellContent>
-                        </Table.Cell>
+                        {
+                          [
+                            {
+                              header: <FormattedMessage id='alerts.product' defaultMessage='Product' />,
+                              description: item.product
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />,
+                              description: <>{item.grossWeightLbs} {'lbs'}</>
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />,
+                              description: item.nmfc
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />,
+                              description: item.freightClass
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />,
+                              description: item.maxPkgsPerPallet
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />,
+                              description: item.hazardous
+                                ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                                : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />,
+                              description: item.stackable
+                                ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                                : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                            },
+                            {
+                              header: <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />,
+                              description: item.freezeProtect
+                                ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
+                                : (<FormattedMessage id='global.no' defaultMessage='No' />)
+                            }
+                          ].map((column, i) =>
+                            <Table.Cell key={i}>
+                              <DivCellContent>
+                                <DivCellHeader>
+                                  {column.header}
+                                </DivCellHeader>
+                                <DivCellValue>
+                                  {column.description}
+                                </DivCellValue>
+                              </DivCellContent>
+                            </Table.Cell>
+                          )
+                        }
                       </Table.Row>
                     )
                   })}
                 </Table.Body>
               </TableStyled>
-            </TableSegment>
-          </GridColumn>
-        </GridRow>
-      </StyledGrid>
-
-
-
-
-      <StyledGrid>
-        <GridRow>
-          <GridColumn width={16}>
-            <TableSegment>
-              {row.info.items.map((item, index) => {
-                return (
-                  <ListTable divided relaxed horizontal size='large' key={index}>
-                    {
-                      [
-                        {
-                          header: <FormattedMessage id='alerts.product' defaultMessage='Product' />,
-                          description: item.product
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />,
-                          description: <>{item.grossWeightLbs} {'lbs'}</>
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />,
-                          description: item.nmfc
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />,
-                          description: item.freightClass
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />,
-                          description: item.maxPkgsPerPallet
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />,
-                          description: item.hazardous
-                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
-                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />,
-                          description: item.stackable
-                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
-                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
-                        },
-                        {
-                          header: <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />,
-                          description: item.freezeProtect
-                            ? (<FormattedMessage id='global.yes' defaultMessage='Yes' />)
-                            : (<FormattedMessage id='global.no' defaultMessage='No' />)
-                        }
-                      ].map((column, index) =>
-                        <List.Item key={index}>
-                          <List.Content>
-                            <List.Header as='label'>{column.header}</List.Header>
-                            <List.Description as='span'>{column.description}</List.Description>
-                          </List.Content>
-                        </List.Item>
-                      )
-                    }
-                  </ListTable>
-                )
-              })}
             </TableSegment>
           </GridColumn>
         </GridRow>
