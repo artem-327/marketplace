@@ -8,7 +8,7 @@ import { withDatagrid } from '../../datagrid'
 import { applyFilter } from '../../filter/actions'
 import { downloadAttachment, downloadAttachmentPdf } from '../../inventory/actions'
 // Services
-import { getRows } from '../services'
+import { getRows } from './Orders.service'
 // Selectors
 import {
   makeGetIsOpen,

@@ -1,3 +1,5 @@
+import { FormattedMessage } from 'react-intl'
+
 export const HEADER_ATTRIBUTES = [
   'orderStatus',
   'shippingStatus',
@@ -129,3 +131,42 @@ export const filters = {
     ]
   }
 }
+
+export const columnsRelatedOrdersDetailDocuments = [
+  {
+    name: 'documentName',
+    title: (
+      <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documentType',
+    title: (
+      <FormattedMessage id='order.detail.documents.type' defaultMessage='Type' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documentDate',
+    title: (
+      <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documentIssuer',
+    title: (
+      <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer' />
+    ),
+    width: 150
+  },
+  {
+    name: 'download',
+    title: (
+      <FormattedMessage id='global.download' defaultMessage='Download' />
+    ),
+    width: 150,
+    align: 'center'
+  }
+]

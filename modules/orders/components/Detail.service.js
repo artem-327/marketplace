@@ -1,9 +1,17 @@
-import * as OrdersHelper from '../../components/helpers/Orders'
+import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
-import { getSafe, getFormattedAddress } from '../../utils/functions'
+import { getSafe, getFormattedAddress, uniqueArrayByKey } from '../../../utils/functions'
 import { FormattedNumber } from 'react-intl'
-import { currency, currencyUSSymbol } from '../../constants/index'
-import { getLocaleDateFormat } from '../../components/date-format'
+import { currencyUSSymbol } from '../../../constants/index'
+import { getLocaleDateFormat } from '../../../components/date-format'
+import { Button, Icon } from 'semantic-ui-react'
+import ProdexGrid from '../../../components/table'
+import { AttachmentManager } from '../../attachments'
+// Constants
+import { columnsRelatedOrdersDetailDocuments } from '../constants'
+// Styles
+import { CustomDivAddDocument } from './Detail.styles'
+
 
 export const getOrder = (state, ownProps) => {
     if (ownProps.router.query.type !== state.orders.detailType) {
@@ -271,86 +279,255 @@ export const getOrder = (state, ownProps) => {
     return prepareDetail(state.orders.detail, ownProps.router.query.type)
 }
 
-const filterAttachments = (a, type) => {
-    if (!a) return []
-    let filtered = a.reduce((latest, a) => {
-      if (a.documentType && a.documentType.id === type) {
-        if (latest) {
-          if (latest.id < a.id) {
-            latest = a
-          }
-        } else {
-          latest = a
-        }
-      }
-      return latest
-    }, null)
-    return filtered ? [filtered] : []
-}
-  
-export const getRows = (datagrid, currentTab) => datagrid.rows.map(r => ({
-    id: r.id,
-    rawData: r,
-    clsName: 'tree-table root-row',
-    root: true,
-    treeRoot: true,
-    globalStatus: r.cfGlobalStatus,
-    date: r.orderDate && moment(r.orderDate).format(getLocaleDateFormat()),
-    customerName: currentTab === 'sales' ? r.buyerCompanyName : r.sellerCompanyName,
-    orderStatus: OrdersHelper.getOrderStatusWithIconCircle(r.orderStatus),
-    shippingStatus: OrdersHelper.getShippingStatus(r.shippingStatus),
-    reviewStatus: OrdersHelper.getReviewStatus(r.reviewStatus),
-    creditStatus: OrdersHelper.getCreditStatus(r.creditReviewStatus),
-    paymentStatus: OrdersHelper.getPaymentStatus(r.paymentStatus),
-    disputeResolutionStatus: OrdersHelper.getDisputeStatus(r.disputeResolutionStatus),
-    bl: '',
-    sds: '',
-    cofA: '',
-    orderTotal: (
-      <FormattedNumber
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
-        style='currency'
-        currency={currency}
-        value={r.cfPriceTotal}
-      />
-    ),
-    accountingDocumentsCount: r.accountingDocumentsCount,
-    attachments: r.attachments,
-    orderItems: r.orderItems.map(item => {
-      let cofA = filterAttachments(item.attachments, 1) // C of A
-      let sds = filterAttachments(item.attachments, 3) // SDS
-      let bl = filterAttachments(item.attachments, 10) // B/L
-      return {
-        ...item,
-        rawData: item,
-        id: r.id + '_' + item.id,
-        clsName: 'tree-table nested-row',
-        cofA,
-        sds,
-        bl,
-        packaging:
-          item.packagingSize && item.packagingType && item.packagingUnit
-            ? item.packagingSize + ' ' + item.packagingUnit.name.toLowerCase() + ' ' + item.packagingType.name
+export const getRows = (attachments, props) => {
+    if (attachments && attachments.length) {
+      return attachments.map(row => {
+        return {
+          id: row.id,
+          documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
+          documentName: (
+            <Button as='a' onClick={() => downloadAttachment(row.name, row.id, props)}>
+              <Icon name='download' />
+              {row.name}
+            </Button>
+          ),
+          documentType: getSafe(() => row.documentType.name, 'N/A'),
+          documentDate: row.issuedAt
+            ? getSafe(() => moment(row.issuedAt).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
-        fobPrice: (
-          <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
-            style='currency'
-            currency={currency}
-            value={item.pricePerUOM}
-          />
-        ),
-        orderTotal: (
-          <FormattedNumber
-            minimumFractionDigits={2}
-            maximumFractionDigits={2}
-            style='currency'
-            currency={currency}
-            value={item.priceSubtotal}
-          />
-        )
-      }
+          documentIssuer: getSafe(() => row.issuer, 'N/A'),
+          download: (
+            <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)}>
+              <Icon name='file' className='positive' />
+            </a>
+          )
+        }
+      })
+    } else {
+      return []
+    }
+}
+
+export const downloadOrder = async (props) => {
+    let endpointType = props.router.query.type === 'sales' ? 'sale' : props.router.query.type
+    let pdf = await props.downloadPdf(endpointType, props.order.id)
+
+    const element = document.createElement('a')
+    const file = new Blob([pdf.value.data], { type: 'application/pdf' })
+    let fileURL = URL.createObjectURL(file)
+
+    element.href = fileURL
+    element.download = `${props.router.query.type}-order-${props.order.id}.pdf`
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+}
+
+export const handleClick = (index, activeIndexes, setActiveIndexes) => {
+    let newActiveIndexes = activeIndexes.map((s, _i) => {
+      return index === _i ? !s : s
     })
-}))
+    setActiveIndexes(newActiveIndexes)
+}
+
+export const attachDocumentsManager = async (newDocuments, props, replaceRow, setReplaceRow, setOpenDocumentsPopup, setIsOpenManager, setAttachmentRows) => {
+    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = props
+    setOpenDocumentsPopup(false)
+
+    if (replaceRow) {
+      await handleUnlink(replaceRow)
+      setReplaceRow('')
+    }
+    const docArray = uniqueArrayByKey(newDocuments, 'id')
+
+    try {
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        })
+      }
+      let response = {}
+      if (getSafe(() => props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      setIsOpenManager(false)
+      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props))
+    } catch (error) {
+      console.error(error)
+    }
+}
+
+export const replaceExiting = (row, setIsOpenManager, setReplaceRow) => {
+    setIsOpenManager(true)
+    setReplaceRow(row)
+}
+
+export const handleUnlink = async (row, props, setAttachmentRows) => {
+    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = props
+    const query = {
+      attachmentId: row.id,
+      orderId: order.id
+    }
+    try {
+      await unlinkAttachmentToOrder(query)
+      let response = {}
+      if (getSafe(() => props.router.query.type, false) === 'sales') {
+        response = await getSaleOrder(order.id)
+      } else {
+        response = await getPurchaseOrder(order.id)
+      }
+
+      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props))
+    } catch (err) {
+      console.error(err)
+    }
+}
+
+export const getMimeType = documentName => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+}
+
+export const downloadAttachment = async (documentName, documentId, props) => {
+    const element = await prepareLinkToAttachment(documentId, props)
+
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+}
+
+export const prepareLinkToAttachment = async (documentId, props) => {
+    let downloadedFile = await props.downloadAttachment(documentId)
+    const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+}
+
+export const extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+}
+
+export const openRelatedPopup = (orderItem, name, setOpenDocumentsPopup, setOpenDocumentsAttachments, setDocumentsPopupProduct, setOrderItemId) => {
+    setOpenDocumentsPopup(true)
+    setOpenDocumentsAttachments(orderItem.attachments)
+    setDocumentsPopupProduct(name)
+    setOrderItemId(orderItem.id)
+}
+
+export const getRelatedDocumentsContent = (props, openDocumentsAttachments, setOpenDocumentsAttachments, isOpenManager, setIsOpenManager, orderItemId) => {
+    const rowsDocuments = openDocumentsAttachments.map(att => ({
+      id: att.id,
+      documentName: (
+        <Button as='a' onClick={() => downloadAttachment(att.name, att.id, props)}>
+          {att.name}
+        </Button>
+      ),
+      documentType: att.documentType.name,
+      documentDate: 'N/A',
+      documentIssuer: 'N/A',
+      download: (
+        <a href='#' onClick={() => downloadAttachment(att.name, att.id, props)}>
+          <Icon name='file' className='positive' />
+        </a>
+      )
+    }))
+    return (
+      <>
+        <CustomDivAddDocument>
+          <div>
+            <AttachmentManager
+              documentTypeIds={[]}
+              isOpenManager={isOpenManager}
+              asModal
+              returnSelectedRows={rows => linkAttachment(rows, orderItemId, props, openDocumentsAttachments, setOpenDocumentsAttachments)}
+              returnCloseAttachmentManager={val => setIsOpenManager(false)}
+            />
+          </div>
+        </CustomDivAddDocument>
+        <ProdexGrid
+          loading={props.loadingRelatedDocuments}
+          tableName='related_orders'
+          columns={columnsRelatedOrdersDetailDocuments}
+          rows={rowsDocuments}
+        />
+      </>
+    )
+}
+
+export const linkAttachment = async (files, orderItemId, props, openDocumentsAttachments, setOpenDocumentsAttachments) => {
+    const { order, getSaleOrder, getPurchaseOrder } = props
+
+    const docArray = uniqueArrayByKey(files, 'id')
+    let newAttachments = openDocumentsAttachments
+    try {
+      if (docArray.length) {
+        await docArray.forEach(doc => {
+          props.linkAttachmentToOrderItem({ attachmentId: doc.id, orderItemId: orderItemId })
+          doc && newAttachments.push(doc)
+        })
+      }
+      setOpenDocumentsAttachments(newAttachments)
+      setTimeout(async () => {
+        if (getSafe(() => props.router.query.type, false) === 'sales') {
+          await getSaleOrder(order.id)
+        } else {
+          await getPurchaseOrder(order.id)
+        }
+      }, 250)
+    } catch (error) {
+      console.error(error)
+    } finally {
+    }
+}

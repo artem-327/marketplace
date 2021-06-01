@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
 import { downloadAttachment, addAttachment } from '../../inventory/actions'
-import { getOrder } from '../services'
+import { getOrder } from './Detail.service'
 
 import {
   makeGetEchoSupportPhone,

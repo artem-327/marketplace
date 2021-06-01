@@ -57,6 +57,8 @@ import {
 } from '../../cart/components/StyledComponents'
 // Components
 import ModalOrderResolution from './components/ModalOrderResolution'
+// Constants
+import { columnsRelatedOrdersDetailDocuments } from '../constants'
 // Styles
 import {
   OrderSegment,
@@ -82,6 +84,22 @@ import {
   StyledHeader,
   CustomDivAddDocument
 } from './Detail.styles'
+// Services
+import {
+  getRows,
+  downloadOrder,
+  handleClick,
+  attachDocumentsManager,
+  replaceExiting,
+  handleUnlink,
+  getMimeType,
+  downloadAttachment,
+  prepareLinkToAttachment,
+  extractFileName,
+  openRelatedPopup,
+  getRelatedDocumentsContent,
+  linkAttachment
+} from './Detail.service'
 
 
 const Detail = props => {
@@ -101,45 +119,6 @@ const Detail = props => {
   const [orderItemId, setOrderItemId] = useState(null)
   const [changedTypeOrder, setChangedTypeOrder] = useState(false)
 
-  const columnsRelatedOrdersDetailDocuments = [
-    {
-      name: 'documentName',
-      title: (
-        <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #' />
-      ),
-      width: 150
-    },
-    {
-      name: 'documentType',
-      title: (
-        <FormattedMessage id='order.detail.documents.type' defaultMessage='Type' />
-      ),
-      width: 150
-    },
-    {
-      name: 'documentDate',
-      title: (
-        <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date' />
-      ),
-      width: 150
-    },
-    {
-      name: 'documentIssuer',
-      title: (
-        <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer' />
-      ),
-      width: 150
-    },
-    {
-      name: 'download',
-      title: (
-        <FormattedMessage id='global.download' defaultMessage='Download' />
-      ),
-      width: 150,
-      align: 'center'
-    }
-  ]
-
   useEffect(() => {
     let endpointType = props.router.query.type === 'sales' ? 'sale' : props.router.query.type
     props.loadDetail(endpointType, props.router.query.id)
@@ -153,36 +132,6 @@ const Detail = props => {
       props.clearOrderDetail()
     }
   }, [])
-
-
-  const getRows = attachments => {
-    if (attachments && attachments.length) {
-      return attachments.map(row => {
-        return {
-          id: row.id,
-          documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
-          documentName: (
-            <Button as='a' onClick={() => downloadAttachment(row.name, row.id)}>
-              <Icon name='download' />
-              {row.name}
-            </Button>
-          ),
-          documentType: getSafe(() => row.documentType.name, 'N/A'),
-          documentDate: row.issuedAt
-            ? getSafe(() => moment(row.issuedAt).format(getLocaleDateFormat()), 'N/A')
-            : 'N/A',
-          documentIssuer: getSafe(() => row.issuer, 'N/A'),
-          download: (
-            <a href='#' onClick={() => downloadAttachment(row.name, row.id)}>
-              <Icon name='file' className='positive' />
-            </a>
-          )
-        }
-      })
-    } else {
-      return []
-    }
-  }
 
   useEffect(() => {
     if (changedTypeOrder) {
@@ -219,243 +168,9 @@ const Detail = props => {
       !getSafe(() => attachmentRows.length, false) &&
       getSafe(() => props.order.attachments.length, false)
     ) {
-      setAttachmentRows(getRows(props.order.attachments))
+      setAttachmentRows(getRows(props.order.attachments, props))
     }
   }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
-
-
-  const downloadOrder = async () => {
-    let endpointType = props.router.query.type === 'sales' ? 'sale' : props.router.query.type
-    let pdf = await props.downloadPdf(endpointType, props.order.id)
-
-    const element = document.createElement('a')
-    const file = new Blob([pdf.value.data], { type: 'application/pdf' })
-    let fileURL = URL.createObjectURL(file)
-
-    element.href = fileURL
-    element.download = `${props.router.query.type}-order-${props.order.id}.pdf`
-    document.body.appendChild(element) // Required for this to work in FireFox
-    element.click()
-  }
-
-  const handleClick = (index) => {
-    let newActiveIndexes = activeIndexes.map((s, _i) => {
-      return index === _i ? !s : s
-    })
-    setActiveIndexes(newActiveIndexes)
-  }
-
-  const attachDocumentsManager = async newDocuments => {
-    const { linkAttachmentToOrder, order, getPurchaseOrder, getSaleOrder } = props
-    setOpenDocumentsPopup(false)
-
-    if (replaceRow) {
-      await handleUnlink(replaceRow)
-      setReplaceRow('')
-    }
-    const docArray = uniqueArrayByKey(newDocuments, 'id')
-
-    try {
-      if (docArray.length) {
-        await docArray.forEach(doc => {
-          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
-        })
-      }
-      let response = {}
-      if (getSafe(() => props.router.query.type, false) === 'sales') {
-        response = await getSaleOrder(order.id)
-      } else {
-        response = await getPurchaseOrder(order.id)
-      }
-
-      setIsOpenManager(false)
-      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, [])))
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const replaceExiting = row => {
-    setIsOpenManager(true)
-    setReplaceRow(row)
-  }
-
-  const handleUnlink = async row => {
-    const { unlinkAttachmentToOrder, order, getSaleOrder, getPurchaseOrder } = props
-    const query = {
-      attachmentId: row.id,
-      orderId: order.id
-    }
-    try {
-      await unlinkAttachmentToOrder(query)
-      let response = {}
-      if (getSafe(() => props.router.query.type, false) === 'sales') {
-        response = await getSaleOrder(order.id)
-      } else {
-        response = await getPurchaseOrder(order.id)
-      }
-
-      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, [])))
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-
-    switch (documentExtension) {
-      case 'doc':
-        return 'application/msword'
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      case 'ppt':
-        return 'application/vnd.ms-powerpoint'
-      case 'pptx':
-        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      case 'xls':
-        return 'application/vnd.ms-excel'
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      case 'pdf':
-        return 'application/pdf'
-      case '7z':
-        return 'application/x-7z-compressed'
-      case 'zip':
-        return 'application/zip'
-      case 'tar':
-        return 'application/x-tar'
-      case 'rar':
-        return 'application/x-rar-compressed'
-      case 'xml':
-        return 'application/xml'
-      default:
-        return 'text/plain'
-    }
-  }
-
-  const downloadAttachment = async (documentName, documentId) => {
-    const element = await prepareLinkToAttachment(documentId)
-
-    element.download = documentName
-    document.body.appendChild(element) // Required for this to work in FireFox
-    element.click()
-  }
-
-  const prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await props.downloadAttachment(documentId)
-    const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && getMimeType(fileName)
-    const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], { type: mimeType })
-    let fileURL = URL.createObjectURL(file)
-    element.href = fileURL
-
-    return element
-  }
-
-  const extractFileName = contentDispositionValue => {
-    var filename = ''
-    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
-      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-      var matches = filenameRegex.exec(contentDispositionValue)
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '')
-      }
-    }
-    return filename
-  }
-
-  const openRelatedPopup = (orderItem, name) => {
-    setOpenDocumentsPopup(true)
-    setOpenDocumentsAttachments(orderItem.attachments)
-    setDocumentsPopupProduct(name)
-    setOrderItemId(orderItem.id)
-  }
-
-  const getRelatedDocumentsContent = () => {
-    const rowsDocuments = openDocumentsAttachments.map(att => ({
-      id: att.id,
-      documentName: (
-        <Button as='a' onClick={() => downloadAttachment(att.name, att.id)}>
-          {att.name}
-        </Button>
-      ),
-      documentType: att.documentType.name,
-      documentDate: 'N/A',
-      documentIssuer: 'N/A',
-      download: (
-        <a href='#' onClick={() => downloadAttachment(att.name, att.id)}>
-          <Icon name='file' className='positive' />
-        </a>
-      )
-    }))
-    return (
-      <>
-        <CustomDivAddDocument>
-          <div>
-            <AttachmentManager
-              documentTypeIds={[]}
-              isOpenManager={isOpenManager}
-              asModal
-              returnSelectedRows={rows => linkAttachment(rows, orderItemId)}
-              returnCloseAttachmentManager={val => setIsOpenManager(false)}
-            />
-          </div>
-        </CustomDivAddDocument>
-        <ProdexGrid
-          loading={props.loadingRelatedDocuments}
-          tableName='related_orders'
-          columns={columnsRelatedOrdersDetailDocuments}
-          rows={rowsDocuments}
-        />
-      </>
-    )
-  }
-
-  const removeAttachment = (orderItemId, file) => {
-    const query = {
-      attachmentId: file.id,
-      orderItemId: orderItemId
-    }
-
-    props.removeLinkAttachmentToOrderItem(query)
-  }
-
-  const linkAttachment = async (files, orderItemId) => {
-    const { order, getSaleOrder, getPurchaseOrder } = props
-
-    const docArray = uniqueArrayByKey(files, 'id')
-    let newAttachments = openDocumentsAttachments
-    try {
-      if (docArray.length) {
-        await docArray.forEach(doc => {
-          props.linkAttachmentToOrderItem({ attachmentId: doc.id, orderItemId: orderItemId })
-          doc && newAttachments.push(doc)
-        })
-      }
-      setOpenDocumentsAttachments(newAttachments)
-      setTimeout(async () => {
-        if (getSafe(() => props.router.query.type, false) === 'sales') {
-          await getSaleOrder(order.id)
-        } else {
-          await getPurchaseOrder(order.id)
-        }
-      }, 250)
-    } catch (error) {
-      console.error(error)
-    } finally {
-    }
-  }
 
   const {
     router,
@@ -516,7 +231,7 @@ const Detail = props => {
               <StyledHeader>{documentsPopupProduct}</StyledHeader>
             </>
           </Modal.Header>
-          <Modal.Content scrolling>{getRelatedDocumentsContent()}</Modal.Content>
+          <Modal.Content scrolling>{getRelatedDocumentsContent(props, openDocumentsAttachments, setOpenDocumentsAttachments, isOpenManager, setIsOpenManager, orderItemId)}</Modal.Content>
           <Modal.Actions>
             <Button basic onClick={() => setOpenDocumentsPopup(false)}>
               <FormattedMessage id='global.close' defaultMessage='Close' />
@@ -564,7 +279,7 @@ const Detail = props => {
                     {isDetailFetching ? '' : '# ' + order.id}
                   </Header>
                   <a
-                    onClick={() => downloadOrder()}
+                    onClick={() => downloadOrder(props)}
                     style={{ fontSize: '1.14285714em', cursor: 'pointer' }}
                     data-test='orders_detail_download_order'>
                     <DownloadCloud />
@@ -802,7 +517,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[0]}
                 index={0}
-                onClick={() => handleClick(0)}
+                onClick={() => handleClick(0, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_order_info'>
                 <Chevron />
                 <FormattedMessage id={`order.${order.paymentType}`} defaultMessage={order.paymentType} />
@@ -850,7 +565,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[1]}
                 index={1}
-                onClick={() => handleClick(1)}
+                onClick={() => handleClick(1, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_order_info'>
                 <Chevron />
                 <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
@@ -981,7 +696,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[2]}
                 index={2}
-                onClick={() => handleClick(2)}
+                onClick={() => handleClick(2, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
@@ -1004,7 +719,7 @@ const Detail = props => {
                         value={listDocumentTypes}
                         selection
                         onChange={(event, { name, value }) => {
-                          const rows = getRows(order.attachments)
+                          const rows = getRows(order.attachments, props)
                           setAttachmentRows(value === 0 ? rows : rows.filter(row => row.documentTypeId === value))
                           setListDocumentTypes(value)
                         }}
@@ -1025,7 +740,7 @@ const Detail = props => {
                             <FormattedMessage id='global.addDocument' defaultMessage='Add Document' />
                           </CustomButton>
                         }
-                        returnSelectedRows={rows => attachDocumentsManager(rows)}
+                        returnSelectedRows={rows => attachDocumentsManager(rows, props, replaceRow, setReplaceRow, setOpenDocumentsPopup, setIsOpenManager, setAttachmentRows)}
                       />
                     </GridColumn>
                   </GridRow>
@@ -1045,14 +760,14 @@ const Detail = props => {
                               id: 'global.replaceExisting',
                               defaultMessage: 'Replace Existing'
                             }),
-                            callback: row => replaceExiting(row)
+                            callback: row => replaceExiting(row, setIsOpenManager, setReplaceRow)
                           },
                           {
                             text: formatMessage({
                               id: 'global.unlink',
                               defaultMessage: 'Unlink'
                             }),
-                            callback: row => handleUnlink(row)
+                            callback: row => handleUnlink(row, props, setAttachmentRows)
                           }
                         ]}
                       />
@@ -1064,7 +779,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[3]}
                 index={3}
-                onClick={() => handleClick(3)}
+                onClick={() => handleClick(3, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
@@ -1119,13 +834,13 @@ const Detail = props => {
                             <Table.Cell textAlign='right'>{order.itemTotal[index]}</Table.Cell>
                             <Table.Cell>
                               {order.orderItems[index].attachments.length ? (
-                                <a href='#' onClick={() => openRelatedPopup(order.orderItems[index], element)}>
+                                <a href='#' onClick={() => openRelatedPopup(order.orderItems[index], element, setOpenDocumentsPopup, setOpenDocumentsAttachments, setDocumentsPopupProduct, setOrderItemId)}>
                                   <FormattedMessage id='global.view' defaultMessage='View' />
                                 </a>
                               ) : ordersType !== 'Purchase' ? (
                                 <AttachmentManager
                                   asModal
-                                  returnSelectedRows={rows => linkAttachment(rows, order.orderItems[index].id)}
+                                  returnSelectedRows={rows => linkAttachment(rows, order.orderItems[index].id, props, openDocumentsAttachments, setOpenDocumentsAttachments)}
                                 />
                               ) : (
                                 'N/A'
@@ -1142,7 +857,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[4]}
                 index={4}
-                onClick={() => handleClick(4)}
+                onClick={() => handleClick(4, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_pickup_info'>
                 <Chevron />
                 <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
@@ -1183,7 +898,7 @@ const Detail = props => {
                   <AccordionTitle
                     active={activeIndexes[5]}
                     index={5}
-                    onClick={() => handleClick(5)}
+                    onClick={() => handleClick(5, activeIndexes, setActiveIndexes)}
                     data-test='orders_detail_return_shipping'>
                     <Chevron />
                     <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
@@ -1306,7 +1021,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[6]}
                 index={6}
-                onClick={() => handleClick(6)}
+                onClick={() => handleClick(6, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_shipping'>
                 <Chevron />
                 <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
@@ -1431,7 +1146,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[7]}
                 index={7}
-                onClick={() => handleClick(7)}
+                onClick={() => handleClick(7, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_payment'>
                 <Chevron />
                 <FormattedMessage id='order.payment' defaultMessage='Payment' />
@@ -1526,7 +1241,7 @@ const Detail = props => {
               <AccordionTitle
                 active={activeIndexes[8]}
                 index={8}
-                onClick={() => handleClick(8)}
+                onClick={() => handleClick(8, activeIndexes, setActiveIndexes)}
                 data-test='orders_detail_notes'>
                 <Chevron />
                 <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
