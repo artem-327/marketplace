@@ -1,11 +1,11 @@
 import * as a from './actions'
 import typeToReducer from 'type-to-reducer'
 
-import { uniqueArrayByKey, mapAutocompleteData, getUniqueArrayOfObjectsByKey } from '~/utils/functions'
+import { uniqueArrayByKey, mapAutocompleteData } from '../../utils/functions'
 
-import { datagridValues, paths, filterPresets } from './constants/filter'
-import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import { datagridValues, paths } from './constants/filter'
+import { currency } from '../../constants/index'
+import { getSafe } from '../../utils/functions'
 
 const asignFiltersDescription = (filter, params) => {
   let datagridKeys = Object.keys(datagridValues)

@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey, getSafe } from '~/utils/functions'
+import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 
 export const initialState = {
   fileIds: [],

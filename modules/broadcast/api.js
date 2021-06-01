@@ -1,4 +1,4 @@
-import api from '~/api'
+import api from '../../api'
 
 export const loadRules = id => api.get(`/prodex/api/broadcast-rules/${id}`).then(response => response.data)
 export const loadGeneralRules = () =>

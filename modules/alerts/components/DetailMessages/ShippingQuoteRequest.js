@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import { ArrowRight } from 'react-feather'
 import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 
-import { Grid, GridRow, GridColumn, Segment, List, Input, Button } from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Segment, Table, Input, Button } from 'semantic-ui-react'
 
 import { TableSegment, ListTable, DetailMessage, StyledGrid } from '../Alerts.styles'
 
@@ -112,8 +112,77 @@ const SpanIdValue = styled.span`
   margin-right: 2px;
 `
 
+const TableStyled = styled(Table)`
+  .table-detail-rows-wrapper .table-responsive table.table,
+  &.ui.table {
+    border: none;
+
+    tbody {
+      tr {
+        border: none;
+        border-bottom: 1px solid #dde2e6 !important;
+        
+        &:first-child {
+          padding-top: 0px !important;
+        }
+        
+        &:last-child {
+          padding-bottom: 0px !important;
+          border-bottom: none !important;
+        }
+        
+        th,
+        td:not(.p-0):first-child,
+        td {
+          box-shadow: none !important;
+          background-color: #fff !important;
+          border: inherit !important;
+          border-left: 1px solid #dde2e6 !important;
+          border-radius: 0 !important;
+          
+          padding: inherit !important;
+          padding-right: 5px !important;
+          padding-left: 5px !important;
+                
+          &:first-child {         
+            border-left: none !important;
+            padding-left: 0px !important;
+            
+            &:before {
+              border-left: none !important;
+            }
+          }
+  
+          &:last-child {
+            padding-right: 0px !important;
+            
+            &:before {
+              border-right: none !important;
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
+const DivCellContent = styled.div`
+  display: block;
+  flex-direction: column;
+`
+
+const DivCellHeader = styled.div`
+  font-size: 12px;
+  color: #848893;
+`
+
+const DivCellValue = styled.div`
+  font-size: 14px;
+  color: #20273a;
+`
+
 const ShippingQuoteRequest = props => {
-  const displayAddress = ({ address, header, company }) => {
+  displayAddress = ({ address, header, company }) => {
     return (
       <AddressGrid>
         <GridRow>
@@ -142,6 +211,140 @@ const ShippingQuoteRequest = props => {
 
   return (
     <DetailMessage>
+
+      <StyledGrid>
+        {false && (
+          <GridRow>
+            <GridColumn width={16} style={{ color: '#20273a' }}>
+              {row.text}
+              {
+                false && (
+                  <FormattedMessage
+                    id='alerts.shippingQuoteRequest'
+                    defaultMessage='{name} from {company} has requested a quote for the following order:'
+                    values={{
+                      name: 'Some Name',
+                      company: 'Company name'
+                    }}
+                  />
+                ) /* temporary disabled*/
+              }
+            </GridColumn>
+          </GridRow>
+        )}
+        <GridRow>
+          <GridColumn width={16}>
+            <TableSegment>
+              <TableStyled>
+                <Table.Body>
+                  {row.info.items.map((item, index) => {
+                    return (
+                      <Table.Row key={index}>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.product' defaultMessage='Product' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.product}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.grossWeightLbs} {'lbs'}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.nmfc}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.freightClass}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.maxPkgsPerPallet}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.hazardous ? (
+                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              ) : (
+                                <FormattedMessage id='global.no' defaultMessage='No' />
+                              )}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.stackable ? (
+                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              ) : (
+                                <FormattedMessage id='global.no' defaultMessage='No' />
+                              )}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <DivCellContent>
+                            <DivCellHeader>
+                              <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
+                            </DivCellHeader>
+                            <DivCellValue>
+                              {item.freezeProtect ? (
+                                <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              ) : (
+                                <FormattedMessage id='global.no' defaultMessage='No' />
+                              )}
+                            </DivCellValue>
+                          </DivCellContent>
+                        </Table.Cell>
+                      </Table.Row>
+                    )
+                  })}
+                </Table.Body>
+              </TableStyled>
+            </TableSegment>
+          </GridColumn>
+        </GridRow>
+      </StyledGrid>
+
+
+
+
       <StyledGrid>
         <GridRow>
           <GridColumn width={16}>

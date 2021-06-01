@@ -1,17 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
 import { injectIntl, FormattedNumber } from 'react-intl'
-import { getSafe } from '~/utils/functions'
 
 // Components
-import { withDatagrid } from '~/modules/datagrid'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import { withDatagrid } from '../../../../modules/datagrid'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import { Checkbox } from 'semantic-ui-react'
 
 // Constants
 import { COLUMNS } from './Carriers.constants'
-import { currency } from '~/constants/index'
+import { currency } from '../../../../constants/index'
 
 // Services
 import { getActions, handleToggleSwitch } from './Carriers.services'
@@ -29,18 +28,17 @@ const getRows = (rows, props) => {
           onContentClick={() => props.openPopup(row.rawData)}
         />
       ),
-      priceMarkup:
-        row.priceMarkup
-          ? (
-              <FormattedNumber
-                minimumFractionDigits={2}
-                maximumFractionDigits={2}
-                style='currency'
-                currency={currency}
-                value={row.priceMarkup}
-              />
-            )
-          : '',
+      priceMarkup: row.priceMarkup ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={row.priceMarkup}
+        />
+      ) : (
+        ''
+      ),
       blindShipmentSupport: (
         <Checkbox
           key={`enabled${row.id}`}

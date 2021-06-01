@@ -1,9 +1,9 @@
 import axios from 'axios'
 import Cookie from 'js-cookie'
 import Router from 'next/router'
-import { Message } from '~/modules/messages'
-import { refreshToken } from '~/utils/auth'
-import { getSafe } from '~/utils/functions'
+import { Message } from '../modules/messages'
+import { refreshToken } from '../utils/auth'
+import { getSafe } from '../utils/functions'
 const customAxios = axios.create()
 //axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
@@ -107,7 +107,7 @@ customAxios.interceptors.response.use(
       })
     } else {
       try {
-        Message.checkForMessages(error.response)
+        Message?.checkForMessages(error?.response)
       } catch (error) {
         console.error(error)
       }

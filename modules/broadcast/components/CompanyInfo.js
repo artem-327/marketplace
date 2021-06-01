@@ -4,10 +4,10 @@ import { Modal, Button, Grid, GridRow, GridColumn, Input, Dimmer, Loader, Label 
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
-import ProdexGrid from '~/components/table'
-import { getLocaleDateFormat } from '~/components/date-format'
-import { getSafe } from '~/utils/functions'
-import { ArrayToFirstItem } from '~/components/formatted-messages/'
+import ProdexGrid from '../../../components/table'
+import { getLocaleDateFormat } from '../../../components/date-format'
+import { getSafe } from '../../../utils/functions'
+import { ArrayToFirstItem } from '../../../components/formatted-messages/'
 //Styles
 import {
   CustomDivValue,

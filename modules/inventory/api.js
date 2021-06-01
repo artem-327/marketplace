@@ -1,5 +1,5 @@
-import api from '~/api'
-import { generateQueryString } from '~/utils/functions'
+import api from '../../api'
+import { generateQueryString } from '../../utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
   let defaultParams = {
@@ -62,12 +62,14 @@ export async function getProductOffer(poId) {
 }
 
 export async function getSharedProductOffer(poId) {
-  return api.post('/prodex/api/product-offers/shared-listings/datagrid', {
-    orFilters: [],
-    filters: [{ operator: 'EQUALS', path: 'ProductOffer.id', values: [poId] }],
-    pageSize: 50,
-    pageNumber: 0
-  }).then(response => response.data)
+  return api
+    .post('/prodex/api/product-offers/shared-listings/datagrid', {
+      orFilters: [],
+      filters: [{ operator: 'EQUALS', path: 'ProductOffer.id', values: [poId] }],
+      pageSize: 50,
+      pageNumber: 0
+    })
+    .then(response => response.data)
 }
 
 export async function deleteProductOffer(poId) {

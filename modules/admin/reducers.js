@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import { config } from './config'
-import { uniqueArrayByKey } from '~/utils/functions'
 
 export const initialState = {
   editTrig: false,
@@ -344,7 +343,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_REJECTED: {
       return {
         ...state,
-        loading: false, 
+        loading: false,
         error: action.error
       }
     }

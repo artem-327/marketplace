@@ -20,6 +20,7 @@ import {
 //Constants
 import { BUTTON_PROPS, ATTRIBUTES_TRADE_CRITERIA } from '../../constants'
 //Images
+// @ts-ignore
 import Logo from '../../../../assets/images/network/trade-pass-logo-bw.png'
 
 /**

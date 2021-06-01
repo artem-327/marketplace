@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Modal, Dimmer, Loader, Input } from 'semantic-ui-react'
-import { func, bool, array, object } from 'prop-types'
+import { func, bool, array, object, shape, oneOfType } from 'prop-types'
 import { Trash2 } from 'react-feather'
 import { injectIntl, FormattedMessage } from 'react-intl'
 // Components
@@ -72,6 +72,7 @@ const InviteModal = props => {
               value={value}
               onChange={(e, data) => setValue(data?.value)}
               type='text'
+              data-test='component-invite-modal-input'
             />
             {isError && (
               <DivError>
@@ -101,13 +102,15 @@ const InviteModal = props => {
             noBorder
             textcolor='#ffffff !important'
             background='#00c7f9 !important'
-            onClick={async () => {
+            onClick={async e => {
+              e.preventDefault()
               try {
                 await search(value)
               } catch (err) {
                 console.error(err)
               }
-            }}>
+            }}
+            data-test='component-my-network-invite-modal-search-button'>
             <b>
               <FormattedMessage id='global.search' defaultMessage='Search' />
             </b>
@@ -127,7 +130,13 @@ InviteModal.propTypes = {
   search: func,
   detailCompany: object,
   buttonActionsDetailRow: func,
-  openGlobalAddForm: func
+  openGlobalAddForm: func,
+  intl: oneOfType([
+    shape({
+      formatMessage: func
+    }),
+    func
+  ])
 }
 
 InviteModal.defaultProps = {
@@ -139,7 +148,8 @@ InviteModal.defaultProps = {
   search: () => {},
   detailCompany: null,
   buttonActionsDetailRow: () => {},
-  openGlobalAddForm: null
+  openGlobalAddForm: null,
+  intl: { formatMessage: () => {} }
 }
 
 export default injectIntl(InviteModal)
