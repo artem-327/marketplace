@@ -73,14 +73,14 @@ export function login(username, password) {
           console.error('Google Tag Manager or FullStory not installed')
         }
 
-        const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
-        const isOrderOperator = identity.roles.map(r => r.id).indexOf(37) > -1
+        const isAdmin = identity.roles.map(r => r.role).indexOf('SUPER_ADMIN') > -1
+        const isOrderOperator = identity.roles.map(r => r.role).indexOf('ORDER_OPERATOR') > -1
 
         let accessRights = {}
 
         if (identity.roles) {
           ROLES_ENUM.forEach(role => {
-            accessRights[role.propertyName] = !!identity.roles.find(el => el.id === role.id)
+            accessRights[role.propertyName] = !!identity.roles.find(el => el.role === role.role)
           })
         }
 
@@ -98,7 +98,7 @@ export function login(username, password) {
             }
           }
         }
-        // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
+        // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.role === 'COMPANY_ADMIN')) {
         // user is first login as companyAdmin then redirect to settings
 
         if (
@@ -110,7 +110,7 @@ export function login(username, password) {
         ) {
           urlPage = '/settings/company-details'
         }
-        if (identity.roles.find(role => role.name === 'Operator')) {
+        if (identity.roles.find(role => role.role === 'OPERATOR')) {
           urlPage = '/operations/shipping-quotes'
         }
 
