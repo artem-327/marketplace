@@ -8,7 +8,7 @@ import { withDatagrid } from '../../datagrid'
 import { applyFilter } from '../../filter/actions'
 import { downloadAttachment, downloadAttachmentPdf } from '../../inventory/actions'
 // Services
-import { getRows } from './Orders.service'
+import { getRowsContainer } from './Orders.service'
 // Selectors
 import {
   makeGetIsOpen,
@@ -39,7 +39,7 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, { router, datagrid, currentTab }) => {
     return {
-      rows: getRows(datagrid, currentTab),
+      rows: getRowsContainer(datagrid, currentTab),
       isOpen: getIsOpen(state),
       filterData: getFilterData(state),
       activeStatus: getActiveStatus(state),

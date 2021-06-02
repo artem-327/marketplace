@@ -92,7 +92,6 @@ import {
   attachDocumentsManager,
   replaceExiting,
   handleUnlink,
-  getMimeType,
   downloadAttachment,
   prepareLinkToAttachment,
   extractFileName,
