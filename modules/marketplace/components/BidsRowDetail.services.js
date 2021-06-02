@@ -1,7 +1,7 @@
 import Router from 'next/router'
 import * as Yup from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
-import { removeEmpty } from '~/utils/functions'
+import { removeEmpty, getSafe } from '~/utils/functions'
 
 export const formValidation = requiredInputs =>
   Yup.object().shape({
@@ -77,4 +77,22 @@ export const handleCheckout = async (id, props) => {
   } catch (e) {
     console.error(e)
   }
+}
+
+export const checkBuyAttempt = (row, state, props) => {
+  let skipBuy = false
+  const elements = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.elements, [])
+  const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+  const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
+
+  if (hasDea) {
+    state.setBuyAttemptHasDea(row)
+    skipBuy = true
+  }
+  if (hasDhs) {
+    state.setBuyAttemptHasDhs(row)
+    skipBuy = true
+  }
+  if (skipBuy) return
+  handleCheckout(row.id, props)
 }
