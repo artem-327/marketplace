@@ -1,13 +1,14 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter } from 'next/router'
-
+// Components
 import Orders from './Orders'
+// Actions
 import * as Actions from '../actions'
-import { withDatagrid } from '../../datagrid'
 import { applyFilter } from '../../filter/actions'
 import { downloadAttachment, downloadAttachmentPdf } from '../../inventory/actions'
 // Services
+import { withDatagrid } from '../../datagrid'
 import { getRowsContainer } from './Orders.service'
 // Selectors
 import {

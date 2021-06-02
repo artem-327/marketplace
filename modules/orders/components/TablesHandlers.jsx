@@ -1,56 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Dropdown } from 'semantic-ui-react'
 import { Input } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '../../../components/custom-formik'
-import { withDatagrid } from '../../datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '../../../utils/functions'
 import moment from 'moment'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { errorMessages, dateValidation, dateBefore } from '../../../constants/yupValidation'
-import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
+// Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
+import { DateInput } from '../../../components/custom-formik'
+// Services
+import { getStringISODate } from '../../../components/date-format'
+import { getSafe } from '../../../utils/functions'
+import { withDatagrid } from '../../datagrid'
+import { validationSchema } from './Orders.service'
+// Constants
+import { filters } from '../constants'
 // Styles
 import {
   PositionHeaderSettings,
   CustomRowDiv
 } from './Orders.styles'
-// Constants
-import { filters } from '../constants'
-
-const validationSchema = Yup.lazy(values => {
-  let validationObject = {
-    dateFrom:
-      values.dateFrom &&
-      values.dateTo &&
-      dateValidation(false).concat(
-        Yup.string().test(
-          'is-before',
-          <FormattedMessage
-            id='orders.dateMustBeSameOrBefore'
-            defaultMessage={`Date must be same or before ${values.dateTo}`}
-            values={{ date: values.dateTo }}
-          />,
-          function () {
-            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
-          }
-        )
-      ),
-    orderId:
-      values.orderId &&
-      Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .test('int', errorMessages.integer, val => {
-          return val % 1 === 0
-        })
-        .positive(errorMessages.positive)
-        .test('numbers', errorMessages.mustBeNumber, value => /^[0-9]*$/.test(value))
-  }
-  return Yup.object().shape({ ...validationObject })
-})
 
 const TablesHandlers = props => {
   const [state, setState] = useState({

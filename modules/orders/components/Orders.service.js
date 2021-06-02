@@ -1,20 +1,24 @@
-import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
-import { getLocaleDateFormat } from '../../../components/date-format'
-import { getMimeType } from '../../../components/getMimeType'
+import { ChevronDown, ChevronUp } from 'react-feather'
 import { FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
 import { Icon, Button } from 'semantic-ui-react'
+import * as Yup from 'yup'
+// Components
 import ActionCell from '../../../components/table/ActionCell'
-import { getSafe } from '../../../utils/functions'
-import { currency } from '../../../constants/index'
-import { ArrayToFirstItem } from '../../../components/formatted-messages'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import ProdexGrid from '../../../components/table'
-import { uniqueArrayByKey } from '../../../utils/functions'
+import { ArrayToFirstItem } from '../../../components/formatted-messages'
 import { AttachmentManager } from '../../../modules/attachments'
 import DetailRow from '../../../components/detail-row'
-//Constants
+// Constants
+import { currency } from '../../../constants/index'
 import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
+// Services
+import * as OrdersHelper from '../../../components/helpers/Orders'
+import { getLocaleDateFormat } from '../../../components/date-format'
+import { getMimeType } from '../../../components/getMimeType'
+import { getSafe } from '../../../utils/functions'
+import { uniqueArrayByKey } from '../../../utils/functions'
+import { errorMessages, dateValidation } from '../../../constants/yupValidation'
 // Styles
 import {
   StyledModal,
@@ -871,3 +875,36 @@ export const getRowDetail = ({ row }) => {
     />
   )
 }
+
+export const validationSchema = Yup.lazy(values => {
+  let validationObject = {
+    dateFrom:
+      values.dateFrom &&
+      values.dateTo &&
+      dateValidation(false).concat(
+        Yup.string().test(
+          'is-before',
+          <FormattedMessage
+            id='orders.dateMustBeSameOrBefore'
+            defaultMessage={`Date must be same or before ${values.dateTo}`}
+            values={{ date: values.dateTo }}
+          />,
+          function () {
+            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
+            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
+            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
+          }
+        )
+      ),
+    orderId:
+      values.orderId &&
+      Yup.number()
+        .typeError(errorMessages.mustBeNumber)
+        .test('int', errorMessages.integer, val => {
+          return val % 1 === 0
+        })
+        .positive(errorMessages.positive)
+        .test('numbers', errorMessages.mustBeNumber, value => /^[0-9]*$/.test(value))
+  }
+  return Yup.object().shape({ ...validationObject })
+})

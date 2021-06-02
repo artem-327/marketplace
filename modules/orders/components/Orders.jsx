@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Modal, Container, Button } from 'semantic-ui-react'
-
+import { withToastManager } from 'react-toast-notifications'
+// Components
 import Spinner from '../../../components/Spinner/Spinner'
 import ProdexGrid from '../../../components/table'
-import { withToastManager } from 'react-toast-notifications'
 import { AttachmentManager } from '../../../modules/attachments'
 import Tutorial from '../../../modules/tutorial/Tutorial'
 import TablesHandlers from './TablesHandlers'

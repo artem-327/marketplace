@@ -1,34 +1,27 @@
 import { useState, useEffect } from 'react'
-import '../../../components/AddInventory.scss'
-import Spinner from '../../../components/Spinner/Spinner'
+import { ArrowLeft, DownloadCloud, Link2 } from 'react-feather'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import moment from 'moment/moment'
 import {
   Grid,
-  Segment,
-  Accordion,
   AccordionContent,
   GridColumn,
   Table,
   List,
-  Label,
   Button,
-  Icon,
   Divider,
   Header,
   Popup,
   GridRow,
-  Dropdown,
-  Input,
   Dimmer,
   Modal
 } from 'semantic-ui-react'
-import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud, Link2 } from 'react-feather'
-import { FormattedMessage } from 'react-intl'
+// Components
 import ActionsRequired from './components/ActionsRequiredContainer'
 import AssignLots from './components/AssignLotsContainer'
 import ReinitiateTransfer from './components/ReinitiateTransferContainer'
 import EnterTrackingIdShip from './components/EnterTrackingIdShipContainer'
 import EnterTrackingIdReturnShip from './components/EnterTrackingIdReturnShipContainer'
-
 import PurchaseRejectDelivery from './components/PurchaseRejectDeliveryContainer'
 import PurchaseRequestCreditDelivery from './components/PurchaseRequestCreditDeliveryContainer'
 import PurchaseReviewCreditRequest from './components/PurchaseReviewCreditRequestContainer'
@@ -36,18 +29,12 @@ import SaleReviewCreditRequest from './components/SaleReviewCreditRequestContain
 import SaleReturnShipping from './components/SaleReturnShippingContainer'
 import PurchaseOrderShipping from './components/PurchaseOrderShippingContainer'
 import SaleAttachingProductOffer from './components/SaleAttachingProductOfferContainer'
-
-import confirm from '../../../components/Confirmable/confirm'
-import moment from 'moment/moment'
-import { FormattedPhone } from '../../../components/formatted-messages/'
-import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '../../../utils/functions'
-import { injectIntl, FormattedNumber } from 'react-intl'
-import { AttachmentManager } from '../../attachments'
-import ProdexGrid from '../../../components/table'
-import { getLocaleDateFormat } from '../../../components/date-format'
 import TransactionInfo from './components/TransactionInfoConatiner'
-
+import ProdexGrid from '../../../components/table'
+import Spinner from '../../../components/Spinner/Spinner'
+import ModalOrderResolution from './components/ModalOrderResolution'
+import { AttachmentManager } from '../../attachments'
+import { FormattedPhone } from '../../../components/formatted-messages/'
 import {
   Rectangle,
   CustomDivContent,
@@ -55,11 +42,10 @@ import {
   CustomDivTitle,
   InfoIcon
 } from '../../cart/components/StyledComponents'
-// Components
-import ModalOrderResolution from './components/ModalOrderResolution'
 // Constants
 import { columnsRelatedOrdersDetailDocuments } from '../constants'
 // Styles
+import '../../../components/AddInventory.scss'
 import {
   OrderSegment,
   OrderList,
@@ -78,13 +64,12 @@ import {
   CustomA,
   TopRow,
   StyledModal,
-  DivIcon,
-  AIcon,
-  UploadCloudIcon,
-  StyledHeader,
-  CustomDivAddDocument
+  StyledHeader
 } from './Detail.styles'
 // Services
+import confirm from '../../../components/Confirmable/confirm'
+import { withToastManager } from 'react-toast-notifications'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 import {
   getRows,
   downloadOrder,
@@ -92,9 +77,6 @@ import {
   attachDocumentsManager,
   replaceExiting,
   handleUnlink,
-  downloadAttachment,
-  prepareLinkToAttachment,
-  extractFileName,
   openRelatedPopup,
   getRelatedDocumentsContent,
   linkAttachment

@@ -1,17 +1,19 @@
-import * as OrdersHelper from '../../../components/helpers/Orders'
 import moment from 'moment/moment'
-import { getSafe, getFormattedAddress, uniqueArrayByKey } from '../../../utils/functions'
-import { FormattedNumber } from 'react-intl'
-import { currencyUSSymbol } from '../../../constants/index'
-import { getLocaleDateFormat } from '../../../components/date-format'
 import { Button, Icon } from 'semantic-ui-react'
+import { FormattedNumber } from 'react-intl'
+// Components
 import ProdexGrid from '../../../components/table'
 import { AttachmentManager } from '../../attachments'
 // Constants
+import * as OrdersHelper from '../../../components/helpers/Orders'
 import { columnsRelatedOrdersDetailDocuments } from '../constants'
 import { getMimeType } from '../../../components/getMimeType'
+import { currencyUSSymbol } from '../../../constants/index'
 // Styles
 import { CustomDivAddDocument } from './Detail.styles'
+// Services
+import { getSafe, getFormattedAddress, uniqueArrayByKey } from '../../../utils/functions'
+import { getLocaleDateFormat } from '../../../components/date-format'
 
 
 export const getOrder = (state, ownProps) => {

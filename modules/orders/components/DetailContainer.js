@@ -1,7 +1,10 @@
 import { connect } from 'react-redux'
+// Components
 import Detail from './Detail'
+// Actions
 import * as Actions from '../actions'
 import { downloadAttachment, addAttachment } from '../../inventory/actions'
+// Services
 import { getOrder } from './Detail.service'
 
 import {

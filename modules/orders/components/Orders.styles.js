@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Modal, Container, Icon, Button, Dimmer, Loader, Dropdown } from 'semantic-ui-react'
-import { CheckCircle, ChevronDown, ChevronUp, ChevronRight } from 'react-feather'
+import { Modal, Dropdown } from 'semantic-ui-react'
+import { CheckCircle } from 'react-feather'
 
 
 export const CustomA = styled.a`

@@ -1,26 +1,18 @@
-
 import styled from 'styled-components'
 import {
   Grid,
   Segment,
   Accordion,
-  AccordionContent,
   GridColumn,
   Table,
   List,
-  Label,
   Button,
-  Icon,
-  Divider,
-  Header,
-  Popup,
-  GridRow,
   Dropdown,
   Input,
-  Dimmer,
   Modal
 } from 'semantic-ui-react'
-import { ArrowLeft, ChevronDown, DownloadCloud, PlusCircle, UploadCloud, Link2 } from 'react-feather'
+import { ChevronDown, PlusCircle, UploadCloud, Link2 } from 'react-feather'
+
 
 export const OrderSegment = styled(Segment)`
 width: calc(100% - 64px);
