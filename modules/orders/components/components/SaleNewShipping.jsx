@@ -1,12 +1,9 @@
-import { Modal, ModalContent, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
-import { Form, Input } from 'formik-semantic-ui-fixed-validation'
+import { Modal, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
-
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
+// Styles
+import { ModalBody } from '../../styles'
 
 const initValues = {}
 

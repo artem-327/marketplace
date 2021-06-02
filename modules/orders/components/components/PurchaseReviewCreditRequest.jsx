@@ -1,38 +1,15 @@
 import { useEffect, useState } from 'react'
-import { Modal, ModalContent, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
 import moment from 'moment'
 import * as val from 'yup'
-
-import { errorMessages } from '../../../../constants/yupValidation'
+// Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
-
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
-
-const AccordionTitle = styled(Accordion.Title)`
-  font-size: 1.12rem;
-  line-height: 1.5;
-
-  i.chevron {
-    margin-right: 1rem;
-    vertical-align: center;
-  }
-`
-
-const ButtonsRow = styled(Grid.Row)`
-  > .column {
-    width: auto !important;
-    margin-left: 0 !important;
-
-    &:first-child {
-      margin-left: auto !important;
-    }
-  }
-`
+// Services
+import { errorMessages } from '../../../../constants/yupValidation'
+// Styles
+import { ModalBody, AccordionTitle, ButtonsRow } from '../../styles'
 
 const initValues = {
   counterValue: null,

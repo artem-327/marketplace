@@ -3,66 +3,25 @@ import {
   Modal,
   Dimmer,
   Loader,
-  ModalContent,
   Table,
   Grid,
-  Header,
   Button,
-  Segment,
-  Tab,
-  TabPane,
   Menu,
   Label
 } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
-import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
 import moment from 'moment'
-
-import { getSafe, generateToastMarkup } from '../../../../utils/functions'
+// Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+// Services
+import { getSafe, generateToastMarkup } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { UploadCloud } from 'react-feather'
-
-const UploadCloudIcon = styled(UploadCloud)`
-  color: #2599d5 !important;
-`
-
-const ModalBody = styled(ModalContent)`
-  padding: 0 1.5rem 1.5rem !important;
-`
-
-const TabMenu = styled(Tab)`
-  .ui.pointing.secondary.menu {
-    margin: 0 0 6px !important;
-    box-shadow: 0 3px 0 0 #ccc !important;
-  }
-`
-
-const LotsTab = styled(TabPane)`
-  margin: 0 !important;
-  border: 0 none !important;
-  padding: 0 !important;
-  .uploadAttachment {
-    padding: 0em !important;
-    font-size: 1rem !important;
-  }
-  .ui.table tr.active,
-  .ui.table .td.active {
-    background: #f8f9fb !important;
-  }
-`
-
-const DivIcon = styled.div`
-  display: flex !important;
-`
-
-const AIcon = styled.a`
-  margin-left: 0.8vw;
-`
+// Styles
+import { UploadCloudIcon, ModalBody, TabMenu, LotsTabs, DivIcon, AIcon } from '../../styles'
 
 const initValues = {
   tab: [
@@ -214,7 +173,7 @@ const SaleAttachingProductOffer = props => {
     if (!getSafe(() => offers.length, 0)) return <></>
 
     return (
-      <LotsTab active={state.activeTab === tabIndex}>
+      <LotsTabs active={state.activeTab === tabIndex}>
         <Grid style={{ marginTop: '0.5em' }}>
           <Grid.Column width={14}>
             <FormattedMessage
@@ -439,7 +398,7 @@ const SaleAttachingProductOffer = props => {
             </Button>
           </Grid.Column>
         </Grid>
-      </LotsTab>
+      </LotsTabs>
     )
   }
 

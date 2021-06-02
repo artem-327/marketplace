@@ -1,81 +1,24 @@
 import { useState } from 'react'
-import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
-import { Form, TextArea, Input } from 'formik-semantic-ui-fixed-validation'
+import { Modal, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
+import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
 import * as val from 'yup'
 import { Check } from 'react-feather'
-
+//Components
+import BasicButton from '../../../../components/buttons/BasicButton'
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
 import { generateToastMarkup } from '../../../../utils/functions'
 import { errorMessages } from '../../../../constants/yupValidation'
-import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 import { getSafe } from '../../../../utils/functions'
 //Styles
 import { PaperclipIcon } from '../../../company-form/components/AddCertifications/AddCertifications.styles'
 import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/DetailRow.style'
-//Components
-import BasicButton from '../../../../components/buttons/BasicButton'
-import confirm from '../../../../components/Confirmable/confirm'
-
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
-
-const StrongTitle = styled.strong`
-  display: flex;
-  align-items: center;
-`
-
-const CreditInput = styled.div`
-  padding-left: 10px;
-  padding-right: 10px;
-`
-
-const CustomA = styled.a`
-  color: #2599d5;
-`
-
-const SpanModalText = styled.span`
-  text-align: center;
-`
-
-const reasons = [
-  {
-    value: 1,
-    label: { id: 'order.reject.SPECIFICATION_NOT_MET', defaultMessage: 'Product does not meet specification' }
-  },
-  {
-    value: 2,
-    label: { id: 'order.reject.PACKAGING_NOT_AS_DESCRIBED', defaultMessage: 'Packaging is not as described' }
-  },
-  {
-    value: 3,
-    label: { id: 'order.reject.BAD_PAPERWORK', defaultMessage: 'Paperwork is not in compliance' }
-  },
-  {
-    value: 4,
-    label: { id: 'order.reject.NOT_PROPERLY_LABELED', defaultMessage: 'Product is not properly labeled' }
-  },
-  {
-    value: 5,
-    label: {
-      id: 'order.reject.DELIVERY_VEHICLE_NOT_PLACARDED',
-      defaultMessage: 'Delivery vehicle is not properly placarded'
-    }
-  },
-  {
-    value: 6,
-    label: {
-      id: 'order.reject.DELIVERY_EQUIPMENT_NOT_AS_REQUESTED',
-      defaultMessage: 'Delivery equipment was not as requested'
-    }
-  },
-  {
-    value: 7,
-    label: { id: 'order.reject.OTHER', defaultMessage: 'Other' }
-  }
-]
+import { ModalBody, StrongTitle, CreditInput, CustomA, SpanModalText } from '../../styles'
+// Constants
+import { reasons } from '../../constants'
 
 const initValues = {
   reasonText: null,

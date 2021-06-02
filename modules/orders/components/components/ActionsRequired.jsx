@@ -1,23 +1,12 @@
-import { Segment, Grid, Header, Button } from 'semantic-ui-react'
+import { Segment, Grid, Header } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '../../../../utils/functions'
 import moment from 'moment/moment'
-import confirm from '../../../../components/Confirmable/confirm'
 import { AlertCircle, AlertTriangle, CheckCircle, Info } from 'react-feather'
-import styled from 'styled-components'
-
-const ARButton = styled(Button)`
-  float: right;
-  width: auto !important;
-  height: 40px;
-  margin-left: 10px !important;
-  margin-right: 0 !important;
-  margin-top: 10px !important;
-  padding: 10px 26px !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  line-height: 20px !important;
-`
+// Services
+import { getSafe } from '../../../../utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+// Styles
+import { ARButton } from '../../styles'
 
 const ActionsRequired = props => {
   const confirmCall = d => {

@@ -1,50 +1,14 @@
 import { useState } from 'react'
-import { Modal, ModalContent, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
+import { Modal, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import styled from 'styled-components'
+// Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+// Styles
+import { ModalBody } from '../../styles'
+// Constants
+import { reasons } from '../../constants'
 
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
-//temporary
-const reasons = [
-  {
-    value: 1,
-    label: { id: 'order.reject.SPECIFICATION_NOT_MET', defaultMessage: 'Product does not meet specification' }
-  },
-  {
-    value: 2,
-    label: { id: 'order.reject.PACKAGING_NOT_AS_DESCRIBED', defaultMessage: 'Packaging is not as described' }
-  },
-  {
-    value: 3,
-    label: { id: 'order.reject.BAD_PAPERWORK', defaultMessage: 'Paperwork is not in compliance' }
-  },
-  {
-    value: 4,
-    label: { id: 'order.reject.NOT_PROPERLY_LABELED', defaultMessage: 'Product is not properly labeled' }
-  },
-  {
-    value: 5,
-    label: {
-      id: 'order.reject.DELIVERY_VEHICLE_NOT_PLACARDED',
-      defaultMessage: 'Delivery vehicle is not properly placarded'
-    }
-  },
-  {
-    value: 6,
-    label: {
-      id: 'order.reject.DELIVERY_EQUIPMENT_NOT_AS_REQUESTED',
-      defaultMessage: 'Delivery equipment was not as requested'
-    }
-  },
-  {
-    value: 7,
-    label: { id: 'order.reject.OTHER', defaultMessage: 'Other' }
-  }
-]
 
 const initValues = {
   reasonComment: null,

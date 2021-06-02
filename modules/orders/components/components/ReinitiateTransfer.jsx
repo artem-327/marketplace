@@ -1,18 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Modal, ModalContent, Header, Button, Grid, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import { Modal, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
-import styled from 'styled-components'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import * as val from 'yup'
+// Services
 import { errorMessages } from '../../../../constants/yupValidation'
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
+// Styles
+import { ModalBody, Subtitle } from '../../styles'
 
-const Subtitle = styled(Header)`
-  margin-top: 1em;
-  font-weight: 400;
-`
 
 const initValues = {
   paymentAccount: undefined

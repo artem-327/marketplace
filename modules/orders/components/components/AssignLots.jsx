@@ -1,40 +1,17 @@
 import { useEffect, useState } from 'react'
-import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from 'semantic-ui-react'
-import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+import { Modal, Table, Grid, Button, Menu, Label } from 'semantic-ui-react'
 import { FieldArray } from 'formik'
-import { getSafe } from '../../../../utils/functions'
-import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
-import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
-import confirm from '../../../../components/Confirmable/confirm'
-import styled from 'styled-components'
 import * as val from 'yup'
+import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
+import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
+// Components
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+// Services
+import { getSafe } from '../../../../utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
 import { errorMessages } from '../../../../constants/yupValidation'
-
-const ModalBody = styled(ModalContent)`
-  padding: 0 1.5rem 1.5rem !important;
-`
-
-const TabMenu = styled(Tab)`
-  .ui.pointing.secondary.menu {
-    margin: 0 0 6px !important;
-    box-shadow: 0 3px 0 0 #ccc !important;
-  }
-`
-
-const LotsTab = styled(TabPane)`
-  margin: 0 !important;
-  border: 0 none !important;
-  padding: 0 !important;
-`
-
-const Subtitle = styled(Header)`
-  margin-top: 1em;
-  font-weight: 400;
-`
-
-const TableWrapper = styled(Segment)`
-  padding: 1em 2em 3em !important;
-`
+// Styles
+import { ModalBody, TabMenu, LotsTab, Subtitle, TableWrapper} from '../../styles'
 
 const initValues = {
   tabLots: [

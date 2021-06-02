@@ -2,106 +2,45 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import {
   Modal,
-  ModalContent,
   Button,
   Grid,
   Dimmer,
-  Header,
   Loader,
-  Segment,
   GridColumn,
   GridRow,
-  Table,
-  Message
 } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
 import { AlertCircle } from 'react-feather'
 import { debounce } from 'lodash'
-//Components
-import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
-import { DateInput } from '../../../../components/custom-formik'
-import { currency } from '../../../../constants/index'
+// Components
 import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
+import FreightLabel from '../../../../components/freight'
+import { DateInput } from '../../../../components/custom-formik'
+// Services
+import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
+import { currency } from '../../../../constants/index'
 import '../../../purchase-order/styles/PurchaseOrder.scss'
 import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
 import { getSafe } from '../../../../utils/functions'
-import FreightLabel from '../../../../components/freight'
-//Styled
-import styled from 'styled-components'
+// Constants
+import { FREIGHT_TYPES } from '../../constants'
+// Styles
+import {
+  ModalBody,
+  CustomGrid,
+  CustomButton,
+  Rectangle,
+  CustomDivTitle,
+  CustomDivContent,
+  CustomDivInTitle,
+  CustomSubmitButton,
+  Line,
+  GridRowLine,
+  GridColumnText
+} from '../../styles'
 
-const FREIGHT_TYPES = {
-  ECHO: 'ECHO_FREIGHT',
-  OWN: 'OWN_FREIGHT'
-}
-
-const ModalBody = styled(ModalContent)`
-  padding: 1.5rem !important;
-`
-
-const CustomGrid = styled(Grid)`
-  input,
-  textarea {
-    background-color: #fdfdfd !important;
-  }
-`
-
-const CustomButton = styled(Button)`
-  background-color: #ffffff !important;
-  border: solid 1px #dee2e6 !important;
-`
-
-const Rectangle = styled.div`
-  border-radius: 4px;
-  border: solid 1px orange;
-  background-color: #ffffff;
-  margin-bottom: 15px;
-  align-items: center;
-  display: block;
-  padding: 10px;
-  font-size: 14px;
-`
-
-const CustomDivTitle = styled.div`
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.43;
-  letter-spacing: normal;
-  color: #0d0d0d;
-  display: flex;
-`
-
-const CustomDivContent = styled.div`
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: 1.43;
-  letter-spacing: normal;
-  color: #848893;
-  padding: 4px 30px;
-`
-
-const CustomDivInTitle = styled.div`
-  padding-left: 10px;
-`
-
-const CustomSubmitButton = styled(Button)`
-  background-color: #2599d5 !important;
-`
-
-const Line = styled.div`
-  border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-`
-
-const GridRowLine = styled(Grid.Row)`
-  border-top: 1px solid rgba(34, 36, 38, 0.15);
-`
-
-const GridColumnText = styled(GridColumn)`
-  font-weight: bold !important;
-`
 
 const SaleReturnShipping = props => {
   const [state, setState] = useState({
