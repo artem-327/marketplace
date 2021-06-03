@@ -3486,6 +3486,19 @@ input[type='number'] {
               }
             }
           }
+
+          table {
+            border-spacing: 0;
+
+            tr td {
+              background-color: #ffffff !important;
+
+              &:nth-child(n):before {
+                content: none !important;
+                display: none !important;
+              }
+            }
+          }
         }
       }
     }
