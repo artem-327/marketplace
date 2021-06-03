@@ -66,11 +66,8 @@ context("Inventory CRUD", () => {
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
 
         cy.get("[data-test=modal_inventory_save_new]").click({ force: true })
-        cy.wait("@newOffer")
         cy.wait("@newOffer").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
-            //cy.log(response.body.id)
-            //cy.wrap(response.body.id).as('wrappedId')
             offerId = response.body.id
             cy.log(offerId)
         })

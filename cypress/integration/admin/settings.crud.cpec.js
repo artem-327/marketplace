@@ -3,7 +3,7 @@ context("Admin Settings RUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("GET", "/prodex/api/settings/admin").as("adminLoading")
         cy.intercept("PATCH", "/prodex/api/settings/admin").as("settingsSaving")
         cy.FElogin(adminJSON.email, adminJSON.password)

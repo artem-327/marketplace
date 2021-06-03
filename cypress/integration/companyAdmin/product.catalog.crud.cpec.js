@@ -74,7 +74,6 @@ context("Company Product Catalog CRUD", () => {
         cy.enterText("#field_input_packageWeight", "5")
 
         cy.get("[data-test='settings_product_popup_submit_btn']").click()
-        cy.wait("@productCreate")
         cy.wait("@productCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
         })

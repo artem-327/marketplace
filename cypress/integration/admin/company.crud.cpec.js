@@ -5,7 +5,7 @@ context("Companies CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard").as("dashboardload")
+        cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")
         cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
         cy.intercept("GET", "/_next/static/webpack/").as("datagridLoad")
@@ -60,7 +60,6 @@ context("Companies CRUD", () => {
 
         cy.clickSave()
 
-        cy.wait("@companyCreate")
         cy.wait("@companyCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
         })

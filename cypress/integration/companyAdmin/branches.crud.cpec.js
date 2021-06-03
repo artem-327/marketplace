@@ -11,7 +11,7 @@ context("Prodex Branches CRUD", () => {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/branches/datagrid").as("branchesLoadingPOST")
-        cy.intercept("POST", "/prodex/api/branches").as("branchCreate")
+        cy.intercept("POST", "/prodex/api/branches?*").as("branchCreate")
         cy.intercept("POST", "/prodex/api/customers/datagrid").as("customersPOST")
 
         cy.FElogin(userJSON.email, userJSON.password)
@@ -49,7 +49,6 @@ context("Prodex Branches CRUD", () => {
         cy.enterText("input[id='field_input_deliveryAddress.contactEmail']", "test@central.com")
 
         cy.get('[data-test=settings_branches_popup_submit_btn]').click()
-        cy.wait("@branchCreate")
         cy.wait("@branchCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })

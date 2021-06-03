@@ -3,7 +3,7 @@ context("Units of measure CRUD", () => {
     const adminJSON = require('../../fixtures/admin.json')
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard").as("loading")
+        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/units/datagrid").as("unitLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)

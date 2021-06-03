@@ -3,12 +3,14 @@ context("Prodex Bank Account CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("GET", "/prodex/api/payments/bank-accounts/velloci").as("bankAccountLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.openSettings()
+        cy.wait("@settingsLoading", { timeout: 100000 })
         cy.waitForUI()
         cy.get("[data-test='navigation_settings_bank_accounts_drpdn']").click()
         cy.wait("@bankAccountLoading")

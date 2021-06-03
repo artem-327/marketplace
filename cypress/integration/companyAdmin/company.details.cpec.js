@@ -66,6 +66,7 @@ context("Company Details", () => {
         cy.get('#field_input_socialFacebook').should("have.value", "https://automation" + recogniser + ".com")
         cy.get('#field_input_socialTwitter').should("have.value", "@Tag" + recogniser)
         cy.get('#field_input_socialInstagram').should("have.value", "@Tag" + recogniser)
+        cy.waitForUI()
     })
 
     it("Checks error message", () => {

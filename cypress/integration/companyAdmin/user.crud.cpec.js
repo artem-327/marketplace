@@ -70,6 +70,8 @@ context("Prodex User CRUD", () => {
 
         cy.get("#field_input_email")
             .should("have.value", "automation@example.com")
+
+        cy.waitForUI()
     })
 
     it("Edits a user", () => {
@@ -90,6 +92,7 @@ context("Prodex User CRUD", () => {
 
         cy.get("#field_input_name")
             .should("have.value", "Jen Automator")
+        cy.waitForUI()
     })
 
     it("Edit user roles a user", () => {
@@ -112,6 +115,7 @@ context("Prodex User CRUD", () => {
             cy.contains("Merchant").prev().should("not.be.checked")
             cy.contains("Order View").prev().should("be.checked")
         })
+        cy.waitForUI()
     })
 
     it("Checks error messages", () => {
