@@ -82,6 +82,7 @@ context("Generic Company Product CRUD", () => {
         cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
+        cy.waitForUI()
         cy.openElement(productId, 4)
 
         cy.get("[data-test=settings_product_alt_name_add_btn]")
@@ -110,6 +111,7 @@ context("Generic Company Product CRUD", () => {
         cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
+        cy.waitForUI()
         cy.openElement(productId, 4)
 
         cy.get("input[id='field_input_productAltNames[0].alternativeName']")

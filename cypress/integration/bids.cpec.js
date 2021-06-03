@@ -61,9 +61,9 @@ context("Bids Tests", () => {
         cy.waitForUI()
         cy.getUserToken(userJSON2.email, userJSON2.password).then(token => {
             let filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [productId] }]
-            cy.getFirstEntityWithFilter(token, 'product-offer-bids/own', filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
                 if (itemId != null)
-                    cy.deleteEntity(token, 'product-offer-bids/id', itemId)
+                    cy.deleteEntity(token, 'product-offers', itemId)
             })
         })
     })

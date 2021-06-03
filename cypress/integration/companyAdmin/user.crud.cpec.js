@@ -8,7 +8,7 @@ context("Prodex User CRUD", () => {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/companies/id/**").as("companyLoading")
         cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
-        cy.intercept("GET", "/prodex/api/settings/user").as("usersLogin")
+        cy.intercept("POST", "/prodex/api/users/datagrid").as("usersLogin")
         cy.intercept("POST", "/prodex/api/users").as("usersSave")
         cy.viewport(2500, 1200)
 

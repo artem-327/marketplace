@@ -21,7 +21,7 @@ context("Admin Settings RUD", () => {
 
     it("Update settings", function () {
         cy.contains("Other Settings")
-        cy.get("div:nth-child(43)").within(() => {
+        cy.get("div:nth-child(44)").within(() => {
             cy.get("input")
                 .clear()
                 .type("tomas-artio@email.cz")

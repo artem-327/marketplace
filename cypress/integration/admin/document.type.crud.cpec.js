@@ -72,6 +72,7 @@ context("Document Types CRUD", () => {
     })
 
     it("Deletes a document", () => {
+        cy.searchInList("TYPE2")
         cy.openElement(typeId, 1)
 
         cy.contains("Yes").click()

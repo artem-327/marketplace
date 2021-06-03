@@ -3,7 +3,7 @@ context("Company Details", () => {
 
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.intercept("GET", "/prodex/api/companies/id/**/all-info").as("allInfoLoading")
+        cy.intercept("GET", "/prodex/api/companies/id/**/logo").as("logoLoading")
         cy.intercept("GET", "/prodex/api/tradepass/my-tradepass").as("tradePassLoading")
         cy.intercept("PATCH", "/prodex/api/companies/id/**/details").as("detailsSaving")
 
@@ -11,9 +11,9 @@ context("Company Details", () => {
 
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.openSettings()
-        cy.wait("@allInfoLoading")
+        cy.wait("@tradePassLoading")
         cy.get("[data-test='navigation_settings_company_details_drpdn']").click()
-        cy.wait("@allInfoLoading")
+        cy.wait("@logoLoading")
     })
 
     it("Check company data", () => {
@@ -59,7 +59,7 @@ context("Company Details", () => {
         })
 
         cy.reload()
-        cy.wait("@allInfoLoading", { timeout: 100000 })
+        cy.wait("@logoLoading", { timeout: 100000 })
 
         cy.get('#field_input_website').should("have.value", "https://automation" + recogniser + ".com")
         cy.get('#field_input_socialLinkedin').should("have.value", "https://automation" + recogniser + ".com")
