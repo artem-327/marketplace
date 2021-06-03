@@ -15,20 +15,41 @@ import ProdexGrid from '~/components/table'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import Tutorial from '~/modules/tutorial/Tutorial'
 import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
+import DeaPopup from '../../listings/components/ConfirmationPopups/DeaPopup'
+import DhsPopup from '../../listings/components/ConfirmationPopups/DhsPopup'
 
 // Styles
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 
 // Services
-import { setInitFilters, handleFilterChangeInputSearch, getRows, handleUpdateFinished } from './BidsSent.services'
+import {
+  setInitFilters,
+  handleFilterChangeInputSearch,
+  getRows,
+  handleUpdateFinished,
+  handleAddToCart
+} from './BidsSent.services'
 import { getSafe } from '~/utils/functions'
 
 const BidsSent = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [filterValues, setFilterValues] = useState({ searchInput: '' })
   const [rowDetailState, setRowDetailState] = useState(null)
+  const [buyAttemptHasDea, setBuyAttemptHasDea] = useState(null)
+  const [buyAttemptHasDhs, setBuyAttemptHasDhs] = useState(null)
 
-  const state = { expandedRowIds, setExpandedRowIds, filterValues, setFilterValues, rowDetailState, setRowDetailState }
+  const state = {
+    expandedRowIds,
+    setExpandedRowIds,
+    filterValues,
+    setFilterValues,
+    rowDetailState,
+    setRowDetailState,
+    buyAttemptHasDea,
+    setBuyAttemptHasDea,
+    buyAttemptHasDhs,
+    setBuyAttemptHasDhs
+  }
 
   // Similar to call componentDidMount:
   useEffect(() => {
@@ -51,7 +72,7 @@ const BidsSent = props => {
     }
   }, [])  // If [] is empty then is similar as componentDidMount.
 
-  const { datagrid, intl, loading, isOpenPopup } = props
+  const { datagrid, intl, loading, isOpenPopup, addOfferToCart } = props
   let { formatMessage } = intl
   const rows = getRows(state, props)
 
@@ -111,8 +132,32 @@ const BidsSent = props => {
         />
       </div>
       {isOpenPopup && <MakeOfferPopup />}
+      {buyAttemptHasDea && !buyAttemptHasDhs && (
+        <DeaPopup
+          onCancel={() => setBuyAttemptHasDea(null)}
+          onAccept={() => {
+            handleAddToCart(buyAttemptHasDea, props)
+            setBuyAttemptHasDea(null)
+          }}
+        />
+      )}
+      {buyAttemptHasDhs && (
+        <DhsPopup
+          onCancel={() => {
+            setBuyAttemptHasDea(null)
+            setBuyAttemptHasDhs(null)
+          }}
+          onAccept={() => {
+            if (buyAttemptHasDea) {
+              setBuyAttemptHasDhs(null)
+            } else {
+              handleAddToCart(buyAttemptHasDhs, props)
+              setBuyAttemptHasDhs(null)
+            }
+          }}
+        />
+      )}
     </Container>
-
   )
 }
 

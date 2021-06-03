@@ -647,31 +647,31 @@ const BidsRowDetail = props => {
                 </Form>
               </DivDetailRow>
             </DivScrollContent>
-            {buyAttemptHasDea && !buyAttemptHasDhs &&
-            <DeaPopup
-              onCancel={() => setBuyAttemptHasDea(null)}
-              onAccept={() => {
-                handleCheckout(buyAttemptHasDea.id, props)
-                setBuyAttemptHasDea(null)
-              }}
-            />
-            }
-            {buyAttemptHasDhs &&
-            <DhsPopup
-              onCancel={() => {
-                setBuyAttemptHasDea(null)
-                setBuyAttemptHasDhs(null)
-              }}
-              onAccept={() => {
-                if (buyAttemptHasDea) {
+            {buyAttemptHasDea && !buyAttemptHasDhs && (
+              <DeaPopup
+                onCancel={() => setBuyAttemptHasDea(null)}
+                onAccept={() => {
+                  handleCheckout(buyAttemptHasDea.id, props)
+                  setBuyAttemptHasDea(null)
+                }}
+              />
+            )}
+            {buyAttemptHasDhs && (
+              <DhsPopup
+                onCancel={() => {
+                  setBuyAttemptHasDea(null)
                   setBuyAttemptHasDhs(null)
-                } else {
-                  handleCheckout(buyAttemptHasDhs.id, props)
-                  setBuyAttemptHasDhs(null)
-                }
-              }}
-            />
-            }
+                }}
+                onAccept={() => {
+                  if (buyAttemptHasDea) {
+                    setBuyAttemptHasDhs(null)
+                  } else {
+                    handleCheckout(buyAttemptHasDhs.id, props)
+                    setBuyAttemptHasDhs(null)
+                  }
+                }}
+              />
+            )}
           </>
         )
       }}
