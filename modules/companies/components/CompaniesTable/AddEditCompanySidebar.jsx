@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Form, FormGroup, Divider, Accordion, Icon, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { cloneDeep } from 'lodash'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 // Components
