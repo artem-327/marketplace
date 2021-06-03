@@ -13,7 +13,7 @@ const getAccessRights = roles => {
 
   if (roles) {
     ROLES_ENUM.forEach(role => {
-      accessRights[role.propertyName] = !!roles.find(el => el.id === role.id)
+      accessRights[role.propertyName] = !!roles.find(el => el.role === role.role)
     })
   }
 

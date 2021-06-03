@@ -982,7 +982,7 @@ export default withAuth(
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
         collapsedMenu: store?.layout?.collapsedMenu,
-        isOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.name === 'Operator'),
+        isOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.role === 'OPERATOR'),
         companiesTabsNames: store?.companiesAdmin?.tabsNames,
         productsTabsNames: store?.productsAdmin?.tabsNames,
         alertTab: store?.alerts?.topMenuTab,

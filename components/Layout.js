@@ -585,7 +585,7 @@ const mapStateToProps = state => {
         'false'
       ).toLowerCase() === 'true',
     companyName: getSafe(() => state.auth.identity.company.name, false),
-    isOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.name === 'Operator'),
+    isOperator: getSafe(() => state.auth.identity.roles, []).some(role => role.role === 'OPERATOR'),
     isOrderOperator: getSafe(() => state.auth.identity.isOrderOperator, false),
     renderCopyright: getSafe(() => state.settings.renderCopyright, false),
     adminTab: getSafe(() => state.admin.currentTab.id, null),

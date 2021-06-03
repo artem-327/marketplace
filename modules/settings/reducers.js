@@ -412,7 +412,6 @@ export default function reducer(state = initialState, action) {
           // preferredCurrency: (user.preferredCurrency || {}).id || 0,
           preferredCurrency: currency,
           homeBranch: user.homeBranch.name,
-          permissions: user.roles ? user.roles.name : '', // ! ! array?
           id: user.id,
           allUserRoles: user.roles || [],
           lastLoginAt: user.lastLoginAt
