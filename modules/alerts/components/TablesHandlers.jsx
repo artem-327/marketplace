@@ -1,21 +1,25 @@
 import { connect } from 'react-redux'
 import { useEffect, useState, createRef } from 'react'
 import { Popup } from 'semantic-ui-react'
-import BasicButton from '../../../components/buttons/BasicButton'
 import { debounce } from 'lodash'
-import * as Actions from '../actions'
-import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import { Mail } from '@material-ui/icons'
 import { Trash2 } from 'react-feather'
+
+// Components
+import BasicButton from '../../../components/buttons/BasicButton'
+import { withDatagrid } from '../../datagrid'
+
+// Actions
+import * as Actions from '../actions'
 
 //Hooks
 import { usePrevious } from '../../../hooks'
 
+// Styles
 import { DivHeaderRow, DivHeaderSection, DivHeaderColumn, InputSearch } from './TablesHandlers.styles'
 
+// Services
 import {
   handleFiltersValue,
   handleFilterChangeInputSearch,

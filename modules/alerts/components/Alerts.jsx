@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
+import { injectIntl } from 'react-intl'
+
+// Components
 import { withDatagrid, DatagridProvider } from '../../datagrid'
-import { getSafe } from '../../../utils/functions'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '../../tutorial/Tutorial'
 import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopup'
+
+// Services
+import { getSafe } from '../../../utils/functions'
+
+// Actions
 import { getCategories, loadData } from '../actions'
-import { injectIntl } from 'react-intl'
 
 const Alerts = props => {
   const { isOpenPopupOperations} = props

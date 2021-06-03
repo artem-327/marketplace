@@ -2,13 +2,19 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import * as Actions from '../../actions'
 import { FileText } from 'react-feather'
-import { downloadAttachment, downloadAttachmentPdf } from '~/modules/inventory/actions'
 import { GridRow, GridColumn } from 'semantic-ui-react'
-import { GridAttachments, RowDocument, DetailMessage, StyledGrid } from '../Alerts.styles'
+
+// Services
+import { getSafe } from '../../../../utils/functions'
 import { downloadFile } from '../Alerts.services'
+
+// Actions
+import * as Actions from '../../actions'
+import { downloadAttachment, downloadAttachmentPdf } from '../../../inventory/actions'
+
+// Styles
+import { GridAttachments, RowDocument, DetailMessage, StyledGrid } from '../Alerts.styles'
 
 const GenericProductRequest = props => {
   const { row } = props

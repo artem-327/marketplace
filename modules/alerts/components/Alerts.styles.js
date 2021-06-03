@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Grid, GridRow, GridColumn, Segment, List, Label, Header, Image } from 'semantic-ui-react'
+import { Grid, GridRow, Segment, List, Label, Header, Image } from 'semantic-ui-react'
 
 export const RowDocument = styled(GridRow)`
   padding: 11px 20px 10px 15px;
@@ -219,5 +219,49 @@ export const CheckIcon = styled.div`
   svg {
     width: 14px;
     height: 14px;
+  }
+`
+
+export const DivSimpleText = styled.div`
+  color: #20273a;
+`
+
+export const AddressGrid = styled(Grid)`
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #f8f9fb;
+  font-size: 14px;
+
+  &.ui.grid {
+    margin: 0 5px;
+    padding: 12px 10px;
+    width: 240px;
+
+    .row {
+      margin: 0;
+      padding: 0;
+    }
+
+    .column {
+      margin: 0;
+      padding: 0 5px;
+      color: #20273a;
+
+      &.header {
+        font-size: 12px;
+        font-weight: normal;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
+        color: #848893;
+        margin-bottom: 3px;
+      }
+
+      &.company-name {
+        color: #20273a;
+        font-weight: bolder;
+      }
+    }
   }
 `

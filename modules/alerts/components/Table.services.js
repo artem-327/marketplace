@@ -1,16 +1,18 @@
-import styled from 'styled-components'
 import moment from 'moment'
-import { FormattedMessage } from 'react-intl'
-import { Label, Popup, Checkbox } from 'semantic-ui-react'
+import { Popup, Checkbox } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
-import { getSafe } from '~/utils/functions'
-
 import { ChevronUp, ChevronDown, Check } from 'react-feather'
+import Link from 'next/link'
+
+// Services
+import { getSafe } from '../../../utils/functions'
+
+// Components
 import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
-import Link from 'next/link'
 
+// Styles
 import {
   StyledNotification,
   StyledAlertHeader,

@@ -1,17 +1,22 @@
-import { Fragment, Component } from 'react'
-import { useEffect, useState } from 'react'
+import { Fragment } from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import ProdexTable from '~/components/table'
-import * as Actions from '../actions'
-import { withDatagrid } from '~/modules/datagrid'
 
-import { COLUMNS } from './Table.constants'
-
+// Services
+import { getSafe } from '../../../utils/functions'
 import { getRows, getRowDetail, toggleCellComponent } from './Table.services'
 
+// Components
+import ProdexTable from '../../../components/table'
+import { withDatagrid } from '../../datagrid'
+
+// Actions
+import * as Actions from '../actions'
+
+// Constants
+import { COLUMNS } from './Table.constants'
 
 const Table = props => {
   const { intl, datagrid, markSeenSending, selectedRows } = props

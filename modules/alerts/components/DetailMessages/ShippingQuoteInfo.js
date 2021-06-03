@@ -2,91 +2,27 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import * as Actions from '../../actions'
-import styled from 'styled-components'
-import { openPopup as openPopupOperations } from '~/modules/operations/actions'
 import Router from 'next/router'
 import moment from 'moment'
-import { currency } from '~/constants/index'
+import { GridRow, GridColumn, List } from 'semantic-ui-react'
+
+// Services
+import { getSafe } from '../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../components/date-format'
+
+// Actions
+import * as Actions from '../../actions'
+import { openPopup as openPopupOperations } from '../../../operations/actions'
+
+// Constants
+import { currency } from '../../../../constants/index'
+
+// Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 
-import { Grid, GridRow, GridColumn, Segment, List, Button } from 'semantic-ui-react'
-
-import { TableSegment, ListTable, DetailMessage, StyledGrid } from '../Alerts.styles'
-
-const DivSimpleText = styled.div`
-  color: #20273a;
-`
-
-const DivProductName = styled.div`
-  font-size: 16px;
-  font-weight: bold;
-  color: #20273a;
-  margin: -3px 0;
-`
-
-export const AddressGrid = styled(Grid)`
-  border-radius: 4px;
-  border: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  font-size: 14px;
-
-  &.ui.grid {
-    margin: 0;
-    padding: 12px 10px;
-    width: 240px;
-
-    .row {
-      margin: 0;
-      padding: 0;
-    }
-
-    .column {
-      margin: 0;
-      padding: 0 5px;
-      color: #20273a;
-
-      &.header {
-        font-size: 12px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: normal;
-        letter-spacing: normal;
-        color: #848893;
-        margin-bottom: 3px;
-      }
-
-      &.company-name {
-        color: #20273a;
-        font-weight: bolder;
-      }
-    }
-  }
-`
-
-const AddressRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 5px 0;
-`
-
-const DivBottomButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-`
-
-const GridRowDescription = styled(GridRow)`
-  &.row {
-    margin: -5px 0 10px !important;
-  }
-`
-
-// ! ! TODO  .description { font-weight: bold; }
+// Styles
+import { TableSegment, ListTable, DetailMessage, StyledGrid, DivSimpleText, AddressGrid } from '../Alerts.styles'
+import { AddressRow, DivBottomButtons, DivProductName, GridRowDescription } from './ShippingQuoteInfo.styles'
 
 const ShippingQuoteInfo = props => {
   const displayAddress = ({ address, company }) => {
