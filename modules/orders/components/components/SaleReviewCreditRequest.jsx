@@ -3,27 +3,12 @@ import { Modal, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-u
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
-import * as val from 'yup'
 // Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
-// Services
-import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
 import { ModalBody, AccordionTitle, ButtonsRow } from '../../styles'
-
-const initValues = {
-  counterValue: null,
-  messageBuyer: null
-}
-
-const validationSchema = val.object().shape({
-  counterValue: val
-    .number()
-    .min(0, errorMessages.minimum(0))
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage),
-  messageBuyer: val.string().typeError(errorMessages.invalidString).required(errorMessages.requiredMessage)
-})
+// Services
+import { initValues, validationSchema, submitHandler, handleChange, acceptRequestCredit, handleClick, downloadAttachment } from './SaleReviewCreditRequest.services'
 
 const SaleReviewCreditRequest = props => {
   const [state, setState] = useState({
@@ -42,68 +27,6 @@ const SaleReviewCreditRequest = props => {
     })
     setState({ ...state, activeIndexes: arrayIndexes })
   }, [])
-
-  const submitHandler = async (values, actions) => {
-    const { closePopup, orderId, creditCounter } = props
-    const { counterValue, messageBuyer, attachments } = values
-    try {
-      const request = {
-        amount: counterValue,
-        message: messageBuyer
-      }
-
-      await creditCounter(orderId, request, attachments)
-      closePopup()
-    } catch (e) {
-      console.error(e)
-    } finally {
-      actions.setSubmitting(false)
-    }
-  }
-
-  const handleChange = (e, value, name, setFieldValue) => {
-    e.preventDefault()
-    setState({ ...state, [name]: value })
-    setFieldValue(name, value)
-  }
-
-  const acceptRequestCredit = async e => {
-    e.preventDefault()
-    const { closePopup, orderId, creditAccept } = props
-
-    try {
-      await creditAccept(orderId)
-      closePopup()
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  const handleClick = (e, titleProps) => {
-    const { index } = titleProps
-    const { activeIndexes } = state
-
-    activeIndexes[index] = activeIndexes[index] ? false : true
-
-    setState({ ...state, activeIndexes })
-  }
-
-  const prepareLinkToAttachment = async attachmentId => {
-    let downloadedFile = await props.downloadCreditRequestAttachments('purchase', props.orderId, attachmentId)
-    const element = document.createElement('a')
-    let fileURL = URL.createObjectURL(downloadedFile.value.data)
-    element.href = fileURL
-
-    return element
-  }
-
-  const downloadAttachment = async (documentName, attachmentId) => {
-    const element = await prepareLinkToAttachment(attachmentId)
-    element.download = documentName
-    document.body.appendChild(element) // Required for this to work in FireFoxs
-    element.click()
-  }
-
   
   const {
     intl: { formatMessage },
@@ -130,7 +53,7 @@ const SaleReviewCreditRequest = props => {
               validateOnChange={true}
               validationSchema={validationSchema}
               initialValues={{ ...initValues }}
-              onSubmit={submitHandler}
+              onSubmit={(values, actions) => submitHandler(values, actions, props)}
               className='flex stretched'
               style={{ padding: '0' }}>
               {({ values, submitForm, setFieldValue, resetForm }) => {
@@ -166,7 +89,7 @@ const SaleReviewCreditRequest = props => {
                               {creditRequestHistory.map((reason, i) => {
                                 return (
                                   <div key={reason.id}>
-                                    <AccordionTitle active={activeIndexes[i]} index={i} onClick={handleClick}>
+                                    <AccordionTitle active={activeIndexes[i]} index={i} onClick={(e, titleProps) => handleClick(e, titleProps, state, setState)}>
                                       <Icon
                                         name={'chevron ' + (activeIndexes[i] ? 'down' : 'right')}
                                         size='small'
@@ -196,7 +119,7 @@ const SaleReviewCreditRequest = props => {
                                                   <Button
                                                     as='a'
                                                     onClick={() =>
-                                                      downloadAttachment(attachment.fileName, attachment.id)
+                                                      downloadAttachment(attachment.fileName, attachment.id, props)
                                                     }>
                                                     <Icon name='download' />
                                                     {attachment.fileName}
@@ -230,7 +153,7 @@ const SaleReviewCreditRequest = props => {
                             </Button>
                           </Grid.Column>
                           <Grid.Column floated='right' width={3}>
-                            <Button color='blue' fluid type='button' onClick={acceptRequestCredit}>
+                            <Button color='blue' fluid type='button' onClick={e => acceptRequestCredit(e, props)}>
                               <FormattedMessage id='global.accept' defaultMessage='Accept' tagName='span' />
                             </Button>
                           </Grid.Column>
@@ -252,7 +175,7 @@ const SaleReviewCreditRequest = props => {
                               <Input
                                 name='counterValue'
                                 inputProps={{
-                                  onChange: (e, { value, name }) => handleChange(e, value, name, setFieldValue),
+                                  onChange: (e, { value, name }) => handleChange(e, value, name, setFieldValue, state, setState),
                                   label: formatMessage({
                                     id: 'order.counterValue',
                                     defaultMessage: 'Counter Value:'
@@ -267,7 +190,7 @@ const SaleReviewCreditRequest = props => {
                           <Grid.Row>
                             <Grid.Column>
                               <TextArea
-                                onChange={(e, { value, name }) => handleChange(e, value, name, setFieldValue)}
+                                onChange={(e, { value, name }) => handleChange(e, value, name, setFieldValue, state, setState)}
                                 name='messageBuyer'
                                 label={formatMessage({
                                   id: 'order.messageBuyer',

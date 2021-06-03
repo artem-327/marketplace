@@ -10,20 +10,17 @@ import {
   GridRow,
 } from 'semantic-ui-react'
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
 import moment from 'moment'
 import { AlertCircle } from 'react-feather'
-import { debounce } from 'lodash'
 // Components
 import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
 import FreightLabel from '../../../../components/freight'
 import { DateInput } from '../../../../components/custom-formik'
 // Services
-import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
 import { currency } from '../../../../constants/index'
 import '../../../purchase-order/styles/PurchaseOrder.scss'
-import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
 import { getSafe } from '../../../../utils/functions'
+import { submitHandler, onDateChange, requestManualShippingQuote, getInitialFormValues, validationSchema } from './SaleReturnShipping.services'
 // Constants
 import { FREIGHT_TYPES } from '../../constants'
 // Styles
@@ -57,101 +54,6 @@ const SaleReturnShipping = props => {
     }
   }, [])
 
-  const submitHandler = async (values, actions) => {
-    const { closePopup, order, orderId, shippingQuotes } = props
-
-    let formValues = {
-      pickupRemarks: values.pickupRemarks.trim(),
-      deliveryRemarks: values.deliveryRemarks.trim(),
-      shipperRefNo: values.shipperRefNo.trim(),
-      freightType: values.freightType
-    }
-
-    try {
-      values.freightType === FREIGHT_TYPES.ECHO
-        ? (formValues.quoteId = (order.cfWeightExceeded ||
-          !getSafe(() => shippingQuotes.rates[state.selectedShippingQuote].quoteId, '')
-            ? values.shipmentQuoteId
-            : getSafe(() => shippingQuotes.rates[state.selectedShippingQuote].quoteId, '')
-          ).trim())
-        : null,
-        await props.returnShipmentOrder(orderId, formValues)
-      props.getSaleOrder(orderId)
-      closePopup()
-    } catch (e) {
-      console.error(e.response)
-    } finally {
-      actions.setSubmitting(false)
-    }
-  }
-
-  const onDateChange = debounce(async (event, { name, value }) => {
-    if (!value || errors.pickupDate) return
-
-    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
-    if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
-      // if current date (today) is selected the pickupDate (datetime) is in past
-      pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
-    }
-    pickupDate = pickupDate.format()
-
-    if (!props.order.cfWeightExceeded) {
-      try {
-        await props.getReturnShipmentRates(props.order.id, pickupDate)
-      } catch {
-      } finally {
-      }
-      setState({ ...state, selectedShippingQuote: 0 })
-    }
-  }, 250)
-
-  const requestManualShippingQuote = async () => {
-    const { order } = props
-
-    try {
-      //orderId, countryId, zip
-      await props.getManualShippingQuote(order.id, {
-        destinationCountryId: order.returnAddressCountryReference.id,
-        destinationZIP: order.returnAddressZip
-      })
-    } catch {
-    } finally {
-    }
-  }
-
-  const getInitialFormValues = () => {
-    const { order } = props
-
-    let initialValues = {
-      pickupDate: getSafe(() => order.shipDate, ''),
-      shipmentQuoteId: '',
-      pickupRemarks: '',
-      deliveryRemarks: '',
-      shipperRefNo: '',
-      freightType: FREIGHT_TYPES.ECHO
-    }
-
-    if (initialValues.pickupDate && moment(initialValues.pickupDate).isAfter(moment()))
-      initialValues.pickupDate = moment(initialValues.pickupDate).format(getLocaleDateFormat())
-    else initialValues.pickupDate = moment().format(getLocaleDateFormat())
-
-    return initialValues
-  }
-
-  const validationSchema = () =>
-    Yup.lazy(values => {
-      return Yup.object().shape({
-        pickupDate: dateValidation(false).concat(
-          Yup.string().test(
-            'min-date',
-            errorMessages.mustBeInFuture,
-            val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
-          )
-        )
-      })
-    })
-
-  
   const {
     intl: { formatMessage },
     orderId,
@@ -180,8 +82,8 @@ const SaleReturnShipping = props => {
               validationSchema={validationSchema()}
               enableReinitialize
               validateOnChange={true}
-              initialValues={getInitialFormValues()}
-              onSubmit={submitHandler}
+              initialValues={getInitialFormValues(props)}
+              onSubmit={(values, actions) => submitHandler(values, actions, props, state)}
               className='flex stretched'
               style={{ padding: '0' }}>
               {formikProps => {
@@ -198,7 +100,7 @@ const SaleReturnShipping = props => {
                               // minDate: moment(),
                               fluid: true,
                               placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
-                              onChange: async (event, val) => await onDateChange(event, val),
+                              onChange: async (event, val) => await onDateChange(event, val, errors, props, state, setState),
                               'data-test': 'return_shipping_pickup_date'
                             }}
                             label={
@@ -261,7 +163,7 @@ const SaleReturnShipping = props => {
                           )}
                           <Grid.Row>
                             <Grid.Column width={6}>
-                              <CustomButton type='button' fluid onClick={() => requestManualShippingQuote()}>
+                              <CustomButton type='button' fluid onClick={() => requestManualShippingQuote(props)}>
                                 <FormattedMessage
                                   id='cart.requestShippingQuote'
                                   defaultMessage='Request Shipping Quote'

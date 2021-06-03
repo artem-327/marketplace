@@ -3,7 +3,6 @@ import { Modal, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import * as val from 'yup'
 import { Check } from 'react-feather'
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
@@ -11,7 +10,6 @@ import UploadAttachment from '../../../inventory/components/upload/UploadAttachm
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 import { generateToastMarkup } from '../../../../utils/functions'
-import { errorMessages } from '../../../../constants/yupValidation'
 import { getSafe } from '../../../../utils/functions'
 //Styles
 import { PaperclipIcon } from '../../../company-form/components/AddCertifications/AddCertifications.styles'
@@ -25,14 +23,6 @@ const initValues = {
   reason: null,
   credit: null
 }
-
-const validationSchema = val.object().shape({
-  credit: val
-    .number()
-    .min(0, errorMessages.minimum(0))
-    .typeError(errorMessages.mustBeNumber)
-    .required(errorMessages.requiredMessage)
-})
 
 const PurchaseRequestCreditDelivery = props => {
   const [state, setState] = useState({
@@ -153,8 +143,6 @@ const PurchaseRequestCreditDelivery = props => {
           <Modal.Description>
             <Form
               enableReinitialize
-              //validateOnChange={true}
-              //validationSchema={validationSchema}
               initialValues={{ ...initValues }}
               onSubmit={submitHandler}
               className='flex stretched'
