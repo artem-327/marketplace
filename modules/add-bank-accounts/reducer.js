@@ -1,6 +1,13 @@
-import * as AT from './action-types'
+import typeToReducer from 'type-to-reducer'
 //Services
 import { getSafe } from '../../utils/functions'
+//Actions
+import {
+  onEventVelloci,
+  getVellociToken,
+  getVellociBusinessId,
+  addVellociAcount
+} from './actions'
 
 export const initialState = {
   loading: false,
@@ -8,80 +15,83 @@ export const initialState = {
   vellociBusinessId: ''
 }
 
-export default function reducer(state = initialState, action) {
-  const { payload } = action
-
-  switch (action.type) {
-    /* GET_VELLOCI_TOKEN */
-    case AT.GET_VELLOCI_TOKEN_PENDING: {
+export default typeToReducer(
+  {
+    [onEventVelloci.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.GET_VELLOCI_TOKEN_FULFILLED: {
+    },
+    [onEventVelloci.fulfilled]: (state, { payload }) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [onEventVelloci.rejected]: state => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [getVellociToken.pending]: state => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [getVellociToken.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         loading: false,
         vellociToken: payload
       }
-    }
-
-    case AT.GET_VELLOCI_TOKEN_REJECTED: {
+    },
+    [getVellociToken.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    /* GET_VELLOCI_BUSINESS_ID */
-    case AT.GET_VELLOCI_BUSINESS_ID_PENDING: {
+    },
+    [getVellociBusinessId.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.GET_VELLOCI_BUSINESS_ID_FULFILLED: {
+    },
+    [getVellociBusinessId.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         loading: false,
         vellociBusinessId: getSafe(() => payload.vellociBusinessId, '')
       }
-    }
-
-    case AT.GET_VELLOCI_BUSINESS_ID_REJECTED: {
+    },
+    [getVellociBusinessId.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    /* ADD_VELLOCI_ACOUNT */
-    case AT.ADD_VELLOCI_ACOUNT_PENDING: {
+    },
+    [addVellociAcount.pending]: state => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.ADD_VELLOCI_ACOUNT_FULFILLED: {
+    },
+    [addVellociAcount.fulfilled]: (state, { payload }) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.ADD_VELLOCI_ACOUNT_REJECTED: {
+    },
+    [addVellociAcount.rejected]: state => {
       return {
         ...state,
         loading: false
       }
-    }
+    },
+  },
 
-    default: {
-      return state
-    }
-  }
-}
+  initialState
+)
