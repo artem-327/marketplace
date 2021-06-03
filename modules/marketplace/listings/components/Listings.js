@@ -25,6 +25,8 @@ import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
 import ViewOnlyPopup from './ConfirmationPopups/ViewOnlyPopup'
+import DeaPopup from './ConfirmationPopups/DeaPopup'
+import DhsPopup from './ConfirmationPopups/DhsPopup'
 
 const defaultHiddenColumns = [
   'origin',
@@ -229,7 +231,9 @@ class Listings extends Component {
       filterValues: {
         SearchByNamesAndTags: null
       },
-      viewOnlyPopupOpen: false
+      viewOnlyPopupOpen: false,
+      buyAttemptHasDea: null,
+      buyAttemptHasDhs: null
     }
   }
 
@@ -404,11 +408,26 @@ class Listings extends Component {
   }
 
   checkBuyAttempt = row => {
-    if (!this.props.buyEligible) {
-      this.setState({ viewOnlyPopupOpen: true })
-      return
+    let skipBuy = false
+    const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
+    const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+    const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
+
+    if (hasDea) {
+      this.setState({ buyAttemptHasDea: row })
+      skipBuy = true
+    }
+    if (hasDhs) {
+      this.setState({ buyAttemptHasDhs: row })
+      skipBuy = true
     }
 
+    if (!this.props.buyEligible) {
+      this.setState({ viewOnlyPopupOpen: true })
+      skipBuy = true
+    }
+
+    if (skipBuy) return
     this.tableRowClicked(row.id, row?.sellerId)
   }
 
@@ -477,7 +496,13 @@ class Listings extends Component {
       isOpenPopup,
       buyEligible
     } = this.props
-    const { columns, openFilterPopup, viewOnlyPopupOpen } = this.state
+    const {
+      columns,
+      openFilterPopup,
+      viewOnlyPopupOpen,
+      buyAttemptHasDea,
+      buyAttemptHasDhs
+    } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
 
@@ -570,6 +595,28 @@ class Listings extends Component {
         {openFilterPopup && <Filter onClose={() => this.setState({ openFilterPopup: false })} />}
         {isOpenPopup && <MakeOfferPopup />}
         {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => this.setState({ viewOnlyPopupOpen: false })} />}
+        {buyAttemptHasDea && !buyAttemptHasDhs &&
+          <DeaPopup
+            onCancel={() => this.setState({ buyAttemptHasDea: null })}
+            onAccept={() => {
+              this.tableRowClicked(buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)
+              this.setState({ buyAttemptHasDea: null })
+            }}
+          />
+        }
+        {buyAttemptHasDhs &&
+          <DhsPopup
+            onCancel={() => this.setState({ buyAttemptHasDhs: null, buyAttemptHasDea: null })}
+            onAccept={() => {
+              if (buyAttemptHasDea) {
+                this.setState({ buyAttemptHasDhs: null })
+              } else {
+                this.tableRowClicked(buyAttemptHasDhs.id, buyAttemptHasDhs?.sellerId)
+                this.setState({ buyAttemptHasDhs: null })
+              }
+            }}
+          />
+        }
       </Container>
     )
   }
