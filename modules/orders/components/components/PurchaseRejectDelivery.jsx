@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Modal, Button, Grid, Dimmer, Loader, FormGroup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 // Styles
@@ -197,6 +198,22 @@ const PurchaseRejectDelivery = props => {
       </Modal>
     </>
   )
+}
+
+PurchaseOrderShipping.propTypes = {
+  orderId: PropTypes.number,
+  closePopup: PropTypes.func, 
+  rejectPurchaseOrder: PropTypes.func,
+  intl: PropTypes.object,
+  isSending: PropTypes.bool
+}
+
+PurchaseOrderShipping.defaultValues = {
+  orderId: 0,
+  closePopup: () => {}, 
+  rejectPurchaseOrder: () => {},
+  intl: {},
+  isSending: false
 }
 
 export default injectIntl(PurchaseRejectDelivery)

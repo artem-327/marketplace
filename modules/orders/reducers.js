@@ -37,7 +37,7 @@ const initialState = {
   opendSaleAttachingProductOffer: false,
   groupedProductOffers: [],
   loadingGroupedProductOffers: false,
-  order: [],
+  order: {},
   documentTypesFetching: false,
   listDocumentTypes: [],
   loadingRelatedDocuments: false,

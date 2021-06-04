@@ -1,5 +1,6 @@
 import { injectIntl } from 'react-intl'
 import moment from 'moment/moment'
+import PropTypes from 'prop-types'
 // Services
 import {
   confirmOrder,
@@ -28,7 +29,6 @@ const ActionsRequired = props => {
     detail,
     openReinitiateTransfer,
     openPopupName,
-    orderCreditHistoryOpen,
     isSending,
     openedPopup,
     sellEligible,
@@ -272,6 +272,72 @@ const ActionsRequired = props => {
       )}
     </>
   )
+}
+
+ActionsRequired.propTypes = {
+  orderStatus: PropTypes.number,
+  shippingStatus: PropTypes.number,
+  reviewStatus: PropTypes.number,
+  creditReviewStatus: PropTypes.number,
+  returnStatus: PropTypes.number,
+  disputeResolutionStatus: PropTypes.number,
+  ordersType: PropTypes.string,
+  shippingTrackingCode: PropTypes.string, 
+  returnShippingTrackingCode: PropTypes.string, 
+  detail: PropTypes.object,
+  intl: PropTypes.object,
+  order: PropTypes.object, 
+  assignLotsRequired: PropTypes.bool,
+  isSending: PropTypes.bool,
+  sellEligible: PropTypes.bool,
+  actionNeeded: PropTypes.bool,
+  openReinitiateTransfer: PropTypes.func,
+  openPopupName: PropTypes.func,
+  openedPopup: PropTypes.func,
+  confirmOrder: PropTypes.func,
+  openAssignLots: PropTypes.func,
+  rejectOrder: PropTypes.func,
+  shipOrder: PropTypes.func,
+  returnShipOrder: PropTypes.func,
+  confirmReturned: PropTypes.func,
+  cancelOrder: PropTypes.func,
+  approveOrder: PropTypes.func,
+  discardOrder: PropTypes.func,
+  receivedOrder: PropTypes.func,
+  acceptDelivery: PropTypes.func
+}
+
+ActionsRequired.defaultValues = {
+  orderStatus: 0,
+  shippingStatus: 0,
+  reviewStatus: 0,
+  creditReviewStatus: 0,
+  returnStatus: 0,
+  disputeResolutionStatus: 0,
+  ordersType: '',
+  shippingTrackingCode: '', 
+  returnShippingTrackingCode: '', 
+  detail: {},
+  intl: {},
+  order: {}, 
+  assignLotsRequired: false,
+  isSending: false,
+  sellEligible: false,
+  actionNeeded: false,
+  openReinitiateTransfer: () => {},
+  openPopupName: () => {},
+  openedPopup: () => {},
+  confirmOrder: () => {},
+  openAssignLots: () => {},
+  rejectOrder: () => {},
+  shipOrder: () => {},
+  returnShipOrder: () => {},
+  confirmReturned: () => {},
+  cancelOrder: () => {},
+  approveOrder: () => {},
+  discardOrder: () => {},
+  receivedOrder: () => {},
+  acceptDelivery: () => {}
 }
 
 export default injectIntl(ActionsRequired)

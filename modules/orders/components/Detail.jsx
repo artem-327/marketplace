@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ArrowLeft, DownloadCloud, Link2 } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment/moment'
+import PropTypes from 'prop-types'
 import {
   Grid,
   AccordionContent,
@@ -156,7 +157,6 @@ const Detail = props => {
   const {
     router,
     order,
-    action,
     isDetailFetching,
     openedAssignLots,
     openedReinitiateTransfer,
@@ -1238,6 +1238,94 @@ const Detail = props => {
       </div>
     </div>
   )
+}
+
+Detail.propTypes = {
+  router: PropTypes.object, 
+  order: PropTypes.object,
+  toastManager: PropTypes.object,
+  intl: PropTypes.object,
+  appInfo: PropTypes.object,
+  isDetailFetching: PropTypes.bool,
+  openedAssignLots: PropTypes.bool,
+  openedReinitiateTransfer: PropTypes.bool,
+  openedEnterTrackingIdShip: PropTypes.bool,
+  openedEnterTrackingIdReturnShip: PropTypes.bool,
+  openedPurchaseRejectDelivery: PropTypes.bool,
+  openedPurchaseRequestCreditDelivery: PropTypes.bool,
+  openedPurchaseReviewCreditRequest: PropTypes.bool,
+  openedSaleReturnShipping: PropTypes.bool,
+  openedSaleReviewCreditRequest: PropTypes.bool,
+  openedPurchaseOrderShipping: PropTypes.bool,
+  opendSaleAttachingProductOffer: PropTypes.bool,
+  loadingRelatedDocuments: PropTypes.bool,
+  isPaymentCancellable: PropTypes.bool,
+  isOrderProcessing: PropTypes.bool,
+  isCompanyAdmin: PropTypes.bool,
+  isAdmin: PropTypes.bool,
+  openedDisputedRequest: PropTypes.bool,
+  isSending: PropTypes.bool,
+  echoSupportPhone: PropTypes.array,
+  listDocumentTypes: PropTypes.array, 
+  cancelPayment: PropTypes.func,
+  editTrackingCode: PropTypes.func,
+  editReturnTrackingCode: PropTypes.func,
+  orderResolutionAccept: PropTypes.func,
+  orderResolutionReopen: PropTypes.func,
+  closePopup: PropTypes.func,
+  linkAttachmentToOrder: PropTypes.func, 
+  getPurchaseOrder: PropTypes.func,
+  unlinkAttachmentToOrder: PropTypes.func,
+  downloadAttachment: PropTypes.func,
+  getSaleOrder: PropTypes.func,
+  loadDetail: PropTypes.func, 
+  getDocumentTypes: PropTypes.func, 
+  clearOrderDetail: PropTypes.func,
+  linkAttachmentToOrderItem: PropTypes.func
+}
+
+Detail.defaultValues = {
+  router: {}, 
+  order: {},
+  toastManager: {},
+  intl: {},
+  appInfo: {},
+  isDetailFetching: false,
+  openedAssignLots: false,
+  openedReinitiateTransfer: false,
+  openedEnterTrackingIdShip: false,
+  openedEnterTrackingIdReturnShip: false,
+  openedPurchaseRejectDelivery: false,
+  openedPurchaseRequestCreditDelivery: false,
+  openedPurchaseReviewCreditRequest: false,
+  openedSaleReturnShipping: false,
+  openedSaleReviewCreditRequest: false,
+  openedPurchaseOrderShipping: false,
+  opendSaleAttachingProductOffer: false,
+  loadingRelatedDocuments: false,
+  isPaymentCancellable: false,
+  isOrderProcessing: false,
+  isCompanyAdmin: false,
+  isAdmin: false,
+  openedDisputedRequest: false,
+  isSending: false,
+  echoSupportPhone: [],
+  listDocumentTypes: [], 
+  cancelPayment: () => {},
+  editTrackingCode: () => {},
+  editReturnTrackingCode: () => {},
+  orderResolutionAccept: () => {},
+  orderResolutionReopen: () => {},
+  closePopup: () => {},
+  linkAttachmentToOrder: () => {}, 
+  getPurchaseOrder: () => {},
+  unlinkAttachmentToOrder: () => {},
+  downloadAttachment: () => {},
+  getSaleOrder: () => {},
+  loadDetail: () => {}, 
+  getDocumentTypes: () => {}, 
+  clearOrderDetail: () => {},
+  linkAttachmentToOrderItem: () => {}
 }
 
 export default injectIntl(withToastManager(Detail))

@@ -1,6 +1,7 @@
 import { Modal, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 // Styles
@@ -112,6 +113,22 @@ const EnterTrackingIdReturnShip = props => {
       </Modal>
     </>
   )
+}
+
+EnterTrackingIdReturnShip.propTypes = {
+  orderId: PropTypes.number,
+  closePopup: PropTypes.func,
+  returnShipOrder: PropTypes.func,
+  intl: PropTypes.object,
+  isSending: PropTypes.bool
+}
+
+EnterTrackingIdReturnShip.defaultValues = {
+  orderId: 0,
+  closePopup: () => {},
+  returnShipOrder: () => {},
+  intl: {},
+  isSending: false
 }
 
 export default injectIntl(EnterTrackingIdReturnShip)

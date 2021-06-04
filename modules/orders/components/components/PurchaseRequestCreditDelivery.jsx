@@ -4,6 +4,7 @@ import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import { Check } from 'react-feather'
+import PropTypes from 'prop-types'
 //Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
@@ -263,6 +264,28 @@ const PurchaseRequestCreditDelivery = props => {
       </Modal>
     </>
   )
+}
+
+PurchaseOrderShipping.propTypes = {
+  orderId: PropTypes.number,
+  closePopup: PropTypes.func, 
+  rejectPurchaseOrder: PropTypes.func,
+  creditRequest: PropTypes.func,
+  intl: PropTypes.object,
+  toastManager: PropTypes.object,
+  appInfo: PropTypes.string,
+  isSending: PropTypes.bool
+}
+
+PurchaseOrderShipping.defaultValues = {
+  orderId: 0,
+  closePopup: () => {}, 
+  rejectPurchaseOrder: () => {},
+  creditRequest: () => {},
+  intl: {},
+  toastManager: {},
+  appInfo: '',
+  isSending: false
 }
 
 export default withToastManager(injectIntl(PurchaseRequestCreditDelivery))

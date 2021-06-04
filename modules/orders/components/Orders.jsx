@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Modal, Container, Button } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Components
 import Spinner from '../../../components/Spinner/Spinner'
 import ProdexGrid from '../../../components/table'
@@ -55,7 +56,7 @@ const Orders = props => {
     }
   }, [])
 
-  const { isFetching, currentTab, datagrid, tutorialCompleted, tableHandlersFilters, saveFilters } = props
+  const { isFetching, currentTab, datagrid, tableHandlersFilters, saveFilters } = props
 
   const { relatedPopupParams } = state
 
@@ -167,6 +168,56 @@ const Orders = props => {
       </Container>
     </div>
   )
+}
+
+Orders.propTypes = {
+  tableHandlersFilters: PropTypes.object,
+  rows: PropTypes.object,
+  intl: PropTypes.object,
+  datagrid: PropTypes.object,
+  getDocumentTypes: PropTypes.func,
+  saveFilters: PropTypes.func,
+  getRelatedOrders: PropTypes.func,
+  downloadAttachmentPdf: PropTypes.func,
+  downloadAttachment: PropTypes.func,
+  clearRelatedOrders: PropTypes.func, 
+  unlinkAttachmentToOrder: PropTypes.func,
+  removeLinkAttachmentToOrderItem: PropTypes.func,
+  linkAttachmentToOrder: PropTypes.func,
+  linkAttachmentToOrderItem: PropTypes.func,
+  currentTab: PropTypes.string,
+  relatedOrders: PropTypes.array,
+  router: PropTypes.array,
+  listDocumentTypes: PropTypes.array,
+  loadRelatedOrders: PropTypes.bool,
+  documentTypesFetching: PropTypes.bool,
+  isFetching: PropTypes.bool,
+  loadingRelatedDocuments: PropTypes.bool
+}
+
+Orders.defaultValues = {
+  tableHandlersFilters: {},
+  rows: {},
+  intl: {},
+  datagrid: {},
+  getDocumentTypes: () => {},
+  saveFilters: () => {},
+  getRelatedOrders: () => {},
+  downloadAttachmentPdf: () => {},
+  downloadAttachment: () => {},
+  clearRelatedOrders: () => {}, 
+  unlinkAttachmentToOrder: () => {},
+  removeLinkAttachmentToOrderItem: () => {},
+  linkAttachmentToOrder: () => {},
+  linkAttachmentToOrderItem: () => {},
+  currentTab: '',
+  relatedOrders: [],
+  router: [],
+  listDocumentTypes: [],
+  loadRelatedOrders: false,
+  documentTypesFetching: false,
+  isFetching: false,
+  loadingRelatedDocuments: false
 }
 
 export default injectIntl(withToastManager(Orders))

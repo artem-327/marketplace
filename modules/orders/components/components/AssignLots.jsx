@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Modal, Menu } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form } from 'formik-semantic-ui-fixed-validation'
+import PropTypes from 'prop-types'
 // Services
 import { getSafe } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
@@ -211,6 +212,30 @@ const AssignLots = props => {
       </Modal>
     </>
   )
+}
+
+AssignLots.propTypes = {
+  orderId: PropTypes.number, 
+  orderItems: PropTypes.array, 
+  poLots: PropTypes.array,
+  intl: PropTypes.object, 
+  loadLotsToAssign: PropTypes.func,
+  closeAssignLots: PropTypes.func,
+  assignLots: PropTypes.func,
+  linkAttachment: PropTypes.func,
+  removeAttachment: PropTypes.func
+}
+
+AssignLots.defaultValues = {
+  orderId: 0, 
+  orderItems: [], 
+  poLots: [],
+  intl: {}, 
+  loadLotsToAssign: () => {},
+  closeAssignLots: () => {},
+  assignLots: () => {},
+  linkAttachment: () => {},
+  removeAttachment: () => {}
 }
 
 export default injectIntl(AssignLots)

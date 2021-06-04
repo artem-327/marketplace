@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import { AlertCircle } from 'react-feather'
 import { debounce } from 'lodash'
+import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../../components/custom-formik'
 import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
@@ -311,6 +312,36 @@ const PurchaseOrderShipping = props => {
       </Modal>
     </>
   )
+}
+
+PurchaseOrderShipping.propTypes = {
+  orderId: PropTypes.number,
+  applicationName: PropTypes.string,
+  order: PropTypes.object,
+  intl: PropTypes.object,
+  shippingQuotes: PropTypes.object,
+  isSending: PropTypes.bool,
+  shippingQuotesAreFetching: PropTypes.bool,
+  getShippingQuotes: PropTypes.func,
+  closePopup: PropTypes.func,
+  purchaseShipmentOrder: PropTypes.func,
+  getPurchaseOrder: PropTypes.func,
+  getManualShippingQuote: PropTypes.func
+}
+
+PurchaseOrderShipping.defaultValues = {
+  orderId: 0,
+  applicationName: '',
+  order: {},
+  intl: {},
+  shippingQuotes: {},
+  isSending: false,
+  shippingQuotesAreFetching: false,
+  getShippingQuotes: () => {},
+  closePopup: () => {},
+  purchaseShipmentOrder: () => {},
+  getPurchaseOrder: () => {},
+  getManualShippingQuote: () => {}
 }
 
 export default injectIntl(PurchaseOrderShipping)

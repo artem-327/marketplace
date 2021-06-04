@@ -4,7 +4,7 @@ import { Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
+import PropTypes from 'prop-types'
 // Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { DateInput } from '../../../components/custom-formik'
@@ -260,6 +260,20 @@ const TablesHandlers = props => {
       <CustomRowDiv>{renderHandler()}</CustomRowDiv>
     </PositionHeaderSettings>
   )
+}
+
+TablesHandlers.propTypes = {
+  tableHandlersFilters: PropTypes.object,
+  currentTab: PropTypes.string,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+TablesHandlers.defaultValues = {
+  tableHandlersFilters: {},
+  currentTab: '',
+  datagrid: {},
+  intl: {}
 }
 
 export default withDatagrid(injectIntl(TablesHandlers))
