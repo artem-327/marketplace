@@ -7,7 +7,9 @@ import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../D
  * Segments shows Legal Data, Merketing Data and Verified Data
  * @component
  */
-const BottomSegmentData = props => (
+const BottomSegmentData = props =>{
+  console.log(props)
+  return (
   <GridRowBottomSegment>
     <GridColumnDetail>
       <SegmentGroupHeader horizontal $noneBorder>
@@ -17,7 +19,7 @@ const BottomSegmentData = props => (
       </SegmentGroupHeader>
     </GridColumnDetail>
   </GridRowBottomSegment>
-)
+)}
 
 BottomSegmentData.propTypes = {
   legalData: PropTypes.object,
