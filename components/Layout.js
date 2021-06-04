@@ -577,7 +577,7 @@ const mapStateToProps = state => {
         () => state.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO').value,
         'false'
       ).toLowerCase() === 'true',
-    avatar: getSafe(() => state.auth.identity.avatar, null),
+    avatar: getSafe(() => state.auth.identity.avatarUrl, null),
     gravatarSrc: getSafe(() => state.auth.identity.gravatarSrc, null),
     useGravatar:
       getSafe(
