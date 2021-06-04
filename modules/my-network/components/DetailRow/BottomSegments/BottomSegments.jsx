@@ -8,7 +8,6 @@ import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../D
  * @component
  */
 const BottomSegmentData = props =>{
-  console.log(props)
   return (
   <GridRowBottomSegment>
     <GridColumnDetail>
