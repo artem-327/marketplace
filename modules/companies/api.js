@@ -1,7 +1,5 @@
 import api from '~/api'
 
-import { getSafe, generateQueryString } from '~/utils/functions'
-
 export const udpateEnabled = (id, enabled) =>
   api.patch(`/prodex/api/companies/admin/id/${id}/enabled?enabled=${enabled}`)
 

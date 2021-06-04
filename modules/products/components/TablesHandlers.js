@@ -14,7 +14,7 @@ import { getSafe } from '../../../utils/functions'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { withDatagrid } from '../../datagrid'
 //Styles
-import { CustomRowDiv } from '../../companies/constants'
+import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 
 const PositionHeaderSettings = styled.div`
   position: relative;
@@ -119,7 +119,7 @@ class TablesHandlers extends Component {
     const filterValue = this.state[currentTab]
 
     return (
-      <CustomRowDiv>
+      <DivCustomRow>
         <div>
           <div className='column'>
             {item.SearchText && (
@@ -160,7 +160,7 @@ class TablesHandlers extends Component {
           )}
           <ColumnSettingButton divide={true} />
         </div>
-      </CustomRowDiv>
+      </DivCustomRow>
     )
   }
 

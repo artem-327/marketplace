@@ -255,13 +255,13 @@ class TablesHandlers extends Component {
       if (currentTab === 'bank-accounts' && paymentProcessor === 'DWOLLA' && accountStatus) {
         await getDwollaBeneficiaryOwners()
       }
-      if (paymentProcessor === 'VELLOCI') {
+      if (currentTab === 'bank-accounts' && paymentProcessor === 'VELLOCI') {
         await vellociGetToken()
       }
     } catch (err) {
       console.error(err)
     }
-    if (!documentTypes || documentTypes.length === 0) {
+    if (currentTab === 'documents' && (!documentTypes || documentTypes.length === 0)) {
       try {
         await getDocumentTypes()
       } catch (err) {

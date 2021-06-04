@@ -1,9 +1,8 @@
 import { Component } from 'react'
 import { Container } from 'semantic-ui-react'
-import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
-import { getSafe } from '~/utils/functions'
+import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TableHandlers from './TableHandlers'
-import { withAuth } from '~/hocs'
+import { withAuth } from '../../../hocs'
 import { connect } from 'react-redux'
 
 import CompaniesTable from './CompaniesTable/Table'
