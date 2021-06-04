@@ -12,7 +12,6 @@ import { getSafe, getMimeType, getFormattedAddress } from '../../../utils/functi
 import { getLocaleDateFormat } from '../../../components/date-format'
 // Constants
 import { columns, CONTENT_SUBCOLUMNS, INITIAL_VALUES, VALIDATION_SCHEME } from './WarehouseCredentials.constants'
-import { UserCompany, UserImage, UserName } from '../../alerts/components/layout'
 // Components
 import DetailRow from '../../../components/detail-row'
 import { Popup, FormGroup, FormField, Input } from 'semantic-ui-react'
