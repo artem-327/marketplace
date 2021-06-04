@@ -56,7 +56,7 @@ export const ListTable = styled(List)`
 
       .description {
         font-size: 14px;
-        // ! ! font-weight: bold;
+        //font-weight: bold;
         color: #20273a;
         line-height: 1.2142857;
       }

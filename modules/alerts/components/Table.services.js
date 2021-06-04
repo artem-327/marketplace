@@ -25,6 +25,14 @@ import {
   CheckIcon
 } from './Alerts.styles'
 
+/**
+ * Get Notification row description content (simplified)
+ * @category Alerts Table
+ * @param {object} row row object data
+ * @param {object} state object with state values and set state Hook functions
+ * @param {object} props object with all props (actions, init data, ...)
+ * @returns {object} notification row description content (simplified)
+ */
 const notificationText = (row, state, props) => {
   return (
     <StyledNotification
@@ -43,6 +51,13 @@ const notificationText = (row, state, props) => {
   )
 }
 
+/**
+ * Handle row detail display expand/collapse
+ * @category Alerts Table
+ * @param {integer} rowId row ID
+ * @param {object} state object with state values and set state Hook functions
+ * @returns {none}
+ */
 const toggleDetail = (rowId, state) => {
   let { expandedRowIds, setExpandedRowIds } = state
   if (expandedRowIds.length) {
@@ -65,6 +80,13 @@ const toggleDetail = (rowId, state) => {
   }
 }
 
+/**
+ * Adjust rows, add actions to the rows
+ * @category Alerts Table
+ * @param {object} state object with state values and set state Hook functions
+ * @param {object} props object with all props (actions, init data, ...)
+ * @returns {array} data table (datagrid) array formatted values
+ */
 export const getRows = (state, props) => {
   return props.rows.map(r => {
     const read = r.read ? 'read' : 'unread'
@@ -157,6 +179,13 @@ export const getRows = (state, props) => {
   })
 }
 
+/**
+ * Get expanded notification row detail
+ * @category Alerts Table
+ * @param {object} row row object data
+ * @param {object} state object with state values and set state Hook functions
+  * @returns {object} notification row detail (expanded content)
+ */
 export const getRowDetail = ({ row }, state) => {
   const messageType = row.info && row.info.infoType ? row.info.infoType : ''
   const messageDetailTable = {
@@ -180,6 +209,13 @@ export const getRowDetail = ({ row }, state) => {
   return <>{messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : textMessage}</>
 }
 
+/**
+ * Handle row click on unread notification message (mark as seen)
+ * @category Alerts Table
+ * @param {object} row row object data
+ * @param {object} props object with all props (actions, init data, ...)
+ * @returns {none}
+ */
 const handleClickOnUnread = async (row, props) => {
   const { datagrid, getCategories, markSeen, getCountUnseen } = props
   try {
@@ -196,6 +232,13 @@ const handleClickOnUnread = async (row, props) => {
   }
 }
 
+/**
+ * Toggle component on data table display (datagrid toggle component)
+ * @category Alerts Table
+ * @param {object} datagrid props
+ * @param {object} props object with all props (actions, init data, ...)
+ * @returns {object} toggle component on data table display (datagrid toggle component)
+ */
 export const toggleCellComponent = ({ expanded, onToggle, tableColumn, tableRow, row, style, ...restProps }, props) => {
   const { selectedRows } = props
   return (
