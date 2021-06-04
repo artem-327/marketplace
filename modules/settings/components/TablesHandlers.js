@@ -607,6 +607,7 @@ class TablesHandlers extends Component {
                         <PlaidButton
                           disabled={!vellociToken || !vellociBusinessId || isThirdPartyConnectionException}
                           token={vellociToken}
+                          data-test='settings_open_popup_add_new_btn'
                           publicKey={vellociBusinessId}
                           onExit={this.onExit}
                           onSuccess={this.onSuccess}
