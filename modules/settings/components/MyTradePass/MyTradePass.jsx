@@ -148,11 +148,13 @@ function mapStateToProps({ settings }) {
   const getVerifiedData = (myTradePass) => {
     const businessDocuments = myTradePass?.businessDocuments
     let data = {}
-    Object.keys(businessDocuments).map((key, i) => {
-      if(key !== 'other') {
-        data[key] = businessDocuments[key].status
-      }
-    })
+    if(typeof(businessDocuments) === 'object' && businessDocuments !== null) {
+      Object.keys(businessDocuments).map((key, i) => {
+        if(key !== 'other') {
+          data[key] = businessDocuments[key].status
+        }
+      })
+    }
     return data
   }
   
