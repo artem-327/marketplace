@@ -3,6 +3,7 @@ import { Modal, Accordion, Button, Icon, Grid, Dimmer, Loader } from 'semantic-u
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
+import PropTypes from 'prop-types'
 // Components
 import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
 // Styles
@@ -300,6 +301,28 @@ const SaleReviewCreditRequest = props => {
       </Modal>
     </>
   )
+}
+
+SaleReviewCreditRequest.propTypes = {
+  orderId: PropTypes.number,
+  creditRequestHistory: PropTypes.array,
+  intl: PropTypes.object,
+  isSending: PropTypes.bool,
+  closePopup: PropTypes.func,
+  creditCounter: PropTypes.func,
+  creditAccept: PropTypes.func,
+  downloadCreditRequestAttachments: PropTypes.func
+}
+
+SaleReviewCreditRequest.defaultValues = {
+  orderId: 0,
+  creditRequestHistory: null,
+  intl: {},
+  isSending: false,
+  closePopup: () => {},
+  creditCounter: () => {},
+  creditAccept: () => {},
+  downloadCreditRequestAttachments: () => {}
 }
 
 export default injectIntl(SaleReviewCreditRequest)

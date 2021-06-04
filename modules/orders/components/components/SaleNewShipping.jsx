@@ -2,6 +2,7 @@ import { Modal, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Styles
 import { ModalBody } from '../../styles'
 
@@ -76,6 +77,20 @@ const SaleNewShipping = props => {
       </Modal>
     </>
   )
+}
+
+SaleNewShipping.propTypes = {
+  orderId: PropTypes.number,
+  closePopup: PropTypes.func,
+  intl: PropTypes.object,
+  isSending: PropTypes.bool
+}
+
+SaleNewShipping.defaultValues = {
+  orderId: 0,
+  closePopup: () => {},
+  intl: {},
+  isSending: false
 }
 
 export default withToastManager(injectIntl(SaleNewShipping))

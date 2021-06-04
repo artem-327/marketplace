@@ -200,7 +200,7 @@ const PurchaseRejectDelivery = props => {
   )
 }
 
-PurchaseOrderShipping.propTypes = {
+PurchaseRejectDelivery.propTypes = {
   orderId: PropTypes.number,
   closePopup: PropTypes.func, 
   rejectPurchaseOrder: PropTypes.func,
@@ -208,7 +208,7 @@ PurchaseOrderShipping.propTypes = {
   isSending: PropTypes.bool
 }
 
-PurchaseOrderShipping.defaultValues = {
+PurchaseRejectDelivery.defaultValues = {
   orderId: 0,
   closePopup: () => {}, 
   rejectPurchaseOrder: () => {},

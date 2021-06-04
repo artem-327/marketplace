@@ -370,7 +370,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         country: action.country,
         zip: action.zip,
-        shippingQuotes: [],
+        shippingQuotes: {},
         shippingQuotesAreFetching: true,
         cart: { ...state.cart, selectedShipping: null }
       }

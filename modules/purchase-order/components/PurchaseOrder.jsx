@@ -126,7 +126,7 @@ class PurchaseOrder extends Component {
     isNewAddress: false,
     submitting: false,
     addressId: 'deliveryAddressId',
-    shippingQuotes: [],
+    shippingQuotes: {},
     selectedAddress: null,
     isSetShippingQuoteId: false
   }

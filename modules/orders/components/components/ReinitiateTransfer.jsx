@@ -3,6 +3,7 @@ import { Modal, Button, Grid, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import * as val from 'yup'
+import PropTypes from 'prop-types'
 // Services
 import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
@@ -118,6 +119,32 @@ const ReinitiateTransfer = props => {
       </Modal>
     </>
   )
+}
+
+ReinitiateTransfer.propTypes = {
+  orderId: PropTypes.number,
+  paymentProcessor: PropTypes.string,
+  intl: PropTypes.object,
+  bankAccounts: PropTypes.array,
+  bankAccountsLoading: PropTypes.bool,
+  isThirdPartyConnectionException: PropTypes.bool,
+  loadDwollaBankAccounts: PropTypes.func,
+  loadVellociBankAccounts: PropTypes.func,
+  closeReinitiateTransfer: PropTypes.func,
+  payOrder: PropTypes.func
+}
+
+ReinitiateTransfer.defaultValues = {
+  orderId: 0,
+  paymentProcessor: '',
+  intl: {},
+  bankAccounts: [],
+  bankAccountsLoading: false,
+  isThirdPartyConnectionException: false,
+  loadDwollaBankAccounts: () => {},
+  loadVellociBankAccounts: () => {},
+  closeReinitiateTransfer: () => {},
+  payOrder: () => {}
 }
 
 export default injectIntl(ReinitiateTransfer)

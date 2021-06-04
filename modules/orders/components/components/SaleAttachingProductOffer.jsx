@@ -8,6 +8,7 @@ import {
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Services
 import { getSafe, generateToastMarkup } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
@@ -364,6 +365,42 @@ const SaleAttachingProductOffer = props => {
       </ModalBody>
     </Modal>
   )
+}
+
+SaleAttachingProductOffer.propTypes = {
+  orderId: PropTypes.number,
+  orderItems: PropTypes.array,
+  groupedProductOffers: PropTypes.array,
+  orderItemsId: PropTypes.array,
+  productOffersPkgAmount: PropTypes.any,
+  toastManager: PropTypes.any,
+  intl: PropTypes.object,
+  patchAssignProductOffers: PropTypes.func,
+  closePopup: PropTypes.func,
+  addAttachment: PropTypes.func,
+  linkAttachmentToOrderItem: PropTypes.func,
+  removeLinkAttachmentToOrderItem: PropTypes.func,
+  getGroupedProductOffers: PropTypes.func, 
+  getSaleOrder: PropTypes.func,
+  clearGroupedProductOffer: PropTypes.func
+}
+
+SaleAttachingProductOffer.defaultValues = {
+  orderId: 0,
+  orderItems: [],
+  groupedProductOffers: [],
+  orderItemsId: [],
+  productOffersPkgAmount: null,
+  toastManager: null,
+  intl: {},
+  patchAssignProductOffers: () => {},
+  closePopup: () => {},
+  addAttachment: () => {},
+  linkAttachmentToOrderItem: () => {},
+  removeLinkAttachmentToOrderItem: () => {},
+  getGroupedProductOffers: () => {}, 
+  getSaleOrder: () => {},
+  clearGroupedProductOffer: () => {}
 }
 
 export default withToastManager(injectIntl(SaleAttachingProductOffer))

@@ -266,7 +266,7 @@ const PurchaseRequestCreditDelivery = props => {
   )
 }
 
-PurchaseOrderShipping.propTypes = {
+PurchaseRequestCreditDelivery.propTypes = {
   orderId: PropTypes.number,
   closePopup: PropTypes.func, 
   rejectPurchaseOrder: PropTypes.func,
@@ -277,7 +277,7 @@ PurchaseOrderShipping.propTypes = {
   isSending: PropTypes.bool
 }
 
-PurchaseOrderShipping.defaultValues = {
+PurchaseRequestCreditDelivery.defaultValues = {
   orderId: 0,
   closePopup: () => {}, 
   rejectPurchaseOrder: () => {},

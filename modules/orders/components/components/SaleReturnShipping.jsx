@@ -12,6 +12,7 @@ import {
 import { Form, Input, TextArea } from 'formik-semantic-ui-fixed-validation'
 import moment from 'moment'
 import { AlertCircle } from 'react-feather'
+import PropTypes from 'prop-types'
 // Components
 import ShippingQuote from '../../../purchase-order/components/ShippingQuote'
 import FreightLabel from '../../../../components/freight'
@@ -274,6 +275,36 @@ const SaleReturnShipping = props => {
       </Modal>
     </>
   )
+}
+
+SaleReturnShipping.propTypes = {
+  orderId: PropTypes.number,
+  isSending: PropTypes.bool,
+  shippingQuotesAreFetching: PropTypes.bool,
+  intl: PropTypes.object,
+  order: PropTypes.object,
+  shippingQuotes: PropTypes.object,
+  applicationName: PropTypes.string,
+  getReturnShipmentRates: PropTypes.func,
+  closePopup: PropTypes.func,
+  returnShipmentOrder: PropTypes.func,
+  getSaleOrder: PropTypes.func,
+  getManualShippingQuote: PropTypes.func
+}
+
+SaleReturnShipping.defaultValues = {
+  orderId: 0,
+  isSending: false,
+  shippingQuotesAreFetching: false,
+  intl: {},
+  order: {},
+  shippingQuotes: {},
+  applicationName: '',
+  getReturnShipmentRates: () => {},
+  closePopup: () => {},
+  returnShipmentOrder: () => {},
+  getSaleOrder: () => {},
+  getManualShippingQuote: () => {}
 }
 
 export default injectIntl(SaleReturnShipping)

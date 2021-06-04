@@ -1,5 +1,6 @@
 import { Grid, GridRow } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 // Services
 import { getSafe } from '../../../../utils/functions'
 // Styles
@@ -34,6 +35,18 @@ const TransactionInfo = props => {
       </Grid>
     </StyledSegment>
   )
+}
+
+TransactionInfo.propTypes = {
+  order: PropTypes.object, 
+  echoSupportPhone: PropTypes.array, 
+  applicationName: PropTypes.string
+}
+
+TransactionInfo.defaultValues = {
+  order: {}, 
+  echoSupportPhone: [], 
+  applicationName: ''
 }
 
 export default injectIntl(TransactionInfo)
