@@ -140,7 +140,6 @@ const getActions = (row, state, props) => {
     deleteOffer,
     acceptOffer,
     rejectOffer,
-    addOfferToCart,
     datagrid
   } = props
   const { expandedRowIds } = state
@@ -152,14 +151,7 @@ const getActions = (row, state, props) => {
       id: 'marketplace.purchase',
       defaultMessage: 'Purchase'
     }),
-    callback: async () => {
-      try {
-        const { value } = await addOfferToCart(row.id)
-        Router.push('/cart')
-      } catch (e) {
-        console.error(e)
-      }
-    }
+    callback: async () => checkBuyAttempt(row, state, props)
   }
   const buttonAccept = {
     text: formatMessage({
@@ -242,4 +234,32 @@ const getActions = (row, state, props) => {
   }
   rowActions.push(buttonDelete)
   return rowActions
+}
+
+const checkBuyAttempt = (row, state, props) => {
+  let skipBuy = false
+  const elements = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.elements, [])
+  const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+  const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
+
+  if (hasDea) {
+    state.setBuyAttemptHasDea(row)
+    skipBuy = true
+  }
+  if (hasDhs) {
+    state.setBuyAttemptHasDhs(row)
+    skipBuy = true
+  }
+  if (skipBuy) return
+  handleAddToCart(row, props)
+}
+
+export const handleAddToCart = async (row, props) => {
+  const { addOfferToCart } = props
+  try {
+    const { value } = await addOfferToCart(row.id)
+    Router.push('/cart')
+  } catch (e) {
+    console.error(e)
+  }
 }

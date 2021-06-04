@@ -19,7 +19,7 @@ const DeaPopup = props => {
   const { onCancel, onAccept } = props
 
   const requirements =
-    <LinkLabel href='https://www.google.com' target='_blank'>
+    <LinkLabel href='https://www.deadiversion.usdoj.gov/21cfr/cfr/1301/1301_72.htm' target='_blank'>
       <FormattedMessage id='marketplace.requirements' defaultMessage='requirements' />
     </LinkLabel>
 
