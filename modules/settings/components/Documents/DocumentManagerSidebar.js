@@ -173,7 +173,13 @@ const RightAlignedGroup = styled(FormGroup)`
 class DocumentManagerSidebar extends Component {
   async componentDidMount() {
     const { documentTypes, getDocumentTypes, initialFileType } = this.props
-    if (documentTypes.length === 0) await getDocumentTypes()
+    if (!documentTypes || documentTypes.length === 0) {
+      try {
+        await getDocumentTypes()
+      } catch (err) {
+        console.error(err)
+      }
+    }
     if (initialFileType !== null) this.setFieldValue('documentType.id', initialFileType)
   }
 

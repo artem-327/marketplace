@@ -414,19 +414,14 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles, currentUser] = await Promise.all([
+        const [users, branches, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
-          api.getRoles(),
           api.getCurrentUser()
         ])
         dispatch({
           type: AT.GET_ALL_BRANCHES_DATA,
           payload: branches
-        })
-        dispatch({
-          type: AT.GET_ROLES_DATA,
-          payload: roles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA_FULFILLED,
@@ -435,6 +430,13 @@ export function getUsersDataRequest() {
         return users
       }
     })
+  }
+}
+
+export function getRoles() {
+  return {
+    type: AT.GET_ROLES_DATA,
+    payload: api.getRoles()
   }
 }
 
@@ -563,20 +565,20 @@ export function getBankAccountsDataRequest(type) {
       type: AT.GET_BANK_ACCOUNTS_DATA,
       async payload() {
         const [
-          bankAccountsData,
-          country
+          bankAccountsData
+          //country
           // currency
         ] = await Promise.all([
           type === 'DWOLLA' ? api.getDwollaBankAccountsData() : api.getVellociBankAccountsData(),
-          api.getCountry()
+          //api.getCountry()
           // api.getCurrencies(),
         ])
-        const newCountryFormat = country.map(country => {
-          return {
-            text: country.name,
-            value: country.id
-          }
-        })
+        //const newCountryFormat = country.map(country => {
+        //  return {
+        //    text: country.name,
+        //    value: country.id
+        //  }
+        //})
         // const newCurrencyFormat = currency.map(currency => {
         //   return {
         //     text: currency.code,
@@ -584,8 +586,8 @@ export function getBankAccountsDataRequest(type) {
         //   }
         // })
         return {
-          bankAccountsData,
-          newCountryFormat
+          bankAccountsData
+          // newCountryFormat
           // newCurrencyFormat
         }
       }

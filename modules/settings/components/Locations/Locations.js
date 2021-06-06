@@ -63,15 +63,6 @@ const CustomGridColumn = styled(Grid.Column)`
 `
 
 class Locations extends Component {
-  componentDidMount = async () => {
-    const { getIdentity } = this.props
-    try {
-      await getIdentity()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
   componentWillUnmount() {
     const { isOpenSidebar, closeSidebar } = this.props
     if (isOpenSidebar) closeSidebar()

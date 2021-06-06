@@ -3,20 +3,15 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 import get from 'lodash/get'
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// Constants
-import { currencyId } from '~/constants/index'
 
 // Components
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Dimmer, Loader, Grid, GridRow, GridColumn, Modal, Form } from 'semantic-ui-react'
-import { CheckboxWithValue } from '~/components/custom-formik'
-import { PhoneNumber } from '~/modules/phoneNumber'
-import { Required } from '~/components/constants/layout'
-import ErrorFocus from '~/components/error-focus'
+import { PhoneNumber } from '../../../phoneNumber'
+import { Required } from '../../../../components/constants/layout'
+import ErrorFocus from '../../../../components/error-focus'
 
 // Services
 import {
@@ -27,7 +22,9 @@ import {
   initSearchCompany,
   getUser,
   searchSellMarketSegments,
-  searchBuyMarketSegments
+  searchBuyMarketSegments,
+  getUserRoles,
+  getAdminRoles
 } from '../../actions'
 import {
   userFormValidation,
@@ -42,8 +39,8 @@ import {
   generateCheckboxes,
   searchCompanies
 } from './UsersSidebar.services'
-import { removeEmpty, uniqueArrayByKey, getSafe } from '~/utils/functions'
-import { withDatagrid } from '~/modules/datagrid'
+import { uniqueArrayByKey, getSafe } from '../../../../utils/functions'
+import { withDatagrid } from '../../../datagrid'
 
 // Styles
 import { GridColumnWError, CustomSegment, ModalFixed } from './UsersSidebar.styles'
@@ -53,12 +50,9 @@ const UsersSidebar = props => {
     closePopup,
     userRoles,
     adminRoles,
-    currencies,
     intl: { formatMessage },
-    //searchedCompaniesOptions,
     searchedCompanies,
     searchedCompaniesLoading,
-    isSuperAdmin,
     updating,
     searchedSellMarketSegmentsLoading,
     searchedSellMarketSegments,
@@ -87,15 +81,17 @@ const UsersSidebar = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
+    try {
+      if (!props.userRoles.length) props.getUserRoles()
+      if (!props.adminRoles.length) props.getAdminRoles()
+    } catch (e) {
+      console.error(e)
+    }
     if (props.popupValues) {
       switchUser(props, state)
     } else {
       setPopupValues(null)
     }
-    // Commented by https://pm.artio.net/issues/34033#note-9
-    //props.searchSellMarketSegments('')
-    //props.searchBuyMarketSegments('')
-
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const companiesAll = uniqueArrayByKey(searchedCompanies.concat(selectedCompany), 'id')
@@ -422,7 +418,9 @@ const mapDispatchToProps = {
   initSearchCompany,
   getUser,
   searchSellMarketSegments,
-  searchBuyMarketSegments
+  searchBuyMarketSegments,
+  getUserRoles,
+  getAdminRoles
 }
 
 const mapStateToProps = state => {

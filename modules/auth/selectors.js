@@ -59,5 +59,5 @@ export const makeGetTutorialCompleted = () =>
 export const makeGetBuyEligible = () => createSelector([getBuyEligible], buyEligible => buyEligible ?? false)
 export const makeGetCompanySharedListingDefaultMarkup = () =>
   createSelector([getIdentitySettings], settings =>
-    settings.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+    settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
   )

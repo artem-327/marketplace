@@ -7,6 +7,9 @@ import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.c
 export const initialState = {
   fileIds: [],
   listDocumentTypes: [],
+  documentTypesAll: [],
+  documentTypesFederalOwnershipCertifications: [],
+  documentTypesManagementCertifications: [],
   listConditions: [],
   listForms: [],
   listGrades: [],
@@ -404,7 +407,10 @@ export default function reducer(state = initialState, action) {
             text: docType.name,
             value: docType.id
           }
-        })
+        }),
+        documentTypesAll: payload.data,
+        documentTypesFederalOwnershipCertifications: payload.data.filter(el => el.group && el.group.id === 6),
+        documentTypesManagementCertifications: payload.data.filter(el => el.group && el.group.id === 7)
       }
     }
 

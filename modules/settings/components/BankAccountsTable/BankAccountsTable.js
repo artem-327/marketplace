@@ -287,7 +287,6 @@ class BankAccountsTable extends Component {
 
   componentDidMount() {
     this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
-    this.props.getCurrentUser()
     this.props.getIdentity().then(resp => {
       getSafe(() => resp.value.identity.company.dwollaAccountStatus, '') === 'verified' &&
         this.props.getDwollaAccBalance()
@@ -297,7 +296,7 @@ class BankAccountsTable extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isReloadBankAcounts || prevProps.isLoadingAddedAccounts !== this.props.isLoadingAddedAccounts) {
+    if (this.props.isReloadBankAcounts || (prevProps.isLoadingAddedAccounts !== this.props.isLoadingAddedAccounts)) {
       await this.props.reloadBankAccounts(false)
       await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
       await this.props.getIdentity().then(resp => {
@@ -763,7 +762,7 @@ const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   const paymentProcessor = getSafe(() => company.paymentProcessor, 'DWOLLA')
 
-  const preferredBankAccountId = get(state, 'settings.currentUser.company.preferredBankAccountId', '')
+  const preferredBankAccountId = get(state, 'auth.identity.company.preferredBankAccountId', '')
   let documentRequired = 'verify-with-document'
   let accountStatus = 'none'
 
@@ -838,7 +837,7 @@ const mapStateToProps = state => {
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     company: company,
-    currentUser: state.settings.currentUser,
+    currentUser: state.auth.identity,
     tabClicked: state.settings.tabClicked,
     isReloadBankAcounts: state.settings.isReloadBankAcounts,
     isHideInactiveAccounts: state.settings.isHideInactiveAccounts,

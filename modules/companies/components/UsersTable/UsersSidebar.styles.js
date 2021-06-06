@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { Form } from 'formik-semantic-ui-fixed-validation'
 import { GridColumn, Segment, Modal } from 'semantic-ui-react'
 
 export const GridColumnWError = styled(GridColumn)`

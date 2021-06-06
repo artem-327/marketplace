@@ -30,7 +30,7 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
           return (
             <Grid.Row key={i} data-test='component-column-segment-row'>
               <GridColumnDetail>
-                <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage='Title' />
+                <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={key} />
                 <DivValue
                   data-test='component-column-segment-value'
                   $minHeight='19px'

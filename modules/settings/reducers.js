@@ -23,6 +23,7 @@ export const initialState = {
   usersRows: [],
   userEditRoles: false,
   roles: [],
+  rolesLoading: false,
   warehousesRows: [],
   branchesRows: [],
   branchesAll: [],
@@ -411,7 +412,6 @@ export default function reducer(state = initialState, action) {
           // preferredCurrency: (user.preferredCurrency || {}).id || 0,
           preferredCurrency: currency,
           homeBranch: user.homeBranch.name,
-          permissions: user.roles ? user.roles.name : '', // ! ! array?
           id: user.id,
           allUserRoles: user.roles || [],
           lastLoginAt: user.lastLoginAt
@@ -424,10 +424,24 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_ROLES_DATA: {
+
+    case AT.GET_ROLES_DATA_PENDING: {
       return {
         ...state,
-        roles: action.payload
+        rolesLoading: true
+      }
+    }
+    case AT.GET_ROLES_DATA_REJECTED: {
+      return {
+        ...state,
+        rolesLoading: false
+      }
+    }
+    case AT.GET_ROLES_DATA_FULFILLED: {
+      return {
+        ...state,
+        roles: action.payload,
+        rolesLoading: false
       }
     }
 
@@ -576,7 +590,7 @@ export default function reducer(state = initialState, action) {
     case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
       const {
         bankAccountsData,
-        newCountryFormat
+        // newCountryFormat
         // newCurrencyFormat
       } = action.payload
 
@@ -584,7 +598,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         bankAccountsRows: bankAccountsData,
-        country: newCountryFormat,
+        // country: newCountryFormat,
         isThirdPartyConnectionException: false
         // currency: newCurrencyFormat
       }
@@ -1718,6 +1732,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        vellociToken: '',
         isThirdPartyConnectionException:
           getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
       }

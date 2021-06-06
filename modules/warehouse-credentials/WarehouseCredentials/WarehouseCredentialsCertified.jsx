@@ -18,7 +18,7 @@ import { Popup, FormGroup, FormField, Input } from 'semantic-ui-react'
 import BasicButton from '../../../components/buttons/BasicButton'
 import { Required } from '../../../components/constants/layout'
 import { Download, FileText, Map } from 'react-feather'
-import { CustomRowDiv } from '../../companies/constants'
+import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 // Styles
 import {
   PositionHeaderSettings,
@@ -337,7 +337,7 @@ class WarehouseCredentialsCertified extends Component {
     return (
       <>
         <PositionHeaderSettings>
-          <CustomRowDiv>
+          <DivCustomRow>
             <div>
               <div className='column'>
                 <Input
@@ -350,7 +350,7 @@ class WarehouseCredentialsCertified extends Component {
                 />
               </div>
             </div>
-          </CustomRowDiv>
+          </DivCustomRow>
         </PositionHeaderSettings>
         <div
           className={`flex stretched warehouse-credentials-wrapper${datagrid.rows.length ? '' : ' empty'}`}

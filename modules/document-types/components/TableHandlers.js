@@ -9,7 +9,7 @@ import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import styled from 'styled-components'
-import { CustomRowDiv } from '~/modules/companies/constants'
+import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 
@@ -92,7 +92,7 @@ class TableHandlers extends Component {
 
     return (
       <PositionHeaderSettings>
-        <CustomRowDiv>
+        <DivCustomRow>
           <div>
             <div className='column'>
               <Input
@@ -116,7 +116,7 @@ class TableHandlers extends Component {
             </div>
             <ColumnSettingButton divide={true} />
           </div>
-        </CustomRowDiv>
+        </DivCustomRow>
       </PositionHeaderSettings>
     )
   }

@@ -145,6 +145,19 @@ function mapStateToProps({ settings }) {
   const myTradePass = settings.myTradePass
   const address = myTradePass?.primaryAddress
   const comma = address?.streetAddress || address?.city ? ', ' : ''
+  const getVerifiedData = (myTradePass) => {
+    const businessDocuments = myTradePass?.businessDocuments
+    let data = {}
+    if(typeof(businessDocuments) === 'object' && businessDocuments !== null) {
+      Object.keys(businessDocuments).map((key, i) => {
+        if(key !== 'other') {
+          data[key] = businessDocuments[key].status
+        }
+      })
+    }
+    return data
+  }
+  
   return {
     loading: settings.loading,
     myTradePass,
@@ -177,12 +190,7 @@ function mapStateToProps({ settings }) {
       twitterHandle: myTradePass?.socialTwitter,
       tradePassConnection: myTradePass?.connectionsCount || 0
     },
-    verifiedData: {
-      articlesIncorporation: myTradePass?.articlesOfIncorporation === 'VERIFIED' ? 'Verified' : 'Unverified',
-      certificateInsurance: myTradePass?.certificateOfInsurance === 'VERIFIED' ? 'Verified' : 'Unverified',
-      linkedBankAccounts: myTradePass?.linkedBankAccount === 'VERIFIED' ? 'Verified' : 'Unverified',
-      tradeOrganization: myTradePass?.tradeOrganizations?.map(org => org?.short_name)?.toString() || 'Unverified'
-    }
+    verifiedData: getVerifiedData(myTradePass)
   }
 }
 

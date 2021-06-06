@@ -5,17 +5,18 @@ export const DEBOUNCE_TIME = 50 //ms
 export const PHONE_REGEXP = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
 export const ROLES_ENUM = [
-  { name: 'Super Admin', id: 1, propertyName: 'isAdmin' },
-  { name: 'Company Admin', id: 2, propertyName: 'isCompanyAdmin' },
-  { name: 'Merchant', id: 3, propertyName: 'isMerchant' },
-  { name: 'User Admin', id: 4, propertyName: 'isUserAdmin' },
-  { name: 'Order View', id: 5, propertyName: 'isOrderView' },
-  { name: 'Product Catalog Admin', id: 6, propertyName: 'isProductCatalogAdmin' },
-  { name: 'Order Processing', id: 7, propertyName: 'isOrderProcessing' },
-  { name: 'Product Offer Manager', id: 8, propertyName: 'isProductOfferManager' },
-  { name: 'Guest Company Admin', id: 67, propertyName: 'isClientCompanyAdmin' },
-  { name: 'Guest Company Manager', id: 36, propertyName: 'isClientCompanyManager' },
-  { name: 'Order Operator', id: 37, propertyName: 'isOrderOperator' }
+  { role: 'SUPER_ADMIN', name: 'Super Admin', id: 1, propertyName: 'isAdmin' },
+  { role: 'COMPANY_ADMIN', name: 'Company Admin', id: 2, propertyName: 'isCompanyAdmin' },
+  { role: 'MERCHANT', name: 'Merchant', id: 3, propertyName: 'isMerchant' },
+  { role: 'USER_ADMIN', name: 'User Admin', id: 4, propertyName: 'isUserAdmin' },
+  { role: 'ORDER_VIEW', name: 'Order View', id: 5, propertyName: 'isOrderView' },
+  { role: 'PRODUCT_CATALOG_ADMIN', name: 'Product Catalog Admin', id: 6, propertyName: 'isProductCatalogAdmin' },
+  { role: 'ORDER_PROCESSING', name: 'Order Processing', id: 7, propertyName: 'isOrderProcessing' },
+  { role: 'PRODUCT_OFFER_MANAGER', name: 'Product Offer Manager', id: 8, propertyName: 'isProductOfferManager' },
+  { role: 'GUEST_COMPANY_ADMIN', name: 'Guest Company Admin', id: 67, propertyName: 'isClientCompanyAdmin' },
+  { role: 'GUEST_COMPANY_MANAGER', name: 'Guest Company Manager', id: 36, propertyName: 'isClientCompanyManager' },
+  { role: 'ORDER_OPERATOR', name: 'Order Operator', id: 37, propertyName: 'isOrderOperator' },
+  { role: 'OPERATOR', name: 'Operator', id: 34, propertyName: 'isOperator' }
 ]
 
 /**
