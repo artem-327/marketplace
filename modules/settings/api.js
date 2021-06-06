@@ -71,7 +71,7 @@ export default {
   getCreditCardsData: () => api.get('/prodex/api/payments/cards').then(response => response.data),
   getDwollaBankAccountsData: () => api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data),
   getVellociBankAccountsData: () =>
-    api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data),
+    api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data).catch(err => console.error(err)),
   getDwollaAccBalance: () => api.get('/prodex/api/payments/dwolla/balance').then(response => response.data),
   getVellociAccBalance: () => api.get('/prodex/api/payments/velloci/balance').then(response => response.data),
   getDwollaBeneficiaryOwners: () =>
@@ -315,7 +315,7 @@ export default {
       .post(`/prodex/api/payments/bank-accounts/velloci/add/log?eventName=${eventName}`, metadata)
       .then(response => response.data),
   vellociGetToken: () =>
-    api.get('/prodex/api/payments/bank-accounts/velloci/add/token').then(response => response.data),
+    api.get('/prodex/api/payments/bank-accounts/velloci/add/token').then(response => response.data).catch(err => console.error(err)),
   vellociAddAcount: (publicToken, metadata) =>
     api
       .post(`/prodex/api/payments/bank-accounts/velloci/add?publicToken=${publicToken}`, metadata)

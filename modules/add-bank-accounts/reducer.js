@@ -80,6 +80,28 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* ADD_VELLOCI_ACOUNT */
+    case AT.ON_EVENT_VELLOCI_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ON_EVENT_VELLOCI_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.ON_EVENT_VELLOCI_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     default: {
       return state
     }
