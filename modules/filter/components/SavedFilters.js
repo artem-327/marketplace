@@ -206,7 +206,7 @@ class SavedFilters extends Component {
     }
 
     return (
-      <FilterAccordion style={{ marginTop: '-28px' }}>
+      <FilterAccordion >
         {savedFilters.length ? (
           savedFilters.map((filter, i) => {
             let {

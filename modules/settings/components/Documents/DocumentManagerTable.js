@@ -131,14 +131,14 @@ class DocumentManager extends Component {
       ...(download
         ? [
             {
-              text: row => (
-                <BasicLink target='_blank' href={`/download/attachments/${row.id}`}>
-                  <FormattedMessage id='global.download' defaultMessage='Download'>
-                    {text => text}
-                  </FormattedMessage>
-                </BasicLink>
+              text: (
+                <FormattedMessage id='global.download' defaultMessage='Download'>
+                  {text => text}
+                </FormattedMessage>
               ),
-              callback: () => {}
+              callback: async row => {
+                await window.open(`/download/attachments/${row.id}`, '_blank')
+              }
             }
           ]
         : []),

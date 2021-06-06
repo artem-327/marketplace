@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { cloneDeep } from 'lodash'
 
 // Constants
 import { INITIAL_FORM_VALUES } from './AddEditCompanySidebar.constants'
@@ -192,6 +193,8 @@ export const submitCompany = async (values, actions, state, props) => {
         else await deleteCompanyLogo(popupValues.id)
       }
       datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!state.companyLogo }))
+      datagrid.clear()
+      datagrid.loadData()
       actions.setSubmitting(false)
       closePopup()
     } else {
@@ -228,7 +231,6 @@ export const submitCompany = async (values, actions, state, props) => {
       if (state.companyLogo) {
         let reader = new FileReader()
         reader.onload = async function () {
-          const loadedLogo = btoa(reader.result)
           const data = await createCompany(payload)
           await postCompanyLogo(data.id, state.companyLogo)
           datagrid.clear()
