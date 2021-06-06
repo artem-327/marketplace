@@ -22,7 +22,7 @@ export const makeGetPopupValues = () => createSelector([getPopupValues, getLastL
       jobTitle: popupValues.jobTitle,
       language: getSafe(() => popupValues.preferredLanguage.language),
       lastLoginAt: lastLoginAt && getSafe(() => moment(lastLoginAt).toDate().toLocaleString(), null),
-      avatar: popupValues.avatar,
+      avatar: popupValues.avatarUrl,
       ownAvatar: popupValues.ownAvatar
     }
   : null
