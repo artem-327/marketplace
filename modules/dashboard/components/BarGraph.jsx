@@ -1,72 +1,15 @@
 import PropTypes from 'prop-types'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Area, ResponsiveContainer } from 'recharts'
 import { FormattedMessage } from 'react-intl'
-//styled
-import styled from 'styled-components'
+// Styles
+import { DivGraph, GraphTitle, GraphSubTitle } from '../styles'
+// Services
+import { CustomTooltip, formatYAxis } from '../services'
 
-const DivGraph = styled.div`
-  margin: 10px;
-`
-
-const GraphTitle = styled.div`
-  font-size: 14px;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
-`
-const GraphSubTitle = styled.div`
-  font-size: 12px;
-  font-style: italic;
-  text-align: center;
-  color: #848893;
-  margin-bottom: 10px;
-`
-
-function CustomTooltip({ payload, label, active, unitsCurrency }) {
-  if (active) {
-    return (
-      <div
-        className='recharts-default-tooltip'
-        style={{
-          margin: '0px',
-          padding: '10px',
-          backgroundColor: 'rgb(255, 255, 255)',
-          border: '1px solid rgb(204, 204, 204)',
-          whiteSpace: 'nowrap'
-        }}>
-        <p className='recharts-tooltip-label' style={{ margin: '0px' }}>
-          {label}
-        </p>
-        <ul className='recharts-tooltip-item-list' style={{ padding: '0px', margin: '0px' }}>
-          <li
-            className='recharts-tooltip-item'
-            style={{ display: 'block', paddingTop: '4px', paddingBottom: '4px', color: 'rgb(37, 153, 213)' }}>
-            <span className='recharts-tooltip-item-name'>{payload[0].name}</span>
-            <span className='recharts-tooltip-item-separator'> : </span>
-            <span className='recharts-tooltip-item-value'>{payload[0].value}</span>
-            <span className='recharts-tooltip-item-unit'>
-              {unitsCurrency === 0
-                ? '$'
-                : unitsCurrency === 1
-                  ? 'k$'
-                  : unitsCurrency === 2
-                    ? 'M$'
-                    : unitsCurrency === 3
-                      ? 'B$'
-                      : 'T$'}
-            </span>
-          </li>
-        </ul>
-      </div>
-    )
-  }
-  return null
-}
-
-const formatYAxis = tickItem => {
-  return `$${tickItem}`
-}
-
+/**
+ * @category Dashboard - BarGraph
+ * @component
+ */
 const BarGraph = ({ data, dataKey, isCurrency, title, titleId, subTitle, subTitleId, unitsCurrency }) => {
   return (
     <DivGraph>

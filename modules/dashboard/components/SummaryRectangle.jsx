@@ -1,109 +1,27 @@
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Button } from 'semantic-ui-react'
-//styled
-import styled from 'styled-components'
-//components
-import { getSafe } from '~/utils/functions'
 import Router from 'next/router'
+// Services
+import { getSafe } from '../../../utils/functions'
+// Styles
+import {
+  RectangleSummary,
+  RectangleSummaryHeader,
+  DivIcon,
+  Circle,
+  DivSummary,
+  DivNumbers,
+  DivTotalText,
+  RectangleSummaryBottom,
+  DivTotalTextBottom,
+  ButtonViewAll
+} from '../styles'
 
-const RectangleSummary = styled.div`
-  width: 100%;
-  height: 103px;
-  border-radius: 4px;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
 
-  &[style*='pointer']:hover [class*='DivNumbers'] {
-    color: #2599d5;
-  }
-`
-
-const RectangleSummaryHeader = styled.div`
-  width: 100%;
-  height: 100px;
-  border-radius: 4px;
-  background-color: #ffffff;
-  display: flex;
-  align-items: center;
-`
-
-const DivIcon = styled.div`
-  height: 100%;
-  width: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
-const Circle = styled.div`
-  width: 70px;
-  height: 70px;
-  border-radius: 35px;
-  border: solid 5px #c5ebff;
-  background-color: #2599d5;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* position: relative;
-  text-align: center; */
-`
-
-const DivSummary = styled.div`
-  width: 200px;
-  height: 100px;
-  background-color: #ffffff;
-`
-
-const DivNumbers = styled.div`
-  opacity: 0.89;
-  font-size: 32px;
-  font-weight: bold;
-  line-height: 1.25;
-  color: #242424;
-  padding-top: 25px;
-`
-
-const DivTotalText = styled.div`
-  font-size: 14px;
-  line-height: 1.43;
-  color: #848893;
-`
-
-const RectangleSummaryBottom = styled.div`
-  width: 100%;
-  height: 50px;
-  border-top: solid 1px #dee2e6;
-  background-color: #f8f9fb;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px;
-`
-
-const DivTotalTextBottom = styled.div`
-  font-size: 12px;
-  line-height: 1.67;
-  color: #848893;
-`
-
-const ButtonViewAll = styled(Button)`
-  width: 80px;
-  height: 32px;
-  border-radius: 3px !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06) !important;
-  border: solid 1px #dee2e6 !important;
-  background-color: #ffffff !important;
-  font-size: 13px !important;
-  font-weight: 500 !important;
-  line-height: 1.54 !important;
-  text-align: center !important;
-  color: #848893 !important;
-  padding: 0 !important;
-`
-
+/**
+ * @category Dashboard - SummaryRectangle
+ * @component
+ */
 const SummaryRectangle = ({
   icon,
   data,

@@ -238,7 +238,12 @@ const CompanyDetails = props => {
       <GridRow>
         <GridColumn width={8}>
           <Input
-            label={<FormattedMessage id='company.emailAddress' defaultMessage='Email Address' />}
+            label={
+              <>
+                <FormattedMessage id='company.emailAddress' defaultMessage='Email Address' />
+                <Required />
+              </>
+            }
             name='email'
             inputProps={{
               placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' })
