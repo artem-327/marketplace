@@ -187,14 +187,12 @@ export const submitCompany = async (values, actions, state, props) => {
       if (values.type) newValues['type'] = values.type
       removeEmpty(newValues)
 
-      const data = await updateCompany(popupValues.id, newValues)
+      const {value} = await updateCompany(popupValues.id, newValues)
       if (state.shouldUpdateLogo) {
-        if (state.companyLogo) await postCompanyLogo(data.id, state.companyLogo)
+        if (state.companyLogo) await postCompanyLogo(value.id, state.companyLogo)
         else await deleteCompanyLogo(popupValues.id)
       }
-      datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!state.companyLogo }))
-      datagrid.clear()
-      datagrid.loadData()
+      datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!state.companyLogo }))
       actions.setSubmitting(false)
       closePopup()
     } else {
