@@ -49,7 +49,7 @@ export const submitButton = async (props, state) => {
       handleSubmitOrder(props, state)
     } else {
       if (openSection === 'review') submitUpdateCartItem(props, state)
-      else if(openSection === 'freight') {
+      else if(openSection === 'freight' && shipmentQuoteId) {
         await getManualQuoteById(shipmentQuoteId)
         setClickedFriehgt(!clickedFriehgt)
       }
