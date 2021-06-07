@@ -2,12 +2,12 @@ import { connect } from 'react-redux'
 
 import AddressForm from './AddressForm'
 
-import { getCountries } from '~/modules/settings/actions'
+import { getCountries } from '../../../modules/global-data/actions'
 import { getAddressSearch, removeEmpty } from '~/modules/settings/actions'
 import { addZip } from '~/modules/zip-dropdown/actions'
 
-function mapStateToProps({ settings }) {
-  let { countries } = settings
+function mapStateToProps({ settings, globalData }) {
+  let { countries } = globalData
   let addressDatalistOptions = settings.addressSearch.map(
     a =>
       a.streetAddress +
@@ -22,7 +22,7 @@ function mapStateToProps({ settings }) {
 
   return {
     countries,
-    countriesLoading: settings.countriesLoading,
+    countriesLoading: globalData.countriesLoading,
     addressDatalistOptions,
     addressDatalistData: settings.addressSearch,
     addressDatalistLength: settings.addressSearch.length,

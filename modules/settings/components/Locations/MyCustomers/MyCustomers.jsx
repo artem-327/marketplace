@@ -263,7 +263,7 @@ const MyCustomers = props => {
 
 function mapStateToProps(store) {
   return {
-    countryCodes: store.phoneNumber.phoneCountryCodes,
+    countryCodes: store.globalData.countries,
     loading: store.settings.loading
   }
 }

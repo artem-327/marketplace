@@ -86,7 +86,7 @@ export default class PhoneNumber extends Component {
   componentDidMount = async () => {
     const { defaultCountryCode, maxPhoneNumberLength } = this.props
 
-    if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
+    if (!this.props.phoneCountryCodes.length && !this.props.phoneCountryCodesLoading) await this.props.getCountries()
 
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
     phone = splitPhoneNumber(phone, this.props.phoneCountryCodes, maxPhoneNumberLength)
@@ -232,11 +232,13 @@ export default class PhoneNumber extends Component {
       disabled,
       placeholder,
       background,
-      width
+      width,
+      phoneCountryCodesLoading
     } = this.props
 
     let { phoneCountryCode, phoneNumber } = this.state
     let error = (get(touched, name, null) || isSubmitting) && get(errors, name, null)
+
     return (
       <Field
         name={name}
@@ -255,6 +257,7 @@ export default class PhoneNumber extends Component {
                   disabled={disabled}
                   placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+CCC' })}
                   value={phoneCountryCode}
+                  loading={phoneCountryCodesLoading}
                 />
                 <StyledInputMask
                   background={background}
