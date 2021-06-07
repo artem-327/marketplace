@@ -15,7 +15,7 @@ export const SidebarFlex = styled(Sidebar)`
   background-color: #f8f9fb !important;
   
   &.ui.bottom.sidebar{
-    height: 89% !important;
+    height: 87vh !important;
   }
 `
 
@@ -62,7 +62,7 @@ export const DivBottomSidebar = styled.div`
 `
 
 export const DimmerSidebarOpened = styled(Dimmer)`
-  height: 11% !important; // 89% height has Sidebar
+  height: 13vh !important; // 87vh height has Sidebar
 `
 
 export const SegmentCustomContent = styled(Segment)`

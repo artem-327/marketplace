@@ -12,7 +12,7 @@ export const SidebarFlex = styled(Sidebar)`
   background-color: #f8f9fb !important;
 
   &.ui.visible.bottom.overlay.sidebar {
-    height: 89% !important;
+    height: 87vh !important;
   }
 
   &.full-screen-sidebar {
@@ -107,7 +107,7 @@ export const DivBottomSidebar = styled.div`
 `
 
 export const DimmerSidebarOpend = styled(Dimmer)`
-  height: 11% !important; // 89% height has Sidebar
+  height: 13vh !important; // 87vh height has Sidebar
 `
 
 export const DivIconChevronDown = styled.div`
