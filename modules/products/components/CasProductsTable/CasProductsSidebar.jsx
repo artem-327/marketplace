@@ -1,19 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
 import { Formik } from 'formik'
 import { Dimmer, Loader, Segment } from 'semantic-ui-react'
 import { ChevronDown } from 'react-feather'
-
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 import BasicButton from '../../../../components/buttons/BasicButton'
-import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContent'
-import { withDatagrid } from '../../../datagrid'
-
+import CasProductsSidebarContent from './CasProductsSidebarContent/CasProductsSidebarContentContainer'
 // Styles
 import {
   FormCustom,
@@ -26,11 +21,13 @@ import {
   DimmerSidebarOpened,
   SegmentCustomContent
 } from './CasProductsSidebar.styles'
-
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './CasProductsSidebar.services'
-import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductsSidebar
+ */
 const CasProductsSidebar = props => {
   const { popupValues, updating } = props
 
@@ -65,7 +62,7 @@ const CasProductsSidebar = props => {
                   basic>
                   <DivTitle>
                     <DivHeader>
-                      {props.popupValues ? (
+                      {popupValues ? (
                         <FormattedMessage id='casProduct.editCasProduct' defaultMessage='Edit CAS Product' />
                       ) : (
                         <FormattedMessage id='casProduct.addCasProduct' defaultMessage='Add CAS Product' />
@@ -89,7 +86,7 @@ const CasProductsSidebar = props => {
                   noborder
                   onClick={() => props.closeAddPopup()}
                   data-test='cas_product_sidebar_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                 </BasicButton>
                 <BasicButton
                   onClick={() => {
@@ -105,7 +102,7 @@ const CasProductsSidebar = props => {
                     })
                   }}
                   data-test='cas_product_sidebar_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+                  <FormattedMessage id='global.save' defaultMessage='Save' />
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>
@@ -117,19 +114,20 @@ const CasProductsSidebar = props => {
   )
 }
 
-CasProductsSidebar.propTypes = {}
-
-CasProductsSidebar.defaultProps = {}
-
-function mapStateToProps(store) {
-  return {
-    popupValues: store.productsAdmin.popupValues,
-    updating: store.productsAdmin.updating
-  }
+CasProductsSidebar.propTypes = {
+  closeAddPopup: PropTypes.func,
+  postNewCasProductRequest: PropTypes.func,
+  updateCasProductRequest: PropTypes.func,
+  popupValues: PropTypes.any,
+  updating: PropTypes.bool
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, {
-  closeAddPopup,
-  postNewCasProductRequest,
-  updateCasProductRequest
-})(CasProductsSidebar)))
+CasProductsSidebar.defaultProps = {
+  closeAddPopup: () => {},
+  postNewCasProductRequest: () => {},
+  updateCasProductRequest: () => {},
+  popupValues: null,
+  updating: false
+}
+
+export default injectIntl(CasProductsSidebar)

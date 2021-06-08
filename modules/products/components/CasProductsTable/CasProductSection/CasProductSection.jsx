@@ -1,22 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
-
+// Services
+import { getSafe } from '../../../../../utils/functions'
 // Components
 import { GridRow, GridColumn } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
-
 // Styles
 import {
   DivHeaderRow,
   DivHeaderCaption,
-  GridStyled,
+  CasGridStyled,
   GridDropdownOptions,
   CheckboxStyled
-} from './CasProductSection.styles'
+} from '../../../styles'
 
+/**
+ * @Component
+ * @category Products - Components / CasProductsTable / CasProductSection / CasProductSection
+ */
 const CasProductSection = props => {
   const {
     intl: { formatMessage },
@@ -46,7 +48,7 @@ const CasProductSection = props => {
       </DivHeaderRow>
 
       {toggleValue && (
-        <GridStyled>
+        <CasGridStyled>
           {items.map((row, rowIndex) => (
             <GridRow columns={row.length} key={rowIndex}>
               {row.map((item, itemIndex) => {
@@ -127,7 +129,7 @@ const CasProductSection = props => {
               })}
             </GridRow>
           ))}
-        </GridStyled>
+        </CasGridStyled>
       )}
     </div>
   )
@@ -149,10 +151,4 @@ CasProductSection.defaultProps = {
   label: ''
 }
 
-function mapStateToProps(store) {
-  return {
-    hazardClasses: store.productsAdmin.hazardClasses
-  }
-}
-
-export default injectIntl(connect(mapStateToProps, {  })(CasProductSection))
+export default injectIntl(CasProductSection)

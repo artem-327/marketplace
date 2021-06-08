@@ -1,366 +1,77 @@
-import { Component } from 'react'
-import * as React from 'react'
-
+import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import moment from 'moment'
-import { removeEmpty } from '../../../../utils/functions'
-import { verifyEchoProduct } from '../../../../modules/admin/api' // No need to be an action
-import { DateInput } from '../../../../components/custom-formik'
-import { PhoneNumber } from '../../../../modules/phoneNumber'
-import * as Yup from 'yup'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-import {
-  Form,
-  Button,
-  Dropdown as FormikDropdown,
-  Input,
-  Checkbox,
-  TextArea
-} from 'formik-semantic-ui-fixed-validation'
+import { Dropdown as FormikDropdown, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import {
   Menu,
   Grid,
   GridRow,
   GridColumn,
-  Segment,
   Header,
   Dropdown,
-  Icon,
   Dimmer,
   Loader,
-  Sidebar,
-  FormGroup
 } from 'semantic-ui-react'
-import TextareaAutosize from 'react-autosize-textarea'
-import { FieldArray, Field } from 'formik'
-
-import UploadAttachment from '../../../../modules/inventory/components/upload/UploadAttachment'
-import { errorMessages, dateValidation, phoneValidation } from '../../../../constants/yupValidation'
-import { getSafe } from '../../../../utils/functions'
-import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
-import styled from 'styled-components'
+import { FieldArray } from 'formik'
+import { ChevronDown } from 'react-feather'
 import debounce from 'lodash/debounce'
-import { uniqueArrayByKey } from '../../../../utils/functions'
 import escapeRegExp from 'lodash/escapeRegExp'
+// Services
+import { getSafe } from '../../../../utils/functions'
+import { uniqueArrayByKey } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
-import { Required, Or } from '../../../../components/constants/layout'
-import { AttachmentManager } from '../../../../modules/attachments'
-import { UploadCloud, ChevronDown, Paperclip } from 'react-feather'
-import ErrorFocus from '../../../../components/error-focus'
-//Components
+import { removeEmpty } from '../../../../utils/functions'
+import { verifyEchoProduct } from '../../../admin/api' // No need to be an action
+import { AddEditEchoProductPopupValidationScheme } from '../../services'
+// Components
 import BasicButton from '../../../../components/buttons/BasicButton'
-
-//Styles
+import UploadAttachment from '../../../inventory/components/upload/UploadAttachment'
+import { AttachmentManager } from '../../../attachments'
+import ErrorFocus from '../../../../components/error-focus'
+import { Required, Or } from '../../../../components/constants/layout'
+import { PhoneNumber } from '../../../phoneNumber'
+import { DateInput } from '../../../../components/custom-formik'
+// Constants
+import { tabs, defaultValues, transportationTypes, onErrorFieldTabs } from './constants'
+//Hooks
+import { usePrevious } from '../../../../hooks'
+// Styles
 import { DimmerBottomSidebarOpend } from '../../../../styles/global.style-components'
+import {
+  SegmentCustomContent,
+  DivTitleColumn,
+  PaperclipIcon,
+  DivBrowseFile,
+  GridColumnMixtures,
+  GridColumnLabelTextArea,
+  GridColumnForm,
+  DivHeader,
+  GridRowCustom,
+  DivIconChevronDown,
+  DivBottomSidebar,
+  MenuCustom,
+  MyContainer,
+  FlexSidebar,
+  FlexTabs,
+  FlexContent,
+  GraySegment,
+  HighSegment,
+  CustomTextarea,
+  DivIcon,
+  IconStyled,
+  DivCircleIcon,
+  DivReadOnlyValues,
+  CustomForm
+} from '../../styles'
 
-const SegmentCustomContent = styled(Segment)`
-  padding-top: 0px !important;
-  width: 900px !important;
-  padding: 30px !important;
-`
-
-const DivTitleColumn = styled.div`
-  color: #000000de;
-  font-size: 14px;
-`
-
-const PaperclipIcon = styled(Paperclip)`
-  -webkit-transform: scaleX(-1);
-  transform: scaleX(-1);
-`
-
-const DivBrowseFile = styled.div`
-  display: flex;
-  align-items: center;
-  place-content: center;
-  color: #20273a;
-  ${({ background }) => background};
-  padding: 6px;
-`
-
-const GridColumnMixtures = styled(GridColumn)`
-  padding: 3px 10px !important;
-`
-
-const GridColumnLabelTextArea = styled(GridColumn)`
-  padding: 3px 0px !important;
-  color: #000000de !important;
-  font-size: 14px;
-`
-
-const GridColumnForm = styled(GridColumn)`
-  padding: 6px 14px !important;
-  ${({ color }) => (color ? color : null)};
-`
-
-const DivHeader = styled.div`
-  background-color: #edeef2;
-  padding: 5px 10px;
-  color: #404040;
-  font-size: 14px;
-`
-
-const GridRowCustom = styled(GridRow)`
-  padding: 0px !important;
-`
-
-const DivIconChevronDown = styled.div`
-  align-self: center;
-  position: absolute;
-  right: 20px;
-  cursor: pointer;
-`
-
-const DivBottomSidebar = styled.div`
-  text-align: right;
-  z-index: 1;
-  padding: 10px 25px;
-  margin-top: 0px;
-  box-shadow: 0px -2px 3px rgba(70, 70, 70, 0.15);
-  background-color: #ffffff;
-`
-
-export const MenuCustom = styled(Menu)`
-  padding-left: 30px !important;
-  margin: 0 !important;
-`
-
-export const MyContainer = styled.div`
-  margin: 0 15px 0 0;
-  text-align: center;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 10px 0 15px 0;
-  font-weight: bold;
-  font-size: 1.1rem;
-`
-
-export const FlexSidebar = styled(Sidebar)`
-  display: flex;
-  flex-direction: column;
-  background-color: #ffffff !important;
-  top: 80px !important;
-  padding-bottom: 80px;
-  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  z-index: 1000 !important;
-  text-align: left;
-  padding-bottom: 0px !important;
-
-  &.ui.visible.bottom.overlay.sidebar {
-    height: 89% !important;
-  }
-  .field {
-    font-size: 1em !important;
-    line-height: 1.29 !important;
-    font-weight: normal;
-    > label {
-      font-size: 1em !important;
-      color: #404040;
-    }
-    > textarea,
-    > .ui.input input,
-    > .ui.dropdown {
-      min-height: 32px;
-      font-size: 1em;
-      line-height: 1.29;
-      border: solid 1px #dee2e6;
-      background-color: #fdfdfd;
-      &.disabled {
-        opacity: 1;
-        color: #cecfd4;
-      }
-      > .default.text {
-        margin: 0 0 0 0.64285714em;
-      }
-    }
-  }
-`
-
-export const FlexTabs = styled.div`
-  height: 100%;
-  margin: 0;
-  text-align: left;
-  border-bottom: 1px solid #f0f0f0;
-  padding: 10px 0 15px 0;
-  font-weight: 400;
-  font-size: 1.1rem;
-
-  > .tab-menu,
-  > .tab-menu > .tab {
-    height: 100%;
-  }
-`
-
-export const FlexContent = styled.div`
-  flex: 1;
-  overflow-x: hidden;
-  overflow-y: auto;
-  align-self: center;
-`
-
-export const GraySegment = styled(Segment)`
-  background-color: #ededed !important;
-`
-
-export const HighSegment = styled(Segment)`
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 1;
-`
-
-const CustomTextarea = styled(TextareaAutosize)`
-  resize: vertical !important;
-  background-color: #fdfdfd !important;
-`
-
-const DivIcon = styled.div`
-  margin-right: 8px;
-`
-
-const IconStyled = styled(Icon)`
-  &.small.icon {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    color: #848893;
-
-    &.delete {
-      color: #f16844;
-    }
-  }
-`
-
-const DivCircleIcon = styled.div`
-  margin: 10.5px auto 10.5px -3px;
-  width: 18px;
-  height: 18px;
-  border-radius: 9px;
-  border: solid 1px #dee2e6;
-  background-color: #ffffff;
-  cursor: pointer;
-`
-
-const DivReadOnlyValues = styled.div`
-  border-radius: 3px;
-  border: solid 1px #dee2e6;
-  background-color: #edeef2;
-  font-size: 14px;
-  padding: 9.5px 15px;
-  line-height: 1.29;
-  color: #848893;
-`
-
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-`
-
-Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
-  return this.test('unique', message, function (value) {
-    if (!value || !value[propertyName]) {
-      return true
-    }
-
-    const { path } = this
-    const options = [...this.parent]
-    const currentIndex = options.indexOf(value)
-
-    const subOptions = options.slice(0, currentIndex)
-
-    if (subOptions.some(option => option[propertyName] === value[propertyName])) {
-      throw this.createError({
-        path: `${path}.${propertyName}`,
-        message
-      })
-    }
-
-    return true
-  })
-})
-
-const validationScheme = Yup.object().shape({
-  code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-  productGroup: Yup.number().required(errorMessages.minOneGroup),
-  company: Yup.number().required(errorMessages.minOneCompany),
-  emergencyPhone: phoneValidation(10),
-  elements: Yup.array().of(
-    Yup.object()
-      .uniqueProperty(
-        'casProduct',
-        errorMessages.unique(
-          <FormattedMessage id='admin.casProductUnique' name='CAS Product has to be unique'>
-            {text => text}
-          </FormattedMessage>
-        )
-      )
-      .shape({
-        name: Yup.string()
-          .trim()
-          .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
-            const { proprietary } = this.parent
-            if (proprietary) {
-              return value !== null && value !== ''
-            }
-            return true
-          }),
-        casProduct: Yup.string()
-          .nullable()
-          .trim()
-          .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
-            const { proprietary } = this.parent
-            if (!proprietary) {
-              return parseInt(value)
-            }
-            return true
-          }),
-        assayMin: Yup.string()
-          .test('v', errorMessages.minUpToMax, function (v) {
-            const { assayMax: v2 } = this.parent
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
-            return Number(v) <= v2
-          })
-          .test('v', errorMessages.minimum(0), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) >= 0
-          })
-          .test('v', errorMessages.maximum(100), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) <= 100
-          })
-          .test('v', errorMessages.mustBeNumber, function (v) {
-            return v === null || v === '' || !isNaN(v)
-          }),
-        assayMax: Yup.string()
-          .test('v', errorMessages.maxAtLeastMin, function (v) {
-            const { assayMin: v2 } = this.parent
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
-            return Number(v) >= v2
-          })
-          .test('v', errorMessages.minimum(0), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) >= 0
-          })
-          .test('v', errorMessages.maximum(100), function (v) {
-            if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-            return Number(v) <= 100
-          })
-          .test('v', errorMessages.mustBeNumber, function (v) {
-            return v === null || v === '' || !isNaN(v)
-          })
-      })
-  ),
-  sdsIssuedDate: dateValidation(false),
-  sdsRevisionDate: dateValidation(false),
-  tdsIssuedDate: dateValidation(false),
-  tdsRevisionDate: dateValidation(false)
-})
-
-class AddEditEchoProduct extends React.Component {
-  state = {
+/**
+ * @Component
+ * @category Products - Components / ProductCatalogTable / AddEditEchoProduct
+ */
+const AddEditEchoProduct = props => {
+  const [state, setState] = useState({
     isLoading: false,
     casProduct: '',
     changedForm: false,
@@ -372,9 +83,23 @@ class AddEditEchoProduct extends React.Component {
     editTab: 0,
     selectedProductGroupsOptions: [],
     selectedCompanyOptions: []
-  }
+  })
 
-  componentDidMount() {
+  /**
+   * Initialize ResetForm to prevent undefined in  useEffect()
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  let initResetForm = () => {}
+  
+  /**
+   * Initialize FormikProps to prevent undefined in  useEffect()
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  let initFormikProps = { touched: [], validateForm: () => {}, submitForm: (values, setSubmitting, callback) => {}, values: [], setSubmitting: () => {} }
+
+  useEffect(() => {
     const {
       hazardClasses,
       packagingGroups,
@@ -382,7 +107,7 @@ class AddEditEchoProduct extends React.Component {
       getPackagingGroupsDataRequest,
       listDocumentTypes,
       getDocumentTypes
-    } = this.props
+    } = props
     try {
       if (hazardClasses.length === 0) getHazardClassesDataRequest()
       if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
@@ -391,66 +116,77 @@ class AddEditEchoProduct extends React.Component {
       console.error(error)
     }
 
-    if (this.props.addForm) {
+    if (props.addForm) {
       // Sidebar just opened - Add
-      this.setInitialState(null, { editTab: 0 })
-      this.resetForm()
+      setInitialState(null, { editTab: 0 })
+      initResetForm()
     } else {
       // Sidebar just opened - Edit
-      this.props.loadEditEchoProduct(this.props.popupValues.id, this.props.editTab, true)
+      if (props.popupValues?.id) props.loadEditEchoProduct(props.popupValues.id, props.editTab, true)
     }
-  }
+  }, [])
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    const { popupValues, editTab } = this.props
+  const { popupValues, addForm, editForm, editInitTrig } = props
+  const prevPopupValues = usePrevious(popupValues)
+  const prevAddForm = usePrevious(addForm)
+  const prevEditForm = usePrevious(editForm)
+  const prevEditInitTrig = usePrevious(editInitTrig)
 
-    if (prevProps.editForm && !prevProps.addForm && this.props.addForm) {
+  useEffect(() => {
+    const { editTab } = props
+
+    if (prevEditForm && !prevAddForm && addForm) {
       // Changed from Edit to Add form
-      this.validateSaveOrSwitchToErrors(() => {
-        this.setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
-        this.resetForm()
+      validateSaveOrSwitchToErrors(() => {
+        setInitialState(null, { codesList: [], changedForm: false, editTab: 0 })
+        initResetForm()
       })
       return
     }
 
-    if (prevProps.addForm && !prevProps.editForm && this.props.editForm) {
+    if (prevAddForm && !prevEditForm && editForm) {
       // Changed from Add to Edit form
-      this.validateSaveOrSwitchToErrors(() => {
-        this.props.loadEditEchoProduct(popupValues.id, editTab, true)
+      validateSaveOrSwitchToErrors(() => {
+        props.loadEditEchoProduct(popupValues.id, editTab, true)
       })
       return
     }
 
-    if (prevProps.editForm && this.props.editForm && prevProps.editInitTrig !== this.props.editInitTrig) {
+    if (prevEditForm && editForm && prevEditInitTrig !== editInitTrig) {
       // Changed edit product
-      this.validateSaveOrSwitchToErrors(() => {
-        this.props.loadEditEchoProduct(popupValues.id, editTab, false)
+      validateSaveOrSwitchToErrors(() => {
+        props.loadEditEchoProduct(popupValues.id, editTab, false)
       })
       return
     }
 
     if (
-      this.props.editForm &&
-      this.props.popupValues &&
-      ((prevProps.popupValues && prevProps.popupValues !== this.props.popupValues) || prevProps.popupValues === null)
+      editForm &&
+      popupValues &&
+      ((prevPopupValues && prevPopupValues !== popupValues) || prevPopupValues === null)
     ) {
-      this.props.searchManufacturers(
-        getSafe(() => this.props.popupValues.manufacturer.name, ''),
+      props.searchManufacturers(
+        getSafe(() => popupValues.manufacturer.name, ''),
         200
       )
-      this.setInitialState(this.props.popupValues, { editTab: this.props.editTab })
-      this.resetForm()
+      setInitialState(popupValues, { editTab: editTab })
+      initResetForm()
     }
-  }
+  }, [popupValues, addForm, editForm, editInitTrig])
 
-  setInitialState = (popupValues, additionalStates) => {
+  /**
+   * Set Initial State
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const setInitialState = (popupValues, additionalStates) => {
     let codesList = [],
       unNumberInitOptions = [],
       selectedProductGroupsOptions = [],
       selectedCompanyOptions = []
 
     if (popupValues) {
-      codesList = popupValues.mfrProductCodes.map(code => ({
+      codesList = popupValues.mfrProductCodes?.map(code => ({
         text: code,
         value: code
       }))
@@ -476,7 +212,8 @@ class AddEditEchoProduct extends React.Component {
     if (popupValues && popupValues.company) {
       selectedCompanyOptions = popupValues.company
     }
-    this.setState({
+    setState({
+      ...state,
       codesList,
       changedForm: false,
       changedAttachments: false,
@@ -488,8 +225,13 @@ class AddEditEchoProduct extends React.Component {
     })
   }
 
-  getInitialFormValues = () => {
-    const { popupValues } = this.state
+  /**
+   * Initialize Form Values
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const getInitialFormValues = () => {
+    const { popupValues } = state
     let initialValues = {
       ...defaultValues,
       ...(popupValues
@@ -534,17 +276,15 @@ class AddEditEchoProduct extends React.Component {
                   caprop65: getSafe(() => element.casProduct.caprop65, ''),
                   reach: getSafe(() => element.casProduct.reach, '')
                 })),
-              [
-                {
-                  name: '',
-                  casProduct: '',
-                  assayMin: '',
-                  assayMax: '',
-                  proprietary: false,
-                  caprop65: '',
-                  reach: ''
-                }
-              ]
+              [{
+                name: '',
+                casProduct: '',
+                assayMin: '',
+                assayMax: '',
+                proprietary: false,
+                caprop65: '',
+                reach: ''
+              }]
             ),
             emergencyCompanyName: getSafe(() => popupValues.emergencyCompanyName, ''),
             emergencyContactName: getSafe(() => popupValues.emergencyContactName, ''),
@@ -700,35 +440,43 @@ class AddEditEchoProduct extends React.Component {
     }
 
     if (initialValues.sdsIssuedDate)
-      initialValues.sdsIssuedDate = this.getDateInLocaleFormat(initialValues.sdsIssuedDate)
+      initialValues.sdsIssuedDate = getDateInLocaleFormat(initialValues.sdsIssuedDate)
     if (initialValues.sdsRevisionDate)
-      initialValues.sdsRevisionDate = this.getDateInLocaleFormat(initialValues.sdsRevisionDate)
+      initialValues.sdsRevisionDate = getDateInLocaleFormat(initialValues.sdsRevisionDate)
     if (initialValues.tdsIssuedDate)
-      initialValues.tdsIssuedDate = this.getDateInLocaleFormat(initialValues.tdsIssuedDate)
+      initialValues.tdsIssuedDate = getDateInLocaleFormat(initialValues.tdsIssuedDate)
     if (initialValues.tdsRevisionDate)
-      initialValues.tdsRevisionDate = this.getDateInLocaleFormat(initialValues.tdsRevisionDate)
+      initialValues.tdsRevisionDate = getDateInLocaleFormat(initialValues.tdsRevisionDate)
 
     if (initialValues.elements.length === 0) {
-      initialValues.elements = [
-        {
-          name: '',
-          casProduct: '',
-          assayMin: '',
-          assayMax: '',
-          proprietary: false,
-          caprop65: '',
-          reach: ''
-        }
-      ]
+      initialValues.elements = [{
+        name: '',
+        casProduct: '',
+        assayMin: '',
+        assayMax: '',
+        proprietary: false,
+        caprop65: '',
+        reach: ''
+      }]
     }
     return initialValues
   }
 
-  tabChanged = index => {
-    this.setState({ editTab: index })
+  /**
+   * Change Tabs
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const tabChanged = index => {
+    setState({...state, editTab: index })
   }
 
-  getDateInLocaleFormat = value => {
+  /**
+   * Get Date In Locale Format
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const getDateInLocaleFormat = value => {
     let date = moment(value)
     if (date.isValid()) {
       return date.format(getLocaleDateFormat())
@@ -737,73 +485,79 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
-    this.props.getUnNumbersByString(searchQuery)
+  const handleUnNumberSearchChange = debounce((_, { searchQuery }) => {
+    props.getUnNumbersByString(searchQuery)
   }, 250)
 
-  handleUnNumberChange = (value, options) => {
+  const handleUnNumberChange = (value, options) => {
     if (value === undefined || value === '') return
-    let stateOptions = this.state.unNumberInitOptions
+    let stateOptions = state.unNumberInitOptions
 
     if (stateOptions.findIndex(t => t.key === value) < 0) {
       // value not found in state options
       let newOption = options.find(t => t.key === value) // new value from unNumbersFiltered
       if (newOption) {
         stateOptions.push(newOption)
-        this.setState({ unNumberInitOptions: stateOptions })
+        setState({ ...state, unNumberInitOptions: stateOptions })
       }
     }
   }
 
-  handleProductGroupsSearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchProductGroups(searchQuery)
+  const handleProductGroupsSearchChange = debounce((_, { searchQuery }) => {
+    props.searchProductGroups(searchQuery)
   }, 250)
 
-  handleCompanySearchChange = debounce((_, { searchQuery }) => {
-    this.props.searchCompany(searchQuery)
+  const handleCompanySearchChange = debounce((_, { searchQuery }) => {
+    props.searchCompany(searchQuery)
   }, 250)
 
-  handleProductGroupsChange = (value, options) => {
+  const handleProductGroupsChange = (value, options) => {
     const newOptions = options.filter(el => value === el.value)
-    this.setState({ selectedProductGroupsOptions: newOptions })
+    setState({ ...state, selectedProductGroupsOptions: newOptions })
   }
 
-  handleCompanyChange = (value, options) => {
+  const handleCompanyChange = (value, options) => {
     const newOptions = options.filter(el => value === el.value)
-    this.setState({ selectedCompanyOptions: newOptions })
+    setState({ ...state, selectedCompanyOptions: newOptions })
   }
 
-  switchToErrors = err => {
+  const switchToErrors = err => {
     const errorTab = onErrorFieldTabs[err[0]]
-    this.tabChanged(errorTab !== undefined ? errorTab : 0)
+    tabChanged(errorTab !== undefined ? errorTab : 0)
   }
 
-  handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
-    this.setState({ isLoading: true, casProduct: searchQuery })
+  const handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
+    setState({ ...state, isLoading: true, casProduct: searchQuery })
 
-    this.props.searchCasProduct(searchQuery, dataindex)
+    props.searchCasProduct(searchQuery, dataindex)
 
     setTimeout(() => {
-      const re = new RegExp(escapeRegExp(this.state.casProduct), 'i')
+      const re = new RegExp(escapeRegExp(state.casProduct), 'i')
       const isMatch = result => re.test(result.casProduct)
 
-      this.setState({
+      setState({
+        ...state,
         isLoading: false
       })
     }, 250)
   }, 500)
 
-  validateSaveOrSwitchToErrors = async callback => {
-    const { touched, validateForm, submitForm, values, setSubmitting } = this.formikProps
+  /**
+   * Valediate Switch to Save or Errors
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const validateSaveOrSwitchToErrors = async callback => {
+    const { touched, validateForm, submitForm, values, setSubmitting } = initFormikProps
 
-    if (Object.keys(touched).length || this.state.changedForm) {
+    if (Object.keys(touched).length || state.changedForm) {
       // Form edited and not saved yet
       validateForm().then(err => {
         const errors = Object.keys(err)
         if (errors.length && errors[0] !== 'isCanceled') {
           // Edited, Errors found
           submitForm() // to show errors
-          this.switchToErrors(Object.keys(err))
+          switchToErrors(Object.keys(err))
           return
         } else {
           // Edited, Errors not found, try to save
@@ -817,7 +571,7 @@ class AddEditEchoProduct extends React.Component {
             .then(
               async () => {
                 // Confirm
-                this.submitForm(values, setSubmitting, callback)
+                submitForm(values, setSubmitting, callback)
               },
               () => {
                 // Cancel
@@ -834,7 +588,12 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  getDateInIsoFormat = value => {
+  /**
+   * Get Date in ISO Format
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const getDateInIsoFormat = value => {
     if (!value) return ''
     let date = getStringISODate(value)
 
@@ -845,7 +604,12 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  submitForm = async (values, setSubmitting, callback) => {
+  /**
+   * Form Submit
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const submitForm = async (values, setSubmitting, callback) => {
     const {
       putCompanyGenericProducts,
       postCompanyGenericProducts,
@@ -853,9 +617,9 @@ class AddEditEchoProduct extends React.Component {
       linkAttachment,
       listDocumentTypes,
       datagrid
-    } = this.props
+    } = props
 
-    const { popupValues } = this.state
+    const { popupValues } = state
 
     let formValues = {
       ...values,
@@ -872,10 +636,10 @@ class AddEditEchoProduct extends React.Component {
               assayMax: e.assayMax === null || e.assayMax === '' ? null : Number(e.assayMax)
             }
       ),
-      sdsIssuedDate: this.getDateInIsoFormat(values.sdsIssuedDate),
-      sdsRevisionDate: this.getDateInIsoFormat(values.sdsRevisionDate),
-      tdsIssuedDate: this.getDateInIsoFormat(values.tdsIssuedDate),
-      tdsRevisionDate: this.getDateInIsoFormat(values.tdsRevisionDate)
+      sdsIssuedDate: getDateInIsoFormat(values.sdsIssuedDate),
+      sdsRevisionDate: getDateInIsoFormat(values.sdsRevisionDate),
+      tdsIssuedDate: getDateInIsoFormat(values.tdsIssuedDate),
+      tdsRevisionDate: getDateInIsoFormat(values.tdsRevisionDate)
     }
     delete formValues.attachments
 
@@ -916,22 +680,10 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  // RowInput = ({ name, readOnly = false, id, defaultMessage, required }) => (
-  //   <GridRow>
-  //     <GridColumn width={6}>
-  //       <FormattedMessage id={id} defaultMessage={defaultMessage} /> {required === true ? <Required /> : null}
-  //     </GridColumn>
-
-  //     <GridColumn width={10}>
-  //       <Input inputProps={{ readOnly: readOnly, id: name }} name={name} />
-  //     </GridColumn>
-  //   </GridRow>
-  // )
-
-  RowInput = ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => {
+  const RowInput = ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => {
     const {
       intl: { formatMessage }
-    } = this.props
+    } = props
     return (
       <Input
         label={
@@ -953,16 +705,16 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  RowTwoInputs = arrayInputs => {
+  const RowTwoInputs = arrayInputs => {
     const {
       intl: { formatMessage }
-    } = this.props
+    } = props
     return (
       <GridRowCustom>
         {arrayInputs.map(
           ({ name, id, defaultMessage, required = false, placeholderId = 'global.empty', readOnly = false }) => (
             <GridColumnForm width={8}>
-              {this.RowInput({ name, id, defaultMessage, required, placeholderId, readOnly })}
+              {RowInput({ name, id, defaultMessage, required, placeholderId, readOnly })}
             </GridColumnForm>
           )
         )}
@@ -970,7 +722,7 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  RowTextArea = ({ name, readOnly = false, id, defaultMessage }, formikProps) => (
+  const RowTextArea = ({ name, readOnly = false, id, defaultMessage }, formikProps) => (
     <GridRowCustom>
       <GridColumnForm width={16}>
         <GridRow>
@@ -985,14 +737,14 @@ class AddEditEchoProduct extends React.Component {
           value={formikProps.values[name]}
           onChange={e => {
             formikProps.setFieldValue(name, e.target.value)
-            this.setState({ changedForm: true })
+            setState({ ...state, changedForm: true })
           }}
         />
       </GridColumnForm>
     </GridRowCustom>
   )
 
-  RowDate = ({ name, readOnly = false, id, defaultMessage, clearable = true }) => (
+  const RowDate = ({ name, readOnly = false, id, defaultMessage, clearable = true }) => (
     <DateInput
       inputProps={{ maxDate: moment(), id: name, clearable: clearable }}
       name={name}
@@ -1004,7 +756,7 @@ class AddEditEchoProduct extends React.Component {
     />
   )
 
-  attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
+  const attachDocumentsUploadAttachment = (newDocument, values, setFieldValue) => {
     const docArray = Array.isArray(newDocument)
       ? uniqueArrayByKey(values.attachments.concat(newDocument), 'id')
       : uniqueArrayByKey(values.attachments.concat([newDocument]), 'id')
@@ -1016,10 +768,10 @@ class AddEditEchoProduct extends React.Component {
           { ...doc, isLinkedFromDocumentManager: true }
         )
     })
-    this.setState({ changedForm: true })
+    setState({ ...state, changedForm: true })
   }
 
-  inputDocumentRows = (formikProps, values, popupValues, documentType) => {
+  const inputDocumentRows = (formikProps, values, popupValues, documentType) => {
     return (
       <>
         <GridRowCustom>
@@ -1036,7 +788,7 @@ class AddEditEchoProduct extends React.Component {
               singleSelection
               documentTypeIds={[documentType]}
               asModal
-              returnSelectedRows={rows => this.attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
+              returnSelectedRows={rows => attachDocumentsUploadAttachment(rows, values, formikProps.setFieldValue)}
             />
           </GridColumnForm>
         </GridRowCustom>
@@ -1048,14 +800,14 @@ class AddEditEchoProduct extends React.Component {
         <GridRowCustom>
           <GridColumnForm width={16}>
             <UploadAttachment
-              {...this.props}
+              {...props}
               attachments={values.attachments.filter(att => getSafe(() => att.documentType.id, 0) === documentType)}
               edit={getSafe(() => popupValues.id, '')}
               name='attachments'
               type={documentType.toString()}
               filesLimit={1}
               fileMaxSize={20}
-              listDocumentTypes={this.props.listDocumentTypes}
+              listDocumentTypes={props.listDocumentTypes}
               onChange={files => {
                 formikProps.setFieldValue(
                   `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
@@ -1066,17 +818,17 @@ class AddEditEchoProduct extends React.Component {
                     isLinkedFromDocumentManager: getSafe(() => files.isLinkedFromDocumentManager, false)
                   }
                 )
-                this.setState({ changedForm: true })
+                setState({ ...state, changedForm: true })
               }}
               onRemoveFile={async id => {
                 await formikProps.setFieldValue('attachments', [])
                 const arrayAttachments = values.attachments.filter(attachment => attachment.id !== id)
                 await formikProps.setFieldValue('attachments', arrayAttachments)
-                this.setState({ changedForm: true, changedAttachments: true })
+                setState({ ...state, changedForm: true, changedAttachments: true })
               }}
               data-test='settings_product_import_attachments'
               emptyContent={
-                <DivBrowseFile background='white'>
+                <DivBrowseFile style={{background: 'white'}}>
                   <DivIcon>
                     <PaperclipIcon size='14' color='#20273a' />
                   </DivIcon>
@@ -1098,7 +850,7 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  RowDropdown = ({ name, readOnly = false, id, defaultMessage, props, clearable = false }) => (
+  const RowDropdown = ({ name, readOnly = false, id, defaultMessage, props, clearable = false }) => (
     <FormikDropdown
       selection
       fluid
@@ -1110,7 +862,7 @@ class AddEditEchoProduct extends React.Component {
     />
   )
 
-  RowUnNumberDropdown = ({ name, readOnly = false, id, defaultMessage, props }) => (
+  const RowUnNumberDropdown = ({ name, readOnly = false, id, defaultMessage, props }) => (
     <FormikDropdown
       selection
       fluid
@@ -1119,24 +871,29 @@ class AddEditEchoProduct extends React.Component {
       {...props}
       inputProps={{
         disabled: readOnly,
-        loading: this.props.unNumbersFetching,
+        loading: props.unNumbersFetching,
         clearable: true,
         search: true,
-        onSearchChange: this.handleUnNumberSearchChange,
-        onChange: (_, { value }) => this.handleUnNumberChange(value, props.options)
+        onSearchChange: handleUnNumberSearchChange,
+        onChange: (_, { value }) => handleUnNumberChange(value, props.options)
       }}
       options={props.options}
     />
   )
 
-  renderMixtures = formikProps => {
+  /**
+   * Render Mixtures
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const renderMixtures = formikProps => {
     const {
       closePopup,
       intl: { formatMessage },
       isLoading
-    } = this.props
+    } = props
 
-    const { popupValues } = this.state
+    const { popupValues } = state
 
     let { values } = formikProps
 
@@ -1145,7 +902,7 @@ class AddEditEchoProduct extends React.Component {
       if (el.casProduct) initialCasProducts.push(el.casProduct)
     })
 
-    let searchedCasProducts = this.props.searchedCasProducts.concat(initialCasProducts)
+    let searchedCasProducts = props.searchedCasProducts.concat(initialCasProducts)
 
     return (
       <>
@@ -1199,7 +956,7 @@ class AddEditEchoProduct extends React.Component {
             <>
               {values.elements && values.elements.length
                 ? values.elements.map((element, index) => (
-                    <GridRowCustom>
+                    <GridRowCustom key={index}>
                       <GridColumnMixtures
                         width={2}
                         data-test='admin_product_popup_proprietary'
@@ -1250,14 +1007,13 @@ class AddEditEchoProduct extends React.Component {
                                 id: 'global.typeToSearch',
                                 defaultMessage: 'Type to search'
                               }),
-                              loading: this.state.isLoading,
-                              onSearchChange: this.handleSearchChange,
+                              loading: state.isLoading,
+                              onSearchChange: handleSearchChange,
                               dataindex: index,
                               onChange: (_, { value }) => {
-                                const casItem = getSafe(
+                                const  casItem = getSafe(
                                   () => uniqueArrayByKey(searchedCasProducts.concat(initialCasProducts), 'id'),
-                                  []
-                                ).find(el => el.id === value)
+                                  []).find(el => el.id === value)
                                 if (casItem) {
                                   formikProps.setFieldValue(`elements[${index}].caprop65`, casItem.caprop65)
                                   formikProps.setFieldValue(`elements[${index}].reach`, casItem.reach)
@@ -1299,12 +1055,13 @@ class AddEditEchoProduct extends React.Component {
                         <DivReadOnlyValues>
                           {values.elements[index].proprietary ? (
                             'N/A'
-                          ) : values.elements[index].caprop65 === true ? (
-                            <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                          ) : values.elements[index].caprop65 === false ? (
-                            <FormattedMessage id='global.no' defaultMessage='No' />
                           ) : (
-                            'N/A'
+                            values.elements[index].caprop65 === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].caprop65 === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                              )
                           )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
@@ -1313,12 +1070,13 @@ class AddEditEchoProduct extends React.Component {
                         <DivReadOnlyValues>
                           {values.elements[index].proprietary ? (
                             'N/A'
-                          ) : values.elements[index].reach === true ? (
-                            <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                          ) : values.elements[index].reach === false ? (
-                            <FormattedMessage id='global.no' defaultMessage='No' />
-                          ) : (
-                            'N/A'
+                          ) :(
+                            values.elements[index].reach === true
+                              ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                              : (values.elements[index].reach === false
+                                ? <FormattedMessage id='global.no' defaultMessage='No' />
+                                : 'N/A'
+                              )
                           )}
                         </DivReadOnlyValues>
                       </GridColumnMixtures>
@@ -1328,14 +1086,14 @@ class AddEditEchoProduct extends React.Component {
                           <DivCircleIcon
                             onClick={() => {
                               arrayHelpers.remove(index)
-                              this.setState({ changedForm: true })
+                              setState({ ...state, changedForm: true })
                             }}
-                            data-test={`settings_product_popup_remove_${index}_btn`}>
-                            <IconStyled name='delete' size='small' />
+                            data-test={`settings_product_popup_remove_${index}_btn`}
+                          >
+                            <IconStyled name='delete' size='small'  />
                           </DivCircleIcon>
-                        ) : (
-                          ''
-                        )}
+                          ) : ''
+                        }
                       </GridColumnMixtures>
                     </GridRowCustom>
                   ))
@@ -1354,10 +1112,11 @@ class AddEditEchoProduct extends React.Component {
                         caprop65: '',
                         reach: ''
                       })
-                      this.setState({ changedForm: true })
+                      setState({ ...state, changedForm: true })
                     }}
-                    data-test='settings_product_popup_add_btn'>
-                    <IconStyled name='plus' size='small' />
+                    data-test='settings_product_popup_add_btn'
+                  >
+                    <IconStyled name='plus' size='small'  />
                   </DivCircleIcon>
                 </GridColumnMixtures>
               </GridRowCustom>
@@ -1368,9 +1127,14 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  renderEdit = formikProps => {
-    let codesList = this.state.codesList
-    const { selectedProductGroupsOptions, selectedCompanyOptions } = this.state
+  /**
+   * Render Edit
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const renderEdit = formikProps => {
+    let codesList = state.codesList
+    const { selectedProductGroupsOptions, selectedCompanyOptions } = state
     const {
       intl: { formatMessage },
       searchedManufacturers,
@@ -1380,7 +1144,7 @@ class AddEditEchoProduct extends React.Component {
       searchedProductGroups,
       searchedCompanyLoading,
       searchedCompany
-    } = this.props
+    } = props
 
     const allProductGroupsOptions = uniqueArrayByKey(searchedProductGroups.concat(selectedProductGroupsOptions), 'key')
     const allCompanyOptions = uniqueArrayByKey(searchedCompany.concat(selectedCompanyOptions), 'key')
@@ -1389,7 +1153,7 @@ class AddEditEchoProduct extends React.Component {
       <Grid>
         <GridRowCustom>
           <GridColumnForm width={16}>
-            {this.RowInput({
+            {RowInput({
               name: 'name',
               id: 'global.productName',
               defaultMessage: 'Product Name',
@@ -1401,7 +1165,7 @@ class AddEditEchoProduct extends React.Component {
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name: 'code',
               id: 'global.productCode',
               defaultMessage: 'Product Code',
@@ -1433,8 +1197,8 @@ class AddEditEchoProduct extends React.Component {
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
                 }),
-                onSearchChange: this.handleProductGroupsSearchChange,
-                onChange: (_, { value }) => this.handleProductGroupsChange(value, allProductGroupsOptions)
+                onSearchChange: handleProductGroupsSearchChange,
+                onChange: (_, { value }) => handleProductGroupsChange(value, allProductGroupsOptions)
               }}
             />
           </GridColumnForm>
@@ -1465,8 +1229,8 @@ class AddEditEchoProduct extends React.Component {
                   id: 'global.startTypingToSearch',
                   defaultMessage: 'Start typing to begin search'
                 }),
-                onSearchChange: this.handleCompanySearchChange,
-                onChange: (_, { value }) => this.handleCompanyChange(value, allProductGroupsOptions)
+                onSearchChange: handleCompanySearchChange,
+                onChange: (_, { value }) => handleCompanyChange(value, allProductGroupsOptions)
               }}
             />
           </GridColumnForm>
@@ -1520,7 +1284,7 @@ class AddEditEchoProduct extends React.Component {
                 onAddItem: (e, { value }) => {
                   const newValue = { text: value, value: value }
                   codesList.push(newValue)
-                  this.setState({ codesList: codesList })
+                  setState({ ...state, codesList: codesList })
                 },
                 noResultsMessage: formatMessage(
                   { id: 'global.dropdown.startTyping', defaultMessage: 'Start typing to add {typeName}.' },
@@ -1549,7 +1313,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
         </GridRowCustom>
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'emergencyCompanyName',
             id: 'global.emergencyCompanyName',
@@ -1577,7 +1341,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
         </GridRowCustom>
 
-        {this.renderMixtures(formikProps)}
+        {renderMixtures(formikProps)}
 
         <GridRowCustom>
           <GridColumn width={16}>
@@ -1589,23 +1353,23 @@ class AddEditEchoProduct extends React.Component {
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowDate({ name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
+            {RowDate({ name: 'sdsIssuedDate', id: 'global.sdsIssuedDate', defaultMessage: 'SDS Issued Date' })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowInput({ name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
+            {RowInput({ name: 'sdsPreparedBy', id: 'global.sdsPreparedBy', defaultMessage: 'SDS Prepared by' })}
           </GridColumnForm>
         </GridRowCustom>
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowDate({
+            {RowDate({
               name: 'sdsRevisionDate',
               id: 'global.sdsRevisionDate',
               defaultMessage: 'SDS Revision Date'
             })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name: 'sdsVersionNumber',
               id: 'global.sdsVersionNumber',
               defaultMessage: 'SDS Version Number',
@@ -1625,23 +1389,23 @@ class AddEditEchoProduct extends React.Component {
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowDate({ name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
+            {RowDate({ name: 'tdsIssuedDate', id: 'global.tdsIssuedDate', defaultMessage: 'TDS Issued Date' })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowInput({ name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
+            {RowInput({ name: 'tdsPreparedBy', id: 'global.tdsPreparedBy', defaultMessage: 'TDS Prepared by' })}
           </GridColumnForm>
         </GridRowCustom>
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowDate({
+            {RowDate({
               name: 'tdsRevisionDate',
               id: 'global.tdsRevisionDate',
               defaultMessage: 'TDS Revision Date'
             })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name: 'tdsVersionNumber',
               id: 'tdsVersionNumber',
               defaultMessage: 'TDS Version Number',
@@ -1654,10 +1418,15 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  renderInfo = formikProps => {
+  /**
+   * Render Info
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const renderInfo = formikProps => {
     return (
       <Grid>
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'appearance', id: 'global.appearance', defaultMessage: 'Appearance' },
           {
             name: 'aspirationHazard',
@@ -1666,7 +1435,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'autoIgnitionTemperature',
             id: 'global.autoIgnitionTemperature',
@@ -1679,7 +1448,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTextArea(
+        {RowTextArea(
           {
             name: 'conditionsToAvoid',
             id: 'global.conditionsToAvoid',
@@ -1688,7 +1457,7 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'decompositionTemperature',
             id: 'global.decompositionTemperature',
@@ -1701,7 +1470,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'endocrineDisruptorInformation',
             id: 'global.endocrineDisruptorInformation',
@@ -1714,7 +1483,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'flammabilityOrExplosiveLower',
             id: 'global.flammabilityOrExplosiveLower',
@@ -1727,9 +1496,9 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTextArea({ name: 'eyeContact', id: 'global.eyeContact', defaultMessage: 'Eye Contact' }, formikProps)}
+        {RowTextArea({ name: 'eyeContact', id: 'global.eyeContact', defaultMessage: 'Eye Contact' }, formikProps)}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'flammabilitySolidGas',
             id: 'global.flammabilitySolidGas',
@@ -1742,7 +1511,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'optionalFlowTime',
             id: 'global.optionalFlowTime',
@@ -1753,7 +1522,7 @@ class AddEditEchoProduct extends React.Component {
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name: 'optionalGasDensity',
               id: 'global.optionalGasDensity',
               defaultMessage: 'Gas Desity'
@@ -1761,12 +1530,12 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
         </GridRowCustom>
 
-        {this.RowTextArea(
+        {RowTextArea(
           { name: 'generalAdvice', id: 'global.generalAdvice', defaultMessage: 'General Advice' },
           formikProps
         )}
 
-        {this.RowTextArea(
+        {RowTextArea(
           {
             name: 'hazardStatement',
             id: 'global.hazardStatement',
@@ -1775,7 +1544,7 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'hazardousDecompositionProducts',
             id: 'global.hazardousDecompositionProducts',
@@ -1788,7 +1557,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'hazardousReactions',
             id: 'global.hazardousReactions',
@@ -1801,7 +1570,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'hmisChronicHealthHazard',
             id: 'global.hmisChronicHealthHazard',
@@ -1814,7 +1583,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'hmisHealthHazard',
             id: 'global.hmisHealthHazard',
@@ -1827,12 +1596,12 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'hnoc', id: 'global.hnoc', defaultMessage: 'HNOC' },
           { name: 'labelElements', id: 'global.labelElements', defaultMessage: 'Label Elements' }
         ])}
 
-        {this.RowTextArea(
+        {RowTextArea(
           {
             name: 'incompatibleMaterials',
             id: 'global.incompatibleMaterials',
@@ -1841,16 +1610,16 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
 
-        {this.RowTextArea({ name: 'ingestion', id: 'global.ingestion', defaultMessage: 'Ingestion' }, formikProps)}
+        {RowTextArea({ name: 'ingestion', id: 'global.ingestion', defaultMessage: 'Ingestion' }, formikProps)}
 
-        {this.RowTextArea({ name: 'inhalation', id: 'global.inhalation', defaultMessage: 'Inhalation' }, formikProps)}
+        {RowTextArea({ name: 'inhalation', id: 'global.inhalation', defaultMessage: 'Inhalation' }, formikProps)}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'mexicoGrade', id: 'global.mexicoGrade', defaultMessage: 'Mexico-Grade' },
           { name: 'irritation', id: 'global.irritation', defaultMessage: 'Irritation' }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'molecularWeight',
             id: 'global.molecularWeight',
@@ -1863,7 +1632,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'mutagenicEffects',
             id: 'global.mutagenicEffects',
@@ -1876,7 +1645,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'nfpaFireHazard', id: 'global.nfpaFireHazard', defaultMessage: 'NFPA Fire Hazard' },
           {
             name: 'mostImportantSymptomsAndEffects',
@@ -1885,7 +1654,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'nfpaHealthHazard',
             id: 'global.nfpaHealthHazard',
@@ -1897,7 +1666,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: 'NFPA Reactivity Hazard'
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'nfpaSpecialHazard',
             id: 'global.nfpaSpecialHazard',
@@ -1909,11 +1678,11 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: 'Notes to Physician'
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'odor', id: 'global.odor', defaultMessage: 'Odor' },
           { name: 'odorThreshold', id: 'global.odorThreshold', defaultMessage: 'Odor Threshold' }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'oshaDefinedHazards',
             id: 'global.oshaDefinedHazards',
@@ -1925,7 +1694,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: 'Other Adverse Effects'
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'partitionCoefficient',
             id: 'global.partitionCoefficient',
@@ -1935,11 +1704,11 @@ class AddEditEchoProduct extends React.Component {
         ])}
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowInput({ name: 'physicalState', id: 'global.physicalState', defaultMessage: 'Physical State' })}
+            {RowInput({ name: 'physicalState', id: 'global.physicalState', defaultMessage: 'Physical State' })}
           </GridColumnForm>
         </GridRowCustom>
 
-        {this.RowTextArea(
+        {RowTextArea(
           {
             name: 'precautionaryStatements',
             id: 'global.precautionaryStatements',
@@ -1948,7 +1717,7 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'productLc50Inhalation',
             id: 'global.productLc50Inhalation',
@@ -1961,17 +1730,17 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'productLd50Oral', id: 'global.productLd50Oral', defaultMessage: 'Product LD50 Oral' },
           { name: 'reactiveHazard', id: 'global.reactiveHazard', defaultMessage: 'Reactive Hazard' }
         ])}
 
-        {this.RowTextArea(
+        {RowTextArea(
           { name: 'recommendedUse', id: 'global.recommendedUse', defaultMessage: 'Recommended Use' },
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'optionalRecommendedRestrictions',
             id: 'global.optionalRecommendedRestrictions',
@@ -1984,7 +1753,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'reproductiveEffects',
             id: 'global.reproductiveEffects',
@@ -1993,22 +1762,22 @@ class AddEditEchoProduct extends React.Component {
           { name: 'sensitization', id: 'global.sensitization', defaultMessage: 'Sensitization' }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'optionalSchedule', id: 'global.optionalSchedule', defaultMessage: 'Schedule' },
           { name: 'signalWord', id: 'global.signalWord', defaultMessage: 'Signal Word' }
         ])}
 
-        {this.RowTextArea(
+        {RowTextArea(
           { name: 'skinContact', id: 'global.skinContact', defaultMessage: 'Skin Contact' },
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'solubility', id: 'global.solubility', defaultMessage: 'Solubility' },
           { name: 'specificGravity', id: 'global.specificGravity', defaultMessage: 'Specific Gravity' }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'optionalSpecificVolume',
             id: 'global.optionalSpecificVolume',
@@ -2017,7 +1786,7 @@ class AddEditEchoProduct extends React.Component {
           { name: 'stability', id: 'global.stability', defaultMessage: 'Stability' }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'stotRepeatedExposure',
             id: 'global.stotRepeatedExposure',
@@ -2030,7 +1799,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTextArea(
+        {RowTextArea(
           {
             name: 'symptomsEffects',
             id: 'global.symptomsEffects',
@@ -2039,7 +1808,7 @@ class AddEditEchoProduct extends React.Component {
           formikProps
         )}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: 'supplementalInformation',
             id: 'global.supplementalInformation',
@@ -2052,7 +1821,7 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'teratogenicity', id: 'global.teratogenicity', defaultMessage: 'Teratogenicity' },
           {
             name: 'usesAdvisedAgainst',
@@ -2061,12 +1830,12 @@ class AddEditEchoProduct extends React.Component {
           }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'vaporDensity', id: 'global.vaporDensity', defaultMessage: 'Vapor Density' },
           { name: 'vaporPressure', id: 'global.vaporPressure', defaultMessage: 'Vapor Pressure' }
         ])}
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           { name: 'viscosity', id: 'global.viscosity', defaultMessage: 'Viscosity' },
           {
             name: 'wasteDisposalMethods',
@@ -2078,8 +1847,8 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  renderDocuments = formikProps => {
-    let { popupValues } = this.state
+  const renderDocuments = formikProps => {
+    let { popupValues } = state
 
     return (
       <Grid>
@@ -2091,7 +1860,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
         </GridRowCustom>
 
-        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 3)}
+        {inputDocumentRows(formikProps, formikProps.values, popupValues, 3)}
 
         <GridRowCustom>
           <GridColumn width={16}>
@@ -2101,7 +1870,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
         </GridRowCustom>
 
-        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 11)}
+        {inputDocumentRows(formikProps, formikProps.values, popupValues, 11)}
 
         <GridRowCustom>
           <GridColumn width={16}>
@@ -2111,12 +1880,17 @@ class AddEditEchoProduct extends React.Component {
           </GridColumn>
         </GridRowCustom>
 
-        {this.inputDocumentRows(formikProps, formikProps.values, popupValues, 12)}
+        {inputDocumentRows(formikProps, formikProps.values, popupValues, 12)}
       </Grid>
     )
   }
 
-  renderTransportation = formikProps => {
+  /**
+   * Render Transportation
+   * @category Products - Add/Edit Echo Product
+   * @method
+   */
+  const renderTransportation = formikProps => {
     return (
       <>
         <Grid>
@@ -2127,19 +1901,19 @@ class AddEditEchoProduct extends React.Component {
                 label={<FormattedMessage id='global.filter' defaultMessage='Filter' />}
                 fluid
                 options={transportationTypes}
-                value={this.state.transportationType}
-                onChange={(_, { value }) => this.setState({ transportationType: value })}
+                value={state.transportationType}
+                onChange={(_, { value }) => setState({ ...state, transportationType: value })}
               />
             </GridColumnForm>
           </GridRowCustom>
         </Grid>
-        {this.renderTransportationContent(formikProps, this.state.transportationType)}
+        {renderTransportationContent(formikProps, state.transportationType)}
       </>
     )
   }
 
-  renderTransportationContent = (formikProps, transportationType) => {
-    let unNumberOptions = [...this.props.unNumbersFiltered, ...this.state.unNumberInitOptions].filter(
+  const renderTransportationContent = (formikProps, transportationType) => {
+    let unNumberOptions = [...props.unNumbersFiltered, ...state.unNumberInitOptions].filter(
       (v, i, a) => a.findIndex(t => t.key === v.key) === i
     )
 
@@ -2149,29 +1923,29 @@ class AddEditEchoProduct extends React.Component {
       <Grid>
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowDropdown({
+            {RowDropdown({
               name: `${transportationType}HazardClass`,
               id: `global.${transportationType}HazardClass`,
               defaultMessage: `${typeUp} Hazard Class`,
               clearable: true,
               props: {
-                options: this.props.hazardClasses
+                options: props.hazardClasses
               }
             })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowDropdown({
+            {RowDropdown({
               name: `${transportationType}PackagingGroup`,
               id: `global.${transportationType}PackagingGroup`,
               defaultMessage: `${typeUp} Packaging Group`,
               clearable: true,
               props: {
-                options: this.props.packagingGroups
+                options: props.packagingGroups
               }
             })}
           </GridColumnForm>
         </GridRowCustom>
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}ProperShippingName`,
             id: `global.${transportationType}ProperShippingName`,
@@ -2185,7 +1959,7 @@ class AddEditEchoProduct extends React.Component {
         ])}
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowUnNumberDropdown({
+            {RowUnNumberDropdown({
               name: `${transportationType}UnNumber`,
               id: `global.${transportationType}UnNumber`,
               defaultMessage: `${typeUp} UN Number`,
@@ -2195,7 +1969,7 @@ class AddEditEchoProduct extends React.Component {
             })}
           </GridColumnForm>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name:
                 transportationType === 'dot' ? 'dotReportableQuantity' : `${transportationType}ReportableQuantities`,
               id:
@@ -2208,7 +1982,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
         </GridRowCustom>
 
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}EnvironmentalHazards`,
             id: `global.${transportationType}EnvironmentalHazards`,
@@ -2220,7 +1994,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: `${typeUp} Ems Numbers`
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}Exceptions`,
             id: `global.${transportationType}Exceptions`,
@@ -2232,7 +2006,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: `${typeUp} Users Special Precautions`
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}MarinePollutant`,
             id: `global.${transportationType}MarinePollutant`,
@@ -2244,7 +2018,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: `${typeUp} Severe Marine Pollutant`
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}PackagingExceptions`,
             id: `global.${transportationType}PackagingExceptions`,
@@ -2256,7 +2030,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: `${typeUp} Packaging Non Bulk`
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}PackagingBulk`,
             id: `global.${transportationType}PackagingBulk`,
@@ -2268,7 +2042,7 @@ class AddEditEchoProduct extends React.Component {
             defaultMessage: `${typeUp} Passanger Quantity Limitations`
           }
         ])}
-        {this.RowTwoInputs([
+        {RowTwoInputs([
           {
             name: `${transportationType}CargoAircraftQuantityLimitations`,
             id: `global.${transportationType}CargoAircraftQuantityLimitations`,
@@ -2283,7 +2057,7 @@ class AddEditEchoProduct extends React.Component {
 
         <GridRowCustom>
           <GridColumnForm width={8}>
-            {this.RowInput({
+            {RowInput({
               name: `${transportationType}VesselStowageOther`,
               id: `global.${transportationType}VesselStowageOther`,
               defaultMessage: `${typeUp} Vessel Stowage Other`
@@ -2291,7 +2065,7 @@ class AddEditEchoProduct extends React.Component {
           </GridColumnForm>
           {transportationType === 'dot' && (
             <GridColumnForm width={8}>
-              {this.RowInput({
+              {RowInput({
                 name: `${transportationType}QuantityLimitations`,
                 id: `global.${transportationType}QuantityLimitations`,
                 defaultMessage: `${typeUp} Quantity Limitations`
@@ -2303,24 +2077,24 @@ class AddEditEchoProduct extends React.Component {
     )
   }
 
-  getContent = formikProps => {
-    let { editTab } = this.state
+  const getContent = formikProps => {
+    let { editTab } = state
     switch (editTab) {
       case 0: {
         // Edit
-        return this.renderEdit(formikProps)
+        return renderEdit(formikProps)
       }
       case 1: {
         // Info
-        return this.renderInfo(formikProps)
+        return renderInfo(formikProps)
       }
       case 2: {
         // Documents
-        return this.renderDocuments(formikProps)
+        return renderDocuments(formikProps)
       }
       case 3: {
         // Transportation
-        return this.renderTransportation(formikProps)
+        return renderTransportation(formikProps)
       }
 
       default:
@@ -2328,99 +2102,177 @@ class AddEditEchoProduct extends React.Component {
     }
   }
 
-  render() {
-    const {
-      closePopup,
-      intl: { formatMessage },
-      isLoading,
-      datagrid
-    } = this.props
+  const {
+    closePopup,
+    intl: { formatMessage },
+    isLoading,
+    datagrid
+  } = props
 
-    const { editTab } = this.state
+  const { editTab } = state
 
-    return (
-      <CustomForm
-        enableReinitialize
-        initialValues={this.getInitialFormValues()}
-        validationSchema={validationScheme}
-        onSubmit={async (values, { setSubmitting }) => {
-          this.submitForm(values, setSubmitting, closePopup)
-        }}
-        render={formikProps => {
-          let { touched, validateForm, resetForm, values, submitForm } = formikProps
-          this.resetForm = resetForm
-          this.formikProps = formikProps
+  return (
+    <CustomForm
+      enableReinitialize
+      initialValues={getInitialFormValues()}
+      validationSchema={AddEditEchoProductPopupValidationScheme}
+      onSubmit={async (values, { setSubmitting }) => {
+        submitForm(values, setSubmitting, closePopup)
+      }}
+      render={formikProps => {
+        let { touched, validateForm, resetForm, values, submitForm } = formikProps
+        initResetForm = resetForm
+        initFormikProps = formikProps
 
-          return (
-            <>
-              <DimmerBottomSidebarOpend
-                height='height: 11% !important;' // 89% height has Sidebar'
-                active={true}
-                onClickOutside={() => closePopup()}
-                page></DimmerBottomSidebarOpend>
-              <FlexSidebar visible={true} width='very wide' direction='bottom' animation='overlay'>
-                <Dimmer inverted active={isLoading}>
-                  <Loader />
-                </Dimmer>
-                <HighSegment basic>
-                  <MenuCustom pointing secondary>
-                    {tabs.map((tab, i) => (
-                      <Menu.Item onClick={() => this.tabChanged(i)} active={editTab === i}>
-                        {formatMessage(tab.text)}
-                      </Menu.Item>
-                    ))}
-                    <DivIconChevronDown onClick={() => closePopup()}>
-                      <ChevronDown />
-                    </DivIconChevronDown>
-                  </MenuCustom>
-                </HighSegment>
+        return (
+          <>
+            <DimmerBottomSidebarOpend
+              height='height: 11% !important;' // 89% height has Sidebar'
+              active={true}
+              onClickOutside={() => closePopup()}
+              page></DimmerBottomSidebarOpend>
+            <FlexSidebar visible={true} width='very wide' direction='bottom' animation='overlay'>
+              <Dimmer inverted active={isLoading}>
+                <Loader />
+              </Dimmer>
+              <HighSegment basic>
+                <MenuCustom pointing secondary>
+                  {tabs.map((tab, i) => (
+                    <Menu.Item onClick={() => tabChanged(i)} active={editTab === i} key={i}>
+                      {formatMessage(tab.text)}
+                    </Menu.Item>
+                  ))}
+                  <DivIconChevronDown onClick={() => closePopup()}><ChevronDown /></DivIconChevronDown>
+                </MenuCustom>
+              </HighSegment>
 
-                <FlexContent>
-                  <SegmentCustomContent basic>{this.getContent(formikProps)}</SegmentCustomContent>
-                </FlexContent>
+              <FlexContent>
+                <SegmentCustomContent basic>{getContent(formikProps)}</SegmentCustomContent>
+              </FlexContent>
 
-                <DivBottomSidebar>
-                  <BasicButton
-                    noBorder
-                    inputProps={{ type: 'button' }}
-                    onClick={() => {
-                      if (this.state.changedAttachments) datagrid.loadData()
-                      closePopup()
-                    }}
-                    data-test='sidebar_inventory_cancel'>
-                    {Object.keys(touched).length || this.state.changedForm
-                      ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
-                      : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
-                  </BasicButton>
+              <DivBottomSidebar>
+                <BasicButton
+                  noBorder
+                  inputProps={{ type: 'button' }}
+                  onClick={() => {
+                    if (state.changedAttachments) datagrid.loadData()
+                    closePopup()
+                  }}
+                  data-test='sidebar_inventory_cancel'>
+                  {Object.keys(touched).length || state.changedForm
+                    ? formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })
+                    : formatMessage({ id: 'global.close', defaultMessage: 'Close' })}
+                </BasicButton>
 
-                  <BasicButton
-                    disabled={!(Object.keys(touched).length || this.state.changedForm)}
-                    onClick={() =>
-                      validateForm().then(err => {
-                        const errors = Object.keys(err)
-                        if (errors.length && errors[0] !== 'isCanceled') {
-                          submitForm() // to show errors
-                          this.switchToErrors(errors)
-                        } else {
-                          submitForm()
-                        }
-                      })
-                    }
-                    primary
-                    size='large'
-                    inputProps={{ type: 'button' }}
-                    data-test='sidebar_inventory_save_new'>
-                    {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                  </BasicButton>
-                </DivBottomSidebar>
-                <ErrorFocus />
-              </FlexSidebar>
-            </>
-          )
-        }}
-      />
-    )
-  }
+                <BasicButton
+                  disabled={!(Object.keys(touched).length || state.changedForm)}
+                  onClick={() =>
+                    validateForm().then(err => {
+                      const errors = Object.keys(err)
+                      if (errors.length && errors[0] !== 'isCanceled') {
+                        submitForm() // to show errors
+                        switchToErrors(errors)
+                      } else {
+                        submitForm()
+                      }
+                    })
+                  }
+                  primary
+                  size='large'
+                  inputProps={{ type: 'button' }}
+                  data-test='sidebar_inventory_save_new'>
+                  {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                </BasicButton>
+              </DivBottomSidebar>
+              <ErrorFocus />
+            </FlexSidebar>
+          </>
+        )
+      }}
+    />
+  )
+}
+
+AddEditEchoProduct.propTypes = {
+  loadFile: PropTypes.func,
+  addAttachment: PropTypes.func,
+  linkAttachment: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  removeAttachmentLink: PropTypes.func,
+  closePopup: PropTypes.func,
+  searchCasProduct: PropTypes.func,
+  putCompanyGenericProducts: PropTypes.func,
+  postCompanyGenericProducts: PropTypes.func,
+  searchManufacturers: PropTypes.func,
+  editEchoProductChangeTab: PropTypes.func,
+  loadEditEchoProduct: PropTypes.func,
+  getHazardClassesDataRequest: PropTypes.func,
+  getPackagingGroupsDataRequest: PropTypes.func,
+  getUnNumbersByString: PropTypes.func,
+  searchProductGroups: PropTypes.func,
+  getDocumentTypes: PropTypes.func,
+  searchCompany: PropTypes.func,
+  addForm: PropTypes.bool,
+  editForm: PropTypes.bool,
+  popupValues: PropTypes.any,
+  editTab: PropTypes.number,
+  editInitTrig: PropTypes.bool,
+  packagingGroups: PropTypes.array,
+  hazardClasses: PropTypes.array,
+  searchedManufacturersLoading: PropTypes.bool,
+  searchedManufacturers: PropTypes.array,
+  searchedCasProducts: PropTypes.array,
+  isLoading: PropTypes.bool,
+  unNumbersFiltered: PropTypes.array,
+  unNumbersFetching: PropTypes.bool,
+  listDocumentTypes: PropTypes.array,
+  searchedProductGroups: PropTypes.array,
+  searchedProductGroupsLoading: PropTypes.bool,
+  searchedCompany: PropTypes.array,
+  searchedCompanyLoading: PropTypes.bool,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+AddEditEchoProduct.defaultProps = {
+  loadFile: () => {},
+  addAttachment: () => {},
+  linkAttachment: () => {},
+  removeAttachment: () => {},
+  removeAttachmentLink: () => {},
+  closePopup: () => {},
+  searchCasProduct: () => {},
+  putCompanyGenericProducts: () => {},
+  postCompanyGenericProducts: () => {},
+  searchManufacturers: () => {},
+  editEchoProductChangeTab: () => {},
+  loadEditEchoProduct: () => {},
+  getHazardClassesDataRequest: () => {},
+  getPackagingGroupsDataRequest: () => {},
+  getUnNumbersByString: () => {},
+  searchProductGroups: () => {},
+  getDocumentTypes: () => {},
+  searchCompany: () => {},
+  addForm: null,
+  editForm: null,
+  popupValues: null,
+  editTab: 0,
+  editInitTrig: false,
+  packagingGroups: [],
+  hazardClasses: [],
+  searchedManufacturersLoading: false,
+  searchedManufacturers: [],
+  searchedCasProducts: [],
+  isLoading: false,
+  unNumbersFiltered: [],
+  unNumbersFetching: false,
+  listDocumentTypes: [],
+  searchedProductGroups: [],
+  searchedProductGroupsLoading: false,
+  searchedCompany: [],
+  searchedCompanyLoading: false,
+  datagrid: {},
+  intl: {}
 }
 
 export default injectIntl(AddEditEchoProduct)
