@@ -25,11 +25,6 @@ export async function createCompany(formData) {
   return data
 }
 
-export async function getCountries() {
-  const { data } = await api.get('/prodex/api/countries')
-  return data
-}
-
 export const getProvinces = id => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)
 
 export async function getAddressSearch(body) {

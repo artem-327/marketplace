@@ -94,11 +94,6 @@ class InventoryFilter extends Component {
     //if (!autocompleteManufacturer || !autocompleteManufacturer.length)
     //  this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
 
-    //if (!autocompleteOrigin || !autocompleteOrigin.length) {
-    //  this.props.getAutocompleteOrigin(this.props.getOriginUrl)
-    //}
-    //this.handleGetSavedFilters()
-
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
       this.fetchIfNoData(fetchProductForms, 'productForms'),
@@ -1204,7 +1199,6 @@ InventoryFilter.propTypes = {
   autocompleteOrigin: array,
   getAutocompleteOrigin: func,
   searchOriginUrl: func,
-  getOriginUrl: string,
   onClose: func
 }
 
@@ -1222,7 +1216,6 @@ InventoryFilter.defaultProps = {
   filterType: filterTypes.INVENTORY,
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
-  getOriginUrl: '/prodex/api/countries',
   savedUrl: '/prodex/api/product-offers/own/datagrid/saved-filters',
   searchUrl: text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`,
   searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,

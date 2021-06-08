@@ -26,7 +26,6 @@ import businessTypes from './modules/company-form/reducer'
 import auth from './modules/auth/reducer'
 import broadcast from './modules/broadcast/reducer'
 import messages from './modules/messages/reducer'
-import phoneNumber from './modules/phoneNumber/reducer'
 import companyProductInfo from './modules/company-product-info/reducer'
 import operations from './modules/operations/reducers'
 import wantedBoard from './modules/wanted-board/reducer'
@@ -42,6 +41,7 @@ import dashboard from './modules/dashboard/reducer'
 import vellociRegister from './modules/velloci-register/reducer'
 import addBankAccounts from './modules/add-bank-accounts/reducer'
 import myNetwork from './modules/my-network/reducer'
+import globalData from './modules/global-data/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -72,7 +72,6 @@ const reducer = combineReducers({
   settings,
   profile,
   broadcast,
-  phoneNumber,
   operations,
   wantedBoard,
   search,
@@ -86,7 +85,8 @@ const reducer = combineReducers({
   dashboard,
   vellociRegister,
   addBankAccounts,
-  myNetwork
+  myNetwork,
+  globalData
 })
 
 const rootReducer = (state, action) => {

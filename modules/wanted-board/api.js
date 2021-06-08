@@ -46,10 +46,6 @@ export function searchCasNumber(text, limit) {
     .then(response => response.data)
 }
 
-export const getCountries = () => {
-  return api.get('/prodex/api/countries').then(response => response.data)
-}
-
 export const getProvinces = countryId => {
   return api.get(`/prodex/api/provinces/country/${countryId}`).then(response => response.data)
 }

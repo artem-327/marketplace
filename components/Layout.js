@@ -42,7 +42,7 @@ import { createRef, Component } from 'react'
 import Router from 'next/router'
 import { getSafe } from '../utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { getCountryCodes } from '../modules/phoneNumber/actions'
+import { getCountries } from '../modules/global-data/actions'
 
 import { toggleMenu, openGlobalAddForm, setMainContainer } from '../modules/layout/actions'
 import { getCompanyLogo } from '../modules/company-form/actions'
@@ -96,7 +96,7 @@ class Layout extends Component {
   componentDidMount() {
     if (this.props.hasLogo && this.props.useCompanyLogo) this.loadCompanyLogo()
 
-    const { auth, phoneCountryCodes, getCountryCodes, hasLogo } = this.props
+    const { auth, countries, getCountries, hasLogo } = this.props
 
     //document.addEventListener('wheel', this.showCopyright)
 
@@ -104,7 +104,7 @@ class Layout extends Component {
     Router.events.on('routeChangeStart', this.handleRouteEvent)
 
     if (this.state.fatalError) this.setState({ fatalError: false })
-    if (!phoneCountryCodes.length) getCountryCodes()
+    if (!countries.length) getCountries()
     if (this.props.takeover && this.props.auth.identity.isAdmin && Router.router.route === '/admin') {
       Router.push('/inventory/my-listings')
     }
@@ -545,7 +545,7 @@ const mapDispatchToProps = {
   openProfilePopup,
   triggerSystemSettingsModal,
   agreeWithTOS,
-  getCountryCodes,
+  getCountries,
   toggleMenu,
   getCompanyLogo,
   openGlobalAddForm,
@@ -568,7 +568,7 @@ const mapStateToProps = state => {
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
       getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
-    phoneCountryCodes: getSafe(() => state.phoneNumber.phoneCountryCodes, []),
+    countries: getSafe(() => state.globalData.countries, []),
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),

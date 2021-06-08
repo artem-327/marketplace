@@ -51,7 +51,6 @@ import {
   getAutocompleteData,
   getPackagingTypes,
   getWarehouses,
-  getCountries,
   getProvinces,
   getUnits,
   //addProductOffer,
@@ -71,6 +70,7 @@ import {
   addPurchaseRequest,
   editPurchaseRequest
 } from '../../actions'
+import { getCountries } from '../../../global-data/actions'
 
 import { FlexSidebar, FlexContent, HighSegment, BottomButtons, LabeledRow } from '../../constants/layout'
 
@@ -1074,9 +1074,6 @@ const mapStateToProps = ({
     listForms,
     listGrades,
     listWarehouses,
-    listCountries,
-    listCountriesLoading,
-    countries,
     listProvinces,
     listProvincesLoading,
     listUnits,
@@ -1096,6 +1093,11 @@ const mapStateToProps = ({
     //  warehousesList,
     //  listDocumentTypes,
     //  editProductOfferInitTrig
+  },
+  globalData: {
+    countries,
+    countriesDropDown,
+    countriesLoading
   }
 }) => ({
   autocompleteData,
@@ -1105,8 +1107,8 @@ const mapStateToProps = ({
   listForms,
   listGrades,
   listWarehouses,
-  listCountries,
-  listCountriesLoading,
+  listCountries: countriesDropDown,
+  listCountriesLoading: countriesLoading,
   countries,
   listProvinces,
   listProvincesLoading,

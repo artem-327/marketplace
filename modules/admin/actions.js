@@ -252,21 +252,6 @@ export function getUnNumbersByString(value) {
 // 	}
 // }
 
-export function getCountries() {
-  return (dispatch, getState) => {
-    const { admin } = getState()
-    admin.countries.length === 0 &&
-      dispatch({
-        type: AT.ADMIN_GET_COUNTRIES,
-        async payload() {
-          const countries = await api.getCountries()
-
-          return { countries }
-        }
-      })
-  }
-}
-
 export function getPrimaryBranchProvinces(id) {
   return {
     type: AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES,

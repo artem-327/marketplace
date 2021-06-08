@@ -6,11 +6,12 @@ import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semant
 import { Formik } from 'formik'
 import {
   closeRegisterDwollaAccount,
-  getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   postDwollaAccount
 } from '../../actions'
+import { getCountries } from '../../../global-data/actions'
+
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -88,7 +89,7 @@ class AddNewPopupCasProducts extends Component {
   }
 
   componentDidMount() {
-    this.props.getCountries()
+    if (!this.props.countries.length) this.props.getCountries()
   }
 
   handlePrimaryBranchCountry = (e, d) => {
@@ -319,11 +320,13 @@ const mapDispatchToProps = {
   getZipCodes
 }
 
-const mapStateToProps = ({ admin, zip, auth }) => {
+const mapStateToProps = ({ admin, zip, auth, globalData }) => {
   return {
     ...admin,
     zip,
-    auth
+    auth,
+    countries: globalData.countries,
+    countriesDropDown: globalData.countriesDropDown
   }
 }
 

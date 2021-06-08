@@ -40,9 +40,7 @@ export const initialState = {
   productsPackagingGroups: [],
   productDataLoading: false,
   deliveryAddressesRows: [],
-  countries: [],
   provinces: [],
-  countriesDropDown: [],
   provincesDropDown: [],
   country: [],
   currency: [],
@@ -86,7 +84,6 @@ export const initialState = {
   dwollaAccBalance: null,
   businessClassifications: [],
   dwollaSaving: false,
-  countriesLoading: false,
   verificationDocumentTypes: [],
   agreementModal: {
     open: false,
@@ -490,8 +487,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         warehousesRows: warehousesRows,
-        country: action.payload.newCountryFormat,
-        countries: action.payload.country
+        country: action.payload.newCountryFormat
       }
     }
 
@@ -534,8 +530,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         branchesRows: branchesRows,
-        country: action.payload.newCountryFormat,
-        countries: action.payload.country
+        country: action.payload.newCountryFormat
       }
     }
 
@@ -1015,33 +1010,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         productDataLoading: false
-      }
-    }
-
-    case AT.SETTINGS_GET_COUNTRIES_PENDING: {
-      return {
-        ...state,
-        countriesLoading: true
-      }
-    }
-
-    case AT.SETTINGS_GET_COUNTRIES_FULFILLED: {
-      return {
-        ...state,
-        countries: payload,
-        countriesLoading: false,
-        countriesDropDown: payload.map(c => ({
-          text: c.name,
-          value: c.id,
-          key: c.id
-        }))
-      }
-    }
-
-    case AT.SETTINGS_GET_COUNTRIES_REJECTED: {
-      return {
-        ...state,
-        countriesLoading: false
       }
     }
 

@@ -102,7 +102,6 @@ export default {
   },
   getProductsWithRequiredParamPar: char =>
     api.get(`/prodex/api/product-templates?search=${char}`).then(response => response.data),
-  getCountry: () => api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () => api.get('/prodex/api/currencies').then(response => response.data),
   getStoredCSV: body => {
     return api
@@ -225,9 +224,6 @@ export default {
     return await api.post('/prodex/api/delivery-addresses/datagrid', value).then(response => response.data)
   },
   deleteDeliveryAddress: async id => api.delete(`/prodex/api/delivery-addresses/id/${id}`).then(() => id),
-  getCountries: async () => {
-    return await api.get('/prodex/api/countries').then(response => response.data)
-  },
   getProvinces: async id => {
     return await api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)
   },

@@ -34,6 +34,4 @@ export const getProductGrade = () => api.get('/prodex/api/product-grades').then(
 
 export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').then(response => response.data)
 
-export const getCountries = () => api.get('/prodex/api/countries').then(response => response.data)
-
 export const getProvinces = id => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)

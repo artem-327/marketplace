@@ -81,10 +81,6 @@ export async function getPackagingGroups() {
   return data
 }
 
-export async function getCountries() {
-  const { data } = await api.get('/prodex/api/countries')
-  return data
-}
 // export async function getZipCodes() { // TODO Refactor to use limit and search (and countryId?)
 //   const {data} = await api.get('/prodex/api/zip-codes')
 //   return data

@@ -2,7 +2,6 @@ import { Component } from 'react'
 import { string } from 'prop-types'
 import { getSafe } from '~/utils/functions'
 import { connect } from 'react-redux'
-import * as Actions from '../../modules/phoneNumber/actions'
 import { injectIntl } from 'react-intl'
 import get from 'lodash/get'
 
@@ -69,8 +68,8 @@ FormattedPhone.defaultProps = {
 
 function mapStateToProps(state) {
   return {
-    phoneCountryCodes: get(state, 'phoneNumber.phoneCountryCodes', [])
+    phoneCountryCodes: get(state, 'globalData.countries', [])
   }
 }
 
-export default connect(mapStateToProps, Actions)(injectIntl(FormattedPhone))
+export default connect(mapStateToProps, null)(injectIntl(FormattedPhone))

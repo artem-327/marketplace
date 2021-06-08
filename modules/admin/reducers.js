@@ -23,8 +23,6 @@ export const initialState = {
   packagingGroupsLoading: false,
   unNumbersFiltered: [],
   companiesRows: [],
-  countries: [],
-  countriesDropDown: [],
   singleCompany: [],
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
@@ -221,18 +219,6 @@ export default function reducer(state = initialState, action) {
         loading: false,
         deleteRowById: null,
         confirmMessage: null
-      }
-    }
-
-    case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
-      return {
-        ...state,
-        countries: payload.countries,
-        countriesDropDown: payload.countries.map(c => ({
-          text: c.name,
-          value: c.id,
-          key: c.id
-        }))
       }
     }
 

@@ -2,7 +2,8 @@ import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Header, Modal, FormGroup, Accordion, Icon, Popup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { closeDwollaPopup, getCountries, getProvinces, postDwollaAccount } from '../../actions'
+import { closeDwollaPopup, getProvinces, postDwollaAccount } from '../../actions'
+import { getCountries } from '../../../global-data/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import styled from 'styled-components'
@@ -315,8 +316,8 @@ const mapStateToProps = state => {
     hasProvinces: state.settings.hasProvinces,
     provincesDropDown: state.settings.provincesDropDown,
     popupValues: state.settings.popupValues,
-    countries: state.settings.countries,
-    countriesDropDown: state.settings.countriesDropDown
+    countries: state.globalData.countries,
+    countriesDropDown: state.globalData.countriesDropDown
   }
 }
 

@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
+import apiGlobal from '../global-data/api'
 import { Datagrid } from '../datagrid'
 
 export const removeEmpty = obj =>
@@ -458,7 +459,7 @@ export function getWarehousesDataRequest() {
     dispatch({
       type: AT.GET_WAREHOUSES_DATA,
       async payload() {
-        const [warehouses, country] = await Promise.all([api.getWarehouses(), api.getCountry()])
+        const [warehouses, country] = await Promise.all([api.getWarehouses(), apiGlobal.getCountries()])
         const newCountryFormat = country.map(country => {
           return {
             text: country.name,
@@ -476,7 +477,7 @@ export function getBranchesDataRequest() {
     dispatch({
       type: AT.GET_BRANCHES_DATA,
       async payload() {
-        const [branches, country] = await Promise.all([api.getBranches(), api.getCountry()])
+        const [branches, country] = await Promise.all([api.getBranches(), apiGlobal.getCountries()])
         const newCountryFormat = country.map(country => {
           return {
             text: country.name,
@@ -570,7 +571,7 @@ export function getBankAccountsDataRequest(type) {
           // currency
         ] = await Promise.all([
           type === 'DWOLLA' ? api.getDwollaBankAccountsData() : api.getVellociBankAccountsData(),
-          //api.getCountry()
+          //apiGlobal.getCountries()
           // api.getCurrencies(),
         ])
         //const newCountryFormat = country.map(country => {
@@ -1003,13 +1004,6 @@ export function createDeliveryAddress(value, reloadFilter) {
 //     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
 //   }
 // }
-
-export function getCountries() {
-  return {
-    type: AT.SETTINGS_GET_COUNTRIES,
-    payload: api.getCountries()
-  }
-}
 
 export function getProvinces(id) {
   return {

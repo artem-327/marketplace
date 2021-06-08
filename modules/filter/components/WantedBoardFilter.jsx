@@ -1018,7 +1018,6 @@ WantedBoardFilter.propTypes = {
   autocompleteOrigin: array,
   getAutocompleteOrigin: func,
   searchOriginUrl: func,
-  getOriginUrl: string,
   onClose: func
 }
 
@@ -1034,7 +1033,6 @@ WantedBoardFilter.defaultProps = {
   filterType: filterTypes.WANTED_BOARD,
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
-  getOriginUrl: '/prodex/api/countries',
   savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
   searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
   onApply: filter => {},

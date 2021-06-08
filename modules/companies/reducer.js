@@ -9,8 +9,6 @@ export const initialState = {
   loading: false,
   updating: false,
   companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: 'asc', sortPath: 'Company.name' },
-  countries: [],
-  countriesDropDown: [],
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   addressSearchPrimaryBranch: [],
@@ -75,18 +73,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenSidebar: false,
         editedId: null
-      }
-    }
-
-    case AT.COMPANIES_GET_COUNTRIES_FULFILLED: {
-      return {
-        ...state,
-        countries: payload.countries,
-        countriesDropDown: payload.countries.map(c => ({
-          text: c.name,
-          value: c.id,
-          key: c.id
-        }))
       }
     }
 

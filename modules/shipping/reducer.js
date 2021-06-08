@@ -54,26 +54,6 @@ export default function reducer(state = initialState, action) {
       return { ...state, loadingZip: false }
     }
 
-    case AT.SHIPPING_GET_COUNTRIES_FULFILLED: {
-      return {
-        ...state,
-        loadingCountries: false,
-        countries: action.payload.map(c => ({
-          text: c.name,
-          value: c.id,
-          key: c.id
-        }))
-      }
-    }
-
-    case AT.SHIPPING_GET_COUNTRIES_PENDING: {
-      return { ...state, loadingCountries: true }
-    }
-
-    case AT.SHIPPING_GET_COUNTRIES_REJECTED: {
-      return { ...state, loadingCountries: false }
-    }
-
     default: {
       return state
     }

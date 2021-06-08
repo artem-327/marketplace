@@ -147,11 +147,6 @@ export const componentSearchCas = (text, limit = 5) => ({
   payload: api.searchCasNumber(text, limit)
 })
 
-export const getCountries = () => ({
-  type: AT.WB_GET_COUNTRIES,
-  payload: api.getCountries()
-})
-
 export const getProvinces = id => ({
   type: AT.WB_GET_PROVINCES,
   payload: api.getProvinces(id)
