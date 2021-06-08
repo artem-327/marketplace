@@ -551,6 +551,7 @@ class Listings extends Component {
             tableName='marketplace_listings_grid'
             {...datagrid.tableProps}
             rows={rows}
+            estimatedRowHeight={55}
             columns={columns}
             groupBy={['productNumber']}
             getChildGroups={rows =>
