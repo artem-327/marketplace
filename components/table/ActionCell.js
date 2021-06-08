@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { MoreVertical } from 'react-feather'
 import { Dropdown } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
+import { connect } from 'react-redux'
 
 export const DivRow = styled.div`
   display: flex !important;
@@ -111,8 +112,9 @@ class ActionCell extends Component {
   }
 
   render() {
-    const { getActions, leftContent, content, onContentClick, row, rightAlignedContent } = this.props
+    const { getActions, leftContent, content, onContentClick, row, rightAlignedContent, takeover } = this.props
     const actions = getActions ? getActions(row) : null
+    const takeoverWidth = takeover ? 30 : 0
     return (
       <DivRow>
         {getActions ? (
@@ -122,7 +124,7 @@ class ActionCell extends Component {
               const dropdownElement = this.actionRef.current.ref.current
               const dropdownList = dropdownElement.querySelector('.menu')
               const tableResponsive = dropdownElement.closest('div.table-responsive')
-              dropdownList.setAttribute('style', `top: ${dropdownElement.getBoundingClientRect().top}px !important;`)
+              dropdownList.setAttribute('style', `top: ${dropdownElement.getBoundingClientRect().top - takeoverWidth}px !important;`)
 
               tableResponsive.addEventListener("scroll", () => {
                 this.actionRef.current?.close()
@@ -159,7 +161,8 @@ ActionCell.propTypes = {
   leftContent: PropTypes.object,
   content: PropTypes.object,
   onContentClick: PropTypes.func,
-  rightAlignedContent: PropTypes.object
+  rightAlignedContent: PropTypes.object,
+  takeover: PropTypes.bool
 }
 
 ActionCell.defaultProps = {
@@ -168,7 +171,14 @@ ActionCell.defaultProps = {
   leftContent: null,
   content: '',
   onContentClick: null,
-  rightAlignedContent: null
+  rightAlignedContent: null,
+  takeover: false
 }
 
-export default ActionCell
+const mapStateToProps = state => {
+  return {
+    takeover: getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
+  }
+}
+
+export default connect(mapStateToProps, {})(ActionCell)

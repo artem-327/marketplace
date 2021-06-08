@@ -45,7 +45,7 @@ export const DivTitle = styled.div`
 `
 
 export const DimmerStyled = styled(Dimmer)`
-  height: 11vh !important; // 89vh height has Sidebar
+  height: 13vh !important; // 87vh height has Sidebar
 `
 
 export const SidebarFlex = styled(Sidebar)`
@@ -58,7 +58,7 @@ export const SidebarFlex = styled(Sidebar)`
   background-color: #f8f9fb !important;
   
   &.ui.bottom.sidebar{
-    height: 89vh !important;
+    height: 87vh !important;
   }
 `
 
