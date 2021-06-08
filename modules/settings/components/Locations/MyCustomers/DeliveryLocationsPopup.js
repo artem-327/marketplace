@@ -6,10 +6,10 @@ import {
   closePopup,
   updateDeliveryAddresses,
   createDeliveryAddress,
-  getCountries,
   getProvinces,
   getAddressSearch
 } from '../../../actions'
+import { getCountries } from '../../../../global-data/actions'
 
 import { Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -293,7 +293,7 @@ const mapStateToProps = state => {
         : null,
     countriesDropDown: state.settings.countriesDropDown,
     provincesDropDown: state.settings.provincesDropDown,
-    countries: state.settings.countries,
+    countries: state.globalData.countries,
     reloadFilter: {
       props: {
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter

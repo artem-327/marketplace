@@ -5,12 +5,12 @@ import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } fro
 import { Formik } from 'formik'
 import {
   closePopup,
-  getCountries,
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch
 } from '~/modules/admin/actions'
+import { getCountries } from '../../global-data/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '~/modules/company-form/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
