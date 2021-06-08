@@ -117,7 +117,11 @@ context("Permissions tests",() => {
 
         cy.wait('@loading', {timeout: 30000})
         cy.url().should("include", "operations")
-        cy.get('tbody > :nth-child(1)').should("be.visible")
+        cy.get('.group-row').should('be.visible')
+
+        cy.get('[data-test="navigation_menu_operations_drpdn"]').should("be.visible")
+        cy.get("[data-test='navigation_menu_companies_drpdn']").should('not.exist')
+        cy.get("[data-test='navigation_menu_products_drpdn']").should('not.exist')
     })
 
     it("User Admin permissions", () =>{
@@ -135,9 +139,6 @@ context("Permissions tests",() => {
 
         cy.get("[data-test='navigation_menu_settings_drpdn']").click()
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')
-
-        cy.waitForUI()
-        cy.wait('@loading')
         cy.get("[data-test='navigation_settings_users_drpdn']").should('be.visible')
     })
 })

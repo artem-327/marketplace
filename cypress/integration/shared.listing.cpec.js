@@ -1,4 +1,4 @@
-context("Shared ListingC", () => {
+context("Shared Listing", () => {
 
     let productId
     let offerId
@@ -31,6 +31,7 @@ context("Shared ListingC", () => {
     })
 
     beforeEach(function () {
+        cy.viewport(3000, 2000)
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("POST", "/prodex/api/product-offers/shared-listings/datagrid").as("sharedListingLoading")
         cy.intercept("PATCH", "/prodex/api/product-offers/**/mark-up").as("markupSave")
@@ -72,8 +73,10 @@ context("Shared ListingC", () => {
     it("Set quick pricing tier", () => {
         cy.get("[data-test*='" + offerId + "']").parent().parent().parent().click({force: true})
         cy.waitForUI()
-
-        cy.get("[name='priceMultiplier']").clear().type(25)
+        //Cypress losing focus while typing
+        cy.get("[name='priceMultiplier']").type(2, { force: true})
+        cy.get("[name='priceMultiplier']").type(2, { force: true})
+        cy.waitForUI()
         cy.contains("button","Save").click()
 
         cy.wait("@markupSave")
@@ -83,7 +86,7 @@ context("Shared ListingC", () => {
         cy.wait("@sharedListingLoading", { timeout: 100000 })
         cy.get("[data-test*='" + offerId + "']").parent().parent().parent().click({force: true})
         cy.waitForUI()
-        cy.get("[name='priceMultiplier']").should("have.value", 25)
+        cy.get("[name='priceMultiplier']").should("have.value", 22)
     })
 
     it("Change broadcasting", () => {
