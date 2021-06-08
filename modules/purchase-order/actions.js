@@ -90,6 +90,11 @@ export const requestManualShipment = params => ({
   payload: api.requestManualShipment(generateQueryString(params))
 })
 
+export const getManualQuoteById = (id) => ({
+  type: AT.GET_MANUAL_QUOTE_BY_ID,
+  payload: api.getManualQuoteById(id)
+})
+
 export const getIdentity = () => ({ type: AT.PURCHASE_GET_IDENTITY, payload: api.getIdentity() })
 
 export const setPreFilledValues = values => ({ type: AT.SET_PRE_FILLED_VALUES, payload: values })
