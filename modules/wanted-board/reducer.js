@@ -22,9 +22,6 @@ export const initialState = {
   listGradesLoading: false,
   listWarehouses: [],
   listWarehousesLoading: false,
-  listCountries: [],
-  countries: [],
-  listCountriesLoading: false,
   listProvinces: [],
   listProvincesLoading: false,
   listUnits: [],
@@ -364,27 +361,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         listWarehousesLoading: false,
         listWarehouses: payload
-      }
-    }
-
-    case AT.WB_GET_COUNTRIES_PENDING: {
-      return { ...state, listCountriesLoading: true }
-    }
-    case AT.WB_GET_COUNTRIES_REJECTED: {
-      return { ...state, listCountriesLoading: false }
-    }
-    case AT.WB_GET_COUNTRIES_FULFILLED: {
-      return {
-        ...state,
-        listCountriesLoading: false,
-        countries: payload,
-        listCountries: payload.map(data => {
-          return {
-            key: data.id,
-            value: data.id,
-            text: data.name
-          }
-        })
       }
     }
 

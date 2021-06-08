@@ -6,6 +6,7 @@ import {
 
 export const initialState = {
   countries: [],
+  countriesDropDown: [],
   countriesLoading: false
 }
 
@@ -22,6 +23,11 @@ export default typeToReducer(
     [getCountries.fulfilled]: (state, { payload }) => ({
       ...state,
       countries: payload,
+      countriesDropDown: payload.map(c => ({
+        text: c.name,
+        value: c.id,
+        key: c.id
+      })),
       countriesLoading: false
     }),
 

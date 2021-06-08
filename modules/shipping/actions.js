@@ -20,8 +20,3 @@ export const getZipCodes = (queryParams) => ({
   type: AT.SHIPPING_GET_ZIP_CODES,
   payload: api.getZipCodes(queryParams)
 })
-
-export const getCountries = (queryParams) => ({
-  type: AT.SHIPPING_GET_COUNTRIES,
-  payload: api.getCountries(queryParams)
-})

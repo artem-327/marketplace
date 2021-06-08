@@ -36,8 +36,6 @@ export const createCompany = createAsyncAction('COMPANIES_CREATE_COMPANY', formD
   api.createCompany(formData)
 )
 
-export const getCountries = createAsyncAction('COMPANIES_GET_COUNTRIES', () => api.getCountries())
-
 export const getPrimaryBranchProvinces = createAsyncAction(
   'COMPANIES_GET_PRIMARY_BRANCH_PROVINCES',
   id => api.getProvinces(id)

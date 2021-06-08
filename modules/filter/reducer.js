@@ -78,8 +78,6 @@ export const initialState = {
     autocompleteOrigin: [],
     autocompleteOriginLoading: false,
     filterState: null,
-    countries: [],
-    countriesLoading: false,
     provinces: [],
     provincesLoading: false
   },
@@ -568,40 +566,6 @@ export default typeToReducer(
       return {
         ...state,
         warehouses: payload
-      }
-    },
-    [a.fetchCountries.pending]: state => {
-      const filterType = state.params.filterType
-      if (!filterType) return { ...state }
-      return {
-        ...state,
-        [filterType]: {
-          ...state[filterType],
-          countriesLoading: true
-        }
-      }
-    },
-    [a.fetchCountries.rejected]: state => {
-      const filterType = state.params.filterType
-      if (!filterType) return { ...state }
-      return {
-        ...state,
-        [filterType]: {
-          ...state[filterType],
-          countriesLoading: false
-        }
-      }
-    },
-    [a.fetchCountries.fulfilled]: (state, { payload }) => {
-      const filterType = state.params.filterType
-      if (!filterType) return { ...state }
-      return {
-        ...state,
-        [filterType]: {
-          ...state[filterType],
-          countries: payload,
-          countriesLoading: false
-        }
       }
     },
     [a.fetchProvinces.pending]: state => {

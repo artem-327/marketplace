@@ -76,7 +76,7 @@ class Filter extends Component {
       appliedFilter,
       onApply,
       applyDatagridFilter,
-      fetchCountries
+      getCountries
     } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
@@ -90,7 +90,7 @@ class Filter extends Component {
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchProductGrade, 'productGrades'),
       //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
-      this.fetchIfNoData(fetchCountries, 'countries')
+      this.fetchIfNoData(getCountries, 'countries')
     ]).finally(() =>
       this.setState({
         ...(filterState !== null && filterState.state),
