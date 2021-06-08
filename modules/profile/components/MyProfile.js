@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal } from 'semantic-ui-react'
+import { Modal, Dimmer, Loader } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
@@ -79,10 +79,15 @@ class MyProfile extends Component {
       saveAvatarPicture,
       deleteAvatarPicture,
       getIdentity,
+      savingAvatarPicture,
+      identityLoading
     } = this.props
 
     return (
       <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
+        <Dimmer active={savingAvatarPicture || identityLoading} inverted>
+          <Loader />
+        </Dimmer>
         <Modal.Header>
           <FormattedMessage id='profile.myProfile' defaultMessage='My Profile' />
         </Modal.Header>
@@ -279,7 +284,9 @@ const mapStateToProps = state => {
     changePasswordPopup: state.profile.changePasswordPopup,
     languages: state.settings.languages,
     languagesFetching: state.settings.languagesFetching,
-    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false)
+    tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false),
+    savingAvatarPicture: state.profile.savingAvatarPicture,
+    identityLoading: state.auth.loading
   }
 }
 

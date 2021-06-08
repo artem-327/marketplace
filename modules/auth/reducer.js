@@ -163,7 +163,24 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
-    case PROFILE_UPDATE_MY_PROFILE_FULFILLED:
+    case PROFILE_UPDATE_MY_PROFILE_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          ...payload,
+          ...getAccessRights(payload.roles),
+          company:
+            state.identity?.company
+              ? {
+                  ...payload.company,
+                  ...state.identity.company
+                }
+              : null
+        }
+      }
+    }
+
     case AT.UPDATE_IDENTITY: {
       return {
         ...state,
