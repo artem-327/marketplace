@@ -1,4 +1,7 @@
+import { Popup } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+//Styles
+import { FileTextIcon } from '../../styles'
 
 export const tabs = [
   { text: { id: 'global.ep.edit', defaultMessage: 'Edit' }, key: 'edit' },
@@ -204,7 +207,98 @@ export const defaultValues = {
 
 export const echoRowActions = callback => {
   return tabs.map((tab, i) => ({
-    text: <FormattedMessage {...tab.text}>{text => text}</FormattedMessage>,
+    text: <FormattedMessage {...tab.text} />,
     callback: row => callback(row, i)
   }))
 }
+
+export const productCatalogTableColumns = 
+[
+  {
+    name: 'name',
+    title: (
+      <FormattedMessage id='global.productName' defaultMessage='Product Name' />
+    ),
+    width: 250,
+    sortPath: 'CompanyGenericProduct.name',
+    allowReordering: false
+  },
+  {
+    name: 'publishedStatus',
+    title: (
+      <Popup
+        size='small'
+        header={
+          <FormattedMessage
+            id='global.productStatusIndicator'
+            defaultMessage='Status indicator if Company Product will be shown on Marketplace'
+          />
+        }
+        trigger={
+          <div>
+            <FileTextIcon />
+          </div>
+        } // <div> has to be there otherwise popup will be not shown
+      />
+    ),
+    caption: <FormattedMessage id='global.productStatusIcon' defaultMessage='Product Status Icon' />,
+    width: 40,
+    align: 'center'
+  },
+  {
+    name: 'code',
+    title: (
+      <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.code'
+  },
+  {
+    name: 'manufacturerName',
+    title: (
+      <FormattedMessage id='admin.manufacturer' defaultMessage='Manufacturer' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.manufacturer.name'
+  },
+  {
+    name: 'sds',
+    title: (
+      <FormattedMessage id='admin.companyGenericProduct.sds' defaultMessage='SDS' />
+    ),
+    width: 150
+  },
+  {
+    name: 'sdsVersionNumber',
+    title: (
+      <FormattedMessage id='admin.companyGenericProduct.sdsVersion' defaultMessage='SDS Version' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.sdsVersionNumber'
+  },
+  {
+    name: 'sdsRevisionDate',
+    title: (
+      <FormattedMessage id='admin.companyGenericProduct.sdsRevisionDate' defaultMessage='SDS Revision Date' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.sdsRevisionDate'
+  },
+  {
+    name: 'productGroup',
+    title: (
+      <FormattedMessage id='global.productGroup' defaultMessage='Product Group' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.productGroup.name'
+  },
+  {
+    name: 'company',
+    title: (
+      <FormattedMessage id='global.company' defaultMessage='Company' />
+    ),
+    width: 150,
+    sortPath: 'CompanyGenericProduct.company.name'
+  }
+]
+

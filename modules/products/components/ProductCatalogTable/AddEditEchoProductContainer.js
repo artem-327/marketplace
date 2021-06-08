@@ -1,6 +1,6 @@
 import AddEditEchoProduct from './AddEditEchoProduct'
 import { connect } from 'react-redux'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 //Actions
 import {
   closePopup,
@@ -21,12 +21,27 @@ import {
   searchProductGroups,
   getDocumentTypes,
   searchCompany
-} from '~/modules/products/actions'
-
-import { Header } from 'semantic-ui-react'
-import { getSafe } from '~/utils/functions'
-
-import { injectIntl } from 'react-intl'
+} from '../../../products/actions'
+import {
+  makeGetCurrentAddForm,
+  makeGetCurrentEditForm,
+  makeGetPopupValues,
+  makeGetEditEchoProductEditTab,
+  makeGetEditEchoProductInitTrig,
+  makeGetPackagingGroups,
+  makeGetHazardClasses,
+  makeGetSearchedManufacturersLoading,
+  makeGetSearchedManufacturers,
+  makeGetSearchedCasProducts,
+  makeGetLoading,
+  makeGetUnNumbersFiltered,
+  makeGetUnNumbersFetching,
+  makeGetDocumentTypes,
+  makeGetSearchedProductGroups,
+  makeGetSearchedProductGroupsLoading,
+  makeGetSearchedCompanies,
+  makeGetSearchedCompaniesLoading
+} from '../../selectors'
 
 const mapDispatchToProps = {
   loadFile,
@@ -49,67 +64,49 @@ const mapDispatchToProps = {
   searchCompany
 }
 
-const mapStateToProps = ({ productsAdmin }, props) => {
-  return {
-    addForm: productsAdmin.currentAddForm,
-    editForm: productsAdmin.currentEditForm,
-    popupValues: productsAdmin.popupValues,
-    editTab: productsAdmin.editEchoProductEditTab,
-    editInitTrig: productsAdmin.editEchoProductInitTrig,
-    packagingGroups: getSafe(() => productsAdmin.packagingGroups.length, false)
-      ? productsAdmin.packagingGroups.map((pGroup, id) => {
-          return {
-            key: id,
-            text: pGroup.groupCode,
-            value: pGroup.id,
-            content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
-          }
-        })
-      : [],
-    hazardClasses: getSafe(() => productsAdmin.hazardClasses.length, false)
-      ? productsAdmin.hazardClasses.map((d, id) => {
-          return {
-            key: id,
-            text: d.classCode,
-            value: d.id,
-            content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
-          }
-        })
-      : [],
-    searchedManufacturersLoading: productsAdmin.searchedManufacturersLoading,
-    searchedManufacturers: productsAdmin.searchedManufacturers,
-    searchedCasProducts: productsAdmin.searchedCasProducts,
-    isLoading: productsAdmin.loading,
-    unNumbersFiltered: getSafe(() => productsAdmin.unNumbersFiltered.length, false)
-      ? productsAdmin.unNumbersFiltered.map((d, id) => {
-          return {
-            key: d.id,
-            text: d.unNumberCode,
-            value: d.id,
-            content: <Header content={d.unNumberCode} subheader={d.description} style={{ fontSize: '1em' }} />
-          }
-        })
-      : [],
-    unNumbersFetching: productsAdmin.unNumbersFetching,
+const makeMapStateToProps = () => {
+  const getCurrentAddForm = makeGetCurrentAddForm()
+  const getCurrentEditForm = makeGetCurrentEditForm()
+  const getPopupValues = makeGetPopupValues()
+  const getEditEchoProductEditTab = makeGetEditEchoProductEditTab()
+  const getEditEchoProductInitTrig = makeGetEditEchoProductInitTrig()
+  const getPackagingGroups = makeGetPackagingGroups()
+  const getHazardClasses = makeGetHazardClasses()
+  const getSearchedManufacturersLoading = makeGetSearchedManufacturersLoading()
+  const getSearchedManufacturers = makeGetSearchedManufacturers()
+  const getSearchedCasProducts = makeGetSearchedCasProducts()
+  const getLoading = makeGetLoading()
+  const getUnNumbersFiltered = makeGetUnNumbersFiltered()
+  const getUnNumbersFetching = makeGetUnNumbersFetching()
+  const getDocumentTypes = makeGetDocumentTypes()
+  const getSearchedProductGroups = makeGetSearchedProductGroups()
+  const getSearchedProductGroupsLoading = makeGetSearchedProductGroupsLoading()
+  const getSearchedCompanies = makeGetSearchedCompanies()
+  const getSearchedCompaniesLoading = makeGetSearchedCompaniesLoading()
 
-    listDocumentTypes: productsAdmin.documentTypes,
-    searchedProductGroups: getSafe(() => productsAdmin.searchedProductGroups.length, false)
-      ? productsAdmin.searchedProductGroups.map(d => ({
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }))
-      : [],
-    searchedProductGroupsLoading: productsAdmin.searchedProductGroupsLoading,
-    searchedCompany: getSafe(() => productsAdmin.searchedCompanies.length, false)
-      ? productsAdmin.searchedCompanies.map(d => ({
-          key: d.id,
-          text: d.name,
-          value: d.id
-        }))
-      : [],
-    searchedCompanyLoading: productsAdmin.searchedCompaniesLoading
+  const mapStateToProps = (state, props) => {
+    return {
+      addForm: getCurrentAddForm(state),
+      editForm: getCurrentEditForm(state),
+      popupValues: getPopupValues(state),
+      editTab: getEditEchoProductEditTab(state),
+      editInitTrig: getEditEchoProductInitTrig(state),
+      packagingGroups: getPackagingGroups(state),
+      hazardClasses: getHazardClasses(state),
+      searchedManufacturersLoading: getSearchedManufacturersLoading(state),
+      searchedManufacturers: getSearchedManufacturers(state),
+      searchedCasProducts: getSearchedCasProducts(state),
+      isLoading: getLoading(state),
+      unNumbersFiltered: getUnNumbersFiltered(state),
+      unNumbersFetching: getUnNumbersFetching(state),
+      listDocumentTypes: getDocumentTypes(state),
+      searchedProductGroups: getSearchedProductGroups(state),
+      searchedProductGroupsLoading: getSearchedProductGroupsLoading(state),
+      searchedCompany: getSearchedCompanies(state),
+      searchedCompanyLoading: getSearchedCompaniesLoading(state)
+    }
   }
+  return mapStateToProps
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddEditEchoProduct)))
+export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(AddEditEchoProduct))
