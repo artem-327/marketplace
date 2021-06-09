@@ -18,7 +18,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import BasicButton from '../../../components/buttons/BasicButton'
 
 //Services
-import { getSafe, generateToastMarkup } from '../../../utils/functions'
+import { getSafe } from '../../../utils/functions'
 import {
   getComponentParameters,
   submitButton,
@@ -125,19 +125,6 @@ const Checkout = props => {
         }
       })
       setOpenSection('')
-    } else if (shipmentQuoteId) {
-      toastManager.add(
-        generateToastMarkup(
-          <FormattedMessage id='shippingQuote.noExistManualQuoteId.title' defaultMessage='Failed to get shipping quote data' />,
-          <FormattedMessage
-            id='shippingQuote.noExistManualQuoteId.content'
-            defaultMessage='Such Quote ID does not exist. Please check your manual quote id again!'
-          />
-        ),
-        {
-          appearance: 'warning'
-        }
-      )
     }
   }, [clickedFriehgt])
 
