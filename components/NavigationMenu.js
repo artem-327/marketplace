@@ -167,8 +167,13 @@ class Navigation extends Component {
 
   toggleOpened = (type, defaultLink) => {
     const { currentType } = this.state
-    const { isAdmin, isOrderOperator } = this.props
+    const { isAdmin, isOrderOperator, auth } = this.props
     const typeState = this.state[type]
+    const { isCompanyAdmin, isUserAdmin } = getSafe(() => auth.identity, {
+      isCompanyAdmin: null,
+      isUserAdmin: null
+    })
+
     if (type === 'admin') {
       Router.push('/admin/units-of-measure')
     }
@@ -182,9 +187,12 @@ class Navigation extends Component {
       Router.push('/companies/companies')
     }
 
-    if (defaultLink && !(type === currentType || this.state[type])) {
+    if (type === 'settings' && !isCompanyAdmin && isUserAdmin) {
+      Router.push('/settings/users')
+    } else if (defaultLink && !(type === currentType || this.state[type])) {
       Router.push(defaultLink)
     }
+    
     // toggle dropdown state
     this.setState({
       orders: false,
