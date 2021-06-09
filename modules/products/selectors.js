@@ -88,12 +88,12 @@ const getSearchedProductGroupsLoading = state => state?.productsAdmin?.searchedP
 const getUpdating = state => state?.productsAdmin?.updating
 const getAltCasNamesRows = state => getSafe(() => state?.productsAdmin?.altCasNamesRows?.data, [])
 const getCasHazardClasses = state => state?.productsAdmin?.hazardClasses
-const getGroupRows = ownProps => ownProps?.datagrid?.rows?.map((row, _i) => ({
+const getGroupRows = datagrid => datagrid?.rows?.map((row, _i) => ({
   ...row,
   rawData: row,
   tags: (
       <ArrayToFirstItem
-          key={_i}
+          key={row.id}
           values={row.tags ? row.tags.map(d => (d.name ? d.name : d)) : ''}
           rowItems={3}
           ids={row.tags ? row.tags.map(d => (d.id ? d.id : d)) : ''}

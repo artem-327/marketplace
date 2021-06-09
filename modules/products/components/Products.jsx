@@ -76,7 +76,7 @@ const Products = props => {
           v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v.searchInput}%`] },
-                // { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v.searchInput}%`] }
+                { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v.searchInput}%`] }
               ]
             : []
       }
