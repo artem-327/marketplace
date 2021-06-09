@@ -2,6 +2,12 @@ import { connect } from 'react-redux'
 
 import WantedBoardFilter from './WantedBoardFilter'
 import * as Actions from '../actions'
+import {
+  getPackagingTypes,
+  getProductConditions,
+  getProductForms,
+  getProductGrades
+} from '../../global-data/actions'
 import { currency } from '~/constants/index'
 import { getAutocompleteData, applyDatagridFilter, searchCasNumber } from '~/modules/wanted-board/actions'
 
@@ -27,7 +33,16 @@ function mapStateToProps(store) {
         id: el.key,
         name: el.text
       })
-    }))
+    })),
+    productConditions: store.globalData.productConditions,
+    productConditionsLoading: store.globalData.productConditionsLoading,
+    productForms: store.globalData.productForms,
+    productFormsLoading: store.globalData.productFormsLoading,
+    productGrades: store.globalData.productGrades,
+    productGradesLoading: store.globalData.productGradesLoading,
+    packagingTypes: store.globalData.packagingTypes,
+    packagingTypesUnique: store.globalData.packagingTypesUnique,
+    packagingTypesLoading: store.globalData.packagingTypesLoading
   }
 }
 
@@ -35,6 +50,10 @@ const mapDispatchToProps = {
   getAutocompleteData,
   applyDatagridFilter,
   searchCasNumber,
+  getPackagingTypes,
+  getProductConditions,
+  getProductForms,
+  getProductGrades,
   ...Actions
 }
 

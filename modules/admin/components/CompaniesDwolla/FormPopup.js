@@ -119,7 +119,7 @@ class AddNewPopupCasProducts extends Component {
       closeRegisterDwollaAccount,
       postDwollaAccount,
       popupValues,
-      countriesDropDown,
+      countriesDropdown,
       primaryBranchProvinces,
       mailingBranchProvinces,
       auth,
@@ -199,11 +199,11 @@ class AddNewPopupCasProducts extends Component {
                         <Input label={<FormattedMessage id='global.dateOfBirth' defaultMessage='Birth' />} name='beneficialOwner.dateOfBirth' />
                       </FormGroup>
                       <FormGroup widths='equal'>
-                        <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown} />
+                        <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropdown} />
                         <Input label="Passport Number" name="beneficialOwner.passport.number" />
                       </FormGroup>
                       <FormGroup widths='equal'>
-                        <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='beneficialOwner.address.country' options={countriesDropDown}
+                        <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='beneficialOwner.address.country' options={countriesDropdown}
                           inputProps={{
                             search: true, onChange: (e, d) => {
                               this.handlePrimaryBranchCountry(e, d)
@@ -276,7 +276,7 @@ class AddNewPopupCasProducts extends Component {
                         <FormGroup widths='equal'>
                           <ZipDropdown label="Zip" name="dwollaController.zip" options={zip.codes}
                             inputProps={{ search: true, clearable: true }} />
-                          <Dropdown label={<FormattedMessage id='global.country2' defaultMessage='Country' />} name='dwollaController.country' options={countriesDropDown}
+                          <Dropdown label={<FormattedMessage id='global.country2' defaultMessage='Country' />} name='dwollaController.country' options={countriesDropdown}
                             inputProps={{
                               search: true,
                               onChange: (e, d) => {
@@ -326,7 +326,7 @@ const mapStateToProps = ({ admin, zip, auth, globalData }) => {
     zip,
     auth,
     countries: globalData.countries,
-    countriesDropDown: globalData.countriesDropDown
+    countriesDropdown: globalData.countriesDropdown
   }
 }
 

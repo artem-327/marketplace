@@ -291,7 +291,7 @@ const mapStateToProps = state => {
             deliveryNotes: getSafe(() => popupValues.deliveryNotes, '')
           }
         : null,
-    countriesDropDown: state.settings.countriesDropDown,
+    countriesDropdown: state.globalData.countriesDropdown,
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.globalData.countries,
     reloadFilter: {

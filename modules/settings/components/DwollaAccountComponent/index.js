@@ -61,7 +61,7 @@ class BankAccountsPopup extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.countriesDropDown.length === 0) await this.props.getCountries()
+    if (this.props.countriesDropdown.length === 0) await this.props.getCountries()
   }
 
   handleCountry = (e, d) => {
@@ -81,7 +81,7 @@ class BankAccountsPopup extends Component {
   render() {
     const {
       closeDwollaPopup,
-      countriesDropDown,
+      countriesDropdown,
       provincesDropDown,
       postDwollaAccount,
       auth,
@@ -152,7 +152,7 @@ class BankAccountsPopup extends Component {
                   {/* <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_addressDatePassport_inp'>
                   <Input label={formatMessage({ id: 'global.city', defaultMessage: 'City' })} name='beneficialOwner.address.city' />
                   
-                  <Dropdown label={formatMessage({ id: 'settings.passportCountry', defaultMessage: 'Passport Country' })} name='beneficialOwner.passport.country' options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_beneficialOwner_passport_country_drpdn' }} />
+                  <Dropdown label={formatMessage({ id: 'settings.passportCountry', defaultMessage: 'Passport Country' })} name='beneficialOwner.passport.country' options={countriesDropdown} inputProps={{ 'data-test': 'settings_dwolla_account_beneficialOwner_passport_country_drpdn' }} />
                   <Input label={formatMessage({ id: 'settings.passportNumber', defaultMessage: 'Passport Number' })} name='beneficialOwner.passport.number' />
                 </FormGroup> */}
 
@@ -168,7 +168,7 @@ class BankAccountsPopup extends Component {
                   displayHeader={false} /> */}
 
                   {/* <FormGroup widths='equal'>
-                  <Dropdown label={formatMessage({ id: 'global.country', defaultMessage: 'Country' })} name='beneficialOwner.address.country' options={countriesDropDown}
+                  <Dropdown label={formatMessage({ id: 'global.country', defaultMessage: 'Country' })} name='beneficialOwner.address.country' options={countriesDropdown}
                     inputProps={{
                       'data-test': 'settings_dwolla_account_beneficialOwner_address_country_drpdn',
                       search: true, onChange: (e, d) => {
@@ -206,7 +206,7 @@ class BankAccountsPopup extends Component {
                       {/* <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_address_inp'>
                       <Input label={formatMessage({ id: 'global.city', defaultMessage: 'City' })} name='dwollaController.address.city' />
                       <Input label={formatMessage({ id: 'global.postalCode', defaultMessage: 'Postal Code' })} name='dwollaController.address.postalCode' />
-                      <Dropdown label={formatMessage({ id: 'global.country', defaultMessage: 'Country' })} name='dwollaController.address.country' options={countriesDropDown}
+                      <Dropdown label={formatMessage({ id: 'global.country', defaultMessage: 'Country' })} name='dwollaController.address.country' options={countriesDropdown}
                         inputProps={{
                           'data-test': 'settings_dwolla_account_dwollaController_address_country_drpdn',
                           search: true, onChange: (e, d) => {
@@ -225,7 +225,7 @@ class BankAccountsPopup extends Component {
                           label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
                           name='dwollaController.lastName'
                         />
-                        {/* <Dropdown label={formatMessage({ id: 'settings.passportCountry', defaultMessage: 'Passport Country' })} name='dwollaController.passport.country' options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_dwollaController_passport_country_drpdn' }} /> */}
+                        {/* <Dropdown label={formatMessage({ id: 'settings.passportCountry', defaultMessage: 'Passport Country' })} name='dwollaController.passport.country' options={countriesDropdown} inputProps={{ 'data-test': 'settings_dwolla_account_dwollaController_passport_country_drpdn' }} /> */}
                         {/* <Input label={formatMessage({ id: 'settings.passportNumber', defaultMessage: 'Passport Number' })} name='dwollaController.passport.number' /> */}
                       </FormGroup>
 
@@ -317,7 +317,7 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     popupValues: state.settings.popupValues,
     countries: state.globalData.countries,
-    countriesDropDown: state.globalData.countriesDropDown
+    countriesDropdown: state.globalData.countriesDropdown
   }
 }
 

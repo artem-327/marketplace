@@ -1096,7 +1096,7 @@ const mapStateToProps = ({
   },
   globalData: {
     countries,
-    countriesDropDown,
+    countriesDropdown,
     countriesLoading
   }
 }) => ({
@@ -1107,7 +1107,7 @@ const mapStateToProps = ({
   listForms,
   listGrades,
   listWarehouses,
-  listCountries: countriesDropDown,
+  listCountries: countriesDropdown,
   listCountriesLoading: countriesLoading,
   countries,
   listProvinces,
