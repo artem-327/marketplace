@@ -3386,6 +3386,7 @@
   "myNetworks.detailRow.modal.accept": "Do you want to accept this request connection?",
   "myNetworks.detailRow.modal.remove": "Do you want to remove this connection?",
   "myNetworks.detailRow.modal.invite": "Do you want to invite this company?",
+  "myNetworks.detailRow.noFilesUploaded": "No files uploaded",
   "myNetworks.inviteModal.title": "TradePass ID",
   "myNetworks.inviteModal.placeholder": "Enter TradePass ID",
   "myNetworks.inviteModal.errorLabel": "No member was found in this TradePass ID",

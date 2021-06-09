@@ -17,21 +17,34 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
       </GridColumnDetail>
     </Grid.Row>
 
-    {Object.keys(data).map((key, i) => {
-      let temp = key.split('_')
-      temp.map((t, i) => {
-        temp[i] = t.charAt(0).toUpperCase() + t.slice(1);
+    {Object.keys(data).length ?
+      Object.keys(data).map((key, i) => {
+        let docNameTemp = key.split('_')
+        docNameTemp.map((t, i) => {
+          docNameTemp[i] = t.charAt(0).toUpperCase() + t.slice(1);
+        })
+        const docName = docNameTemp.join(' ')
+
+        let value = data[key]
+        if(blueValue) value = value.replace('_', ' ')
+
+        return (
+          <Grid.Row key={i}>
+            <GridColumnDetail>
+              <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={docName} />
+              <DivValue $minHeight='19px' fontSize='14px' $color={blueValue ? '#00c7f9' : null} lineHeight='1.42857'> {value}</DivValue>
+            </GridColumnDetail>
+          </Grid.Row>
+        )
       })
-      const docName = temp.join(' ')
-      return (
-        <Grid.Row key={i}>
-          <GridColumnDetail>
-            <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={docName} />
-            <DivValue $minHeight='19px' fontSize='14px' $color={blueValue ? '#00c7f9' : null} lineHeight='1.42857'> {data[key]}</DivValue>
-          </GridColumnDetail>
-        </Grid.Row>
-      )
-    })}
+    :
+      <Grid.Row>
+        <GridColumnDetail>
+          <FormattedMessage id='myNetworks.detailRow.noFilesUploaded' defaultMessage='No files uploaded' />
+        </GridColumnDetail>
+      </Grid.Row>
+    }
+
   </SegmentBottom>
 )
 
