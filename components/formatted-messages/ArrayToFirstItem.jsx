@@ -72,8 +72,9 @@ export default class ArrayToFirstItem extends Component {
           />
           {tags ? (
             <ProductFirstTags>
-              {rowValues.map(val => (
+              {rowValues.map((val, i) => (
                 <ItemLabel
+                  key={i}
                   style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
                   onClick={e => {
                     if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
@@ -91,8 +92,9 @@ export default class ArrayToFirstItem extends Component {
       if (tags) {
         return (
           <ProductFirstTags>
-            {rowValues.map(val => (
+            {rowValues.map((val, i) => (
               <ItemLabel
+                key={i}
                 style={typeof onTagClick !== 'undefined' ? { cursor: 'pointer' } : null}
                 onClick={e => {
                   if (typeof onTagClick !== 'undefined') onTagClick(e, { value: val })
