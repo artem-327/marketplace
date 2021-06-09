@@ -49,18 +49,6 @@ export const getAutocompleteOrigin = createAsyncAction('GET_AUTOCOMPLETE_ORIGIN_
 
 export const saveFilterState = createAction('SAVE_FILTER_STATE', value => value)
 
-export const fetchProductConditions = createAsyncAction('GET_PRODUCT_CONDITIONS', () =>
-  api.getProductConditions()
-)
-export const fetchProductForms = createAsyncAction('GET_PRODUCT_FORMS', () =>
-  api.getProductForms()
-)
-export const fetchPackagingTypes = createAsyncAction('GET_PACKAGING_TYPES', () =>
-  api.getPackagingTypes()
-)
-export const fetchProductGrade = createAsyncAction('GET_PRODUCT_GRADES', () =>
-  api.getProductGrade()
-)
 export const fetchWarehouses = createAsyncAction('GET_WAREHOUSES', () =>
   api.getWarehouses()
 )

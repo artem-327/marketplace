@@ -38,11 +38,6 @@ const asignFiltersDescription = (filter, params) => {
 }
 
 export const initialState = {
-  productConditions: [],
-  productForms: [],
-  packagingTypes: [],
-  uniquePackagingTypes: [],
-  productGrades: [],
   warehouses: [],
   params: {
     currencyCode: currency
@@ -535,31 +530,6 @@ export default typeToReducer(
           ...state[filterType],
           filterState: payload
         }
-      }
-    },
-    [a.fetchProductConditions.fulfilled]: (state, { payload }) => {
-      return {
-        ...state,
-        productConditions: payload
-      }
-    },
-    [a.fetchProductForms.fulfilled]: (state, { payload }) => {
-      return {
-        ...state,
-        productForms: payload
-      }
-    },
-    [a.fetchPackagingTypes.fulfilled]: (state, { payload }) => {
-      return {
-        ...state,
-        packagingTypes: payload,
-        uniquePackagingTypes: uniqueArrayByKey(payload, 'name')
-      }
-    },
-    [a.fetchProductGrade.fulfilled]: (state, { payload }) => {
-      return {
-        ...state,
-        productGrades: payload
       }
     },
     [a.fetchWarehouses.fulfilled]: (state, { payload }) => {

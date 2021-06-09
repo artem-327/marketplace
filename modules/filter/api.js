@@ -24,14 +24,6 @@ export const getAutocompleteManufacturer = searchManufacturerUrl =>
 
 export const getAutocompleteOrigin = searchOriginUrl => api.get(searchOriginUrl).then(response => response.data)
 
-export const getProductConditions = () => api.get('/prodex/api/product-conditions').then(response => response.data)
-
-export const getProductForms = () => api.get('/prodex/api/product-forms').then(response => response.data)
-
-export const getPackagingTypes = () => api.get('/prodex/api/packaging-types').then(response => response.data)
-
-export const getProductGrade = () => api.get('/prodex/api/product-grades').then(response => response.data)
-
 export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').then(response => response.data)
 
 export const getProvinces = id => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)

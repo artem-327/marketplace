@@ -66,10 +66,10 @@ class Filter extends Component {
 
   componentDidMount() {
     const {
-      fetchProductConditions,
-      fetchProductForms,
-      fetchPackagingTypes,
-      fetchProductGrade,
+      getProductConditions,
+      getProductForms,
+      getPackagingTypes,
+      getProductGrades,
       fetchWarehouses,
       setParams,
       filterState,
@@ -85,10 +85,10 @@ class Filter extends Component {
     //  this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     Promise.all([
-      this.fetchIfNoData(fetchProductConditions, 'productConditions'),
-      this.fetchIfNoData(fetchProductForms, 'productForms'),
-      this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
+      this.fetchIfNoData(getProductConditions, 'productConditions'),
+      this.fetchIfNoData(getProductForms, 'productForms'),
+      this.fetchIfNoData(getPackagingTypes, 'packagingTypes'),
+      this.fetchIfNoData(getProductGrades, 'productGrades'),
       //this.fetchIfNoData(fetchWarehouses, 'warehouses'),
       this.fetchIfNoData(getCountries, 'countries')
     ]).finally(() =>
@@ -272,7 +272,7 @@ class Filter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateDropdown = (data, values, placeholder, groupName = null, upward = false) => {
+  generateDropdown = (data, values, placeholder, groupName = null, loading = false, upward = false) => {
     if (!data) return []
 
     const options = data.map(d => {
@@ -293,6 +293,7 @@ class Filter extends Component {
           multiple: true,
           fluid: true,
           placeholder,
+          loading: loading,
           upward: upward
         }}
       />
@@ -579,8 +580,12 @@ class Filter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      uniquePackagingTypes,
+      packagingTypesUnique,
       productGrades,
+      productConditionsLoading,
+      productFormsLoading,
+      productGradesLoading,
+      packagingTypesLoading,
       intl,
       autocompleteData,
       autocompleteDataLoading,
@@ -596,10 +601,11 @@ class Filter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      uniquePackagingTypes,
+      packagingTypesUnique,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes',
+      packagingTypesLoading,
       true
     )
     let productConditionDropdown = this.generateDropdown(
@@ -607,6 +613,7 @@ class Filter extends Component {
       values,
       formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
       'productConditions',
+      productConditionsLoading,
       true
     )
     let productGradeDropdown = this.generateDropdown(
@@ -614,6 +621,7 @@ class Filter extends Component {
       values,
       formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
       'productGrades',
+      productGradesLoading,
       true
     )
     let productFormsDropdown = this.generateDropdown(
@@ -621,6 +629,7 @@ class Filter extends Component {
       values,
       formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
       'productForms',
+      productFormsLoading,
       true
     )
 

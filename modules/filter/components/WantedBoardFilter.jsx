@@ -37,6 +37,7 @@ import {
   StyledModalHeader
 } from '../constants/layout'
 import { getDuplicatePackagingTypesByKey } from '../../../services/filters'
+import {getPackagingTypes, getProductForms, getProductGrades} from "../../global-data/actions";
 
 class WantedBoardFilter extends Component {
   state = {
@@ -54,14 +55,14 @@ class WantedBoardFilter extends Component {
   }
 
   componentDidMount() {
-    const { fetchProductForms, fetchPackagingTypes, fetchProductGrade, setParams, filterState } = this.props
+    const { getProductForms, getPackagingTypes, getProductGrades, setParams, filterState } = this.props
 
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
-      this.fetchIfNoData(fetchProductForms, 'productForms'),
-      this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrades')
+      this.fetchIfNoData(getProductForms, 'productForms'),
+      this.fetchIfNoData(getPackagingTypes, 'packagingTypes'),
+      this.fetchIfNoData(getProductGrades, 'productGrades')
     ]).finally(() =>
       this.setState({
         ...(filterState !== null && filterState.state),
@@ -241,7 +242,7 @@ class WantedBoardFilter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateDropdown = (data, values, placeholder, groupName = null) => {
+  generateDropdown = (data, values, placeholder, groupName = null, loading = false) => {
     if (!data) return []
 
     const options = data.map(d => {
@@ -261,7 +262,8 @@ class WantedBoardFilter extends Component {
         inputProps={{
           multiple: true,
           fluid: true,
-          placeholder
+          placeholder,
+          loading: loading
         }}
       />
     )
@@ -522,9 +524,11 @@ class WantedBoardFilter extends Component {
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError, setFieldTouched }) => {
     let {
       productForms,
-      packagingTypes,
-      uniquePackagingTypes,
+      packagingTypesUnique,
       productGrades,
+      productFormsLoading,
+      productGradesLoading,
+      packagingTypesLoading,
       intl,
       autocompleteData,
       autocompleteDataLoading,
@@ -535,22 +539,25 @@ class WantedBoardFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      uniquePackagingTypes,
+      packagingTypesUnique,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
-      'packagingTypes'
+      'packagingTypes',
+      packagingTypesLoading
     )
     let productGradeDropdown = this.generateDropdown(
       productGrades,
       values,
       formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
-      'productGrades'
+      'productGrades',
+      productGradesLoading
     )
     let productFormsDropdown = this.generateDropdown(
       productForms,
       values,
       formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
-      'productForms'
+      'productForms',
+      productFormsLoading
     )
 
     var noResultsMessage = null

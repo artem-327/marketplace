@@ -70,10 +70,10 @@ class InventoryFilter extends Component {
 
   componentDidMount() {
     const {
-      fetchProductConditions,
-      fetchProductForms,
-      fetchPackagingTypes,
-      fetchProductGrade,
+      getProductConditions,
+      getProductForms,
+      getPackagingTypes,
+      getProductGrades,
       fetchWarehouses,
       setParams,
       autocompleteManufacturer,
@@ -95,10 +95,10 @@ class InventoryFilter extends Component {
     //  this.props.getAutocompleteManufacturer(this.props.searchManufacturerUrl(''))
 
     Promise.all([
-      this.fetchIfNoData(fetchProductConditions, 'productConditions'),
-      this.fetchIfNoData(fetchProductForms, 'productForms'),
-      this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrades'),
+      this.fetchIfNoData(getProductConditions, 'productConditions'),
+      this.fetchIfNoData(getProductForms, 'productForms'),
+      this.fetchIfNoData(getPackagingTypes, 'packagingTypes'),
+      this.fetchIfNoData(getProductGrades, 'productGrades'),
       this.fetchIfNoData(fetchWarehouses, 'warehouses')
     ]).finally(() =>
       this.setState({
@@ -277,7 +277,7 @@ class InventoryFilter extends Component {
     else this.setState({ openedSaveFilter: false })
   }
 
-  generateDropdown = (data, values, placeholder, groupName = null, upward = false) => {
+  generateDropdown = (data, values, placeholder, groupName = null, loading = false, upward = false) => {
     if (!data) return []
 
     const options = data.map(d => {
@@ -298,6 +298,7 @@ class InventoryFilter extends Component {
           multiple: true,
           fluid: true,
           placeholder,
+          loading: loading,
           upward: upward
         }}
       />
@@ -565,8 +566,12 @@ class InventoryFilter extends Component {
       productConditions,
       productForms,
       packagingTypes,
-      uniquePackagingTypes,
+      packagingTypesUnique,
       productGrades,
+      productConditionsLoading,
+      productFormsLoading,
+      productGradesLoading,
+      packagingTypesLoading,
       intl,
       autocompleteData,
       autocompleteDataLoading,
@@ -581,10 +586,11 @@ class InventoryFilter extends Component {
     const { formatMessage } = intl
 
     let packagingTypesDropdown = this.generateDropdown(
-      uniquePackagingTypes,
+      packagingTypesUnique,
       values,
       formatMessage({ id: 'filter.selectPackaging', defaultMessage: 'Select Packaging (Multiple Select)' }),
       'packagingTypes',
+      packagingTypesLoading,
       true
     )
     let productConditionDropdown = this.generateDropdown(
@@ -592,6 +598,7 @@ class InventoryFilter extends Component {
       values,
       formatMessage({ id: 'filter.selectCondition', defaultMessage: 'Select Condition (Multiple Select)' }),
       'productConditions',
+      productConditionsLoading,
       true
     )
     let productGradeDropdown = this.generateDropdown(
@@ -599,6 +606,7 @@ class InventoryFilter extends Component {
       values,
       formatMessage({ id: 'filter.selectGrade', defaultMessage: 'Select Grade (Multiple Select)' }),
       'productGrades',
+      productGradesLoading,
       true
     )
     let productFormsDropdown = this.generateDropdown(
@@ -606,6 +614,7 @@ class InventoryFilter extends Component {
       values,
       formatMessage({ id: 'filter.selectForm', defaultMessage: 'Select Form (Multiple Select)' }),
       'productForms',
+      productFormsLoading,
       true
     )
 
@@ -933,8 +942,7 @@ class InventoryFilter extends Component {
                 fluid: true,
                 clearable: true,
                 upward: true,
-                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' }),
-                upward: true
+                placeholder: formatMessage({ id: 'global.select', defaultMessage: 'Select' })
               }}
             />
           </GridColumn>
