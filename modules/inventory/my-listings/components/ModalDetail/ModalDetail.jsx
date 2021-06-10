@@ -115,8 +115,8 @@ class ModalDetail extends Component {
     } else {
       searchOrigins('', 200)
     }
-    this.fetchIfNoData('listForms', getProductForms)
-    this.fetchIfNoData('listGrades', getProductGrades)
+    this.fetchIfNoData('productFormsDropdown', getProductForms)
+    this.fetchIfNoData('productGradesDropdown', getProductGrades)
     this.fetchIfNoData('warehousesList', getWarehouses)
 
     this.switchTab(modalActiveTab, detailValues)
@@ -669,15 +669,15 @@ class ModalDetail extends Component {
 
   render() {
     let {
-      listForms,
-      listGrades,
+      productFormsDropdown,
+      productGradesDropdown,
       loading,
       detailValues,
       searchedOrigins,
       searchedOriginsLoading,
       searchOrigins,
       warehousesList,
-      listDocumentTypes,
+      documentTypesDropdown,
       intl: { formatMessage },
       toastManager,
       loadFile,
@@ -1348,7 +1348,7 @@ class ModalDetail extends Component {
                                               </FormattedMessage>
                                               <Dropdown
                                                 name='edit.productForm'
-                                                options={listForms}
+                                                options={productFormsDropdown}
                                                 inputProps={{
                                                   onChange: this.onChange,
                                                   disabled: detailValues && detailValues.grouped,
@@ -1371,7 +1371,7 @@ class ModalDetail extends Component {
                                               </FormattedMessage>
                                               <Dropdown
                                                 name='edit.productGrades'
-                                                options={listGrades}
+                                                options={productGradesDropdown}
                                                 inputProps={{
                                                   placeholder: (
                                                     <FormattedMessage
@@ -1788,7 +1788,7 @@ class ModalDetail extends Component {
                                 <Tab.Pane key='documents' style={{ padding: '16px' }}>
                                   {this.state.activeTab === 2 ? (
                                     <DocumentTab
-                                      listDocumentTypes={listDocumentTypes}
+                                      listDocumentTypes={documentTypesDropdown}
                                       values={values.documents}
                                       setFieldValue={setFieldValue}
                                       setFieldNameAttachments='documents.attachments'

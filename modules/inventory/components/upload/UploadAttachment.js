@@ -10,7 +10,7 @@ import { FieldArray } from 'formik'
 import File from '~/components/File/File'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 //Actions
-import { getDocumentTypes } from '~/modules/inventory/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
 import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
@@ -473,7 +473,7 @@ UploadAttachment.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  listDocumentTypes: getSafe(() => state.simpleAdd.listDocumentTypes, [])
+  listDocumentTypes: getSafe(() => state.globalData.documentTypesDropdown, [])
 })
 
 export default withToastManager(connect(mapStateToProps, { getDocumentTypes })(UploadAttachment))

@@ -14,7 +14,9 @@ import { otherPermissions, sharedTo } from '~/constants/index'
 import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
-import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
+
 import { bool, func, number } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
@@ -307,14 +309,14 @@ DocumentPopup.defaultProps = {
   initialFileType: null
 }
 
-const mapStateToProps = ({ simpleAdd, settings }) => {
+const mapStateToProps = ({ globalData, simpleAdd, settings }) => {
   const currentTab = Router && Router.router && Router.router.pathname ? Router.router.pathname : ''
   const documentTab = currentTab && currentTab.type === '/settings/documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,
-    documentTypes: simpleAdd.listDocumentTypes,
-    documentTypesFetching: simpleAdd.documentTypesFetching,
+    documentTypes: globalData.documentTypesDropdown,
+    documentTypesFetching: globalData.documentTypesLoading,
     edit: documentTab && getSafe(() => settings.popupValues.id, false),
     enableClose: documentTab
   }

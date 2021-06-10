@@ -6,3 +6,4 @@ export const getProductConditions = createAsyncAction('GLOBAL_GET_PRODUCT_CONDIT
 export const getProductForms = createAsyncAction('GLOBAL_GET_PRODUCT_FORMS', () => api.getProductForms())
 export const getProductGrades = createAsyncAction('GLOBAL_GET_PRODUCT_GRADES', () => api.getProductGrades())
 export const getPackagingTypes = createAsyncAction('GLOBAL_GET_PACKAGING_TYPES', () => api.getPackagingTypes())
+export const getDocumentTypes = createAsyncAction('GLOBAL_GET_DOCUMENT_TYPES', () => api.getDocumentTypes())

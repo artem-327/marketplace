@@ -41,22 +41,6 @@ export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
 }
 
-export function getDocumentTypes() {
-  return api.get(`/prodex/api/document-types/`)
-}
-
-export function getProductConditions() {
-  return api.get(`/prodex/api/product-conditions/`)
-}
-
-export function getProductForms() {
-  return api.get(`/prodex/api/product-forms/`)
-}
-
-export function getProductGrades() {
-  return api.get(`/prodex/api/product-grades/`)
-}
-
 export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
 }
