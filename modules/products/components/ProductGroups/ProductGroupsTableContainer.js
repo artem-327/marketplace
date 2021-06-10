@@ -20,9 +20,9 @@ const makeMapStateToProps = () => {
     const getLoading = makeGetLoading()
     const getGroupRows = makeGetGroupRows()
 
-    const mapStateToProps = (state, { datagrid }) => {
+    const mapStateToProps = (state, ownProps) => {
         return {
-            rows: getGroupRows(datagrid),
+            rows: getGroupRows(ownProps),
             filterValue: getFilterValue(state),
             editedId: getEditedId(state),
             loading: getLoading(state)            
