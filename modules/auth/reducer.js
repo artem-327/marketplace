@@ -4,6 +4,7 @@ import * as AT from './action-types'
 import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../settings/action-types'
 import { SET_PREFERRED_LANGUAGE_FULFILLED } from '../settings/action-types'
+import { PROFILE_UPDATE_MY_PROFILE_FULFILLED } from '../profile/action-types'
 //Functions
 import { getSafe } from '../../utils/functions'
 //Constants
@@ -164,7 +165,24 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
-    case 'PROFILE_UPDATE_MY_PROFILE_FULFILLED':
+    case PROFILE_UPDATE_MY_PROFILE_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          ...payload,
+          ...getAccessRights(payload.roles),
+          company:
+            state.identity?.company
+              ? {
+                  ...payload.company,
+                  ...state.identity.company
+                }
+              : null
+        }
+      }
+    }
+
     case AT.UPDATE_IDENTITY: {
       return {
         ...state,

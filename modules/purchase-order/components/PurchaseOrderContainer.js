@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { withToastManager } from 'react-toast-notifications'
 import PurchaseOrder from './PurchaseOrder'
 import TmpBoth from './TmpBoth'
 import Checkout from './Checkout'
@@ -64,8 +65,9 @@ function mapStateToProps(store) {
     isOpenSidebar: getSafe(() => store.cart.isOpenSidebar, false),
     loading: getSafe(() => store.cart.loading, false),
     isOpenModal: getSafe(() => store.cart.isOpenModal, false),
-    isThirdPartyConnectionException: getSafe(() => store.cart.isThirdPartyConnectionException, false)
+    isThirdPartyConnectionException: getSafe(() => store.cart.isThirdPartyConnectionException, false),
+    manualQuoteById: getSafe(() => store.cart.manualQuoteById, null)
   }
 }
 
-export default connect(mapStateToProps, Actions)(Checkout)
+export default withToastManager(connect(mapStateToProps, Actions)(Checkout))
