@@ -74,7 +74,20 @@ const Checkout = props => {
   useEffect(() => {
     const init = async () => {
       await props.getIdentity()
-      await props.getCart()
+      const { value } = await props.getCart()
+      const initVal = value.cartItems.map(item => ({
+        id: item.id,
+        quantity: item.pkgAmount.toString(),
+        minPkg: item.productOffer.minPkg,
+        splitPkg: item.productOffer.splitPkg,
+        pkgAvailable: item.productOffer.pkgAvailable,
+        price: item.cfPriceSubtotal
+      }))
+      setSectionState({
+        ...sectionState,
+        review: { accepted: false, value: initVal }
+      })
+
 
       const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
   
