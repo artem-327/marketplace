@@ -122,7 +122,7 @@ export const FlexSidebar = styled(Sidebar)`
   padding-bottom: 0px !important;
 
   &.ui.visible.bottom.overlay.sidebar {
-    height: 89% !important;
+    height: 87vh !important;
   }
   .field {
     font-size: 1em !important;
