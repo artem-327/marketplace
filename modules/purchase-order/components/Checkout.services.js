@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 // Services
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
@@ -39,14 +40,19 @@ export const confirmSection = ({ openSection, setOpenSection, sectionState, setS
   }
 }
 
-export const submitButton = (props, state) => {
-  const { allAccepted, openSection, sectionState } = state
+export const submitButton = async (props, state) => {
+  const { getManualQuoteById } = props
+  const { allAccepted, openSection, sectionState, shipmentQuoteId, clickedFriehgt, setClickedFriehgt } = state
 
-  if ((sectionState[openSection] && sectionState[openSection].value) || allAccepted || openSection === 'review') {
+  if ((sectionState[openSection] && sectionState[openSection].value) || allAccepted || openSection === 'review' || shipmentQuoteId) {
     if (allAccepted) {
       handleSubmitOrder(props, state)
     } else {
       if (openSection === 'review') submitUpdateCartItem(props, state)
+      else if(openSection === 'freight' && shipmentQuoteId) {
+        await getManualQuoteById(shipmentQuoteId)
+        setClickedFriehgt(!clickedFriehgt)
+      }
       else confirmSection(state)
     }
   }
@@ -59,7 +65,7 @@ export const submitButton = (props, state) => {
  * @return object Default component attributes and event handlings (isExpanded, onButtonClick, onChangeButtonClick, etc.)
  */
 export const getComponentParameters = (props, state) => {
-  const { name, allAccepted, openSection, setOpenSection, sectionState, setSummaryButtonCaption } = state
+  const { name, allAccepted, openSection, setOpenSection, sectionState, setSummaryButtonCaption, shipmentQuoteId, setShipmentQuoteId } = state
 
   return {
     id: name,
@@ -73,7 +79,9 @@ export const getComponentParameters = (props, state) => {
     onSubmitClick: () => submitButton(props, state),
     setSummaryButtonCaption,
     allAccepted,
-    value: sectionState[name].value
+    value: sectionState[name].value,
+    shipmentQuoteId: shipmentQuoteId,
+    setShipmentQuoteId: setShipmentQuoteId
   }
 }
 

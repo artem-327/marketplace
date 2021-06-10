@@ -51,6 +51,8 @@ const Checkout = props => {
   })
   const [summaryButtonCaption, setSummaryButtonCaption] = useState('')
   const [fixedFreightId, setfixedFreightId] = useState(false)
+  const [shipmentQuoteId, setShipmentQuoteId] = useState('')
+  const [clickedFriehgt, setClickedFriehgt] = useState(true)
 
   const {
     cart,
@@ -62,7 +64,9 @@ const Checkout = props => {
     intl: { formatMessage },
     loading,
     isThirdPartyConnectionException,
-    applicationName
+    applicationName,
+    manualQuoteById,
+    toastManager
   } = props
 
   // Similar to call componentDidMount:
@@ -105,6 +109,25 @@ const Checkout = props => {
     fetchCheckout(freight)
   }, [])
 
+  useEffect(() => {
+    if(manualQuoteById) {
+      setSectionState({
+        ...sectionState,
+        freight: {
+          accepted: true,
+          value: {
+            carrierName: manualQuoteById.carrierName,
+            cfEstimatedSubtotal: manualQuoteById.price,
+            estimatedDeliveryDate: '',
+            quoteId: manualQuoteById.quoteId,
+            freightType: FREIGHT_TYPES.ECHO
+          }
+        }
+      })
+      setOpenSection('')
+    }
+  }, [clickedFriehgt])
+
   const allAccepted = checkAllAccepted(sectionState)
 
   const state = {
@@ -113,7 +136,11 @@ const Checkout = props => {
     setOpenSection,
     sectionState,
     setSectionState,
-    setSummaryButtonCaption
+    setSummaryButtonCaption,
+    shipmentQuoteId,
+    setShipmentQuoteId,
+    clickedFriehgt,
+    setClickedFriehgt
   }
 
   if (cartIsFetching) return <Spinner />

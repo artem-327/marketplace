@@ -3,12 +3,8 @@ import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 //Styles
 import { DivTitleBottomSegment, DivValue, GridColumnDetail, SegmentBottom } from '../DetailRow.style'
-//Services
-import { isEmptyObject } from '../../../../../services'
-
 /**
  * Segment shows Legal, Marketing and Verified Data
- * @category My Network
  * @component
  */
 const ColumnSegment = ({ data, titleId, blueValue }) => (
@@ -16,46 +12,49 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleBottomSegment>
-          <FormattedMessage
-            id={`myNetworks.detailRow.${titleId}`}
-            defaultMessage='Title'
-            data-test='component-column-segment-title'
-          />
+          <FormattedMessage id={`myNetworks.detailRow.${titleId}`} defaultMessage='Title' />
         </DivTitleBottomSegment>
       </GridColumnDetail>
     </Grid.Row>
 
-    {!isEmptyObject(data)
-      ? Object.keys(data).map((key, i) => {
-          return (
-            <Grid.Row key={i} data-test='component-column-segment-row'>
-              <GridColumnDetail>
-                <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={key} />
-                <DivValue
-                  data-test='component-column-segment-value'
-                  $minHeight='19px'
-                  fontSize='14px'
-                  $color={blueValue ? '#00c7f9' : null}
-                  lineHeight='1.42857'>
-                  {data[key]}
-                </DivValue>
-              </GridColumnDetail>
-            </Grid.Row>
-          )
+    {Object.keys(data).length ?
+      Object.keys(data).map((key, i) => {
+        let docNameTemp = key.split('_')
+        docNameTemp.map((t, i) => {
+          docNameTemp[i] = t.charAt(0).toUpperCase() + t.slice(1);
         })
-      : null}
+        const docName = docNameTemp.join(' ')
+
+        let value = data[key]
+        if(blueValue) value = value.replace('_', ' ')
+
+        return (
+          <Grid.Row key={i}>
+            <GridColumnDetail>
+              <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={docName} />
+              <DivValue $minHeight='19px' fontSize='14px' $color={blueValue ? '#00c7f9' : null} lineHeight='1.42857'> {value}</DivValue>
+            </GridColumnDetail>
+          </Grid.Row>
+        )
+      })
+    :
+      <Grid.Row>
+        <GridColumnDetail>
+          <FormattedMessage id='myNetworks.detailRow.noFilesUploaded' defaultMessage='No files uploaded' />
+        </GridColumnDetail>
+      </Grid.Row>
+    }
+
   </SegmentBottom>
 )
 
 ColumnSegment.propTypes = {
   titleId: PropTypes.string,
-  blueValue: PropTypes.string,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object
 }
 
 ColumnSegment.defaultProps = {
   titleId: '',
-  blueValue: '',
   data: null
 }
 

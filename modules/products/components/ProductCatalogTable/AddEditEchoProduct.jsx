@@ -2127,7 +2127,7 @@ const AddEditEchoProduct = props => {
         return (
           <>
             <DimmerBottomSidebarOpend
-              height='height: 11% !important;' // 89% height has Sidebar'
+              height='height: 13vh !important;' // 87vh height has Sidebar'
               active={true}
               onClickOutside={() => closePopup()}
               page></DimmerBottomSidebarOpend>
