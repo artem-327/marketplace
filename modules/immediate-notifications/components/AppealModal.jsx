@@ -14,13 +14,44 @@ import { ModalAppeal } from './styles'
  */
 const ImmediateAppealModal = props => {
   const {
-    open
+    state,
+    setState,
+    sendMessageToSupport
   } = props
-  
-  const [openModal, setOpenModal] = useState(open)
+
+  const [appealValue, setAppealValue] = useState('')
+  const [requiredLength, setRequiredLength] = useState(false)
+
+  const submitHandler = async () => {
+    setRequiredLength(true)
+    if(appealValue.length > 4) {
+      const {value} = await sendMessageToSupport(appealValue)
+      if(value && value.messages) {
+        setState({
+          ...state,
+          type: 'standard',
+          open: true,
+          icon: 'SUCCESS',
+          title: 'Your Message has Been Sent.',
+          text: 'A representative will review your appeal and will reach out within 24 hours.',
+          leftButtonText: 'Explore BluePallet',
+          leftButtonRedirect: '',
+          rightButtonText: '',
+          rightButtonRedirect: ''
+        })
+      } else {
+        setState({
+          ...state,
+          open: false
+        })
+      }
+    } else {
+      setRequiredLength(true)
+    }
+  }
 
   return (
-    <ModalAppeal closeIcon centered={false} open={openModal} onClose={() => setOpenModal(false)}>
+    <ModalAppeal closeIcon centered={false} open={state.open} onClose={() => setState({...state, open: false})}>
       <Modal.Header>
         <FormattedMessage
           id='immediateNotification.appeal'
@@ -37,17 +68,20 @@ const ImmediateAppealModal = props => {
         <TextArea
           style={{resize: "none", width: "100%", height:"150px", padding: "10px", color: "#666"}}
           placeholder= 'Please type why you feel this decision is incorrect.'
+          value={appealValue}
+          onChange={(e, {value}) => setAppealValue(value)}
         />
+        <small style={{color: '#9f3a38', display: requiredLength ? 'block' : 'none'}}>Must be 5 letters at least!</small>
       </Modal.Content>
 
       <Modal.Actions>
         <BasicButton 
-          onClick={() => setOpenModal(false)} 
+          onClick={() => setState({...state, open: false})} 
         >
           <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
         </BasicButton>
         <BasicButton 
-          onClick={() => setOpenModal(false)} 
+          onClick={submitHandler} 
           noBorder
           textcolor='#ffffff !important'
           background='#00c7f9 !important'
