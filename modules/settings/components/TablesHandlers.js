@@ -603,11 +603,10 @@ class TablesHandlers extends Component {
                       />
                     }
                     trigger={
-                      <div>
+                      <div data-test='settings_open_popup_btn_velloci'>
                         <PlaidButton
                           disabled={!vellociToken || !vellociBusinessId || isThirdPartyConnectionException}
                           token={vellociToken}
-                          data-test='settings_open_popup_add_new_btn'
                           publicKey={vellociBusinessId}
                           onExit={this.onExit}
                           onSuccess={this.onSuccess}
@@ -631,11 +630,10 @@ class TablesHandlers extends Component {
                       />
                     }
                     trigger={
-                      <div>
+                      <div data-test='settings_open_popup_btn'>
                         <Button
                           primary
                           onClick={() => openSidebar(null, currentTab)}
-                          data-test='settings_open_popup_btn'
                           disabled={currentTab === 'logistics' && isThirdPartyConnectionException}>
                           <PlusCircle />
                           <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
@@ -659,11 +657,10 @@ class TablesHandlers extends Component {
                     />
                   }
                   trigger={
-                    <div className='column'>
+                    <div className='column' data-test='settings_open_popup_send_link_btn'>
                       <BasicButton
                         type='button'
                         onClick={() => openPopup()}
-                        data-test='settings_open_popup_send_link_btn'
                         disabled={isThirdPartyConnectionException}>
                         <>
                           <Link2 />
