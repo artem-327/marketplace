@@ -117,9 +117,11 @@
     "fetch-mock": "^9.11.0",
     "gulp": "^3.0.0",
     "jest": "^26.6.3",
+    "jest-junit": "^12.2.0",
     "moxios": "^0.4.0",
     "redux-mock-store": "^1.5.4",
-    "semantic-ui": "^2.4.2"
+    "semantic-ui": "^2.4.2",
+    "svg-jest": "^1.0.1"
   },
   "browserslist": [
     ">0.2%",
@@ -128,10 +130,15 @@
     "not op_mini all"
   ],
   "jest": {
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "moduleNameMapper": {
-      "^~/(.*)$": "<rootDir>/$1",
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/assetsTransformer.js",
-      "\\.(css|less)$": "<rootDir>/assetsTransformer.js"
+      "\\.svg$": "svg-jest",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|svg)$": "<rootDir>/assetsTransformer.js",
+      "\\.(css|less)$": "<rootDir>/assetsTransformer.js",
+      "^~/(.*)$": "<rootDir>/$1"
     },
     "resetMocks": false
   }
