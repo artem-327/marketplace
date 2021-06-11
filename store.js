@@ -32,6 +32,7 @@ import operations from '~/modules/operations/reducers'
 import wantedBoard from '~/modules/wanted-board/reducer'
 import search from '~/modules/search/reducer'
 import alerts from '~/modules/alerts/reducer'
+import immediates from '~/modules/immediate-notifications/reducer'
 import layout from '~/modules/layout/reducer'
 import companiesAdmin from '~/modules/companies/reducer'
 import productsAdmin from '~/modules/products/reducer'
@@ -78,6 +79,7 @@ const reducer = combineReducers({
   search,
   layout,
   alerts,
+  immediates,
   companiesAdmin,
   productsAdmin,
   documentTypes,
