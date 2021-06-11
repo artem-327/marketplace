@@ -140,7 +140,7 @@ const Checkout = props => {
       })
       const sectionToOpen = findSectionToOpen(sectionState)
       setOpenSection(sectionToOpen)
-    } else if (shipmentQuoteId) {
+    } else if (shipmentQuoteId && fixedFreightId) {
       toastManager.add(
         generateToastMarkup(
           <FormattedMessage id='shippingQuote.noExistManualQuoteId.title' defaultMessage='Failed to get shipping quote data' />,
@@ -237,6 +237,7 @@ const Checkout = props => {
                       {...props}
                       {...getComponentParameters(props, { name: 'shipping', ...state })}
                       onValueChange={value => {
+                        setShipmentQuoteId('')
                         setSectionState({
                           ...sectionState,
                           shipping: { accepted: false, value },
