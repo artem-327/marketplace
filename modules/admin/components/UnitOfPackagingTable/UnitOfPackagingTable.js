@@ -11,8 +11,14 @@ import {
   deleteConfirmation,
   deleteUnitOfPackaging,
   getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest
+  getAllUnitsOfMeasuresDataRequest, postNewRequest
 } from '../../actions'
+import {
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
+} from '../../../global-data/actions'
 import { withDatagrid } from '~/modules/datagrid'
 
 class UnitOfPackagingTable extends Component {
@@ -70,6 +76,7 @@ class UnitOfPackagingTable extends Component {
           ).then(async () => {
             try {
               await deleteUnitOfPackaging(row.id)
+              if (config.globalReload) this.props[config.globalReload]()
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
@@ -122,7 +129,11 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteConfirmation,
   getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest
+  getAllUnitsOfMeasuresDataRequest,
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
 }
 
 const mapStateToProps = (state, { datagrid }) => {

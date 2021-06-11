@@ -4,6 +4,12 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeEditPopup, putEditedDataRequest } from '../../actions'
+import {
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
+} from '../../../global-data/actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
@@ -42,6 +48,7 @@ class EditPopup1Parameter extends Component {
 
               try {
                 await putEditedDataRequest(config, id, data)
+                if (config.globalReload) this.props[config.globalReload]()
               } catch (e) {
                 console.error(e)
               } finally {
@@ -83,7 +90,11 @@ class EditPopup1Parameter extends Component {
 
 const mapDispatchToProps = {
   closeEditPopup,
-  putEditedDataRequest
+  putEditedDataRequest,
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
 }
 
 const mapStateToProps = (state, { currentTab }) => {

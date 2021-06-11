@@ -296,7 +296,8 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_UNITS_OF_PACKAGING_DATA',
         apiCall: '/prodex/api/packaging-types/'
       }
-    }
+    },
+    globalReload: 'getPackagingTypes'
   },
 
   manufacturers: {
@@ -429,7 +430,8 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_GRADES_DATA',
         apiCall: '/prodex/api/product-grades/'
       }
-    }
+    },
+    globalReload: 'getProductGrades'
   },
 
   forms: {
@@ -488,7 +490,8 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_FORMS_DATA',
         apiCall: '/prodex/api/product-forms/'
       }
-    }
+    },
+    globalReload: 'getProductForms'
   },
 
   conditions: {
@@ -547,7 +550,8 @@ export const config = {
         typeRequest: 'ADMIN_DELETE_CONDITIONS_DATA',
         apiCall: '/prodex/api/product-conditions/'
       }
-    }
+    },
+    globalReload: 'getProductConditions'
   },
 
   'nmfc-numbers': {
