@@ -8,6 +8,12 @@ context("Generic Company Product CRUD", () => {
     }]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")

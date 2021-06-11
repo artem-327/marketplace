@@ -5,6 +5,12 @@ context("Form CRUD", () => {
     let filterEdited = [{"operator": "LIKE", "path": "ProductForm.name", "values": ["%Finest%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/product-forms/datagrid").as("formsLoad")

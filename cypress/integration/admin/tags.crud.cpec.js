@@ -4,6 +4,12 @@ context("Tags CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "Tag.name", "values": ["%Liquor%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/tags/datagrid").as("tagsLoad")

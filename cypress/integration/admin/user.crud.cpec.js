@@ -4,6 +4,12 @@ context("Prodex Admin User CRUD", () => {
         {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%TesterFE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")

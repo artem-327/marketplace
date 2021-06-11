@@ -2,6 +2,12 @@ context("Units of measure CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "Unit.name", "values": ["%Test%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/units/datagrid").as("unitLoad")

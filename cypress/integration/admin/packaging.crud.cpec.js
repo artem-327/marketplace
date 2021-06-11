@@ -5,6 +5,12 @@ context("Units of packaging CRUD", () => {
     let filterEdited = [{"operator": "LIKE", "path": "PackagingType.name", "values": ["%Best package%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/packaging-types/datagrid").as("packaging")

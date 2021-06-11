@@ -4,6 +4,12 @@ context("Companies CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "Company.name", "values": ["%Donald%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")
         cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")

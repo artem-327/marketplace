@@ -351,6 +351,18 @@ Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
     })
 })
 
+Cypress.Commands.add("finishTakeover", (token) => {
+    cy.request({
+        method: 'PATCH',
+        url: '/prodex/api/admin/company/take-over/finish',
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
 Cypress.Commands.add("getFirstPurchaseRequestWithFilter", (token, filter) => {
     cy.request({
         method: 'POST',

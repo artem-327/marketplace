@@ -5,6 +5,12 @@ context("Market Segments CRUD", () => {
     let filterEdited = [{"operator": "LIKE", "path": "MarketSegment.name", "values": ["%Great segment%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/market-segments/datagrid").as("segments")

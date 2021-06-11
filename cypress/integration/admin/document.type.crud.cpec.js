@@ -4,6 +4,12 @@ context("Document Types CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "DocumentType.name", "values": ["%TYPE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/document-types/datagrid").as("typesLoad")

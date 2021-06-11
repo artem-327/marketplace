@@ -4,6 +4,12 @@ context("Shipping quotes CRUD", () => {
     let filter = [{"operator": "LIKE", "path": "ShippingQuote.carrierName", "values": ["%POST%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/shipment/manual-quotes/datagrid").as("quotesLoad")

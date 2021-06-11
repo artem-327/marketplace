@@ -5,6 +5,12 @@ context("Manufacturers CRUD", () => {
     let filterRename = [{"operator": "LIKE", "path": "Manufacturer.name", "values": ["%Artio%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/manufacturers/datagrid").as("manufacturersLoad")

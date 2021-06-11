@@ -5,6 +5,12 @@ context("CAS products CRUD", () => {
         {"operator": "LIKE", "path": "CasProduct.casNumber", "values": ["%100-95-521%"]}]
     const adminJSON = require('../../fixtures/admin.json')
 
+    before(function () {
+        cy.getToken().then(token => {
+            cy.finishTakeover(token)
+        })
+    })
+
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
         cy.intercept("POST", "/prodex/api/cas-products/datagrid").as("CASloading")

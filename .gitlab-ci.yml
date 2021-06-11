@@ -21,3 +21,5 @@ test:
 
 after_script:
   - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0
+  - docker rm -f $(docker ps -a -q) || exit 0
+  - docker volume rm $(docker volume ls -q) || exit 0
