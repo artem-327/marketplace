@@ -11,7 +11,7 @@ export const TopMenu = styled(Menu)`
   bottom: 0;
   left: 240px !important;
   border: 0 none !important;
-  z-index: 1 !important;
+  z-index: 603 !important;
   &.ui.menu.fixed .item-cart {
     padding: 20px 14px;
 
@@ -1073,7 +1073,7 @@ export const CopyrightContainer = styled(Container)`
   }
 `
 export const FlexContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 80px;
   right: 0;
   bottom: 0;
