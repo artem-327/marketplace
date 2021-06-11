@@ -36,6 +36,9 @@ export const Listings = props => {
           }
         })
       }
+      if (v && v.seller) {
+        filters.and.push({ operator: 'EQUALS', path: 'ProductOffer.owner.id', values: [v.seller] })
+      }
       return filters
     }
   }

@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -67,6 +67,11 @@ const FlexContainerSmall = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
   padding: 10px 0;
+`
+
+const DropdownStyled = styled(Dropdown)`
+  width: 370px;
+  z-index: 600 !important;
 `
 
 class Listings extends Component {
@@ -229,7 +234,8 @@ class Listings extends Component {
       ],
       //pageNumber: 0,
       filterValues: {
-        SearchByNamesAndTags: null
+        SearchByNamesAndTags: null,
+        seller: 0
       },
       viewOnlyPopupOpen: false,
       buyAttemptHasDea: null,
@@ -238,7 +244,7 @@ class Listings extends Component {
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersListings, advancedFilters, datagrid, applyDatagridFilter } = this.props
+    const { tableHandlersFiltersListings, advancedFilters, datagrid, applyDatagridFilter, searchCompanies } = this.props
 
     if (tableHandlersFiltersListings) {
       this.setState({ filterValues: tableHandlersFiltersListings }, () => {
@@ -258,6 +264,7 @@ class Listings extends Component {
       let datagridFilter = this.toDatagridFilter(advancedFilters)
       applyDatagridFilter(datagridFilter, true)
     }
+    searchCompanies()
   }
 
   componentWillUnmount() {
@@ -300,6 +307,26 @@ class Listings extends Component {
         filterValues: {
           ...this.state.filterValues,
           SearchByNamesAndTags: data
+        }
+      },
+      () => {
+        const filter = {
+          ...this.state.filterValues,
+          ...(!!this.state.filterValues.SearchByNamesAndTags && {
+            ...this.state.filterValues.SearchByNamesAndTags.filters
+          })
+        }
+        this.handleFiltersValue(filter)
+      }
+    )
+  }
+
+  handleSellerChange = (e, { value }) => {
+    this.setState(
+      {
+        filterValues: {
+          ...this.state.filterValues,
+          seller: value
         }
       },
       () => {
@@ -494,14 +521,17 @@ class Listings extends Component {
       tableHandlersFiltersListings,
       activeMarketplaceFilter,
       isOpenPopup,
-      buyEligible
+      buyEligible,
+      searchedCompaniesDropdown,
+      searchedCompaniesLoading
     } = this.props
     const {
       columns,
       openFilterPopup,
       viewOnlyPopupOpen,
       buyAttemptHasDea,
-      buyAttemptHasDhs
+      buyAttemptHasDhs,
+      filterValues
     } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -521,6 +551,17 @@ class Listings extends Component {
                     filterType='marketplace'
                   />
                 </CustomSearchNameTags>
+              </div>
+              <div className='column'>
+                <DropdownStyled
+                  style={{ width: '210px' }}
+                  name='seller'
+                  selection
+                  value={filterValues.seller}
+                  options={searchedCompaniesDropdown}
+                  loading={searchedCompaniesLoading}
+                  onChange={this.handleSellerChange}
+                />
               </div>
               <div className='column'>
                 <Button

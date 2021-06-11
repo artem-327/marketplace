@@ -14,6 +14,8 @@ export const initialState = {
   searchedOrigins: [],
   searchedOriginsLoading: false,
   searchedProductsLoading: false,
+  searchedCompanies: [],
+  searchedCompaniesLoading: false,
   broadcastedProductOffers: [],
   broadcastedProductOffersPageLoaded: -1,
   warehousesList: [],
@@ -303,6 +305,26 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.MARKETPLACE_SEARCH_COMPANIES_PENDING: {
+      return {
+        ...state,
+        searchedCompaniesLoading: true
+      }
+    }
+    case AT.MARKETPLACE_SEARCH_COMPANIES_REJECTED: {
+      return {
+        ...state,
+        searchedCompaniesLoading: false
+      }
+    }
+    case AT.MARKETPLACE_SEARCH_COMPANIES_FULFILLED: {
+      return {
+        ...state,
+        searchedCompaniesLoading: false,
+        searchedCompanies: payload
       }
     }
 

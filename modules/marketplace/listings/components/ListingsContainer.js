@@ -8,7 +8,7 @@ import { getProductOffer, sidebarChanged } from '~/modules/purchase-order/action
 import { openPopup as openInfoPopup, closePopup } from '~/modules/company-product-info/actions'
 import { getSafe } from '~/utils/functions'
 //Selectors
-import { makeGetDatagridRows } from '../../selectors'
+import { makeGetDatagridRows, makeGetSearchedCompaniesDropdown } from '../../selectors'
 import {
   makeGetZipHomeBranch,
   makeGetCountryIdHomeBranch,
@@ -32,6 +32,7 @@ const makeMapStateToProps = () => {
   const getIsCompanyAdmin = makeGetIsCompanyAdmin()
   const getTutorialCompleted = makeGetTutorialCompleted()
   const getBuyEligible = makeGetBuyEligible()
+  const getSearchedCompaniesDropdown = makeGetSearchedCompaniesDropdown()
 
   const mapStateToProps = (store, props) => {
     return {
@@ -47,7 +48,8 @@ const makeMapStateToProps = () => {
       isMerchant: getIsMerchant(store),
       isCompanyAdmin: getIsCompanyAdmin(store),
       tutorialCompleted: getTutorialCompleted(store),
-      buyEligible: getBuyEligible(store)
+      buyEligible: getBuyEligible(store),
+      searchedCompaniesDropdown: getSearchedCompaniesDropdown(store)
     }
   }
   return mapStateToProps

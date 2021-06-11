@@ -46,3 +46,7 @@ export const counterOffer = (id, body) => {
 export const addOfferToCart = id => {
   return api.patch(`/prodex/api/product-offer-bids/id/${id}/to-cart`).then(response => response.data)
 }
+
+export const searchCompanies = () => {
+  return api.get('/prodex/api/companies/search?onlyWithInventory=true').then(response => response.data)
+}

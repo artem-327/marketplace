@@ -1,4 +1,4 @@
-import { FormattedNumber } from 'react-intl'
+import { FormattedNumber, FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
 import { Image } from 'semantic-ui-react'
 //Services
@@ -95,4 +95,45 @@ export const getRows = rows => {
       )
     }
   })
+}
+
+/**
+ * Prepares Sellers dropdown options array for filter in Marketplace.
+ * @method
+ * @param {Array<object>} companies Array of companies returned from GET /api/companies/search.
+ * @returns {Array<object> | []} Returns Sellers dropdown options array for filter in Marketplace.
+ */
+export const getCompaniesDropdown = companies => {
+  const options = companies?.map(c => {
+    const logo = c.avatarUrl || c.logoUrl
+
+    return {
+      text: c.cfDisplayName,
+      value: c.id,
+      key: c.id,
+      content: (
+        <div key={c.id} style={{ display: 'flex' }}>
+          {logo ? (
+            <Image
+              verticalAlign='middle'
+              style={{ width: '20px', margin: 'auto 10px auto 0' }}
+              size='mini'
+              spaced={true}
+              src={logo}
+            />
+            ) : null
+          }
+          <div style={{ margin: 'auto 0' }}>{c.cfDisplayName}</div>
+        </div>
+      )
+    }
+  })
+
+  return [
+    {
+      text: (<FormattedMessage id='marketplace.allSellers' defaultMessage='All Sellers' />),
+      value: 0,
+      key: 0
+    }
+  ].concat(options)
 }
