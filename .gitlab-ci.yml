@@ -5,6 +5,16 @@ build:
   stage: build
   script:
     - docker build -t prodex/web:test -f ./dockerfiles/Dockerfile.review .
+    - docker build -t prodex/web:jest -f ./dockerfiles/Dockerfile.test .
+    - docker create prodex/web:jest
+    - docker cp $(docker ps -alq):/usr/src/app/junit.xml .
+  artifacts:
+    when: always
+    paths:
+      - ./junit.xml
+    reports:
+      junit:
+        - ./junit.xml
 
 .login:
   before_script:
@@ -69,5 +79,6 @@ cleanup:
   stage: .post
   when: always
   script:
-  - docker rmi $(docker images -q prodex/web:test) || exit 0
-  - docker system prune --volumes -f || exit 0
+    - docker rmi $(docker images -q prodex/web:jest) || exit 0
+    - docker rmi $(docker images -q prodex/web:test) || exit 0
+    - docker system prune --volumes -f || exit 0
