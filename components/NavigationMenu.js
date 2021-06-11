@@ -330,7 +330,7 @@ class Navigation extends Component {
       company: null
     })
 
-    const operationsTabs = !isAdmin && !isOperator && isOperator ? orderOperatorTabs : operationsDefaultTabs
+    const operationsTabs = !isAdmin && !isOperator && isOrderOperator ? orderOperatorTabs : operationsDefaultTabs
 
     return (
       <div className='flex-wrapper'>
