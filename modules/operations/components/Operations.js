@@ -238,7 +238,8 @@ class Operations extends Component {
     if (
       !(
         getSafe(() => this.props.auth.identity.isAdmin, false) ||
-        getSafe(() => this.props.auth.identity.isOperator, false)
+        getSafe(() => this.props.auth.identity.isOperator, false) ||
+        (getSafe(() => this.props.auth.identity.isOrderOperator, false) && currentTab === 'orders')
       )
     )
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
