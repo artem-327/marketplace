@@ -88,21 +88,29 @@ const StandardModal = props => {
             </p>
           </DivConent>
           <DivConent>
-            <BasicButton
-              onClick={() => handleClick(state.leftButtonRedirect)}>
-              <b>
-                {state.leftButtonText}
-              </b>
-            </BasicButton>
-            <BasicButton
-              noBorder
-              textcolor='#ffffff !important'
-              background='#00c7f9 !important'
-              onClick={() => handleClick(state.rightButtonRedirect)}>
-              <b>
-                {state.rightButtonText}
-              </b>
-            </BasicButton>
+            { state.leftButtonText ?
+              <BasicButton
+                onClick={() => handleClick(state.leftButtonRedirect)}>
+                <b>
+                  {state.leftButtonText}
+                </b>
+              </BasicButton>
+            :
+              <></>
+            }
+            { state.rightButtonText ?
+              <BasicButton
+                noBorder
+                textcolor='#ffffff !important'
+                background='#00c7f9 !important'
+                onClick={() => handleClick(state.rightButtonRedirect)}>
+                <b>
+                  {state.rightButtonText}
+                </b>
+              </BasicButton>
+            :
+              <></>
+            }
           </DivConent>
       </Modal.Content>
     </ModalCustom>

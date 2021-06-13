@@ -12,7 +12,8 @@ import AppealModal from './AppealModal'
 const ImmediateModal = props => {
   const {
     nextImmediate,
-    getNextImmediate
+    getNextImmediate,
+    sendMessageToSupport
   } = props
   
   const [state, setState] = useState({
@@ -51,19 +52,21 @@ const ImmediateModal = props => {
   return (
     <>
       {state.type === 'standard' && <StandardModal state={state} setState={setState} />}
-      {state.type === 'appeal' && <AppealModal state={state} setState={setState} />}
+      {state.type === 'appeal' && <AppealModal state={state} setState={setState} sendMessageToSupport={sendMessageToSupport} />}
     </>
   )
 }
 
 ImmediateModal.propTypes = {
   nextImmediate: PropTypes.any,
-  getNextImmediate: PropTypes.func
+  getNextImmediate: PropTypes.func,
+  sendMessageToSupport: PropTypes.func
 }
 
 ImmediateModal.defaultProps = {
   nextImmediate: null,
-  getNextImmediate: () => {}
+  getNextImmediate: () => {},
+  sendMessageToSupport: () => {}
 }
 
 export default ImmediateModal
