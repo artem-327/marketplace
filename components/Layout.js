@@ -25,6 +25,7 @@ import NavigationMenu from './NavigationMenu'
 import MiniCart from './MiniCart'
 import HoldIcon from './HoldIcon'
 import NotificationsIcon from './NotificationsIcon'
+import ImmediateModal from '../modules/immediate-notifications'
 
 import CreateMenu from './CreateMenu'
 import { Messages } from '../modules/messages'
@@ -535,6 +536,7 @@ class Layout extends Component {
             />
           )}
         </GlobalSidebars>
+        <ImmediateModal />
       </MainContainer>
     )
   }
