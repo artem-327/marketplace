@@ -1,6 +1,5 @@
 import OrdersContainer from './components/OrdersContainer'
-import { DatagridProvider } from '~/modules/datagrid'
-import Router from 'next/router'
+import { DatagridProvider } from '../datagrid'
 
 const OrdersModule = (props) => (
   <>
