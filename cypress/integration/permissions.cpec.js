@@ -117,7 +117,7 @@ context("Permissions tests",() => {
 
         cy.wait('@loading', {timeout: 30000})
         cy.url().should("include", "operations")
-        cy.get('.group-row').should('be.visible')
+        cy.get('[data-test="table_row_action"]').should('be.visible')
 
         cy.get('[data-test="navigation_menu_operations_drpdn"]').should("be.visible")
         cy.get("[data-test='navigation_menu_companies_drpdn']").should('not.exist')
