@@ -8,6 +8,8 @@ build:
     - docker build -t prodex/web:jest -f ./dockerfiles/Dockerfile.test .
     - docker create prodex/web:jest
     - docker cp $(docker ps -alq):/usr/src/app/junit.xml .
+    - docker cp $(docker ps -alq):/usr/src/app/failedFlag . || exit 0
+    - if [ -f "failedFlag" ]; then exit 1; fi
   artifacts:
     when: always
     paths:

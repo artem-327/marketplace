@@ -10,9 +10,5 @@ RUN npm install
 # Copying source files
 COPY . .
 
-#ENV REACT_APP_API_URL=https://test.echoexchange.net/
-#ENV NODE_ENV=production
-#ENV APP_ENV=review
-
 # Testing app
-RUN npm test
+RUN npm test || touch failedFlag
