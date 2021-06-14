@@ -46,6 +46,19 @@ const ImmediateModal = props => {
         rightButtonText: nextImmediate.info.rightButton.title,
         rightButtonRedirect: nextImmediate.info.rightButton.redirect
       })
+    } else {
+      setState({
+        ...state,
+        type: '',
+        open: false,
+        icon: '',
+        title: '',
+        text: '',
+        leftButtonText: '',
+        leftButtonRedirect: '',
+        rightButtonText: '',
+        rightButtonRedirect: ''
+      })
     }
   }, [nextImmediate])
 
