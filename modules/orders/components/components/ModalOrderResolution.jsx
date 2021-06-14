@@ -1,19 +1,15 @@
-import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
-import { func, bool, string, object, number } from 'prop-types'
+import { func, bool, string, object } from 'prop-types'
 import { FormattedNumber, injectIntl } from 'react-intl'
 import { Check } from 'react-feather'
-
 // Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 import confirm from '../../../../components/Confirmable/confirm'
-
 //Styles
 import { ModalCustom } from '../../../my-network/components/InviteModal/InviteModal.styles'
 import { CustomA, DivText, DivTextContact, SpanModalText } from '../Orders.styles'
 import { DivCircle, DivModal } from '../../../my-network/components/DetailRow/DetailRow.style'
-
 //Constants
 import { currency } from '../../../../constants'
 

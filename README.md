@@ -1,5 +1,4 @@
-# Prodex frontend
-
+# Prodex Frontend
 
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
@@ -37,8 +36,7 @@ Then there are other directories which  are divided into these parts:
 ### Components
 
 #### Nav
-In this directory is Nav bar component, which represents top nav bar of all pages. 
-
+In this directory is Nav bar component, which represents top nav bar of all pages.
 
 ### Images
 This directory contains all images of all pages. Images might be separated into sub-folders such as
@@ -110,11 +108,13 @@ The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
 ### `npm test`
+Launches the test runner<br>
+See the section about [running tests](#tests) for more information.
 
+### `npm run test:watch`
 Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](#running-tests) for more information.
 
-### `npm run build`
+### `npm run build:review`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
@@ -122,8 +122,25 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-See the section about [deployment](#deployment) for more information.
+### `npm run build`
 
-## More Information
+Does the same as `npm run build:review` but includes Google Tag Manager fo usage only on production.
 
-For more information about creat-react-app and all scripts visit **Docs/Readme.md**
+## Tests
+### Unit and component tests
+There are components and modules tests. There should be basic tests for all new components and modules written.
+Tests are launched using `Jest`. Most attribute assertions are done using Enzyme, 
+see [Jest docs](https://jestjs.io/docs/tutorial-react#dom-testing).
+Tests should cover basic expected functionality and properties. See already written tests for inspiration.
+
+You may run tests using `npm tests`. Using `npm run test:watch` you may launch watcher which calls tests when their logic or
+logic of the component is changed
+
+### UI test
+UI tests can be found in separate branch T-30282-Cypress_integration
+
+## Deployment
+Deployment is done via Docker. See Dockerfile in `/dockerfiles`
+You may creat you local image using `docker build -f ./dockerfiles/Dockerfile.test .`
+Mind `Dockerfile.prod` is for production only
+
