@@ -108,3 +108,26 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
     setSubmitting(false)
   }
 }
+
+/**
+ likely able to reuse function above, once the remaining fields (address, twitter handle, etc)
+ in MarketingMaterials have been added to the module
+ */
+export const logoUpload = async (companyId, { setSubmitting }, props, state) => {
+  const { postCompanyLogo, deleteCompanyLogo } = props
+  const { companyLogo, shouldUpdateLogo } = state
+
+  try {
+    if (shouldUpdateLogo) {
+      if (companyLogo) {
+        await postCompanyLogo(companyId, companyLogo)
+      } else {
+        await deleteCompanyLogo(companyId)
+      }
+    }
+  } catch (e) {
+    console.log(e)
+  } finally {
+    setSubmitting(false)
+  }
+}

@@ -43,6 +43,7 @@ import {
 let pictureUploadComponentRef = null
 
 const PictureUpload = props => {
+  console.log('@@@PictureUpload props: ', props)
   const {
     hasPicture,
     bottomCaption,

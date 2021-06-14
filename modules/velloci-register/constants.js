@@ -12,7 +12,7 @@ export const titleForms = [
   'termsAndConditions',
   'businessInfo',
   'controlPerson',
-  'companyFormationDocument',
+  'marketingMaterials',
   'ownerInformation',
   'verifyPersonalInformation',
   'termsAndConditions'

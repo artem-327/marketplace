@@ -2639,6 +2639,7 @@
   "onboarding.business.role": "Business Role (Title)",
   "onboarding.enter.business.role": "Enter business role",
   "onboarding.ssn.placeholder": "xxx-xx-xxxx",
+  "onboarding.add.company.logo": "Add Your Company Logo (.jpg or .png files acceptable)",
   "order.VENDOR": "VENDOR",
   "order.CUSTOMER": "CUSTOMER",
   "order.returnShippingSale": "ORDER RETURN SHIPPING",

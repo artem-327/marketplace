@@ -1,5 +1,5 @@
 //Components
-import CompanyVerification from './steps/CompanyVerification'
+import MarketingMaterials from './steps/MarketingMaterials'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
 import FormationDocument from './steps/FormationDocument'
@@ -23,8 +23,10 @@ export const switchPages = props => {
       return <ControlPerson formikProps={props.formikProps} />
     }
     case 3: {
-      return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
+      // return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
       // return <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
+      return <MarketingMaterials formikProps={props.formikProps} {...props} />
+
     }
     case 4: {
       return <OwnerInformation formikProps={props.formikProps} countBeneficialOwners={props.countBeneficialOwners} />

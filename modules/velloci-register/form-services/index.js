@@ -85,11 +85,11 @@ export const getValidationSchema = () =>
             .required(errorMessages.requiredMessage),
         })
       }),
-      companyFormationDocument: Yup.lazy(() => {
-        return Yup.object().shape({
-          attachments: Yup.array().min(1, errorMessages.minOneAttachment)
-        })
-      }),
+      // marketingMaterials: Yup.lazy(() => {
+      //   return Yup.object().shape({
+      //     picture: Yup.object().required(errorMessages.requiredMessage)
+      //   })
+      // }),
       ownerInformation: Yup.lazy(() => {
         return Yup.object().shape({
           isBeneficialOwner: Yup.boolean(),
@@ -245,6 +245,7 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
       if (errors[titleForms[activeStep]] || activeStep === FINAL_STEP) {
         formikProps.handleSubmit()
       } else if ((_.isEmpty(errors) && activeStep !== FINAL_STEP) || (!errors[titleForms[activeStep]] && activeStep !== FINAL_STEP)) {
+        console.log('Scroll to top!', 'mainContainer', mainContainer)
         nextStep(activeStep + 1)
         mainContainer.current.scroll({ top: 0, left: 0, behavior: 'smooth' })
         formikProps.setErrors({})

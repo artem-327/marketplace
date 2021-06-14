@@ -78,6 +78,7 @@ class UploadAttachment extends Component {
   }
 
   componentDidMount() {
+    console.log('@@@UploadAttachment props: ', this.props)
     const { listDocumentTypes, getDocumentTypes } = this.props
     if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     this.setState({
