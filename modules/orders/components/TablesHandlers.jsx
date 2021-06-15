@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import { Formik } from 'formik'
 import PropTypes from 'prop-types'
+import { debounce } from 'lodash'
 // Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { DateInput } from '../../../components/custom-formik'
@@ -148,7 +149,7 @@ const TablesHandlers = props => {
     datagrid.setSearch(filterValue, true, 'pageFilters')
   }
 
-  const handleFilterChange = (e, data) => {
+  const handleFilterChange = debounce((e, data) => {
     const { currentTab } = props
     if (currentTab === '') return
 
@@ -166,7 +167,7 @@ const TablesHandlers = props => {
       [data.name]: data.value
     }
     handleFiltersValue(filter)
-  }
+  }, 500)
 
   const renderHandler = () => {
     const {
