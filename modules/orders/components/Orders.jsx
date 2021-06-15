@@ -132,7 +132,7 @@ const Orders = props => {
 
       {<Tutorial marginOrders isTutorial={false} isBusinessVerification={true} />}
       <Container fluid style={{ padding: '20px 30px 10px 30px' }}>
-        <TablesHandlers currentTab={currentTab} tableHandlersFilters={tableHandlersFilters} saveFilters={saveFilters} />
+        <TablesHandlers currentTab={currentTab} tableHandlersFilters={tableHandlersFilters} saveFilters={saveFilters} datagrid={datagrid}/>
       </Container>
       <Container fluid style={{ padding: '10px 30px' }} className='flex stretched'>
         {isFetching ? (

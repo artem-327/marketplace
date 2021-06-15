@@ -11,10 +11,11 @@ import { DateInput } from '../../../components/custom-formik'
 // Services
 import { getStringISODate } from '../../../components/date-format'
 import { getSafe } from '../../../utils/functions'
-import { withDatagrid } from '../../datagrid'
 import { validationSchema } from './Orders.service'
 // Constants
 import { filters } from '../constants'
+//Hooks
+import { usePrevious } from '../../../hooks'
 // Styles
 import {
   PositionHeaderSettings,
@@ -37,6 +38,7 @@ const TablesHandlers = props => {
     }
   })
 
+  const prevCurrentTab = usePrevious(props.currentTab)
   let formikProps = {}
 
   useEffect(() => {
@@ -71,30 +73,32 @@ const TablesHandlers = props => {
   }, [])
 
   useEffect(() => {
-    const { currentTab } = props
-    if (currentTab === '') return
+    if (typeof prevCurrentTab !== 'undefined') {
+      const { currentTab } = props
+      if (currentTab === '') return
 
-    let filterValue = state[currentTab]
-    const status = localStorage[`orders-status-filter-${currentTab}`]
-    filterValue = {
-      ...filterValue,
-      status: status ? status : filterValue.status
+      let filterValue = state[currentTab]
+      const status = localStorage[`orders-status-filter-${currentTab}`]
+      filterValue = {
+        ...filterValue,
+        status: status ? status : filterValue.status
+      }
+      
+      if(Object.keys(formikProps).length > 0) {
+        const { setValues, setFieldTouched } = formikProps
+        setValues({
+          dateFrom: filterValue.dateFrom,
+          dateTo: filterValue.dateTo,
+          orderId: filterValue.orderId
+        })
+        setFieldTouched('dateFrom', true, true)
+
+        setState({ ...state, [currentTab]: filterValue })
+      }    
+
+      props.datagrid.clear()
+      handleFiltersValue(filterValue)
     }
-    
-    if(Object.keys(formikProps).length > 0) {
-      const { setValues, setFieldTouched } = formikProps
-      setValues({
-        dateFrom: filterValue.dateFrom,
-        dateTo: filterValue.dateTo,
-        orderId: filterValue.orderId
-      })
-      setFieldTouched('dateFrom', true, true)
-
-      setState({ ...state, [currentTab]: filterValue })
-    }    
-
-    props.datagrid.clear()
-    handleFiltersValue(filterValue)
   }, [props.currentTab])
 
   const initFilterValues = initTableHandlersFilters => {
@@ -276,4 +280,4 @@ TablesHandlers.defaultValues = {
   intl: {}
 }
 
-export default withDatagrid(injectIntl(TablesHandlers))
+export default injectIntl(TablesHandlers)
