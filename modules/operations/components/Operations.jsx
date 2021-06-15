@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import TablesHandlers from './TablesHandlersContainer'
-import { Container, Grid, GridColumn } from 'semantic-ui-react'
+import { Container, Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
 
 import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTableContainer'
 import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopupContainer'
@@ -17,10 +16,8 @@ import CompanyGenericProductsTable from './company-generic-products/CompanyGener
 
 import { getSafe } from '../../../utils/functions'
 import { DatagridProvider } from '../../datagrid'
-
-const CustomGridColumn = styled(GridColumn)`
-  padding: 0 30px !important;
-`
+// Styles
+import { CustomGridColumn } from '../styles'
 
 const Operations = props => {
   useEffect(() => {

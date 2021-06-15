@@ -7,27 +7,8 @@ import { getLocaleDateFormat } from '../../../../components/date-format'
 import moment from 'moment/moment'
 import styled from 'styled-components'
 import { Icon, Modal, Button } from 'semantic-ui-react'
-
-
-const StyledModal = styled(Modal)`
-  > .header {
-    padding: 21px 30px !important;
-    font-size: 14px !important;
-  }
-
-  > .content {
-    padding: 30px !important;
-  }
-
-  > .actions {
-    background-color: #ffffff !important;
-    padding: 10px 5px !important;
-    button {
-      margin: 0 5px;
-      height: 40px;
-    }
-  }
-`
+// Styles
+import { StyledModal } from '../../styles'
 
 
 const CompanyGenericProductsTable = props => {

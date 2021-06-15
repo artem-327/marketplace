@@ -7,7 +7,7 @@ import ProdexTable from '../../../../components/table'
 import { Popup } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { ChevronUp, ChevronDown, Check } from 'react-feather'
-import { UserImage, UserName, UserCompany, StyledNotification, CheckIcon } from './styles'
+import { UserImage, UserName, UserCompany, StyledNotification, CheckIcon } from '../../styles'
 import RowDetail from './RowDetail'
 
 const ShippingQuoteRequestsTable = props => {

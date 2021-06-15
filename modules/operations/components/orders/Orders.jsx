@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { injectIntl, FormattedMessage, FormattedDate, FormattedNumber } from 'react-intl'
-import { Modal, Container, Icon, Button, Dropdown } from 'semantic-ui-react'
-import styled from 'styled-components'
+import { Modal, Container, Icon, Button } from 'semantic-ui-react'
 import Spinner from '../../../../components/Spinner/Spinner'
 import ProdexGrid from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
@@ -13,37 +12,8 @@ import { withToastManager } from 'react-toast-notifications'
 import { ChevronDown, ChevronRight } from 'react-feather'
 //Hooks
 import { usePrevious } from '../../../../hooks'
-
-const StyledModal = styled(Modal)`
-  > .header {
-    padding: 21px 30px !important;
-    font-size: 14px !important;
-  }
-
-  > .content {
-    padding: 30px !important;
-    //margin: 30px 0;
-  }
-
-  > .actions {
-    background-color: #ffffff !important;
-    padding: 10px 5px !important;
-    button {
-      margin: 0 5px;
-      height: 40px;
-    }
-  }
-`
-
-const CustomDivAddDocument = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`
-
-const RelatedDocumentsDropdown = styled(Dropdown)`
-  z-index: 601 !important;
-`
+// Styles
+import { StyledModal, CustomDivAddDocument, RelatedDocumentsDropdown } from '../../styles'
 
 const Orders = props => {
   const columns = [

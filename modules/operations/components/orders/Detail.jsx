@@ -3,344 +3,38 @@ import '../../../../components/AddInventory.scss'
 import Spinner from '../../../../components/Spinner/Spinner'
 import Link from 'next/link'
 import { Grid, Segment, Accordion, Table, List, Button, Icon, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
-import { ChevronDown, DownloadCloud, ArrowLeft } from 'react-feather'
+import { DownloadCloud, ArrowLeft } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
 import moment from 'moment/moment'
 import { FormattedPhone } from '../../../../components/formatted-messages/'
 import { withToastManager } from 'react-toast-notifications'
-import { getSafe, generateToastMarkup, uniqueArrayByKey } from '../../../../utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import { injectIntl, FormattedNumber } from 'react-intl'
 import { currency } from '../../../../constants/index'
 import ProdexGrid from '../../../../components/table'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import TransactionInfo from '../../../orders/components/components/TransactionInfo'
 import { Info } from 'react-feather'
-//Components
+// Components
 import ModalResolveDispute from './ModalResolveDispute'
 import BasicButton from '../../../../components/buttons/BasicButton'
+// Styles
+import {
+  OrderSegment,
+  OrderList,
+  OrderAccordion,
+  AccordionTitle,
+  Chevron,
+  GridData,
+  GridDataColumn,
+  StyledTable,
+  TableRowData,
+  GridDataColumnTrackingID,
+  StyledModal,
+  TopRow,
+  StyledHeader
+} from '../../styles'
 
-export const OrderSegment = styled(Segment)`
-  width: calc(100% - 64px);
-  margin-left: 32px !important;
-  margin-bottom: 30px !important;
-
-  > .grid {
-    padding: 0;
-
-    > .row {
-      padding-top: 0 !important;
-      padding-bottom: 0 !important;
-    }
-
-    > .column,
-    > .row > .column {
-      padding: 20px !important;
-    }
-  }
-
-  h1.header {
-    height: 17px;
-    margin: 0 0 10px;
-    padding: 0;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    color: #20273a;
-    line-height: 1.2142857;
-
-    ~ a {
-      display: inline-block;
-      height: 32px;
-      border: 1px solid #2599d5;
-      border-radius: 3px;
-      padding: 5px 14px;
-      background-color: #ddf1fc;
-      font-size: 13px !important;
-      font-weight: 500;
-      color: #2599d5;
-      line-height: 1.5384615;
-
-      svg {
-        width: 18px;
-        height: 20px;
-        margin-right: 10px;
-        vertical-align: top;
-        color: inherit;
-      }
-    }
-  }
-`
-
-export const OrderList = styled(List)`
-  &.horizontal.divided:not(.celled) {
-    display: flex !important;
-    flex-flow: row;
-    justify-content: flex-end;
-
-    > .item:nth-child(n) {
-      // nth-child to have stronger path
-      flex-grow: 1;
-      max-width: 150px;
-      border-left: 1px solid rgba(34, 36, 38, 0.15) !important;
-      padding: 13px 15px !important;
-
-      .header {
-        margin: 0;
-        padding: 0 0 3px;
-        font-size: 12px;
-        font-weight: 400;
-        color: #848893;
-        line-height: 1.1666667;
-      }
-
-      .description {
-        font-size: 14px;
-        font-weight: 700;
-        color: #20273a;
-        line-height: 1.2142857;
-
-        &.green {
-          color: #84c225;
-        }
-
-        &.red {
-          color: #f16844;
-        }
-      }
-    }
-  }
-`
-
-const OrderAccordion = styled(Accordion)`
-  box-shadow: 0 0 0 0 transparent !important;
-  background: transparent !important;
-
-  > .title {
-    border: solid 1px #dee2e6 !important;
-    border-radius: 4px;
-    background-color: #f8f9fb !important;
-
-    &.active {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-
-  > .content {
-    border: 1px solid #dee2e6;
-    border-top: 0 none !important;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    padding: 15px 1em !important;
-    background-color: #ffffff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-
-    + .title {
-      margin-top: 10px !important;
-    }
-
-    .table-responsive {
-      .ui.table {
-        width: calc(100% - 32px);
-        margin: 16px;
-        border: 0 none;
-
-        th.p-0,
-        td.p-0 {
-          width: 0 !important;
-          padding: 0 !important;
-        }
-
-        span.product-name {
-          font-weight: 500;
-        }
-      }
-    }
-  }
-`
-
-const AccordionTitle = styled(Accordion.Title)`
-  padding-left: 9px !important;
-  text-transform: uppercase;
-  font-size: 1rem !important;
-  color: #20273a !important;
-  line-height: 1.9285714;
-
-  svg {
-    transform: rotate(-90deg);
-    color: #2599d5 !important;
-  }
-
-  &.active {
-    color: #20273a !important;
-
-    svg {
-      transform: rotate(0deg);
-      color: #2599d5 !important;
-    }
-  }
-`
-
-const Chevron = styled(ChevronDown)`
-  width: 20px;
-  height: 20px;
-  margin: 3px 6px 4px;
-  vertical-align: top;
-  font-size: 20px;
-  color: #2599d5 !important;
-`
-
-const GridData = styled(Grid)`
-  padding-top: 1em !important;
-  padding-bottom: 1em !important;
-
-  > .column:not(.row),
-  > .row > .column,
-  &.column > .column:not(.row),
-  &.column > .row > .column {
-    &[class*='key'] {
-      width: 181px !important;
-
-      + * {
-        width: calc(100% - 211px) !important;
-      }
-    }
-  }
-`
-
-const GridDataColumn = styled(Grid.Column)`
-  padding-top: 10px !important;
-  padding-bottom: 10px !important;
-  font-size: 14px !important;
-  line-height: 1.4285714 !important;
-
-  &.key {
-    padding-left: 30px !important;
-    padding-right: 0 !important;
-    font-size: 14px;
-    font-weight: 400;
-    color: #848893;
-    line-height: 2.86;
-  }
-`
-
-const StyledTable = styled(Table)`
-  width: 100% !important;
-  margin: -10px 0 !important;
-  padding: 0 !important;
-
-  thead,
-  tbody,
-  tfoot {
-    tr {
-      th,
-      td {
-        border: 0 none !important;
-        padding: 10px 0 10px 30px !important;
-        font-size: 14px !important;
-        font-weight: 400 !important;
-        color: #848893 !important;
-        line-height: 1.4285714 !important;
-
-        &:first-child {
-          padding-left: 16px !important;
-        }
-
-        &:last-child {
-          padding-right: 16px !important;
-          color: #20273a !important;
-        }
-      }
-    }
-  }
-`
-
-const TableRowData = styled(Table.Row)`
-  padding-top: 0.75em !important;
-  padding-bottom: 0.75em !important;
-  font-size: 1.14285714rem;
-  line-height: 1.125;
-
-  strong {
-    padding-left: 0;
-    padding-right: 0;
-  }
-`
-
-const GridDataColumnTrackingID = styled(GridDataColumn)`
-  display: flex !important;
-`
-
-const StyledModal = styled(Modal)`
-  > .header {
-    padding: 21px 30px !important;
-    font-size: 14px !important;
-  }
-
-  > .content {
-    padding: 30px !important;
-  }
-
-  > .actions {
-    background-color: #ffffff !important;
-    padding: 10px 5px !important;
-    button {
-      margin: 0 5px;
-      height: 40px;
-    }
-  }
-`
-
-const TopRow = styled.div`
-  margin: 0 32px;
-  padding: 20px 0 50px 0;
-  vertical-align: middle;
-  display: block;
-
-  > a {
-    float: left;
-    border-radius: 3px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-    border: solid 1px #dee2e6;
-    background-color: #ffffff;
-    color: #848893;
-    font-size: 14px !important;
-    font-weight: 500;
-    line-height: 1.43;
-    padding: 9px 17px 11px 17px;
-
-    > svg {
-      width: 18px;
-      height: 20px;
-      color: #848893;
-      margin-right: 9px;
-      vertical-align: middle;
-    }
-  }
-
-  > div.field {
-    float: right;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
-    border: solid 1px #dee2e6;
-    background-color: #ffffff;
-
-    > div {
-      padding: 12px 18px;
-    }
-
-    > div:first-child {
-      color: #848893;
-    }
-  }
-`
-
-const StyledHeader = styled.span`
-  color: #2599d5;
-`
 
 const Detail = props => {
   const columnsRelatedOrdersDetailDocuments = [

@@ -5,65 +5,20 @@ import { DateInput } from '../../../components/custom-formik'
 import moment from 'moment'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { errorMessages, dateValidation, dateBefore } from '../../../constants/yupValidation'
+import { errorMessages, dateValidation } from '../../../constants/yupValidation'
 import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
 import { debounce } from 'lodash'
-import styled from 'styled-components'
 import { OrdersFilters } from '../constants'
 
-import { withDatagrid, Datagrid } from '../../datagrid'
+import { withDatagrid } from '../../datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
 import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 //Hooks
 import { usePrevious } from '../../../hooks'
-
-
-const PositionHeaderSettings = styled.div`
-  position: relative;
-  z-index: 602;
-`
-
-const CustomRowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 15px 25px;
-  flex-wrap: wrap;
-
-  > div {
-    align-items: top;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .column {
-    margin: 5px 5px;
-  }
-
-  input,
-  .ui.dropdown {
-    height: 40px;
-  }
-  
-  .ui.button.primary {
-    background: rgb(37, 153, 213);
-    
-    svg {
-      width: 18px;
-      height: 20px;
-      margin-right: 10px;
-      vertical-align: top;
-      color: inherit;
-    }
-  }
-`
-
-const DivColumn = styled.div`
-  margin-right: 9px !important;
-`
+// Styles
+import { PositionHeaderSettings, CustomRowDiv, DivColumn } from '../styles'
 
 const textsTable = {
   'shipping-quotes': {

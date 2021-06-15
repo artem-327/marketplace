@@ -1,4 +1,3 @@
-import { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { getSafe } from '../../../../utils/functions'
 import {
@@ -9,7 +8,7 @@ import {
   AddressRow,
   AddressGrid,
   SpanIdValue
-} from './styles'
+} from '../../styles'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 
 const RowDetail = props => {

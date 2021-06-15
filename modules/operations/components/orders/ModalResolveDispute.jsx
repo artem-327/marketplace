@@ -6,7 +6,7 @@ import { func, bool, string, number, array } from 'prop-types'
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
 import { ModalCustom } from '../../../my-network/components/InviteModal/InviteModal.styles'
-import { FormFieldCustom, DivMarginBottom } from './Orders.styles'
+import { FormFieldCustom, DivMarginBottom } from '../../styles'
 //Constants
 import { REJECT_ORDER, CREDIT_ORDER, ACCEPT_ORDER } from './Orders.constants'
 
