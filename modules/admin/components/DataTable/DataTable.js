@@ -4,7 +4,13 @@ import { injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
+import {getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation, postNewRequest} from '../../actions'
+import {
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
+} from '../../../global-data/actions'
 import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
@@ -35,6 +41,7 @@ class DataTable extends Component {
           ).then(async () => {
             try {
               await deleteConfirmation(row.id, config)
+              if (config.globalReload) this.props[config.globalReload]()
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
@@ -86,7 +93,11 @@ const mapDispatchToProps = {
   getDataRequest,
   openEditPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteConfirmation,
+  getProductForms,
+  getProductConditions,
+  getProductGrades,
+  getPackagingTypes
 }
 
 const mapStateToProps = (state, { datagrid, currentTab }) => {

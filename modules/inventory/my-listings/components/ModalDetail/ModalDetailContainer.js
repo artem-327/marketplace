@@ -9,12 +9,8 @@ import {
   getAutocompleteData,
   getWarehouses,
   addProductOffer,
-  getProductGrades,
   searchOrigins,
-  getProductForms,
-  getProductConditions,
   searchManufacturers,
-  getDocumentTypes,
   addAttachment,
   loadFile,
   removeAttachment,
@@ -27,6 +23,13 @@ import {
   deleteTdsTemplate,
   changeBroadcast
 } from '../../../actions'
+import {
+  getProductGrades,
+  getProductForms,
+  getProductConditions,
+  getDocumentTypes,
+} from '../../../../global-data/actions'
+
 import { openBroadcast } from '../../../../broadcast/actions'
 
 //Services
@@ -64,9 +67,6 @@ const mapStateToProps = (
     simpleAdd: {
       autocompleteData,
       autocompleteDataLoading,
-      listConditions,
-      listForms,
-      listGrades,
       loading,
       modalActiveTab,
       isModalDetailOpen,
@@ -84,15 +84,20 @@ const mapStateToProps = (
       broadcastOption
     },
     broadcast,
-    settings: { documentTypes }
+    globalData: {
+      productFormsDropdown,
+      productGradesDropdown,
+      productConditionsDropdown,
+      documentTypesDropdown,
+
+    }
   },
   { inventoryGrid }
 ) => ({
   autocompleteData,
   autocompleteDataLoading,
-  listConditions,
-  listForms,
-  listGrades,
+  productFormsDropdown,
+  productGradesDropdown,
   loading,
   modalActiveTab,
   isModalDetailOpen,
@@ -112,7 +117,7 @@ const mapStateToProps = (
   tdsTemplatesLoading,
   tdsTemplates,
   broadcastOption,
-  listDocumentTypes: documentTypes
+  documentTypesDropdown: documentTypesDropdown
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalDetail)

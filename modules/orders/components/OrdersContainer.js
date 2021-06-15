@@ -5,6 +5,7 @@ import { withRouter } from 'next/router'
 import Orders from './Orders'
 // Actions
 import * as Actions from '../actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { applyFilter } from '../../filter/actions'
 import { downloadAttachment, downloadAttachmentPdf } from '../../inventory/actions'
 // Services
@@ -59,7 +60,14 @@ const makeMapStateToProps = () => {
 
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ ...Actions, downloadAttachment, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
+  return bindActionCreators({
+    ...Actions,
+    downloadAttachment,
+    downloadAttachmentPdf,
+    dispatch,
+    applyFilter,
+    getDocumentTypes
+  }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(makeMapStateToProps, mapDispatchToProps)(Orders)))

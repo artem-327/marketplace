@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeEditPopup, putEditedDataRequest } from '../actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
@@ -17,7 +18,7 @@ const formValidation = Yup.object().shape({
 
 class EditPopup1Parameter extends Component {
   render() {
-    const { closeEditPopup, popupValues, putEditedDataRequest } = this.props
+    const { closeEditPopup, popupValues, putEditedDataRequest, getDocumentTypes } = this.props
 
     const { id, editable = true } = popupValues
 
@@ -45,6 +46,7 @@ class EditPopup1Parameter extends Component {
 
               try {
                 await putEditedDataRequest(id, data)
+                getDocumentTypes()
               } catch (e) {
                 console.error(e)
               } finally {
@@ -88,7 +90,8 @@ class EditPopup1Parameter extends Component {
 
 const mapDispatchToProps = {
   closeEditPopup,
-  putEditedDataRequest
+  putEditedDataRequest,
+  getDocumentTypes
 }
 
 const mapStateToProps = state => {

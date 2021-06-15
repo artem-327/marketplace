@@ -7,6 +7,7 @@ import moment from 'moment/moment'
 import Orders from './Orders'
 import * as OrdersHelper from '~/components/helpers/Orders'
 import * as Actions from '../../actions'
+import { getDocumentTypes } from '../../../global-data/actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
 import { ArrayToMultiple } from '~/components/formatted-messages'
@@ -33,7 +34,7 @@ const filterAttachments = (a, type) => {
 }
 
 function mapStateToProps(state, { router, datagrid }) {
-  const { operations } = state
+  const { operations, globalData } = state
 
   return {
     ...operations,
@@ -95,14 +96,21 @@ function mapStateToProps(state, { router, datagrid }) {
           : []
       }
     }),
-    activeStatus: operations.ordersStatusFilter
-    //! !listDocumentTypes: operations.listDocumentTypes,
-    //! !documentTypesFetching: operations.documentTypesFetching
+    activeStatus: operations.ordersStatusFilter,
+    listDocumentTypes: globalData.documentTypesDropdown,
+    documentTypesFetching: globalData.documentTypesLoading
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ ...Actions, downloadAttachment, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
+  return bindActionCreators({
+    ...Actions,
+    downloadAttachment,
+    downloadAttachmentPdf,
+    dispatch,
+    applyFilter,
+    getDocumentTypes
+  }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(mapStateToProps, mapDispatchToProps)(Orders)))

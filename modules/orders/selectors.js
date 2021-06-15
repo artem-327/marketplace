@@ -16,7 +16,7 @@ const getOpenedSaleReviewCreditRequest = state => state?.orders?.openedSaleRevie
 const getOpenedPurchaseOrderShipping = state => state?.orders?.openedPurchaseOrderShipping
 const getAction = state => getSafe(() => state.orders.detail.orderStatus.toString(), 0) + getSafe(() => state.orders.detail.shippingStatus.toString(), 0)
 const getopendSaleAttachingProductOffer = state => state?.orders?.opendSaleAttachingProductOffer
-const getListDocumentTypes = state => state?.orders?.listDocumentTypes
+const getListDocumentTypes = state => state?.globalData?.documentTypesDropdown
 const getLoadingRelatedDocuments = state => state?.orders?.loadingRelatedDocuments
 const getIsAdmin = state => getSafe(() => state.auth.identity.isAdmin, false)
 const getIsCompanyAdmin = state => getSafe(() => state.auth.identity.isCompanyAdmin, false)
@@ -28,7 +28,7 @@ const getAppInfo = state => state?.auth?.identity?.appInfo
 const getIsOpen = state => state?.isOpen
 const getFilterData = state => state?.forms?.filter
 const getActiveStatus = state => state?.orders?.statusFilter
-const getDocumentTypesFetching = state => state?.orders?.documentTypesFetching
+const getDocumentTypesFetching = state => state?.globalData?.documentTypesLoading
 const getTutorialCompleted = state => getSafe(() => state.auth.identity.tutorialCompleted, false)
 const getRelatedOrders = state => state?.orders?.relatedOrders
 const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders

@@ -53,7 +53,6 @@ import {
   clearGroupedProductOffer,
   linkAttachmentToOrderItem,
   removeLinkAttachmentToOrderItem,
-  getDocumentTypes,
   unlinkAttachmentToOrder,
   linkAttachmentToOrder,
   clearOrderDetail,
@@ -101,8 +100,6 @@ const initialState = {
   groupedProductOffers: [],
   loadingGroupedProductOffers: false,
   order: [],
-  documentTypesFetching: false,
-  listDocumentTypes: [],
   loadingRelatedDocuments: false,
   tableHandlersFilters: null,
   isThirdPartyConnectionException: false,
@@ -985,31 +982,6 @@ export default typeToReducer(
         ...state,
         loadingGroupedProductOffer: false,
         loadingRelatedDocuments: false
-      }
-    },
-    [getDocumentTypes.pending]: (state, action) => {
-      return {
-        ...state,
-        documentTypesFetching: true
-      }
-    },
-    [getDocumentTypes.rejected]: (state, action) => {
-      return {
-        ...state,
-        documentTypesFetching: false
-      }
-    },
-    [getDocumentTypes.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        documentTypesFetching: false,
-        listDocumentTypes: action.payload.data.map(docType => {
-          return {
-            key: docType.id,
-            text: docType.name,
-            value: docType.id
-          }
-        })
       }
     },
     [unlinkAttachmentToOrder.pending]: (state, action) => {

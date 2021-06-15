@@ -9,6 +9,7 @@ import TreeModel from 'tree-model'
 import { withToastManager } from 'react-toast-notifications'
 
 import * as Actions from '../actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { saveRules, initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
@@ -240,6 +241,7 @@ class TablesHandlers extends Component {
   componentDidMount = async () => {
     const {
       documentTypes,
+      documentTypesLoading,
       getDocumentTypes,
       initGlobalBroadcast,
       getDwollaBeneficiaryOwners,
@@ -261,7 +263,7 @@ class TablesHandlers extends Component {
     } catch (err) {
       console.error(err)
     }
-    if (currentTab === 'documents' && (!documentTypes || documentTypes.length === 0)) {
+    if (currentTab === 'documents' && documentTypes.length === 0 && !documentTypesLoading) {
       try {
         await getDocumentTypes()
       } catch (err) {
@@ -719,7 +721,8 @@ const mapStateToProps = state => {
     paymentProcessor: getSafe(() => company.paymentProcessor, 'DWOLLA'),
     logisticsFilter: state.settings.logisticsFilter,
     'bank-accountsFilter': state.settings['bank-accountsFilter'],
-    documentTypes: state.settings.documentTypes,
+    documentTypes: state.globalData.documentTypes,
+    documentTypesLoading: state.globalData.documentTypesLoading,
     bankAccounts: bankAccountsConfig[accountStatus],
     tableHandlersFilters: state.settings.tableHandlersFiltersSettings,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
@@ -741,5 +744,9 @@ const mapStateToProps = state => {
 }
 
 export default withDatagrid(
-  withToastManager(connect(mapStateToProps, { ...Actions, saveRules, initGlobalBroadcast })(injectIntl(TablesHandlers)))
+  withToastManager(connect(
+    mapStateToProps,
+    {
+      ...Actions, saveRules, initGlobalBroadcast, getDocumentTypes
+    })(injectIntl(TablesHandlers)))
 )

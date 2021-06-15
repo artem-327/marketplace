@@ -69,7 +69,6 @@ export default {
     return data
   },
   searchTags: filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data),
-  getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   searchMarketSegments: filter =>
     api.post(`/prodex/api/market-segments/datagrid`, filter).then(response => response.data),
   getCompanyGenericProduct: id => api.get(`/prodex/api/company-generic-products/id/${id}`),

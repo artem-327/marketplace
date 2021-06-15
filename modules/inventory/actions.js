@@ -9,6 +9,13 @@ import { openBroadcast } from '../broadcast/actions'
 // import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
 import { Datagrid } from '~/modules/datagrid'
 
+import {
+  getDocumentTypes,
+  getProductConditions,
+  getProductForms,
+  getProductGrades
+} from '../global-data/actions.js'
+
 export function initProductOfferEdit(id) {
   return async dispatch => {
     dispatch(getDocumentTypes())
@@ -261,34 +268,6 @@ export function findProducts(search) {
   return {
     type: AT.INVENTORY_FIND_PRODUCTS,
     payload: api.findProducts(search)
-  }
-}
-
-export function getDocumentTypes() {
-  return {
-    type: AT.INVENTORY_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
-  }
-}
-
-export function getProductConditions() {
-  return {
-    type: AT.INVENTORY_GET_PRODUCT_CONDITIONS,
-    payload: api.getProductConditions()
-  }
-}
-
-export function getProductForms() {
-  return {
-    type: AT.INVENTORY_GET_PRODUCT_FORMS,
-    payload: api.getProductForms()
-  }
-}
-
-export function getProductGrades() {
-  return {
-    type: AT.INVENTORY_GET_PRODUCT_GRADES,
-    payload: api.getProductGrades()
   }
 }
 

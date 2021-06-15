@@ -60,7 +60,7 @@ const CompanyDetails = props => {
     businessTypes,
     associations,
     naicsCodes,
-    documentTypesAll,
+    documentTypes,
     documentTypesFederalOwnershipCertifications,
     documentTypesManagementCertifications,
     documentTypesLoading,
@@ -385,7 +385,7 @@ const CompanyDetails = props => {
         </DimmerStyled>
         {[18, 19, 20, 21].map((docId, index) => {
           let uploadedFiles = companyLegalDocs.filter(el => el.documentType && el.documentType.id === docId)
-          const docType = documentTypesAll.find(el => el.id === docId)
+          const docType = documentTypes.find(el => el.id === docId)
           uploadedFiles = uploadedFiles.length ? uploadedFiles : [undefined]
           return uploadedFiles.map((uploadedFile, fileIndex) => {
             return (
@@ -526,13 +526,13 @@ function mapStateToProps(state) {
     loading: getSafe(() => state.businessTypes.loading, false),
     deleting: getSafe(() => state.simpleAdd.updatingDatagrid, false),
     associations: getSafe(() => state.businessTypes.associations, []),
-    documentTypesAll: getSafe(() => state.simpleAdd.documentTypesAll, []),
-    documentTypesLoading: getSafe(() => state.simpleAdd.documentTypesFetching, false),
+    documentTypes: getSafe(() => state.globalData.documentTypes, []),
+    documentTypesLoading: getSafe(() => state.globalData.documentTypesLoading, false),
     documentTypesFederalOwnershipCertifications: getSafe(
-      () => state.simpleAdd.documentTypesFederalOwnershipCertifications,
+      () => state.globalData.documentTypesFederalOwnershipCertifications,
       []
     ),
-    documentTypesManagementCertifications: getSafe(() => state.simpleAdd.documentTypesManagementCertifications, []),
+    documentTypesManagementCertifications: getSafe(() => state.globalData.documentTypesManagementCertifications, []),
     companyLegalDocs: getSafe(() => state.businessTypes.companyLegalDocs, []),
     companyLegalDocsLoading: getSafe(() => state.businessTypes.companyLegalDocsLoading, false),
     managementCertificationsDocs: getSafe(() => state.businessTypes.managementCertificationsDocs, []),

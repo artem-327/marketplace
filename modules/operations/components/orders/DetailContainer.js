@@ -253,7 +253,7 @@ function prepareDetail(data, type = 'sales') {
 }
 
 function mapStateToProps(state, ownProps) {
-  const { operations } = state
+  const { operations, globalData } = state
   const { orderDetailData } = operations
 
   return {
@@ -265,7 +265,7 @@ function mapStateToProps(state, ownProps) {
     isPaymentCancellable: getSafe(() => orderDetailData.isPaymentCancellable, false),
     action: actionRequired(orderDetailData),
     //! !opendSaleAttachingProductOffer: orders.opendSaleAttachingProductOffer,
-    listDocumentTypes: operations.listDocumentTypes,
+    listDocumentTypes: globalData.documentTypesDropdown,
     isOpenPopup: operations?.isOpenPopup,
     loading: operations?.loading
   }

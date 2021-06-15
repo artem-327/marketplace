@@ -1222,10 +1222,10 @@ class AddInventoryForm extends Component {
 
   render() {
     const {
-      listDocumentTypes,
-      listConditions,
-      listForms,
-      listGrades,
+      documentTypesDropdown,
+      productConditionsDropdown,
+      productFormsDropdown,
+      productGradesDropdown,
       searchOrigins,
       searchedOrigins,
       searchedOriginsLoading,
@@ -2116,7 +2116,7 @@ class AddInventoryForm extends Component {
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.form', defaultMessage: 'Form' })}
                                         name='productForm'
-                                        options={listForms}
+                                        options={productFormsDropdown}
                                         inputProps={{ 'data-test': 'new_inventory_form_drpdn' }}
                                       />
                                     </FormField>
@@ -2128,7 +2128,7 @@ class AddInventoryForm extends Component {
                                           defaultMessage: 'Condition'
                                         })}
                                         name='productCondition'
-                                        options={listConditions}
+                                        options={productConditionsDropdown}
                                         inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }}
                                       />
                                     </FormField>
@@ -2137,7 +2137,7 @@ class AddInventoryForm extends Component {
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
                                         name='productGrades'
-                                        options={listGrades}
+                                        options={productGradesDropdown}
                                         inputProps={{
                                           'data-test': 'new_inventory_grade_drpdn',
                                           selection: true,
@@ -2799,7 +2799,7 @@ class AddInventoryForm extends Component {
                                       </label>
                                       <Dropdown
                                         name={`additionalType`}
-                                        options={listDocumentTypes}
+                                        options={documentTypesDropdown}
                                         inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }}
                                       />
                                     </FormField>

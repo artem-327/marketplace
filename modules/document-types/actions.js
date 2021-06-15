@@ -9,13 +9,6 @@ export function closePopup() {
   }
 }
 
-export function getDataRequest(config, values = null) {
-  return {
-    type: config.api.get.typeRequest,
-    payload: api.getDataRequest(config, values)
-  }
-}
-
 export function openEditPopup(editedData) {
   return {
     type: AT.DOCUMENT_TYPES_OPEN_EDIT_POPUP,

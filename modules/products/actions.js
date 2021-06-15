@@ -141,7 +141,6 @@ export const searchTags = createAsyncAction('PRODUCTS_SEARCH_TAGS', (tag) => api
     pageSize: 50
   })
 )
-export const getDocumentTypes = createAsyncAction('PRODUCTS_GET_DOCUMENT_TYPES', () => api.getDocumentTypes())
 export const searchMarketSegments = createAsyncAction('PRODUCTS_SEARCH_MARKET_SEGMENTS', (segment) => api.searchMarketSegments({
     orFilters: [
       {

@@ -1012,13 +1012,6 @@ export function getProvinces(id) {
   }
 }
 
-export function getDocumentTypes() {
-  return {
-    type: AT.SETTINGS_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
-  }
-}
-
 export function loadFile(attachment) {
   return {
     type: AT.SETTINGS_LOAD_FILE,

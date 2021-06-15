@@ -14,7 +14,9 @@ import { otherPermissions, sharedTo } from '~/constants/index'
 import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closePopup } from '~/modules/settings/actions'
-import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
+
 import { bool, func, number } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
@@ -61,8 +63,8 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentPopup extends Component {
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initialFileType } = this.props
-    if (!documentTypes || documentTypes.length === 0) {
+    const { documentTypes, documentTypesLoading, getDocumentTypes, initialFileType } = this.props
+    if (documentTypes.length === 0 && !documentTypesLoading) {
       try {
         await getDocumentTypes()
       } catch (err) {
@@ -78,7 +80,7 @@ class DocumentPopup extends Component {
       popupValues,
       documentTypes,
       intl: { formatMessage },
-      documentTypesFetching,
+      documentTypesLoading,
       edit,
       addAttachment,
       updateAttachment,
@@ -243,8 +245,7 @@ class DocumentPopup extends Component {
                       />
                     )}
                     <Dropdown
-                      inputProps={{ loading: documentTypesFetching, disabled: lockedFileType }}
-                      loading={documentTypesFetching}
+                      inputProps={{ loading: documentTypesLoading, disabled: lockedFileType }}
                       name='documentType.id'
                       label={
                         <>
@@ -307,14 +308,14 @@ DocumentPopup.defaultProps = {
   initialFileType: null
 }
 
-const mapStateToProps = ({ simpleAdd, settings }) => {
+const mapStateToProps = ({ globalData, simpleAdd, settings }) => {
   const currentTab = Router && Router.router && Router.router.pathname ? Router.router.pathname : ''
   const documentTab = currentTab && currentTab.type === '/settings/documents'
 
   return {
     popupValues: documentTab ? settings.popupValues : null,
-    documentTypes: simpleAdd.listDocumentTypes,
-    documentTypesFetching: simpleAdd.documentTypesFetching,
+    documentTypes: globalData.documentTypesDropdown,
+    documentTypesLoading: globalData.documentTypesLoading,
     edit: documentTab && getSafe(() => settings.popupValues.id, false),
     enableClose: documentTab
   }

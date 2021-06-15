@@ -5,10 +5,6 @@ export const initialState = {
   companyLogo: null,
   loading: false,
   associations: [],
-  documentTypesLoading: false,
-  documentTypesAll: [],
-  documentTypesFederalOwnershipCertifications: [],
-  documentTypesManagementCertifications: [],
   industryTypesLoading: false,
   industryTypes: [],
   companyLegalDocs: [],
@@ -73,30 +69,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         associations: payload
-      }
-    }
-
-    case AT.COMPANY_FORM_GET_DOCUMENT_TYPES_PENDING: {
-      return {
-        ...state,
-        documentTypesLoading: true
-      }
-    }
-
-    case AT.COMPANY_FORM_GET_DOCUMENT_TYPES_REJECTED: {
-      return {
-        ...state,
-        documentTypesLoading: false
-      }
-    }
-
-    case AT.COMPANY_FORM_GET_DOCUMENT_TYPES_FULFILLED: {
-      return {
-        ...state,
-        documentTypesLoading: false,
-        documentTypesAll: payload,
-        documentTypesFederalOwnershipCertifications: payload.filter(el => el.group && el.group.id === 6),
-        documentTypesManagementCertifications: payload.filter(el => el.group && el.group.id === 7)
       }
     }
 

@@ -128,8 +128,6 @@ export const reviewRequest = companyId => api.patch(`/prodex/api/companies/id/${
 export const getCompanyDetails = id =>
   api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 
-export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`)
-
 export const deleteCompanyGenericProduct = id => api.delete(`/prodex/api/company-generic-products/id/${id}`)
 
 export const loadFile = attachment => {
