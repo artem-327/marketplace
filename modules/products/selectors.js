@@ -76,7 +76,7 @@ const getUnNumbersFiltered = state => getSafe(() => state?.productsAdmin?.unNumb
     })
   : []
 const getUnNumbersFetching = state => state?.productsAdmin?.unNumbersFetching
-const getDocumentTypes = state => state?.productsAdmin?.documentTypes
+const getDocumentTypes = state => state?.globalData?.documentTypes
 const getSearchedProductGroups = state => getSafe(() => state?.productsAdmin?.searchedProductGroups?.length, false)
   ? state?.productsAdmin?.searchedProductGroups?.map(d => ({
       key: d.id,

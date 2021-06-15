@@ -107,7 +107,6 @@ export const deleteAssignProductOffers = createAsyncAction('DELETE_ASSIGN_PRODUC
 export const clearGroupedProductOffer = createAction('CLEAR_GROUPED_PRODUCT_OFFERS')
 export const linkAttachmentToOrderItem = createAsyncAction('LINK_ATTACHMENT_TO_ORDER_ITEM', (query) => Api.linkAttachmentToOrderItem(query))
 export const removeLinkAttachmentToOrderItem = createAsyncAction('REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM', (query) => Api.removeLinkAttachmentToOrderItem(query))
-export const getDocumentTypes = createAsyncAction('RELATED_GET_DOCUMENT_TYPES', () => Api.getDocumentTypes())
 export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
 export const linkAttachmentToOrder = createAsyncAction('LINK_ATTACHMENT_TO_ORDER', (query) => Api.linkAttachmentToOrder(query))
 export const clearOrderDetail = createAction('CLEARE_ORDER_DETAIL')

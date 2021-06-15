@@ -1,10 +1,6 @@
 import api from '~/api'
 import { getSafe, generateQueryString } from '~/utils/functions'
 
-export async function getDataRequest(config, values) {
-  const { data } = await api.get(config.api.get.apiCall)
-  return data
-}
 export async function deleteItem(id) {
   const { data } = await api.delete(`/prodex/api/document-types/id/${id}`)
   return data

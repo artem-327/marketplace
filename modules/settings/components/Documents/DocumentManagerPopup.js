@@ -63,8 +63,8 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentPopup extends Component {
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initialFileType } = this.props
-    if (!documentTypes || documentTypes.length === 0) {
+    const { documentTypes, documentTypesLoading, getDocumentTypes, initialFileType } = this.props
+    if (documentTypes.length === 0 && !documentTypesLoading) {
       try {
         await getDocumentTypes()
       } catch (err) {
@@ -80,7 +80,7 @@ class DocumentPopup extends Component {
       popupValues,
       documentTypes,
       intl: { formatMessage },
-      documentTypesFetching,
+      documentTypesLoading,
       edit,
       addAttachment,
       updateAttachment,
@@ -245,8 +245,7 @@ class DocumentPopup extends Component {
                       />
                     )}
                     <Dropdown
-                      inputProps={{ loading: documentTypesFetching, disabled: lockedFileType }}
-                      loading={documentTypesFetching}
+                      inputProps={{ loading: documentTypesLoading, disabled: lockedFileType }}
                       name='documentType.id'
                       label={
                         <>
@@ -316,7 +315,7 @@ const mapStateToProps = ({ globalData, simpleAdd, settings }) => {
   return {
     popupValues: documentTab ? settings.popupValues : null,
     documentTypes: globalData.documentTypesDropdown,
-    documentTypesFetching: globalData.documentTypesLoading,
+    documentTypesLoading: globalData.documentTypesLoading,
     edit: documentTab && getSafe(() => settings.popupValues.id, false),
     enableClose: documentTab
   }

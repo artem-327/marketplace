@@ -322,8 +322,8 @@ class Orders extends Component {
   }
 
   componentDidMount() {
-    const { getDocumentTypes, listDocumentTypes } = this.props
-    if (listDocumentTypes && !listDocumentTypes.length) {
+    const { getDocumentTypes, listDocumentTypes, documentTypesFetching } = this.props
+    if (listDocumentTypes && !listDocumentTypes.length && !documentTypesFetching) {
       getDocumentTypes()
     }
   }

@@ -210,7 +210,7 @@ const WarehousesFormEdit = ({
               //listDocumentTypes={this.props.listDocumentTypes}
               noWrapperStyles
               onChange={files => {
-                addCertificateAttachment(files, sidebarValues.id, listDocumentTypes, toastManager, formikProps, {
+                addCertificateAttachment(files, sidebarValues?.id, listDocumentTypes, toastManager, formikProps, {
                   loadFile,
                   addAttachment: addDeaAttachment
                 })
@@ -233,7 +233,7 @@ const WarehousesFormEdit = ({
                     <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
                   )}
                   <DivIcon>
-                    <ImageResized src={sidebarValues.deaListReceive ? GreenIcon : RedIcon} />
+                    <ImageResized src={sidebarValues?.deaListReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
@@ -243,7 +243,7 @@ const WarehousesFormEdit = ({
                     <FormattedMessage id='settings.certifications.dea.fileText' defaultMessage='DEA List I' />
                   )}
                   <DivIcon>
-                    <ImageResized src={sidebarValues.deaListReceive ? GreenIcon : RedIcon} />
+                    <ImageResized src={sidebarValues?.deaListReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
@@ -273,7 +273,7 @@ const WarehousesFormEdit = ({
             }}
           />
         </FormGroup>
-        {sidebarValues.epaReceive && (
+        {sidebarValues?.epaReceive && (
           <>
             <EpaWrapper $bgColor='#ffffff'>
               <div>
@@ -346,7 +346,7 @@ const WarehousesFormEdit = ({
               //listDocumentTypes={this.props.listDocumentTypes}
               noWrapperStyles
               onChange={files => {
-                addCertificateAttachment(files, sidebarValues.id, listDocumentTypes, toastManager, formikProps, {
+                addCertificateAttachment(files, sidebarValues?.id, listDocumentTypes, toastManager, formikProps, {
                   loadFile,
                   addAttachment: addTaxExemptAttachment
                 })
@@ -369,7 +369,7 @@ const WarehousesFormEdit = ({
                     <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
                   )}
                   <DivIcon>
-                    <ImageResized src={sidebarValues.taxExemptReceive ? GreenIcon : RedIcon} />
+                    <ImageResized src={sidebarValues?.taxExemptReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }
@@ -379,7 +379,7 @@ const WarehousesFormEdit = ({
                     <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
                   )}
                   <DivIcon>
-                    <ImageResized src={sidebarValues.taxExemptReceive ? GreenIcon : RedIcon} />
+                    <ImageResized src={sidebarValues?.taxExemptReceive ? GreenIcon : RedIcon} />
                   </DivIcon>
                 </DivBrowseFile>
               }

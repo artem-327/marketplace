@@ -174,8 +174,8 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentManagerSidebar extends Component {
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initialFileType } = this.props
-    if (!documentTypes || documentTypes.length === 0) {
+    const { documentTypes, documentTypesLoading, getDocumentTypes, initialFileType } = this.props
+    if (documentTypes.length === 0 && !documentTypesLoading) {
       try {
         await getDocumentTypes()
       } catch (err) {
@@ -191,7 +191,7 @@ class DocumentManagerSidebar extends Component {
       sidebarValues,
       documentTypes,
       intl: { formatMessage },
-      documentTypesFetching,
+      documentTypesLoading,
       edit,
       addAttachment,
       updateAttachment,
@@ -272,14 +272,13 @@ class DocumentManagerSidebar extends Component {
                     <FormGroup widths='equal'>
                       <Dropdown
                         inputProps={{
-                          loading: documentTypesFetching,
+                          loading: documentTypesLoading,
                           disabled: lockedFileType,
                           placeholder: formatMessage({
                             id: 'settings.documents.selectDocumentType',
                             defaultMessage: 'Select document type'
                           })
                         }}
-                        loading={documentTypesFetching}
                         name='documentType.id'
                         label={
                           <>
@@ -536,7 +535,7 @@ const mapStateToProps = ({ globalData, simpleAdd, settings }) => {
   return {
     sidebarValues: documentTab ? settings.sidebarValues : null,
     documentTypes: globalData.documentTypesDropdown,
-    documentTypesFetching: globalData.documentTypesLoading,
+    documentTypesLoading: globalData.documentTypesLoading,
     edit: documentTab && getSafe(() => settings.sidebarValues.id, false),
     enableClose: documentTab
   }

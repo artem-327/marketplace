@@ -19,9 +19,9 @@ import {
   getPackagingGroupsDataRequest,
   getUnNumbersByString,
   searchProductGroups,
-  getDocumentTypes,
   searchCompany
 } from '../../../products/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
 import {
   makeGetCurrentAddForm,
   makeGetCurrentEditForm,
