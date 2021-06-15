@@ -6,7 +6,7 @@ export const ModalActions = styled(Modal.Actions)`
   text-align: center !important;
 `
 
-export const GridColumnInputEmail = styled(Grid.Column)`
+export const GridColumnInput = styled(Grid.Column)`
   .ui.fluid.input > input {
     background-color: #fdfdfd !important;
   }
