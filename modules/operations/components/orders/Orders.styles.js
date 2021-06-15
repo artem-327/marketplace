@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Radio, Form } from 'semantic-ui-react'
+import { Form } from 'semantic-ui-react'
 
 export const FormFieldCustom = styled(Form.Field)`
   .ui.checkbox input.hidden {

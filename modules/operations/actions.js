@@ -94,6 +94,13 @@ export const openOrderDetail = (data = null) => ({
   payload: data
 })
 
+export function getDocumentTypes() {
+  return {
+    type: AT.OPERATIONS_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}
+
 export const cancelOrder = orderId => ({
   type: AT.OPERATIONS_ORDERS_CANCEL_ORDER,
   payload: api.cancelOrder(orderId)
