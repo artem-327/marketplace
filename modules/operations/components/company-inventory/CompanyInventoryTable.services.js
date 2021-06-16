@@ -1,5 +1,7 @@
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
+// Components
+import ActionCell from '../../../../components/table/ActionCell'
 //Services
 import { getSafe } from '../../../../utils/functions'
 
@@ -25,3 +27,50 @@ export const getRows = datagrid => datagrid?.rows?.map(d => {
         )
     }
 })
+
+export const columns = [
+    {
+        name: 'productName',
+        title: (
+            <FormattedMessage id='operations.productName' defaultMessage='Product Name' />
+        ),
+        sortPath: 'ProductOffer.companyProduct.intProductName',
+        allowReordering: false
+    },
+    {
+        name: 'productCode',
+        title: (
+            <FormattedMessage id='operations.productCode' defaultMessage='Product Code' />
+        ),
+        sortPath: 'ProductOffer.companyProduct.intProductCode'
+    },
+    {
+        name: 'owner',
+        title: (
+            <FormattedMessage id='operations.owner' defaultMessage='Owner' />
+        ),
+        sortPath: 'ProductOffer.owner.cfDisplayName'
+    },
+    {
+        name: 'complete',
+        title: (
+            <FormattedMessage id='operations.complete' defaultMessage='Complete' />
+        )
+    },
+    {
+        name: 'broadcasted',
+        title: (
+            <FormattedMessage id='operations.broadcasted' defaultMessage='Broadcasted' />
+        ),
+        sortPath: 'ProductOffer.cfStatus'
+    }
+]
+
+export const getRowss = rows => {
+    return rows.map(row => {
+        return {
+            ...row,
+            productName: <ActionCell row={row} content={row.productName} />
+        }
+    })
+}

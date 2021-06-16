@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
-import { openPopup, deleteTag } from '../../actions'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import TagsTable from './TagsTable'
+// Actions
+import { openPopup, deleteTag } from '../../actions'
+// Services
+import { withDatagrid } from '../../../datagrid'
+// Selectors
 import { makeGetFilterValue, makeGetLoading, makeGetRows } from '../../selectors'
 
 const mapDispatchToProps = {

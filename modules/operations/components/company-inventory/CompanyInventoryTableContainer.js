@@ -1,8 +1,11 @@
 import { connect } from 'react-redux'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import CompanyInventoryTable from './CompanyInventoryTable'
-import { makeGetFilterValue, makeGetLoading } from '../../selectors'
+// Services
+import { withDatagrid } from '../../../datagrid'
 import { getRows } from './CompanyInventoryTable.services'
+// Selectors
+import { makeGetFilterValue, makeGetLoading } from '../../selectors'
 
 
 const mapDispatchToProps = {}

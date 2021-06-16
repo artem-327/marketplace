@@ -1,6 +1,9 @@
 import { connect } from 'react-redux'
-import { closePopup, updateTag, createTag } from '../../actions'
+// Components
 import TagsPopup from './TagsPopup'
+// Actions
+import { closePopup, updateTag, createTag } from '../../actions'
+// Selectors
 import { makeGetPopupValuesId, makeGetPopupValuesName } from '../../selectors'
 
 const mapDispatchToProps = {

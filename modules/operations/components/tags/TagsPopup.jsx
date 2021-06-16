@@ -1,21 +1,13 @@
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import * as Yup from 'yup'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
-
-import { getSafe } from '../../../../utils/functions'
-import { errorMessages } from '../../../../constants/yupValidation'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
-
-const formValidation = () =>
-  Yup.lazy(values =>
-    Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
-    })
-  )
+// Services
+import { formValidation, initialFormValues } from './Tags.services'
+import { withDatagrid } from '../../../datagrid'
 
 const TagsPopup = props => {
   const {
@@ -28,10 +20,6 @@ const TagsPopup = props => {
     intl: { formatMessage },
     datagrid
   } = props
-
-  const initialFormValues = {
-    name: getSafe(() => popupValues.name, false) ? popupValues.name : ''
-  }
 
   return (
     <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>

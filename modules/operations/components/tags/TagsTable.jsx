@@ -1,72 +1,11 @@
 import { injectIntl } from 'react-intl'
-import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-
-import confirm from '../../../../components/Confirmable/confirm'
+// Components
 import ProdexTable from '../../../../components/table'
-import ActionCell from '../../../../components/table/ActionCell'
+// Services
+import { columns, getRows} from './Tags.services'
 
 const TagsTable = props => {
-  const columns = [
-    {
-      name: 'name',
-      title: (
-        <FormattedMessage id='operations.tagName' defaultMessage='Tag Name' />
-      ),
-      sortPath: 'Tag.name',
-      allowReordering: false
-    }
-  ]
-
-  const getActions = () => {
-    const { intl, openPopup, deleteTag, datagrid } = props
-
-    const { formatMessage } = intl
-    return [
-      { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
-      {
-        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        callback: row =>
-          confirm(
-            formatMessage({
-              id: `confirm.delete.operations.tag.title`,
-              defaultMessage: `Delete`
-            }),
-            formatMessage(
-              {
-                id: `confirm.delete.operations.tag.content`,
-                defaultMessage: `Do you really want to delete tag?`
-              },
-              { name: row.name }
-            )
-          ).then(async () => {
-            try {
-              await deleteTag(row.id)
-              datagrid.removeRow(row.id)
-            } catch (e) {
-              console.error(e)
-            }
-          })
-      }
-    ]
-  }
-
-  const getRows = rows => {
-    return rows.map(row => {
-      return {
-        ...row,
-        name: (
-          <ActionCell
-            row={row}
-            getActions={getActions}
-            content={row.name}
-            onContentClick={() => props.openPopup(row)}
-          />
-        )
-      }
-    })
-  }
-
   const { loading, rows, datagrid, filterValue } = props
 
   return (
@@ -77,7 +16,7 @@ const TagsTable = props => {
         filterValue={filterValue}
         loading={datagrid.loading || loading}
         columns={columns}
-        rows={getRows(rows)}
+        rows={getRows(rows, props)}
       />
     </div>
   )
