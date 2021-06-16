@@ -1,49 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
-import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import * as Yup from 'yup'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
+// Components
 import { DateInput } from '../../../../components/custom-formik'
-import { generateToastMarkup, uniqueArrayByKey } from '../../../../utils/functions'
-import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
-import { getStringISODate } from '../../../../components/date-format'
-import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
-import { debounce } from 'lodash'
-
-const initialFormValues = {
-  carrierName: '',
-  quoteId: '',
-  price: '',
-  validityDate: '',
-  shippingQuoteRequestId: ''
-}
-
-const formValidation = () =>
-  Yup.lazy(values =>
-    Yup.object().shape({
-      validityDate: dateValidation(false).concat(
-        Yup.string().test(
-          'min-date',
-          errorMessages.mustBeInFuture,
-          val => !val || moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
-        )
-      ),
-      carrierName: Yup.string().trim().min(3, errorMessages.minLength(3)),
-      quoteId: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-      price: Yup.number().typeError(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
-    })
-  )
+import { Required } from '../../../../components/constants/layout'
+// Services
+import { generateToastMarkup, uniqueArrayByKey } from '../../../../utils/functions'
+import { getStringISODate } from '../../../../components/date-format'
+import { initialFormValues, formValidation, handleSearch } from './ShippingQuotes.services'
 
 const ShippingQuotesPopup = props => {
   const [selectedOption, setSelectedOption] = useState(null)
-
-  const handleSearch = debounce(text => {
-    props.searchManualQuoteRequest(text)
-  }, 250)
 
   useEffect(() => {
     const { popupValues } = props
@@ -188,7 +159,7 @@ const ShippingQuotesPopup = props => {
                       selection: true,
                       clearable: true,
                       onSearchChange: (e, { searchQuery }) =>
-                        searchQuery.length > 0 && handleSearch(searchQuery),
+                        searchQuery.length > 0 && handleSearch(searchQuery, props),
                       onChange: (e, { value }) => {
                         if (value) {
                           const selectedOption = allManQuotRequestsOptions.find(el => el.id === value)

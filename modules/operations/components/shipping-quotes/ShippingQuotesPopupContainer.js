@@ -1,8 +1,11 @@
 import { connect } from 'react-redux'
-import { withDatagrid } from '../../../datagrid'
-import { closePopup, createShippingQuote, searchManualQuoteRequest } from '../../actions'
-import { getSafe } from '../../../../utils/functions'
+// Components
 import ShippingQuotesPopup from './ShippingQuotesPopup'
+// Services
+import { withDatagrid } from '../../../datagrid'
+// Actions
+import { closePopup, createShippingQuote, searchManualQuoteRequest } from '../../actions'
+// Selectors
 import { makeGetSearchedManQuotRequests, makeGetSearchedManQuotRequestsLoading, makeGetPopupValues } from '../../selectors'
 
 const mapDispatchToProps = {

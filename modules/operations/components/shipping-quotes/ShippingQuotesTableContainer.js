@@ -1,12 +1,16 @@
 import { connect } from 'react-redux'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import ShippingQuotesTable from './ShippingQuotesTable'
+// Actions
 import {
   deleteShippingQuote,
   openPopup
 } from '../../actions'
+// Selectors
 import { makeGetFilterValue, makeGetLoading } from '../../selectors'
-import { getRows } from './ShippingQuotesTable.services'
+// Services
+import { withDatagrid } from '../../../datagrid'
+import { getRows } from './ShippingQuotes.services'
 
 const mapDispatchToProps = {
     deleteShippingQuote,
