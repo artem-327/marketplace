@@ -1,10 +1,14 @@
 import { connect } from 'react-redux'
+// Components
 import CompanyGenericProductsTable from './CompanyGenericProductsTable'
+// Actions
 import * as Actions from '../../actions'
+// Services
 import { downloadAttachment } from '../../../inventory/actions'
 import { withDatagrid } from '../../../datagrid'
-import { makeGetFilterValue, makeGetLoading } from '../../selectors'
 import { getRows } from './CompanyGenericProductsTable.services'
+// Selectors
+import { makeGetFilterValue, makeGetLoading } from '../../selectors'
 
 const makeMapStateToProps = () => {
     const getFilterValue = makeGetFilterValue()

@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react'
 import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { Input as FormikInput } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '../../../components/custom-formik'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { PlusCircle } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
-
-import { withDatagrid } from '../../datagrid'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
-import { PlusCircle } from 'react-feather'
+// Components
+import { DateInput } from '../../../components/custom-formik'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 // Hooks
 import { usePrevious } from '../../../hooks'
 // Styles
 import { PositionHeaderSettings, CustomRowDiv, DivColumn } from '../styles'
 // Services
+import { withDatagrid } from '../../datagrid'
+import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
 import { 
   validationSchema, 
   initFilterValues, 

@@ -1,6 +1,9 @@
 import { connect } from 'react-redux'
+// Components
 import TablesHandlers from './TablesHandlers'
+// Actions
 import * as Actions from '../actions'
+// Selectors
 import { makeGetTableHandlersFilters, makeGetSearchedCompanies, makeGetSearchedCompaniesLoading, makeGetCompanyProductUnmappedOnly } from '../selectors'
 
 const makeMapStateToProps = () => {

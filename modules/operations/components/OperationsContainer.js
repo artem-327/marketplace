@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
+// Components
 import Operations from './Operations'
+// Actions
 import * as Actions from '../actions'
+// Services
 import { withAuth } from '../../../hocs'
+// Selectors
 import { makeGetAuth, makeGetIsOpenPopup, makeGetOrderDetailData, makeGetCompanyProductUnmappedOnly } from '../selectors'
 
 const makeMapStateToProps = () => {

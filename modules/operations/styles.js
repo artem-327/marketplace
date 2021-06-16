@@ -695,3 +695,22 @@ export const TopRow = styled.div`
 export const StyledHeader = styled.span`
   color: #2599d5;
 `
+
+export const StyledStatusLabel = styled(Label)`
+  font-size: 12px !important;
+  height: 22px !important;
+  font-weight: normal !important;
+  font-stretch: normal;
+  font-style: normal;
+  color: #ffffff !important;
+  border-radius: 11px !important;
+
+  padding: 0.3333em 1.16667em 0.16667em 1.16667em !important;
+
+  &.false {
+    background-color: #f16844 !important;
+  }
+  &.true {
+    background-color: #84c225 !important;
+  }
+`

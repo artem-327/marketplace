@@ -1,9 +1,11 @@
 import * as Yup from 'yup'
 import moment from 'moment'
-import { errorMessages, dateValidation } from '../../../constants/yupValidation'
-import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
 import { debounce } from 'lodash'
+// Services
+import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
 import { getSafe } from '../../../utils/functions'
+// Constants
+import { errorMessages, dateValidation } from '../../../constants/yupValidation'
 import { OrdersFilters } from '../constants'
 
 export const validationSchema = Yup.lazy(values => {
