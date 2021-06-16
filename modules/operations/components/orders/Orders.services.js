@@ -504,9 +504,9 @@ export const getModalAccountingContent = (props, state) => {
 
 export const getRelatedDocumentsContent = (props, state, setState) => {
     const {
-    intl: { formatMessage },
-    listDocumentTypes,
-    documentTypesFetching
+        intl: { formatMessage },
+        listDocumentTypes,
+        documentTypesFetching
     } = props
     let { relatedAttachments, filterDocumentType } = state
 

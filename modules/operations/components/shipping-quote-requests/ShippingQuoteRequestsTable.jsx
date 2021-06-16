@@ -1,7 +1,10 @@
 import { Fragment, useState } from 'react'
 import { injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
+// Components
 import ProdexTable from '../../../../components/table'
 import RowDetail from './RowDetail'
+// Services
 import { columns, getRows } from './ShippingQuoteRequestsTable.services'
 
 const ShippingQuoteRequestsTable = props => {
@@ -49,6 +52,18 @@ const ShippingQuoteRequestsTable = props => {
       </div>
     </Fragment>
   )
+}
+
+ShippingQuoteRequestsTable.propTypes = {
+  rows: PropTypes.array,
+  intl: PropTypes.object, 
+  datagrid: PropTypes.object
+}
+
+ShippingQuoteRequestsTable.defaultValues = {
+  rows: [],
+  intl: {}, 
+  datagrid: {}
 }
 
 export default injectIntl(ShippingQuoteRequestsTable)

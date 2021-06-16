@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Container, Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import TablesHandlers from './TablesHandlersContainer'
 // Services
@@ -50,6 +51,24 @@ const Operations = props => {
       </Container>
     </DatagridProvider>
   )
+}
+
+Operations.propTypes = {
+  isOpenPopup: PropTypes.bool,
+  closePopup: PropTypes.func, 
+  currentTab: PropTypes.string,
+  orderDetailData: PropTypes.object,
+  auth: PropTypes.object,
+  companyProductUnmappedOnly: PropTypes.string
+}
+
+Operations.defaultValues = {
+  isOpenPopup: false,
+  closePopup: () => {}, 
+  currentTab: '',
+  orderDetailData: null,
+  auth: {},
+  companyProductUnmappedOnly: 'ALL'
 }
 
 export default Operations

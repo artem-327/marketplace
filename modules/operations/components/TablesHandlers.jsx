@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { PlusCircle } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
+import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../components/custom-formik'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
@@ -368,6 +369,38 @@ const TablesHandlers = props => {
       <CustomRowDiv>{renderHandler()}</CustomRowDiv>
     </PositionHeaderSettings>
   )
+}
+
+TablesHandlers.propTypes = {
+  currentTab: PropTypes.string,
+  tableHandlersFilters: PropTypes.object,
+  saveFilters: PropTypes.func,
+  openPopup: PropTypes.func,
+  intl: PropTypes.object,
+  searchedCompaniesLoading: PropTypes.bool,
+  searchedCompanies: PropTypes.array,
+  searchedCompaniesByName: PropTypes.array,
+  companyProductUnmappedOnly: PropTypes.string,
+  datagrid: PropTypes.object,
+  setSearch: PropTypes.func,
+  setProductMappedUnmaped: PropTypes.func,
+  searchCompany: PropTypes.func
+}
+
+TablesHandlers.defaultValues = {
+  currentTab: '',
+  tableHandlersFilters: null,
+  saveFilters: () => {},
+  openPopup: () => {},
+  intl: {},
+  searchedCompaniesLoading: false,
+  searchedCompanies: [],
+  searchedCompaniesByName: [],
+  companyProductUnmappedOnly: 'ALL',
+  datagrid: {},
+  setSearch: () => {},
+  setProductMappedUnmaped: () => {},
+  searchCompany: () => {}
 }
 
 export default withDatagrid(injectIntl(TablesHandlers))

@@ -1,5 +1,9 @@
 import { FormattedMessage } from 'react-intl'
+import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
+// Services
 import { getSafe } from '../../../../utils/functions'
+// Styles
 import {
   DetailMessage,
   StyledGrid,
@@ -9,7 +13,6 @@ import {
   AddressGrid,
   SpanIdValue
 } from '../../styles'
-import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 
 const RowDetail = props => {
   const displayAddress = ({ address, header, company }) => {
@@ -187,6 +190,14 @@ const RowDetail = props => {
       </AddressRow>
     </DetailMessage>
   )
+}
+
+RowDetail.propTypes = {
+  rows: PropTypes.array
+}
+
+RowDetail.defaultValues = {
+  rows: []
 }
 
 export default RowDetail

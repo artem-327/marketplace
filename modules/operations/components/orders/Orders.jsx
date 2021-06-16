@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Modal, Container, Button } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Components
 import Spinner from '../../../../components/Spinner/Spinner'
 import ProdexGrid from '../../../../components/table'
@@ -141,6 +142,48 @@ const Orders = props => {
       </Container>
     </div>
   )
+}
+
+Orders.propTypes = {
+  datagrid: PropTypes.object,
+  intl: PropTypes.object,
+  datagridFilterUpdate: PropTypes.bool,
+  isFetching: PropTypes.bool,
+  orderProcessing: PropTypes.bool,
+  orderAccountingDocumentsLoading: PropTypes.bool,
+  documentTypesFetching: PropTypes.bool,
+  rows: PropTypes.array,
+  listDocumentTypes: PropTypes.array,
+  orderAccountingDocuments: PropTypes.array, 
+  router: PropTypes.any,
+  getAccountingDocuments: PropTypes.func,
+  downloadAttachmentPdf: PropTypes.func,
+  downloadAttachment: PropTypes.func,
+  clearAccountingDocuments: PropTypes.func,
+  cancelOrder: PropTypes.func,
+  getDocumentTypes: PropTypes.func, 
+  openOrderDetail: PropTypes.func
+}
+
+Orders.defaultValues = {
+  datagrid: {},
+  intl: {},
+  datagridFilterUpdate: false,
+  isFetching: false,
+  orderProcessing: false,
+  orderAccountingDocumentsLoading: false,
+  documentTypesFetching: false,
+  rows: [],
+  listDocumentTypes: [],
+  orderAccountingDocuments: [], 
+  router: null,
+  getAccountingDocuments: () => {},
+  downloadAttachmentPdf: () => {},
+  downloadAttachment: () => {},
+  clearAccountingDocuments: () => {},
+  cancelOrder: () => {},
+  getDocumentTypes: () => {}, 
+  openOrderDetail: () => {}  
 }
 
 export default injectIntl(withToastManager(Orders))

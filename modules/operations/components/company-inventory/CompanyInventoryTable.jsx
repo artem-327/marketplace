@@ -1,4 +1,5 @@
 import { injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
 // Services
@@ -20,6 +21,22 @@ const CompanyInventoryTable = props => {
       />
     </div>
   )
+}
+
+CompanyInventoryTable.propTypes = {
+  datagrid: PropTypes.object, 
+  intl: PropTypes.object,
+  loading: PropTypes.bool,
+  filterValue: PropTypes.string, 
+  rows: PropTypes.array
+}
+
+CompanyInventoryTable.defaultValues = {
+  datagrid: {}, 
+  intl: {},
+  loading: false,
+  filterValue: '', 
+  rows: []
 }
 
 export default injectIntl(CompanyInventoryTable)

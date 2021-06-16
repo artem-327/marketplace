@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Modal, Button } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
 // Styles
@@ -50,6 +51,32 @@ const CompanyGenericProductsTable = props => {
       </div>
     </Fragment>
   )
+}
+
+CompanyGenericProductsTable.propTypes = {
+  datagrid: PropTypes.object, 
+  intl: PropTypes.object,
+  loading: PropTypes.bool,
+  filterValue: PropTypes.string, 
+  rows: PropTypes.array,
+  markRequestAsProcessed: PropTypes.func,
+  denyRequest: PropTypes.func,
+  deleteRequest: PropTypes.func,
+  downloadAttachmentPdf: PropTypes.func,
+  downloadAttachment: PropTypes.func
+}
+
+CompanyGenericProductsTable.defaultValues = {
+  datagrid: {}, 
+  intl: {},
+  loading: false,
+  filterValue: '', 
+  rows: [],
+  markRequestAsProcessed: () => {},
+  denyRequest: () => {},
+  deleteRequest: () => {},
+  downloadAttachmentPdf: () => {},
+  downloadAttachment: () => {}
 }
 
 export default injectIntl(CompanyGenericProductsTable)

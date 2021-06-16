@@ -1,7 +1,7 @@
 import { Modal, FormGroup } from 'semantic-ui-react'
-import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
+import PropTypes from 'prop-types'
 // Components
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
@@ -16,9 +16,7 @@ const TagsPopup = props => {
     rowId,
     updateTag,
     createTag,
-    toastManager,
-    intl: { formatMessage },
-    datagrid
+    intl: { formatMessage }
   } = props
 
   return (
@@ -82,4 +80,22 @@ const TagsPopup = props => {
   )
 }
 
-export default withDatagrid(injectIntl(withToastManager(TagsPopup)))
+TagsPopup.propTypes = {
+  popupValues: PropTypes.object,
+  rowId: PropTypes.number,
+  closePopup: PropTypes.func,
+  updateTag: PropTypes.func,
+  createTag: PropTypes.func,
+  intl: PropTypes.func
+}
+
+TagsPopup.defaultValues = {
+  popupValues: null,
+  rowId: null,
+  closePopup: () => {},
+  updateTag: () => {},
+  createTag: () => {},
+  intl: () => {}
+}
+
+export default withDatagrid(injectIntl(TagsPopup))

@@ -1,9 +1,11 @@
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
-import { getSafe } from '../../../../utils/functions'
-import { Popup } from 'semantic-ui-react'
 import ReactHtmlParser from 'react-html-parser'
 import { ChevronUp, ChevronDown, Check } from 'react-feather'
+import { Popup } from 'semantic-ui-react'
+// Services
+import { getSafe } from '../../../../utils/functions'
+// Styles
 import { UserImage, UserName, UserCompany, StyledNotification, CheckIcon } from '../../styles'
 
 export const columns = [

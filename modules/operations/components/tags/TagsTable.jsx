@@ -1,5 +1,6 @@
 import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 // Services
@@ -20,6 +21,20 @@ const TagsTable = props => {
       />
     </div>
   )
+}
+
+TagsTable.propTypes = {
+  datagrid: PropTypes.object,
+  loading: PropTypes.bool,
+  filterValue: PropTypes.string, 
+  rows: PropTypes.array
+}
+
+TagsTable.defaultValues = {
+  datagrid: {},
+  loading: false,
+  filterValue: '', 
+  rows: []
 }
 
 export default injectIntl(withToastManager(TagsTable))

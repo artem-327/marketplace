@@ -1,4 +1,5 @@
 import { injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
 // Services
@@ -20,6 +21,24 @@ const ShippingQuotesTable = props => {
       />
     </div>
   )
+}
+
+ShippingQuotesTable.propTypes = {
+  datagrid: PropTypes.object, 
+  intl: PropTypes.object,
+  loading: PropTypes.bool,
+  filterValue: PropTypes.string, 
+  rows: PropTypes.array, 
+  deleteShippingQuote: PropTypes.func
+}
+
+ShippingQuotesTable.defaultValues = {
+  datagrid: {}, 
+  intl: {},
+  loading: false,
+  filterValue: '', 
+  rows: [],
+  deleteShippingQuote: () => {}
 }
 
 export default injectIntl(ShippingQuotesTable)

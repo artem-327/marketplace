@@ -191,11 +191,29 @@ const ShippingQuotesPopup = props => {
 }
 
 ShippingQuotesPopup.propTypes = {
-  updateDatagrid: PropTypes.bool
+  updateDatagrid: PropTypes.bool,
+  searchedManQuotRequestsLoading: PropTypes.bool,
+  popupValues: PropTypes.object,
+  intl: PropTypes.object,
+  datagrid: PropTypes.object,
+  searchedManQuotRequests: PropTypes.array,
+  toastManager: PropTypes.any,
+  createShippingQuote: PropTypes.func,
+  closePopup: PropTypes.func,
+  searchManualQuoteRequest: PropTypes.func
 }
 
 ShippingQuotesPopup.defaultProps = {
-  updateDatagrid: true
+  updateDatagrid: true,
+  searchedManQuotRequestsLoading: false,
+  popupValues: null,
+  intl: {},
+  datagrid: {},
+  searchedManQuotRequests: [],
+  toastManager: null,
+  createShippingQuote: () => {},
+  closePopup: () => {},
+  searchManualQuoteRequest: () => {}
 }
 
 export default injectIntl(withToastManager(ShippingQuotesPopup))

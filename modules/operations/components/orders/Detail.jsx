@@ -5,6 +5,7 @@ import { Grid, Segment, Accordion, Table, List, Button, Divider, Header, GridRow
 import { DownloadCloud, ArrowLeft, Info } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import { injectIntl, FormattedNumber } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ModalResolveDispute from './ModalResolveDispute'
 import BasicButton from '../../../../components/buttons/BasicButton'
@@ -64,7 +65,6 @@ const Detail = props => {
     isDetailFetching,
     intl: { formatMessage },
     echoSupportPhone,
-    editTrackingCode,
     closePopup,
     isOpenPopup,
     loading,
@@ -821,6 +821,42 @@ const Detail = props => {
       </div>
     </div>
   )
+}
+
+Detail.propTypes = {
+  order: PropTypes.object,
+  intl: PropTypes.object,
+  echoSupportPhone: PropTypes.string,
+  isDetailFetching: PropTypes.bool,
+  isOpenPopup: PropTypes.bool,
+  loading: PropTypes.bool,
+  closePopup: PropTypes.func,
+  openPopup: PropTypes.func,
+  resolveDisputeReject: PropTypes.func,
+  resolveDisputeCredit: PropTypes.func,
+  resolveDisputeAccept: PropTypes.func,
+  downloadDisputeAttachment: PropTypes.func,
+  openOrderDetail: PropTypes.func,
+  downloadPdf: PropTypes.func,
+  downloadAttachment: PropTypes.func
+}
+
+Detail.defaultValues = {
+  order: {},
+  intl: {},
+  echoSupportPhone: 'N/A',
+  isDetailFetching: false,
+  isOpenPopup: false,
+  loading: false,
+  closePopup: () => {},
+  openPopup: () => {},
+  resolveDisputeReject: () => {},
+  resolveDisputeCredit: () => {},
+  resolveDisputeAccept: () => {},
+  downloadDisputeAttachment: () => {},
+  openOrderDetail: () => {},
+  downloadPdf: () => {},
+  downloadAttachment: () => {}  
 }
 
 export default injectIntl(withToastManager(Detail))

@@ -1,5 +1,7 @@
 import { connect } from 'react-redux'
+// Components
 import ShippingQuoteRequestsTable from './ShippingQuoteRequestsTable'
+// Services
 import { withDatagrid } from '../../../datagrid'
 import { getSafe } from '../../../../utils/functions'
 
