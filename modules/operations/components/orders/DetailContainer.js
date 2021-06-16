@@ -1,9 +1,13 @@
 import { connect } from 'react-redux'
+// Constants
 import Detail from './Detail'
+// Actions
 import * as Actions from '../../actions'
 import { downloadAttachment } from '../../../inventory/actions'
 import { downloadPdf, downloadDisputeAttachment } from '../../../orders/actions'
+// Services
 import { actionRequired, prepareDetail } from './Detail.services'
+// Selectors
 import { makeGetEchoSupportPhone, makeGetIsPaymentCancellable, makeGetIsOpenPopup, makeGetLoading } from '../../selectors'
 
 const makeMapStateToProps = () => {

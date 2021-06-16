@@ -714,3 +714,9 @@ export const StyledStatusLabel = styled(Label)`
     background-color: #84c225 !important;
   }
 `
+
+export const ModalCustom = styled(Modal)`
+  &.ui.modal > .actions {
+    background: none !important;
+  }
+`

@@ -153,3 +153,10 @@ export const textsTable = {
     SearchText: 'operations.tables.companyGenericProduct.search'
   }
 }
+
+export const ACCEPT_ORDER = 'acceptOrder'
+
+export const CREDIT_ORDER = 'creditOrder'
+ 
+export const REJECT_ORDER = 'rejectOrder'
+ 

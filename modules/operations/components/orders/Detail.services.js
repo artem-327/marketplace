@@ -1,8 +1,15 @@
-import * as OrdersHelper from '../../../../components/helpers/Orders'
 import moment from 'moment/moment'
+import { Button, Icon } from 'semantic-ui-react'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
+// Components
+import ProdexGrid from '../../../../components/table'
+// Services
+import { getLocaleDateFormat } from '../../../../components/date-format'
 import { getSafe, getFormattedAddress } from '../../../../utils/functions'
-import { FormattedNumber } from 'react-intl'
+import * as OrdersHelper from '../../../../components/helpers/Orders'
+// Constants
 import { currency } from '../../../../constants/index'
+import { getMimeType } from '../../../../components/getMimeType'
 
 export const actionRequired = (data) => {
     // return statuses code
@@ -244,4 +251,168 @@ export const prepareDetail = (data, type = 'sales') => {
       note: getSafe(() => data.note, ''),
       attachments: getSafe(() => data.attachments, [])
     }
+}
+
+
+export const columnsRelatedOrdersDetailDocuments = [
+  {
+    name: 'documentName',
+    title: (
+      <FormattedMessage id='order.detail.documents.name' defaultMessage='Document #' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documenType',
+    title: (
+      <FormattedMessage id='order.detail.documents.type' defaultMessage='Type' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documenDate',
+    title: (
+      <FormattedMessage id='order.detail.documents.date' defaultMessage='Document Date' />
+    ),
+    width: 150
+  },
+  {
+    name: 'documenIssuer',
+    title: (
+      <FormattedMessage id='order.detail.documents.issuer' defaultMessage='Issuer' />
+    ),
+    width: 150
+  },
+  {
+    name: 'download',
+    title: (
+      <FormattedMessage id='global.download' defaultMessage='Download' />
+    ),
+    width: 150,
+    align: 'center'
+  }
+]
+
+export const downloadOrder = async (props) => {
+  let endpointType = 'sale'
+  let pdf = await props.downloadPdf(endpointType, props.order.id)
+
+  const element = document.createElement('a')
+  const file = new Blob([pdf.value.data], { type: 'application/pdf' })
+  let fileURL = URL.createObjectURL(file)
+
+  element.href = fileURL
+  element.download = `${endpointType}-order-${props.order.id}.pdf`
+  document.body.appendChild(element) // Required for this to work in FireFox
+  element.click()
+}
+
+export const handleClick = (titleProps, state, setState) => {
+  const { index } = titleProps
+  const { activeIndexes } = state
+
+  activeIndexes[index] = activeIndexes[index] ? false : true
+
+  setState({ ...state, activeIndexes })
+}
+
+const downloadAttachment = async (documentName, documentId, props) => {
+  const element = await prepareLinkToAttachment(documentId, props)
+
+  element.download = documentName
+  document.body.appendChild(element) // Required for this to work in FireFox
+  element.click()
+}
+
+const prepareLinkToAttachment = async (documentId, props) => {
+  let downloadedFile = await props.downloadAttachment(documentId)
+  const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
+  const mimeType = fileName && getMimeType(fileName)
+  const element = document.createElement('a')
+  const file = new Blob([downloadedFile.value.data], { type: mimeType })
+  let fileURL = URL.createObjectURL(file)
+  element.href = fileURL
+
+  return element
+}
+
+const extractFileName = contentDispositionValue => {
+  var filename = ''
+  if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+    var matches = filenameRegex.exec(contentDispositionValue)
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '')
+    }
+  }
+  return filename
+}
+
+export const getRows = (attachments, props) => {
+  if (attachments && attachments.length) {
+    return attachments.map(row => {
+      return {
+        id: row.id,
+        documentTypeId: getSafe(() => row.documentType.id, 'N/A'),
+        documentName: (
+          <Button as='a' onClick={() => downloadAttachment(row.name, row.id, props)}>
+            {row.name}
+          </Button>
+        ),
+        documenType: getSafe(() => row.documentType.name, 'N/A'),
+        documenDate: row.expirationDate
+          ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
+          : 'N/A',
+        documenIssuer: getSafe(() => row.issuer, 'N/A'),
+        download: (
+          <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)}>
+            <Icon name='file' className='positive' />
+          </a>
+        )
+      }
+    })
+  } else {
+    return []
+  }
+}
+
+export const openRelatedPopup = (attachments, name, state, setState) => {
+  setState({
+    ...state,
+    openDocumentsPopup: true,
+    openDocumentsAttachments: attachments,
+    documentsPopupProduct: name
+  })
+}
+
+export const getRelatedDocumentsContent = (props, state) => {
+  const {
+    intl: { formatMessage }
+  } = props
+  let { openDocumentsAttachments } = state
+
+  const rowsDocuments = openDocumentsAttachments.map(att => ({
+    id: att.id,
+    documentName: (
+      <Button as='a' onClick={() => downloadAttachment(att.name, att.id, props)}>
+        {att.name}
+      </Button>
+    ),
+    documenType: att.documentType.name,
+    documenDate: 'N/A',
+    documenIssuer: 'N/A',
+    download: (
+      <a href='#' onClick={() => downloadAttachment(att.name, att.id, props)}>
+        <Icon name='file' className='positive' />
+      </a>
+    )
+  }))
+  return (
+    <ProdexGrid
+      loading={state.submitting}
+      tableName='related_orders'
+      columns={columnsRelatedOrdersDetailDocuments}
+      rows={rowsDocuments}
+    />
+  )
 }
