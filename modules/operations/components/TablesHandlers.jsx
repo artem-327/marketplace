@@ -4,82 +4,30 @@ import { Input as FormikInput } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '../../../components/custom-formik'
 import moment from 'moment'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
-import { errorMessages, dateValidation } from '../../../constants/yupValidation'
-import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
-import { debounce } from 'lodash'
-import { OrdersFilters } from '../constants'
 
 import { withDatagrid } from '../../datagrid'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
 import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
-//Hooks
+// Hooks
 import { usePrevious } from '../../../hooks'
 // Styles
 import { PositionHeaderSettings, CustomRowDiv, DivColumn } from '../styles'
+// Services
+import { 
+  validationSchema, 
+  initFilterValues, 
+  handleFiltersValue, 
+  handleFilterChangeMappedUnmapped, 
+  handleFilterChangeInputSearch,
+  handleFilterChangeCompany,
+  searchCompanies
+} from './TablesHandlers.services'
+// Constants
+import { OrdersFilters } from '../constants'
+import { textsTable } from '../constants'
 
-const textsTable = {
-  'shipping-quotes': {
-    BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
-    SearchText: 'operations.tables.shippingQuotes.search'
-  },
-  'shipping-quote-requests': {
-    SearchText: 'operations.tables.shippingQuoteRequests.search'
-  },
-  tags: {
-    BtnAddText: 'operations.tables.tags.buttonAdd',
-    SearchText: 'operations.tables.tags.search'
-  },
-  'company-product-catalog': {
-    SearchText: 'operations.tables.companyProductCatalog.search',
-    SearchCompanyText: 'operations.tables.companyProductCatalog.SearchCompanyText',
-    MappedText: 'operations.tables.companyProductCatalog.MappedText'
-  },
-  'company-inventory': {
-    SearchText: 'operations.tables.companyInventory.search'
-  },
-  orders: {
-    SearchText: 'operations.tables.orders.search'
-  },
-  'company-generic-products': {
-    SearchText: 'operations.tables.companyGenericProduct.search'
-  }
-}
-
-const validationSchema = Yup.lazy(values => {
-  let validationObject = {
-    dateFrom:
-      values.dateFrom &&
-      values.dateTo &&
-      dateValidation(false).concat(
-        Yup.string().test(
-          'is-before',
-          <FormattedMessage
-            id='orders.dateMustBeSameOrBefore'
-            defaultMessage={`Date must be same or before ${values.dateTo}`}
-            values={{ date: values.dateTo }}
-          />,
-          function () {
-            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
-          }
-        )
-      ),
-    orderId:
-      values.orderId &&
-      Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .test('int', errorMessages.integer, val => {
-          return val % 1 === 0
-        })
-        .positive(errorMessages.positive)
-        .test('numbers', errorMessages.mustBeNumber, value => /^[0-9]*$/.test(value))
-  }
-  return Yup.object().shape({ ...validationObject })
-})
 
 const TablesHandlers = props => {
   let formikProps
@@ -118,7 +66,7 @@ const TablesHandlers = props => {
     const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
     if (tableHandlersFilters) {
-      initFilterValues(tableHandlersFilters)
+      initFilterValues(tableHandlersFilters, props, formikProps, setState)
     } else {
       let filterValue = state[currentTab]
       if (currentTab === 'orders') {
@@ -129,7 +77,7 @@ const TablesHandlers = props => {
         }
         setState({ ...state, orders: filterValue }) // ! ! Otestovat
       }
-      handleFiltersValue(filterValue)
+      handleFiltersValue(filterValue, props, formikProps)
     }
 
     return () => { props.saveFilters(state) }
@@ -149,109 +97,9 @@ const TablesHandlers = props => {
         }
         setState({ ...state, orders: filterValue })
       }
-      handleFiltersValue(filterValue)
+      handleFiltersValue(filterValue, props, formikProps)
     }
   }, [props.currentTab])
-
-  const initFilterValues = initTableHandlersFilters => {
-    const { currentTab } = props
-    if (currentTab === '') return
-    const status = localStorage['operations-orders-status-filter']
-
-    const tableHandlersFilters = {
-      ...initTableHandlersFilters,
-      orders: {
-        ...initTableHandlersFilters.orders,
-        status: status ? status : initTableHandlersFilters.orders.status
-      }
-    }
-    setState({ ...tableHandlersFilters })
-
-    if(formikProps) {
-      const { setValues, setFieldTouched } = formikProps
-
-      setValues({
-        dateFrom: tableHandlersFilters.orders.dateFrom,
-        dateTo: tableHandlersFilters.orders.dateTo,
-        orderId: tableHandlersFilters.orders.orderId
-      })
-      setFieldTouched('dateFrom', true, true)
-    }
-
-    handleFiltersValue(tableHandlersFilters[currentTab])
-  }
-
-  const handleFiltersValue = debounce(value => {
-    const { datagrid, currentTab } = props
-
-    const orderIdError = getSafe(() => formikProps.errors.orderId, false)
-    const dateFromError = getSafe(() => formikProps.errors.dateFrom, false)
-
-    let filter = value
-    if (currentTab === 'orders') {
-      filter = {
-        ...value,
-        status: getSafe(() => OrdersFilters[value.status].filters, ''),
-        orderId: !orderIdError && value.orderId ? value.orderId : '',
-        dateFrom: value.dateFrom && !dateFromError ? getStringISODate(value.dateFrom) : '',
-        dateTo: value.dateTo ? moment(getStringISODate(value.dateTo)).endOf('day').format() : ''
-      }
-    }
-    datagrid.setSearch(filter, true, 'pageFilters')
-  }, 500)
-
-  const handleFilterChangeMappedUnmapped = (e, { value }) => {
-    const { currentTab } = props
-    if (currentTab === '') return
-    props.setProductMappedUnmaped(value)
-    handleFiltersValue(state[currentTab])
-  }
-
-  const handleFilterChangeInputSearch = (e, data) => {
-    const { currentTab } = props
-    if (currentTab === '') return
-
-    setState({
-      ...state,
-      [currentTab]: {
-        ...state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    if (currentTab === 'orders' && data.name === 'status') {
-      localStorage['operations-orders-status-filter'] = data.value
-    }
-
-    const filter = {
-      ...state[currentTab],
-      [data.name]: data.value
-    }
-    handleFiltersValue(filter)
-  }
-
-  const handleFilterChangeCompany = (e, data) => {
-    const { currentTab } = props
-    if (currentTab === '') return
-
-    setState({
-      ...state,
-      [currentTab]: {
-        ...state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    const filter = {
-      ...state[currentTab],
-      [data.name]: data.value
-    }
-    handleFiltersValue(filter)
-  }
-
-  const searchCompanies = debounce(text => {
-    props.searchCompany(text, 5)
-  }, 250)
 
   const renderHandler = () => {
     const {
@@ -322,7 +170,7 @@ const TablesHandlers = props => {
                           id: item.SearchText,
                           defaultMessage: 'Select Credit Card'
                         })}
-                        onChange={handleFilterChangeInputSearch}
+                        onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <div className='column'>
@@ -341,9 +189,9 @@ const TablesHandlers = props => {
                         value={filterValue.company}
                         loading={searchedCompaniesLoading}
                         onSearchChange={(e, { searchQuery }) => {
-                          searchQuery.length > 0 && searchCompanies(searchQuery)
+                          searchQuery.length > 0 && searchCompanies(searchQuery, props)
                         }}
-                        onChange={handleFilterChangeCompany}
+                        onChange={(e, data) => { handleFilterChangeCompany(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <DivColumn className='column'>
@@ -374,7 +222,7 @@ const TablesHandlers = props => {
                           }
                         ]}
                         value={companyProductUnmappedOnly}
-                        onChange={handleFilterChangeMappedUnmapped}
+                        onChange={(e, { value }) => { handleFilterChangeMappedUnmapped(value, props, formikProps, state) }}
                       />
                     </DivColumn>
                     <ColumnSettingButton divide={true} />
@@ -397,7 +245,7 @@ const TablesHandlers = props => {
                           text: formatMessage({ id: `orders.statusOptions.${name}` }),
                           value: name
                         }))}
-                        onChange={handleFilterChangeInputSearch}
+                        onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <div className='column'>
@@ -410,7 +258,7 @@ const TablesHandlers = props => {
                             defaultMessage: 'Search By Order ID'
                           }),
                           icon: 'search',
-                          onChange: handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </div>
@@ -430,9 +278,9 @@ const TablesHandlers = props => {
                         value={filterValue.company}
                         loading={searchedCompaniesLoading}
                         onSearchChange={(e, { searchQuery }) => {
-                          searchQuery.length > 0 && searchCompanies(searchQuery)
+                          searchQuery.length > 0 && searchCompanies(searchQuery, props)
                         }}
-                        onChange={handleFilterChangeCompany}
+                        onChange={(e, data) => { handleFilterChangeCompany(data, props, formikProps, state, setState) }}
                       />
                     </div>
                   </div>
@@ -452,7 +300,7 @@ const TablesHandlers = props => {
                             id: 'global.from',
                             defaultMessage: 'From'
                           }),
-                          onChange: handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </div>
@@ -467,7 +315,7 @@ const TablesHandlers = props => {
                             id: 'global.to',
                             defaultMessage: 'To'
                           }),
-                          onChange: handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </DivColumn>
@@ -491,7 +339,7 @@ const TablesHandlers = props => {
                             id: item.SearchText,
                             defaultMessage: 'Select Credit Card'
                           })}
-                          onChange={handleFilterChangeInputSearch}
+                          onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                         />
                       </div>
                     )}

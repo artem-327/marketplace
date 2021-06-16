@@ -125,3 +125,31 @@ export const OrdersFilters = {
     ]
   }
 }
+
+export const textsTable = {
+  'shipping-quotes': {
+    BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
+    SearchText: 'operations.tables.shippingQuotes.search'
+  },
+  'shipping-quote-requests': {
+    SearchText: 'operations.tables.shippingQuoteRequests.search'
+  },
+  tags: {
+    BtnAddText: 'operations.tables.tags.buttonAdd',
+    SearchText: 'operations.tables.tags.search'
+  },
+  'company-product-catalog': {
+    SearchText: 'operations.tables.companyProductCatalog.search',
+    SearchCompanyText: 'operations.tables.companyProductCatalog.SearchCompanyText',
+    MappedText: 'operations.tables.companyProductCatalog.MappedText'
+  },
+  'company-inventory': {
+    SearchText: 'operations.tables.companyInventory.search'
+  },
+  orders: {
+    SearchText: 'operations.tables.orders.search'
+  },
+  'company-generic-products': {
+    SearchText: 'operations.tables.companyGenericProduct.search'
+  }
+}
