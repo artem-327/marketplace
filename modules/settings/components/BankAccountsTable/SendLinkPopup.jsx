@@ -65,8 +65,8 @@ const SendLinkPopup = ({
                         name='name'
                         inputProps={{
                           placeholder: formatMessage({
-                            id: 'global.entername',
-                            defaultMessage: 'Enter Name'
+                            id: 'global.enterFirstName',
+                            defaultMessage: 'Enter First Name'
                           }),
                           fluid: true
                         }}
