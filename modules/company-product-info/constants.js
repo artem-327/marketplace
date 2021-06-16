@@ -137,7 +137,7 @@ export const dropdownOptions = {
       options: ['1', 'ACG', '80', '37', '50', '20', 'NA']
     },
     dhsReleaseScreeningThresholdQuantitie: {
-      options: ['1', '10', '100', '500', '1000', '2500', '5000', 'NA']
+      options: ['1', '10', '100', '500', '1000', '2500', '5000', '10000', '15000', '20000', 'NA']
     },
     dhsTheftScreeningThresholdQuantities: {
       options: ['45', '500', 'NA']
