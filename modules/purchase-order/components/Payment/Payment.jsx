@@ -38,13 +38,22 @@ const Payment = props => {
     sectionState,
     onValueChange,
     setSummaryButtonCaption,
-    payments,
     value,
     isThirdPartyConnectionException,
     paymentProcessor,
     getPayments,
-    isFetching
+    isFetching,
+    isHideInactiveAccounts
   } = props
+
+  let payments = []
+  if (isHideInactiveAccounts) {
+    props.payments.forEach(p => {
+      if (p.status === 'active') payments.push(p)
+    })
+  } else {
+    payments = props.payments
+  }
 
   // This useEffect is used similar as componentDidUpdate
   // Could by used in previous (above) useEffect, but this approach is more clear
@@ -151,7 +160,8 @@ Payment.defaultProps = {}
 function mapStateToProps(store, props) {
   return {
     paymentProcessor: getSafe(() => store.auth.identity.company.paymentProcessor, ''),
-    isFetching: store.cart.isFetching
+    isFetching: store.cart.isFetching,
+    isHideInactiveAccounts: store.settings.isHideInactiveAccounts
   }
 }
 
