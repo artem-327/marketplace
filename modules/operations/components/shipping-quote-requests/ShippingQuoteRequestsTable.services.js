@@ -8,6 +8,11 @@ import { getSafe } from '../../../../utils/functions'
 // Styles
 import { UserImage, UserName, UserCompany, StyledNotification, CheckIcon } from '../../styles'
 
+/**
+ * columns used in ShippingQuoteRequestsTable Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
     {
     name: 'user',
@@ -66,6 +71,11 @@ const toggleDetail = (rowId, expandedRowIds, setExpandedRowIds) => {
     }
 }
 
+/**
+ * get Rows function used in ShippingQuoteRequestsTable Component
+ * @category Operations
+ * @services
+ */
 export const getRows = (props, expandedRowIds, setExpandedRowIds) => {
     return props.rows.map(r => {
     const open = expandedRowIds.some(id => id === r.id)

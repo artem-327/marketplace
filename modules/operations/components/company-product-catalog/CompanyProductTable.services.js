@@ -4,6 +4,11 @@ import ActionCell from '../../../../components/table/ActionCell'
 //Services
 import { getSafe } from '../../../../utils/functions'
 
+/**
+ * get Rows function used in CompanyProductTableContainer
+ * @category Operations
+ * @services
+ */
 export const getRows = datagrid => datagrid?.rows?.map(d => {
     return {
         id: d.id,
@@ -19,6 +24,11 @@ export const getRows = datagrid => datagrid?.rows?.map(d => {
     }
 })
 
+/**
+ * columns used in CompanyProductTable Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
     {
         name: 'intProductName',
@@ -64,6 +74,11 @@ export const columns = [
     }
 ]
 
+/**
+ * get Rows function used in CompanyProductTable Component
+ * @category Operations
+ * @services
+ */
 export const getRowss = rows => {
     return rows.map(row => {
         return {

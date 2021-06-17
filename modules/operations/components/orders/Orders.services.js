@@ -33,6 +33,11 @@ const filterAttachments = (a, type) => {
     return filtered ? [filtered] : []
 }
 
+/**
+ * get Rows function used in OrdersContainer
+ * @category Operations
+ * @services
+ */
 export const getRows = datagrid => datagrid?.rows?.map(r => {
     const isCancelable =
         r.orderStatus === 4 /* Draft */ ||
@@ -90,6 +95,11 @@ export const getRows = datagrid => datagrid?.rows?.map(r => {
     }
 })
 
+/**
+ * columns used in Orders Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
     {
       name: 'orderId',
@@ -292,6 +302,11 @@ const failedWrapper = value => {
     return <span style={{ color: '#DB2828' }}>{value}</span>
 }
 
+/**
+ * get Rows function used in Orders Component
+ * @category Operations
+ * @services
+ */
 export const getRowss = (props, state, setState) => {
     return props.rows.map(row => ({
     ...row,
@@ -458,6 +473,11 @@ const extractFileName = contentDispositionValue => {
     return filename
 }
 
+/**
+ * close Popup function used in Orders Component
+ * @category Operations
+ * @services
+ */
 export const closePopup = (props, state, setState) => {
     setState({
     ...state,
@@ -469,6 +489,11 @@ export const closePopup = (props, state, setState) => {
     props.clearAccountingDocuments()
 }
 
+/**
+ * get Modal Accounting Content function used in Orders Component
+ * @category Operations
+ * @services
+ */
 export const getModalAccountingContent = (props, state) => {
     const { orderAccountingDocuments, orderAccountingDocumentsLoading } = props
     const docList = orderAccountingDocuments.map(att => ({
@@ -502,6 +527,11 @@ export const getModalAccountingContent = (props, state) => {
     )
 }
 
+/**
+ * get Related Documents Content function used in Orders Component
+ * @category Operations
+ * @services
+ */
 export const getRelatedDocumentsContent = (props, state, setState) => {
     const {
         intl: { formatMessage },

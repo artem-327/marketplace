@@ -5,6 +5,11 @@ import ActionCell from '../../../../components/table/ActionCell'
 //Services
 import { getSafe } from '../../../../utils/functions'
 
+/**
+ * get Rows function used in CompanyInventoryTableContainer
+ * @category Operations
+ * @services
+ */
 export const getRows = datagrid => datagrid?.rows?.map(d => {
     const isComplete =
         (d.validityDate ? moment().isBefore(d.validityDate) : true) &&
@@ -28,6 +33,11 @@ export const getRows = datagrid => datagrid?.rows?.map(d => {
     }
 })
 
+/**
+ * columns used in CompanyInventoryTable Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
     {
         name: 'productName',
@@ -66,6 +76,11 @@ export const columns = [
     }
 ]
 
+/**
+ * get Rows function used in CompanyInventoryTable Component
+ * @category Operations
+ * @services
+ */
 export const getRowss = rows => {
     return rows.map(row => {
         return {

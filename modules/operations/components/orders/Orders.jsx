@@ -19,6 +19,11 @@ import {
   getRelatedDocumentsContent
 } from './Orders.services'
 
+/**
+ * Orders Component
+ * @category Operations - Orders
+ * @components
+ */
 const Orders = props => {
   const [state, setState] = useState({
     sorting: {

@@ -7,6 +7,11 @@ import RowDetail from './RowDetail'
 // Services
 import { columns, getRows } from './ShippingQuoteRequestsTable.services'
 
+/**
+ * ShippingQuoteRequestsTable Component
+ * @category Operations
+ * @components
+ */
 const ShippingQuoteRequestsTable = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 

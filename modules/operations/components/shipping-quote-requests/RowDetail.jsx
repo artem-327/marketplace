@@ -14,6 +14,11 @@ import {
   SpanIdValue
 } from '../../styles'
 
+/**
+ * RowDetail Component
+ * @category Operations - Shipping quote requests
+ * @components
+ */
 const RowDetail = props => {
   const displayAddress = ({ address, header, company }) => {
     return (

@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import api from './api'
-import { Datagrid } from '~/modules/datagrid'
+import { Datagrid } from '../datagrid'
 
 export function openPopup(rows = null) {
   return {

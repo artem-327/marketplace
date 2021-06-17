@@ -14,6 +14,11 @@ import {
   getAttachmentsContent
 } from './CompanyGenericProductsTable.services'
 
+/**
+ * CompanyGenericProductsTable Component
+ * @category Operations
+ * @components
+ */
 const CompanyGenericProductsTable = props => {
   const [state, setState] = useState({
     openAttachmentsPopup: false,

@@ -8,6 +8,11 @@ import { getSafe } from '../../../utils/functions'
 import { errorMessages, dateValidation } from '../../../constants/yupValidation'
 import { OrdersFilters } from '../constants'
 
+/**
+ * TablesHanders Form Validation Schema
+ * @category Operations
+ * @services
+ */
 export const validationSchema = Yup.lazy(values => {
     let validationObject = {
       dateFrom:
@@ -41,7 +46,11 @@ export const validationSchema = Yup.lazy(values => {
     return Yup.object().shape({ ...validationObject })
 })
 
-
+/**
+ * TablesHanders Form Initial Filter Values
+ * @category Operations
+ * @services
+ */
 export const initFilterValues = (initTableHandlersFilters, props, formikProps, setState) => {
     const { currentTab } = props
     if (currentTab === '') return
@@ -70,6 +79,11 @@ export const initFilterValues = (initTableHandlersFilters, props, formikProps, s
     handleFiltersValue(tableHandlersFilters[currentTab], props, formikProps)
 }
 
+/**
+ * TablesHanders Form Filter Values Handler
+ * @category Operations
+ * @services
+ */
 export const handleFiltersValue = debounce((value, props, formikProps) => {
     const { datagrid, currentTab } = props
 
@@ -89,6 +103,11 @@ export const handleFiltersValue = debounce((value, props, formikProps) => {
     datagrid.setSearch(filter, true, 'pageFilters')
 }, 500)
 
+/**
+ * TablesHanders Filter Handler of Change Mapped or Unmapped
+ * @category Operations
+ * @services
+ */
 export const handleFilterChangeMappedUnmapped = (value, props, formikProps, state) => {
     const { currentTab } = props
     if (currentTab === '') return
@@ -96,6 +115,11 @@ export const handleFilterChangeMappedUnmapped = (value, props, formikProps, stat
     handleFiltersValue(state[currentTab], props, formikProps)
 }
 
+/**
+ * TablesHanders Filter Handler of Input Search
+ * @category Operations
+ * @services
+ */
 export const handleFilterChangeInputSearch = (data, props, formikProps, state, setState) => {
     const { currentTab } = props
     if (currentTab === '') return
@@ -119,6 +143,11 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
     handleFiltersValue(filter, props, formikProps)
 }
 
+/**
+ * TablesHanders Filter Handler of Company Change
+ * @category Operations
+ * @services
+ */
 export const handleFilterChangeCompany = (data, props, formikProps, state, setState) => {
     const { currentTab } = props
     if (currentTab === '') return
@@ -138,6 +167,11 @@ export const handleFilterChangeCompany = (data, props, formikProps, state, setSt
     handleFiltersValue(filter, props, formikProps)
 }
 
+/**
+ * TablesHanders Search Companies
+ * @category Operations
+ * @services
+ */
 export const searchCompanies = debounce((text, props) => {
     props.searchCompany(text, 5)
 }, 250)

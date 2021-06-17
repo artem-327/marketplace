@@ -44,6 +44,11 @@ import {
 } from './Detail.services'
 
 
+/**
+ * Order Detail Component
+ * @category Operations - Orders - Detail
+ * @components
+ */
 const Detail = props => {
   const [state, setState] = useState({
     activeIndexes: [true, true, true, false, false, false, false, false],

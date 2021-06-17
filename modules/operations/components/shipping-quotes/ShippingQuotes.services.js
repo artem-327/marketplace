@@ -13,6 +13,11 @@ import { getStringISODate } from '../../../../components/date-format'
 // Constants
 import { currency } from '../../../../constants/index'
 
+/**
+ * get Rows function used in ShippingQuotesTableContainer
+ * @category Operations
+ * @services
+ */
 export const getRows = datagrid => datagrid?.rows?.map(d => {
     return {
         data: d, // all row data, used for edit popup
@@ -34,6 +39,11 @@ export const getRows = datagrid => datagrid?.rows?.map(d => {
     }
 })
 
+/**
+ * columns used in ShippingQuotesTable Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
     {
       name: 'quoteId',
@@ -92,6 +102,11 @@ const getActions = (props) => {
     ]
 }
 
+/**
+ * get Rows function used in ShippingQuotesTable Component
+ * @category Operations
+ * @services
+ */
 export const getRowss = (rows, props) => {
     return rows.map(row => {
         return {
@@ -101,10 +116,20 @@ export const getRowss = (rows, props) => {
     })
 }
 
+/**
+ * handle Search function used in ShippingQuotesPopup Component
+ * @category Operations
+ * @services
+ */
 export const handleSearch = debounce((text, props) => {
     props.searchManualQuoteRequest(text)
 }, 250)
 
+/**
+ * initial Form Values used in ShippingQuotesPopup Component
+ * @category Operations
+ * @services
+ */
 export const initialFormValues = {
     carrierName: '',
     quoteId: '',
@@ -113,6 +138,11 @@ export const initialFormValues = {
     shippingQuoteRequestId: ''
 }
 
+/**
+ * form Validation used in ShippingQuotesPopup Component
+ * @category Operations
+ * @services
+ */
 export const formValidation = () =>
     Yup.lazy(values =>
         Yup.object().shape({

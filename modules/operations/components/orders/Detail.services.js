@@ -11,11 +11,16 @@ import * as OrdersHelper from '../../../../components/helpers/Orders'
 import { currency } from '../../../../constants/index'
 import { getMimeType } from '../../../../components/getMimeType'
 
+/**
+ * action Required function used in DetailContainer
+ * @category Operations
+ * @services
+ */
 export const actionRequired = (data) => {
     // return statuses code
     return getSafe(() => data.orderStatus.toString(), 0) + getSafe(() => data.shippingStatus.toString(), 0)
 }
-  
+
 const getReturnAddress = (data) => {
     let returnAddr = ''
     if (data.returnAddressStreet) {
@@ -29,7 +34,12 @@ const getReturnAddress = (data) => {
     }
     return returnAddr
 }
-  
+
+/**
+ * prepare Detail function used in DetailContainer
+ * @category Operations
+ * @services
+ */
 export const prepareDetail = (data, type = 'sales') => {
     if (typeof data?.id === 'undefined') return {}
   
@@ -254,6 +264,11 @@ export const prepareDetail = (data, type = 'sales') => {
 }
 
 
+/**
+ * columns(Related Orders Detail Documents) used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const columnsRelatedOrdersDetailDocuments = [
   {
     name: 'documentName',
@@ -293,6 +308,11 @@ export const columnsRelatedOrdersDetailDocuments = [
   }
 ]
 
+/**
+ * download Order function used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const downloadOrder = async (props) => {
   let endpointType = 'sale'
   let pdf = await props.downloadPdf(endpointType, props.order.id)
@@ -307,6 +327,11 @@ export const downloadOrder = async (props) => {
   element.click()
 }
 
+/**
+ * handle Click function used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const handleClick = (titleProps, state, setState) => {
   const { index } = titleProps
   const { activeIndexes } = state
@@ -348,6 +373,11 @@ const extractFileName = contentDispositionValue => {
   return filename
 }
 
+/**
+ * get Rows function used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const getRows = (attachments, props) => {
   if (attachments && attachments.length) {
     return attachments.map(row => {
@@ -376,6 +406,11 @@ export const getRows = (attachments, props) => {
   }
 }
 
+/**
+ * open Related Popup function used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const openRelatedPopup = (attachments, name, state, setState) => {
   setState({
     ...state,
@@ -385,6 +420,11 @@ export const openRelatedPopup = (attachments, name, state, setState) => {
   })
 }
 
+/**
+ * get Related Documents Content function used in Detail Component
+ * @category Operations
+ * @services
+ */
 export const getRelatedDocumentsContent = (props, state) => {
   const {
     intl: { formatMessage }

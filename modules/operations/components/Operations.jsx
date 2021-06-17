@@ -11,6 +11,11 @@ import { getApiConfig, renderContent } from './Operations.services'
 // Styles
 import { CustomGridColumn } from '../styles'
 
+/**
+ * Operations Component
+ * @category Operations
+ * @components
+ */
 const Operations = props => {
   useEffect(() => {
     const { isOpenPopup, closePopup } = props

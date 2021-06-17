@@ -10,6 +10,11 @@ import Orders from './orders/OrdersContainer'
 import OrderDetail from './orders/DetailContainer'
 import CompanyGenericProductsTable from './company-generic-products/CompanyGenericProductsTableContainer'
 
+/**
+ * Operations Render Content
+ * @category Operations
+ * @services
+ */
 export const renderContent = (props) => {
     const { currentTab, isOpenPopup, orderDetailData } = props
 
@@ -36,6 +41,11 @@ export const renderContent = (props) => {
     )
 }
 
+/**
+ * Operations Get Api Config
+ * @category Operations
+ * @services
+ */
 export const getApiConfig = (props) => {
     const { currentTab, companyProductUnmappedOnly } = props
     const datagridApiMap = {

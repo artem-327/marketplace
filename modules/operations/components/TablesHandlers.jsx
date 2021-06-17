@@ -29,7 +29,11 @@ import {
 import { OrdersFilters } from '../constants'
 import { textsTable } from '../constants'
 
-
+/**
+ * TablesHanders Component
+ * @category Operations
+ * @components
+ */
 const TablesHandlers = props => {
   let formikProps
   const prevCurrentTab = usePrevious(props.currentTab)

@@ -13,12 +13,14 @@
   "source": {
     // TODO Edit for all folders where is JSDoc
     "include": [
-      "./modules/inventory/my-listings",
       "./components/buttons",
-      "./modules/settings/components/UserTable",
       "./components/Confirmable",
-      "./modules/add-bank-accounts",
+      "./components/date-format",
       "./styles",
+      "./test",
+      "./modules/inventory/my-listings",
+      "./modules/settings/components/UserTable",
+      "./modules/add-bank-accounts",
       "./modules/settings/components/Locations",
       "./modules/settings/components/TradeCriteria",
       "./modules/settings/components/MyTradePass",
@@ -26,13 +28,13 @@
       "./modules/inventory/shared-listings",
       "./modules/inventory/my-listings",
       "./modules/inventory/my-products",
-      "./components/date-format",
       "./modules/admin/components/Carriers",
       "./modules/company-form/components",
-      "./modules/products/components/CasProductsTable",
+      "./modules/operations",
+      "./modules/orders",
+      "./modules/products",
       "./modules/purchase-order",
       "./modules/warehouse-credentials",
-      "./test",
       "./modules/profile"
     ],
     "exclude": ["./modules/inventory/my-listings/components"]

@@ -5,6 +5,11 @@ import ProdexGrid from '../../../../components/table'
 // Services
 import { columns, getRowss } from './CompanyInventoryTable.services'
 
+/**
+ * CompanyInventoryTable Component
+ * @category Operations
+ * @components
+ */
 const CompanyInventoryTable = props => {
   const { datagrid, rows, filterValue, loading, intl } = props
 

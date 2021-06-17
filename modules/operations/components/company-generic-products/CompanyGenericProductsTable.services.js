@@ -12,7 +12,6 @@ import confirm from '../../../../components/Confirmable/confirm'
 // Styles
 import { StyledStatusLabel } from '../../styles'
 
-
 const StatusLabel = val => (
     <StyledStatusLabel className={val ? 'true' : 'false'}>
       {val ? (
@@ -23,7 +22,11 @@ const StatusLabel = val => (
     </StyledStatusLabel>
 )
 
-
+/**
+ * get Rows function used in CompanyGenericProductsTableContainer
+ * @category Operations
+ * @services
+ */
 export const getRows = datagrid => datagrid?.rows?.map(d => {
     const requestedByName = getSafe(() => d.requestedBy.name, null)
     const requestedByCompany = getSafe(() => d.requestedBy.company.cfDisplayName, null)
@@ -54,7 +57,11 @@ export const getRows = datagrid => datagrid?.rows?.map(d => {
     }
 })
 
-
+/**
+ * columns used in CompanyGenericProductsTable Component
+ * @category Operations
+ * @services
+ */
 export const columns = [
   {
     name: 'processed',
@@ -179,6 +186,11 @@ const deleteRequest = async (row, props) => {
   }
 }
 
+/**
+ * get Rows function used in CompanyGenericProductsTable Component
+ * @category Operations
+ * @services
+ */
 export const getRowss = (props, state, setState) => {
   return props.rows.map(row => ({
     ...row,
@@ -257,6 +269,11 @@ const openAttachmentsPopup = (e, attachments, state, setState) => {
   })
 }
 
+/**
+ * close Popup function used in CompanyGenericProductsTable Component
+ * @category Operations
+ * @services
+ */
 export const closePopup = (state, setState) => {
   setState({
     ...state,
@@ -265,6 +282,11 @@ export const closePopup = (state, setState) => {
   })
 }
 
+/**
+ * get Attachments Content function used in CompanyGenericProductsTable Component
+ * @category Operations
+ * @services
+ */
 export const getAttachmentsContent = (props, state) => {
   const rowsAttachments = state.attachments.map(att => ({
     id: att.id,

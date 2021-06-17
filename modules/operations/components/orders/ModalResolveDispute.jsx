@@ -10,6 +10,7 @@ import { FormFieldCustom, DivMarginBottom, ModalCustom } from '../../styles'
 import { REJECT_ORDER, CREDIT_ORDER, ACCEPT_ORDER } from '../../constants'
 
 /**
+ * ModalResolveDispute Component
  * @category Operations - Orders - Detail
  * @components
  */
