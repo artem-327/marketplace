@@ -9,7 +9,7 @@ import BasicButton from '../../../../components/buttons/BasicButton'
 //Services
 import { initialFormValues, formValidation } from './services'
 //Styles
-import { ModalActions, GridColumnInputEmail } from './styles'
+import { ModalActions, GridColumnInput } from './styles'
 
 const SendLinkPopup = ({
   isOpenPopup,
@@ -33,7 +33,7 @@ const SendLinkPopup = ({
         validationSchema={formValidation()}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await inviteToAddBankAccounts(companyId, values.email, companyName)
+            await inviteToAddBankAccounts(companyId, values.email, values.name)
           } catch (e) {
             console.error(e)
           } finally {
@@ -59,7 +59,22 @@ const SendLinkPopup = ({
                     </Grid.Column>
                   </Grid.Row>
                   <Grid.Row>
-                    <GridColumnInputEmail>
+                    <GridColumnInput>
+                      <Input
+                        label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                        name='name'
+                        inputProps={{
+                          placeholder: formatMessage({
+                            id: 'global.enterFirstName',
+                            defaultMessage: 'Enter First Name'
+                          }),
+                          fluid: true
+                        }}
+                      />
+                    </GridColumnInput>
+                  </Grid.Row>
+                  <Grid.Row>
+                    <GridColumnInput>
                       <Input
                         label={formatMessage({ id: 'global.emailAddress', defaultMessage: 'Email Address' })}
                         name='email'
@@ -71,7 +86,7 @@ const SendLinkPopup = ({
                           fluid: true
                         }}
                       />
-                    </GridColumnInputEmail>
+                    </GridColumnInput>
                   </Grid.Row>
                 </Grid>
               </Modal.Content>
