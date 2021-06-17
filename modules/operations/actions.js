@@ -1,6 +1,9 @@
-import api from './api'
-import { Datagrid } from '../datagrid'
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+// Apis
+import api from './api'
+// Services
+import { Datagrid } from '../datagrid'
+
 
 export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
