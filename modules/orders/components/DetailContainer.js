@@ -4,6 +4,7 @@ import Detail from './Detail'
 // Actions
 import * as Actions from '../actions'
 import { downloadAttachment, addAttachment } from '../../inventory/actions'
+import { getDocumentTypes } from '../../global-data/actions'
 // Services
 import { getOrder } from './Detail.service'
 
@@ -89,4 +90,4 @@ const makeMapStateToProps = () => {
   return mapStateToProps
 }
 
-export default connect(makeMapStateToProps, { ...Actions, downloadAttachment, addAttachment })(Detail)
+export default connect(makeMapStateToProps, { ...Actions, downloadAttachment, addAttachment, getDocumentTypes })(Detail)
