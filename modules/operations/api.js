@@ -10,7 +10,6 @@ export default {
     api
       .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
       .then(response => response.data),
-  getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
   getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   markRequestAsProcessed: id =>

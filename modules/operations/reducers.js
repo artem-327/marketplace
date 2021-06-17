@@ -10,7 +10,6 @@ export const initialState = {
   ordersStatusFilter: 'All',
   orderDetailData: null,
   documentTypesFetching: false,
-  listDocumentTypes: [],
   orderProcessing: false,
   orderAccountingDocuments: [],
   orderAccountingDocumentsLoading: false,
@@ -116,34 +115,6 @@ export default function reducers(state = initialState, action) {
       return {
         ...state,
         orderDetailData: payload
-      }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_PENDING: {
-      return {
-        ...state,
-        documentTypesFetching: true
-      }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_FULFILLED: {
-      return {
-        ...state,
-        documentTypesFetching: false,
-        listDocumentTypes: payload.data.map(docType => {
-          return {
-            key: docType.id,
-            text: docType.name,
-            value: docType.id
-          }
-        })
-      }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_REJECTED: {
-      return {
-        ...state,
-        documentTypesFetching: false
       }
     }
 

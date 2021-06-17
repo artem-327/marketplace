@@ -7,13 +7,13 @@ import Orders from './Orders'
 import * as Actions from '../../actions'
 import { applyFilter } from '../../../filter/actions'
 import { downloadAttachment, downloadAttachmentPdf } from '../../../inventory/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
 // Services
 import { withDatagrid } from '../../../datagrid'
 import { getRows } from './Orders.services'
 // Selectors
 import { 
-  makeGetListDocumentTypes, 
-  makeGetDocumentTypesFetching, 
+  makeGetListDocumentTypes,
   makeGetDatagridFilterUpdate, 
   makeGetOrderAccountingDocuments,
   makeGetOrderAccountingDocumentsLoading,
@@ -23,7 +23,6 @@ import {
 
 const makeMapStateToProps = () => {
   const getListDocumentTypes = makeGetListDocumentTypes()
-  const getDocumentTypesFetching = makeGetDocumentTypesFetching()
   const getDatagridFilterUpdate = makeGetDatagridFilterUpdate()
   const getOrderAccountingDocuments = makeGetOrderAccountingDocuments()
   const getOrderAccountingDocumentsLoading = makeGetOrderAccountingDocumentsLoading()
@@ -34,7 +33,6 @@ const makeMapStateToProps = () => {
     return {
       rows: getRows(datagrid),
       listDocumentTypes: getListDocumentTypes(state),
-      documentTypesFetching: getDocumentTypesFetching(state),
       datagridFilterUpdate: getDatagridFilterUpdate(state),
       orderAccountingDocuments: getOrderAccountingDocuments(state),
       orderAccountingDocumentsLoading: getOrderAccountingDocumentsLoading(state),
@@ -46,7 +44,7 @@ const makeMapStateToProps = () => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ ...Actions, downloadAttachment, downloadAttachmentPdf, dispatch, applyFilter }, dispatch)
+  return bindActionCreators({ ...Actions, downloadAttachment, downloadAttachmentPdf, dispatch, applyFilter, getDocumentTypes }, dispatch)
 }
 
 export default withDatagrid(withRouter(connect(makeMapStateToProps, mapDispatchToProps)(Orders)))
