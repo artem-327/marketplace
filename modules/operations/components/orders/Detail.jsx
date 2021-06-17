@@ -16,7 +16,6 @@ import TransactionInfo from '../../../orders/components/components/TransactionIn
 // Constants
 import { currency } from '../../../../constants/index'
 // Styles
-import '../../../../components/AddInventory.scss'
 import {
   OrderSegment,
   OrderList,
