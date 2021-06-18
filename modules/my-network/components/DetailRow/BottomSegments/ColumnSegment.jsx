@@ -30,7 +30,14 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
         const docName = docNameTemp.join(' ')
 
         let value = data[key]
-        if(blueValue) value = value.replace('_', ' ')
+        if(blueValue) {
+          let valueTemp = value.toLowerCase()
+          valueTemp = valueTemp.split('_')
+          valueTemp.map((t, i) => {
+            valueTemp[i] = t.charAt(0).toUpperCase() + t.slice(1);
+          })
+          value = valueTemp.join(' ')
+        }
 
         return (
           <Grid.Row key={i} data-test='component-column-segment-row'>

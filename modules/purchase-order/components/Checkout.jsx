@@ -18,13 +18,14 @@ import Spinner from '../../../components/Spinner/Spinner'
 import BasicButton from '../../../components/buttons/BasicButton'
 
 //Services
-import { getSafe } from '../../../utils/functions'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 import {
   getComponentParameters,
   submitButton,
   submitUpdateCartItem,
   getShippingQuotes,
-  checkAllAccepted
+  checkAllAccepted,
+  findSectionToOpen
 } from './Checkout.services'
 
 // Styles
@@ -71,8 +72,8 @@ const Checkout = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    const fetchCheckout = async (freight) => {
-      props.getIdentity()
+    const init = async () => {
+      await props.getIdentity()
       const { value } = await props.getCart()
       const initVal = value.cartItems.map(item => ({
         id: item.id,
@@ -84,33 +85,46 @@ const Checkout = props => {
       }))
       setSectionState({
         ...sectionState,
-        review: { accepted: false, value: initVal },
+        review: { accepted: false, value: initVal }
+      })
+
+
+      const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
+  
+      if (shippingQuoteId) {
+        setfixedFreightId(true)
+        setShipmentQuoteId(shippingQuoteId)
+        await props.getManualQuoteById(shippingQuoteId)
+      }
+    }
+
+    init()
+  }, [])
+
+  useEffect(() => {
+    const fetchCheckout = async (freight) => {
+      setSectionState({
+        ...sectionState,
         freight
       })
     }
 
-    const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
     let freight = sectionState.freight
 
-    if (shippingQuoteId) {
-      setfixedFreightId(true)
+    if(fixedFreightId && manualQuoteById) {
       freight = {
         accepted: true,
         value: {
-          carrierName: shippingQuoteId,
-          cfEstimatedSubtotal: '',
+          carrierName: manualQuoteById.carrierName,
+          cfEstimatedSubtotal: manualQuoteById.price,
           estimatedDeliveryDate: '',
-          quoteId: shippingQuoteId,
+          quoteId: manualQuoteById.quoteId,
           freightType: FREIGHT_TYPES.ECHO
         }
       }
-    }
 
-    fetchCheckout(freight)
-  }, [])
-
-  useEffect(() => {
-    if(manualQuoteById) {
+      fetchCheckout(freight)
+    } else if (manualQuoteById) {
       setSectionState({
         ...sectionState,
         freight: {
@@ -124,9 +138,23 @@ const Checkout = props => {
           }
         }
       })
-      setOpenSection('')
+      const sectionToOpen = findSectionToOpen(sectionState)
+      setOpenSection(sectionToOpen)
+    } else if (shipmentQuoteId && fixedFreightId) {
+      toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='shippingQuote.noExistManualQuoteId.title' defaultMessage='Failed to get shipping quote data' />,
+          <FormattedMessage
+            id='shippingQuote.noExistManualQuoteId.content'
+            defaultMessage='Such Quote ID does not exist. Please check your manual quote id again!'
+          />
+        ),
+        {
+          appearance: 'warning'
+        }
+      )
     }
-  }, [clickedFriehgt])
+  }, [manualQuoteById, clickedFriehgt])
 
   const allAccepted = checkAllAccepted(sectionState)
 
@@ -209,6 +237,7 @@ const Checkout = props => {
                       {...props}
                       {...getComponentParameters(props, { name: 'shipping', ...state })}
                       onValueChange={value => {
+                        setShipmentQuoteId('')
                         setSectionState({
                           ...sectionState,
                           shipping: { accepted: false, value },

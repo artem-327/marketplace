@@ -1,7 +1,5 @@
-import { useEffect } from 'react'
 // Services
 import Router from 'next/router'
-import { getSafe } from '~/utils/functions'
 import { FREIGHT_TYPES } from './Checkout.constants'
 
 /**
