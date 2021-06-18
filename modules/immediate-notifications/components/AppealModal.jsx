@@ -71,7 +71,7 @@ const ImmediateAppealModal = props => {
           value={appealValue}
           onChange={(e, {value}) => setAppealValue(value)}
         />
-        {requiredLength ? <small style={{color: '#9f3a38'}}>Must be 5 letters at least!</small> : <></>}
+        {requiredLength ? <small style={{color: '#9f3a38'}}><FormattedMessage id='validation.minLength' values={{ min: 5 }} defaultMessage='Field should have at least 5 characters' /></small> : <></>}
       </Modal.Content>
 
       <Modal.Actions>
