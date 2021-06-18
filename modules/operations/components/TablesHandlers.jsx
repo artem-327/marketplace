@@ -1,302 +1,112 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
+import { useEffect, useState } from 'react'
 import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { Input as FormikInput } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '~/components/custom-formik'
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { PlusCircle } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
-import * as Yup from 'yup'
-import { errorMessages, dateValidation, dateBefore } from '~/constants/yupValidation'
-import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
-import { debounce } from 'lodash'
-import styled from 'styled-components'
+import PropTypes from 'prop-types'
+// Components
+import { DateInput } from '../../../components/custom-formik'
+import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
+// Hooks
+import { usePrevious } from '../../../hooks'
+// Styles
+import { PositionHeaderSettings, CustomRowDiv, DivColumn } from '../styles'
+// Services
+import { withDatagrid } from '../../datagrid'
+import { getSafe, uniqueArrayByKey } from '../../../utils/functions'
+import { 
+  validationSchema, 
+  initFilterValues, 
+  handleFiltersValue, 
+  handleFilterChangeMappedUnmapped, 
+  handleFilterChangeInputSearch,
+  handleFilterChangeCompany,
+  searchCompanies
+} from './TablesHandlers.services'
+// Constants
 import { OrdersFilters } from '../constants'
+import { textsTable } from '../constants'
 
-import * as Actions from '../actions'
-import { withDatagrid, Datagrid } from '~/modules/datagrid'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { getSafe, uniqueArrayByKey } from '~/utils/functions'
-import { PlusCircle } from 'react-feather'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-
-const PositionHeaderSettings = styled.div`
-  position: relative;
-  z-index: 602;
-`
-
-const CustomRowDiv = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 15px 25px;
-  flex-wrap: wrap;
-
-  > div {
-    align-items: top;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .column {
-    margin: 5px 5px;
-  }
-
-  input,
-  .ui.dropdown {
-    height: 40px;
-  }
+/**
+ * TablesHanders Component
+ * @category Operations
+ * @components
+ */
+const TablesHandlers = props => {
+  let formikProps
+  const prevCurrentTab = usePrevious(props.currentTab)
   
-  .ui.button.primary {
-    background: rgb(37, 153, 213);
-    
-    svg {
-      width: 18px;
-      height: 20px;
-      margin-right: 10px;
-      vertical-align: top;
-      color: inherit;
+  const [state, setState] = useState({
+    'shipping-quotes': {
+      searchInput: ''
+    },
+    'shipping-quote-requests': {
+      searchInput: ''
+    },
+    tags: {
+      searchInput: ''
+    },
+    'company-product-catalog': {
+      searchInput: '',
+      company: ''
+    },
+    'company-inventory': {
+      searchInput: ''
+    },
+    orders: {
+      status: 'all',
+      orderId: '',
+      company: '',
+      dateFrom: '',
+      dateTo: ''
+    },
+    'company-generic-products': {
+      searchInput: ''
     }
-  }
-`
+  })
 
-const DivColumn = styled.div`
-  margin-right: 9px !important;
-`
-
-const textsTable = {
-  'shipping-quotes': {
-    BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
-    SearchText: 'operations.tables.shippingQuotes.search'
-  },
-  'shipping-quote-requests': {
-    SearchText: 'operations.tables.shippingQuoteRequests.search'
-  },
-  tags: {
-    BtnAddText: 'operations.tables.tags.buttonAdd',
-    SearchText: 'operations.tables.tags.search'
-  },
-  'company-product-catalog': {
-    SearchText: 'operations.tables.companyProductCatalog.search',
-    SearchCompanyText: 'operations.tables.companyProductCatalog.SearchCompanyText',
-    MappedText: 'operations.tables.companyProductCatalog.MappedText'
-  },
-  'company-inventory': {
-    SearchText: 'operations.tables.companyInventory.search'
-  },
-  orders: {
-    SearchText: 'operations.tables.orders.search'
-  },
-  'company-generic-products': {
-    SearchText: 'operations.tables.companyGenericProduct.search'
-  }
-}
-
-const validationSchema = Yup.lazy(values => {
-  let validationObject = {
-    dateFrom:
-      values.dateFrom &&
-      values.dateTo &&
-      dateValidation(false).concat(
-        Yup.string().test(
-          'is-before',
-          <FormattedMessage
-            id='orders.dateMustBeSameOrBefore'
-            defaultMessage={`Date must be same or before ${values.dateTo}`}
-            values={{ date: values.dateTo }}
-          />,
-          function () {
-            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
-          }
-        )
-      ),
-    orderId:
-      values.orderId &&
-      Yup.number()
-        .typeError(errorMessages.mustBeNumber)
-        .test('int', errorMessages.integer, val => {
-          return val % 1 === 0
-        })
-        .positive(errorMessages.positive)
-        .test('numbers', errorMessages.mustBeNumber, value => /^[0-9]*$/.test(value))
-  }
-  return Yup.object().shape({ ...validationObject })
-})
-
-class TablesHandlers extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      'shipping-quotes': {
-        searchInput: ''
-      },
-      'shipping-quote-requests': {
-        searchInput: ''
-      },
-      tags: {
-        searchInput: ''
-      },
-      'company-product-catalog': {
-        searchInput: '',
-        company: ''
-      },
-      'company-inventory': {
-        searchInput: ''
-      },
-      orders: {
-        status: 'all',
-        orderId: '',
-        company: '',
-        dateFrom: '',
-        dateTo: ''
-      },
-      'company-generic-products': {
-        searchInput: ''
-      }
-    }
-    this.handleFiltersValue = debounce(this.handleFiltersValue, 300)
-  }
-
-  componentDidMount() {
-    const { tableHandlersFilters, currentTab } = this.props
+  useEffect(() => {
+    const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
     if (tableHandlersFilters) {
-      this.initFilterValues(tableHandlersFilters)
+      initFilterValues(tableHandlersFilters, props, formikProps, setState)
     } else {
-      let filterValue = this.state[currentTab]
+      let filterValue = state[currentTab]
       if (currentTab === 'orders') {
         const status = localStorage['operations-orders-status-filter']
         filterValue = {
           ...filterValue,
           status: status ? status : filterValue.status
         }
-        this.setState({ orders: filterValue }) // ! ! Otestovat
+        setState({ ...state, orders: filterValue }) // ! ! Otestovat
       }
-      this.handleFiltersValue(filterValue)
+      handleFiltersValue(filterValue, props, formikProps)
     }
-  }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.currentTab !== this.props.currentTab) {
-      const { currentTab } = this.props
+    return () => { props.saveFilters(state) }
+  }, [])
+
+  useEffect(() => {
+    if (typeof prevCurrentTab !== 'undefined') {
+      const { currentTab } = props
       if (currentTab === '') return
 
-      let filterValue = this.state[currentTab]
+      let filterValue = state[currentTab]
       if (currentTab === 'orders') {
         const status = localStorage['operations-orders-status-filter']
         filterValue = {
           ...filterValue,
           status: status ? status : filterValue.status
         }
-        this.setState({ orders: filterValue })
+        setState({ ...state, orders: filterValue })
       }
-      this.handleFiltersValue(filterValue)
+      handleFiltersValue(filterValue, props, formikProps)
     }
-  }
+  }, [props.currentTab])
 
-  componentWillUnmount() {
-    this.props.saveFilters(this.state)
-  }
-
-  initFilterValues = initTableHandlersFilters => {
-    const { currentTab } = this.props
-    if (currentTab === '') return
-    const status = localStorage['operations-orders-status-filter']
-
-    const tableHandlersFilters = {
-      ...initTableHandlersFilters,
-      orders: {
-        ...initTableHandlersFilters.orders,
-        status: status ? status : initTableHandlersFilters.orders.status
-      }
-    }
-
-    const { setValues, setFieldTouched } = this.formikProps
-    this.setState({ ...tableHandlersFilters })
-
-    setValues({
-      dateFrom: tableHandlersFilters.orders.dateFrom,
-      dateTo: tableHandlersFilters.orders.dateTo,
-      orderId: tableHandlersFilters.orders.orderId
-    })
-    setFieldTouched('dateFrom', true, true)
-
-    this.handleFiltersValue(tableHandlersFilters[currentTab])
-  }
-
-  handleFiltersValue = value => {
-    const { datagrid, currentTab } = this.props
-
-    const orderIdError = getSafe(() => this.formikProps.errors.orderId, false)
-    const dateFromError = getSafe(() => this.formikProps.errors.dateFrom, false)
-
-    let filter = value
-    if (currentTab === 'orders') {
-      filter = {
-        ...value,
-        status: getSafe(() => OrdersFilters[value.status].filters, ''),
-        orderId: !orderIdError && value.orderId ? value.orderId : '',
-        dateFrom: value.dateFrom && !dateFromError ? getStringISODate(value.dateFrom) : '',
-        dateTo: value.dateTo ? moment(getStringISODate(value.dateTo)).endOf('day').format() : ''
-      }
-    }
-    datagrid.setSearch(filter, true, 'pageFilters')
-  }
-
-  handleFilterChangeMappedUnmapped = (e, { value }) => {
-    const { currentTab } = this.props
-    if (currentTab === '') return
-    this.props.setProductMappedUnmaped(value)
-    this.handleFiltersValue(this.state[currentTab])
-  }
-
-  handleFilterChangeInputSearch = (e, data) => {
-    const { currentTab } = this.props
-    if (currentTab === '') return
-
-    this.setState({
-      [currentTab]: {
-        ...this.state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    if (currentTab === 'orders' && data.name === 'status') {
-      localStorage['operations-orders-status-filter'] = data.value
-    }
-
-    const filter = {
-      ...this.state[currentTab],
-      [data.name]: data.value
-    }
-    this.handleFiltersValue(filter)
-  }
-
-  handleFilterChangeCompany = (e, data) => {
-    const { currentTab } = this.props
-    if (currentTab === '') return
-
-    this.setState({
-      [currentTab]: {
-        ...this.state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    const filter = {
-      ...this.state[currentTab],
-      [data.name]: data.value
-    }
-    this.handleFiltersValue(filter)
-  }
-
-  searchCompanies = debounce(text => {
-    this.props.searchCompany(text, 5)
-  }, 250)
-
-  renderHandler = () => {
+  const renderHandler = () => {
     const {
       currentTab,
       openPopup,
@@ -305,13 +115,13 @@ class TablesHandlers extends Component {
       searchedCompanies,
       searchedCompaniesByName,
       companyProductUnmappedOnly
-    } = this.props
+    } = props
 
     let companiesOptions, companiesOptionsByName
 
     const item = textsTable[currentTab]
 
-    const filterValue = this.state[currentTab]
+    const filterValue = state[currentTab]
 
     if (filterValue && filterValue.company) {
       const d = JSON.parse(filterValue.company)
@@ -348,7 +158,7 @@ class TablesHandlers extends Component {
         onSubmit={() => {}}
         validateOnChange={true}
         render={formikProps => {
-          this.formikProps = formikProps
+          formikProps = formikProps
 
           switch (currentTab) {
             case 'company-product-catalog':
@@ -365,7 +175,7 @@ class TablesHandlers extends Component {
                           id: item.SearchText,
                           defaultMessage: 'Select Credit Card'
                         })}
-                        onChange={this.handleFilterChangeInputSearch}
+                        onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <div className='column'>
@@ -384,9 +194,9 @@ class TablesHandlers extends Component {
                         value={filterValue.company}
                         loading={searchedCompaniesLoading}
                         onSearchChange={(e, { searchQuery }) => {
-                          searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                          searchQuery.length > 0 && searchCompanies(searchQuery, props)
                         }}
-                        onChange={this.handleFilterChangeCompany}
+                        onChange={(e, data) => { handleFilterChangeCompany(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <DivColumn className='column'>
@@ -417,7 +227,7 @@ class TablesHandlers extends Component {
                           }
                         ]}
                         value={companyProductUnmappedOnly}
-                        onChange={this.handleFilterChangeMappedUnmapped}
+                        onChange={(e, { value }) => { handleFilterChangeMappedUnmapped(value, props, formikProps, state) }}
                       />
                     </DivColumn>
                     <ColumnSettingButton divide={true} />
@@ -440,7 +250,7 @@ class TablesHandlers extends Component {
                           text: formatMessage({ id: `orders.statusOptions.${name}` }),
                           value: name
                         }))}
-                        onChange={this.handleFilterChangeInputSearch}
+                        onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                       />
                     </div>
                     <div className='column'>
@@ -453,7 +263,7 @@ class TablesHandlers extends Component {
                             defaultMessage: 'Search By Order ID'
                           }),
                           icon: 'search',
-                          onChange: this.handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </div>
@@ -473,9 +283,9 @@ class TablesHandlers extends Component {
                         value={filterValue.company}
                         loading={searchedCompaniesLoading}
                         onSearchChange={(e, { searchQuery }) => {
-                          searchQuery.length > 0 && this.searchCompanies(searchQuery)
+                          searchQuery.length > 0 && searchCompanies(searchQuery, props)
                         }}
-                        onChange={this.handleFilterChangeCompany}
+                        onChange={(e, data) => { handleFilterChangeCompany(data, props, formikProps, state, setState) }}
                       />
                     </div>
                   </div>
@@ -495,7 +305,7 @@ class TablesHandlers extends Component {
                             id: 'global.from',
                             defaultMessage: 'From'
                           }),
-                          onChange: this.handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </div>
@@ -510,7 +320,7 @@ class TablesHandlers extends Component {
                             id: 'global.to',
                             defaultMessage: 'To'
                           }),
-                          onChange: this.handleFilterChangeInputSearch
+                          onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
                     </DivColumn>
@@ -534,7 +344,7 @@ class TablesHandlers extends Component {
                             id: item.SearchText,
                             defaultMessage: 'Select Credit Card'
                           })}
-                          onChange={this.handleFilterChangeInputSearch}
+                          onChange={(e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }}
                         />
                       </div>
                     )}
@@ -544,7 +354,7 @@ class TablesHandlers extends Component {
                       <DivColumn className='column'>
                         <Button fluid primary onClick={() => openPopup()} data-test='operations_open_popup_btn'>
                           <PlusCircle />
-                          <FormattedMessage id={item.BtnAddText}>{text => text}</FormattedMessage>
+                          <FormattedMessage id={item.BtnAddText} />
                         </Button>
                       </DivColumn>
                     )}
@@ -558,31 +368,43 @@ class TablesHandlers extends Component {
     )
   }
 
-  render() {
-    return (
-      <PositionHeaderSettings>
-        <CustomRowDiv>{this.renderHandler()}</CustomRowDiv>
-      </PositionHeaderSettings>
-    )
-  }
+  return (
+    <PositionHeaderSettings>
+      <CustomRowDiv>{renderHandler()}</CustomRowDiv>
+    </PositionHeaderSettings>
+  )
 }
 
-const mapStateToProps = state => {
-  return {
-    tableHandlersFilters: state.operations.tableHandlersFilters,
-    searchedCompanies: state.operations.searchedCompanies.map(d => ({
-      key: d.id,
-      value: JSON.stringify(d),
-      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-    })),
-    searchedCompaniesByName: state.operations.searchedCompanies.map(d => ({
-      key: d.id,
-      value: JSON.stringify(d),
-      text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-    })),
-    searchedCompaniesLoading: state.operations.searchedCompaniesLoading,
-    companyProductUnmappedOnly: state.operations.companyProductUnmappedOnly
-  }
+TablesHandlers.propTypes = {
+  currentTab: PropTypes.string,
+  tableHandlersFilters: PropTypes.object,
+  saveFilters: PropTypes.func,
+  openPopup: PropTypes.func,
+  intl: PropTypes.object,
+  searchedCompaniesLoading: PropTypes.bool,
+  searchedCompanies: PropTypes.array,
+  searchedCompaniesByName: PropTypes.array,
+  companyProductUnmappedOnly: PropTypes.string,
+  datagrid: PropTypes.object,
+  setSearch: PropTypes.func,
+  setProductMappedUnmaped: PropTypes.func,
+  searchCompany: PropTypes.func
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(TablesHandlers)))
+TablesHandlers.defaultValues = {
+  currentTab: '',
+  tableHandlersFilters: null,
+  saveFilters: () => {},
+  openPopup: () => {},
+  intl: {},
+  searchedCompaniesLoading: false,
+  searchedCompanies: [],
+  searchedCompaniesByName: [],
+  companyProductUnmappedOnly: 'ALL',
+  datagrid: {},
+  setSearch: () => {},
+  setProductMappedUnmaped: () => {},
+  searchCompany: () => {}
+}
+
+export default withDatagrid(injectIntl(TablesHandlers))

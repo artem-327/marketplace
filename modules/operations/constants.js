@@ -1,3 +1,8 @@
+/**
+ * defaultTabs constant is used in components / NavigationMenu.js
+ * @category Operations
+ * @constant
+ */
 export const defaultTabs = [
   { name: 'Shipping Quotes', id: 0, type: 'shipping-quotes' },
   { name: 'Shipping Quote Requests', id: 6, type: 'shipping-quote-requests' },
@@ -8,10 +13,20 @@ export const defaultTabs = [
   { name: 'Company Generic Products', id: 5, type: 'company-generic-products' }
 ]
 
+/**
+ * orderOperatorTabs constant is used in components / NavigationMenu.js
+ * @category Operations
+ * @constant
+ */
 export const orderOperatorTabs = [
   { name: 'Orders', id: 4, type: 'orders' }
 ]
 
+/**
+ * OrdersFilters constant is used in modules / operations / components / TableHandlers
+ * @category Operations
+ * @constant
+ */
 export const OrdersFilters = {
   all: {
     filters: []
@@ -125,3 +140,46 @@ export const OrdersFilters = {
     ]
   }
 }
+
+/**
+ * textsTable constant is used in modules / operations / components / TableHandlers
+ * @category Operations
+ * @constant
+ */
+export const textsTable = {
+  'shipping-quotes': {
+    BtnAddText: 'operations.tables.shippingQuotes.buttonAdd',
+    SearchText: 'operations.tables.shippingQuotes.search'
+  },
+  'shipping-quote-requests': {
+    SearchText: 'operations.tables.shippingQuoteRequests.search'
+  },
+  tags: {
+    BtnAddText: 'operations.tables.tags.buttonAdd',
+    SearchText: 'operations.tables.tags.search'
+  },
+  'company-product-catalog': {
+    SearchText: 'operations.tables.companyProductCatalog.search',
+    SearchCompanyText: 'operations.tables.companyProductCatalog.SearchCompanyText',
+    MappedText: 'operations.tables.companyProductCatalog.MappedText'
+  },
+  'company-inventory': {
+    SearchText: 'operations.tables.companyInventory.search'
+  },
+  orders: {
+    SearchText: 'operations.tables.orders.search'
+  },
+  'company-generic-products': {
+    SearchText: 'operations.tables.companyGenericProduct.search'
+  }
+}
+
+/**
+ * below constants are used in modules / operations / components / orders / ModalResolveDispute
+ * @category Operations
+ * @constant
+ */
+export const ACCEPT_ORDER = 'acceptOrder'
+export const CREDIT_ORDER = 'creditOrder' 
+export const REJECT_ORDER = 'rejectOrder'
+ 

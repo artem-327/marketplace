@@ -1,39 +1,22 @@
-import { Component } from 'react'
-import { connect } from 'react-redux'
-import TablesHandlers from './TablesHandlers'
-import { Container, Grid, GridColumn } from 'semantic-ui-react'
-import { withAuth } from '~/hocs'
-import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
-
-import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTable'
-import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopup'
-import ShippingQuoteRequestsTable from './shipping-quote-requests/ShippingQuoteRequestsTable'
-import TagsTable from './tags/TagsTable'
-import TagsPopup from './tags/TagsPopup'
-import CompanyProductTable from './company-product-catalog/CompanyProductTable'
-import CompanyInventoryTable from './company-inventory/CompanyInventoryTable'
+// Components
+import ShippingQuotesTable from './shipping-quotes/ShippingQuotesTableContainer'
+import ShippingQuotesPopup from './shipping-quotes/ShippingQuotesPopupContainer'
+import ShippingQuoteRequestsTable from './shipping-quote-requests/ShippingQuoteRequestsTableContainer'
+import TagsTable from './tags/TagsTableContainer'
+import TagsPopup from './tags/TagsPopupContainer'
+import CompanyProductTable from './company-product-catalog/CompanyProductTableContainer'
+import CompanyInventoryTable from './company-inventory/CompanyInventoryTableContainer'
 import Orders from './orders/OrdersContainer'
 import OrderDetail from './orders/DetailContainer'
-import CompanyGenericProductsTable from './company-generic-products/CompanyGenericProductsTable'
+import CompanyGenericProductsTable from './company-generic-products/CompanyGenericProductsTableContainer'
 
-import { getSafe } from '~/utils/functions'
-import { DatagridProvider } from '~/modules/datagrid'
-import * as Actions from '../actions'
-import { orderOperatorTabs } from '../constants'
-
-const CustomGridColumn = styled(GridColumn)`
-  padding: 0 30px !important;
-`
-
-class Operations extends Component {
-  componentWillUnmount() {
-    const { isOpenPopup, closePopup } = this.props
-    if (isOpenPopup) closePopup()
-  }
-
-  renderContent = () => {
-    const { currentTab, isOpenPopup, orderDetailData } = this.props
+/**
+ * Operations Render Content
+ * @category Operations
+ * @services
+ */
+export const renderContent = (props) => {
+    const { currentTab, isOpenPopup, orderDetailData } = props
 
     const tables = {
       'shipping-quotes': <ShippingQuotesTable />,
@@ -56,10 +39,15 @@ class Operations extends Component {
         {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
-  }
+}
 
-  getApiConfig = () => {
-    const { currentTab, companyProductUnmappedOnly } = this.props
+/**
+ * Operations Get Api Config
+ * @category Operations
+ * @services
+ */
+export const getApiConfig = (props) => {
+    const { currentTab, companyProductUnmappedOnly } = props
     const datagridApiMap = {
       'shipping-quotes': {
         url: '/prodex/api/shipment/manual-quotes/datagrid',
@@ -230,50 +218,4 @@ class Operations extends Component {
       }
     }
     return datagridApiMap[currentTab]
-  }
-
-  render() {
-    const { currentTab, orderDetailData } = this.props
-
-    if (
-      !(
-        getSafe(() => this.props.auth.identity.isAdmin, false) ||
-        getSafe(() => this.props.auth.identity.isOperator, false)
-      )
-    )
-      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-
-    const displayPage = !!orderDetailData
-
-    return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
-        <Container fluid className='flex stretched'>
-          {displayPage ? (
-            this.renderContent()
-          ) : (
-            <>
-              <Container fluid>
-                <TablesHandlers currentTab={currentTab} />
-              </Container>
-
-              <Grid columns='equal' className='flex stretched' style={{ margin: '0', padding: '0' }}>
-                <Grid.Row style={{ margin: '0', padding: '0 0 10px 0' }}>
-                  <CustomGridColumn className='flex stretched'>{this.renderContent()}</CustomGridColumn>
-                </Grid.Row>
-              </Grid>
-            </>
-          )}
-        </Container>
-      </DatagridProvider>
-    )
-  }
 }
-
-const mapStateToProps = state => {
-  return {
-    ...state.operations,
-    auth: state.auth
-  }
-}
-
-export default withAuth(connect(mapStateToProps, Actions)(Operations))

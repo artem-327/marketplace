@@ -1,143 +1,43 @@
-import * as AT from './action-types'
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+// Apis
 import api from './api'
-import { Datagrid } from '~/modules/datagrid'
+// Services
+import { Datagrid } from '../datagrid'
 
-export function openPopup(rows = null) {
-  return {
-    type: AT.OPERATIONS_OPEN_POPUP,
-    payload: rows
-  }
-}
 
-export function closePopup(rows = null) {
-  return {
-    type: AT.OPERATIONS_CLOSE_POPUP,
-    payload: rows
-  }
-}
-
-export function deleteShippingQuote(id) {
-  return {
-    type: AT.OPERATIONS_DELETE_SHIPPING_QUOTE,
-    async payload() {
-      await api.deleteShippingQuote(id)
-      Datagrid.removeRow(id)
-      return id
-    }
-  }
-}
-
-export function updateShippingQuote(id, data) {
-  return {
-    //type: AT.OPERATIONS_DELETE_SHIPPING_QUOTE,
-    //payload: api.updateShippingQuote(id)  // endpoint not exists
-    type: AT.OPERATIONS_CLOSE_POPUP,
-    payload: null
-  }
-}
-
-export function createShippingQuote(data) {
-  return {
-    type: AT.OPERATIONS_CREATE_SHIPPING_QUOTE,
-    payload: api.createShippingQuote(data)
-  }
-}
-
-export function deleteTag(id) {
-  return {
-    type: AT.OPERATIONS_DELETE_TAG,
-    async payload() {
-      await api.deleteTag(id)
-      Datagrid.removeRow(id)
-      return id
-    }
-  }
-}
-//TODO missing endpoint fix updateRow
-export function updateTag(id, name) {
-  return {
-    type: AT.OPERATIONS_UPDATE_TAG,
-    async payload() {
-      const newRow = await api.updateTag(id, name)
-      Datagrid.updateRow(id, () => newRow.data)
-    }
-  }
-}
-
-export function createTag(name) {
-  return {
-    type: AT.OPERATIONS_CREATE_TAG,
-    async payload() {
-      await api.createTag(name)
-      Datagrid.loadData()
-    }
-  }
-}
-
-export const searchCompany = (companyText, limit) => ({
-  type: AT.OPERATIONS_SEARCH_COMPANY,
-  payload: api.searchCompany(companyText, limit)
+export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
+export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
+export const deleteShippingQuote = createAsyncAction('OPERATIONS_DELETE_SHIPPING_QUOTE', async (id) => {
+  await api.deleteShippingQuote(id)
+  Datagrid.removeRow(id)
+  return id
 })
-
-export const setProductMappedUnmaped = value => ({
-  type: AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED,
-  payload: value
+export const createShippingQuote = createAsyncAction('OPERATIONS_CREATE_SHIPPING_QUOTE', (data) => api.createShippingQuote(data))
+export const deleteTag = createAsyncAction('OPERATIONS_DELETE_TAG', async (id) => {
+  await api.deleteTag(id)
+  Datagrid.removeRow(id)
+  return id
 })
-
-export const loadData = (filter = null) => ({
-  type: AT.OPERATIONS_ORDERS_FETCH_SUCCESS,
-  payload: { filter }
+export const updateTag = createAsyncAction('OPERATIONS_UPDATE_TAG', async (id, name) => {
+  const newRow = await api.updateTag(id, name)
+  Datagrid.updateRow(id, () => newRow.data)
 })
-
-export const openOrderDetail = (data = null) => ({
-  type: AT.OPERATIONS_OPEN_ORDER_DETAIL,
-  payload: data
+export const createTag = createAsyncAction('OPERATIONS_CREATE_TAG', async (name) => {
+  await api.createTag(name)
+  Datagrid.loadData()
 })
-
-export const cancelOrder = orderId => ({
-  type: AT.OPERATIONS_ORDERS_CANCEL_ORDER,
-  payload: api.cancelOrder(orderId)
-})
-
-export const clearAccountingDocuments = () => ({
-  type: AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR,
-  payload: {}
-})
-
-export const getAccountingDocuments = orderId => ({
-  type: AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS,
-  payload: api.getAccountingDocuments(orderId)
-})
-
-export function saveFilters(filters) {
-  return {
-    type: AT.OPERATIONS_SAVE_FILTERS,
-    payload: filters
-  }
-}
-
-export function markRequestAsProcessed(id) {
-  return {
-    type: AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED,
-    payload: api.markRequestAsProcessed(id)
-  }
-}
-
-export function denyRequest(id) {
-  return {
-    type: AT.OPERATIONS_DENY_REQUEST,
-    payload: api.denyRequest(id)
-  }
-}
-
-export function deleteRequest(id) {
-  return {
-    type: AT.OPERATIONS_DELETE_REQUEST,
-    payload: api.deleteRequest(id)
-  }
-}
-
-export const searchManualQuoteRequest = val => {
+export const searchCompany = createAsyncAction('OPERATIONS_SEARCH_COMPANY', (companyText, limit) => api.searchCompany(companyText, limit))
+export const setProductMappedUnmaped = createAction('OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED', value => value)
+export const loadData = createAction('OPERATIONS_ORDERS_FETCH_SUCCESS', (filter = null) => ({filter}))
+export const openOrderDetail = createAction('OPERATIONS_OPEN_ORDER_DETAIL', (data = null) => data)
+export const cancelOrder = createAsyncAction('OPERATIONS_ORDERS_CANCEL_ORDER', (orderId) => api.cancelOrder(orderId))
+export const clearAccountingDocuments = createAction('OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR')
+export const getAccountingDocuments = createAsyncAction('OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS', (orderId) => api.getAccountingDocuments(orderId))
+export const saveFilters = createAction('OPERATIONS_SAVE_FILTERS', filters => filters)
+export const markRequestAsProcessed = createAsyncAction('OPERATIONS_MARK_REQUEST_AS_PROCESSED', (id) => api.markRequestAsProcessed(id))
+export const denyRequest = createAsyncAction('OPERATIONS_DENY_REQUEST', (id) => api.denyRequest(id))
+export const deleteRequest = createAsyncAction('OPERATIONS_DELETE_REQUEST', (id) => api.deleteRequest(id))
+export const searchManualQuoteRequest = createAsyncAction('OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST', async (val) => {
   const textValue = val.toString()
   const number = parseInt(val)
   let filters = [];
@@ -172,32 +72,12 @@ export const searchManualQuoteRequest = val => {
     })
   }
 
-  return {
-  type: AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST,
-  payload: api.searchManualQuoteRequest({
+  return await api.searchManualQuoteRequest({
     orFilters: filters,
     pageNumber: 0,
     pageSize: 50
   })
-}}
-
-export function resolveDisputeAccept(orderId) {
-  return {
-    type: AT.RESOLVE_DISPUTE_ACCEPT,
-    payload: api.resolveDisputeAccept(orderId)
-  }
-}
-
-export function resolveDisputeCredit(orderId, amount) {
-  return {
-    type: AT.RESOLVE_DISPUTE_CREDIT,
-    payload: api.resolveDisputeCredit(orderId, amount)
-  }
-}
-
-export function resolveDisputeReject(orderId) {
-  return {
-    type: AT.RESOLVE_DISPUTE_REJECT,
-    payload: api.resolveDisputeReject(orderId)
-  }
-}
+})
+export const resolveDisputeAccept = createAsyncAction('RESOLVE_DISPUTE_ACCEPT', (orderId) => api.resolveDisputeAccept(orderId))
+export const resolveDisputeCredit = createAsyncAction('RESOLVE_DISPUTE_CREDIT', (orderId, amount) => api.resolveDisputeCredit(orderId, amount))
+export const resolveDisputeReject = createAsyncAction('RESOLVE_DISPUTE_REJECT', (orderId) => api.resolveDisputeReject(orderId))
