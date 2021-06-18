@@ -20,7 +20,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
@@ -239,12 +239,13 @@ class Listings extends Component {
       },
       viewOnlyPopupOpen: false,
       buyAttemptHasDea: null,
-      buyAttemptHasDhs: null
+      buyAttemptHasDhs: null,
+      selectedSellerOption: null
     }
   }
 
   componentDidMount() {
-    const { tableHandlersFiltersListings, advancedFilters, datagrid, applyDatagridFilter, searchCompanies } = this.props
+    const { tableHandlersFiltersListings, advancedFilters, datagrid, applyDatagridFilter } = this.props
 
     if (tableHandlersFiltersListings) {
       this.setState({ filterValues: tableHandlersFiltersListings }, () => {
@@ -264,7 +265,6 @@ class Listings extends Component {
       let datagridFilter = this.toDatagridFilter(advancedFilters)
       applyDatagridFilter(datagridFilter, true)
     }
-    searchCompanies()
   }
 
   componentWillUnmount() {
@@ -322,12 +322,15 @@ class Listings extends Component {
   }
 
   handleSellerChange = (e, { value }) => {
+    const val = value === '' ? 0 : value
+    const selectedSellerOption = this.props.searchedCompaniesDropdown.find(el => el.value === val)
     this.setState(
       {
         filterValues: {
           ...this.state.filterValues,
-          seller: value
-        }
+          seller: val
+        },
+        selectedSellerOption
       },
       () => {
         const filter = {
@@ -340,6 +343,10 @@ class Listings extends Component {
       }
     )
   }
+
+  handleSearchSellerChange = debounce(text => {
+    this.props.searchCompanies(text)
+  }, 300)
 
   getRows = () => {
     const {
@@ -531,10 +538,18 @@ class Listings extends Component {
       viewOnlyPopupOpen,
       buyAttemptHasDea,
       buyAttemptHasDhs,
-      filterValues
+      filterValues,
+      selectedSellerOption
     } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
+
+    let searchedCompaniesOptions = searchedCompaniesDropdown.slice()
+    if (selectedSellerOption) {
+      if (!searchedCompaniesOptions.some(el => el.key === selectedSellerOption.key)) {
+        searchedCompaniesOptions.push(selectedSellerOption)
+      }
+    }
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
@@ -557,10 +572,13 @@ class Listings extends Component {
                   style={{ width: '210px' }}
                   name='seller'
                   selection
+                  clearable={filterValues.seller !== 0}
+                  search={options => options}
                   value={filterValues.seller}
-                  options={searchedCompaniesDropdown}
+                  options={searchedCompaniesOptions}
                   loading={searchedCompaniesLoading}
                   onChange={this.handleSellerChange}
+                  onSearchChange={(e, { searchQuery }) => this.handleSearchSellerChange(searchQuery)}
                 />
               </div>
               <div className='column'>

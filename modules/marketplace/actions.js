@@ -115,7 +115,7 @@ export const addOfferToCart = id => ({
   payload: api.addOfferToCart(id)
 })
 
-export const searchCompanies = () => ({
+export const searchCompanies = name => ({
   type: AT.MARKETPLACE_SEARCH_COMPANIES,
-  payload: api.searchCompanies()
+  payload: api.searchCompanies(name)
 })

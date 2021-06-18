@@ -107,25 +107,27 @@ export const getCompaniesDropdown = companies => {
   const options = companies?.map(c => {
     const logo = c.avatarUrl || c.logoUrl
 
+    const seller = (
+      <div key={c.id} style={{ display: 'flex' }}>
+        {logo ? (
+          <Image
+            verticalAlign='middle'
+            style={{ width: '20px', margin: 'auto 10px auto 0' }}
+            size='mini'
+            spaced={true}
+            src={logo}
+          />
+        ) : null
+        }
+        <div style={{ margin: 'auto 0' }}>{c.cfDisplayName}</div>
+      </div>
+    )
+
     return {
-      text: c.cfDisplayName,
+      text: seller,
       value: c.id,
       key: c.id,
-      content: (
-        <div key={c.id} style={{ display: 'flex' }}>
-          {logo ? (
-            <Image
-              verticalAlign='middle'
-              style={{ width: '20px', margin: 'auto 10px auto 0' }}
-              size='mini'
-              spaced={true}
-              src={logo}
-            />
-            ) : null
-          }
-          <div style={{ margin: 'auto 0' }}>{c.cfDisplayName}</div>
-        </div>
-      )
+      content: seller
     }
   })
 
