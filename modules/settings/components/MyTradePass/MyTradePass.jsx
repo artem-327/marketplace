@@ -149,7 +149,9 @@ function mapStateToProps({ settings }) {
     let data = {}
     if(businessDocuments) {
       Object.keys(businessDocuments).map((key, i) => {
-        if(key !== 'other') {
+        if(key === 'formation_articles_of_incorporation') {
+          data[key] = businessDocuments[key].status
+        } else if(key === 'insurance_general_liability') {
           data[key] = businessDocuments[key].status
         }
       })

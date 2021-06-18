@@ -267,7 +267,13 @@ export default function reducer(state = initialState, action) {
     case AT.CART_FETCH_PENDING: {
       return {
         ...state,
-        cartIsFetching: true
+        loading: true
+      }
+    }
+    case AT.CART_FETCH_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
     case AT.CART_FETCH_FULFILLED: {
@@ -283,7 +289,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         cart: payload,
-        cartIsFetching: false
+        loading: false
       }
     }
 
