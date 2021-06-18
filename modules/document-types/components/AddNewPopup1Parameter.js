@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewRequest } from '../actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
@@ -21,7 +22,7 @@ const formValidation = Yup.object().shape({
 
 class AddNewPopup1Parameter extends Component {
   render() {
-    const { closeAddPopup, postNewRequest } = this.props
+    const { closeAddPopup, postNewRequest, getDocumentTypes } = this.props
 
     return (
       <Modal closeIcon onClose={() => closeAddPopup()} open centered={false}>
@@ -43,6 +44,7 @@ class AddNewPopup1Parameter extends Component {
 
               try {
                 await postNewRequest(data)
+                getDocumentTypes()
               } catch (e) {
                 console.error(e)
               } finally {
@@ -86,7 +88,8 @@ class AddNewPopup1Parameter extends Component {
 
 const mapDispatchToProps = {
   closeAddPopup,
-  postNewRequest
+  postNewRequest,
+  getDocumentTypes
 }
 
 export default connect(null, mapDispatchToProps)(AddNewPopup1Parameter)

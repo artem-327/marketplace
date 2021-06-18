@@ -1,6 +1,68 @@
-import * as AT from './action-types'
-import { getSafe } from '../../utils/functions'
+import typeToReducer from 'type-to-reducer'
 import Router from 'next/router'
+import { getSafe } from '../../utils/functions'
+import {
+  loadData,
+  confirmOrder,
+  confirmReturned,
+  rejectOrder,
+  shipOrder,
+  returnShipOrder,
+  downloadPdf,
+  searchCompany,
+  openAssignLots,
+  closeAssignLots,
+  assignLots,
+  loadLotsToAssign,
+  linkAttachment,
+  removeAttachmentLink,
+  removeAttachment,
+  cancelPayment,
+  openReinitiateTransfer,
+  closeReinitiateTransfer,
+  loadDwollaBankAccounts,
+  loadVellociBankAccounts,
+  payOrder,
+  cancelOrder,
+  clearRelatedOrders,
+  getRelatedOrders,
+  approveOrder,
+  discardOrder,
+  openPopupName,
+  closePopup,
+  receivedOrder,
+  acceptDelivery,
+  getReturnShipmentRates,
+  returnShipmentOrder,
+  rejectPurchaseOrder,
+  creditCounterAccept,
+  creditCounter,
+  creditCounterReject,
+  creditRequest,
+  getShippingQuotes,
+  getManualShippingQuote,
+  purchaseShipmentOrder,
+  downloadCreditRequestAttachments,
+  creditAccept,
+  getPurchaseOrder,
+  getSaleOrder,
+  applyDatagridFilter,
+  getGroupedProductOffers,
+  patchAssignProductOffers,
+  deleteAssignProductOffers,
+  clearGroupedProductOffer,
+  linkAttachmentToOrderItem,
+  removeLinkAttachmentToOrderItem,
+  unlinkAttachmentToOrder,
+  linkAttachmentToOrder,
+  clearOrderDetail,
+  editTrackingCode,
+  editReturnTrackingCode,
+  saveFilters,
+  orderResolutionReopen,
+  orderResolutionAccept,
+  downloadDisputeAttachment
+} from './actions'
 
 const initialState = {
   data: [],
@@ -38,200 +100,203 @@ const initialState = {
   groupedProductOffers: [],
   loadingGroupedProductOffers: false,
   order: [],
-  documentTypesFetching: false,
-  listDocumentTypes: [],
   loadingRelatedDocuments: false,
   tableHandlersFilters: null,
   isThirdPartyConnectionException: false,
   openedDisputedRequest: false
 }
 
-export default function reducer(state = initialState, action) {
-  switch (action.type) {
-    /*
-        case AT.ORDERS_FETCH_REQUESTED:
-            return {
-                ...state,
-                isFetching: true
-            }
-        */
-    case AT.ORDERS_FETCH_SUCCESS:
+
+export default typeToReducer(
+  {
+    [loadData]: (state, action) => {
       return {
         ...state,
         isFetching: false,
-        //data: action.payload.data,
         dataType: action.payload.endpointType,
         statusFilter: action.payload.filter.status,
         activeStatus: action.payload.filter.status,
         filterData: action.payload.filter
       }
-    /*
-        case AT.ORDERS_FETCH_FAILURE:
-            return {
-                ...state,
-                isFetching: false
-            }
-            */
-    case AT.ORDER_GET_SALE_ORDER_FULFILLED:
-    case AT.ORDER_GET_PURCHASE_ORDER_FULFILLED:
-      return {
-        ...state,
-        isDetailFetching: false,
-        detail: action.payload.data
-      }
-    case AT.ORDER_GET_SALE_ORDER_PENDING:
-    case AT.ORDER_GET_PURCHASE_ORDER_PENDING:
-    case AT.ORDERS_DETAIL_FETCH_REQUESTED:
-      return {
-        ...state,
-        isDetailFetching: true
-      }
-    case AT.ORDERS_DETAIL_FETCH_SUCCESS:
-      return {
-        ...state,
-        isDetailFetching: false,
-        detail: action.payload.data,
-        detailType: action.payload.detailType === 'sale' ? 'sales' : action.payload.detailType
-      }
-    case AT.ORDER_GET_SALE_ORDER_REJECTED:
-    case AT.ORDER_GET_PURCHASE_ORDER_REJECTED:
-    case AT.ORDERS_DETAIL_FETCH_FAILURE:
-      action.payload === 'sale' ? Router.push('/orders/sales') : Router.push('/orders/purchase')
-      return {
-        ...state,
-        isDetailFetching: false
-      }
-    case AT.ORDER_CONFIRM_FETCH_PENDING:
-    case AT.ORDER_APPROVE_ORDER_PENDING:
+    },
+    [confirmOrder.pending]: (state, action) => {
       return {
         ...state,
         isSending: 1
       }
-    case AT.ORDER_DISCARD_ORDER_PENDING:
-    case AT.ORDER_REJECT_FETCH_PENDING:
-      return {
-        ...state,
-        isSending: 2
-      }
-    case AT.ORDER_ACCEPT_DELIVERY_ORDER_PENDING:
-    case AT.ORDER_RECEIVED_ORDER_PENDING:
-    case AT.ORDER_CONFIRM_RETURNED_FETCH_PENDING:
-    case AT.ORDER_CANCEL_ORDER_PENDING:
-    case AT.ACCEPT_CREDIT_PENDING:
-    case AT.CREDIT_COUNTER_REJECT_PENDING:
-    case AT.CREDIT_ACCEPT_PENDING:
-    case AT.ORDER_RETURN_SHIP_FETCH_PENDING:
-    case AT.ORDER_SHIP_FETCH_PENDING:
-      return {
-        ...state,
-        isSending: true
-      }
-    case AT.ORDER_DISCARD_ORDER_REJECTED:
-    case AT.ORDER_APPROVE_ORDER_REJECTED:
-    case AT.ORDER_ACCEPT_DELIVERY_ORDER_REJECTED:
-    case AT.ORDER_RECEIVED_ORDER_REJECTED:
-    case AT.ORDER_CONFIRM_RETURNED_FETCH_REJECTED:
-    case AT.ORDER_CANCEL_ORDER_REJECTED:
-    case AT.ACCEPT_CREDIT_REJECTED:
-    case AT.CREDIT_COUNTER_REJECT_REJECTED:
-    case AT.CREDIT_ACCEPT_REJECTED:
-    case AT.ORDER_CONFIRM_FETCH_REJECTED:
-    case AT.ORDER_REJECT_FETCH_REJECTED:
-    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_REJECTED:
-    case AT.ORDER_RETURN_SHIP_FETCH_REJECTED:
-    case AT.ORDER_SHIP_FETCH_REJECTED:
+    },
+    [confirmOrder.rejected]: (state, action) => {
       return {
         ...state,
         isSending: false
       }
-    case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
+    },
+    [confirmOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [confirmReturned.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [confirmReturned.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [confirmReturned.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [rejectOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: 2
+      }
+    },
+    [rejectOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [rejectOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [shipOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [shipOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [shipOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [returnShipOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [returnShipOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [returnShipOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [downloadPdf.pending]: (state, action) => {
       return {
         ...state
       }
-    case AT.ORDERS_SEARCH_COMPANY_FULFILLED:
+    },
+    [downloadPdf.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [downloadPdf.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [searchCompany.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [searchCompany.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [searchCompany.fulfilled]: (state, action) => {
       return {
         ...state,
         searchedCompanies: action.payload.data
       }
-    case AT.ORDER_OPEN_ASSIGN_LOTS:
+    },
+    [openAssignLots]: (state, action) => {
       return {
         ...state,
         openedAssignLots: true
       }
-    case AT.ORDER_CLOSE_ASSIGN_LOTS:
+    },
+    [closeAssignLots]: (state, action) => {
       return {
         ...state,
         openedAssignLots: false
       }
-    case AT.ORDER_OPEN_REINITIATE_TRANSFER:
+    },
+    [assignLots.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [assignLots.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [assignLots.fulfilled]: (state, action) => {
       return {
         ...state,
-        openedReinitiateTransfer: true
+        detail: {
+          ...state.detail,
+          orderItems: state.detail.orderItems.map(orderItem => {
+            let foundOrderItem = action.payload.find(oi => oi.id === orderItem.id)
+            if (foundOrderItem) {
+              return {
+                ...foundOrderItem
+              }
+            }
+            return {
+              ...orderItem
+            }
+          })
+        }
       }
-    case AT.ORDER_CLOSE_REINITIATE_TRANSFER:
+    },
+    [loadLotsToAssign.pending]: (state, action) => {
       return {
-        ...state,
-        openedReinitiateTransfer: false
+        ...state
       }
-    case AT.ORDER_OPEN_POPUP_NAME:
+    },
+    [loadLotsToAssign.rejected]: (state, action) => {
       return {
-        ...state,
-        [action.payload]: true
+        ...state
       }
-    case AT.ORDER_CLOSE_POPUP:
-      return {
-        ...state,
-        openedEnterTrackingIdShip: false,
-        openedEnterTrackingIdReturnShip: false,
-        openedPurchaseRejectDelivery: false,
-        openedPurchaseRequestCreditDelivery: false,
-        openedPurchaseReviewCreditRequest: false,
-        openedSaleReviewCreditRequest: false,
-        openedSaleReturnShipping: false,
-        openedPurchaseOrderShipping: false,
-        opendSaleAttachingProductOffer: false,
-        openedDisputedRequest: false
-      }
-
-    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_PENDING:
-    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_PENDING:
-      return {
-        ...state,
-        bankAccountsLoading: true
-      }
-    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_FULFILLED:
-      return {
-        ...state,
-        bankAccounts: action.payload.data.map(bankAccount => {
-          return {
-            id: bankAccount.id,
-            text: bankAccount.name,
-            value: bankAccount.id
-          }
-        }),
-        bankAccountsLoading: false
-      }
-    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_FULFILLED:
-      return {
-        ...state,
-        bankAccounts: action.payload.data.map(bankAccount => {
-          return {
-            id: bankAccount.id,
-            text: bankAccount.display_name,
-            value: bankAccount.account_public_id
-          }
-        }),
-        bankAccountsLoading: false
-      }
-    case AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS_REJECTED:
-    case AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS_REJECTED:
-      return {
-        ...state,
-        bankAccountsLoading: false,
-        isThirdPartyConnectionException:
-          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
-      }
-    case AT.ORDER_GET_LOTS_FULFILLED:
+    },
+    [loadLotsToAssign.fulfilled]: (state, action) => {
       // prepare lots for used product offers
       let poLots = state.detail.lots ? state.detail.lots : []
       poLots.push({
@@ -265,33 +330,63 @@ export default function reducer(state = initialState, action) {
           poLots: statePoLots.concat(poLots)
         }
       }
-    case AT.ORDER_ASSIGN_LOTS_FULFILLED:
+    },
+    [linkAttachment.pending]: (state, action) => {
       return {
-        ...state,
-        detail: {
-          ...state.detail,
-          orderItems: state.detail.orderItems.map(orderItem => {
-            let foundOrderItem = action.payload.find(oi => oi.id === orderItem.id)
-            if (foundOrderItem) {
-              return {
-                ...foundOrderItem
-              }
-            }
-            return {
-              ...orderItem
-            }
-          })
-        }
+        ...state
       }
-    case AT.ORDER_PAY_ORDER_FULFILLED:
+    },
+    [linkAttachment.rejected]: (state, action) => {
       return {
-        ...state,
-        detail: {
-          ...state.detail,
-          ...action.payload.data
-        }
+        ...state
       }
-    case AT.ORDER_CANCEL_PAYMENT_FULFILLED:
+    },
+    [linkAttachment.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachmentLink.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachmentLink.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachmentLink.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachment.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachment.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [removeAttachment.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [cancelPayment.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [cancelPayment.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [cancelPayment.fulfilled]: (state, action) => {
       return {
         ...state,
         detail: {
@@ -299,395 +394,729 @@ export default function reducer(state = initialState, action) {
           paymentStatus: 4
         }
       }
-    case AT.CLEAR_RELATED_ORDERS:
+    },
+    [openReinitiateTransfer]: (state, action) => {
+      return {
+        ...state,
+        openedReinitiateTransfer: true
+      }
+    },
+    [closeReinitiateTransfer]: (state, action) => {
+      return {
+        ...state,
+        openedReinitiateTransfer: false
+      }
+    },
+    [loadDwollaBankAccounts.pending]: (state, action) => {
+      return {
+        ...state,
+        bankAccountsLoading: true
+      }
+    },
+    [loadDwollaBankAccounts.rejected]: (state, action) => {
+      return {
+        ...state,
+        bankAccountsLoading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+      }
+    },
+    [loadDwollaBankAccounts.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        bankAccounts: action.payload.data.map(bankAccount => {
+          return {
+            id: bankAccount.id,
+            text: bankAccount.name,
+            value: bankAccount.id
+          }
+        }),
+        bankAccountsLoading: false
+      }
+    },
+    [loadVellociBankAccounts.pending]: (state, action) => {
+      return {
+        ...state,
+        bankAccountsLoading: true
+      }
+    },
+    [loadVellociBankAccounts.rejected]: (state, action) => {
+      return {
+        ...state,
+        bankAccountsLoading: false,
+        isThirdPartyConnectionException:
+          getSafe(() => action.payload.response.data.exceptionMessage, '') === 'THIRD_PARTY_CONNECTION_EXCEPTION'
+      }
+    },
+    [loadVellociBankAccounts.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        bankAccounts: action.payload.data.map(bankAccount => {
+          return {
+            id: bankAccount.id,
+            text: bankAccount.display_name,
+            value: bankAccount.account_public_id
+          }
+        }),
+        bankAccountsLoading: false
+      }
+    },
+    [payOrder.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [payOrder.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [payOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: {
+          ...state.detail,
+          ...action.payload.data
+        }
+      }
+    },
+    [cancelOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [cancelOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [cancelOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [clearRelatedOrders]: (state, action) => {
       return {
         ...state,
         relatedOrders: []
       }
-    case AT.RELATED_ORDERS_PENDING:
+    },
+    [getRelatedOrders.pending]: (state, action) => {
       return {
         ...state,
         loadRelatedOrders: true
       }
-    case AT.RELATED_ORDERS_FULFILLED:
+    },
+    [getRelatedOrders.rejected]: (state, action) => {
+      return {
+        ...state,
+        loadRelatedOrders: false
+      }
+    },
+    [getRelatedOrders.fulfilled]: (state, action) => {
       return {
         ...state,
         loadRelatedOrders: false,
         relatedOrders: action.payload.data
       }
-    case AT.CREDIT_ACCEPT_FULFILLED:
-    case AT.ORDER_RETURN_SHIP_FETCH_FULFILLED:
-    case AT.ORDER_SHIP_FETCH_FULFILLED:
-    case AT.ORDER_CONFIRM_FETCH_FULFILLED:
-    case AT.ORDER_REJECT_FETCH_FULFILLED:
-    case AT.ORDER_CANCEL_ORDER_FULFILLED:
-    case AT.ORDER_APPROVE_ORDER_FULFILLED:
+    },
+    [approveOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: 1
+      }
+    },
+    [approveOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [approveOrder.fulfilled]: (state, action) => {
       return {
         ...state,
         detail: action.payload.data,
         isSending: false
       }
-    case AT.RETURN_SHIPMENT_RATES_FULFILLED:
+    },
+    [discardOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: 2
+      }
+    },
+    [discardOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [discardOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [openPopupName]: (state, action) => {
+      return {
+        ...state,
+        [action.payload]: true
+      }
+    },
+    [closePopup]: (state, action) => {
+      return {
+        ...state,
+        openedEnterTrackingIdShip: false,
+        openedEnterTrackingIdReturnShip: false,
+        openedPurchaseRejectDelivery: false,
+        openedPurchaseRequestCreditDelivery: false,
+        openedPurchaseReviewCreditRequest: false,
+        openedSaleReviewCreditRequest: false,
+        openedSaleReturnShipping: false,
+        openedPurchaseOrderShipping: false,
+        opendSaleAttachingProductOffer: false,
+        openedDisputedRequest: false
+      }
+    },
+    [receivedOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [receivedOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [receivedOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [acceptDelivery.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [acceptDelivery.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [acceptDelivery.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [getReturnShipmentRates.pending]: (state, action) => {
+      return {
+        ...state,
+        returnShipmentRates: {},
+        isSending: true
+      }
+    },
+    [getReturnShipmentRates.rejected]: (state, action) => {
+      return {
+        ...state,
+        returnShipmentRates: {},
+        isSending: false
+      }
+    },
+    [getReturnShipmentRates.fulfilled]: (state, action) => {
       return {
         ...state,
         returnShipmentRates: action.payload.data,
         isSending: false
       }
-    case AT.RETURN_SHIPMENT_RATES_PENDING:
-      return {
-        ...state,
-        returnShipmentRates: {},
-        isSending: true
-      }
-    case AT.RETURN_SHIPMENT_RATES_REJECTED:
-      return {
-        ...state,
-        returnShipmentRates: {},
-        isSending: false
-      }
-    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_PENDING:
-      return {
-        ...state,
-        shipmentOrderResult: {}
-      }
-    case AT.ORDER_PURCHASE_SHIPMENT_ORDER_FULFILLED:
-      return {
-        ...state,
-        shipmentOrderResult: action.payload.data,
-        isSending: false
-      }
-    case AT.RETURN_SHIPMENT_ORDER_PENDING:
+    },
+    [returnShipmentOrder.pending]: (state, action) => {
       return {
         ...state,
         returnShipmentOrderResult: {}
       }
-    case AT.RETURN_SHIPMENT_ORDER_FULFILLED:
+    },
+    [returnShipmentOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        returnShipmentOrderResult: {}
+      }
+    },
+    [returnShipmentOrder.fulfilled]: (state, action) => {
       return {
         ...state,
         returnShipmentOrderResult: action.payload.data,
         isSending: false
       }
-    case AT.ORDER_CONFIRM_RETURNED_FETCH_FULFILLED:
-    case AT.ORDER_ACCEPT_DELIVERY_ORDER_FULFILLED:
-    case AT.ORDER_RECEIVED_ORDER_FULFILLED:
-    case AT.ORDER_DISCARD_ORDER_FULFILLED:
-    case AT.REJECT_PURCHASE_ORDER_FULFILLED:
-    case AT.ACCEPT_CREDIT_FULFILLED:
-    case AT.CREDIT_COUNTER_FULFILLED:
-    case AT.CREDIT_COUNTER_REJECT_FULFILLED:
-    case AT.CREDIT_REQUEST_UPDATE_FULFILLED:
+    },
+    [rejectPurchaseOrder.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [rejectPurchaseOrder.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [rejectPurchaseOrder.fulfilled]: (state, action) => {
       return {
         ...state,
         detail: action.payload.data,
         isSending: false
       }
-    case AT.ORDER_SHIPPING_QUOTES_FETCH_PENDING: {
+    },
+    [creditCounterAccept.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [creditCounterAccept.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [creditCounterAccept.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [creditCounter.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [creditCounter.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [creditCounter.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [creditCounterReject.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [creditCounterReject.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [creditCounterReject.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [creditRequest.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [creditRequest.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [creditRequest.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [getShippingQuotes.pending]: (state, action) => {
       return {
         ...state,
         shippingQuotesAreFetching: true
       }
-    }
-    case AT.ORDER_SHIPPING_QUOTES_FETCH_FULFILLED: {
-      return {
-        ...state,
-        shippingQuotes: action.payload.data,
-        shippingQuotesAreFetching: false
-      }
-    }
-    case AT.ORDER_SHIPPING_QUOTES_FETCH_REJECTED: {
+    },
+    [getShippingQuotes.rejected]: (state, action) => {
       return {
         ...state,
         shippingQuotesAreFetching: false,
         shippingQuotes: {}
       }
-    }
-
-    case AT.ORDER_APPLY_FILTER: {
+    },
+    [getShippingQuotes.fulfilled]: (state, action) => {
       return {
         ...state,
-        datagridFilter: payload,
-        datagridFilterUpdate: !state.datagridFilterUpdate
+        shippingQuotes: action.payload.data,
+        shippingQuotesAreFetching: false
       }
-    }
-
-    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_PENDING: {
+    },
+    [getManualShippingQuote.pending]: (state, action) => {
       return {
         ...state
       }
-    }
-    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
+    },
+    [getManualShippingQuote.rejected]: (state, action) => {
       return {
         ...state
       }
-    }
-    case AT.DELETE_ASSIGN_PRODUCT_OFFERS_REJECTED: {
+    },
+    [getManualShippingQuote.fulfilled]: (state, action) => {
       return {
         ...state
       }
-    }
-
-    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_PENDING: {
-      return {
-        ...state
-      }
-    }
-    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_FULFILLED: {
+    },
+    [purchaseShipmentOrder.pending]: (state, action) => {
       return {
         ...state,
+        shipmentOrderResult: {}
+      }
+    },
+    [purchaseShipmentOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [purchaseShipmentOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        shipmentOrderResult: action.payload.data,
+        isSending: false
+      }
+    },
+    [downloadCreditRequestAttachments.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [downloadCreditRequestAttachments.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [downloadCreditRequestAttachments.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [creditAccept.pending]: (state, action) => {
+      return {
+        ...state,
+        isSending: true
+      }
+    },
+    [creditAccept.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [creditAccept.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        detail: action.payload.data,
+        isSending: false
+      }
+    },
+    [getPurchaseOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        isDetailFetching: true
+      }
+    },
+    [getPurchaseOrder.rejected]: (state, action) => {
+      action.payload === 'sale' ? Router.push('/orders/sales') : Router.push('/orders/purchase')
+      return {
+        ...state,
+        isDetailFetching: false
+      }
+    },
+    [getPurchaseOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        isDetailFetching: false,
         detail: action.payload.data
       }
-    }
-    case AT.PATCH_ASSIGN_PRODUCT_OFFERS_REJECTED: {
+    },
+    [getSaleOrder.pending]: (state, action) => {
       return {
-        ...state
+        ...state,
+        isDetailFetching: true
       }
-    }
-
-    case AT.GET_GROUPED_PRODUCT_OFFERS_PENDING: {
+    },
+    [getSaleOrder.rejected]: (state, action) => {
+      action.payload === 'sale' ? Router.push('/orders/sales') : Router.push('/orders/purchase')
+      return {
+        ...state,
+        isDetailFetching: false
+      }
+    },
+    [getSaleOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        isDetailFetching: false,
+        detail: action.payload.data
+      }
+    },
+    [applyDatagridFilter]: (state, action) => {
+      return {
+        ...state,
+        datagridFilter: action.payload,
+        datagridFilterUpdate: !state.datagridFilterUpdate
+      }
+    },
+    [getGroupedProductOffers.pending]: (state, action) => {
       return {
         ...state,
         loadingProductOffer: true
       }
-    }
-    case AT.GET_GROUPED_PRODUCT_OFFERS_FULFILLED: {
+    },
+    [getGroupedProductOffers.rejected]: (state, action) => {
+      return {
+        ...state,
+        loadingProductOffer: false
+      }
+    },
+    [getGroupedProductOffers.fulfilled]: (state, action) => {
       return {
         ...state,
         loadingGroupedProductOffer: false,
         groupedProductOffers: action.payload
       }
-    }
-    case AT.GET_GROUPED_PRODUCT_OFFERS_REJECTED: {
+    },
+    [patchAssignProductOffers.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [patchAssignProductOffers.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [patchAssignProductOffers.fulfilled]: (state, action) => {
       return {
         ...state,
-        loadingProductOffer: false
+        detail: action.payload.data
       }
-    }
-    case AT.CLEAR_GROUPED_PRODUCT_OFFERS: {
+    },
+    [deleteAssignProductOffers.pending]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [deleteAssignProductOffers.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [deleteAssignProductOffers.fulfilled]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [clearGroupedProductOffer]: (state, action) => {
       return {
         ...state,
         loadingGroupedProductOffer: false,
         groupedProductOffers: []
       }
-    }
-
-    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
+    },
+    [linkAttachmentToOrderItem.pending]: (state, action) => {
       return {
         ...state,
         loadingProductOffer: true,
         loadingRelatedDocuments: true
       }
-    }
-    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
-      return {
-        ...state,
-        loadingGroupedProductOffer: false,
-        loadingRelatedDocuments: false
-      }
-    }
-    case AT.LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
+    },
+    [linkAttachmentToOrderItem.rejected]: (state, action) => {
       return {
         ...state,
         loadingProductOffer: false,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_PENDING: {
+    },
+    [linkAttachmentToOrderItem.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
+      }
+    },
+    [removeLinkAttachmentToOrderItem.pending]: (state, action) => {
       return {
         ...state,
         loadingProductOffer: true,
         loadingRelatedDocuments: true
       }
-    }
-    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_FULFILLED: {
-      return {
-        ...state,
-        loadingGroupedProductOffer: false,
-        loadingRelatedDocuments: false
-      }
-    }
-    case AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM_REJECTED: {
+    },
+    [removeLinkAttachmentToOrderItem.rejected]: (state, action) => {
       return {
         ...state,
         loadingProductOffer: false,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.RELATED_GET_DOCUMENT_TYPES_PENDING: {
+    },
+    [removeLinkAttachmentToOrderItem.fulfilled]: (state, action) => {
       return {
         ...state,
-        documentTypesFetching: true
+        loadingGroupedProductOffer: false,
+        loadingRelatedDocuments: false
       }
-    }
-
-    case AT.RELATED_GET_DOCUMENT_TYPES_FULFILLED: {
-      return {
-        ...state,
-        documentTypesFetching: false,
-        listDocumentTypes: action.payload.data.map(docType => {
-          return {
-            key: docType.id,
-            text: docType.name,
-            value: docType.id
-          }
-        })
-      }
-    }
-
-    case AT.RELATED_GET_DOCUMENT_TYPES_REJECTED: {
-      return {
-        ...state,
-        documentTypesFetching: false
-      }
-    }
-
-    case AT.UNLINK_ATTACHMENT_TO_ORDER_PENDING: {
+    },
+    [unlinkAttachmentToOrder.pending]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: true
       }
-    }
-
-    case AT.UNLINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+    },
+    [unlinkAttachmentToOrder.rejected]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.UNLINK_ATTACHMENT_TO_ORDER_REJECTED: {
+    },
+    [unlinkAttachmentToOrder.fulfilled]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.LINK_ATTACHMENT_TO_ORDER_PENDING: {
+    },
+    [linkAttachmentToOrder.pending]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: true
       }
-    }
-
-    case AT.LINK_ATTACHMENT_TO_ORDER_FULFILLED: {
+    },
+    [linkAttachmentToOrder.rejected]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.LINK_ATTACHMENT_TO_ORDER_REJECTED: {
+    },
+    [linkAttachmentToOrder.fulfilled]: (state, action) => {
       return {
         ...state,
         loadingRelatedDocuments: false
       }
-    }
-
-    case AT.CLEARE_ORDER_DETAIL: {
+    },
+    [clearOrderDetail]: (state, action) => {
       return {
         ...state,
         detail: {}
       }
-    }
-
-    case AT.EDIT_TRACKING_CODE_PENDING: {
+    },
+    [editTrackingCode.pending]: (state, action) => {
       return {
         ...state
       }
-    }
-
-    case AT.EDIT_TRACKING_CODE_FULFILLED: {
+    },
+    [editTrackingCode.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [editTrackingCode.fulfilled]: (state, action) => {
       return {
         ...state,
         detail: action.payload.data
       }
-    }
-
-    case AT.EDIT_TRACKING_CODE_REJECTED: {
+    },
+    [editReturnTrackingCode.pending]: (state, action) => {
       return {
         ...state
       }
-    }
-
-    case AT.EDIT_RETURN_TRACKING_CODE_PENDING: {
+    },
+    [editReturnTrackingCode.rejected]: (state, action) => {
       return {
         ...state
       }
-    }
-
-    case AT.EDIT_RETURN_TRACKING_CODE_FULFILLED: {
+    },
+    [editReturnTrackingCode.fulfilled]: (state, action) => {
       return {
         ...state,
         detail: action.payload.data
       }
-    }
-
-    case AT.EDIT_RETURN_TRACKING_CODE_REJECTED: {
-      return {
-        ...state
-      }
-    }
-
-    case AT.ORDERS_SAVE_FILTERS: {
+    },
+    [saveFilters]: (state, action) => {
       return {
         ...state,
         tableHandlersFilters: action.payload
       }
-    }
-
-    /* ORDERS_RESOLUTION */
-    case AT.ORDERS_RESOLUTION_ACCEPT_PENDING: {
+    },
+    [orderResolutionReopen.pending]: (state, action) => {
       return {
         ...state,
         isSending: true
       }
-    }
-
-    case AT.ORDERS_RESOLUTION_ACCEPT_FULFILLED: {
+    },
+    [orderResolutionReopen.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [orderResolutionReopen.fulfilled]: (state, action) => {
       return {
         ...state,
         isSending: false,
         detail: action.payload
       }
-    }
-
-    case AT.ORDERS_RESOLUTION_ACCEPT_REJECTED: {
-      return {
-        ...state,
-        isSending: false
-      }
-    }
-
-    case AT.ORDERS_RESOLUTION_REOPEN_PENDING: {
+    },
+    [orderResolutionAccept.pending]: (state, action) => {
       return {
         ...state,
         isSending: true
       }
-    }
-
-    case AT.ORDERS_RESOLUTION_REOPEN_FULFILLED: {
+    },
+    [orderResolutionAccept.rejected]: (state, action) => {
+      return {
+        ...state,
+        isSending: false
+      }
+    },
+    [orderResolutionAccept.fulfilled]: (state, action) => {
       return {
         ...state,
         isSending: false,
         detail: action.payload
       }
-    }
-
-    case AT.ORDERS_RESOLUTION_REOPEN_REJECTED: {
+    },
+    [downloadDisputeAttachment.pending]: (state, action) => {
       return {
-        ...state,
-        isSending: false
+        ...state
       }
-    }
-
-    case AT.DOWNLOAD_DISPUTE_ATTACHMENT_FULFILLED: {
+    },
+    [downloadDisputeAttachment.rejected]: (state, action) => {
+      return {
+        ...state
+      }
+    },
+    [downloadDisputeAttachment.fulfilled]: (state, action) => {
       return {
         ...state
       }
     }
-
-    default:
-      return state
-  }
-}
+  },
+  initialState
+)

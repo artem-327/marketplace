@@ -7,7 +7,6 @@ import {
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
   searchUnNumber,
-  getDocumentTypes,
   searchCompanyGenericProduct,
   getNmfcNumbersByString,
   addNmfcNumber,
@@ -15,6 +14,8 @@ import {
   loadFile,
   removeAttachment
 } from '~/modules/settings/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
+
 import { closePopup } from '../../actions'
 import { addAttachment } from '~/modules/inventory/actions'
 import { withDatagrid } from '~/modules/datagrid'
@@ -36,7 +37,7 @@ const mapDispatchToProps = {
   addAttachment,
   removeAttachment
 }
-const mapStateToProps = ({ settings, simpleAdd, auth }) => {
+const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
   let settingsMap = new Map()
   if (getSafe(() => auth.identity.settings.length, false)) {
     for (let setting of auth.identity.settings) {
@@ -59,7 +60,7 @@ const mapStateToProps = ({ settings, simpleAdd, auth }) => {
     packagingGroups: settings.productsPackagingGroups,
     searchedUnNumbers: settings.searchedUnNumbers,
     loading: settings.productDataLoading,
-    documentTypes: settings.documentTypes,
+    documentTypes: globalData.documentTypesDropdown,
     nmfcNumbersFetching: settings.nmfcNumbersFetching,
     nmfcNumbersFiltered: settings.nmfcNumbersFiltered.map(d => {
       return {

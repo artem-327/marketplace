@@ -4,7 +4,8 @@ import { injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../actions'
+import { openEditPopup, closeConfirmPopup, deleteConfirmation } from '../actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage } from 'react-intl'
 
@@ -29,7 +30,7 @@ class Table extends Component {
   }
 
   getActions = () => {
-    const { intl, openEditPopup, deleteConfirmation, datagrid } = this.props
+    const { intl, openEditPopup, deleteConfirmation, datagrid, getDocumentTypes } = this.props
 
     const { formatMessage } = intl
     return [
@@ -57,6 +58,7 @@ class Table extends Component {
             try {
               await deleteConfirmation(row.id)
               datagrid.removeRow(row.id)
+              getDocumentTypes()
             } catch (e) {
               console.error(e)
             }
@@ -100,7 +102,7 @@ class Table extends Component {
 }
 
 const mapDispatchToProps = {
-  getDataRequest,
+  getDocumentTypes,
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation

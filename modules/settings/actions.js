@@ -693,7 +693,6 @@ export function postNewDwollaBankAccountRequest(payload) {
 
 export function putBankAccountRequest(account, id) {
   return {
-    // ! ! missing in saga
     type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
     async payload() {
       Datagrid.updateRow(id, () => account)
@@ -705,18 +704,10 @@ export function putBankAccountRequest(account, id) {
 
 export function deleteCreditCard(cardId) {
   return {
-    // ! ! saga calls api.deleteWarehouse ???
     type: AT.DELETE_CREDIT_CARD,
     payload: cardId
   }
 }
-
-// export function deleteBankAccount(accountId) {
-//   return {  // ! ! saga calls api.deleteWarehouse ???
-//     type: AT.DELETE_BANK_ACCOUNT,
-//     payload: accountId
-//   }
-// }
 
 export function uploadCSVFile(payload, type = '.csv') {
   return {
@@ -1009,13 +1000,6 @@ export function getProvinces(id) {
   return {
     type: AT.SETTINGS_GET_PROVINCES,
     payload: api.getProvinces(id)
-  }
-}
-
-export function getDocumentTypes() {
-  return {
-    type: AT.SETTINGS_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
   }
 }
 

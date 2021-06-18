@@ -34,7 +34,6 @@ import {
   loadEditEchoProduct,
   getUnNumbersByString,
   searchTags,
-  getDocumentTypes,
   searchMarketSegments,
   getAlternativeCompanyGenericProductsNames,
   postNewCompanyGenericProductsAltName,
@@ -58,8 +57,6 @@ export const initialState = {
   searchedCompaniesLoading: false,
   companyProductUnmappedOnly: false,
   ordersStatusFilter: 'All',
-  documentTypesFetching: false,
-  listDocumentTypes: [],
   orderProcessing: false,
   orderAccountingDocuments: [],
   orderAccountingDocumentsLoading: false,
@@ -82,7 +79,6 @@ export const initialState = {
   unNumbersFiltered: [],
   searchedTags: [],
   searchedTagsLoading: false,
-  documentTypes: [],
   searchedMarketSegments: [],
   searchedMarketSegmentsLoading: false,
   altEchoNamesRows: [],
@@ -545,46 +541,6 @@ export default typeToReducer(
         ...state,
         searchedTags: payload,
         searchedTagsLoading: false
-      }
-    },
-    [getDocumentTypes.pending]: state => {
-      return { ...state }
-    },
-    [getDocumentTypes.rejected]: state => {
-      return { ...state }
-    },
-    [getDocumentTypes.fulfilled]: (state, {payload}) => {
-      return {
-        ...state,
-        documentTypes: payload.data.map(docType => {
-          return {
-            ...docType,
-            value: docType.id,
-            text: docType.name
-          }
-        })
-      }
-    },
-    [getDocumentTypes.pending]: state => {
-      return { 
-        ...state 
-      }
-    },
-    [getDocumentTypes.rejected]: state => {
-      return { 
-        ...state 
-      }
-    },
-    [getDocumentTypes.fulfilled]: (state, {payload}) => {
-      return {
-        ...state,
-        documentTypes: payload.data.map(docType => {
-          return {
-            ...docType,
-            value: docType.id,
-            text: docType.name
-          }
-        })
       }
     },
     [searchMarketSegments.pending]: state => {

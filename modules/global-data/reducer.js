@@ -6,7 +6,8 @@ import {
   getProductConditions,
   getProductForms,
   getProductGrades,
-  getPackagingTypes
+  getPackagingTypes,
+  getDocumentTypes
 } from './actions'
 
 export const initialState = {
@@ -31,6 +32,12 @@ export const initialState = {
   packagingTypesUnique: [],
   packagingTypesUniqueDropdown: [],
   packagingTypesLoading: false,
+
+  documentTypes: [],
+  documentTypesDropdown: [],
+  documentTypesFederalOwnershipCertifications: [],
+  documentTypesManagementCertifications: [],
+  documentTypesLoading: false,
 }
 
 export default typeToReducer(
@@ -135,6 +142,28 @@ export default typeToReducer(
       })),
       packagingTypesLoading: false
     }),
+
+    [getDocumentTypes.pending]: state => ({
+      ...state,
+      documentTypesLoading: true
+    }),
+    [getDocumentTypes.rejected]: state => ({
+      ...state,
+      documentTypesLoading: false
+    }),
+    [getDocumentTypes.fulfilled]: (state, { payload }) => ({
+      ...state,
+      documentTypes: payload,
+      documentTypesDropdown: payload.map(c => ({
+        text: c.name,
+        value: c.id,
+        key: c.id
+      })),
+      documentTypesFederalOwnershipCertifications: payload.filter(el => el.group && el.group.id === 6),
+      documentTypesManagementCertifications: payload.filter(el => el.group && el.group.id === 7),
+      documentTypesLoading: false
+    })
+
   },
   initialState
 )

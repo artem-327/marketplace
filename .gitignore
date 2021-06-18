@@ -5,6 +5,7 @@ debug.log
 
 # testing
 /coverage
+junit.xml
 
 # misc
 .DS_Store

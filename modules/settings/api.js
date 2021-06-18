@@ -61,7 +61,6 @@ export default {
       }
     })
   },
-  getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
   getRoles: () => api.get('/prodex/api/roles?type=COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),

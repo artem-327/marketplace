@@ -12,7 +12,11 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleBottomSegment>
-          <FormattedMessage id={`myNetworks.detailRow.${titleId}`} defaultMessage='Title' />
+          <FormattedMessage
+            id={`myNetworks.detailRow.${titleId}`}
+            defaultMessage='Title'
+            data-test='component-column-segment-title'
+          />
         </DivTitleBottomSegment>
       </GridColumnDetail>
     </Grid.Row>
@@ -26,21 +30,38 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
         const docName = docNameTemp.join(' ')
 
         let value = data[key]
-        if(blueValue) value = value.replace('_', ' ')
+        if(blueValue) {
+          let valueTemp = value.toLowerCase()
+          valueTemp = valueTemp.split('_')
+          valueTemp.map((t, i) => {
+            valueTemp[i] = t.charAt(0).toUpperCase() + t.slice(1);
+          })
+          value = valueTemp.join(' ')
+        }
 
         return (
-          <Grid.Row key={i}>
+          <Grid.Row key={i} data-test='component-column-segment-row'>
             <GridColumnDetail>
               <FormattedMessage id={`myNetworks.detailRow.${key}`} defaultMessage={docName} />
-              <DivValue $minHeight='19px' fontSize='14px' $color={blueValue ? '#00c7f9' : null} lineHeight='1.42857'> {value}</DivValue>
+              <DivValue
+                $minHeight='19px'
+                fontSize='14px'
+                $color={blueValue ? '#00c7f9' : null}
+                lineHeight='1.42857'
+                data-test='component-column-segment-value'
+              >{value}</DivValue>
             </GridColumnDetail>
           </Grid.Row>
         )
       })
     :
-      <Grid.Row>
+      <Grid.Row data-test='component-column-segment-row'>
         <GridColumnDetail>
-          <FormattedMessage id='myNetworks.detailRow.noFilesUploaded' defaultMessage='No files uploaded' />
+          <FormattedMessage
+            id='myNetworks.detailRow.noFilesUploaded'
+            defaultMessage='No files uploaded'
+            data-test='component-column-segment-value'
+          />
         </GridColumnDetail>
       </Grid.Row>
     }
@@ -50,12 +71,14 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
 
 ColumnSegment.propTypes = {
   titleId: PropTypes.string,
+  blueValue: PropTypes.string,
   data: PropTypes.object
 }
 
 ColumnSegment.defaultProps = {
   titleId: '',
-  data: null
+  blueValue: '',
+  data: {}
 }
 
 export default ColumnSegment

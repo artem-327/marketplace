@@ -1,6 +1,32 @@
-import * as AT from './action-types'
+import typeToReducer from 'type-to-reducer'
+// Actions
+import {
+  openPopup,
+  closePopup,
+  deleteShippingQuote,
+  createShippingQuote,
+  deleteTag,
+  updateTag,
+  createTag,
+  searchCompany,
+  setProductMappedUnmaped,
+  loadData,
+  openOrderDetail,
+  cancelOrder,
+  clearAccountingDocuments,
+  getAccountingDocuments,
+  saveFilters,
+  markRequestAsProcessed,
+  denyRequest,
+  deleteRequest,
+  searchManualQuoteRequest,
+  resolveDisputeAccept,
+  resolveDisputeCredit,
+  resolveDisputeReject
+} from './actions'
 
-export const initialState = {
+
+const initialState = {
   popupValues: null,
   isOpenPopup: false,
   loading: false,
@@ -10,7 +36,6 @@ export const initialState = {
   ordersStatusFilter: 'All',
   orderDetailData: null,
   documentTypesFetching: false,
-  listDocumentTypes: [],
   orderProcessing: false,
   orderAccountingDocuments: [],
   orderAccountingDocumentsLoading: false,
@@ -19,249 +44,329 @@ export const initialState = {
   searchedManQuotRequestsLoading: false
 }
 
-export default function reducers(state = initialState, action) {
-  const { payload } = action
-
-  switch (action.type) {
-    case AT.OPERATIONS_OPEN_POPUP: {
+export default typeToReducer(
+  {
+    [openPopup]: (state, action) => {
       return {
         ...state,
         isOpenPopup: true,
         popupValues: action.payload
       }
-    }
-
-    case AT.OPERATIONS_CLOSE_POPUP: {
+    },
+    [closePopup]: (state, action) => {
       return {
         ...state,
         isOpenPopup: false,
         popupValues: null
       }
-    }
-
-    case AT.OPERATIONS_HANDLE_FILTERS_VALUE: {
-      return {
-        ...state
-      }
-    }
-
-    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_PENDING:
-    case AT.OPERATIONS_DENY_REQUEST_PENDING:
-    case AT.OPERATIONS_DELETE_REQUEST_PENDING:
-    case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_PENDING:
-    case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_PENDING:
-    case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_PENDING:
-    case AT.OPERATIONS_CREATE_TAG_PENDING:
-    case AT.OPERATIONS_UPDATE_TAG_PENDING:
-    case AT.OPERATIONS_DELETE_TAG_PENDING: {
+    },
+    [deleteShippingQuote.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_REJECTED:
-    case AT.OPERATIONS_MARK_REQUEST_AS_PROCESSED_FULFILLED:
-    case AT.OPERATIONS_DENY_REQUEST_REJECTED:
-    case AT.OPERATIONS_DENY_REQUEST_FULFILLED:
-    case AT.OPERATIONS_DELETE_REQUEST_REJECTED:
-    case AT.OPERATIONS_DELETE_REQUEST_FULFILLED:
-    case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_FULFILLED:
-    case AT.OPERATIONS_UPDATE_SHIPPING_QUOTE_REJECTED:
-    case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_FULFILLED:
-    case AT.OPERATIONS_DELETE_SHIPPING_QUOTE_REJECTED:
-    case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_FULFILLED:
-    case AT.OPERATIONS_CREATE_SHIPPING_QUOTE_REJECTED:
-    case AT.OPERATIONS_CREATE_TAG_FULFILLED:
-    case AT.OPERATIONS_UPDATE_TAG_FULFILLED:
-    case AT.OPERATIONS_DELETE_TAG_FULFILLED:
-    case AT.OPERATIONS_CREATE_TAG_REJECTED:
-    case AT.OPERATIONS_UPDATE_TAG_REJECTED:
-    case AT.OPERATIONS_DELETE_TAG_REJECTED: {
+    },
+    [deleteShippingQuote.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.OPERATIONS_SEARCH_COMPANY_PENDING: {
-      return { ...state, searchedCompaniesLoading: true }
-    }
-    case AT.OPERATIONS_SEARCH_COMPANY_REJECTED: {
-      return { ...state, searchedCompaniesLoading: false }
-    }
-    case AT.OPERATIONS_SEARCH_COMPANY_FULFILLED: {
+    },
+    [deleteShippingQuote.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [createShippingQuote.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [createShippingQuote.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [createShippingQuote.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteTag.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [deleteTag.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteTag.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [updateTag.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [updateTag.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [updateTag.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [createTag.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [createTag.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [createTag.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [searchCompany.pending]: (state, action) => {
+      return {
+        ...state, 
+        searchedCompaniesLoading: true
+      }
+    },
+    [searchCompany.rejected]: (state, action) => {
+      return {
+        ...state, 
+        searchedCompaniesLoading: false
+      }
+    },
+    [searchCompany.fulfilled]: (state, action) => {
       return {
         ...state,
         searchedCompanies: action.payload,
         searchedCompaniesLoading: false
       }
-    }
-
-    case AT.OPERATIONS_SET_PRODUCT_MAPPED_UNMAPPED: {
+    },
+    [setProductMappedUnmaped]: (state, action) => {
       return {
         ...state,
-        companyProductUnmappedOnly: payload
+        companyProductUnmappedOnly: action.payload
       }
-    }
-
-    case AT.OPERATIONS_ORDERS_FETCH_SUCCESS:
+    },
+    [loadData]: (state, action) => {
       return {
         ...state,
         loading: false,
         ordersStatusFilter: action.payload.filter.status
       }
-
-    case AT.OPERATIONS_OPEN_ORDER_DETAIL: {
+    },
+    [openOrderDetail]: (state, action) => {
       return {
         ...state,
-        orderDetailData: payload
+        orderDetailData: action.payload
       }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_PENDING: {
+    },
+    [cancelOrder.pending]: (state, action) => {
       return {
-        ...state,
-        documentTypesFetching: true
+        ...state, 
+        orderProcessing: true
       }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_FULFILLED: {
+    },
+    [cancelOrder.rejected]: (state, action) => {
       return {
-        ...state,
-        documentTypesFetching: false,
-        listDocumentTypes: payload.data.map(docType => {
-          return {
-            key: docType.id,
-            text: docType.name,
-            value: docType.id
-          }
-        })
+        ...state, 
+        orderProcessing: false
       }
-    }
-
-    case AT.OPERATIONS_GET_DOCUMENT_TYPES_REJECTED: {
+    },
+    [cancelOrder.fulfilled]: (state, action) => {
       return {
-        ...state,
-        documentTypesFetching: false
+        ...state, 
+        orderProcessing: false
       }
-    }
-
-    case AT.OPERATIONS_ORDERS_CANCEL_ORDER_PENDING: {
-      return { ...state, orderProcessing: true }
-    }
-    case AT.OPERATIONS_ORDERS_CANCEL_ORDER_REJECTED:
-    case AT.OPERATIONS_ORDERS_CANCEL_ORDER_FULFILLED: {
-      return { ...state, orderProcessing: false }
-    }
-
-    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR:
+    },
+    [clearAccountingDocuments]: (state, action) => {
       return {
         ...state,
         orderAccountingDocuments: []
       }
-    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_PENDING:
+    },
+    [getAccountingDocuments.pending]: (state, action) => {
       return {
         ...state,
         orderAccountingDocumentsLoading: true
       }
-    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_REJECTED:
+    },
+    [getAccountingDocuments.rejected]: (state, action) => {
       return {
         ...state,
         orderAccountingDocumentsLoading: false
       }
-
-    case AT.OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_FULFILLED:
+    },
+    [getAccountingDocuments.fulfilled]: (state, action) => {
       return {
         ...state,
         orderAccountingDocumentsLoading: false,
         orderAccountingDocuments: action.payload.data
       }
-
-    case AT.OPERATIONS_SAVE_FILTERS: {
+    },
+    [saveFilters]: (state, action) => {
       return {
         ...state,
         tableHandlersFilters: action.payload
       }
-    }
-
-    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_PENDING: {
-      return { ...state, searchedManQuotRequestsLoading: true }
-    }
-    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_REJECTED: {
-      return { ...state, searchedManQuotRequestsLoading: false }
-    }
-    case AT.OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST_FULFILLED: {
+    },
+    [markRequestAsProcessed.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [markRequestAsProcessed.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [markRequestAsProcessed.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [denyRequest.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [denyRequest.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [denyRequest.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteRequest.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [deleteRequest.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [deleteRequest.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [searchManualQuoteRequest.pending]: (state, action) => {
+      return {
+        ...state, 
+        searchedManQuotRequestsLoading: true
+      }
+    },
+    [searchManualQuoteRequest.rejected]: (state, action) => {
+      return {
+        ...state, 
+        searchedManQuotRequestsLoading: false
+      }
+    },
+    [searchManualQuoteRequest.fulfilled]: (state, action) => {
       return {
         ...state,
         searchedManQuotRequests: action.payload,
         searchedManQuotRequestsLoading: false
       }
-    }
-
-    /* RESOLVE DISPUTE */
-    case AT.RESOLVE_DISPUTE_CREDIT_PENDING: {
+    },
+    [resolveDisputeAccept.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-    case AT.RESOLVE_DISPUTE_CREDIT_REJECTED: {
+    },
+    [resolveDisputeAccept.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-    case AT.RESOLVE_DISPUTE_CREDIT_FULFILLED: {
+    },
+    [resolveDisputeAccept.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderDetailData: action.payload,
+        loading: false
+      }
+    },
+    [resolveDisputeCredit.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [resolveDisputeCredit.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [resolveDisputeCredit.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderDetailData: action.payload,
+        loading: false
+      }
+    },
+    [resolveDisputeReject.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [resolveDisputeReject.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [resolveDisputeReject.fulfilled]: (state, action) => {
       return {
         ...state,
         orderDetailData: action.payload,
         loading: false
       }
     }
-
-    case AT.RESOLVE_DISPUTE_REJECT_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-    case AT.RESOLVE_DISPUTE_REJECT_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-    case AT.RESOLVE_DISPUTE_REJECT_FULFILLED: {
-      return {
-        ...state,
-        orderDetailData: action.payload,
-        loading: false
-      }
-    }
-
-    case AT.RESOLVE_DISPUTE_ACCEPT_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-    case AT.RESOLVE_DISPUTE_ACCEPT_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-    case AT.RESOLVE_DISPUTE_ACCEPT_FULFILLED: {
-      return {
-        ...state,
-        orderDetailData: action.payload,
-        loading: false
-      }
-    }
-
-    default: {
-      return state
-    }
-  }
-}
+  },
+  initialState
+)

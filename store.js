@@ -4,13 +4,10 @@ import thunk from 'redux-thunk'
 import promise from 'redux-promise-middleware'
 import { combineReducers, compose } from 'redux'
 import { combineForms } from 'react-redux-form'
-import createSagaMiddleware from 'redux-saga'
 import { throttle } from 'lodash'
 //actions
 import { LOGIN_INIT } from './modules/auth/action-types'
 import { loadState, saveState } from './utils/storePersist'
-//sagas
-import ordersSaga from './modules/orders/saga'
 //reducers
 import settings from './modules/settings/reducers'
 import admin from './modules/admin/reducers'
@@ -31,6 +28,7 @@ import operations from './modules/operations/reducers'
 import wantedBoard from './modules/wanted-board/reducer'
 import search from './modules/search/reducer'
 import alerts from './modules/alerts/reducer'
+import immediates from './modules/immediate-notifications/reducer'
 import layout from './modules/layout/reducer'
 import companiesAdmin from './modules/companies/reducer'
 import productsAdmin from './modules/products/reducer'
@@ -77,6 +75,7 @@ const reducer = combineReducers({
   search,
   layout,
   alerts,
+  immediates,
   companiesAdmin,
   productsAdmin,
   documentTypes,
@@ -126,10 +125,8 @@ const composeEnhancers =
     : compose
 
 export const makeStore = preloadedState => {
-  // create the saga middleware
-  const sagaMiddleware = createSagaMiddleware()
 
-  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), sagaMiddleware, logger))
+  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), logger))
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
   const { auth } = loadState() || {}
@@ -142,8 +139,6 @@ export const makeStore = preloadedState => {
       saveState({ auth })
     }, 1000)
   )
-
-  sagaMiddleware.run(ordersSaga)
 
   return store
 }

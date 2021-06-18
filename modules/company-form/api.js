@@ -23,7 +23,5 @@ export const deleteCompanyLogo = companyId => api.delete(`/prodex/api/companies/
 export const getAssociations = dataGrid =>
   api.post(`/prodex/api/associations/datagrid/`, dataGrid).then(response => response.data)
 
-export const getDocumentTypes = () => api.get(`/prodex/api/document-types/`).then(response => response.data)
-
 export const getDocsDatagridFilter = filter =>
     api.post('/prodex/api/attachments/datagrid', filter).then(response => response.data)

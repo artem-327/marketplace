@@ -5,12 +5,12 @@ import { func, bool, string, number, array } from 'prop-types'
 // Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
-import { ModalCustom } from '../../../my-network/components/InviteModal/InviteModal.styles'
-import { FormFieldCustom, DivMarginBottom } from './Orders.styles'
+import { FormFieldCustom, DivMarginBottom, ModalCustom } from '../../styles'
 //Constants
-import { REJECT_ORDER, CREDIT_ORDER, ACCEPT_ORDER } from './Orders.constants'
+import { REJECT_ORDER, CREDIT_ORDER, ACCEPT_ORDER } from '../../constants'
 
 /**
+ * ModalResolveDispute Component
  * @category Operations - Orders - Detail
  * @components
  */

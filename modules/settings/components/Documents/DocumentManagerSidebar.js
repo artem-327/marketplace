@@ -14,7 +14,9 @@ import { otherPermissions, sharedTo } from '~/constants/index'
 import { getSafe, removeEmpty } from '~/utils/functions'
 
 import { closeSidebar } from '~/modules/settings/actions'
-import { getDocumentTypes, addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { addAttachment, updateAttachment } from '~/modules/inventory/actions'
+import { getDocumentTypes } from '../../../global-data/actions'
+
 import { bool, func, number } from 'prop-types'
 import { getStringISODate } from '~/components/date-format'
 import Router from 'next/router'
@@ -172,8 +174,8 @@ const RightAlignedGroup = styled(FormGroup)`
 
 class DocumentManagerSidebar extends Component {
   async componentDidMount() {
-    const { documentTypes, getDocumentTypes, initialFileType } = this.props
-    if (!documentTypes || documentTypes.length === 0) {
+    const { documentTypes, documentTypesLoading, getDocumentTypes, initialFileType } = this.props
+    if (documentTypes.length === 0 && !documentTypesLoading) {
       try {
         await getDocumentTypes()
       } catch (err) {
@@ -189,7 +191,7 @@ class DocumentManagerSidebar extends Component {
       sidebarValues,
       documentTypes,
       intl: { formatMessage },
-      documentTypesFetching,
+      documentTypesLoading,
       edit,
       addAttachment,
       updateAttachment,
@@ -270,14 +272,13 @@ class DocumentManagerSidebar extends Component {
                     <FormGroup widths='equal'>
                       <Dropdown
                         inputProps={{
-                          loading: documentTypesFetching,
+                          loading: documentTypesLoading,
                           disabled: lockedFileType,
                           placeholder: formatMessage({
                             id: 'settings.documents.selectDocumentType',
                             defaultMessage: 'Select document type'
                           })
                         }}
-                        loading={documentTypesFetching}
                         name='documentType.id'
                         label={
                           <>
@@ -527,14 +528,14 @@ DocumentManagerSidebar.defaultProps = {
   initialFileType: null
 }
 
-const mapStateToProps = ({ simpleAdd, settings }) => {
+const mapStateToProps = ({ globalData, simpleAdd, settings }) => {
   const currentTab = Router && Router.router && Router.router.pathname ? Router.router.pathname : ''
   const documentTab = currentTab === '/settings/documents'
 
   return {
     sidebarValues: documentTab ? settings.sidebarValues : null,
-    documentTypes: simpleAdd.listDocumentTypes,
-    documentTypesFetching: simpleAdd.documentTypesFetching,
+    documentTypes: globalData.documentTypesDropdown,
+    documentTypesLoading: globalData.documentTypesLoading,
     edit: documentTab && getSafe(() => settings.sidebarValues.id, false),
     enableClose: documentTab
   }

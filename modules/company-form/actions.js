@@ -20,13 +20,6 @@ export const getAssociations = dataGrid => ({
   payload: api.getAssociations(dataGrid)
 })
 
-export function getDocumentTypes() {
-  return {
-    type: AT.COMPANY_FORM_GET_DOCUMENT_TYPES,
-    payload: api.getDocumentTypes()
-  }
-}
-
 export const getIndustryTypes = () => ({
   type: AT.COMPANY_FORM_GET_INDUSTRY_TYPES,
   payload: api.getIndustryTypes()

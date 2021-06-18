@@ -1,3 +1,3 @@
-import Operations from './components/Operations'
+import Operations from './components/OperationsContainer'
 
 export default Operations

@@ -12,7 +12,7 @@ import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 
 import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
-import { getDocumentTypes } from '~/modules/settings/actions'
+import { getDocumentTypes } from '../../global-data/actions'
 import { getSafe } from '~/utils/functions'
 
 const CustomHeader = styled.div`
@@ -306,7 +306,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    documentTypes: state.settings.documentTypes
+    documentTypes: state.globalData.documentTypesDropdown
   }
 }
 const AttachmentModal = withDatagrid(connect(mapStateToProps, mapDispatchToProps)(AttachmentClass))

@@ -6,13 +6,6 @@ import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.c
 
 export const initialState = {
   fileIds: [],
-  listDocumentTypes: [],
-  documentTypesAll: [],
-  documentTypesFederalOwnershipCertifications: [],
-  documentTypesManagementCertifications: [],
-  listConditions: [],
-  listForms: [],
-  listGrades: [],
   lotFiles: [],
   poCreated: false,
   searchedManufacturers: [],
@@ -29,7 +22,6 @@ export const initialState = {
   updatingDatagrid: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
-  documentTypesFetching: false,
   simpleEditOpen: false,
   popupValues: null,
   isOpenPopup: false,
@@ -143,45 +135,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
-      }
-    }
-
-    case AT.INVENTORY_GET_PRODUCT_CONDITIONS_FULFILLED: {
-      return {
-        ...state,
-        listConditions: action.payload.data.map(condition => {
-          return {
-            key: condition.id,
-            value: condition.id,
-            text: condition.name
-          }
-        })
-      }
-    }
-
-    case AT.INVENTORY_GET_PRODUCT_FORMS_FULFILLED: {
-      return {
-        ...state,
-        listForms: action.payload.data.map(form => {
-          return {
-            key: form.id,
-            value: form.id,
-            text: form.name
-          }
-        })
-      }
-    }
-
-    case AT.INVENTORY_GET_PRODUCT_GRADES_FULFILLED: {
-      return {
-        ...state,
-        listGrades: action.payload.data.map(grade => {
-          return {
-            key: grade.id,
-            value: grade.id,
-            text: grade.name
-          }
-        })
       }
     }
 
@@ -390,37 +343,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_GET_DOCUMENT_TYPES_PENDING: {
-      return {
-        ...state,
-        documentTypesFetching: true
-      }
-    }
-
-    case AT.INVENTORY_GET_DOCUMENT_TYPES_FULFILLED: {
-      return {
-        ...state,
-        documentTypesFetching: false,
-        listDocumentTypes: action.payload.data.map(docType => {
-          return {
-            key: docType.id,
-            text: docType.name,
-            value: docType.id
-          }
-        }),
-        documentTypesAll: payload.data,
-        documentTypesFederalOwnershipCertifications: payload.data.filter(el => el.group && el.group.id === 6),
-        documentTypesManagementCertifications: payload.data.filter(el => el.group && el.group.id === 7)
-      }
-    }
-
-    case AT.INVENTORY_GET_DOCUMENT_TYPES_REJECTED: {
-      return {
-        ...state,
-        documentTypesFetching: false
-      }
-    }
-
     case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
       return {
         ...state,
@@ -437,9 +359,6 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_RESET_FORM: {
       return {
         ...initialState,
-        listConditions: state.listConditions,
-        listForms: state.listForms,
-        listGrades: state.listGrades,
         warehousesList: state.warehousesList,
         initialState: {
           ...action.payload.data,

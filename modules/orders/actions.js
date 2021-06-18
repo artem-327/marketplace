@@ -1,243 +1,93 @@
-import * as AT from './action-types'
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import Api from './api'
 
-export const loadData = (endpointType, filter = null) => ({
-  type: AT.ORDERS_FETCH_SUCCESS,
-  payload: { endpointType, filter }
-})
-export const loadDetail = (endpointType, selectedIndex) => ({
-  type: AT.ORDERS_DETAIL_FETCH,
-  payload: { endpointType, selectedIndex }
-})
-export const confirmOrder = orderId => ({
-  type: AT.ORDER_CONFIRM_FETCH,
-  payload: Api.confirm(orderId)
-})
-export const confirmReturned = orderId => ({
-  type: AT.ORDER_CONFIRM_RETURNED_FETCH,
-  payload: Api.confirmReturned(orderId)
-})
-export const rejectOrder = orderId => ({
-  type: AT.ORDER_REJECT_FETCH,
-  payload: Api.reject(orderId)
-})
-export const shipOrder = (orderId, trackingId = '') => ({
-  type: AT.ORDER_SHIP_FETCH,
-  payload: Api.ship(orderId, trackingId)
-})
-export const returnShipOrder = (orderId, trackingId = '') => ({
-  type: AT.ORDER_RETURN_SHIP_FETCH,
-  payload: Api.returnShip(orderId, trackingId)
-})
-export const downloadPdf = (endpointType, orderId) => ({
-  type: AT.ORDER_DOWNLOAD_PDF,
-  payload: Api.downloadPdf(endpointType, orderId)
-})
-export const searchCompany = companyText => ({
-  type: AT.ORDERS_SEARCH_COMPANY,
-  payload: Api.searchCompany(companyText)
-})
-export const openAssignLots = () => ({
-  type: AT.ORDER_OPEN_ASSIGN_LOTS,
-  payload: {}
-})
-export const closeAssignLots = () => ({
-  type: AT.ORDER_CLOSE_ASSIGN_LOTS,
-  payload: {}
-})
-export const assignLots = (orderId, tabLots) => ({
-  type: AT.ORDER_ASSIGN_LOTS,
-  async payload() {
-    async function asyncForEach(array, callback) {
-      for (let index = 0; index < array.length; index++) {
-        await callback(array[index], index, array)
+export const loadData = createAction('ORDERS_FETCH_SUCCESS', (endpointType, filter = null) => ({ endpointType, filter }))
+export const confirmOrder = createAsyncAction('ORDER_CONFIRM_FETCH', orderId => Api.confirm(orderId))
+export const confirmReturned = createAsyncAction('ORDER_CONFIRM_RETURNED_FETCH', orderId => Api.confirmReturned(orderId))
+export const rejectOrder = createAsyncAction('ORDER_REJECT_FETCH', orderId => Api.reject(orderId))
+export const shipOrder = createAsyncAction('ORDER_SHIP_FETCH', (orderId, trackingId = '') => Api.ship(orderId, trackingId))
+export const returnShipOrder = createAsyncAction('ORDER_RETURN_SHIP_FETCH', (orderId, trackingId = '') => Api.returnShip(orderId, trackingId))
+export const downloadPdf = createAsyncAction('ORDER_DOWNLOAD_PDF', (endpointType, orderId) => Api.downloadPdf(endpointType, orderId))
+export const searchCompany = createAsyncAction('ORDERS_SEARCH_COMPANY', companyText => Api.searchCompany(companyText))
+export const openAssignLots = createAction('ORDER_OPEN_ASSIGN_LOTS')
+export const closeAssignLots = createAction('ORDER_CLOSE_ASSIGN_LOTS')
+export const assignLots = createAsyncAction('ORDER_ASSIGN_LOTS', async (orderId, tabLots) => {
+  const asyncForEach = async (array, callback) => {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
+  }
+  let orderItems = []
+  await asyncForEach(tabLots, async (tab, index) => {
+    let orderItemId = tab.orderItemId
+    let assignedLots = tab.lots.reduce(function (filtered, lot) {
+      if (lot.selected && lot.allocated) {
+        filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
       }
-    }
-    let orderItems = []
-    await asyncForEach(tabLots, async (tab, index) => {
-      let orderItemId = tab.orderItemId
-      let assignedLots = tab.lots.reduce(function (filtered, lot) {
-        if (lot.selected && lot.allocated) {
-          filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
-        }
-        return filtered
-      }, [])
+      return filtered
+    }, [])
 
-      const response = await Api.assignLots(orderId, orderItemId, assignedLots)
-      await orderItems.push(response.data.orderItems.find(oi => oi.id === orderItemId))
-    })
+    const response = await Api.assignLots(orderId, orderItemId, assignedLots)
+    await orderItems.push(response.data.orderItems.find(oi => oi.id === orderItemId))
+  })
 
-    return orderItems
-  }
+  return orderItems
 })
-export const loadLotsToAssign = productOfferId => ({
-  type: AT.ORDER_GET_LOTS,
-  payload: Api.getLots(productOfferId)
-})
-export const linkAttachment = (lotId, attachment) => ({
-  type: AT.ORDER_LINK_ATTACHMENT,
-  async payload() {
-    await Api.linkAttachment(lotId, attachment.id || attachment.lastModified)
-    return {
-      lotId: lotId,
-      file: attachment
-    }
-  }
-})
-export const removeAttachmentLink = (isLot, lotId, aId) => ({
-  type: AT.ORDER_REMOVE_ATTACHMENT_LINK,
-  payload: Api.removeAttachmentLink(lotId, aId)
-})
-export const removeAttachment = aId => ({
-  type: AT.ORDER_REMOVE_ATTACHMENT,
-  async payload() {
-    await Api.removeAttachment(aId)
-    return {
-      fileId: aId
-    }
-  }
-})
-export const cancelPayment = orderId => ({
-  type: AT.ORDER_CANCEL_PAYMENT,
-  async payload() {
-    await Api.cancelPayment(orderId)
-    return {
-      orderId: orderId
-    }
-  }
-})
-export const openReinitiateTransfer = () => ({
-  type: AT.ORDER_OPEN_REINITIATE_TRANSFER,
-  payload: {}
-})
-export const closeReinitiateTransfer = () => ({
-  type: AT.ORDER_CLOSE_REINITIATE_TRANSFER,
-  payload: {}
-})
-export const loadDwollaBankAccounts = () => ({
-  type: AT.ORDER_LOAD_DWOLLA_BANK_ACCOUNTS,
-  payload: Api.loadDwollaBankAccounts()
-})
-export const loadVellociBankAccounts = () => ({
-  type: AT.ORDER_LOAD_VELLOCI_BANK_ACCOUNTS,
-  payload: Api.loadVellociBankAccounts()
-})
-export const payOrder = (orderId, bankAccount) => ({
-  type: AT.ORDER_PAY_ORDER,
-  payload: Api.payOrder(orderId, bankAccount)
-})
-export const cancelOrder = orderId => ({
-  type: AT.ORDER_CANCEL_ORDER,
-  payload: Api.cancelOrder(orderId)
-})
-export const clearRelatedOrders = () => ({
-  type: AT.CLEAR_RELATED_ORDERS,
-  payload: {}
-})
-export const getRelatedOrders = orderId => ({
-  type: AT.RELATED_ORDERS,
-  payload: Api.getRelatedOrders(orderId)
-})
-export const approveOrder = orderId => ({
-  type: AT.ORDER_APPROVE_ORDER,
-  payload: Api.approveOrder(orderId)
-})
-export const discardOrder = orderId => ({
-  type: AT.ORDER_DISCARD_ORDER,
-  payload: Api.discardOrder(orderId)
-})
-export const openPopupName = name => ({
-  type: AT.ORDER_OPEN_POPUP_NAME,
-  payload: name
-})
-export const closePopup = () => ({
-  type: AT.ORDER_CLOSE_POPUP,
-  payload: {}
-})
-export const receivedOrder = orderId => ({
-  type: AT.ORDER_RECEIVED_ORDER,
-  payload: Api.receivedOrder(orderId)
-})
-export const acceptDelivery = orderId => ({
-  type: AT.ORDER_ACCEPT_DELIVERY_ORDER,
-  payload: Api.accept(orderId)
-})
-
-export const getReturnShipmentRates = (orderId, pickupDate) => ({
-  type: AT.RETURN_SHIPMENT_RATES,
-  payload: Api.getReturnShipmentRates(orderId, pickupDate)
-})
-
-export const returnShipmentOrder = (orderId, query) => ({
-  type: AT.RETURN_SHIPMENT_ORDER,
-  payload: Api.returnShipmentOrder(orderId, query)
-})
-
-export const rejectPurchaseOrder = (orderId, request, files) => ({
-  type: AT.REJECT_PURCHASE_ORDER,
-  payload: Api.rejectPurchaseOrder(orderId, request, files)
-})
-export const creditCounterAccept = orderId => ({
-  type: AT.ACCEPT_CREDIT,
-  payload: Api.creditCounterAccept(orderId)
-})
-export const creditCounter = (orderId, request, files) => ({
-  type: AT.CREDIT_COUNTER,
-  payload: Api.creditCounter(orderId, request, files)
-})
-export const creditCounterReject = orderId => ({
-  type: AT.CREDIT_COUNTER_REJECT,
-  payload: Api.creditCounterReject(orderId)
-})
-
-export const creditRequest = (orderId, request, files) => ({
-  type: AT.CREDIT_REQUEST_UPDATE,
-  payload: Api.creditRequest(orderId, request, files)
-})
-export const getShippingQuotes = (orderId, pickupDate) => ({
-  type: AT.ORDER_SHIPPING_QUOTES_FETCH,
-  payload: Api.getShippingQuotes(orderId, pickupDate)
-})
-export const getManualShippingQuote = (orderId, query) => ({
-  type: AT.ORDER_MANUAL_SHIPPING_QUOTE,
-  payload: Api.getManualShippingQuote(orderId, query)
-})
-export const purchaseShipmentOrder = (orderId, query) => ({
-  type: AT.ORDER_PURCHASE_SHIPMENT_ORDER,
-  payload: Api.purchaseShipmentOrder(orderId, query)
-})
-export const downloadCreditRequestAttachments = (endpointType, orderId, creditRequestAttachmentId) => ({
-  type: AT.DOWNLOAD_CREDIT_REQUEST_ATTACHMENTS,
-  payload: Api.downloadCreditRequestAttachments(endpointType, orderId, creditRequestAttachmentId)
-})
-
-export const creditAccept = orderId => ({
-  type: AT.CREDIT_ACCEPT,
-  payload: Api.creditAccept(orderId)
-})
-
-export const getPurchaseOrder = orderId => ({
-  type: AT.ORDER_GET_PURCHASE_ORDER,
-  payload: Api.getPurchaseOrder(orderId)
-})
-export const getSaleOrder = orderId => ({
-  type: AT.ORDER_GET_SALE_ORDER,
-  payload: Api.getSaleOrder(orderId)
-})
-
-export function applyDatagridFilter(filter) {
+export const loadLotsToAssign = createAsyncAction('ORDER_GET_LOTS', productOfferId => Api.getLots(productOfferId))
+export const linkAttachment = createAsyncAction('ORDER_LINK_ATTACHMENT', async (lotId, attachment) => {
+  await Api.linkAttachment(lotId, attachment.id || attachment.lastModified)
   return {
-    type: AT.ORDER_APPLY_FILTER,
-    payload: filter
+    lotId: lotId,
+    file: attachment
   }
-}
-
-export const getGroupedProductOffers = (orderId, orderItemsId) => ({
-  type: AT.GET_GROUPED_PRODUCT_OFFERS,
-  async payload() {
-    let res = []
+})
+export const removeAttachmentLink = createAsyncAction('ORDER_REMOVE_ATTACHMENT_LINK', (isLot, lotId, aId) => Api.removeAttachmentLink(lotId, aId))
+export const removeAttachment = createAsyncAction('ORDER_REMOVE_ATTACHMENT', async (aId) => {
+  await Api.removeAttachment(aId)
+  return {
+    fileId: aId
+  }
+})
+export const cancelPayment = createAsyncAction('ORDER_CANCEL_PAYMENT', async (orderId) => {
+  await Api.cancelPayment(orderId)
+  return {
+    orderId: orderId
+  }
+})
+export const openReinitiateTransfer = createAction('ORDER_OPEN_REINITIATE_TRANSFER')
+export const closeReinitiateTransfer = createAction('ORDER_CLOSE_REINITIATE_TRANSFER')
+export const loadDwollaBankAccounts = createAsyncAction('ORDER_LOAD_DWOLLA_BANK_ACCOUNTS', () => Api.loadDwollaBankAccounts())
+export const loadVellociBankAccounts = createAsyncAction('ORDER_LOAD_VELLOCI_BANK_ACCOUNTS', () => Api.loadVellociBankAccounts())
+export const payOrder = createAsyncAction('ORDER_PAY_ORDER', (orderId, bankAccount) => Api.payOrder(orderId, bankAccount))
+export const cancelOrder = createAsyncAction('ORDER_CANCEL_ORDER', orderId => Api.cancelOrder(orderId))
+export const clearRelatedOrders = createAction('CLEAR_RELATED_ORDERS')
+export const getRelatedOrders = createAsyncAction('RELATED_ORDERS', orderId => Api.getRelatedOrders(orderId))
+export const approveOrder = createAsyncAction('ORDER_APPROVE_ORDER', orderId => Api.approveOrder(orderId))
+export const discardOrder = createAsyncAction('ORDER_DISCARD_ORDER', orderId => Api.discardOrder(orderId))
+export const openPopupName = createAction('ORDER_OPEN_POPUP_NAME', name => name)
+export const closePopup = createAction('ORDER_CLOSE_POPUP')
+export const receivedOrder = createAsyncAction('ORDER_RECEIVED_ORDER', orderId => Api.receivedOrder(orderId))
+export const acceptDelivery = createAsyncAction('ORDER_ACCEPT_DELIVERY_ORDER', orderId => Api.accept(orderId))
+export const getReturnShipmentRates = createAsyncAction('RETURN_SHIPMENT_RATES', (orderId, pickupDate) => Api.getReturnShipmentRates(orderId, pickupDate))
+export const returnShipmentOrder = createAsyncAction('RETURN_SHIPMENT_ORDER', (orderId, query) => Api.returnShipmentOrder(orderId, query))
+export const rejectPurchaseOrder = createAsyncAction('REJECT_PURCHASE_ORDER', (orderId, request, files) => Api.rejectPurchaseOrder(orderId, request, files))
+export const creditCounterAccept = createAsyncAction('ACCEPT_CREDIT', orderId => Api.creditCounterAccept(orderId))
+export const creditCounter = createAsyncAction('CREDIT_COUNTER', (orderId, request, files) => Api.creditCounter(orderId, request, files))
+export const creditCounterReject = createAsyncAction('CREDIT_COUNTER_REJECT', orderId => Api.creditCounterReject(orderId))
+export const creditRequest = createAsyncAction('CREDIT_REQUEST_UPDATE', (orderId, request, files) => Api.creditRequest(orderId, request, files))
+export const getShippingQuotes = createAsyncAction('ORDER_SHIPPING_QUOTES_FETCH', (orderId, pickupDate) => Api.getShippingQuotes(orderId, pickupDate))
+export const getManualShippingQuote = createAsyncAction('ORDER_MANUAL_SHIPPING_QUOTE', (orderId, query) => Api.getManualShippingQuote(orderId, query))
+export const purchaseShipmentOrder = createAsyncAction('ORDER_PURCHASE_SHIPMENT_ORDER', (orderId, query) => Api.purchaseShipmentOrder(orderId, query))
+export const downloadCreditRequestAttachments = createAsyncAction('DOWNLOAD_CREDIT_REQUEST_ATTACHMENTS', 
+  (endpointType, orderId, creditRequestAttachmentId) => Api.downloadCreditRequestAttachments(endpointType, orderId, creditRequestAttachmentId))
+export const creditAccept = createAsyncAction('CREDIT_ACCEPT', orderId => Api.creditAccept(orderId))
+export const getPurchaseOrder = createAsyncAction('ORDER_GET_PURCHASE_ORDER', orderId => Api.getPurchaseOrder(orderId))
+export const getSaleOrder = createAsyncAction('ORDER_GET_SALE_ORDER', orderId => Api.getSaleOrder(orderId))
+export const applyDatagridFilter = createAction('ORDER_APPLY_FILTER', filter => filter)
+export const getGroupedProductOffers = createAsyncAction('GET_GROUPED_PRODUCT_OFFERS', async (orderId, orderItemsId) => {
+  let res = []
     if (orderItemsId && orderItemsId.length > 1) {
-      async function asyncForEach(array, callback) {
+      const asyncForEach = async (array, callback) => {
         for (let index = 0; index < array.length; index++) {
           await callback(array[index], index, array)
         }
@@ -251,108 +101,18 @@ export const getGroupedProductOffers = (orderId, orderItemsId) => ({
       await res.push(result.data)
     }
     return res
-  }
 })
-
-export function patchAssignProductOffers(orderId, orderItemId, request) {
-  return {
-    type: AT.PATCH_ASSIGN_PRODUCT_OFFERS,
-    payload: Api.patchAssignProductOffers(orderId, orderItemId, request)
-  }
-}
-
-export function deleteAssignProductOffers(orderId, orderItemId) {
-  return {
-    type: AT.DELETE_ASSIGN_PRODUCT_OFFERS,
-    payload: Api.deleteAssignProductOffers(orderId, orderItemId)
-  }
-}
-
-export function clearGroupedProductOffer() {
-  return {
-    type: AT.CLEAR_GROUPED_PRODUCT_OFFERS
-  }
-}
-
-export function linkAttachmentToOrderItem(query) {
-  return {
-    type: AT.LINK_ATTACHMENT_TO_ORDER_ITEM,
-    payload: Api.linkAttachmentToOrderItem(query)
-  }
-}
-
-export function removeLinkAttachmentToOrderItem(query) {
-  return {
-    type: AT.REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM,
-    payload: Api.removeLinkAttachmentToOrderItem(query)
-  }
-}
-
-export function getDocumentTypes() {
-  return {
-    type: AT.RELATED_GET_DOCUMENT_TYPES,
-    payload: Api.getDocumentTypes()
-  }
-}
-
-export function unlinkAttachmentToOrder(query) {
-  return {
-    type: AT.UNLINK_ATTACHMENT_TO_ORDER,
-    payload: Api.unlinkAttachmentToOrder(query)
-  }
-}
-
-export function linkAttachmentToOrder(query) {
-  return {
-    type: AT.LINK_ATTACHMENT_TO_ORDER,
-    payload: Api.linkAttachmentToOrder(query)
-  }
-}
-
-export function clearOrderDetail() {
-  return {
-    type: AT.CLEARE_ORDER_DETAIL
-  }
-}
-
-export function editTrackingCode(orderId, trackingCode) {
-  return {
-    type: AT.EDIT_TRACKING_CODE,
-    payload: Api.editTrackingCode(orderId, trackingCode)
-  }
-}
-
-export function editReturnTrackingCode(orderId, trackingCode) {
-  return {
-    type: AT.EDIT_RETURN_TRACKING_CODE,
-    payload: Api.editReturnTrackingCode(orderId, trackingCode)
-  }
-}
-
-export function saveFilters(filters) {
-  return {
-    type: AT.ORDERS_SAVE_FILTERS,
-    payload: filters
-  }
-}
-
-export function orderResolutionReopen(orderId, ordersType) {
-  return {
-    type: AT.ORDERS_RESOLUTION_REOPEN,
-    payload: Api.orderResolutionReopen(orderId, ordersType)
-  }
-}
-
-export function orderResolutionAccept(orderId, ordersType) {
-  return {
-    type: AT.ORDERS_RESOLUTION_ACCEPT,
-    payload: Api.orderResolutionAccept(orderId, ordersType)
-  }
-}
-
-export function downloadDisputeAttachment(orderId, attachmentId) {
-  return {
-    teyp: AT.DOWNLOAD_DISPUTE_ATTACHMENT,
-    payload: Api.downloadDisputeAttachment(orderId, attachmentId)
-  }
-}
+export const patchAssignProductOffers = createAsyncAction('PATCH_ASSIGN_PRODUCT_OFFERS', (orderId, orderItemId, request) => Api.patchAssignProductOffers(orderId, orderItemId, request))
+export const deleteAssignProductOffers = createAsyncAction('DELETE_ASSIGN_PRODUCT_OFFERS', (orderId, orderItemId) => Api.deleteAssignProductOffers(orderId, orderItemId))
+export const clearGroupedProductOffer = createAction('CLEAR_GROUPED_PRODUCT_OFFERS')
+export const linkAttachmentToOrderItem = createAsyncAction('LINK_ATTACHMENT_TO_ORDER_ITEM', (query) => Api.linkAttachmentToOrderItem(query))
+export const removeLinkAttachmentToOrderItem = createAsyncAction('REMOVE_LINK_ATTACHMENT_TO_ORDER_ITEM', (query) => Api.removeLinkAttachmentToOrderItem(query))
+export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
+export const linkAttachmentToOrder = createAsyncAction('LINK_ATTACHMENT_TO_ORDER', (query) => Api.linkAttachmentToOrder(query))
+export const clearOrderDetail = createAction('CLEARE_ORDER_DETAIL')
+export const editTrackingCode = createAsyncAction('EDIT_TRACKING_CODE', (orderId, trackingCode) => Api.editTrackingCode(orderId, trackingCode))
+export const editReturnTrackingCode = createAsyncAction('EDIT_RETURN_TRACKING_CODE', (orderId, trackingCode) => Api.editReturnTrackingCode(orderId, trackingCode))
+export const saveFilters = createAction('ORDERS_SAVE_FILTERS', filters => filters)
+export const orderResolutionReopen = createAsyncAction('ORDERS_RESOLUTION_REOPEN', (orderId, ordersType) => Api.orderResolutionReopen(orderId, ordersType))
+export const orderResolutionAccept = createAsyncAction('ORDERS_RESOLUTION_ACCEPT', (orderId, ordersType) => Api.orderResolutionAccept(orderId, ordersType))
+export const downloadDisputeAttachment = createAsyncAction('DOWNLOAD_DISPUTE_ATTACHMENT', (orderId, attachmentId) => Api.downloadDisputeAttachment(orderId, attachmentId))

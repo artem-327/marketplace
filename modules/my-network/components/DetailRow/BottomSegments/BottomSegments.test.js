@@ -54,7 +54,7 @@ describe('renders ColumnSegment only with empty required props', () => {
     //It finds specific node (component) with data-test='component-column-segment-row' from component.
     const component = findByTestAttr(wrapper, 'component-column-segment-row')
     //It expects no rows and without error in the component if props `data` is empty object.
-    expect(component.length).toBe(0)
+    expect(component.length).toBe(1)
   })
 })
 

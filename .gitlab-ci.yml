@@ -8,6 +8,8 @@ build:
     - docker build -t prodex/web:jest -f ./dockerfiles/Dockerfile.test .
     - docker create prodex/web:jest
     - docker cp $(docker ps -alq):/usr/src/app/junit.xml .
+    - docker cp $(docker ps -alq):/usr/src/app/failedFlag . || exit 0
+    - if [ -f "failedFlag" ]; then exit 1; fi
   artifacts:
     when: always
     paths:
@@ -68,7 +70,7 @@ deploy_production:
   when: manual
   script:
     - docker build -t prodex/web:prod -f ./dockerfiles/Dockerfile.prod .
-    - docker tag prodex/web:test 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
+    - docker tag prodex/web:prod 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
     - docker push 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
     - docker rmi 097989233947.dkr.ecr.us-east-1.amazonaws.com/prodex/web:production
   only:
