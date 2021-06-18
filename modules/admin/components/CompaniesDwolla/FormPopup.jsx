@@ -1,8 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
-
 import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
-
 import { Formik } from 'formik'
 import {
   closeRegisterDwollaAccount,
@@ -11,43 +9,16 @@ import {
   postDwollaAccount
 } from '../../actions'
 import { getCountries } from '../../../global-data/actions'
-
-import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
-import { ZipDropdown } from '~/modules/zip-dropdown'
+import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '~/components/custom-formik'
+import { DateInput } from '../../../../components/custom-formik'
 import * as Yup from 'yup'
-
 // debug purposes only
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-import { validationSchema } from '~/modules/company-form/constants'
-import { errorMessages, addressValidationSchema, dateValidation } from '~/constants/yupValidation'
-
-import { AddressForm } from '~/modules/address-form'
+import { errorMessages, addressValidationSchema, dateValidation } from '../../../../constants/yupValidation'
+import { AddressForm } from '../../../address-form'
 
 const formValidationNew = Yup.object().shape({
-  // beneficialOwner: Yup.object().shape({
-  //   address: Yup.object().shape({
-  //     address1: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-  //     address2: Yup.string().trim().min(3, 'Enter at least 2 characters'),
-  //     address3: Yup.string().trim().min(3, 'Enter at least 2 characters'),
-  //     city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-  //     country: Yup.string().required(),
-  //     postalCode: Yup.string().required(),
-  //     stateProvinceRegion: Yup.string().trim(),
-  //   }),
-  //   dateOfBirth: Yup.string().trim().min(3, 'Too short').required('Required'),
-  //   firstName: Yup.string().trim().min(3, 'Too short').required('Required'),
-  //   // "id": "string",
-  //   lastName: Yup.string().trim().min(3, 'Too short').required('Required'),
-  //   passport: Yup.object().shape({
-  //     country: Yup.string().required(),
-  //     number: Yup.string().required(),
-  //   }),
-  //   ssn: Yup.string().trim().min(3, 'Too short').required('Required'),
-  //   // "status": "string"
-  // }),
   dwollaController: Yup.object().shape({
     firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
     lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -55,27 +26,8 @@ const formValidationNew = Yup.object().shape({
     dateOfBirth: dateValidation(false).concat(Yup.string().required(errorMessages.requiredMessage)),
     ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
     address: addressValidationSchema()
-
-    //   streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    // city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    // country: Yup.string().required('Required field'),
-    // province: Yup.string(),
-    // zip: Yup.string()
   })
 })
-
-// "dwollaController": {
-//   "city": "string",
-//   "country": 0,
-//   "dateOfBirth": "string",
-//   "firstName": "string",
-//   "jobTitle": "string",
-//   "lastName": "string",
-//   "province": 0,
-//   "ssn": "string",
-//   "streetAddress": "string",
-//   "zip": "string"
-// }
 
 class AddNewPopupCasProducts extends Component {
   state = {
@@ -189,44 +141,6 @@ class AddNewPopupCasProducts extends Component {
                 <Form loading={isSubmitting} onSubmit={props.handleSubmit}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      {/* <FormGroup widths='equal'>
-                        <Input label={<FormattedMessage id='global.address1' defaultMessage='Address1' />} name='beneficialOwner.address.address1' />
-                        <Input label={<FormattedMessage id='global.address2' defaultMessage='Address2' />} name='beneficialOwner.address.address2' />
-                        <Input label={<FormattedMessage id='global.address3' defaultMessage='Address3' />} name='beneficialOwner.address.address3' />
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='beneficialOwner.address.city' />
-                        <Input label={<FormattedMessage id='global.dateOfBirth' defaultMessage='Birth' />} name='beneficialOwner.dateOfBirth' />
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropdown} />
-                        <Input label="Passport Number" name="beneficialOwner.passport.number" />
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='beneficialOwner.address.country' options={countriesDropdown}
-                          inputProps={{
-                            search: true, onChange: (e, d) => {
-                              this.handlePrimaryBranchCountry(e, d)
-                            }
-                          }} />
-                        <Dropdown label="State/Province" name="beneficialOwner.address.stateProvinceRegion" options={primaryBranchProvinces}
-                          inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <Input label={<FormattedMessage id='global.postalCode' defaultMessage='Postal Code' />} name='beneficialOwner.address.postalCode' />
-                        <Input label={<FormattedMessage id='global.firstName' defaultMessage='First Name' />} name='beneficialOwner.firstName' />
-                      </FormGroup>
-                      <FormGroup widths='equal'>
-                        <Input label={<FormattedMessage id='global.lastName' defaultMessage='Last Name' />} name='beneficialOwner.lastName' />
-                        <Input label={<FormattedMessage id='global.ssn' defaultMessage='SSN' />} name='beneficialOwner.ssn' />
-                      </FormGroup> */}
-
-                      {/* <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
-                        <h4>
-                          <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} />
-                          <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
-                        </h4>
-                      </Accordion.Title> */}
 
                       <Header>
                         <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
@@ -269,23 +183,6 @@ class AddNewPopupCasProducts extends Component {
                           setFieldValue={setFieldValue}
                           prefix='dwollaController'
                         />
-                        {/* <FormGroup widths='equal'>
-                          <Input label={<FormattedMessage id='global.address4' defaultMessage='Street address' />} name='dwollaController.streetAddress' />
-                          <Input label={<FormattedMessage id='global.city2' defaultMessage='City' />} name='dwollaController.city' />
-                        </FormGroup>
-                        <FormGroup widths='equal'>
-                          <ZipDropdown label="Zip" name="dwollaController.zip" options={zip.codes}
-                            inputProps={{ search: true, clearable: true }} />
-                          <Dropdown label={<FormattedMessage id='global.country2' defaultMessage='Country' />} name='dwollaController.country' options={countriesDropdown}
-                            inputProps={{
-                              search: true,
-                              onChange: (e, d) => {
-                                this.handleMailingBranchCountry(e, d)
-                              }
-                            }} />
-                          <Dropdown label="State/Province" name="dwollaController.province" options={mailingBranchProvinces}
-                            inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
-                        </FormGroup> */}
                       </Accordion.Content>
                     </Modal.Content>
                   </Accordion>
@@ -293,14 +190,10 @@ class AddNewPopupCasProducts extends Component {
               </Segment>
               <Modal.Actions>
                 <Button.Reset data-test='admin_popup_company_dwolla_cancel_btn' onClick={props.handleReset}>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                    {text => text}
-                  </FormattedMessage>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                 </Button.Reset>
                 <Button.Submit data-test='admin_popup_company_dwolla_save_btn' onClick={props.handleSubmit}>
-                  <FormattedMessage id='global.save' defaultMessage='Save'>
-                    {text => text}
-                  </FormattedMessage>
+                  <FormattedMessage id='global.save' defaultMessage='Save' />
                 </Button.Submit>
               </Modal.Actions>
             </Modal>

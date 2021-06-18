@@ -1,9 +1,8 @@
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-import confirm from '~/components/Confirmable/confirm'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import {getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation, postNewRequest} from '../../actions'
 import {
   getProductForms,
@@ -11,14 +10,14 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 
-class DataTable extends Component {
-  getActions = () => {
-    const { config, intl, openEditPopup, deleteConfirmation, datagrid } = this.props
+const DataTable = props => {
+  const getActions = () => {
+    const { config, intl, openEditPopup, deleteConfirmation, datagrid } = props
 
     const { formatMessage } = intl
-    const { addEditText, formattedMessageName } = this.props.config
+    const { addEditText, formattedMessageName } = props.config
     return [
       { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openEditPopup(row) },
       {
@@ -41,7 +40,7 @@ class DataTable extends Component {
           ).then(async () => {
             try {
               await deleteConfirmation(row.id, config)
-              if (config.globalReload) this.props[config.globalReload]()
+              if (config.globalReload) props[config.globalReload]()
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
@@ -51,42 +50,40 @@ class DataTable extends Component {
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
-            onContentClick={() => this.props.openEditPopup(row)}
+            onContentClick={() => props.openEditPopup(row)}
           />
         )
       }
     })
   }
 
-  render() {
-    const { loading, rows, datagrid, filterValue } = this.props
+  const { loading, rows, datagrid, filterValue } = props
 
-    const { tableName } = this.props.config
-    const { columns } = this.props.config.display
-    columns[0].allowReordering = false
+  const { tableName } = props.config
+  const { columns } = props.config.display
+  columns[0].allowReordering = false
 
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          tableName={tableName}
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          loading={datagrid.loading || loading}
-          columns={columns}
-          rows={this.getRows(rows)}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        tableName={tableName}
+        {...datagrid.tableProps}
+        filterValue={filterValue}
+        loading={datagrid.loading || loading}
+        columns={columns}
+        rows={getRows(rows)}
+      />
+    </div>
+  )
 }
 
 const mapDispatchToProps = {

@@ -1,8 +1,7 @@
 import * as AT from './action-types'
 import * as api from './api'
-import { updateIdentity } from '~/modules/auth/actions'
-import { Datagrid } from '~/modules/datagrid'
-import { getSafe } from '../../utils/functions'
+import { updateIdentity } from '../auth/actions'
+import { Datagrid } from '../datagrid'
 
 import Router from 'next/router'
 
@@ -450,7 +449,7 @@ export function linkAttachment(isLot, echoId, attachmentIds) {
     type: AT.ADMIN_LINK_ATTACHMENT,
     async payload() {
       if (Array.isArray(attachmentIds)) {
-        async function asyncForEach(array, callback) {
+        const asyncForEach = async (array, callback) => {
           for (let index = 0; index < array.length; index++) {
             await callback(array[index], index, array)
           }

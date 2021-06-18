@@ -1,5 +1,5 @@
-import confirm from '~/components/Confirmable/confirm'
-import { removeEmpty } from '~/utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+import { removeEmpty } from '../../../../utils/functions'
 
 /**
  * Get datagrid row actions

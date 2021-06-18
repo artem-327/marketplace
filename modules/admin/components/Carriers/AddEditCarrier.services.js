@@ -1,6 +1,6 @@
-import { getSafe, removeEmpty } from '~/utils/functions'
+import { getSafe, removeEmpty } from '../../../../utils/functions'
 import * as Yup from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages } from '../../../../constants/yupValidation'
 
 /**
  * Submit form - add or edit Carrier.

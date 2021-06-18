@@ -1,9 +1,9 @@
-import { Component } from 'react'
+import { Component, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import confirm from '~/components/Confirmable/confirm'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import {
   getDataRequest,
   openEditPopup,
@@ -19,43 +19,34 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 
-class UnitOfPackagingTable extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'PackagingType.name',
-          allowReordering: false
-        },
-        {
-          name: 'measureType',
-          title: (
-            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          sortPath: 'PackagingType.measureType.name'
-        }
-      ]
+const UnitOfPackagingTable = props => {
+  const columns = [
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='global.name' defaultMessage='Name' />
+      ),
+      sortPath: 'PackagingType.name',
+      allowReordering: false
+    },
+    {
+      name: 'measureType',
+      title: (
+        <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
+      ),
+      sortPath: 'PackagingType.measureType.name'
     }
-  }
-  componentDidMount() {
-    this.props.getMeasureTypesDataRequest()
-    this.props.getAllUnitsOfMeasuresDataRequest()
-  }
+  ]
 
-  getActions = () => {
-    const { intl, openEditPopup, deleteUnitOfPackaging, datagrid } = this.props
+  useEffect(() => {
+    props.getMeasureTypesDataRequest()
+    props.getAllUnitsOfMeasuresDataRequest()
+  }, [])
+
+  const getActions = () => {
+    const { intl, openEditPopup, deleteUnitOfPackaging, datagrid, config } = props
 
     const { formatMessage } = intl
 
@@ -76,7 +67,7 @@ class UnitOfPackagingTable extends Component {
           ).then(async () => {
             try {
               await deleteUnitOfPackaging(row.id)
-              if (config.globalReload) this.props[config.globalReload]()
+              if (config.globalReload) props[config.globalReload]()
               datagrid.removeRow(row.id)
             } catch (e) {
               console.error(e)
@@ -86,40 +77,38 @@ class UnitOfPackagingTable extends Component {
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
-            onContentClick={() => this.props.openEditPopup(row)}
+            onContentClick={() => props.openEditPopup(row)}
           />
         )
       }
     })
   }
 
-  render() {
-    const { loading, rows, datagrid, filterValue } = this.props
+  const { loading, rows, datagrid, filterValue } = props
 
-    const { tableName } = this.props.config
+  const { tableName } = props.config
 
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          tableName={tableName}
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          loading={datagrid.loading || loading}
-          columns={this.state.columns}
-          rows={this.getRows(rows)}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        tableName={tableName}
+        {...datagrid.tableProps}
+        filterValue={filterValue}
+        loading={datagrid.loading || loading}
+        columns={columns}
+        rows={getRows(rows)}
+      />
+    </div>
+  )
 }
 
 const mapDispatchToProps = {

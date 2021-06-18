@@ -1,75 +1,58 @@
-import { Component } from 'react'
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 import { deleteLogisticsProvider, openPopup } from '../../actions'
-import { withDatagrid } from '../../../../modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 
-class LogisticsTable extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 300,
-          allowReordering: false
-        },
-        {
-          name: 'identifierType',
-          title: (
-            <FormattedMessage id='logistics.identifierType' defaultMessage='Identifier Type'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 300
-        },
-        {
-          name: 'identifierValue',
-          title: (
-            <FormattedMessage id='logistics.identifierValue' defaultMessage='Identifier Value'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 300
-        },
-        {
-          name: 'reinvoice',
-          title: (
-            <FormattedMessage id='logistics.reinvoice' defaultMessage='Re-Invoice'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 120
-        },
-        {
-          name: 'email',
-          title: (
-            <FormattedMessage id='global.email' defaultMessage='Email'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          width: 200
-        }
-      ]
+const LogisticsTable = props => {
+  const columns = [
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='global.name' defaultMessage='Name' />
+      ),
+      width: 300,
+      allowReordering: false
+    },
+    {
+      name: 'identifierType',
+      title: (
+        <FormattedMessage id='logistics.identifierType' defaultMessage='Identifier Type' />
+      ),
+      width: 300
+    },
+    {
+      name: 'identifierValue',
+      title: (
+        <FormattedMessage id='logistics.identifierValue' defaultMessage='Identifier Value' />
+      ),
+      width: 300
+    },
+    {
+      name: 'reinvoice',
+      title: (
+        <FormattedMessage id='logistics.reinvoice' defaultMessage='Re-Invoice' />
+      ),
+      width: 120
+    },
+    {
+      name: 'email',
+      title: (
+        <FormattedMessage id='global.email' defaultMessage='Email' />
+      ),
+      width: 200
     }
-  }
+  ]
 
-  getActions = () => {
+  const getActions = () => {
     const {
       datagrid,
       openPopup,
       intl: { formatMessage },
       deleteLogisticsProvider
-    } = this.props
+    } = props
 
     return [
       {
@@ -103,38 +86,36 @@ class LogisticsTable extends Component {
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
-            onContentClick={() => this.props.openPopup(row.rawData)}
+            onContentClick={() => props.openPopup(row.rawData)}
           />
         )
       }
     })
   }
 
-  render() {
-    const { loading, rows, datagrid, filterValue } = this.props
+  const { loading, rows, datagrid, filterValue } = props
 
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          tableName='admin_logistics_providers'
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          loading={datagrid.loading || loading}
-          columns={this.state.columns}
-          rows={this.getRows(rows)}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        tableName='admin_logistics_providers'
+        {...datagrid.tableProps}
+        filterValue={filterValue}
+        loading={datagrid.loading || loading}
+        columns={columns}
+        rows={getRows(rows)}
+      />
+    </div>
+  )
 }
 
 const mapDispatchToProps = {
@@ -148,7 +129,7 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         ...row,
         rawData: row,
-        name: <div style={{ fontWeight: '500', overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
+        name: <div style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
         reinvoice: row.reinvoice ? (
           <FormattedMessage id='global.yes' defaultMessage='Yes' />
         ) : (

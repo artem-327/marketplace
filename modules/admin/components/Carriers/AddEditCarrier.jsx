@@ -6,20 +6,17 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 //import ErrorFocus from '../../../components/error-focus'
 import { Modal, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
+import { Required } from '../../../../components/constants/layout'
+import { withDatagrid } from '../../../datagrid'
 import ErrorFocus from '../../../../components/error-focus'
 import { PriceInput } from '../../../marketplace/constants/layout'
 
 // Constants
-import { errorMessages, multipleEmails } from '~/constants/yupValidation'
-import { currencyId, currencySymbol } from '~/constants/index'
 import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
 
 // Services
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
 import * as Actions from '../../actions'
-import { getSafe } from '~/utils/functions'
 
 let formikPropsSelf = {}
 

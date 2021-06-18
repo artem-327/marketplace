@@ -1,8 +1,8 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Segment } from 'semantic-ui-react'
-import { withAuth } from '~/hocs'
+import { withAuth } from '../../../hocs'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
@@ -22,10 +22,10 @@ import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../utils/functions'
 
-import { DatagridProvider } from '~/modules/datagrid'
-import Settings from '~/components/settings'
+import { DatagridProvider } from '../../datagrid'
+import Settings from '../../../components/settings'
 import * as Actions from '../actions'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
@@ -157,14 +157,16 @@ const addDwollaForms = {
   Companies: <CompaniesDwollaForm />
 }
 
-class Admin extends Component {
-  componentWillUnmount() {
-    const { currentEditForm, currentAddForm, currentAddDwolla, closePopup } = this.props
-    if (currentEditForm || currentAddForm || currentAddDwolla) closePopup()
-  }
+const Admin = props => {
+  useEffect(() => {
+    return () => {
+      const { currentEditForm, currentAddForm, currentAddDwolla, closePopup } = props
+      if (currentEditForm || currentAddForm || currentAddDwolla) closePopup()
+    }
+  }, [])
 
-  renderContent = () => {
-    const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
+  const renderContent = () => {
+    const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = props
     return (
       <>
         {currentAddForm && addForms[currentTab]}
@@ -175,34 +177,32 @@ class Admin extends Component {
     )
   }
 
-  getApiConfig = () => {
-    const { currentTab } = this.props
+  const getApiConfig = () => {
+    const { currentTab } = props
 
     return datagridConfig[currentTab]
   }
 
-  render() {
-    if (!getSafe(() => this.props.auth.identity.isAdmin, false))
-      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-    const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = this.props
+  if (!getSafe(() => props.auth.identity.isAdmin, false))
+    return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+  const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = props
 
-    return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
-        <Container fluid className='flex stretched'>
-          <>
-            {currentTab !== 'admin-settings' && (
-              <div style={{ padding: '20px 30px' }}>
-                <TablesHandlers currentTab={currentTab} />
-              </div>
-            )}
-            <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-              {this.renderContent()}
+  return (
+    <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
+      <Container fluid className='flex stretched'>
+        <>
+          {currentTab !== 'admin-settings' && (
+            <div style={{ padding: '20px 30px' }}>
+              <TablesHandlers currentTab={currentTab} />
             </div>
-          </>
-        </Container>
-      </DatagridProvider>
-    )
-  }
+          )}
+          <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
+            {renderContent()}
+          </div>
+        </>
+      </Container>
+    </DatagridProvider>
+  )
 }
 
 const mapStateToProps = state => ({

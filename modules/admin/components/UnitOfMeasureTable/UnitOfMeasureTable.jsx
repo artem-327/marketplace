@@ -1,10 +1,9 @@
-import { Component } from 'react'
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import confirm from '~/components/Confirmable/confirm'
-//import ProdexGrid from '~/components/table'
-import ProdexTable from '~/components/table'
-import ActionCell from '~/components/table/ActionCell'
+import confirm from '../../../../components/Confirmable/confirm'
+import ProdexTable from '../../../../components/table'
+import ActionCell from '../../../../components/table/ActionCell'
 import {
   getDataRequest,
   openEditPopup,
@@ -13,56 +12,43 @@ import {
   getMeasureTypesDataRequest,
   deleteUnit
 } from '../../actions'
-import { withDatagrid } from '~/modules/datagrid'
+import { withDatagrid } from '../../../datagrid'
 
-class UnitOfMeasureTable extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      columns: [
-        {
-          name: 'name',
-          title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
-          ),
-          allowReordering: false
-        },
-        {
-          name: 'nameAbbreviation',
-          title: (
-            <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'measureType',
-          title: (
-            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-              {text => text}
-            </FormattedMessage>
-          )
-        },
-        {
-          name: 'ratioToBaseSiUnit',
-          title: (
-            <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
-              {text => text}
-            </FormattedMessage>
-          )
-        }
-      ]
+const UnitOfMeasureTable = props => {
+  const columns = [
+    {
+      name: 'name',
+      title: (
+        <FormattedMessage id='global.name' defaultMessage='Name' />
+      ),
+      allowReordering: false
+    },
+    {
+      name: 'nameAbbreviation',
+      title: (
+        <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation' />
+      )
+    },
+    {
+      name: 'measureType',
+      title: (
+        <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
+      )
+    },
+    {
+      name: 'ratioToBaseSiUnit',
+      title: (
+        <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit' />
+      )
     }
-  }
-  componentDidMount() {
-    this.props.getMeasureTypesDataRequest()
-  }
+  ]
 
-  getActions = () => {
-    const { intl, openEditPopup, deleteUnit, datagrid } = this.props
+  useEffect(() => {
+    props.getMeasureTypesDataRequest()
+  }, [])
+
+  const getActions = () => {
+    const { intl, openEditPopup, deleteUnit, datagrid } = props
 
     const { formatMessage } = intl
     return [
@@ -95,40 +81,38 @@ class UnitOfMeasureTable extends Component {
     ]
   }
 
-  getRows = rows => {
+  const getRows = rows => {
     return rows.map(row => {
       return {
         ...row,
         name: (
           <ActionCell
             row={row}
-            getActions={this.getActions}
+            getActions={getActions}
             content={row.name}
-            {...(row.system === false && { onContentClick: () => this.props.openEditPopup(row) })}
+            {...(row.system === false && { onContentClick: () => props.openEditPopup(row) })}
           />
         )
       }
     })
   }
 
-  render() {
-    const { loading, rows, datagrid, filterValue } = this.props
+  const { loading, rows, datagrid, filterValue } = props
 
-    const { tableName } = this.props.config
+  const { tableName } = props.config
 
-    return (
-      <div className='flex stretched listings-wrapper'>
-        <ProdexTable
-          tableName={tableName}
-          {...datagrid.tableProps}
-          filterValue={filterValue}
-          loading={datagrid.loading || loading}
-          columns={this.state.columns}
-          rows={this.getRows(rows)}
-        />
-      </div>
-    )
-  }
+  return (
+    <div className='flex stretched listings-wrapper'>
+      <ProdexTable
+        tableName={tableName}
+        {...datagrid.tableProps}
+        filterValue={filterValue}
+        loading={datagrid.loading || loading}
+        columns={columns}
+        rows={getRows(rows)}
+      />
+    </div>
+  )
 }
 
 const mapDispatchToProps = {

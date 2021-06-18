@@ -1,6 +1,6 @@
-import api from '~/api'
+import api from '../../api'
 
-import { getSafe, generateQueryString } from '~/utils/functions'
+import { getSafe, generateQueryString } from '../../utils/functions'
 
 export async function getCasProductByString(value, limit = 30) {
   const { data } = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
