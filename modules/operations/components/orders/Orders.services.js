@@ -349,7 +349,7 @@ export const getRowss = (props, state, setState) => {
             row &&
             row.orderItems &&
             row.orderItems.length &&
-            row.orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A'))
+            row.orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A'))
         }
         />
     ),
@@ -372,7 +372,7 @@ export const getRowss = (props, state, setState) => {
         globalStatus: '',
         date: '',
         customerName: '',
-        productName: item.echoProductName ? item.echoProductName : 'N/A',
+        productName: item.companyGenericProductName ? item.companyGenericProductName : 'N/A',
         orderStatus: '',
         shippingStatus: '',
         reviewStatus: '',
