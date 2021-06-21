@@ -13,6 +13,7 @@ const getUpdating = state => getSafe(() => state.admin.updating, false)
 const getEditId = state => getSafe(() => state.admin.popupValues.id, null)
 const getFilterValue = state => getSafe(() => state.admin.filterValue, '')
 const getLoading = state => getSafe(() => state.admin.loading, false)
+const getCountries = state => getSafe(() => state.globalData.countries, [])
 
 export const makeGetDimensionUnits = () => createSelector([getUnitsOfMeasures], unitsOfMeasures => unitsOfMeasures?.filter(d=>{return d.measureType.name === "length"}).map(d => {
     return {
@@ -41,3 +42,4 @@ export const makeGetUpdating = () => createSelector([getUpdating], updating => u
 export const makeGetEditId = () => createSelector([getEditId], editId => editId)
 export const makeGetFilterValue = () => createSelector([getFilterValue], filterValue => filterValue)
 export const makeGetLoading = () => createSelector([getLoading], loading => loading)
+export const makeGetCountries = () => createSelector([getCountries], countries => countries)
