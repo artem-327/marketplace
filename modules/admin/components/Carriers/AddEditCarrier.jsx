@@ -1,13 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
 // Components
 //import ErrorFocus from '../../../components/error-focus'
 import { Modal, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { Required } from '../../../../components/constants/layout'
-import { withDatagrid } from '../../../datagrid'
 import ErrorFocus from '../../../../components/error-focus'
 import { PriceInput } from '../../../marketplace/constants/layout'
 
@@ -16,7 +14,6 @@ import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
 
 // Services
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
-import * as Actions from '../../actions'
 
 let formikPropsSelf = {}
 
@@ -114,11 +111,4 @@ const AddEditCarrier = props => {
   )
 }
 
-function mapStateToProps({ admin }) {
-  return {
-    popupValues: admin.popupValues,
-    updating: admin.updating
-  }
-}
-
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(AddEditCarrier)))
+export default AddEditCarrier

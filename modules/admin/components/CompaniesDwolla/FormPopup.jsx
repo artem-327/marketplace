@@ -1,20 +1,11 @@
 import { Component } from 'react'
-import { connect } from 'react-redux'
-import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
+import { Form, Modal, FormGroup, Accordion, Segment, Header } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import {
-  closeRegisterDwollaAccount,
-  getPrimaryBranchProvinces,
-  getMailingBranchProvinces,
-  postDwollaAccount
-} from '../../actions'
-import { getCountries } from '../../../global-data/actions'
-import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
-import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { DateInput } from '../../../../components/custom-formik'
 import * as Yup from 'yup'
 // debug purposes only
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { errorMessages, addressValidationSchema, dateValidation } from '../../../../constants/yupValidation'
 import { AddressForm } from '../../../address-form'
 
@@ -203,24 +194,4 @@ class AddNewPopupCasProducts extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  closeRegisterDwollaAccount,
-  getCountries,
-  getPrimaryBranchProvinces,
-  getMailingBranchProvinces,
-  postDwollaAccount,
-  addZip,
-  getZipCodes
-}
-
-const mapStateToProps = ({ admin, zip, auth, globalData }) => {
-  return {
-    ...admin,
-    zip,
-    auth,
-    countries: globalData.countries,
-    countriesDropdown: globalData.countriesDropdown
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))
+export default AddNewPopupCasProducts

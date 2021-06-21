@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
 import { config } from '../config'
 import { debounce } from 'lodash'
 
 import { Button, Input } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 
-import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
 import styled from 'styled-components'
-import { withDatagrid } from '../../datagrid'
 import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
@@ -117,18 +114,4 @@ const TablesHandlers = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    tableHandlersFilters: state.admin.tableHandlersFilters,
-    casListDataRequest: state.admin.casListDataRequest,
-    companyListDataRequest: state.admin.companyListDataRequest
-  }
-}
-
-const mapDispatchToProps = {
-  openPopup,
-  handleFiltersValue,
-  handleVariableSave
-}
-
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)))
+export default TablesHandlers

@@ -1,8 +1,6 @@
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import TablesHandlers from './TablesHandlers'
-import { Container, Grid, Segment } from 'semantic-ui-react'
-import { withAuth } from '../../../hocs'
+import TablesHandlers from './TablesHandlersContainer'
+import { Container, Segment } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
@@ -20,18 +18,17 @@ import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
 import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
-import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
+import CompaniesDwollaForm from './CompaniesDwolla/FormPopupContainer'
 
 import { getSafe } from '../../../utils/functions'
 
 import { DatagridProvider } from '../../datagrid'
 import Settings from '../../../components/settings'
-import * as Actions from '../actions'
 
 import LogisticsTable from './LogisticsTable/LogisticsTable'
 import AddEditLogisticProvider from './LogisticsTable/AddEditLogisticProvider'
-import Carriers from './Carriers/Carriers'
-import AddEditCarrier from './Carriers/AddEditCarrier'
+import Carriers from './Carriers/CarriersContainer'
+import AddEditCarrier from './Carriers/AddEditCarrierContainer'
 
 import styled from 'styled-components'
 
@@ -185,7 +182,7 @@ const Admin = props => {
 
   if (!getSafe(() => props.auth.identity.isAdmin, false))
     return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-  const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = props
+  const { currentTab } = props
 
   return (
     <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
@@ -205,9 +202,4 @@ const Admin = props => {
   )
 }
 
-const mapStateToProps = state => ({
-  ...state.admin,
-  auth: state.auth
-})
-
-export default withAuth(connect(mapStateToProps, Actions)(Admin))
+export default Admin

@@ -1,9 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
-import { injectIntl, FormattedNumber } from 'react-intl'
+import { FormattedNumber } from 'react-intl'
 
 // Components
-import { withDatagrid } from '../../../../modules/datagrid'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 import { Checkbox } from 'semantic-ui-react'
@@ -14,7 +12,6 @@ import { currency } from '../../../../constants/index'
 
 // Services
 import { getActions, handleToggleSwitch } from './Carriers.services'
-import { deleteCarrier, updateCarrier, openPopup } from '../../actions'
 
 const getRows = (rows, props) => {
   return rows.map(row => {
@@ -69,19 +66,4 @@ const Carriers = props => {
   )
 }
 
-const mapStateToProps = (state, { datagrid }) => {
-  return {
-    rows: datagrid.rows.map((row, index) => {
-      return {
-        ...row,
-        rawData: row
-      }
-    }),
-    editId: state.admin.popupValues && state.admin.popupValues.id,
-    filterValue: state.admin.filterValue,
-    loading: state.admin.loading,
-    updating: state.admin.updating
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, { deleteCarrier, updateCarrier, openPopup })(injectIntl(Carriers)))
+export default Carriers

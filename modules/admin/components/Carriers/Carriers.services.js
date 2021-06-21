@@ -52,7 +52,7 @@ export const getActions = props => {
  * @method
  * @param {Object} values Object form values.
  * @param {Object} props Object module input props (updateCarrier, datagrid).
- * @return {none}
+ * @return none
  */
 export const handleToggleSwitch = async (values, props) => {
   const { updateCarrier, datagrid } = props
@@ -68,3 +68,10 @@ export const handleToggleSwitch = async (values, props) => {
     console.error(e)
   }
 }
+
+export const getRows = datagrid => datagrid.rows.map((row, index) => {
+  return {
+      ...row,
+      rawData: row
+  }
+})
