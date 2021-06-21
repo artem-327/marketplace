@@ -1,17 +1,14 @@
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { errorMessages, multipleEmails } from '../../../../constants/yupValidation'
 
-import { Modal, FormGroup, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
+import { Modal, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
 
 import * as Yup from 'yup'
 import { Required } from '../../../../components/constants/layout'
 import styled from 'styled-components'
-import { getSafe, removeEmpty } from '../../../../utils/functions'
-import { withDatagrid } from '../../../datagrid'
+import { removeEmpty } from '../../../../utils/functions'
 
 const initialValuesAdd = {
   providerIdentifier: '',
@@ -250,13 +247,4 @@ const AddEditLogisticProvider = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {
-    popupValues: state.admin.popupValues,
-    logisticsProvidersFetching: state.admin.logisticsProvidersFetching,
-    logisticsProviders: state.admin.logisticsProviders,
-    updating: state.admin.updating
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(AddEditLogisticProvider)))
+export default AddEditLogisticProvider

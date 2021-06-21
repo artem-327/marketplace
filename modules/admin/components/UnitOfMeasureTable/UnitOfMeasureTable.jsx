@@ -1,18 +1,8 @@
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import {
-  getDataRequest,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  getMeasureTypesDataRequest,
-  deleteUnit
-} from '../../actions'
-import { withDatagrid } from '../../../datagrid'
 
 const UnitOfMeasureTable = props => {
   const columns = [
@@ -115,36 +105,4 @@ const UnitOfMeasureTable = props => {
   )
 }
 
-const mapDispatchToProps = {
-  getDataRequest,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  getMeasureTypesDataRequest,
-  deleteUnit
-}
-
-const mapStateToProps = (state, { datagrid }) => {
-  let cfg = state.admin.config['units-of-measure']
-
-  return {
-    config: cfg,
-    rows: datagrid.rows.map(d => {
-      return {
-        id: d.id,
-        name: d.name,
-        nameAbbreviation: d.nameAbbreviation,
-        measureType: d.measureType.name,
-        measureTypeId: d.measureType.id,
-        ratioToBaseSiUnit: d.ratioToBaseSiUnit,
-        system: d.system
-      }
-    }),
-    filterValue: state.admin.filterValue,
-    loading: state.admin.loading,
-    confirmMessage: state.admin.confirmMessage,
-    deleteRowById: state.admin.deleteRowById
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfMeasureTable)))
+export default UnitOfMeasureTable

@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import { getSafe } from '../../utils/functions'
+import { config } from './config'
 
 const getUnitsOfMeasures = state => getSafe(() => state.admin.unitsOfMeasures, [])
 const getCurrentEditForm = state => getSafe(() => state.admin.currentEditForm, null)
@@ -14,6 +15,18 @@ const getEditId = state => getSafe(() => state.admin.popupValues.id, null)
 const getFilterValue = state => getSafe(() => state.admin.filterValue, '')
 const getLoading = state => getSafe(() => state.admin.loading, false)
 const getCountries = state => getSafe(() => state.globalData.countries, [])
+const getConfig = state => getSafe(() => state.admin.config, config)
+const getConfirmMessage = state => getSafe(() => state.admin.confirmMessage, null)
+const getDeleteRowById = state => getSafe(() => state.admin.deleteRowById, null)
+const getlogisticsProvidersFetching = state => getSafe(() => state.admin.logisticsProvidersFetching, false)
+const getLogisticsProviders = state => getSafe(() => state.admin.logisticsProviders, [])
+const getMeasureOptions = state => state?.admin?.measureTypes?.map(d => {
+  return {
+    id: d.id,
+    text: d.name,
+    value: d.id
+  }
+})
 
 export const makeGetDimensionUnits = () => createSelector([getUnitsOfMeasures], unitsOfMeasures => unitsOfMeasures?.filter(d=>{return d.measureType.name === "length"}).map(d => {
     return {
@@ -43,3 +56,9 @@ export const makeGetEditId = () => createSelector([getEditId], editId => editId)
 export const makeGetFilterValue = () => createSelector([getFilterValue], filterValue => filterValue)
 export const makeGetLoading = () => createSelector([getLoading], loading => loading)
 export const makeGetCountries = () => createSelector([getCountries], countries => countries)
+export const makeGetConfig = () => createSelector([getConfig], config => config)
+export const makeGetConfirmMessage = () => createSelector([getConfirmMessage], confirmMessage => confirmMessage)
+export const makeGetDeleteRowById = () => createSelector([getDeleteRowById], deleteRowById => deleteRowById)
+export const makeGetlogisticsProvidersFetching = () => createSelector([getlogisticsProvidersFetching], logisticsProvidersFetching => logisticsProvidersFetching)
+export const makeGetLogisticsProviders = () => createSelector([getLogisticsProviders], logisticsProviders => logisticsProviders)
+export const makeGetMeasureOptions = () => createSelector([getMeasureOptions], measureOptions => measureOptions)

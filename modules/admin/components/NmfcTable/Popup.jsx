@@ -1,14 +1,8 @@
-import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { Modal, FormGroup, Form, Button } from 'semantic-ui-react'
 import { Form as Formik, Input } from 'formik-semantic-ui-fixed-validation'
-import { injectIntl } from 'react-intl'
 import * as Yup from 'yup'
-
-import { closeAddPopup } from '../../actions'
-
 import { nmfcValidation } from '../../../../constants/yupValidation'
-import { addNmfcNumber, editNmfcNumber } from '../../actions'
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
 
@@ -108,19 +102,4 @@ const Popup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeAddPopup,
-  addNmfcNumber,
-  editNmfcNumber
-}
-
-const mapStateToProps = ({ admin }) => {
-  let config = admin.config['nmfc-numbers']
-
-  return {
-    config,
-    popupValues: admin.popupValues
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Popup))
+export default Popup

@@ -1,25 +1,8 @@
-import { Component, useEffect } from 'react'
-import { connect } from 'react-redux'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { useEffect } from 'react'
+import { FormattedMessage } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import {
-  getDataRequest,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  deleteUnitOfPackaging,
-  getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest, postNewRequest
-} from '../../actions'
-import {
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-} from '../../../global-data/actions'
-import { withDatagrid } from '../../../datagrid'
 
 const UnitOfPackagingTable = props => {
   const columns = [
@@ -111,46 +94,4 @@ const UnitOfPackagingTable = props => {
   )
 }
 
-const mapDispatchToProps = {
-  getDataRequest,
-  deleteUnitOfPackaging,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest,
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-}
-
-const mapStateToProps = (state, { datagrid }) => {
-  let cfg = state.admin.config['packaging-types']
-  return {
-    config: cfg,
-    rows: datagrid.rows.map(d => {
-      return {
-        id: d.id,
-        name: d.name,
-        nameAbbreviation: d.nameAbbreviation,
-        measureType: d.measureType.name,
-        measureTypeId: d.measureType.id,
-        length: d.length,
-        width: d.width,
-        height: d.height,
-        palletPkgMax: d.palletPkgMax,
-        palletPkgMin: d.palletPkgMin,
-        weight: d.weight,
-        weightUnit: d.weightUnit,
-        dimensionUnit: d.dimensionUnit
-      }
-    }),
-    filterValue: state.admin.filterValue,
-    loading: state.admin.loading,
-    confirmMessage: state.admin.confirmMessage,
-    deleteRowById: state.admin.deleteRowById
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfPackagingTable)))
+export default UnitOfPackagingTable

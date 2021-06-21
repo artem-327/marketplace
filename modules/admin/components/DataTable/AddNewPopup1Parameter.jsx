@@ -1,17 +1,6 @@
-import { connect } from 'react-redux'
-
 import { Modal, FormGroup } from 'semantic-ui-react'
-
-import { closeAddPopup, postNewRequest } from '../../actions'
-import {
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-} from '../../../global-data/actions'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-
 import { FormattedMessage } from 'react-intl'
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
@@ -79,20 +68,4 @@ const AddNewPopup1Parameter = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeAddPopup,
-  postNewRequest,
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-}
-
-const mapStateToProps = (state, { currentTab }) => {
-  let cfg = state.admin.config[currentTab]
-  return {
-    config: cfg
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopup1Parameter)
+export default AddNewPopup1Parameter

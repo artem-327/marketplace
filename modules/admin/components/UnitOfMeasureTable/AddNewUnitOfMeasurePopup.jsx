@@ -1,8 +1,4 @@
-import { connect } from 'react-redux'
-
 import { Modal, FormGroup } from 'semantic-ui-react'
-
-import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
@@ -114,23 +110,4 @@ const AddNewUnitOfMeasurePopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeAddPopup,
-  postNewRequest
-}
-
-const mapStateToProps = state => {
-  let cfg = state.admin.config['units-of-measure']
-  return {
-    config: cfg,
-    measureOptions: state.admin.measureTypes.map(d => {
-      return {
-        id: d.id,
-        text: d.name,
-        value: d.id
-      }
-    })
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfMeasurePopup)
+export default AddNewUnitOfMeasurePopup

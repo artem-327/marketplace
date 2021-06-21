@@ -78,7 +78,7 @@ const Table = props => {
     })
   }
 
-  const { config, loading, datagrid, filterValue, rows } = props
+  const { config, loading, datagrid, filterValue } = props
 
   const { tableName } = config
 

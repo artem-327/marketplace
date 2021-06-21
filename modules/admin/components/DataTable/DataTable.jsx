@@ -1,16 +1,6 @@
-import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import {getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation, postNewRequest} from '../../actions'
-import {
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-} from '../../../global-data/actions'
-import { withDatagrid } from '../../../datagrid'
 
 const DataTable = props => {
   const getActions = () => {
@@ -86,27 +76,4 @@ const DataTable = props => {
   )
 }
 
-const mapDispatchToProps = {
-  getDataRequest,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation,
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-}
-
-const mapStateToProps = (state, { datagrid, currentTab }) => {
-  let cfg = state.admin.config[currentTab]
-  return {
-    config: cfg,
-    rows: datagrid.rows,
-    filterValue: state.admin.filterValue,
-    loading: state.admin.loading,
-    confirmMessage: state.admin.confirmMessage,
-    deleteRowById: state.admin.deleteRowById
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(DataTable)))
+export default DataTable

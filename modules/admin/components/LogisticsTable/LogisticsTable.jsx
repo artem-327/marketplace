@@ -1,10 +1,7 @@
-import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
-import { deleteLogisticsProvider, openPopup } from '../../actions'
-import { withDatagrid } from '../../../datagrid'
 
 const LogisticsTable = props => {
   const columns = [
@@ -118,29 +115,4 @@ const LogisticsTable = props => {
   )
 }
 
-const mapDispatchToProps = {
-  deleteLogisticsProvider,
-  openPopup
-}
-
-const mapStateToProps = (state, { datagrid }) => {
-  return {
-    rows: datagrid.rows.map(row => {
-      return {
-        ...row,
-        rawData: row,
-        name: <div style={{ fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis' }}>{row.name}</div>,
-        reinvoice: row.reinvoice ? (
-          <FormattedMessage id='global.yes' defaultMessage='Yes' />
-        ) : (
-          <FormattedMessage id='global.no' defaultMessage='No' />
-        )
-      }
-    }),
-    editId: state.admin.popupValues && state.admin.popupValues.id,
-    filterValue: state.admin.filterValue,
-    loading: state.admin.loading
-  }
-}
-
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(LogisticsTable)))
+export default LogisticsTable

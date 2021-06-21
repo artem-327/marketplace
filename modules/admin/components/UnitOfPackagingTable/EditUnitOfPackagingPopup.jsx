@@ -1,20 +1,9 @@
-import { connect } from 'react-redux'
-
 import { Modal, FormGroup } from 'semantic-ui-react'
-
-import {closeEditPopup, postNewRequest, putEditedDataRequest} from '../../actions'
-import {
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-} from '../../../global-data/actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
-import {makeGetDimensionUnits, makeGetWeightUnits} from '../../selectors'
 import { errorMessages } from '../../../../constants/yupValidation'
 
 const formValidation = Yup.object().shape({
@@ -215,35 +204,4 @@ const EditUnitOfPackagingPopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeEditPopup,
-  putEditedDataRequest,
-  getProductForms,
-  getProductConditions,
-  getProductGrades,
-  getPackagingTypes
-}
-
-const makeMapStateToProps = () => {
-  const getDimensionUnits = makeGetDimensionUnits()
-  const getWeightUnits = makeGetWeightUnits()
-  const mapStateToProps = state => {
-    let cfg = state.admin.config['packaging-types']
-    return {
-      config: cfg,
-      popupValues: state.admin.popupValues,
-      measureOptions: state.admin.measureTypes.map(d => {
-        return {
-          id: d.id,
-          text: d.name,
-          value: d.id
-        }
-      }),
-      dimensionUnits: getDimensionUnits(state),
-      weightUnits: getWeightUnits(state)
-    }
-  }
-  return mapStateToProps
-}
-
-export default connect(makeMapStateToProps, mapDispatchToProps)(EditUnitOfPackagingPopup)
+export default EditUnitOfPackagingPopup
