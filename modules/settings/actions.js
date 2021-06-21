@@ -434,13 +434,6 @@ export function getUsersDataRequest() {
   }
 }
 
-export function getRoles() {
-  return {
-    type: AT.GET_ROLES_DATA,
-    payload: api.getRoles()
-  }
-}
-
 export function openRolesPopup(row) {
   return {
     type: AT.OPEN_ROLES_POPUP,

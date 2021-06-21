@@ -22,10 +22,9 @@ import {
   initSearchCompany,
   getUser,
   searchSellMarketSegments,
-  searchBuyMarketSegments,
-  getUserRoles,
-  getAdminRoles
+  searchBuyMarketSegments
 } from '../../actions'
+import { getCompanyUserRoles, getAdminRoles } from '../../../global-data/actions'
 import {
   userFormValidation,
   switchUser,
@@ -82,7 +81,7 @@ const UsersSidebar = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     try {
-      if (!props.userRoles.length) props.getUserRoles()
+      if (!props.userRoles.length) props.getCompanyUserRoles()
       if (!props.adminRoles.length) props.getAdminRoles()
     } catch (e) {
       console.error(e)
@@ -419,17 +418,17 @@ const mapDispatchToProps = {
   getUser,
   searchSellMarketSegments,
   searchBuyMarketSegments,
-  getUserRoles,
+  getCompanyUserRoles,
   getAdminRoles
 }
 
 const mapStateToProps = state => {
-  const { companiesAdmin } = state
+  const { companiesAdmin, globalData } = state
   return {
     editTrig: companiesAdmin.editTrig,
     updating: companiesAdmin.updating,
-    userRoles: companiesAdmin.userRoles,
-    adminRoles: companiesAdmin.adminRoles,
+    userRoles: globalData.companyUserRoles,
+    adminRoles: globalData.adminRoles,
     popupValues: companiesAdmin.popupValues,
     isSuperAdmin: companiesAdmin.currentUser && companiesAdmin.currentUser.roles.findIndex(d => d.id === 1) !== -1,
     searchedCompanies: companiesAdmin.searchedCompanies,

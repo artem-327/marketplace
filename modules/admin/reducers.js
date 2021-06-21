@@ -39,8 +39,6 @@ export const initialState = {
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-  productsHazardClasses: [],
-  productsPackagingGroups: [],
   searchedCasProducts: [],
   searchedUnNumbers: [],
   searchedManufacturers: [],
@@ -50,8 +48,6 @@ export const initialState = {
   editEchoProductInitTrig: false,
   currentUser: null,
   user: null,
-  userRoles: [],
-  adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   updating: false,
@@ -332,38 +328,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_HAZARD_CLASSES_PENDING: {
-      return { ...state, hazardClassesLoading: true }
-    }
-
-    case AT.ADMIN_GET_HAZARD_CLASSES_REJECTED: {
-      return { ...state, hazardClassesLoading: false }
-    }
-
-    case AT.ADMIN_GET_HAZARD_CLASSES_FULFILLED: {
-      return {
-        ...state,
-        hazardClasses: action.payload,
-        hazardClassesLoading: false
-      }
-    }
-
-    case AT.ADMIN_GET_PACKAGING_GROUPS_PENDING: {
-      return { ...state, packagingGroupsLoading: true }
-    }
-
-    case AT.ADMIN_GET_PACKAGING_GROUPS_REJECTED: {
-      return { ...state, packagingGroupsLoading: false }
-    }
-
-    case AT.ADMIN_GET_PACKAGING_GROUPS_FULFILLED: {
-      return {
-        ...state,
-        packagingGroups: action.payload,
-        packagingGroupsLoading: false
-      }
-    }
-
     case AT.ADMIN_GET_UN_NUMBERS_PENDING:
     case AT.ADMIN_GET_UN_NUMBERS_BY_STRING_PENDING: {
       return {
@@ -578,30 +542,6 @@ export default function reducer(state = initialState, action) {
     //   }
     // }
 
-    case AT.ADMIN_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
-      const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
-        return {
-          key: id,
-          text: hClass.classCode + ': ' + hClass.description,
-          value: hClass.id
-        }
-      })
-      const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
-        return {
-          key: id,
-          text: pGroup.groupCode + ': ' + pGroup.description,
-          value: pGroup.id
-        }
-      })
-      return {
-        ...state,
-        //loading: false,
-        //loaded: true,
-        productsHazardClasses: hazardClasses,
-        productsPackagingGroups: packagingGroups
-      }
-    }
-
     case AT.ADMIN_SEARCH_MANUFACTURERS_PENDING: {
       return {
         ...state,
@@ -625,20 +565,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentUser: action.payload
-      }
-    }
-
-    case AT.ADMIN_GET_ROLES_FULFILLED: {
-      return {
-        ...state,
-        userRoles: action.payload
-      }
-    }
-
-    case AT.ADMIN_GET_ADMIN_ROLES_FULFILLED: {
-      return {
-        ...state,
-        adminRoles: action.payload
       }
     }
 

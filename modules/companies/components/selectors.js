@@ -68,8 +68,8 @@ export const makeGetCompaniesDatagridRows = () => {
 const getEditId = state => state.companiesAdmin.popupValues && state.companiesAdmin.popupValues.id
 const getLoading = state => state.companiesAdmin.loading
 const getEditedId = state => state.companiesAdmin.editedId
-const getUserRoles = state => state.companiesAdmin.userRoles
-const getAdminRoles = state => state.companiesAdmin.adminRoles.map(d => d.id)
+const getUserRoles = state => state.globalData.companyUserRoles
+const getAdminRoles = state => state.globalData.adminRoles.map(d => d.id)
 const getIsOpenSidebar = state => state.companiesAdmin.isOpenSidebar
 const getCompanyListDataRequest = state => state.companiesAdmin.companyListDataRequest
 const getReRegisterP44Pending = state => state.companiesAdmin.reRegisterP44Pending

@@ -181,20 +181,6 @@ export function handleFiltersValue(props, value) {
   }
 }
 
-export function getHazardClassesDataRequest() {
-  return {
-    type: AT.ADMIN_GET_HAZARD_CLASSES,
-    payload: api.getHazardClasses()
-  }
-}
-
-export function getPackagingGroupsDataRequest() {
-  return {
-    type: AT.ADMIN_GET_PACKAGING_GROUPS,
-    payload: api.getPackagingGroups()
-  }
-}
-
 export function getMeasureTypesDataRequest() {
   return {
     type: AT.ADMIN_GET_MEASURE_TYPES,
@@ -309,21 +295,6 @@ export function prepareSearchedCasProducts(elements) {
     payload: {
       elements
     }
-  }
-}
-
-export function getProductsCatalogRequest() {
-  return dispatch => {
-    dispatch({
-      type: AT.ADMIN_GET_PRODUCTS_CATALOG_DATA,
-      async payload() {
-        const [hazardClasses, packagingGroups] = await Promise.all([api.getHazardClasses(), api.getPackagingGroups()])
-        return {
-          hazardClasses: hazardClasses,
-          packagingGroups: packagingGroups
-        }
-      }
-    })
   }
 }
 
@@ -528,16 +499,6 @@ export const submitUserEdit = (id, data) => ({
 export const deleteUser = id => ({
   type: AT.ADMIN_DELETE_USER,
   payload: api.deleteUser(id)
-})
-
-export const getUserRoles = () => ({
-  type: AT.ADMIN_GET_ROLES,
-  payload: api.getUserRoles()
-})
-
-export const getAdminRoles = () => ({
-  type: AT.ADMIN_GET_ADMIN_ROLES,
-  payload: api.getAdminRoles()
 })
 
 export const searchCompany = (companyText, limit) => ({

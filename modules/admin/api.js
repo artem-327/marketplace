@@ -31,11 +31,6 @@ export function getAllUnitsOfMeasures() {
   return api.get('/prodex/api/units')
 }
 
-export async function getHazardClasses() {
-  const { data } = await api.get('/prodex/api/hazard-classes')
-  return data
-}
-
 export async function getDataRequest(config, values) {
   const { data } = await api.get(config.api.get.apiCall)
   return data
@@ -73,11 +68,6 @@ export async function putEditedDataRequest(config, values, id) {
 
 export async function putEditedDataRequest2(config, values, id) {
   const { data } = await api[getSafe(() => config.api.update.method, 'put')](config.api.update.apiCall + id, values)
-  return data
-}
-
-export async function getPackagingGroups() {
-  const { data } = await api.get('/prodex/api/packaging-groups')
   return data
 }
 
@@ -204,9 +194,6 @@ export const submitUserEdit = (id, body) =>
   api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
 
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
-export const getUserRoles = () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data)
-export const getAdminRoles = () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data)
-
 export const searchCompany = (companyText, limit = 30) =>
   api
     .get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)

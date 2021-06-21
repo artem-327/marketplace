@@ -22,8 +22,6 @@ export const initialState = {
   isOpenUploadDocumentsPopup: null,
   usersRows: [],
   userEditRoles: false,
-  roles: [],
-  rolesLoading: false,
   warehousesRows: [],
   branchesRows: [],
   branchesAll: [],
@@ -417,27 +415,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         usersRows: usersRows
-      }
-    }
-
-
-    case AT.GET_ROLES_DATA_PENDING: {
-      return {
-        ...state,
-        rolesLoading: true
-      }
-    }
-    case AT.GET_ROLES_DATA_REJECTED: {
-      return {
-        ...state,
-        rolesLoading: false
-      }
-    }
-    case AT.GET_ROLES_DATA_FULFILLED: {
-      return {
-        ...state,
-        roles: action.payload,
-        rolesLoading: false
       }
     }
 

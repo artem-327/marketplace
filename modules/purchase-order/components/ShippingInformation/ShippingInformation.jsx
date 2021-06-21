@@ -23,12 +23,8 @@ import {
   handleSubmit
 } from './ShippingInformation.services'
 
-import {
-  getPackagingGroupsDataRequest,
-  getHazardClassesDataRequest,
-  getUnNumbersByString,
-  addUnNumber
-} from '~/modules/admin/actions'
+import { getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
+import { getHazardClasses, getPackagingGroups } from '../../../global-data/actions'
 import { getCart } from '~/modules/purchase-order/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '~/modules/settings/actions'
 
@@ -67,8 +63,8 @@ const ShippingInformation = props => {
       size='tiny'
       onOpen={() => {
         try {
-          if (hazardClasses.length === 0) props.getHazardClassesDataRequest()
-          if (packagingGroups.length === 0) props.getPackagingGroupsDataRequest()
+          if (hazardClasses.length === 0) props.getHazardClasses()
+          if (packagingGroups.length === 0) props.getPackagingGroups()
         } catch (e) {
           console.error(e)
         }
@@ -247,14 +243,8 @@ ShippingInformation.defaultProps = {
 }
 
 function mapStateToProps(store) {
-  const {
-    packagingGroups,
-    hazardClasses,
-    unNumbersFiltered,
-    unNumbersFetching,
-    hazardClassesLoading,
-    packagingGroupsLoading
-  } = store.admin
+  const { unNumbersFiltered, unNumbersFetching } = store.admin
+  const { packagingGroups, hazardClasses, hazardClassesLoading, packagingGroupsLoading } = store.globalData
   const { nmfcNumbersFetching, nmfcNumbersFiltered } = store.settings
 
   return {
@@ -284,8 +274,8 @@ function mapStateToProps(store) {
 }
 
 export default withToastManager(injectIntl(connect(mapStateToProps, {
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
+  getHazardClasses,
+  getPackagingGroups,
   getUnNumbersByString,
   addUnNumber,
   getNmfcNumbersByString,

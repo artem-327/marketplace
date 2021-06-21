@@ -62,7 +62,6 @@ export default {
     })
   },
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles?type=COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
@@ -92,9 +91,6 @@ export default {
   },
   getUnitsType: async () => {
     return await api.get('/prodex/api/units')
-  },
-  getHazardClasses: async () => {
-    return await api.get('/prodex/api/hazard-classes')
   },
   getPackagingGroups: async () => {
     return await api.get('/prodex/api/packaging-groups')
