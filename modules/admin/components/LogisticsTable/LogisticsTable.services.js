@@ -18,53 +18,53 @@ export const makeRows = datagrid => datagrid.rows.map(row => {
 })
 
 export const columns = [
-    {
-      name: 'name',
-      title: (
-        <FormattedMessage id='global.name' defaultMessage='Name' />
-      ),
-      width: 300,
-      allowReordering: false
-    },
-    {
-      name: 'identifierType',
-      title: (
-        <FormattedMessage id='logistics.identifierType' defaultMessage='Identifier Type' />
-      ),
-      width: 300
-    },
-    {
-      name: 'identifierValue',
-      title: (
-        <FormattedMessage id='logistics.identifierValue' defaultMessage='Identifier Value' />
-      ),
-      width: 300
-    },
-    {
-      name: 'reinvoice',
-      title: (
-        <FormattedMessage id='logistics.reinvoice' defaultMessage='Re-Invoice' />
-      ),
-      width: 120
-    },
-    {
-      name: 'email',
-      title: (
-        <FormattedMessage id='global.email' defaultMessage='Email' />
-      ),
-      width: 200
-    }
+  {
+    name: 'name',
+    title: (
+      <FormattedMessage id='global.name' defaultMessage='Name' />
+    ),
+    width: 300,
+    allowReordering: false
+  },
+  {
+    name: 'identifierType',
+    title: (
+      <FormattedMessage id='logistics.identifierType' defaultMessage='Identifier Type' />
+    ),
+    width: 300
+  },
+  {
+    name: 'identifierValue',
+    title: (
+      <FormattedMessage id='logistics.identifierValue' defaultMessage='Identifier Value' />
+    ),
+    width: 300
+  },
+  {
+    name: 'reinvoice',
+    title: (
+      <FormattedMessage id='logistics.reinvoice' defaultMessage='Re-Invoice' />
+    ),
+    width: 120
+  },
+  {
+    name: 'email',
+    title: (
+      <FormattedMessage id='global.email' defaultMessage='Email' />
+    ),
+    width: 200
+  }
 ]
 
 const getActions = props => {
-    const {
+  const {
     datagrid,
     openPopup,
     intl: { formatMessage },
     deleteLogisticsProvider
-    } = props
+  } = props
 
-    return [
+  return [
     {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
         callback: row => openPopup(row.rawData)
@@ -93,21 +93,21 @@ const getActions = props => {
             }
         })
     }
-    ]
+  ]
 }
 
 export const getRows = (rows, props) => {
-    return rows.map(row => {
-        return {
-            ...row,
-            name: (
-            <ActionCell
-                row={row}
-                getActions={() => getActions(props)}
-                content={row.name}
-                onContentClick={() => props.openPopup(row.rawData)}
-            />
-            )
-        }
-    })
+  return rows.map(row => {
+    return {
+      ...row,
+      name: (
+      <ActionCell
+        row={row}
+        getActions={() => getActions(props)}
+        content={row.name}
+        onContentClick={() => props.openPopup(row.rawData)}
+      />
+      )
+    }
+  })
 }

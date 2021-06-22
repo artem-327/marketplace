@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl'
 // Components
 import DataTable from './components/DataTable/DataTableContainer'
 import UnitOfMeasureTable from './components/UnitOfMeasureTable/UnitOfMeasureTableContainer'
-import UnitOfPackagingTable from './components/UnitOfPackagingTable/UnitOfPackagingTable'
+import UnitOfPackagingTable from './components/UnitOfPackagingTable/UnitOfPackagingTableContainer'
 import NmfcTable from './components/NmfcTable/TableContainer'
 
 import AddNewUnitOfMeasurePopup from './components/UnitOfMeasureTable/AddNewUnitOfMeasurePopupContainer'
@@ -11,7 +11,7 @@ import AddNewPopup1Parameter from './components/DataTable/AddNewPopup1ParameterC
 import NmfcPopup from './components/NmfcTable/PopupContainer'
 
 import EditUnitOfMeasurePopup from './components/UnitOfMeasureTable/EditUnitOfMeasurePopupContainer'
-import EditUnitOfPackagingPopup from './components/UnitOfPackagingTable/EditUnitOfPackagingPopup'
+import EditUnitOfPackagingPopup from './components/UnitOfPackagingTable/EditUnitOfPackagingPopupContainer'
 import EditPopup1Parameter from './components/DataTable/EditPopup1ParameterContainer'
 
 import CompaniesDwollaForm from './components/CompaniesDwolla/FormPopupContainer'
