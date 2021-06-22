@@ -381,27 +381,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    // case AT.ADMIN_GET_COMPANIES_FULFILLED: {
-    //   const requiredFields = action.payload.map(row => {
-    //     return {
-    //       ...row,
-    //       //displayName: row.displayName,
-    //       //primaryBranchAddress: row.primaryBranchAddress,
-    //       //primaryContact: row.primaryContact,
-    //       //contactEmail: row.contactEmail,
-    //       hasDwollaAccount: row.hasDwollaAccount ? 'Yes' : 'No'
-    //     }
-    //   })
-    //   return {
-    //     ...state,
-    //     loading: false,
-    //     companiesRows: [
-    //       // ...state.companiesRows,
-    //       ...requiredFields
-    //     ]
-    //   }
-    // }
-
     case AT.ADMIN_GET_FULL_COMPANY_FULFILLED: {
       return {
         ...state,
@@ -552,37 +531,6 @@ export default function reducer(state = initialState, action) {
         searchedUnNumbers: action.payload.data
       }
     }
-
-    // case AT.ADMIN_CREATE_ELEMENTS_INDEX: {
-    //   // ADD new array to casProducts
-    //   let { searchedCasProducts } = state
-    //   searchedCasProducts.push([])
-
-    //   return {
-    //     ...state,
-    //     searchedCasProducts
-    //   }
-    // }
-
-    // case AT.ADMIN_REMOVE_ELEMENTS_INDEX: {
-    //   // REMOVE array from casProducts
-    //   let { searchedCasProducts } = state
-    //   searchedCasProducts.splice(action.payload.index, 1)
-
-    //   return {
-    //     ...state,
-    //     searchedCasProducts
-    //   }
-    // }
-
-    // case AT.ADMIN_PREPARE_CAS_PRODUCTS: {
-    //   return {
-    //     ...state,
-    //     searchedCasProducts: action.payload.elements.map(element => {
-    //       return [element.casProduct]
-    //     })
-    //   }
-    // }
 
     case AT.ADMIN_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
       const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
