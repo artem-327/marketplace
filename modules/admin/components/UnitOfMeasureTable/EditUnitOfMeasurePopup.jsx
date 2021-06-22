@@ -133,7 +133,7 @@ const EditUnitOfMeasurePopup = props => {
   )
 }
 
-AddNewUnitOfMeasurePopup.propTypes = {
+EditUnitOfMeasurePopup.propTypes = {
   measureOptions: PropTypes.array,
   closeEditPopup: PropTypes.func,
   putEditedDataRequest: PropTypes.func,
@@ -141,7 +141,7 @@ AddNewUnitOfMeasurePopup.propTypes = {
   config: PropTypes.object
 }
 
-AddNewUnitOfMeasurePopup.defaultValues = {
+EditUnitOfMeasurePopup.defaultValues = {
   measureOptions: [],
   closeEditPopup: () => {},
   putEditedDataRequest: () => {},
