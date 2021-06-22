@@ -1,19 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FormattedMessage } from 'react-intl'
-
-// Components
-//import ErrorFocus from '../../../components/error-focus'
 import { Modal, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Required } from '../../../../components/constants/layout'
+// Components
 import ErrorFocus from '../../../../components/error-focus'
 import { PriceInput } from '../../../marketplace/constants/layout'
-
 // Constants
 import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
-
 // Services
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
+// Styles
+import { Required } from '../../../../components/constants/layout'
 
 let formikPropsSelf = {}
 

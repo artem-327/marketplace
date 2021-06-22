@@ -1,147 +1,20 @@
 import { useEffect } from 'react'
-import TablesHandlers from './TablesHandlersContainer'
 import { Container } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
-
-import DataTable from './DataTable/DataTableContainer'
-import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTableContainer'
-import UnitOfPackagingTable from './UnitOfPackagingTable/UnitOfPackagingTable'
-import NmfcTable from './NmfcTable/TableContainer'
-
-import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePopupContainer'
-import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopupContainer'
-import AddNewPopup1Parameter from './DataTable/AddNewPopup1ParameterContainer'
-import NmfcPopup from './NmfcTable/PopupContainer'
-
-import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopupContainer'
-import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
-import EditPopup1Parameter from './DataTable/EditPopup1ParameterContainer'
-
-import CompaniesDwollaForm from './CompaniesDwolla/FormPopupContainer'
-
-import { getSafe } from '../../../utils/functions'
-
+// Components
+import TablesHandlers from './TablesHandlersContainer'
 import { DatagridProvider } from '../../datagrid'
-import Settings from '../../../components/settings'
-
-import LogisticsTable from './LogisticsTable/LogisticsTableContainer'
-import AddEditLogisticProvider from './LogisticsTable/AddEditLogisticProviderContainer'
-import Carriers from './Carriers/CarriersContainer'
-import AddEditCarrier from './Carriers/AddEditCarrierContainer'
-// Styles
-import { FixyWrapper, AdminSegment } from '../styles'
-
-
-const tables = {
-  'units-of-measure': <UnitOfMeasureTable />,
-  'packaging-types': <UnitOfPackagingTable />,
-  manufacturers: <DataTable currentTab={'manufacturers'} />,
-  grades: <DataTable currentTab={'grades'} />,
-  forms: <DataTable currentTab={'forms'} />,
-  conditions: <DataTable currentTab={'conditions'} />,
-  'nmfc-numbers': <NmfcTable />,
-  associations: <DataTable currentTab={'associations'} />,
-  logistics: <LogisticsTable />,
-  carriers: <Carriers />,
-  'admin-settings': (
-    <FixyWrapper>
-      <AdminSegment basic padded='very'>
-        <Settings inputsInGroup={3} asModal={false} role='admin' />
-      </AdminSegment>
-    </FixyWrapper>
-  )
-}
-
-const datagridConfig = {
-  conditions: {
-    url: '/prodex/api/product-conditions/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  'nmfc-numbers': {
-    url: '/prodex/api/nmfc-numbers/datagrid',
-    searchToFilter: v => {
-      let filters = []
-      if (v && v.searchInput) {
-        filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v.searchInput}%`] })
-        if (Number.isInteger(parseInt(v.searchInput)))
-          filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v.searchInput)}%`] })
-      }
-      return filters
-    }
-  },
-  associations: {
-    url: '/prodex/api/associations/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  forms: {
-    url: '/prodex/api/product-forms/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  grades: {
-    url: '/prodex/api/product-grades/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  manufacturers: {
-    url: '/prodex/api/manufacturers/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  'packaging-types': {
-    url: '/prodex/api/packaging-types/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  'units-of-measure': {
-    url: '/prodex/api/units/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  logistics: {
-    url: '/prodex/api/logistics-providers/stored/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsProvider.name', values: [`%${v.searchInput}%`] }] : []
-  },
-  carriers: {
-    url: '/prodex/api/logistics-carriers/stored/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsCarrier.code', values: [`%${v.searchInput}%`] }] : []
-  }
-}
-
-const editForms = {
-  'units-of-measure': <EditUnitOfMeasurePopup />,
-  'packaging-types': <EditUnitOfPackagingPopup />,
-  manufacturers: <EditPopup1Parameter currentTab={'manufacturers'} />,
-  grades: <EditPopup1Parameter currentTab={'grades'} />,
-  forms: <EditPopup1Parameter currentTab={'forms'} />,
-  conditions: <EditPopup1Parameter currentTab={'conditions'} />,
-  'nmfc-numbers': <NmfcPopup />,
-  associations: <EditPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />,
-  carriers: <AddEditCarrier />
-}
-
-const addForms = {
-  'units-of-measure': <AddNewUnitOfMeasurePopup />,
-  'packaging-types': <AddNewUnitOfPackagingPopup />,
-  manufacturers: <AddNewPopup1Parameter currentTab={'manufacturers'} />,
-  grades: <AddNewPopup1Parameter currentTab={'grades'} />,
-  forms: <AddNewPopup1Parameter currentTab={'forms'} />,
-  conditions: <AddNewPopup1Parameter currentTab={'conditions'} />,
-  'nmfc-numbers': <NmfcPopup />,
-  associations: <AddNewPopup1Parameter currentTab={'associations'} />,
-  logistics: <AddEditLogisticProvider />,
-  carriers: <AddEditCarrier />
-}
-
-const addDwollaForms = {
-  Companies: <CompaniesDwollaForm />
-}
+// Services
+import { getSafe } from '../../../utils/functions'
+// Constants
+import {
+  tables,
+  datagridConfig,
+  editForms,
+  addForms,
+  addDwollaForms
+} from '../constants'
 
 const Admin = props => {
   useEffect(() => {

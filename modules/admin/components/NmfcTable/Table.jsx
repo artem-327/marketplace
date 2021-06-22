@@ -1,6 +1,8 @@
 import { FormattedMessage } from 'react-intl'
+// Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
+// Services
 import confirm from '../../../../components/Confirmable/confirm'
 
 const Table = props => {

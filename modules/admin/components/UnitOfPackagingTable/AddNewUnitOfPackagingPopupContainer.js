@@ -1,5 +1,7 @@
 import { connect } from 'react-redux'
+// Components
 import AddNewUnitOfPackagingPopup from './AddNewUnitOfPackagingPopup'
+// Actions
 import { closeAddPopup, postNewRequest } from '../../actions'
 import {
   getProductForms,
@@ -7,6 +9,7 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
+// Selectors
 import { makeGetDimensionUnits, makeGetWeightUnits, makeGetMeasureOptions, makeGetConfig } from '../../selectors'
 
 const mapDispatchToProps = {

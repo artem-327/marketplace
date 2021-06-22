@@ -2,26 +2,14 @@ import { useEffect } from 'react'
 import { Form, Modal, FormGroup, Accordion, Segment, Header } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
-import { DateInput } from '../../../../components/custom-formik'
-import * as Yup from 'yup'
-// debug purposes only
 import { FormattedMessage } from 'react-intl'
-import { errorMessages, addressValidationSchema, dateValidation } from '../../../../constants/yupValidation'
+// Components
+import { DateInput } from '../../../../components/custom-formik'
 import { AddressForm } from '../../../address-form'
-
-const formValidationNew = Yup.object().shape({
-  dwollaController: Yup.object().shape({
-    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
-    dateOfBirth: dateValidation(false).concat(Yup.string().required(errorMessages.requiredMessage)),
-    ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
-    address: addressValidationSchema()
-  })
-})
+// Services
+import { formValidation, initialFormValues } from './FormPopup.services'
 
 const FormPopup = props => {
-
   useEffect(() => {
     if (!props.countries.length) props.getCountries()
   }, [])
@@ -32,39 +20,11 @@ const FormPopup = props => {
     popupValues
   } = props
 
-  const initialFormValues = {
-    dwollaController: {
-      ...(popupValues.primaryUser
-        ? {
-            firstName: popupValues.primaryUser.name.split(' ')[0],
-            lastName: popupValues.primaryUser.name.split(' ')[1],
-            address: {
-              city: popupValues.primaryUser.homeBranch.address.city,
-              streetAddress: popupValues.primaryUser.homeBranch.address.streetAddress,
-              zip: popupValues.primaryUser.homeBranch.address.zip.id,
-              country: popupValues.primaryUser.homeBranch.address.country.id
-            }
-          }
-        : {
-            firstName: '',
-            lastName: '',
-            address: {
-              city: '',
-              streetAddress: '',
-              zip: '',
-              country: ''
-            }
-          }),
-      ssn: '',
-      dateOfBirth: ''
-    }
-  }
-
   return (
     <Formik
       enableReinitialize
-      initialValues={initialFormValues}
-      validationSchema={formValidationNew}
+      initialValues={initialFormValues(popupValues)}
+      validationSchema={formValidation}
       validateOnChange={false}
       validateOnBlur={false}
       onSubmit={async (values, { setSubmitting }) => {

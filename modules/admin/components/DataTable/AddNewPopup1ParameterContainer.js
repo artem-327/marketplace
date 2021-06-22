@@ -1,4 +1,7 @@
 import { connect } from 'react-redux'
+// Components
+import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+// Actions
 import { closeAddPopup, postNewRequest } from '../../actions'
 import {
   getProductForms,
@@ -6,7 +9,7 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
-import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+// Selectors
 import { makeGetConfig } from '../../selectors'
 
 const mapDispatchToProps = {

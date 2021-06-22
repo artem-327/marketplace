@@ -1,6 +1,8 @@
-import confirm from '../../../../components/Confirmable/confirm'
+// Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
 
 const DataTable = props => {
   const getActions = () => {

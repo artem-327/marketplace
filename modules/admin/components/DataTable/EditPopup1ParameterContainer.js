@@ -1,4 +1,7 @@
 import { connect } from 'react-redux'
+// Components
+import EditPopup1Parameter from './EditPopup1Parameter'
+// Actions
 import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import {
   getProductForms,
@@ -6,7 +9,7 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
-import EditPopup1Parameter from './EditPopup1Parameter'
+// Selectors
 import { makeGetConfig, makeGetPopupValues } from '../../selectors'
 
 const mapDispatchToProps = {

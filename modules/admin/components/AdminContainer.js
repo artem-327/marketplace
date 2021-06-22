@@ -1,7 +1,11 @@
 import { connect } from 'react-redux'
+// Components
 import Admin from './Admin'
+// Services
 import { withAuth } from '../../../hocs'
+// Actions
 import { closePopup } from '../actions'
+// Selectors
 import { makeGetCurrentEditForm, makeGetCurrentAddForm, makeGetCurrentAddDwolla, makeGetAuth } from '../selectors'
 
 const makeMapStateToProps = () => {

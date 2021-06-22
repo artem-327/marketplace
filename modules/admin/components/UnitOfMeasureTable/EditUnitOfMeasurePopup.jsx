@@ -2,9 +2,12 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
-import { errorMessages } from '../../../../constants/yupValidation'
-import { Required } from '../../../../components/constants/layout'
+// Components
 import ErrorFocus from '../../../../components/error-focus'
+// Services
+import { errorMessages } from '../../../../constants/yupValidation'
+// Styles
+import { Required } from '../../../../components/constants/layout'
 
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().required(errorMessages.minLength(1)),

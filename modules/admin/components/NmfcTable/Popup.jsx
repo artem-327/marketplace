@@ -1,11 +1,13 @@
 import { Modal, FormGroup, Button } from 'semantic-ui-react'
 import { Form as Formik, Input } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
-import { nmfcValidation } from '../../../../constants/yupValidation'
-import { Required } from '../../../../components/constants/layout'
+// Components
 import ErrorFocus from '../../../../components/error-focus'
+// Services
+import { nmfcValidation } from '../../../../constants/yupValidation'
 // Styles
 import { CustomForm } from '../../styles'
+import { Required } from '../../../../components/constants/layout'
 
 const Popup = props => {
   let submitForm

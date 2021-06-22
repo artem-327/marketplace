@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 import { getSafe } from '../../utils/functions'
-import { config } from './config'
+import { config } from './constants'
 
 const getUnitsOfMeasures = state => getSafe(() => state.admin.unitsOfMeasures, [])
 const getCurrentEditForm = state => getSafe(() => state.admin.currentEditForm, null)

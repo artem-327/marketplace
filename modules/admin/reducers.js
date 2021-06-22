@@ -1,5 +1,5 @@
 import * as AT from './action-types'
-import { config } from './config'
+import { config } from './constants'
 
 export const initialState = {
   editTrig: false,
@@ -522,9 +522,15 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADMIN_ADD_UN_NUMBER: {
       let copy = state.unNumbersFiltered.slice()
-      if (!(payload instanceof Array)) payload = [payload]
+      let newPayload
 
-      payload.forEach(element => {
+      if (!(payload instanceof Array)) {
+        newPayload = [payload]
+      } else {
+        newPayload = payload
+      }
+
+      newPayload.forEach(element => {
         if (!copy.find(e => e.id === element.id)) copy.push(element)
       })
 

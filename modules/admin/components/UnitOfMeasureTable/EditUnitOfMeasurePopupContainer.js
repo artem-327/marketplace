@@ -1,6 +1,9 @@
 import { connect } from 'react-redux'
+// Components
 import EditUnitOfMeasurePopup from './EditUnitOfMeasurePopup'
+// Actions
 import { closeEditPopup, putEditedDataRequest } from '../../actions'
+// Selectors
 import { makeGetConfig, makeGetMeasureOptions, makeGetPopupValues } from '../../selectors'
 
 const mapDispatchToProps = {

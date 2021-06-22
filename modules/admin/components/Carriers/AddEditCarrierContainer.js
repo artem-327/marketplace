@@ -1,8 +1,12 @@
 import { connect } from 'react-redux'
-import AddEditCarrier from './AddEditCarrier'
-import { withDatagrid } from '../../../datagrid'
-import * as Actions from '../../actions'
 import { injectIntl } from 'react-intl'
+// Components
+import AddEditCarrier from './AddEditCarrier'
+// Services
+import { withDatagrid } from '../../../datagrid'
+// Actions
+import * as Actions from '../../actions'
+// Selectors
 import { makeGetPopupValues, makeGetUpdating } from '../../selectors'
 
 const makeMapStateToProps = () => {

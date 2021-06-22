@@ -2,8 +2,10 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
-import { Required } from '../../../../components/constants/layout'
+// Components
 import ErrorFocus from '../../../../components/error-focus'
+// Styles
+import { Required } from '../../../../components/constants/layout'
 
 const initialFormValues = {
   val0: ''

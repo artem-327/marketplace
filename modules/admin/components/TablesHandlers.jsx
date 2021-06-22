@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { config } from '../config'
 import { debounce } from 'lodash'
 import { Button, Input } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { PlusCircle } from 'react-feather'
+// Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
+// Constants
+import { config } from '../constants'
 // Hooks
 import { usePrevious } from '../../../hooks'
 // Styles

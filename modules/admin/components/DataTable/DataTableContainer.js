@@ -1,6 +1,8 @@
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
+// Components
 import DataTable from './DataTable'
+// Actions
 import { getDataRequest, openEditPopup, closeConfirmPopup, deleteConfirmation } from '../../actions'
 import {
   getProductForms,
@@ -8,7 +10,9 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
+// Services
 import { withDatagrid } from '../../../datagrid'
+// Selectors
 import { makeGetConfig, makeGetFilterValue, makeGetLoading, makeGetConfirmMessage, makeGetDeleteRowById } from '../../selectors'
 
 const mapDispatchToProps = {

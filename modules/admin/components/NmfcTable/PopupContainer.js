@@ -1,8 +1,11 @@
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
+// Components
+import Popup from './Popup'
+// Actions
 import { closeAddPopup } from '../../actions'
 import { addNmfcNumber, editNmfcNumber } from '../../actions'
-import Popup from './Popup'
+// Selectors
 import { makeGetConfig, makeGetPopupValues } from '../../selectors'
 
 const mapDispatchToProps = {

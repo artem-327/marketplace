@@ -1,9 +1,12 @@
-
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
+// Components
 import TablesHandlers from './TablesHandlers'
+// Actions
 import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
+// Services
 import { withDatagrid } from '../../datagrid'
+// Selectors
 import { makeGetTableHandlersFilters, makeGetCasListDataRequest } from '../selectors'
 
 const makeMapStateToProps = () => {

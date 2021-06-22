@@ -1,10 +1,14 @@
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-import { deleteLogisticsProvider, openPopup } from '../../actions'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import LogisticsTable from './LogisticsTable'
-import { makeGetEditId, makeGetFilterValue, makeGetLoading } from '../../selectors'
+// Actions 
+import { deleteLogisticsProvider, openPopup } from '../../actions'
+// Services
+import { withDatagrid } from '../../../datagrid'
 import { makeRows } from './LogisticsTable.services'
+// Selectors
+import { makeGetEditId, makeGetFilterValue, makeGetLoading } from '../../selectors'
 
 const mapDispatchToProps = {
     deleteLogisticsProvider,

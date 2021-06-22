@@ -1,4 +1,30 @@
 import { FormattedMessage } from 'react-intl'
+// Components
+import DataTable from './components/DataTable/DataTableContainer'
+import UnitOfMeasureTable from './components/UnitOfMeasureTable/UnitOfMeasureTableContainer'
+import UnitOfPackagingTable from './components/UnitOfPackagingTable/UnitOfPackagingTable'
+import NmfcTable from './components/NmfcTable/TableContainer'
+
+import AddNewUnitOfMeasurePopup from './components/UnitOfMeasureTable/AddNewUnitOfMeasurePopupContainer'
+import AddNewUnitOfPackagingPopup from './components/UnitOfPackagingTable/AddNewUnitOfPackagingPopupContainer'
+import AddNewPopup1Parameter from './components/DataTable/AddNewPopup1ParameterContainer'
+import NmfcPopup from './components/NmfcTable/PopupContainer'
+
+import EditUnitOfMeasurePopup from './components/UnitOfMeasureTable/EditUnitOfMeasurePopupContainer'
+import EditUnitOfPackagingPopup from './components/UnitOfPackagingTable/EditUnitOfPackagingPopup'
+import EditPopup1Parameter from './components/DataTable/EditPopup1ParameterContainer'
+
+import CompaniesDwollaForm from './components/CompaniesDwolla/FormPopupContainer'
+
+import Settings from '../../components/settings'
+
+import LogisticsTable from './components/LogisticsTable/LogisticsTableContainer'
+import AddEditLogisticProvider from './components/LogisticsTable/AddEditLogisticProviderContainer'
+import Carriers from './components/Carriers/CarriersContainer'
+import AddEditCarrier from './components/Carriers/AddEditCarrierContainer'
+// Styles
+import { FixyWrapper, AdminSegment } from './styles'
+
 
 export const defaultTabs = [
   { name: 'Units of Measure', id: 1, type: 'units-of-measure' },
@@ -17,7 +43,7 @@ export const defaultTabs = [
 export const config = {
   'units-of-measure': {
     tableName: 'admin_units_of_measure',
-    addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
+    addEditText: <FormattedMessage id='admin.unitOfMeasure' />,
     formattedMessageName: 'unitOfMeasurement',
     searchText: 'admin.searchUnitOfMeasure',
     display: {
@@ -25,33 +51,25 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           )
         },
         {
           name: 'nameAbbreviation',
           title: (
-            <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation' />
           )
         },
         {
           name: 'measureType',
           title: (
-            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
           )
         },
         {
           name: 'ratioToBaseSiUnit',
           title: (
-            <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit' />
           )
         }
       ]
@@ -60,9 +78,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -70,9 +86,7 @@ export const config = {
       {
         name: 'nameAbbreviation',
         title: (
-          <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation' />
         ),
         type: 'text',
         required: true
@@ -80,9 +94,7 @@ export const config = {
       {
         name: 'measureType',
         title: (
-          <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
         ),
         type: 'text',
         required: true
@@ -90,9 +102,7 @@ export const config = {
       {
         name: 'ratioToBaseSiUnit',
         title: (
-          <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.ratioToBaseSiUnit' defaultMessage='Ratio to Base SI Unit' />
         ),
         type: 'number',
         required: true
@@ -125,7 +135,7 @@ export const config = {
 
   'packaging-types': {
     tableName: 'admin_packaging_types',
-    addEditText: <FormattedMessage id='admin.unitOfPackaging'>{text => text}</FormattedMessage>,
+    addEditText: <FormattedMessage id='admin.unitOfPackaging' />,
     formattedMessageName: 'unitOfPackaging',
     searchText: 'admin.searchUnitOfPackaging',
     display: {
@@ -133,18 +143,14 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'PackagingType.name'
         },
         {
           name: 'measureType',
           title: (
-            <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
           ),
           sortPath: 'PackagingType.measureType.name'
         }
@@ -154,9 +160,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: false
@@ -164,9 +168,7 @@ export const config = {
       {
         name: 'measureType',
         title: (
-          <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.measureType' defaultMessage='Measure Type' />
         ),
         type: 'text',
         step: 1,
@@ -175,9 +177,7 @@ export const config = {
       {
         name: 'height',
         title: (
-          <FormattedMessage id='global.height' defaultMessage='Height'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.height' defaultMessage='Height' />
         ),
         type: 'number',
         step: 0.01,
@@ -186,9 +186,7 @@ export const config = {
       {
         name: 'length',
         title: (
-          <FormattedMessage id='global.length' defaultMessage='Length'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.length' defaultMessage='Length' />
         ),
         type: 'number',
         step: 0.01,
@@ -197,9 +195,7 @@ export const config = {
       {
         name: 'width',
         title: (
-          <FormattedMessage id='global.width' defaultMessage='Width'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.width' defaultMessage='Width' />
         ),
         type: 'number',
         step: 0.01,
@@ -208,9 +204,7 @@ export const config = {
       {
         name: 'dimensionUnit',
         title: (
-          <FormattedMessage id='global.dimensionUnit' defaultMessage='Dimension Unit'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.dimensionUnit' defaultMessage='Dimension Unit' />
         ),
         type: 'text',
         required: true
@@ -218,9 +212,7 @@ export const config = {
       {
         name: 'palletPkgMax',
         title: (
-          <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max' />
         ),
         type: 'number',
         step: 1,
@@ -229,9 +221,7 @@ export const config = {
       {
         name: 'palletPkgMin',
         title: (
-          <FormattedMessage id='global.palletPkgMin' defaultMessage='Pallet Pkg Min'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.palletPkgMin' defaultMessage='Pallet Pkg Min' />
         ),
         type: 'number',
         step: 1,
@@ -240,9 +230,7 @@ export const config = {
       {
         name: 'weight',
         title: (
-          <FormattedMessage id='global.weight' defaultMessage='Weight'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.weight' defaultMessage='Weight' />
         ),
         type: 'number',
         step: 0.01,
@@ -251,9 +239,7 @@ export const config = {
       {
         name: 'weightUnit',
         title: (
-          <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit' />
         ),
         type: 'text',
         required: true
@@ -265,21 +251,6 @@ export const config = {
         typeRequest: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA',
         typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_FULFILLED',
         apiCall: '/prodex/api/packaging-types'
-        /*
-        retFcnProcess: (state, action, config) => {
-          const rows = action.payload.map(data => {
-            return {
-              id: data.id,
-              name: data.name,
-              measureType: data.measureType,
-            }
-          })
-          return {
-            ...state,
-            loading: false,
-            [config.api.get.dataName]: rows
-          }
-        },*/
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
@@ -302,7 +273,7 @@ export const config = {
 
   manufacturers: {
     tableName: 'admin_manufacturers',
-    addEditText: <FormattedMessage id='admin.manufacturer'>{text => text}</FormattedMessage>,
+    addEditText: <FormattedMessage id='admin.manufacturer' />,
     formattedMessageName: 'manufacturer',
     searchText: 'admin.searchManufacturer',
     display: {
@@ -310,9 +281,7 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'Manufacturer.name'
         }
@@ -322,9 +291,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -377,9 +344,7 @@ export const config = {
   grades: {
     tableName: 'admin_grades',
     addEditText: (
-      <FormattedMessage id='admin.grade' defaultMessage='Grade'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='admin.grade' defaultMessage='Grade' />
     ),
     formattedMessageName: 'grade',
     searchText: 'admin.searchGrade',
@@ -388,9 +353,7 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'ProductGrade.name'
         }
@@ -400,9 +363,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -437,9 +398,7 @@ export const config = {
   forms: {
     tableName: 'admin_forms',
     addEditText: (
-      <FormattedMessage id='admin.form' defaultMessage='Form'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='admin.form' defaultMessage='Form' />
     ),
     formattedMessageName: 'form',
     searchText: 'admin.searchForm',
@@ -448,9 +407,7 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'ProductForm.name'
         }
@@ -460,9 +417,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -497,9 +452,7 @@ export const config = {
   conditions: {
     tableName: 'admin_conditions',
     addEditText: (
-      <FormattedMessage id='admin.condition' defaultMessage='Condition'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='admin.condition' defaultMessage='Condition' />
     ),
     formattedMessageName: 'condition',
     searchText: 'admin.searchCondition',
@@ -508,9 +461,7 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'ProductCondition.name'
         }
@@ -520,9 +471,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -557,9 +506,7 @@ export const config = {
   'nmfc-numbers': {
     tableName: 'admin_nmfc_numbers',
     addEditText: (
-      <FormattedMessage id='admin.nmfcNumber' defaultMessage='NMFC Number'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='admin.nmfcNumber' defaultMessage='NMFC Number' />
     ),
     formattedMessageName: 'NmfcNumber',
     searchText: 'admin.searchNmfc',
@@ -568,18 +515,14 @@ export const config = {
         {
           name: 'code',
           title: (
-            <FormattedMessage id='global.code' defaultMessage='Code'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.code' defaultMessage='Code' />
           ),
           sortPath: 'NmfcNumber.prefix'
         },
         {
           name: 'description',
           title: (
-            <FormattedMessage id='global.description' defaultMessage='Description'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.description' defaultMessage='Description' />
           ),
           sortPath: 'NmfcNumber.description'
         }
@@ -589,9 +532,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -602,9 +543,7 @@ export const config = {
   associations: {
     tableName: 'admin_associations',
     addEditText: (
-      <FormattedMessage id='admin.associations' defaultMessage='Associations'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='admin.associations' defaultMessage='Associations' />
     ),
     formattedMessageName: 'association',
     searchText: 'admin.searchAssociations',
@@ -613,9 +552,7 @@ export const config = {
         {
           name: 'name',
           title: (
-            <FormattedMessage id='global.name' defaultMessage='Name'>
-              {text => text}
-            </FormattedMessage>
+            <FormattedMessage id='global.name' defaultMessage='Name' />
           ),
           sortPath: 'Association.name'
         }
@@ -625,9 +562,7 @@ export const config = {
       {
         name: 'name',
         title: (
-          <FormattedMessage id='global.name' defaultMessage='Name'>
-            {text => text}
-          </FormattedMessage>
+          <FormattedMessage id='global.name' defaultMessage='Name' />
         ),
         type: 'text',
         required: true
@@ -664,18 +599,14 @@ export const config = {
   logistics: {
     tableName: 'admin_logistics',
     addEditText: (
-      <FormattedMessage id='global.logistics' defaultMessage='Logistics'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='global.logistics' defaultMessage='Logistics' />
     ),
     searchText: 'admin.searchLogisticsProvider'
   },
   carriers: {
     tableName: 'admin_carriers',
     addEditText: (
-      <FormattedMessage id='global.carriers' defaultMessage='Carriers'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='global.carriers' defaultMessage='Carriers' />
     ),
     searchText: 'admin.searchCarrier'
   },
@@ -683,4 +614,114 @@ export const config = {
   'admin-settings': {
     hideHandler: true
   }
+}
+
+export const tables = {
+  'units-of-measure': <UnitOfMeasureTable />,
+  'packaging-types': <UnitOfPackagingTable />,
+  manufacturers: <DataTable currentTab={'manufacturers'} />,
+  grades: <DataTable currentTab={'grades'} />,
+  forms: <DataTable currentTab={'forms'} />,
+  conditions: <DataTable currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcTable />,
+  associations: <DataTable currentTab={'associations'} />,
+  logistics: <LogisticsTable />,
+  carriers: <Carriers />,
+  'admin-settings': (
+    <FixyWrapper>
+      <AdminSegment basic padded='very'>
+        <Settings inputsInGroup={3} asModal={false} role='admin' />
+      </AdminSegment>
+    </FixyWrapper>
+  )
+}
+
+export const datagridConfig = {
+  conditions: {
+    url: '/prodex/api/product-conditions/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  'nmfc-numbers': {
+    url: '/prodex/api/nmfc-numbers/datagrid',
+    searchToFilter: v => {
+      let filters = []
+      if (v && v.searchInput) {
+        filters.push({ operator: 'LIKE', path: 'NmfcNumber.description', values: [`%${v.searchInput}%`] })
+        if (Number.isInteger(parseInt(v.searchInput)))
+          filters.push({ operator: 'LIKE', path: 'NmfcNumber.prefix', values: [`${parseInt(v.searchInput)}%`] })
+      }
+      return filters
+    }
+  },
+  associations: {
+    url: '/prodex/api/associations/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  forms: {
+    url: '/prodex/api/product-forms/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  grades: {
+    url: '/prodex/api/product-grades/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  manufacturers: {
+    url: '/prodex/api/manufacturers/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  'packaging-types': {
+    url: '/prodex/api/packaging-types/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  'units-of-measure': {
+    url: '/prodex/api/units/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  logistics: {
+    url: '/prodex/api/logistics-providers/stored/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsProvider.name', values: [`%${v.searchInput}%`] }] : []
+  },
+  carriers: {
+    url: '/prodex/api/logistics-carriers/stored/datagrid',
+    searchToFilter: v =>
+      v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsCarrier.code', values: [`%${v.searchInput}%`] }] : []
+  }
+}
+
+export const editForms = {
+  'units-of-measure': <EditUnitOfMeasurePopup />,
+  'packaging-types': <EditUnitOfPackagingPopup />,
+  manufacturers: <EditPopup1Parameter currentTab={'manufacturers'} />,
+  grades: <EditPopup1Parameter currentTab={'grades'} />,
+  forms: <EditPopup1Parameter currentTab={'forms'} />,
+  conditions: <EditPopup1Parameter currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcPopup />,
+  associations: <EditPopup1Parameter currentTab={'associations'} />,
+  logistics: <AddEditLogisticProvider />,
+  carriers: <AddEditCarrier />
+}
+
+export const addForms = {
+  'units-of-measure': <AddNewUnitOfMeasurePopup />,
+  'packaging-types': <AddNewUnitOfPackagingPopup />,
+  manufacturers: <AddNewPopup1Parameter currentTab={'manufacturers'} />,
+  grades: <AddNewPopup1Parameter currentTab={'grades'} />,
+  forms: <AddNewPopup1Parameter currentTab={'forms'} />,
+  conditions: <AddNewPopup1Parameter currentTab={'conditions'} />,
+  'nmfc-numbers': <NmfcPopup />,
+  associations: <AddNewPopup1Parameter currentTab={'associations'} />,
+  logistics: <AddEditLogisticProvider />,
+  carriers: <AddEditCarrier />
+}
+
+export const addDwollaForms = {
+  Companies: <CompaniesDwollaForm />
 }

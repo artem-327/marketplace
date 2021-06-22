@@ -1,23 +1,13 @@
 import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { errorMessages, multipleEmails } from '../../../../constants/yupValidation'
 import { Modal, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-import * as Yup from 'yup'
-import { Required } from '../../../../components/constants/layout'
+// Services
 import { removeEmpty } from '../../../../utils/functions'
+import { getValidationSchema, getInitialValues } from './AddEditLogisticProvider.services'
 // Styles
 import { GridColumnEmail } from '../../styles'
-
-const initialValuesAdd = {
-  providerIdentifier: '',
-  providerIdentifierName: '',
-  identifierType: '',
-  identifierValue: '',
-  note: '',
-  reinvoice: false,
-  email: ''
-}
+import { Required } from '../../../../components/constants/layout'
 
 const AddEditLogisticProvider = props => {
   let submitForm
@@ -25,31 +15,6 @@ const AddEditLogisticProvider = props => {
   useEffect(() => {
     props.getLogisticsProviders()
   }, [])
-
-  const getInitialValues = () => {
-    let { popupValues } = props
-    return popupValues
-      ? {
-          note: popupValues.note || '',
-          email: popupValues.email || '',
-          reinvoice: popupValues.reinvoice,
-          providerIdentifierName: `${popupValues.name} (${popupValues.identifierValue})`
-        }
-      : initialValuesAdd
-  }
-
-  const getValidationSchema = popupValues => {
-    if (popupValues) {
-      return Yup.object().shape({
-        email: multipleEmails()
-      })
-    } else {
-      return Yup.object().shape({
-        providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-        email: multipleEmails()
-      })
-    }
-  }
 
   const {
     closePopup,
@@ -87,7 +52,7 @@ const AddEditLogisticProvider = props => {
           enableReinitialize={true}
           validateOnChange={false}
           validateOnBlur={false}
-          initialValues={getInitialValues()}
+          initialValues={getInitialValues(popupValues)}
           onSubmit={async (values, { setSubmitting }) => {
             try {
               if (popupValues) {

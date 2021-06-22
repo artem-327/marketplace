@@ -1,8 +1,12 @@
 import { connect } from 'react-redux'
-import * as Actions from '../../actions'
 import { injectIntl } from 'react-intl'
-import { withDatagrid } from '../../../datagrid'
+// Components
 import AddEditLogisticProvider from './AddEditLogisticProvider'
+// Actions
+import * as Actions from '../../actions'
+// Services
+import { withDatagrid } from '../../../datagrid'
+// Selectors
 import { makeGetPopupValues, makeGetlogisticsProvidersFetching, makeGetLogisticsProviders, makeGetUpdating } from '../../selectors'
 
 const makeMapStateToProps = () => {

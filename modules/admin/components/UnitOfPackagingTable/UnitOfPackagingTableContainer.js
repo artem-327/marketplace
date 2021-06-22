@@ -1,6 +1,8 @@
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
+// Components
 import UnitOfPackagingTable from './UnitOfPackagingTable'
+// Actions
 import {
   getDataRequest,
   openEditPopup,
@@ -16,7 +18,10 @@ import {
   getProductGrades,
   getPackagingTypes
 } from '../../../global-data/actions'
+// Services
 import { withDatagrid } from '../../../datagrid'
+import { makeRows } from './UnitOfPackagingTable.services'
+// Selectors
 import {
     makeGetConfig,
     makeGetFilterValue,
@@ -24,7 +29,6 @@ import {
     makeGetConfirmMessage,
     makeGetDeleteRowById
 } from '../../selectors'
-import { makeRows } from './UnitOfPackagingTable.services'
 
 const mapDispatchToProps = {
     getDataRequest,

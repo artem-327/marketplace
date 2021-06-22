@@ -1,9 +1,13 @@
-import Table from './Table'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
+// Components
+import Table from './Table'
+// Services
 import { withDatagrid } from '../../../datagrid'
+// Actions
 import { deleteNmfcNumber, openEditPopup } from '../../actions'
+// Selectors
 import { makeGetFilterValue, makeGetLoading, makeGetConfig } from '../../selectors'
 
 const mapDispatchToProps = { deleteNmfcNumber, openEditPopup }
