@@ -15,7 +15,7 @@ const LogisticsTable = props => {
         filterValue={filterValue}
         loading={datagrid.loading || loading}
         columns={columns}
-        rows={getRows(rows. props)}
+        rows={getRows(rows, props)}
       />
     </div>
   )
