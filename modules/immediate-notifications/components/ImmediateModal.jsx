@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 // Components
 import StandardModal from './StandardModal'
 import AppealModal from './AppealModal'
+// Hooks
+import { usePrevious } from '../../../hooks'
 
 /**
  * Immediate Modal Popup
@@ -15,6 +17,8 @@ const ImmediateModal = props => {
     getNextImmediate,
     sendMessageToSupport
   } = props
+
+  const prevNextImmediate = usePrevious(nextImmediate)
   
   const [state, setState] = useState({
     type: 'standard',
@@ -33,32 +37,34 @@ const ImmediateModal = props => {
   }, [])
 
   useEffect(() => {
-    if(nextImmediate && nextImmediate.info && nextImmediate.info.infoType && nextImmediate.immediate) {
-      setState({
-        ...state,
-        type: 'standard',
-        open: true,
-        icon: nextImmediate.info.icon,
-        title: nextImmediate.info.title,
-        text: nextImmediate.text,
-        leftButtonText: nextImmediate.info.leftButton.title,
-        leftButtonRedirect: nextImmediate.info.leftButton.redirect,
-        rightButtonText: nextImmediate.info.rightButton.title,
-        rightButtonRedirect: nextImmediate.info.rightButton.redirect
-      })
-    } else {
-      setState({
-        ...state,
-        type: '',
-        open: false,
-        icon: '',
-        title: '',
-        text: '',
-        leftButtonText: '',
-        leftButtonRedirect: '',
-        rightButtonText: '',
-        rightButtonRedirect: ''
-      })
+    if (typeof prevNextImmediate !== 'undefined') {
+      if(nextImmediate && nextImmediate.info && nextImmediate.info.infoType && nextImmediate.immediate) {
+        setState({
+          ...state,
+          type: 'standard',
+          open: true,
+          icon: nextImmediate.info.icon,
+          title: nextImmediate.info.title,
+          text: nextImmediate.text,
+          leftButtonText: nextImmediate.info.leftButton.title,
+          leftButtonRedirect: nextImmediate.info.leftButton.redirect,
+          rightButtonText: nextImmediate.info.rightButton.title,
+          rightButtonRedirect: nextImmediate.info.rightButton.redirect
+        })
+      } else {
+        setState({
+          ...state,
+          type: '',
+          open: false,
+          icon: '',
+          title: '',
+          text: '',
+          leftButtonText: '',
+          leftButtonRedirect: '',
+          rightButtonText: '',
+          rightButtonRedirect: ''
+        })
+      }
     }
   }, [nextImmediate])
 

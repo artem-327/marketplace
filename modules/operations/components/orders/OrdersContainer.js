@@ -14,6 +14,7 @@ import { getRows } from './Orders.services'
 // Selectors
 import { 
   makeGetListDocumentTypes,
+  makeGetDocumentTypesFetching,
   makeGetDatagridFilterUpdate, 
   makeGetOrderAccountingDocuments,
   makeGetOrderAccountingDocumentsLoading,
@@ -23,6 +24,7 @@ import {
 
 const makeMapStateToProps = () => {
   const getListDocumentTypes = makeGetListDocumentTypes()
+  const getDocumentTypesFetching = makeGetDocumentTypesFetching()
   const getDatagridFilterUpdate = makeGetDatagridFilterUpdate()
   const getOrderAccountingDocuments = makeGetOrderAccountingDocuments()
   const getOrderAccountingDocumentsLoading = makeGetOrderAccountingDocumentsLoading()
@@ -33,6 +35,7 @@ const makeMapStateToProps = () => {
     return {
       rows: getRows(datagrid),
       listDocumentTypes: getListDocumentTypes(state),
+      documentTypesFetching: getDocumentTypesFetching(state),
       datagridFilterUpdate: getDatagridFilterUpdate(state),
       orderAccountingDocuments: getOrderAccountingDocuments(state),
       orderAccountingDocumentsLoading: getOrderAccountingDocumentsLoading(state),

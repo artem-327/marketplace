@@ -59,7 +59,7 @@ export const columns = [
         title: (
             <FormattedMessage id='operations.owner' defaultMessage='Owner' />
         ),
-        sortPath: 'ProductOffer.owner.cfDisplayName'
+        sortPath: 'ProductOffer.companyProduct.companyGenericProduct.company.cfDisplayName'
     },
     {
         name: 'complete',

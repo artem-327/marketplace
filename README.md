@@ -107,6 +107,11 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.<br>
 You will also see any lint errors in the console.
 
+>**For Windows Command Line Users**<br>
+If you encourage `'NODE_ENV' is not recognized as an internal or external command`, add `NODE_ENV=production` to your environment variables
+and run `node --max-old-space-size=8192 server.js` instead<br>
+Explanation: Local environment variable passing is different in Windows from Linux/Mac and multiple line codes are not supported in `package.json`
+
 ### `npm test`
 Launches the test runner<br>
 See the section about [running tests](#tests) for more information.
@@ -120,7 +125,14 @@ Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+This version is exactly the same as it would be deploy on production, only Google Tag Manager is not included, so it is safe to use for 
+developer/testing purposes
+
+>**For Windows Command Line Users**<br>
+If you encourage `'BABEL_ENV' is not recognized as an internal or external command`, add `BABLE_ENV=review` to your environment variables 
+and run `npm run build` only<br>
+Explanation: Local environment variable passing is different in Windows from Linux/Mac and multiple line codes are not supported in `package.json` 
+
 
 ### `npm run build`
 

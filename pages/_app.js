@@ -59,7 +59,7 @@ const ProdexToast = toast => {
 
 class ProdexApp extends App {
   componentDidMount() {
-    if (gtmId && process.env.APP_ENV !== 'review' && process.env.NODE_ENV === 'production') {
+    if (gtmId && process.env.BABEL_ENV !== 'review' && process.env.NODE_ENV === 'production') {
       TagManager.initialize(tagManagerArgs)
     }
   }
