@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 // Services
@@ -19,6 +20,26 @@ const LogisticsTable = props => {
       />
     </div>
   )
+}
+
+LogisticsTable.propTypes = {
+  loading: PropTypes.bool,
+  rows: PropTypes.array,
+  filterValue: PropTypes.string,
+  openPopup: PropTypes.func,
+  deleteLogisticsProvider: PropTypes.func,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+LogisticsTable.defaultValues = {
+  loading: false,
+  rows: [],
+  filterValue: '',
+  openPopup: () => {},
+  deleteLogisticsProvider: () => {},
+  datagrid: {},
+  intl: {}
 }
 
 export default LogisticsTable

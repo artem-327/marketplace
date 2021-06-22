@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Container } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
+import PropTypes from 'prop-types'
 // Components
 import TablesHandlers from './TablesHandlersContainer'
 import { DatagridProvider } from '../../datagrid'
@@ -62,6 +63,24 @@ const Admin = props => {
       </Container>
     </DatagridProvider>
   )
+}
+
+Admin.propTypes = {
+  currentEditForm: PropTypes.bool,
+  currentAddForm: PropTypes.bool,
+  currentAddDwolla: PropTypes.bool,
+  currentTab: PropTypes.string,
+  closePopup: PropTypes.func,
+  auth: PropTypes.object
+}
+
+Admin.defaultValues = {
+  currentEditForm: null,
+  currentAddForm: null,
+  currentAddDwolla: null,
+  currentTab: '',
+  closePopup: () => {},
+  auth: {}
 }
 
 export default Admin

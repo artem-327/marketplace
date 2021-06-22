@@ -3,6 +3,7 @@ import { debounce } from 'lodash'
 import { Button, Input } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { PlusCircle } from 'react-feather'
+import PropTypes from 'prop-types'
 // Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 // Constants
@@ -107,6 +108,24 @@ const TablesHandlers = props => {
       </DivCustomRow>
     </PositionHeaderSettings>
   )
+}
+
+TablesHandlers.propTypes = {
+  currentTab: PropTypes.string,
+  tableHandlersFilters: PropTypes.object,
+  datagrid: PropTypes.object,
+  handleVariableSave: PropTypes.func,
+  openPopup: PropTypes.func,
+  intl: PropTypes.object
+}
+
+TablesHandlers.defaultValues = {
+  currentTab: '',
+  tableHandlersFilters: null,
+  datagrid: {},
+  handleVariableSave: () => {},
+  openPopup: () => {},
+  intl: {}
 }
 
 export default TablesHandlers

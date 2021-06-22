@@ -2,6 +2,7 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Services
@@ -111,6 +112,20 @@ const AddNewUnitOfMeasurePopup = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+AddNewUnitOfMeasurePopup.propTypes = {
+  measureOptions: PropTypes.array,
+  postNewRequest: PropTypes.func,
+  closeAddPopup: PropTypes.func,
+  config: PropTypes.object
+}
+
+AddNewUnitOfMeasurePopup.defaultValues = {
+  measureOptions: [],
+  postNewRequest: () => {},
+  closeAddPopup: () => {},
+  config: {}
 }
 
 export default AddNewUnitOfMeasurePopup

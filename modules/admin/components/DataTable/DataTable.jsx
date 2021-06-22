@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
@@ -76,6 +77,28 @@ const DataTable = props => {
       />
     </div>
   )
+}
+
+DataTable.propTypes = {
+  openEditPopup: PropTypes.func,
+  deleteConfirmation: PropTypes.func,
+  rows: PropTypes.array,
+  filterValue: PropTypes.string,
+  loading: PropTypes.bool,
+  config: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+DataTable.defaultValues = {
+  openEditPopup: () => {},
+  deleteConfirmation: () => {},
+  rows: [],
+  filterValue: '',
+  loading: false,
+  config: {},
+  datagrid: {},
+  intl: {}
 }
 
 export default DataTable

@@ -1,6 +1,7 @@
 import { FormattedMessage } from 'react-intl'
 import { Modal, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 import { PriceInput } from '../../../marketplace/constants/layout'
@@ -105,6 +106,26 @@ const AddEditCarrier = props => {
       </Modal.Actions>
     </Modal>
   )
+}
+
+AddEditCarrier.propTypes = {
+  closePopup: PropTypes.func,
+  postNewCarrier: PropTypes.func,
+  updateCarrier: PropTypes.func,
+  popupValues: PropTypes.object,
+  updating: PropTypes.bool,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+AddEditCarrier.defaultValues = {
+  closePopup: () => {},
+  postNewCarrier: () => {},
+  updateCarrier: () => {},
+  updating: false,
+  popupValues: null,
+  datagrid: {},
+  intl: {}
 }
 
 export default AddEditCarrier

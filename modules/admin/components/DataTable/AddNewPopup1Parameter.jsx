@@ -2,6 +2,7 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Styles
@@ -68,6 +69,18 @@ const AddNewPopup1Parameter = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+AddNewPopup1Parameter.propTypes = {
+  closeAddPopup: PropTypes.func,
+  postNewRequest: PropTypes.func,
+  config: PropTypes.object
+}
+
+AddNewPopup1Parameter.defaultValues = {
+  closeAddPopup: () => {},
+  postNewRequest: () => {},
+  config: {}
 }
 
 export default AddNewPopup1Parameter

@@ -2,6 +2,7 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Styles
@@ -70,6 +71,28 @@ const EditPopup1Parameter = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+EditPopup1Parameter.propTypes = {
+  config: PropTypes.object,
+  popupValues: PropTypes.object,
+  closeEditPopup: PropTypes.func,
+  putEditedDataRequest: PropTypes.func,
+  getProductForms: PropTypes.func,
+  getProductConditions: PropTypes.func,
+  getProductGrades: PropTypes.func,
+  getPackagingTypes: PropTypes.func
+}
+
+EditPopup1Parameter.defaultValues = {
+  config: {},
+  popupValues: null,
+  closeEditPopup: () => {},
+  putEditedDataRequest: () => {},
+  getProductForms: () => {},
+  getProductConditions: () => {},
+  getProductGrades: () => {},
+  getPackagingTypes: () => {}
 }
 
 export default EditPopup1Parameter

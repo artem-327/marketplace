@@ -1,4 +1,5 @@
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
@@ -96,6 +97,24 @@ const Table = props => {
       />
     </div>
   )
+}
+
+Table.propTypes = {
+  addNmfcNumber: PropTypes.func,
+  editNmfcNumber: PropTypes.func,
+  closeAddPopup: PropTypes.func,
+  popupValues: PropTypes.object,
+  config: PropTypes.object,
+  intl: PropTypes.object
+}
+
+Table.defaultValues = {
+  addNmfcNumber: () => {},
+  editNmfcNumber: () => {},
+  closeAddPopup: () => {},
+  popupValues: null,
+  config: {},
+  intl: {}
 }
 
 export default Table

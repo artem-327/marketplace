@@ -2,6 +2,7 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Services
@@ -205,6 +206,26 @@ const EditUnitOfPackagingPopup = props => {
       </Modal.Content>
     </Modal>
   )
+}
+
+EditUnitOfPackagingPopup.propTypes = {
+  dimensionUnits: PropTypes.array,
+  weightUnits: PropTypes.array,
+  measureOptions: PropTypes.array,
+  closeEditPopup: PropTypes.func,
+  putEditedDataRequest: PropTypes.func,
+  popupValues: PropTypes.object,
+  config: PropTypes.object
+}
+
+EditUnitOfPackagingPopup.defaultValues = {
+  dimensionUnits: [],
+  weightUnits: [],
+  measureOptions: [],
+  closeEditPopup: () => {},
+  putEditedDataRequest: () => {},
+  popupValues: null,
+  config: {}
 }
 
 export default EditUnitOfPackagingPopup

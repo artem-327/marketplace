@@ -1,6 +1,7 @@
 import { Modal, FormGroup, Button } from 'semantic-ui-react'
 import { Form as Formik, Input } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
+import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Services
@@ -100,6 +101,24 @@ const Popup = props => {
       </Modal.Actions>
     </Modal>
   )
+}
+
+Popup.propTypes = {
+  addNmfcNumber: PropTypes.func,
+  editNmfcNumber: PropTypes.func,
+  closeAddPopup: PropTypes.func,
+  popupValues: PropTypes.object,
+  config: PropTypes.object,
+  intl: PropTypes.object
+}
+
+Popup.defaultValues = {
+  addNmfcNumber: () => {},
+  editNmfcNumber: () => {},
+  closeAddPopup: () => {},
+  popupValues: null,
+  config: {},
+  intl: {}
 }
 
 export default Popup

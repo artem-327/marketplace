@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 // Services
@@ -26,6 +27,34 @@ const UnitOfPackagingTable = props => {
       />
     </div>
   )
+}
+
+UnitOfPackagingTable.propTypes = {
+  getAllUnitsOfMeasuresDataRequest: PropTypes.func,
+  deleteUnitOfPackaging: PropTypes.func,
+  getMeasureTypesDataRequest: PropTypes.func,
+  openEditPopup: PropTypes.func,
+  deleteUnit: PropTypes.func,
+  rows: PropTypes.array,
+  filterValue: PropTypes.string,
+  loading: PropTypes.bool,
+  config: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+UnitOfPackagingTable.defaultValues = {
+  getAllUnitsOfMeasuresDataRequest: () => {},
+  deleteUnitOfPackaging: () => {},
+  getMeasureTypesDataRequest: () => {},
+  openEditPopup: () => {},
+  deleteUnit: () => {},
+  rows: [],
+  filterValue: null,
+  loading: false,
+  config: {},
+  datagrid: {},
+  intl: {}
 }
 
 export default UnitOfPackagingTable

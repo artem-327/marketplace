@@ -3,6 +3,7 @@ import { Form, Modal, FormGroup, Accordion, Segment, Header } from 'semantic-ui-
 import { Formik } from 'formik'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../../components/custom-formik'
 import { AddressForm } from '../../../address-form'
@@ -113,6 +114,22 @@ const FormPopup = props => {
       }}
     ></Formik>
   )
+}
+
+FormPopup.propTypes = {
+  countries: PropTypes.array,
+  getCountries: PropTypes.func,
+  closeRegisterDwollaAccount: PropTypes.func,
+  postDwollaAccount: PropTypes.func,
+  popupValues: PropTypes.object
+}
+
+FormPopup.defaultValues = {
+  countries: [],
+  getCountries: () => {},
+  closeRegisterDwollaAccount: () => {},
+  postDwollaAccount: () => {},
+  popupValues: null
 }
 
 export default FormPopup

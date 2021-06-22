@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Modal, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import PropTypes from 'prop-types'
 // Services
 import { removeEmpty } from '../../../../utils/functions'
 import { getValidationSchema, getInitialValues } from './AddEditLogisticProvider.services'
@@ -203,6 +204,32 @@ const AddEditLogisticProvider = props => {
       </Modal.Actions>
     </Modal>
   )
+}
+
+AddEditLogisticProvider.propTypes = {
+  getLogisticsProviders: PropTypes.func,
+  closePopup: PropTypes.func,
+  postNewLogisticsProvider: PropTypes.func,
+  updateLogisticsProvider: PropTypes.func,
+  logisticsProviders: PropTypes.array,
+  logisticsProvidersFetching: PropTypes.bool,
+  updating: PropTypes.bool,
+  popupValues: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
+}
+
+AddEditLogisticProvider.defaultValues = {
+  getLogisticsProviders: () => {},
+  closePopup: () => {},
+  postNewLogisticsProvider: () => {},
+  updateLogisticsProvider: () => {},
+  logisticsProviders: [],
+  logisticsProvidersFetching: false,
+  updating: false,
+  popupValues: null,
+  datagrid: {},
+  intl: {}
 }
 
 export default AddEditLogisticProvider
