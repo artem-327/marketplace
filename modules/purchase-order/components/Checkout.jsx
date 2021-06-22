@@ -4,7 +4,7 @@ import Router from 'next/router'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Head from 'next/head'
-import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow, Popup } from 'semantic-ui-react'
 import { ArrowLeft } from 'react-feather'
 
 //Components
@@ -27,6 +27,7 @@ import {
   checkAllAccepted,
   findSectionToOpen
 } from './Checkout.services'
+import { takeOverCompanyFinish } from '../../admin/actions'
 
 // Styles
 import {
@@ -36,8 +37,15 @@ import {
   ContainerCheckout,
   GridSections,
   DivButtonContentWrapper,
-  SpanButtonText
+  SpanButtonText,
+  IconMinimize2,
+  ReturnToAdmin,
+  CustomDiv,
+  Rectangle
 } from './Checkout.styles'
+import {
+  CustomSpanReturn
+} from '../../../components/constants/layout'
 
 //Constants
 import { FREIGHT_TYPES } from './Checkout.constants'
@@ -67,7 +75,10 @@ const Checkout = props => {
     isThirdPartyConnectionException,
     applicationName,
     manualQuoteById,
-    toastManager
+    toastManager,
+    takeover,
+    companyName,
+    takeOverCompanyFinish
   } = props
 
   // Similar to call componentDidMount:
@@ -190,8 +201,34 @@ const Checkout = props => {
         <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' }, { companyName: applicationName })}</title>
       </Head>
       <ContainerMain fluid>
+        {takeover ? (
+          <CustomDiv>
+            <Rectangle>
+              <IconMinimize2 size='28' />
+              <div>
+                <span>
+                  <FormattedMessage
+                    id='global.takeOverInfo'
+                    defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
+                    values={{ companyName: companyName }}
+                  />
+                </span>
+                {
+                  <Popup
+                    content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />}
+                    trigger={
+                      <CustomSpanReturn onClick={() => takeOverCompanyFinish()}>
+                        <ReturnToAdmin />
+                      </CustomSpanReturn>
+                    }
+                  />
+                }
+              </div>
+            </Rectangle>
+          </CustomDiv>
+        ) : null}
         <HeaderRow itemsCount={cartItems.length} />
-        <DivScrollableContent>
+        <DivScrollableContent takeover={takeover}>
           <ContainerCheckout>
             <DivTopButtonRow>
               <BasicButton
@@ -322,8 +359,11 @@ Checkout.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    applicationName: store?.auth?.identity?.appInfo?.applicationName
+    applicationName: store?.auth?.identity?.appInfo?.applicationName,
+    takeover:
+      getSafe(() => !!store.auth.identity.company.id, false) && getSafe(() => store.auth.identity.isAdmin, false),
+    companyName: getSafe(() => store.auth.identity.company.name, '')
   }
 }
 
-export default connect(mapStateToProps, {})(injectIntl(Checkout))
+export default connect(mapStateToProps, { takeOverCompanyFinish })(injectIntl(Checkout))
