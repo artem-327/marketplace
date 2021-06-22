@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import TablesHandlers from './TablesHandlersContainer'
-import { Container, Segment } from 'semantic-ui-react'
+import { Container } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
 
@@ -29,20 +29,9 @@ import LogisticsTable from './LogisticsTable/LogisticsTableContainer'
 import AddEditLogisticProvider from './LogisticsTable/AddEditLogisticProviderContainer'
 import Carriers from './Carriers/CarriersContainer'
 import AddEditCarrier from './Carriers/AddEditCarrierContainer'
+// Styles
+import { FixyWrapper, AdminSegment } from '../styles'
 
-import styled from 'styled-components'
-
-const FixyWrapper = styled.div`
-  position: relative;
-  transform: translateY(0);
-  height: 100%;
-`
-
-const AdminSegment = styled(Segment)`
-  height: auto !important;
-  margin-bottom: 42px !important;
-  padding-bottom: 0 !important;
-`
 
 const tables = {
   'units-of-measure': <UnitOfMeasureTable />,

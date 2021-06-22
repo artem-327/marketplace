@@ -1,14 +1,12 @@
-import styled from 'styled-components'
-import { Modal, FormGroup, Form, Button } from 'semantic-ui-react'
+import { Modal, FormGroup, Button } from 'semantic-ui-react'
 import { Form as Formik, Input } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import { nmfcValidation } from '../../../../constants/yupValidation'
 import { Required } from '../../../../components/constants/layout'
 import ErrorFocus from '../../../../components/error-focus'
+// Styles
+import { CustomForm } from '../../styles'
 
-const CustomForm = styled(Form)`
-  flex-grow: 0 !important;
-`
 const Popup = props => {
   let submitForm
 

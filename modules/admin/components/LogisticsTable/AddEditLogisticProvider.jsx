@@ -1,14 +1,13 @@
 import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { errorMessages, multipleEmails } from '../../../../constants/yupValidation'
-
 import { Modal, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
-
 import * as Yup from 'yup'
 import { Required } from '../../../../components/constants/layout'
-import styled from 'styled-components'
 import { removeEmpty } from '../../../../utils/functions'
+// Styles
+import { GridColumnEmail } from '../../styles'
 
 const initialValuesAdd = {
   providerIdentifier: '',
@@ -19,12 +18,6 @@ const initialValuesAdd = {
   reinvoice: false,
   email: ''
 }
-
-const GridColumnEmail = styled(GridColumn)`
-  .field {
-    margin-bottom: 2px !important;
-  }
-`
 
 const AddEditLogisticProvider = props => {
   let submitForm

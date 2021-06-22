@@ -1,21 +1,14 @@
 import { useEffect, useState } from 'react'
 import { config } from '../config'
 import { debounce } from 'lodash'
-
 import { Button, Input } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
-import styled from 'styled-components'
-import { DivCustomRow } from '../../companies/components/TablesHandlers.styles'
 import { PlusCircle } from 'react-feather'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
-//Hooks
+// Hooks
 import { usePrevious } from '../../../hooks'
-
-const PositionHeaderSettings = styled.div`
-  position: relative;
-  z-index: 602;
-`
+// Styles
+import { PositionHeaderSettings, DivCustomRow } from '../styles'
 
 const TablesHandlers = props => {
   const [state, setState] = useState({})
