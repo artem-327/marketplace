@@ -63,6 +63,11 @@ const handleToggleSwitch = async (values, props) => {
   }
 }
 
+/**
+ * Get Rows in CarriersContainer using datagrid
+ * @category Admin Settings - Carrier
+ * @method
+ */
 export const makeRows = datagrid => datagrid.rows.map((row, index) => {
   return {
       ...row,
@@ -70,6 +75,11 @@ export const makeRows = datagrid => datagrid.rows.map((row, index) => {
   }
 })
 
+/**
+ * Get Rows in Carriers Component using props
+ * @category Admin Settings - Carrier
+ * @method
+ */
 export const getRows = (rows, props) => {
   return rows.map(row => {
     return {

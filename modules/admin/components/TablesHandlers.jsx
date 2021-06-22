@@ -13,6 +13,11 @@ import { usePrevious } from '../../../hooks'
 // Styles
 import { PositionHeaderSettings, DivCustomRow } from '../styles'
 
+/**
+ * TablesHandlers Component
+ * @category Admin Settings
+ * @components
+ */
 const TablesHandlers = props => {
   const [state, setState] = useState({})
   const prevCurrentTab = usePrevious(props.currentTab)
@@ -58,11 +63,21 @@ const TablesHandlers = props => {
     }
   }, [props.currentTab])
 
+  /**
+   * Handle Filter Value Change
+   * @category Admin Settings
+   * @method
+   */
   const handleFiltersValue = debounce(filter => {
     const { datagrid } = props
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
+  /**
+   * Handle Filter Value Change in Input Search
+   * @category Admin Settings
+   * @method
+   */
   const handleFilterChangeInputSearch = (e, data) => {
     const { currentTab } = props
     if (currentTab === '') return

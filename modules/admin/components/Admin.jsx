@@ -17,6 +17,11 @@ import {
   addDwollaForms
 } from '../constants'
 
+/**
+ * Admin Component
+ * @category Admin Settings
+ * @components
+ */
 const Admin = props => {
   useEffect(() => {
     return () => {
@@ -25,6 +30,11 @@ const Admin = props => {
     }
   }, [])
 
+  /**
+   * Render Content
+   * @category Admin Settings
+   * @method
+   */
   const renderContent = () => {
     const { currentEditForm, currentAddForm, currentTab, currentAddDwolla } = props
     return (
@@ -37,6 +47,11 @@ const Admin = props => {
     )
   }
 
+  /**
+   * Get Api Config
+   * @category Admin Settings
+   * @method
+   */
   const getApiConfig = () => {
     const { currentTab } = props
 

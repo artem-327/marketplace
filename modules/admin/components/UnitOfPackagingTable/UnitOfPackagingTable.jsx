@@ -5,6 +5,11 @@ import ProdexTable from '../../../../components/table'
 // Services
 import { columns, getRows } from './UnitOfPackagingTable.services'
 
+/**
+ * UnitOfPackagingTable Component
+ * @category Admin Settings - Packaging Types
+ * @components
+ */
 const UnitOfPackagingTable = props => {
   useEffect(() => {
     props.getMeasureTypesDataRequest()

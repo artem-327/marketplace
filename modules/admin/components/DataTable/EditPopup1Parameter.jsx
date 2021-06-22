@@ -12,6 +12,11 @@ const formValidation = Yup.object().shape({
   val0: Yup.string().trim().min(1, 'Too short').required('Required')
 })
 
+/**
+ * EditPopup1Parameter Component
+ * @category Admin Settings
+ * @components
+ */
 const EditPopup1Parameter = props => {
   const { closeEditPopup, config, popupValues, putEditedDataRequest } = props
 

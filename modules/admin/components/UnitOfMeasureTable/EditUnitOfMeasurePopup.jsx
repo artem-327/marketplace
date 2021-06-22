@@ -10,6 +10,11 @@ import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Edit Units of Measure
+ * @method
+ */
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().required(errorMessages.minLength(1)),
   val1: Yup.string().trim().required(errorMessages.minLength(1)),
@@ -20,12 +25,22 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage)
 })
 
+/**
+ * EditUnitOfMeasurePopup Component
+ * @category Admin Settings - Edit Units of Measure
+ * @components
+ */
 const EditUnitOfMeasurePopup = props => {
 
   const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions } = props
 
   const { id } = popupValues
 
+  /**
+   * Get initial values for form.
+   * @category Admin Settings - Edit Units of Measure
+   * @method
+   */
   const initialFormValues = {
     val0: popupValues[config.edit[0].name],
     val1: popupValues[config.edit[1].name],

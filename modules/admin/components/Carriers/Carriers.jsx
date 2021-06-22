@@ -6,6 +6,11 @@ import { COLUMNS } from './Carriers.constants'
 // Services
 import { getRows } from './Carriers.services'
 
+/**
+ * Carriers Component
+ * @category Admin Settings - Carrier
+ * @components
+ */
 const Carriers = props => {
   const { loading, updating, rows, datagrid, filterValue } = props
 

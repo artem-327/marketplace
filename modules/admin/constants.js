@@ -26,6 +26,11 @@ import AddEditCarrier from './components/Carriers/AddEditCarrierContainer'
 import { FixyWrapper, AdminSegment } from './styles'
 
 
+/**
+ * defaultTabs constant is used in src / components / NavigationMenu
+ * @category Admin
+ * @constant
+ */
 export const defaultTabs = [
   { name: 'Units of Measure', id: 1, type: 'units-of-measure' },
   { name: 'Packaging Types', id: 2, type: 'packaging-types' },
@@ -40,6 +45,11 @@ export const defaultTabs = [
   { name: 'Admin Settings', id: 11, type: 'admin-settings' }
 ]
 
+/**
+ * config constant is used in selectors and services
+ * @category Admin
+ * @constant
+ */
 export const config = {
   'units-of-measure': {
     tableName: 'admin_units_of_measure',
@@ -616,6 +626,11 @@ export const config = {
   }
 }
 
+/**
+ * tables constant is used in ./ components / Admin
+ * @category Admin
+ * @constant
+ */
 export const tables = {
   'units-of-measure': <UnitOfMeasureTable />,
   'packaging-types': <UnitOfPackagingTable />,
@@ -636,6 +651,11 @@ export const tables = {
   )
 }
 
+/**
+ * datagridConfig constant is used in ./ components / Admin
+ * @category Admin
+ * @constant
+ */
 export const datagridConfig = {
   conditions: {
     url: '/prodex/api/product-conditions/datagrid',
@@ -696,6 +716,11 @@ export const datagridConfig = {
   }
 }
 
+/**
+ * editForms constant is used in ./ components / Admin
+ * @category Admin
+ * @constant
+ */
 export const editForms = {
   'units-of-measure': <EditUnitOfMeasurePopup />,
   'packaging-types': <EditUnitOfPackagingPopup />,
@@ -709,6 +734,11 @@ export const editForms = {
   carriers: <AddEditCarrier />
 }
 
+/**
+ * addForms constant is used in ./ components / Admin
+ * @category Admin
+ * @constant
+ */
 export const addForms = {
   'units-of-measure': <AddNewUnitOfMeasurePopup />,
   'packaging-types': <AddNewUnitOfPackagingPopup />,
@@ -722,6 +752,11 @@ export const addForms = {
   carriers: <AddEditCarrier />
 }
 
+/**
+ * addDwollaForms constant is used in ./ components / Admin
+ * @category Admin
+ * @constant
+ */
 export const addDwollaForms = {
   Companies: <CompaniesDwollaForm />
 }

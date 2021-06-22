@@ -10,6 +10,11 @@ import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Get initial values for form.
+ * @category Admin Settings - Add New Units of Measure
+ * @method
+ */
 const initialFormValues = {
   val0: '',
   val1: '',
@@ -17,6 +22,11 @@ const initialFormValues = {
   val3: ''
 }
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Add New Units of Measure
+ * @method
+ */
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().required(errorMessages.minLength(1)),
   val1: Yup.string().trim().required(errorMessages.minLength(1)),
@@ -27,6 +37,11 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage)
 })
 
+/**
+ * AddNewUnitOfMeasurePopup Component
+ * @category Admin Settings - Add New Units of Measure
+ * @components
+ */
 const AddNewUnitOfMeasurePopup = props => {
   const { closeAddPopup, config, postNewRequest, measureOptions } = props
 

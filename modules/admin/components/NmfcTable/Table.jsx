@@ -6,6 +6,11 @@ import ActionCell from '../../../../components/table/ActionCell'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 
+/**
+ * Table Component
+ * @category Admin Settings - NMFC Numbers
+ * @components
+ */
 const Table = props => {
   const columns = [
     {

@@ -10,6 +10,11 @@ import { getValidationSchema, getInitialValues } from './AddEditLogisticProvider
 import { GridColumnEmail } from '../../styles'
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * AddEditLogisticProvider Component
+ * @category Admin Settings - Logistics
+ * @components
+ */
 const AddEditLogisticProvider = props => {
   let submitForm
 

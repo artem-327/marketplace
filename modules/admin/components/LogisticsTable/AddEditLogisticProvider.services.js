@@ -12,6 +12,11 @@ const initialValuesAdd = {
     email: ''
 }
 
+/**
+ * Get initial values for form.
+ * @category Admin Settings - Logistics
+ * @method
+ */
 export const getInitialValues = popupValues => {
     return popupValues
     ? {
@@ -24,6 +29,11 @@ export const getInitialValues = popupValues => {
     : initialValuesAdd
 }
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Logistics
+ * @method
+ */
 export const getValidationSchema = popupValues => {
     if (popupValues) {
         return Yup.object().shape({

@@ -5,6 +5,11 @@ import ActionCell from '../../../../components/table/ActionCell'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 
+/**
+ * DataTable Component
+ * @category Admin Settings
+ * @components
+ */
 const DataTable = props => {
   const getActions = () => {
     const { config, intl, openEditPopup, deleteConfirmation, datagrid } = props

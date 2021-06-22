@@ -8,14 +8,29 @@ import ErrorFocus from '../../../../components/error-focus'
 // Styles
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Get initial values for form.
+ * @category Admin Settings
+ * @method
+ */
 const initialFormValues = {
   val0: ''
 }
 
+/**
+ * Validation of form.
+ * @category Admin Settings
+ * @method
+ */
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().min(1, 'Too short').required('Required')
 })
 
+/**
+ * AddNewPopup1Parameter Component
+ * @category Admin Settings
+ * @components
+ */
 const AddNewPopup1Parameter = props => {
   const { closeAddPopup, config, postNewRequest } = props
 

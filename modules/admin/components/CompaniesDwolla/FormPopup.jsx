@@ -10,6 +10,11 @@ import { AddressForm } from '../../../address-form'
 // Services
 import { formValidation, initialFormValues } from './FormPopup.services'
 
+/**
+ * FormPopup Component
+ * @category Admin Settings - Forms
+ * @components
+ */
 const FormPopup = props => {
   useEffect(() => {
     if (!props.countries.length) props.getCountries()

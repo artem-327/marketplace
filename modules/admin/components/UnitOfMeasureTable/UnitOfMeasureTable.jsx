@@ -5,6 +5,11 @@ import ProdexTable from '../../../../components/table'
 // Services
 import { columns, getRows } from './UnitOfMeasureTable.services'
 
+/**
+ * UnitOfMeasureTable Component
+ * @category Admin Settings - Units of Measure
+ * @components
+ */
 const UnitOfMeasureTable = props => {
   useEffect(() => {
     props.getMeasureTypesDataRequest()

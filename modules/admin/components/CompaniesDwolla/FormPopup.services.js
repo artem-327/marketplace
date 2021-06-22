@@ -2,6 +2,11 @@ import * as Yup from 'yup'
 // Services
 import { errorMessages, addressValidationSchema, dateValidation } from '../../../../constants/yupValidation'
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Forms
+ * @method
+ */
 export const formValidation = Yup.object().shape({
     dwollaController: Yup.object().shape({
         firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
@@ -13,6 +18,11 @@ export const formValidation = Yup.object().shape({
     })
 })
 
+/**
+ * Get initial values for form.
+ * @category Admin Settings - Forms
+ * @method
+ */
 export const initialFormValues = popupValues => ({
     dwollaController: {
         ...(popupValues.primaryUser

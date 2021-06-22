@@ -10,6 +10,11 @@ import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Get initial values for form.
+ * @category Admin Settings - Add New Packaging Types
+ * @method
+ */
 const initialFormValues = {
   val0: '',
   val1: '',
@@ -23,6 +28,11 @@ const initialFormValues = {
   val9: ''
 }
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Add New Packaging Types
+ * @method
+ */
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().min(1, 'Too short').required('Required'),
   val1: Yup.number().required('Required'),
@@ -36,6 +46,11 @@ const formValidation = Yup.object().shape({
   val9: Yup.number().required('Required')
 })
 
+/**
+ * AddNewUnitOfPackagingPopup Component
+ * @category Admin Settings - Add New Packaging Types
+ * @components
+ */
 const AddNewUnitOfPackagingPopup = props => {
 
   const { closeAddPopup, config, postNewRequest, measureOptions, dimensionUnits, weightUnits } = props

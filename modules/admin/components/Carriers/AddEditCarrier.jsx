@@ -14,6 +14,11 @@ import { Required } from '../../../../components/constants/layout'
 
 let formikPropsSelf = {}
 
+/**
+ * AddEditCarrier Component
+ * @category Admin Settings - Add/Edit Carrier
+ * @components
+ */
 const AddEditCarrier = props => {
   const {
     closePopup,

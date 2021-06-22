@@ -10,6 +10,11 @@ import { nmfcValidation } from '../../../../constants/yupValidation'
 import { CustomForm } from '../../styles'
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Popup Component
+ * @category Admin Settings - NMFC Numbers
+ * @components
+ */
 const Popup = props => {
   let submitForm
 

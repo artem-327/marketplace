@@ -10,6 +10,11 @@ import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
 import { Required } from '../../../../components/constants/layout'
 
+/**
+ * Validation of form.
+ * @category Admin Settings - Edit Packaging Types
+ * @method
+ */
 const formValidation = Yup.object().shape({
   val0: Yup.string().trim().min(1, 'Too short').required('Required'),
   val1: Yup.number().required('Required'),
@@ -23,11 +28,21 @@ const formValidation = Yup.object().shape({
   val9: Yup.number().required('Required')
 })
 
+/**
+ * EditUnitOfPackagingPopup Component
+ * @category Admin Settings - Edit Packaging Types
+ * @components
+ */
 const EditUnitOfPackagingPopup = props => {
   const { closeEditPopup, config, popupValues, putEditedDataRequest, measureOptions, dimensionUnits, weightUnits } = props
 
   const { id } = popupValues
 
+  /**
+   * Get initial values for form.
+   * @category Admin Settings - Edit Packaging Types
+   * @method
+   */
   const initialFormValues = {
     val0: popupValues[config.edit[0].name],
     val1: popupValues.measureTypeId,

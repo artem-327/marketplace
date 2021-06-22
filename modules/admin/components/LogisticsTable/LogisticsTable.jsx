@@ -4,6 +4,11 @@ import ProdexTable from '../../../../components/table'
 // Services
 import { columns, getRows } from './LogisticsTable.services'
 
+/**
+ * LogisticsTable Component
+ * @category Admin Settings - Logistics
+ * @components
+ */
 const LogisticsTable = props => {
   
   const { loading, rows, datagrid, filterValue } = props

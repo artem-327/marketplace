@@ -4,6 +4,11 @@ import ActionCell from '../../../../components/table/ActionCell'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 
+/**
+ * Get Rows in Selecotrs
+ * @category Admin Settings - Units of Measure
+ * @method
+ */
 export const makeRows = datagrid => datagrid.rows.map(d => {
   return {
     id: d.id,
@@ -79,6 +84,11 @@ const getActions = props => {
   ]
 }
 
+/**
+ * Get Rows in Components
+ * @category Admin Settings - Units of Measure
+ * @method
+ */
 export const getRows = (rows, props) => {
   return rows.map(row => {
     return {
