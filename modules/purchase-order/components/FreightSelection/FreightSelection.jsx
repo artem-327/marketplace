@@ -49,11 +49,8 @@ import {
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
 import ConfirmationPopup from './ConfirmationPopup/ConfirmationPopup'
-
+import DeliveryDatePopup from './DeliveryDatePopup/DeliveryDatePopup'
 import FreightLabel from './FreightLabel'
-
-// Services
-import { handleManualShipment } from './FreightSelection.services'
 
 //Hooks
 import { usePrevious } from '../../../../hooks'
@@ -61,11 +58,11 @@ import { usePrevious } from '../../../../hooks'
 // Constants
 import { FREIGHT_TYPES } from '../Checkout.constants'
 
-
 const FreightSelection = props => {
   // Stores previos values for compating with current value
   const prevIsExpanded = usePrevious(props.isExpanded)
   const [isOpenConfirmPopup, setIsOpenConfirmPopup] = useState(false)
+  const [isOpenDeliveryDatePopup, setIsOpenDeliveryDatePopup] = useState(false)
 
   const {
     isExpanded,
@@ -253,9 +250,8 @@ const FreightSelection = props => {
                       <GridRowCustomPadding value='5px 0 15px'>
                         <GridColumn computer={8}>
                           <BasicButton
-                            loading={props.manualShipmentPending}
                             type='button'
-                            onClick={() => handleManualShipment(setIsOpenConfirmPopup, props)}>
+                            onClick={() => setIsOpenDeliveryDatePopup(true)}>
                             <FormattedMessage id='cart.requestShippingQuote' defaultMessage='Request Shipping Quote'>
                               {text => text}
                             </FormattedMessage>
@@ -329,7 +325,16 @@ const FreightSelection = props => {
               </DivSectionCollapsedWrapper>
             )
           ) : null}
-
+          {isOpenDeliveryDatePopup && (
+            <DeliveryDatePopup
+              {...props}
+              onClose={() => setIsOpenDeliveryDatePopup(false)}
+              onSubmit={() => {
+                setIsOpenConfirmPopup(true)
+                setIsOpenDeliveryDatePopup(false)
+              }}
+            />
+          )}
           {isOpenConfirmPopup && <ConfirmationPopup onClose={() => setIsOpenConfirmPopup(false)} />}
         </>
       }
