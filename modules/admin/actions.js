@@ -1,8 +1,10 @@
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import Router from 'next/router'
-import * as AT from './action-types'
+// Apis
 import * as api from './api'
+// Actions
 import { updateIdentity } from '../auth/actions'
+// Services
 import { Datagrid } from '../datagrid'
 
 
@@ -10,7 +12,6 @@ export const openEditPopup = createAction('ADMIN_OPEN_EDIT_POPUP', editedData =>
 export const closeEditPopup = createAction('ADMIN_CLOSE_EDIT_POPUP')
 export const openAddPopup = createAction('ADMIN_OPEN_ADD_POPUP', currentTab => currentTab)
 export const closeAddPopup = createAction('ADMIN_CLOSE_ADD_POPUP')
-export const confirmationSuccess = createAction('ADMIN_CONFIRM_SUCCESS')
 export const closeConfirmPopup = createAction('ADMIN_CLOSE_CONFIRM_POPUP')
 export const postDwollaAccount = createAsyncAction('ADMIN_CREATE_DWOLLA_ACCOUNT', (values, companyId) => api.postNewDwollaAccount(values, companyId))
 export const getHazardClassesDataRequest = createAsyncAction('ADMIN_GET_HAZARD_CLASSES', () => api.getHazardClasses())
@@ -25,7 +26,6 @@ export const getCompany = createAsyncAction('ADMIN_GET_FULL_COMPANY', (params) =
 export const udpateEnabled = createAsyncAction('ADMIN_ENABLED_COMPANY', (id, enabled) => api.udpateEnabled(id, enabled))
 export const searchUnNumber = createAsyncAction('ADMIN_SEARCH_UN_NUMBER', (pattern) => api.searchUnNumber(pattern))
 export const searchManufacturers = createAsyncAction('ADMIN_SEARCH_MANUFACTURERS', (text, limit = false) => api.searchManufacturers(text, limit))
-export const prepareSearchedCasProducts = createAction('ADMIN_PREPARE_CAS_PRODUCTS', elements => ({elements}))
 export const getProductsCatalogRequest = createAsyncAction('ADMIN_GET_PRODUCTS_CATALOG_DATA', async () => {
   const [hazardClasses, packagingGroups] = await Promise.all([api.getHazardClasses(), api.getPackagingGroups()])
   return {
@@ -33,8 +33,6 @@ export const getProductsCatalogRequest = createAsyncAction('ADMIN_GET_PRODUCTS_C
     packagingGroups: packagingGroups
   }
 })
-export const editEchoProductChangeTab = createAction('ADMIN_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB', (editTab, force = false, data = null) => ({ editTab, force, data }))
-export const openEditEchoProduct = createAction('ADMIN_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB', (id, editTab, force = false) => ({ editTab, force, data: { id } }))
 export const registerDwollaAccount = createAction('ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP', data => data)
 export const closeRegisterDwollaAccount = createAction('ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP')
 export const openPopup = createAction('ADMIN_OPEN_POPUP', data => ({ data }))
@@ -59,7 +57,6 @@ export const reviewRequest = createAsyncAction('ADMIN_REVIEW_REQUESTED', async (
   }))
   return result
 })
-export const loadFile = createAsyncAction('ADMIN_LOAD_FILE', (attachment) => api.loadFile(attachment))
 export const addAttachment = createAsyncAction('ADMIN_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
   const data = await api.addAttachment(attachment, type, additionalParams)
   return data
@@ -95,7 +92,7 @@ export const editNmfcNumber = createAsyncAction('EDIT_NMFC_NUMBER', async (nmfc)
   Datagrid.updateRow(nmfc.id, () => nmfc)
   return data
 })
-export const deleteNmfcNumber = createAsyncAction('EDIT_NMFC_NUMBER', async (id) => {
+export const deleteNmfcNumber = createAsyncAction('DELETE_NMFC_NUMBER', async (id) => {
   const data = await api.deleteNmfcNumber(id)
   Datagrid.removeRow(id)
   return data
@@ -166,32 +163,34 @@ export const deleteLogisticsProvider = createAsyncAction('ADMIN_DELETE_LOGISTICS
 export const postNewCarrier = createAsyncAction('ADMIN_POST_NEW_CARRIER', data => api.postNewCarrier(data))
 export const updateCarrier = createAsyncAction('ADMIN_EDIT_CARRIER', (id, data) => api.updateCarrier(id, data))
 export const deleteCarrier = createAsyncAction('ADMIN_DELETE_CARRIER', id => api.deleteCarrier(id))
+export const handleFiltersValue = createAsyncAction('ADMIN_HANDLE_FILTERS_VALUE', async (props, value) => {
+  let filterValue = value
+  let casProductsRows = []
+  let manufacturersRows = []
 
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-export function deleteConfirmation(id, config = null) {
+  switch (props.currentTab) {
+    case 'CAS Products':
+      casProductsRows = await api.getCasProductByString(value)
+      break
+    case 'manufacturers':
+      manufacturersRows = await api.getManufacturersByString(value)
+      break
+  }
+
+  return { filterValue, casProductsRows, manufacturersRows }
+})
+export const getDataRequest = createAsyncAction('ADMIN_GET_DATA_REQUEST', (config, values = null) => api.getDataRequest(config, values))
+export const deleteConfirmation = createAsyncAction('ADMIN_DELETE_CONFIRM_POPUP', async (id, config = null) => {
   if (config != null) {
     if (typeof config.api.delete !== 'undefined') {
-      return async dispatch => {
-        await dispatch({
-          type: config.api.delete.typeRequest,
-          payload: api.deleteItem(config, id)
-        })
-        Datagrid.removeRow(id)
-      }
-    }
-  } else {
-    return {
-      type: AT.ADMIN_DELETE_CONFIRM_POPUP
+      const data = api.deleteItem(config, id)
+      Datagrid.removeRow(id)
+      return data
     }
   }
-}
-export function getDataRequest(config, values = null) {
-  return {
-    type: config.api.get.typeRequest,
-    payload: api.getDataRequest(config, values)
-  }
-}
-export function postNewRequest(config, values) {
+  return null
+})
+export const postNewRequest = (config, values) => {
   return async dispatch => {
     await dispatch({
       type: config?.api?.post?.pendingRequest
@@ -215,7 +214,7 @@ export function postNewRequest(config, values) {
       )
   }
 }
-export function putEditedDataRequest(config, id, values) {
+export const putEditedDataRequest = (config, id, values) => {
   return async dispatch => {
     const editedItem = await api.putEditedDataRequest(config, values, id)
 
@@ -227,40 +226,6 @@ export function putEditedDataRequest(config, id, values) {
     dispatch(closePopup())
   }
 }
-export function handleFiltersValue(props, value) {
-  return async dispatch => {
-    // save filter value
-    await dispatch({
-      type: AT.ADMIN_HANDLE_FILTERS_VALUE,
-      payload: value
-    })
-
-    switch (props.currentTab) {
-      case 'CAS Products':
-        {
-          await dispatch({
-            type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
-            payload: api.getCasProductByString(value)
-          })
-        }
-        break
-      case 'manufacturers':
-        {
-          await dispatch({
-            type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
-            payload: api.getManufacturersByString(value)
-          })
-        }
-        break
-    }
-  }
-}
-export function openRegisterDwollaAccount(data) {
-  return async dispatch => {
-    dispatch(getCompany(data.id))
-    dispatch(registerDwollaAccount(data))
-  }
-}
 export const takeOverCompanyFinish = () => {
   return async dispatch => {
     let payload = await api.takeOverCompanyFinish()
@@ -268,6 +233,3 @@ export const takeOverCompanyFinish = () => {
     Router.push('/companies/companies')
   }
 }
-
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
