@@ -13,6 +13,12 @@ export const errorMessages = {
   ),
   mustBeInFuture: <FormattedMessage id='validation.dateInFuture' defaultMessage='Date must be in future' />,
   mustBeInPast: <FormattedMessage id='validation.dateInPast' defaultMessage='Date must be in past' />,
+  mustBeDaysInFuture: days => (
+    <FormattedMessage
+      id='validation.dateInFutureDays'
+      defaultMessage={`Date must be at least ${days} days in future`} values={{ days }}
+    />
+  ),
   dateNotInPast: <FormattedMessage id='validation.dateNotInPast' defaultMessage='Date must not be in past' />,
   dateNotInFuture: <FormattedMessage id='validation.dateNotInFuture' defaultMessage='Date must not be in future' />,
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
