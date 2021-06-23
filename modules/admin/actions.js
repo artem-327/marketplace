@@ -1,56 +1,16 @@
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+import Router from 'next/router'
 import * as AT from './action-types'
 import * as api from './api'
 import { updateIdentity } from '../auth/actions'
 import { Datagrid } from '../datagrid'
 
-import Router from 'next/router'
 
-export const removeEmpty = obj =>
-  Object.entries(obj).forEach(([key, val]) => {
-    if (val && typeof val === 'object') {
-      removeEmpty(val)
-      if (Object.entries(val).length === 0) delete obj[key]
-    } else {
-      if (val == null) delete obj[key]
-      else if (typeof val === 'string') {
-        if (val.trim() === '') delete obj[key]
-        else obj[key] = val.trim()
-      }
-    }
-  })
-
-export function openEditPopup(editedData) {
-  return {
-    type: AT.ADMIN_OPEN_EDIT_POPUP,
-    payload: editedData
-  }
-}
-
-export function closeEditPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_EDIT_POPUP
-  }
-}
-
-export function openAddPopup(currentTab) {
-  return {
-    type: AT.ADMIN_OPEN_ADD_POPUP,
-    payload: currentTab
-  }
-}
-export function closeAddPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_ADD_POPUP
-  }
-}
-
-// export function handleOpenConfirmPopup(id) {
-// 	return {
-// 		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
-// 		payload: id
-// 	}
-// }
-
+export const openEditPopup = createAction('ADMIN_OPEN_EDIT_POPUP', editedData => editedData)
+export const closeEditPopup = createAction('ADMIN_CLOSE_EDIT_POPUP')
+export const openAddPopup = createAction('ADMIN_OPEN_ADD_POPUP', currentTab => currentTab)
+export const closeAddPopup = createAction('ADMIN_CLOSE_ADD_POPUP')
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 export function deleteConfirmation(id, config = null) {
   if (config != null) {
     if (typeof config.api.delete !== 'undefined') {
@@ -68,25 +28,12 @@ export function deleteConfirmation(id, config = null) {
     }
   }
 }
-export function confirmationSuccess() {
-  return {
-    type: AT.ADMIN_CONFIRM_SUCCESS
-  }
-}
-
-export function closeConfirmPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_CONFIRM_POPUP
-  }
-}
-
 export function getDataRequest(config, values = null) {
   return {
     type: config.api.get.typeRequest,
     payload: api.getDataRequest(config, values)
   }
 }
-
 export function postNewRequest(config, values) {
   return async dispatch => {
     await dispatch({
@@ -111,14 +58,6 @@ export function postNewRequest(config, values) {
       )
   }
 }
-
-export function postDwollaAccount(values, companyId) {
-  return {
-    type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
-    payload: api.postNewDwollaAccount(values, companyId)
-  }
-}
-
 export function putEditedDataRequest(config, id, values) {
   return async dispatch => {
     const editedItem = await api.putEditedDataRequest(config, values, id)
@@ -131,6 +70,20 @@ export function putEditedDataRequest(config, id, values) {
     dispatch(closePopup())
   }
 }
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+export const confirmationSuccess = createAction('ADMIN_CONFIRM_SUCCESS')
+export const closeConfirmPopup = createAction('ADMIN_CLOSE_CONFIRM_POPUP')
+
+
+
+export function postDwollaAccount(values, companyId) {
+  return {
+    type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
+    payload: api.postNewDwollaAccount(values, companyId)
+  }
+}
+
 
 export function handleFiltersValue(props, value) {
   return async dispatch => {
@@ -143,17 +96,10 @@ export function handleFiltersValue(props, value) {
     switch (props.currentTab) {
       case 'CAS Products':
         {
-          // if (value.trim().length < 3) {
-          // 	await dispatch({
-          // 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-          // 		payload: api.getCasProductByFilter(value, props.casListDataRequest)
-          // 	})
-          // } else {
           await dispatch({
             type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
             payload: api.getCasProductByString(value)
           })
-          // }
         }
         break
       case 'manufacturers':
@@ -163,18 +109,6 @@ export function handleFiltersValue(props, value) {
             payload: api.getManufacturersByString(value)
           })
         }
-        // case 'Companies':
-        // 	await dispatch({
-        // 		type: AT.ADMIN_GET_COMPANIES,
-        // 		payload: api.getCompanies({
-        // 			...props.companyListDataRequest,
-        // 			filters: [{
-        // 				operator: "LIKE",
-        // 				path: "Company.name",
-        // 				values: ['%' + value + '%']
-        // 			}]
-        // 		})
-        // 	})
         break
     }
   }
@@ -240,16 +174,6 @@ export function getUnNumbersByString(value) {
   }
 }
 
-// export function casDeleteItem(value, reloadFilter) {
-// 	return async dispatch => {
-// 		await dispatch({
-// 			type: AT.ADMIN_DELETE_CAS_PRODUCT,
-// 			payload: api.deleteCasProduct(value)
-// 		})
-// 		// Reload CAS Product list using filters
-// 		// dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
-// 	}
-// }
 
 export function getPrimaryBranchProvinces(id) {
   return {
@@ -272,14 +196,6 @@ export function getCompany(params) {
   }
 }
 
-/*
-export function getCompany(id) {
-	return {
-		type: AT.ADMIN_GET_COMPANY,
-		payload: api.getCompany(id)
-	}
-}
-*/
 
 export function udpateEnabled(id, enabled) {
   return {
