@@ -12,7 +12,10 @@ import {
   getUserRoles,
   getAdminRoles,
   getHazardClasses,
-  getPackagingGroups
+  getPackagingGroups,
+  getUnits,
+  getMeasureTypes,
+  getLanguages
 } from './actions'
 
 export const initialState = {
@@ -60,6 +63,18 @@ export const initialState = {
   packagingGroups: [],
   packagingGroupsDropdown: [],
   packagingGroupsLoading: false,
+
+  units: [],
+  unitsDropdown: [],
+  unitsLoading: false,
+
+  measureTypes: [],
+  measureTypesDropdown: [],
+  measureTypesLoading: false,
+
+  languages: [],
+  languagesDropdown: [],
+  languagesLoading: false
 }
 
 export default typeToReducer(
@@ -239,7 +254,7 @@ export default typeToReducer(
     [getHazardClasses.fulfilled]: (state, { payload }) => ({
       ...state,
       hazardClasses: payload,
-      hazardClassesDropdown: payload.hazardClasses.map((hClass, id) => {
+      hazardClassesDropdown: payload.map((hClass, id) => {
         return {
           key: id,
           text: hClass.classCode + ': ' + hClass.description,
@@ -260,7 +275,7 @@ export default typeToReducer(
     [getPackagingGroups.fulfilled]: (state, { payload }) => ({
       ...state,
       packagingGroups: payload,
-      packagingGroupsDropdown: payload.packagingGroups.map((pGroup, id) => {
+      packagingGroupsDropdown: payload.map((pGroup, id) => {
         return {
           key: id,
           text: pGroup.groupCode + ': ' + pGroup.description,
@@ -268,7 +283,71 @@ export default typeToReducer(
         }
       }),
       packagingGroupsLoading: false
-    })
+    }),
+
+    [getUnits.pending]: state => ({
+      ...state,
+      unitsLoading: true
+    }),
+    [getUnits.rejected]: state => ({
+      ...state,
+      unitsLoading: false
+    }),
+    [getUnits.fulfilled]: (state, { payload }) => ({
+      ...state,
+      units: payload,
+      unitsDropdown: payload.map((unit, id) => {
+        return {
+          key: id,
+          text: unit.name,  // ! ! or 'nameAbbreviation' ?
+          value: unit.id
+        }
+      }),
+      unitsLoading: false
+    }),
+
+    [getMeasureTypes.pending]: state => ({
+      ...state,
+      measureTypesLoading: true
+    }),
+    [getMeasureTypes.rejected]: state => ({
+      ...state,
+      measureTypesLoading: false
+    }),
+    [getMeasureTypes.fulfilled]: (state, { payload }) => ({
+      ...state,
+      measureTypes: payload,
+      measureTypesDropdown: payload.map((measType, id) => {
+        return {
+          key: id,
+          text: measType.name,
+          value: measType.id
+        }
+      }),
+      measureTypesLoading: false
+    }),
+
+    [getLanguages.pending]: state => ({
+      ...state,
+      languagesLoading: true
+    }),
+    [getLanguages.rejected]: state => ({
+      ...state,
+      languagesLoading: false
+    }),
+    [getLanguages.fulfilled]: (state, { payload }) => ({
+      ...state,
+      languages: payload,
+      languagesDropdown: payload.map(lang => {
+        return {
+          key: lang.languageAbbreviation,
+          text: lang.language,
+          value: lang.language
+        }
+      }),
+      languagesLoading: false
+    }),
+
   },
   initialState
 )

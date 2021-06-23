@@ -11,5 +11,8 @@ export default {
   getUserRoles: () => api.get('/prodex/api/roles?type=WITHOUT_ADMIN').then(response => response.data),
   getAdminRoles: () => api.get('/prodex/api/roles?type=ONLY_ADMIN').then(response => response.data),
   getHazardClasses: () => api.get('/prodex/api/hazard-classes').then(response => response.data),
-  getPackagingGroups: () => api.get('/prodex/api/packaging-groups').then(response => response.data)
+  getPackagingGroups: () => api.get('/prodex/api/packaging-groups').then(response => response.data),
+  getUnits: () => api.get('/prodex/api/units').then(response => response.data),
+  getMeasureTypes: () => api.get('/prodex/api/measure-types').then(response => response.data),
+  getLanguages: () => api.get('/prodex/api/cms/languages').then(response => response.data)
 }

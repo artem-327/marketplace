@@ -12,6 +12,9 @@ export const getUserRoles = createAsyncAction('GLOBAL_GET_USER_ROLES', () => api
 export const getAdminRoles = createAsyncAction('GLOBAL_GET_ADMIN_ROLES', () => api.getAdminRoles())
 export const getHazardClasses = createAsyncAction('GLOBAL_GET_HAZARD_CLASSES', () => api.getHazardClasses())
 export const getPackagingGroups = createAsyncAction('GLOBAL_GET_PACKAGING_GROUPS', () => api.getPackagingGroups())
+export const getUnits = createAsyncAction('GLOBAL_GET_UNITS', () => api.getUnits())
+export const getMeasureTypes = createAsyncAction('GLOBAL_GET_MEASURE_TYPES', () => api.getMeasureTypes())
+export const getLanguages = createAsyncAction('GLOBAL_GET_LANGUAGES', () => api.getLanguages())
 
 // TODO - deep test:
 // user roles + admin roles
@@ -20,6 +23,8 @@ export const getPackagingGroups = createAsyncAction('GLOBAL_GET_PACKAGING_GROUPS
 
 // TODO - to rework to global data reducer:
 // unit of measure  (getMeasureTypes?)
-// /prodex/api/currencies
 // /prodex/api/units
 // languages
+
+// Not used
+// /prodex/api/currencies
