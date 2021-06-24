@@ -1,12 +1,14 @@
-import confirm from '~/components/Confirmable/confirm'
-import { removeEmpty } from '~/utils/functions'
+import { FormattedNumber } from 'react-intl'
+// Components
+import ActionCell from '../../../../components/table/ActionCell'
+import { Checkbox } from 'semantic-ui-react'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
+import { removeEmpty } from '../../../../utils/functions'
+import { currency } from '../../../../constants/index'
 
-/**
- * Get datagrid row actions
- *
- * @param {object} props - Component props (datagrid, openPopup, formatMessage, deleteCarrier)
- */
-export const getActions = props => {
+
+const getActions = props => {
   const {
     datagrid,
     openPopup,
@@ -46,15 +48,7 @@ export const getActions = props => {
   ]
 }
 
-/**
- * Submit form - add or edit Carrier.
- * @category Admin Settings - Add/Edit Carrier
- * @method
- * @param {Object} values Object form values.
- * @param {Object} props Object module input props (updateCarrier, datagrid).
- * @return {none}
- */
-export const handleToggleSwitch = async (values, props) => {
+const handleToggleSwitch = async (values, props) => {
   const { updateCarrier, datagrid } = props
   try {
     let payload = {
@@ -67,4 +61,57 @@ export const handleToggleSwitch = async (values, props) => {
   } catch (e) {
     console.error(e)
   }
+}
+
+/**
+ * Get Rows in CarriersContainer using datagrid
+ * @category Admin Settings - Carrier
+ * @method
+ */
+export const makeRows = datagrid => datagrid.rows.map((row, index) => {
+  return {
+      ...row,
+      rawData: row
+  }
+})
+
+/**
+ * Get Rows in Carriers Component using props
+ * @category Admin Settings - Carrier
+ * @method
+ */
+export const getRows = (rows, props) => {
+  return rows.map(row => {
+    return {
+      ...row,
+      code: (
+        <ActionCell
+          row={row}
+          getActions={() => getActions(props)}
+          content={row.code}
+          onContentClick={() => props.openPopup(row.rawData)}
+        />
+      ),
+      priceMarkup: row.priceMarkup ? (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={row.priceMarkup}
+        />
+      ) : (
+        ''
+      ),
+      blindShipmentSupport: (
+        <Checkbox
+          key={`enabled${row.id}`}
+          toggle={true}
+          defaultChecked={row.blindShipmentSupport}
+          onClick={() => handleToggleSwitch(row.rawData, props)}
+          data-test={`admin_carrier_table_blind_shipment_support_${row.id}_chckb`}
+        />
+      )
+    }
+  })
 }

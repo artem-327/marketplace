@@ -1,3 +1,3 @@
-import Admin from './components/Admin'
+import Admin from './components/AdminContainer'
 
 export default Admin

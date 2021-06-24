@@ -1,94 +1,196 @@
-import * as AT from './action-types'
-import * as api from './api'
-import { updateIdentity } from '~/modules/auth/actions'
-import { Datagrid } from '~/modules/datagrid'
-import { getSafe } from '../../utils/functions'
-
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import Router from 'next/router'
+// Apis
+import * as api from './api'
+// Actions
+import { updateIdentity } from '../auth/actions'
+// Services
+import { Datagrid } from '../datagrid'
 
-export const removeEmpty = obj =>
-  Object.entries(obj).forEach(([key, val]) => {
-    if (val && typeof val === 'object') {
-      removeEmpty(val)
-      if (Object.entries(val).length === 0) delete obj[key]
-    } else {
-      if (val == null) delete obj[key]
-      else if (typeof val === 'string') {
-        if (val.trim() === '') delete obj[key]
-        else obj[key] = val.trim()
+
+export const openEditPopup = createAction('ADMIN_OPEN_EDIT_POPUP', editedData => editedData)
+export const closeEditPopup = createAction('ADMIN_CLOSE_EDIT_POPUP')
+export const openAddPopup = createAction('ADMIN_OPEN_ADD_POPUP', currentTab => currentTab)
+export const closeAddPopup = createAction('ADMIN_CLOSE_ADD_POPUP')
+export const closeConfirmPopup = createAction('ADMIN_CLOSE_CONFIRM_POPUP')
+export const postDwollaAccount = createAsyncAction('ADMIN_CREATE_DWOLLA_ACCOUNT', (values, companyId) => api.postNewDwollaAccount(values, companyId))
+export const getHazardClassesDataRequest = createAsyncAction('ADMIN_GET_HAZARD_CLASSES', () => api.getHazardClasses())
+export const getPackagingGroupsDataRequest = createAsyncAction('ADMIN_GET_PACKAGING_GROUPS', () => api.getPackagingGroups())
+export const getMeasureTypesDataRequest = createAsyncAction('ADMIN_GET_MEASURE_TYPES', () => api.getMeasureTypes())
+export const getAllUnitsOfMeasuresDataRequest = createAsyncAction('ADMIN_GET_ALL_UNITS_OF_MEASURES', () => api.getAllUnitsOfMeasures())
+export const getAllUnNumbersDataRequest = createAsyncAction('ADMIN_GET_UN_NUMBERS', () => api.getAllUnNumbers())
+export const getUnNumbersByString = createAsyncAction('ADMIN_GET_UN_NUMBERS_BY_STRING', (value) => api.getUnNumbersByString(value))
+export const getPrimaryBranchProvinces = createAsyncAction('ADMIN_GET_PRIMARY_BRANCH_PROVINCES', (id) => api.getProvinces(id))
+export const getMailingBranchProvinces = createAsyncAction('ADMIN_GET_MAILING_BRANCH_PROVINCES', (id) => api.getProvinces(id))
+export const getCompany = createAsyncAction('ADMIN_GET_FULL_COMPANY', (params) => api.getCompany(params))
+export const udpateEnabled = createAsyncAction('ADMIN_ENABLED_COMPANY', (id, enabled) => api.udpateEnabled(id, enabled))
+export const searchUnNumber = createAsyncAction('ADMIN_SEARCH_UN_NUMBER', (pattern) => api.searchUnNumber(pattern))
+export const searchManufacturers = createAsyncAction('ADMIN_SEARCH_MANUFACTURERS', (text, limit = false) => api.searchManufacturers(text, limit))
+export const getProductsCatalogRequest = createAsyncAction('ADMIN_GET_PRODUCTS_CATALOG_DATA', async () => {
+  const [hazardClasses, packagingGroups] = await Promise.all([api.getHazardClasses(), api.getPackagingGroups()])
+  return {
+    hazardClasses: hazardClasses,
+    packagingGroups: packagingGroups
+  }
+})
+export const registerDwollaAccount = createAction('ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP', data => data)
+export const closeRegisterDwollaAccount = createAction('ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP')
+export const openPopup = createAction('ADMIN_OPEN_POPUP', data => ({ data }))
+export const closePopup = createAction('ADMIN_CLOSE_POPUP')
+export const deleteUnit = createAsyncAction('ADMIN_DELETE_UNIT', async (id) => {
+  const result = await api.deleteUnit(id)
+  Datagrid.removeRow(id)
+  return result
+})
+export const deleteUnitOfPackaging = createAsyncAction('ADMIN_DELETE_UNIT_OF_PACKAGING', async (id) => {
+  const result = await api.deleteUnitOfPackaging(id)
+  Datagrid.removeRow(id)
+  return result
+})
+export const getAddressSearchPrimaryBranch = createAsyncAction('ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH', (body) => api.getAddressSearch(body))
+export const getAddressSearchMailingBranch = createAsyncAction('ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH', (body) => api.getAddressSearch(body))
+export const reviewRequest = createAsyncAction('ADMIN_REVIEW_REQUESTED', async (row, datagrid) => {
+  const result = await api.reviewRequest(row.id)
+  datagrid.updateRow(row.id, () => ({
+    ...row,
+    reviewRequested: !row.reviewRequested
+  }))
+  return result
+})
+export const addAttachment = createAsyncAction('ADMIN_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
+  const data = await api.addAttachment(attachment, type, additionalParams)
+  return data
+})
+export const linkAttachment = createAsyncAction('ADMIN_LINK_ATTACHMENT', async (isLot, echoId, attachmentIds) => {
+  if (Array.isArray(attachmentIds)) {
+    const asyncForEach = async (array, callback) => {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array)
       }
     }
-  })
 
-export function openEditPopup(editedData) {
-  return {
-    type: AT.ADMIN_OPEN_EDIT_POPUP,
-    payload: editedData
+    await asyncForEach(attachmentIds, async (attachment, index) => {
+      await api.linkAttachment(echoId, attachment.id)
+    })
+  } else {
+    await api.linkAttachment(echoId, attachmentIds)
   }
-}
 
-export function closeEditPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_EDIT_POPUP
+  return true
+})
+export const removeAttachment = createAsyncAction('ADMIN_REMOVE_ATTACHMENT', aId => api.removeAttachment(aId))
+export const removeAttachmentLink = createAsyncAction('ADMIN_REMOVE_ATTACHMENT_LINK', (isLot, echoId, aId) => api.removeAttachmentLink(echoId, aId))
+export const addUnNumber = createAction('ADMIN_ADD_UN_NUMBER', payload => payload)
+export const getCompanyDetails = createAsyncAction('ADMIN_GET_COMPANY_DETAILS', id => api.getCompanyDetails(id))
+export const addNmfcNumber = createAsyncAction('ADD_NMFC_NUMBER', async (nmfc) => {
+  const data = await api.addNmfcNumber(nmfc)
+  Datagrid.loadData()
+  return data
+})
+export const editNmfcNumber = createAsyncAction('EDIT_NMFC_NUMBER', async (nmfc) => {
+  const data = await api.editNmfcNumber(nmfc)
+  Datagrid.updateRow(nmfc.id, () => nmfc)
+  return data
+})
+export const deleteNmfcNumber = createAsyncAction('DELETE_NMFC_NUMBER', async (id) => {
+  const data = await api.deleteNmfcNumber(id)
+  Datagrid.removeRow(id)
+  return data
+})
+export const getUsersMe = createAsyncAction('ADMIN_GET_USERS_ME', () => api.getUsersMe())
+export const getUser = createAsyncAction('ADMIN_GET_USER', id => api.getUser(id))
+export const userSwitchEnableDisable = createAsyncAction('ADMIN_USER_SWITCH_ENABLE_DISABLE', async (id, row) => {
+  const data = await api.userSwitchEnableDisable(id)
+  Datagrid.updateRow(id, () => ({ ...row, enabled: !row.enabled }))
+  return data
+})
+export const postNewUserRequest = createAsyncAction('ADMIN_POST_NEW_USER', data => api.postNewUserRequest(data))
+export const submitUserEdit = createAsyncAction('ADMIN_EDIT_USER', (id, data) => api.submitUserEdit(id, data))
+export const deleteUser = createAsyncAction('ADMIN_DELETE_USER', id => api.deleteUser(id))
+export const getUserRoles = createAsyncAction('ADMIN_GET_ROLES', () => api.getUserRoles())
+export const getAdminRoles = createAsyncAction('ADMIN_GET_ADMIN_ROLES', () => api.getAdminRoles())
+export const searchCompany = createAsyncAction('ADMIN_SEARCH_COMPANY', (companyText, limit) => api.searchCompany(companyText, limit))
+export const initSearchCompany = createAsyncAction('ADMIN_INIT_SEARCH_COMPANY', id => api.getCompanyInfo(id))
+export const searchTags = createAsyncAction('ADMIN_SEARCH_TAGS', tag => api.searchTags({
+  orFilters: [
+    {
+      operator: 'LIKE',
+      path: 'Tag.name',
+      values: [tag.toString()]
+    }
+  ],
+  pageNumber: 0,
+  pageSize: 50
+}))
+export const searchMarketSegments = createAsyncAction('ADMIN_SEARCH_MARKET_SEGMENTS', segment => api.searchMarketSegments({
+  orFilters: [
+    {
+      operator: 'LIKE',
+      path: 'MarketSegment.name',
+      values: [segment.toString()]
+    }
+  ],
+  pageNumber: 0,
+  pageSize: 50
+}))
+export const searchSellMarketSegments = createAsyncAction('ADMIN_SEARCH_SELL_MARKET_SEGMENTS', segment => api.searchMarketSegments({
+  orFilters: [
+    {
+      operator: 'LIKE',
+      path: 'MarketSegment.name',
+      values: [segment.toString()]
+    }
+  ],
+  pageNumber: 0,
+  pageSize: 50
+}))
+export const searchBuyMarketSegments = createAsyncAction('ADMIN_SEARCH_BUY_MARKET_SEGMENTS', segment => api.searchMarketSegments({
+  orFilters: [
+    {
+      operator: 'LIKE',
+      path: 'MarketSegment.name',
+      values: [segment.toString()]
+    }
+  ],
+  pageNumber: 0,
+  pageSize: 50
+}))
+export const handleVariableSave = createAction('ADMIN_HANDLE_VARIABLE_CHANGE', (variable, value) => ({ variable, value }))
+export const getLogisticsProviders = createAsyncAction('ADMIN_GET_LOGISTICS_PROVIDERS', () => api.getLogisticsProviders())
+export const postNewLogisticsProvider = createAsyncAction('ADMIN_POST_NEW_LOGISTICS_PROVIDER', data => api.postNewLogisticsProvider(data))
+export const updateLogisticsProvider = createAsyncAction('ADMIN_EDIT_LOGISTICS_PROVIDER', (id, data) => api.updateLogisticsProvider(id, data))
+export const deleteLogisticsProvider = createAsyncAction('ADMIN_DELETE_LOGISTICS_PROVIDER', id => api.deleteLogisticsProvider(id))
+export const postNewCarrier = createAsyncAction('ADMIN_POST_NEW_CARRIER', data => api.postNewCarrier(data))
+export const updateCarrier = createAsyncAction('ADMIN_EDIT_CARRIER', (id, data) => api.updateCarrier(id, data))
+export const deleteCarrier = createAsyncAction('ADMIN_DELETE_CARRIER', id => api.deleteCarrier(id))
+export const handleFiltersValue = createAsyncAction('ADMIN_HANDLE_FILTERS_VALUE', async (props, value) => {
+  let filterValue = value
+  let casProductsRows = []
+  let manufacturersRows = []
+
+  switch (props.currentTab) {
+    case 'CAS Products':
+      casProductsRows = await api.getCasProductByString(value)
+      break
+    case 'manufacturers':
+      manufacturersRows = await api.getManufacturersByString(value)
+      break
   }
-}
 
-export function openAddPopup(currentTab) {
-  return {
-    type: AT.ADMIN_OPEN_ADD_POPUP,
-    payload: currentTab
-  }
-}
-export function closeAddPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_ADD_POPUP
-  }
-}
-
-// export function handleOpenConfirmPopup(id) {
-// 	return {
-// 		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
-// 		payload: id
-// 	}
-// }
-
-export function deleteConfirmation(id, config = null) {
+  return { filterValue, casProductsRows, manufacturersRows }
+})
+export const getDataRequest = createAsyncAction('ADMIN_GET_DATA_REQUEST', (config, values = null) => api.getDataRequest(config, values))
+export const deleteConfirmation = createAsyncAction('ADMIN_DELETE_CONFIRM_POPUP', async (id, config = null) => {
   if (config != null) {
     if (typeof config.api.delete !== 'undefined') {
-      return async dispatch => {
-        await dispatch({
-          type: config.api.delete.typeRequest,
-          payload: api.deleteItem(config, id)
-        })
-        Datagrid.removeRow(id)
-      }
-    }
-  } else {
-    return {
-      type: AT.ADMIN_DELETE_CONFIRM_POPUP
+      const data = api.deleteItem(config, id)
+      Datagrid.removeRow(id)
+      return data
     }
   }
-}
-export function confirmationSuccess() {
-  return {
-    type: AT.ADMIN_CONFIRM_SUCCESS
-  }
-}
-
-export function closeConfirmPopup() {
-  return {
-    type: AT.ADMIN_CLOSE_CONFIRM_POPUP
-  }
-}
-
-export function getDataRequest(config, values = null) {
-  return {
-    type: config.api.get.typeRequest,
-    payload: api.getDataRequest(config, values)
-  }
-}
-
-export function postNewRequest(config, values) {
+  return null
+})
+export const postNewRequest = (config, values) => {
   return async dispatch => {
     await dispatch({
       type: config?.api?.post?.pendingRequest
@@ -112,15 +214,7 @@ export function postNewRequest(config, values) {
       )
   }
 }
-
-export function postDwollaAccount(values, companyId) {
-  return {
-    type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
-    payload: api.postNewDwollaAccount(values, companyId)
-  }
-}
-
-export function putEditedDataRequest(config, id, values) {
+export const putEditedDataRequest = (config, id, values) => {
   return async dispatch => {
     const editedItem = await api.putEditedDataRequest(config, values, id)
 
@@ -132,281 +226,6 @@ export function putEditedDataRequest(config, id, values) {
     dispatch(closePopup())
   }
 }
-
-export function handleFiltersValue(props, value) {
-  return async dispatch => {
-    // save filter value
-    await dispatch({
-      type: AT.ADMIN_HANDLE_FILTERS_VALUE,
-      payload: value
-    })
-
-    switch (props.currentTab) {
-      case 'CAS Products':
-        {
-          // if (value.trim().length < 3) {
-          // 	await dispatch({
-          // 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-          // 		payload: api.getCasProductByFilter(value, props.casListDataRequest)
-          // 	})
-          // } else {
-          await dispatch({
-            type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
-            payload: api.getCasProductByString(value)
-          })
-          // }
-        }
-        break
-      case 'manufacturers':
-        {
-          await dispatch({
-            type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
-            payload: api.getManufacturersByString(value)
-          })
-        }
-        // case 'Companies':
-        // 	await dispatch({
-        // 		type: AT.ADMIN_GET_COMPANIES,
-        // 		payload: api.getCompanies({
-        // 			...props.companyListDataRequest,
-        // 			filters: [{
-        // 				operator: "LIKE",
-        // 				path: "Company.name",
-        // 				values: ['%' + value + '%']
-        // 			}]
-        // 		})
-        // 	})
-        break
-    }
-  }
-}
-
-export function getHazardClassesDataRequest() {
-  return {
-    type: AT.ADMIN_GET_HAZARD_CLASSES,
-    payload: api.getHazardClasses()
-  }
-}
-
-export function getPackagingGroupsDataRequest() {
-  return {
-    type: AT.ADMIN_GET_PACKAGING_GROUPS,
-    payload: api.getPackagingGroups()
-  }
-}
-
-export function getMeasureTypesDataRequest() {
-  return {
-    type: AT.ADMIN_GET_MEASURE_TYPES,
-    payload: api.getMeasureTypes()
-  }
-}
-
-export function getAllUnitsOfMeasuresDataRequest() {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_PENDING
-    })
-    await api
-      .getAllUnitsOfMeasures()
-      .then(
-        async response =>
-          await dispatch({
-            type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_FULFILLED,
-            payload: response.data
-          })
-      )
-      .catch(
-        async err =>
-          await dispatch({
-            type: AT.ADMIN_GET_ALL_UNITS_OF_MEASURES_REJECTED,
-            error: err
-          })
-      )
-  }
-}
-
-
-export function getAllUnNumbersDataRequest() {
-  return {
-    type: AT.ADMIN_GET_UN_NUMBERS,
-    payload: api.getAllUnNumbers()
-  }
-}
-
-export function getUnNumbersByString(value) {
-  return {
-    type: AT.ADMIN_GET_UN_NUMBERS_BY_STRING,
-    payload: api.getUnNumbersByString(value)
-  }
-}
-
-// export function casDeleteItem(value, reloadFilter) {
-// 	return async dispatch => {
-// 		await dispatch({
-// 			type: AT.ADMIN_DELETE_CAS_PRODUCT,
-// 			payload: api.deleteCasProduct(value)
-// 		})
-// 		// Reload CAS Product list using filters
-// 		// dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
-// 	}
-// }
-
-export function getPrimaryBranchProvinces(id) {
-  return {
-    type: AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES,
-    payload: api.getProvinces(id)
-  }
-}
-
-export function getMailingBranchProvinces(id) {
-  return {
-    type: AT.ADMIN_GET_MAILING_BRANCH_PROVINCES,
-    payload: api.getProvinces(id)
-  }
-}
-
-export function getCompany(params) {
-  return {
-    type: AT.ADMIN_GET_FULL_COMPANY,
-    payload: api.getCompany(params)
-  }
-}
-
-/*
-export function getCompany(id) {
-	return {
-		type: AT.ADMIN_GET_COMPANY,
-		payload: api.getCompany(id)
-	}
-}
-*/
-
-export function udpateEnabled(id, enabled) {
-  return {
-    type: AT.ADMIN_ENABLED_COMPANY,
-    payload: api.udpateEnabled(id, enabled)
-  }
-}
-
-export function searchUnNumber(pattern) {
-  return {
-    type: AT.ADMIN_SEARCH_UN_NUMBER,
-    payload: api.searchUnNumber(pattern)
-  }
-}
-
-export function searchManufacturers(text, limit = false) {
-  return {
-    type: AT.ADMIN_SEARCH_MANUFACTURERS,
-    payload: api.searchManufacturers(text, limit)
-  }
-}
-
-export function prepareSearchedCasProducts(elements) {
-  return {
-    type: AT.ADMIN_PREPARE_CAS_PRODUCTS,
-    payload: {
-      elements
-    }
-  }
-}
-
-export function getProductsCatalogRequest() {
-  return dispatch => {
-    dispatch({
-      type: AT.ADMIN_GET_PRODUCTS_CATALOG_DATA,
-      async payload() {
-        const [hazardClasses, packagingGroups] = await Promise.all([api.getHazardClasses(), api.getPackagingGroups()])
-        return {
-          hazardClasses: hazardClasses,
-          packagingGroups: packagingGroups
-        }
-      }
-    })
-  }
-}
-
-export function editEchoProductChangeTab(editTab, force = false, data = null) {
-  return {
-    type: AT.ADMIN_EDIT_COMPANY_GENERIC_PRODUCT_CHANGE_TAB,
-    payload: { editTab, force, data }
-  }
-}
-
-export function openEditEchoProduct(id, editTab, force = false) {
-  return async dispatch => {
-    dispatch(editEchoProductChangeTab(editTab, force, { id }))
-  }
-}
-
-export function openRegisterDwollaAccount(data) {
-  return async dispatch => {
-    dispatch(getCompany(data.id))
-    dispatch(registerDwollaAccount(data))
-  }
-}
-
-export function registerDwollaAccount(data) {
-  return {
-    type: AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP,
-    payload: data
-  }
-}
-
-export function closeRegisterDwollaAccount() {
-  return {
-    type: AT.ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP
-  }
-}
-
-export function openPopup(data) {
-  return {
-    type: AT.ADMIN_OPEN_POPUP,
-    payload: { data }
-  }
-}
-
-export function closePopup() {
-  return {
-    type: AT.ADMIN_CLOSE_POPUP
-  }
-}
-
-export const deleteUnit = id => {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_DELETE_UNIT,
-      payload: api.deleteUnit(id)
-    })
-    Datagrid.removeRow(id)
-  }
-}
-
-export const deleteUnitOfPackaging = id => {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING,
-      payload: api.deleteUnitOfPackaging(id)
-    })
-    Datagrid.removeRow(id)
-  }
-}
-
-export function getAddressSearchPrimaryBranch(body) {
-  return {
-    type: AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH,
-    payload: api.getAddressSearch(body)
-  }
-}
-
-export function getAddressSearchMailingBranch(body) {
-  return {
-    type: AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH,
-    payload: api.getAddressSearch(body)
-  }
-}
-
 export const takeOverCompanyFinish = () => {
   return async dispatch => {
     let payload = await api.takeOverCompanyFinish()
@@ -414,240 +233,3 @@ export const takeOverCompanyFinish = () => {
     Router.push('/companies/companies')
   }
 }
-
-export const reviewRequest = (row, datagrid) => {
-  return async dispatch => {
-    await dispatch({
-      type: AT.ADMIN_REVIEW_REQUESTED,
-      payload: await api.reviewRequest(row.id)
-    })
-    datagrid.updateRow(row.id, () => ({
-      ...row,
-      reviewRequested: !row.reviewRequested
-    }))
-  }
-}
-
-export function loadFile(attachment) {
-  return {
-    type: AT.ADMIN_LOAD_FILE,
-    payload: api.loadFile(attachment)
-  }
-}
-
-export function addAttachment(attachment, type, additionalParams = {}) {
-  return {
-    type: AT.ADMIN_ADD_ATTACHMENT,
-    async payload() {
-      const data = await api.addAttachment(attachment, type, additionalParams)
-      return data
-    }
-  }
-}
-
-export function linkAttachment(isLot, echoId, attachmentIds) {
-  return {
-    type: AT.ADMIN_LINK_ATTACHMENT,
-    async payload() {
-      if (Array.isArray(attachmentIds)) {
-        async function asyncForEach(array, callback) {
-          for (let index = 0; index < array.length; index++) {
-            await callback(array[index], index, array)
-          }
-        }
-
-        await asyncForEach(attachmentIds, async (attachment, index) => {
-          await api.linkAttachment(echoId, attachment.id)
-        })
-      } else {
-        await api.linkAttachment(echoId, attachmentIds)
-      }
-
-      return true
-    }
-  }
-}
-
-export function removeAttachment(aId) {
-  return async dispatch => {
-    await dispatch({ type: AT.ADMIN_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
-  }
-}
-
-export function removeAttachmentLink(isLot, echoId, aId) {
-  return {
-    type: AT.ADMIN_REMOVE_ATTACHMENT_LINK,
-    payload: api.removeAttachmentLink(echoId, aId)
-  }
-}
-
-export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
-
-export const getCompanyDetails = id => ({ type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id) })
-
-export const addNmfcNumber = nmfc => {
-  return async dispatch => {
-    await dispatch({ type: AT.ADD_NMFC_NUMBER, payload: api.addNmfcNumber(nmfc) })
-    Datagrid.loadData()
-  }
-}
-
-export const editNmfcNumber = nmfc => {
-  return async dispatch => {
-    await dispatch({ type: AT.EDIT_NMFC_NUMBER, payload: api.editNmfcNumber(nmfc) })
-    Datagrid.updateRow(nmfc.id, () => nmfc)
-  }
-}
-
-export const deleteNmfcNumber = id => {
-  return async dispatch => {
-    await dispatch({ type: AT.DELETE_NMFC_NUMBER, payload: api.deleteNmfcNumber(id) })
-    Datagrid.removeRow(id)
-  }
-}
-
-export const getUsersMe = () => ({ type: AT.ADMIN_GET_USERS_ME, payload: api.getUsersMe() })
-
-export const getUser = id => ({ type: AT.ADMIN_GET_USER, payload: api.getUser(id) })
-
-export const userSwitchEnableDisable = (id, row) => {
-  Datagrid.updateRow(id, () => ({ ...row, enabled: !row.enabled }))
-  return { type: AT.ADMIN_USER_SWITCH_ENABLE_DISABLE, payload: api.userSwitchEnableDisable(id) }
-}
-
-export const postNewUserRequest = data => ({
-  type: AT.ADMIN_POST_NEW_USER,
-  payload: api.postNewUserRequest(data)
-})
-
-export const submitUserEdit = (id, data) => ({
-  type: AT.ADMIN_EDIT_USER,
-  payload: api.submitUserEdit(id, data)
-})
-
-export const deleteUser = id => ({
-  type: AT.ADMIN_DELETE_USER,
-  payload: api.deleteUser(id)
-})
-
-export const getUserRoles = () => ({
-  type: AT.ADMIN_GET_ROLES,
-  payload: api.getUserRoles()
-})
-
-export const getAdminRoles = () => ({
-  type: AT.ADMIN_GET_ADMIN_ROLES,
-  payload: api.getAdminRoles()
-})
-
-export const searchCompany = (companyText, limit) => ({
-  type: AT.ADMIN_SEARCH_COMPANY,
-  payload: api.searchCompany(companyText, limit)
-})
-
-export const initSearchCompany = id => ({
-  type: AT.ADMIN_INIT_SEARCH_COMPANY,
-  payload: api.getCompanyInfo(id)
-})
-
-export const searchTags = tag => ({
-  type: AT.ADMIN_SEARCH_TAGS,
-  payload: api.searchTags({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'Tag.name',
-        values: [tag.toString()]
-      }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
-})
-
-export const searchMarketSegments = segment => ({
-  type: AT.ADMIN_SEARCH_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'MarketSegment.name',
-        values: [segment.toString()]
-      }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
-})
-
-export const searchSellMarketSegments = segment => ({
-  type: AT.ADMIN_SEARCH_SELL_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'MarketSegment.name',
-        values: [segment.toString()]
-      }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
-})
-
-export const searchBuyMarketSegments = segment => ({
-  type: AT.ADMIN_SEARCH_BUY_MARKET_SEGMENTS,
-  payload: api.searchMarketSegments({
-    orFilters: [
-      {
-        operator: 'LIKE',
-        path: 'MarketSegment.name',
-        values: [segment.toString()]
-      }
-    ],
-    pageNumber: 0,
-    pageSize: 50
-  })
-})
-
-export function handleVariableSave(variable, value) {
-  return {
-    type: AT.ADMIN_HANDLE_VARIABLE_CHANGE,
-    payload: { variable, value }
-  }
-}
-
-export const getLogisticsProviders = () => ({
-  type: AT.ADMIN_GET_LOGISTICS_PROVIDERS,
-  payload: api.getLogisticsProviders()
-})
-
-export const postNewLogisticsProvider = data => ({
-  type: AT.ADMIN_POST_NEW_LOGISTICS_PROVIDER,
-  payload: api.postNewLogisticsProvider(data)
-})
-
-export const updateLogisticsProvider = (id, data) => ({
-  type: AT.ADMIN_EDIT_LOGISTICS_PROVIDER,
-  payload: api.updateLogisticsProvider(id, data)
-})
-
-export const deleteLogisticsProvider = id => ({
-  type: AT.ADMIN_DELETE_LOGISTICS_PROVIDER,
-  payload: api.deleteLogisticsProvider(id)
-})
-
-export const postNewCarrier = data => ({
-  type: AT.ADMIN_POST_NEW_CARRIER,
-  payload: api.postNewCarrier(data)
-})
-
-export const updateCarrier = (id, data) => ({
-  type: AT.ADMIN_EDIT_CARRIER,
-  payload: api.updateCarrier(id, data)
-})
-
-export const deleteCarrier = id => ({
-  type: AT.ADMIN_DELETE_CARRIER,
-  payload: api.deleteCarrier(id)
-})

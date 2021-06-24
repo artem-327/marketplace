@@ -29,7 +29,6 @@ import { downloadAttachment } from '../../inventory/actions'
 import { getSafe, getMimeType, getFormattedAddress } from '../../../utils/functions'
 // Constants
 import { columns, CONTENT_SUBCOLUMNS, INITIAL_VALUES, VALIDATION_SCHEME } from './WarehouseCredentials.constants'
-import { groupActions } from '../../company-product-info/constants'
 // Styles
 import {
   PositionHeaderSettings,
@@ -42,7 +41,6 @@ import {
   FormArea,
   ButtonGroup
 } from './WarehouseCredentials.styles'
-import { config } from '../../admin/config'
 
 class WarehouseCredentialsPending extends Component {
   state = {

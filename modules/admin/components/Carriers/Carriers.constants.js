@@ -4,9 +4,7 @@ export const COLUMNS = [
   {
     name: 'code',
     title: (
-      <FormattedMessage id='carrier.code' defaultMessage='Code'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='carrier.code' defaultMessage='Code' />
     ),
     width: 300,
     allowReordering: false,
@@ -15,9 +13,7 @@ export const COLUMNS = [
   {
     name: 'blindShipmentSupport',
     title: (
-      <FormattedMessage id='carrier.blindShipmentSupport' defaultMessage='Blind Shipment Support'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='carrier.blindShipmentSupport' defaultMessage='Blind Shipment Support' />
     ),
     width: 200,
     align: 'center',
@@ -26,9 +22,7 @@ export const COLUMNS = [
   {
     name: 'priceMarkup',
     title: (
-      <FormattedMessage id='carrier.priceMarkup' defaultMessage='Price Markup'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='carrier.priceMarkup' defaultMessage='Price Markup' />
     ),
     width: 200,
     sortPath: 'LogisticsCarrier.priceMarkup'

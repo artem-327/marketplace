@@ -28,7 +28,7 @@
       "./modules/inventory/shared-listings",
       "./modules/inventory/my-listings",
       "./modules/inventory/my-products",
-      "./modules/admin/components/Carriers",
+      "./modules/admin",
       "./modules/company-form/components",
       "./modules/operations",
       "./modules/orders",

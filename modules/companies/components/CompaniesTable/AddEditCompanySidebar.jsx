@@ -15,7 +15,7 @@ import { postCompanyLogo, deleteCompanyLogo } from '../../../company-form/action
 import { PhoneNumber } from '../../../phoneNumber'
 import { Required } from '../../../../components/constants/layout'
 import { withDatagrid } from '../../../datagrid'
-import { FlexSidebar, FlexContent, HighSegment, LabeledRow } from '../../../admin/constants/layout'
+import { FlexSidebar, FlexContent, HighSegment } from './AddEditCompanySidebar.styles'
 import ErrorFocus from '../../../../components/error-focus'
 
 // Services
