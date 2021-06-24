@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 //Services
 import { getSafe } from '../../utils/functions'
 
+const getIsReady = state => (getSafe(() => state.auth.identity, null) !== null) && (getSafe(() => state.auth.identity.isAdmin, null) !== null)
 const getIsAdmin = state => getSafe(() => state.auth.identity.isAdmin, false)
 const getTakeover = state => getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false)
 const getCompanySumOfPurchasesMonthly = state => getSafe(() => state.dashboard.data.companySumOfPurchasesMonthly, '')
@@ -89,6 +90,9 @@ const getTop10ProductGroups = state => getSafe(() => state.dashboard.data.top10P
     : []
 const getDailyStats = state => getSafe(() => state.dashboard.dailyStats, null)
 
+export const makeGetIsReady = () => {
+    return createSelector([getIsReady], isReady => isReady)
+}
 export const makeGetIsAdmin = () => {
     return createSelector([getIsAdmin], isAdmin => isAdmin)
 }
