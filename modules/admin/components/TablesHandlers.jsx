@@ -14,6 +14,18 @@ import { usePrevious } from '../../../hooks'
 import { PositionHeaderSettings, DivCustomRow } from '../styles'
 
 /**
+ * Handle Filter Value Change
+ * @category Admin Settings
+ * @method
+ */
+const handleFiltersValue = debounce((filter, props) => {
+  const { datagrid } = props
+  datagrid.setSearch(filter, true, 'pageFilters')
+  props.handleFiltersValue(props, filter)
+  props.handleVariableSave('tableHandlersFilters', { [props.currentTab]: filter })
+}, 300)
+
+/**
  * TablesHandlers Component
  * @category Admin Settings
  * @components
@@ -31,23 +43,23 @@ const TablesHandlers = props => {
       if (currentTab) {
         const filter = tableHandlersFilters[currentTab]
         if (filter) {
-          handleFiltersValue(filter)
+          handleFiltersValue(filter, props)
         } else {
-          handleFiltersValue(null)
+          handleFiltersValue(null, props)
         }
       }
     } else {
       if (currentTab) {
         const filter = state[currentTab]
         if (filter) {
-          handleFiltersValue(filter)
+          handleFiltersValue(filter, props)
         } else {
-          handleFiltersValue(null)
+          handleFiltersValue(null, props)
         }
       }
     }
 
-    return () => { props.handleVariableSave('tableHandlersFilters', state) }
+    return () => props.handleVariableSave('tableHandlersFilters', state)
   }, [])
 
   useEffect(() => {
@@ -56,22 +68,12 @@ const TablesHandlers = props => {
       props.datagrid.clear()
       const filter = state[currentTab]
       if (filter) {
-        handleFiltersValue(filter)
+        handleFiltersValue(filter, props)
       } else {
-        handleFiltersValue(null)
+        handleFiltersValue(null, props)
       }
     }
   }, [props.currentTab])
-
-  /**
-   * Handle Filter Value Change
-   * @category Admin Settings
-   * @method
-   */
-  const handleFiltersValue = debounce(filter => {
-    const { datagrid } = props
-    datagrid.setSearch(filter, true, 'pageFilters')
-  }, 300)
 
   /**
    * Handle Filter Value Change in Input Search
@@ -87,7 +89,7 @@ const TablesHandlers = props => {
       [data.name]: data.value
     }
     setState({ [currentTab]: filter })
-    handleFiltersValue(filter)
+    handleFiltersValue(filter, props)
   }
 
   const { currentTab, openPopup, intl } = props
