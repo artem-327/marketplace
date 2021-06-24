@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Popup, List, Icon, Tab, Grid, Input, Dropdown } from 'semantic-ui-react'
 import { MoreVertical, Sliders } from 'react-feather'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withRouter } from 'next/router'
@@ -20,7 +20,7 @@ import { Datagrid } from '~/modules/datagrid'
 import { debounce } from 'lodash'
 import { ArrayToFirstItem } from '~/components/formatted-messages/'
 import SearchByNamesAndTags from '~/modules/search'
-import { getSafe } from '~/utils/functions'
+import { getSafe, uniqueArrayByKey } from '~/utils/functions'
 import { Filter } from '~/modules/filter'
 import { CustomRowDiv } from '~/modules/inventory/constants/layout'
 import MakeOfferPopup from './MakeOfferPopup'
@@ -67,6 +67,11 @@ const FlexContainerSmall = styled.div`
   flex-grow: 0;
   flex-shrink: 0;
   padding: 10px 0;
+`
+
+const DropdownStyled = styled(Dropdown)`
+  width: 370px;
+  z-index: 600 !important;
 `
 
 class Listings extends Component {
@@ -314,6 +319,17 @@ class Listings extends Component {
     )
   }
 
+  handleSellerChange = (e, { value }) => {
+    const val = value === '' ? 0 : value
+    const selectedSellerOption = this.props.searchedCompaniesDropdown.find(el => el.value === val)
+    this.props.saveSellerOption(selectedSellerOption)
+    this.handleFiltersValue(this.state.filterValues)
+  }
+
+  handleSearchSellerChange = debounce(text => {
+    this.props.searchCompanies(text)
+  }, 300)
+
   getRows = () => {
     const {
       rows,
@@ -494,17 +510,29 @@ class Listings extends Component {
       tableHandlersFiltersListings,
       activeMarketplaceFilter,
       isOpenPopup,
-      buyEligible
+      buyEligible,
+      selectedSellerOption,
+      searchedCompaniesDropdown,
+      searchedCompaniesLoading
     } = this.props
     const {
       columns,
       openFilterPopup,
       viewOnlyPopupOpen,
       buyAttemptHasDea,
-      buyAttemptHasDhs
+      buyAttemptHasDhs,
+      filterValues
     } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
+
+    let searchedCompaniesOptions = searchedCompaniesDropdown.slice()
+    if (selectedSellerOption) {
+      if (!searchedCompaniesOptions.some(el => el.key === selectedSellerOption.key)) {
+        searchedCompaniesOptions.push(selectedSellerOption)
+      }
+    }
+    const seller = selectedSellerOption ? selectedSellerOption.value : 0
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
@@ -521,6 +549,20 @@ class Listings extends Component {
                     filterType='marketplace'
                   />
                 </CustomSearchNameTags>
+              </div>
+              <div className='column'>
+                <DropdownStyled
+                  style={{ width: '210px' }}
+                  name='seller'
+                  selection
+                  clearable={seller !== 0}
+                  search={options => options}
+                  value={seller}
+                  options={searchedCompaniesOptions}
+                  loading={searchedCompaniesLoading}
+                  onChange={this.handleSellerChange}
+                  onSearchChange={(e, { searchQuery }) => this.handleSearchSellerChange(searchQuery)}
+                />
               </div>
               <div className='column'>
                 <Button

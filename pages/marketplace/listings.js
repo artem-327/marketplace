@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-import { Listings } from '~/modules/marketplace/listings'
+import Listings from '~/modules/marketplace/listings'
 import { injectIntl } from 'react-intl'
 
 class ListingsPage extends Component {
