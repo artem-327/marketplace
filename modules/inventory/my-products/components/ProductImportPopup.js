@@ -78,8 +78,8 @@ class ProductImportPopup extends Component {
   }
 
   async componentDidMount() {
-    const { broadcastTemplates, getTemplates, formatMessage, companies, companyGenericProduct } = this.props
-    if (broadcastTemplates && !broadcastTemplates.length && !companies && !companyGenericProduct) {
+    const { broadcastTemplates, getTemplates, companies, companyGenericProduct, productOffer } = this.props
+    if (productOffer && broadcastTemplates && !broadcastTemplates.length && !companies && !companyGenericProduct) {
       await getTemplates()
     }
   }
