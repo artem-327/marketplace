@@ -34,7 +34,8 @@ export const initialState = {
   tableHandlersFiltersBidsSent: null,
   tableHandlersFiltersBidsReceived: null,
   isOpenPopup: false,
-  popupValues: null
+  popupValues: null,
+  selectedSellerOption: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -325,6 +326,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedCompaniesLoading: false,
         searchedCompanies: payload
+      }
+    }
+
+    case AT.MARKETPLACE_SAVE_SELLER_FILTER_OPTION: {
+      return {
+        ...state,
+        selectedSellerOption: payload
       }
     }
 

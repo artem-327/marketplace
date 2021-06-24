@@ -1,10 +1,12 @@
 import ListingsContainer from './components/ListingsContainer'
-import { DatagridProvider } from '~/modules/datagrid'
-import { CompanyProductInfo } from '~/modules/company-product-info'
+import { connect } from 'react-redux'
+import { DatagridProvider } from '../../datagrid'
+import { CompanyProductInfo } from '../../company-product-info'
 
-export const Listings = props => {
+const Listings = props => {
+  const { selectedSellerOption } = props
   const urlApiConfig = {
-    url: '/prodex/api/product-offers/broadcasted/datagrid/',
+    url: `/prodex/api/product-offers/broadcasted/datagrid${selectedSellerOption && selectedSellerOption.value ? `?sellerCompanyId=${selectedSellerOption.value}` : ''}`,
     searchToFilter: v => {
       let filters = { or: [], and: [] }
       if (v && v.filterName && v.filterName.length > 0) {
@@ -36,12 +38,10 @@ export const Listings = props => {
           }
         })
       }
-      if (v && v.seller) {
-        filters.and.push({ operator: 'EQUALS', path: 'ProductOffer.owner.id', values: [v.seller] })
-      }
       return filters
     }
   }
+
   return (
     <>
       <CompanyProductInfo fromMarketPlace />
@@ -51,3 +51,11 @@ export const Listings = props => {
     </>
   )
 }
+
+function mapStateToProps(store) {
+  return {
+    selectedSellerOption: store.marketplace.selectedSellerOption
+  }
+}
+
+export default connect(mapStateToProps, null)(Listings)

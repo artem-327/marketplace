@@ -119,3 +119,8 @@ export const searchCompanies = name => ({
   type: AT.MARKETPLACE_SEARCH_COMPANIES,
   payload: api.searchCompanies(name)
 })
+
+export const saveSellerOption = option => ({
+  type: AT.MARKETPLACE_SAVE_SELLER_FILTER_OPTION,
+  payload: option
+})

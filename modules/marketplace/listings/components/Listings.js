@@ -234,13 +234,11 @@ class Listings extends Component {
       ],
       //pageNumber: 0,
       filterValues: {
-        SearchByNamesAndTags: null,
-        seller: 0
+        SearchByNamesAndTags: null
       },
       viewOnlyPopupOpen: false,
       buyAttemptHasDea: null,
-      buyAttemptHasDhs: null,
-      selectedSellerOption: null
+      buyAttemptHasDhs: null
     }
   }
 
@@ -324,24 +322,8 @@ class Listings extends Component {
   handleSellerChange = (e, { value }) => {
     const val = value === '' ? 0 : value
     const selectedSellerOption = this.props.searchedCompaniesDropdown.find(el => el.value === val)
-    this.setState(
-      {
-        filterValues: {
-          ...this.state.filterValues,
-          seller: val
-        },
-        selectedSellerOption
-      },
-      () => {
-        const filter = {
-          ...this.state.filterValues,
-          ...(!!this.state.filterValues.SearchByNamesAndTags && {
-            ...this.state.filterValues.SearchByNamesAndTags.filters
-          })
-        }
-        this.handleFiltersValue(filter)
-      }
-    )
+    this.props.saveSellerOption(selectedSellerOption)
+    this.handleFiltersValue(this.state.filterValues)
   }
 
   handleSearchSellerChange = debounce(text => {
@@ -529,6 +511,7 @@ class Listings extends Component {
       activeMarketplaceFilter,
       isOpenPopup,
       buyEligible,
+      selectedSellerOption,
       searchedCompaniesDropdown,
       searchedCompaniesLoading
     } = this.props
@@ -538,8 +521,7 @@ class Listings extends Component {
       viewOnlyPopupOpen,
       buyAttemptHasDea,
       buyAttemptHasDhs,
-      filterValues,
-      selectedSellerOption
+      filterValues
     } = this.state
     let { formatMessage } = intl
     const rows = this.getRows()
@@ -550,6 +532,7 @@ class Listings extends Component {
         searchedCompaniesOptions.push(selectedSellerOption)
       }
     }
+    const seller = selectedSellerOption ? selectedSellerOption.value : 0
 
     return (
       <Container fluid style={{ padding: '10px 25px' }} className='flex stretched'>
@@ -572,9 +555,9 @@ class Listings extends Component {
                   style={{ width: '210px' }}
                   name='seller'
                   selection
-                  clearable={filterValues.seller !== 0}
+                  clearable={seller !== 0}
                   search={options => options}
-                  value={filterValues.seller}
+                  value={seller}
                   options={searchedCompaniesOptions}
                   loading={searchedCompaniesLoading}
                   onChange={this.handleSellerChange}
