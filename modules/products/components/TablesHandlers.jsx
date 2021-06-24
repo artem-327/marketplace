@@ -17,8 +17,9 @@ import { textsTable } from '../constants'
 import { usePrevious } from '../../../hooks'
 
 
-const handleFiltersValue = debounce((filter, datagrid) => {
-  datagrid.setSearch(filter, true, 'pageFilters')
+const handleFiltersValue = debounce((filter, props) => {
+  props.datagrid.setSearch(filter, true, 'pageFilters')
+  props.handleVariableSave('tableHandlersFilters', { [props.currentTab]: filter })
 }, 300)
 
 /**
@@ -45,18 +46,18 @@ const TablesHandlers = props => {
       if (currentTab) {
         const filter = tableHandlersFilters[currentTab]
         if (filter) {
-          handleFiltersValue(filter, datagrid)
+          handleFiltersValue(filter, props)
         } else {
-          handleFiltersValue(null, datagrid)
+          handleFiltersValue(null, props)
         }
       }
     } else {
       if (currentTab) {
         const filter = state[currentTab]
         if (filter) {
-          handleFiltersValue(filter, datagrid)
+          handleFiltersValue(filter, props)
         } else {
-          handleFiltersValue(null, datagrid)
+          handleFiltersValue(null, props)
         }
       }
     }
@@ -71,9 +72,9 @@ const TablesHandlers = props => {
       datagrid.clear()
       const filter = state[currentTab]
       if (filter) {
-        handleFiltersValue(filter, datagrid)
+        handleFiltersValue(filter, props)
       } else {
-        handleFiltersValue(null, datagrid)
+        handleFiltersValue(null, props)
       }
     }
   }, [currentTab])
@@ -87,7 +88,7 @@ const TablesHandlers = props => {
       [data.name]: data.value
     }
     setState({ [currentTab]: filter })
-    handleFiltersValue(filter, datagrid)
+    handleFiltersValue(filter, props)
   }
 
   const renderHandler = () => {

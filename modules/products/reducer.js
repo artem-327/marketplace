@@ -677,7 +677,7 @@ export default typeToReducer(
     [handleVariableSave]: (state, {payload}) => {
       return {
         ...state,
-        [payload.variable]: payload.value
+        [payload.variable]: { ...state[payload.variable], ...payload.value}
       }
     },
     [postNewCompanyGenericProductsAltName.pending]: state => {
