@@ -1003,7 +1003,7 @@ export default typeToReducer(
     [handleVariableSave]: (state, action) => {
       return {
         ...state,
-        [action.payload.variable]: action.payload.value
+        [action.payload.variable]: { ...state[action.payload.variable], ...action.payload.value }
       }
     },
     [getLogisticsProviders.pending]: (state, action) => {
@@ -1136,7 +1136,7 @@ export default typeToReducer(
     [handleFiltersValue.pending]: (state, action) => {
       return {
         ...state,
-        filterValue: action.payload.filterValue,
+        filterValue: '',
         casProductsRows: [],
         companiesRows: []
       }
@@ -1144,7 +1144,7 @@ export default typeToReducer(
     [handleFiltersValue.rejected]: (state, action) => {
       return {
         ...state,
-        filterValue: action.payload.filterValue,
+        filterValue: '',
         casProductsRows: [],
         companiesRows: []
       }
@@ -1153,8 +1153,8 @@ export default typeToReducer(
       return {
         ...state,
         filterValue: action.payload.filterValue,
-        casProductsRows: [...action.payload.casProductsRows],
-        companiesRows: [...action.payload.companiesRows]
+        casProductsRows: action.payload.casProductsRows,
+        companiesRows: action.payload.companiesRows
       }
     },
     [getDataRequest.pending]: (state, action) => {
