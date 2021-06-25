@@ -4,13 +4,13 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import PropTypes from 'prop-types'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
-import { PriceInput } from '../../../marketplace/constants/layout'
 // Constants
 import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
 // Services
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
 // Styles
 import { Required } from '../../../../components/constants/layout'
+import { PriceInput } from '../../../marketplace/constants/layout'
 
 let formikPropsSelf = {}
 

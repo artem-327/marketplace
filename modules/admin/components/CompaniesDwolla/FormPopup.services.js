@@ -25,7 +25,7 @@ export const formValidation = Yup.object().shape({
  */
 export const initialFormValues = popupValues => ({
     dwollaController: {
-        ...(popupValues.primaryUser
+        ...(popupValues?.primaryUser
             ? {
                 firstName: popupValues.primaryUser.name.split(' ')[0],
                 lastName: popupValues.primaryUser.name.split(' ')[1],

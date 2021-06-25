@@ -71,7 +71,7 @@ const Table = props => {
   }
 
   const getRows = rows => {
-    return rows.map(row => {
+    return rows?.map(row => {
       return {
         ...row,
         code: (
@@ -88,7 +88,7 @@ const Table = props => {
 
   const { config, loading, datagrid, filterValue } = props
 
-  const { tableName } = config
+  const { tableName } = config? config : {tableName: ''}
 
   return (
     <div className='flex stretched listings-wrapper'>
@@ -98,7 +98,7 @@ const Table = props => {
         filterValue={filterValue}
         loading={datagrid.loading || loading}
         columns={columns}
-        rows={getRows(datagrid.tableProps.rows)}
+        rows={getRows(datagrid?.tableProps?.rows)}
       />
     </div>
   )
