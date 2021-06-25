@@ -90,11 +90,4 @@ describe('`My Network` renders InviteModal', () => {
     //Expect that React.useState will be called with value 'train'.
     expect(mockSetValue).toHaveBeenCalledWith('train')
   })
-
-  test('search button simulate click', () => {
-    //Finds specific semantic Input from component.
-    const searchButton = findByTestAttr(wrapper, 'component-my-network-invite-modal-search-button')
-    //Simulates click event on the button.
-    searchButton.simulate('click', { preventDefault() {} })
-  })
 })

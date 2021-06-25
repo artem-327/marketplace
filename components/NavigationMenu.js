@@ -32,7 +32,7 @@ import { withAuth } from '../hocs'
 //Components
 import { tabChanged, triggerSystemSettingsModal } from '../modules/settings/actions'
 import { loadData as switchAlertsCategory } from '../modules/alerts/actions'
-import { defaultTabs as adminDefaultTabs } from '../modules/admin/config'
+import { defaultTabs as adminDefaultTabs } from '../modules/admin/constants'
 import { NavCircle } from '../modules/alerts/components/Alerts.styles'
 import { Datagrid } from '../modules/datagrid'
 //Services

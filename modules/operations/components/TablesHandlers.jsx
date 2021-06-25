@@ -358,7 +358,7 @@ const TablesHandlers = props => {
                         </Button>
                       </DivColumn>
                     )}
-                    <ColumnSettingButton divide={currentTab === 'company-generic-products' ? false : true} />
+                    {currentTab === 'tags' ? <></> : <ColumnSettingButton divide={currentTab === 'company-generic-products' ? false : true} /> }
                   </div>
                 </>
               )

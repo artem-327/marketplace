@@ -7,7 +7,6 @@ export const ModalStyled = styled(Modal)`
   }
 `
 
-
 export const DivCenteredWrapper = styled.div`
   align-items: center;
 `

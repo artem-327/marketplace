@@ -1,28 +1,24 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
-import { FormattedMessage, injectIntl } from 'react-intl'
-
-// Components
-//import ErrorFocus from '../../../components/error-focus'
+import { FormattedMessage } from 'react-intl'
 import { Modal, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
+import PropTypes from 'prop-types'
+// Components
 import ErrorFocus from '../../../../components/error-focus'
 import { PriceInput } from '../../../marketplace/constants/layout'
-
 // Constants
-import { errorMessages, multipleEmails } from '~/constants/yupValidation'
-import { currencyId, currencySymbol } from '~/constants/index'
 import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
-
 // Services
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
-import * as Actions from '../../actions'
-import { getSafe } from '~/utils/functions'
+// Styles
+import { Required } from '../../../../components/constants/layout'
 
 let formikPropsSelf = {}
 
+/**
+ * AddEditCarrier Component
+ * @category Admin Settings - Add/Edit Carrier
+ * @components
+ */
 const AddEditCarrier = props => {
   const {
     closePopup,
@@ -117,11 +113,24 @@ const AddEditCarrier = props => {
   )
 }
 
-function mapStateToProps({ admin }) {
-  return {
-    popupValues: admin.popupValues,
-    updating: admin.updating
-  }
+AddEditCarrier.propTypes = {
+  closePopup: PropTypes.func,
+  postNewCarrier: PropTypes.func,
+  updateCarrier: PropTypes.func,
+  popupValues: PropTypes.object,
+  updating: PropTypes.bool,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(AddEditCarrier)))
+AddEditCarrier.defaultValues = {
+  closePopup: () => {},
+  postNewCarrier: () => {},
+  updateCarrier: () => {},
+  updating: false,
+  popupValues: null,
+  datagrid: {},
+  intl: {}
+}
+
+export default AddEditCarrier

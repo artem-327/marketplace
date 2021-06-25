@@ -1,7 +1,6 @@
 import moment from 'moment'
 //Action Types
 import * as AT from './action-types'
-import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../admin/action-types'
 import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '../settings/action-types'
 import { SET_PREFERRED_LANGUAGE_FULFILLED } from '../settings/action-types'
 //Functions
@@ -315,8 +314,7 @@ export default function reducer(state = initialState, action) {
     }
 
     /* REGISTER_DWOLLA_ACCOUNT */
-    case SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED:
-    case ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED: {
+    case SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED: {
       return {
         ...state,
         identity: {
