@@ -43,9 +43,7 @@ import {
   CustomDiv,
   Rectangle
 } from './Checkout.styles'
-import {
-  CustomSpanReturn
-} from '../../../components/constants/layout'
+import { CustomSpanReturn } from '../../../components/constants/layout'
 
 //Constants
 import { FREIGHT_TYPES } from './Checkout.constants'
@@ -76,6 +74,7 @@ const Checkout = props => {
     applicationName,
     manualQuoteById,
     toastManager,
+    isReady,
     takeover,
     companyName,
     takeOverCompanyFinish
@@ -99,9 +98,8 @@ const Checkout = props => {
         review: { accepted: false, value: initVal }
       })
 
-
       const shippingQuoteId = getSafe(() => Router.router.query.shippingQuoteId, '')
-  
+
       if (shippingQuoteId) {
         setfixedFreightId(true)
         setShipmentQuoteId(shippingQuoteId)
@@ -113,7 +111,7 @@ const Checkout = props => {
   }, [])
 
   useEffect(() => {
-    const fetchCheckout = async (freight) => {
+    const fetchCheckout = async freight => {
       setSectionState({
         ...sectionState,
         freight
@@ -122,7 +120,7 @@ const Checkout = props => {
 
     let freight = sectionState.freight
 
-    if(fixedFreightId && manualQuoteById) {
+    if (fixedFreightId && manualQuoteById) {
       freight = {
         accepted: true,
         value: {
@@ -154,7 +152,10 @@ const Checkout = props => {
     } else if (shipmentQuoteId && fixedFreightId) {
       toastManager.add(
         generateToastMarkup(
-          <FormattedMessage id='shippingQuote.noExistManualQuoteId.title' defaultMessage='Failed to get shipping quote data' />,
+          <FormattedMessage
+            id='shippingQuote.noExistManualQuoteId.title'
+            defaultMessage='Failed to get shipping quote data'
+          />,
           <FormattedMessage
             id='shippingQuote.noExistManualQuoteId.content'
             defaultMessage='Such Quote ID does not exist. Please check your manual quote id again!'
@@ -185,165 +186,171 @@ const Checkout = props => {
   if (cartIsFetching) return <Spinner />
 
   const orderTotal =
-    getSafe(() => props.cart.cfPriceSubtotal, 0)
-    + getSafe(() => sectionState.freight.value.cfEstimatedSubtotal, 0)
+    getSafe(() => props.cart.cfPriceSubtotal, 0) + getSafe(() => sectionState.freight.value.cfEstimatedSubtotal, 0)
 
   let isAnyItemHazardous = cart.cartItems.some(
     item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
   )
 
   let subTotalPrice = 0
-  sectionState.review.value.forEach(item => subTotalPrice += item.price)
+  sectionState.review.value.forEach(item => (subTotalPrice += item.price))
 
   return (
     <>
       <Head>
-        <title>{formatMessage({ id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' }, { companyName: applicationName })}</title>
+        <title>
+          {formatMessage(
+            { id: 'checkout.titlePage', defaultMessage: '{companyName} / Checkout' },
+            { companyName: applicationName }
+          )}
+        </title>
       </Head>
       <ContainerMain fluid>
-        {takeover ? (
-          <CustomDiv>
-            <Rectangle>
-              <IconMinimize2 size='28' />
-              <div>
-                <span>
-                  <FormattedMessage
-                    id='global.takeOverInfo'
-                    defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
-                    values={{ companyName: companyName }}
-                  />
-                </span>
-                {
-                  <Popup
-                    content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />}
-                    trigger={
-                      <CustomSpanReturn onClick={() => takeOverCompanyFinish()}>
-                        <ReturnToAdmin />
-                      </CustomSpanReturn>
-                    }
-                  />
-                }
-              </div>
-            </Rectangle>
-          </CustomDiv>
-        ) : null}
-        <HeaderRow itemsCount={cartItems.length} />
-        <DivScrollableContent takeover={takeover}>
-          <ContainerCheckout>
-            <DivTopButtonRow>
-              <BasicButton
-                type='button'
-                onClick={() => Router.push('/cart')}>
-                <DivButtonContentWrapper>
-                  <ArrowLeft size='18' />
-                  <SpanButtonText>
-                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
-                      {text => text}
-                    </FormattedMessage>
-                  </SpanButtonText>
-                </DivButtonContentWrapper>
-              </BasicButton>
-            </DivTopButtonRow>
-
-            <Grid>
-              <GridRow>
-                <GridColumn width={12}>
-                  <GridSections>
-                    <ReviewItems
-                      {...props}
-                      {...getComponentParameters(props, { name: 'review', ...state })}
-                      onClickDelete={index => {
-                        let newValue = sectionState.review.value.slice()
-                        newValue.splice(index, 1)
-                        setSectionState({
-                          ...sectionState,
-                          review: { accepted: false, value: newValue },
-                          ...(!fixedFreightId && { freight: { accepted: false, value: null } })
-                        })
-                      }}
-                      onValueChange={value => {
-                        setSectionState({
-                          ...sectionState,
-                          review: { accepted: false, ...value },
-                          ...(!fixedFreightId && { freight: { accepted: false, value: null } })
-                        })
-                      }}
-                      onSubmitClick={() => submitUpdateCartItem(props, state)}
-                    />
-                    <ShippingTerms
-                      {...props}
-                      {...getComponentParameters(props, { name: 'shipping', ...state })}
-                      onValueChange={value => {
-                        setShipmentQuoteId('')
-                        setSectionState({
-                          ...sectionState,
-                          shipping: { accepted: false, value },
-                          ...(!fixedFreightId && { freight: { accepted: false, value: null } })
-                        })
-                        const address = value.fullAddress.address
-
-                        if (!cart.weightLimitExceed && !fixedFreightId && !cart.palletLimitExceed) {
-                          getShippingQuotes(props, address.country.id, address.zip.zip)
+        {isReady ? (
+          <>
+            {takeover ? (
+              <CustomDiv>
+                <Rectangle>
+                  <IconMinimize2 size='28' />
+                  <div>
+                    <span>
+                      <FormattedMessage
+                        id='global.takeOverInfo'
+                        defaultMessage={`You are working in take-over mode on behalf of '${companyName}'.`}
+                        values={{ companyName: companyName }}
+                      />
+                    </span>
+                    {
+                      <Popup
+                        content={<FormattedMessage id='global.returnToAdmin' defaultMessage='Return to Admin' />}
+                        trigger={
+                          <CustomSpanReturn onClick={() => takeOverCompanyFinish()}>
+                            <ReturnToAdmin />
+                          </CustomSpanReturn>
                         }
-                      }}
-                    />
-                    <Payment
-                      {...getComponentParameters(props, { name: 'payment', ...state })}
-                      isThirdPartyConnectionException={isThirdPartyConnectionException}
-                      payments={payments}
-                      onValueChange={value => {
-                        setSectionState({
-                          ...sectionState,
-                          payment: { accepted: false, value }
-                        })
-                      }}
-                    />
-                    <FreightSelection
-                      {...props}
-                      {...getComponentParameters(props, { name: 'freight', ...state })}
-                      shippingAddress={sectionState.shipping.value}
-                      fixedFreightId={fixedFreightId}
-                      orderTotal={orderTotal}
-                      onValueChange={value => {
-                        setSectionState({
-                          ...sectionState,
-                          freight: { accepted: false, value }
-                        })
-                      }}
-                    />
-                  </GridSections>
-                </GridColumn>
-                <GridColumn width={4}>
-                  <OrderSummary
-                    loading={loading}
-                    allAccepted={allAccepted}
-                    subTotalPrice={subTotalPrice}
-                    cart={props.cart}
-                    sectionState={sectionState}
-                    onButtonClick={() => submitButton(props, state)}
-                    isNotHazardousPermissions={!purchaseHazmatEligible && isAnyItemHazardous}
-                    submitButtonDisabled={
-                      (!purchaseHazmatEligible && isAnyItemHazardous) ||
-                      (openSection === 'review' && sectionState.review.errors) ||
-                      offerDetailIsFetching
+                      />
                     }
-                    buttonText={
-                      allAccepted ? (
-                        <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+                  </div>
+                </Rectangle>
+              </CustomDiv>
+            ) : null}
+            <HeaderRow itemsCount={cartItems.length} />
+            <DivScrollableContent takeover={takeover}>
+              <ContainerCheckout>
+                <DivTopButtonRow>
+                  <BasicButton type='button' onClick={() => Router.push('/cart')}>
+                    <DivButtonContentWrapper>
+                      <ArrowLeft size='18' />
+                      <SpanButtonText>
+                        <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>
                           {text => text}
                         </FormattedMessage>
-                      ) : summaryButtonCaption ? (
-                        summaryButtonCaption
-                      ) : (
-                        ''
-                      )
-                    }
-                  />
-                </GridColumn>
-              </GridRow>
-            </Grid>
-          </ContainerCheckout>
-        </DivScrollableContent>
+                      </SpanButtonText>
+                    </DivButtonContentWrapper>
+                  </BasicButton>
+                </DivTopButtonRow>
+
+                <Grid>
+                  <GridRow>
+                    <GridColumn width={12}>
+                      <GridSections>
+                        <ReviewItems
+                          {...props}
+                          {...getComponentParameters(props, { name: 'review', ...state })}
+                          onClickDelete={index => {
+                            let newValue = sectionState.review.value.slice()
+                            newValue.splice(index, 1)
+                            setSectionState({
+                              ...sectionState,
+                              review: { accepted: false, value: newValue },
+                              ...(!fixedFreightId && { freight: { accepted: false, value: null } })
+                            })
+                          }}
+                          onValueChange={value => {
+                            setSectionState({
+                              ...sectionState,
+                              review: { accepted: false, ...value },
+                              ...(!fixedFreightId && { freight: { accepted: false, value: null } })
+                            })
+                          }}
+                          onSubmitClick={() => submitUpdateCartItem(props, state)}
+                        />
+                        <ShippingTerms
+                          {...props}
+                          {...getComponentParameters(props, { name: 'shipping', ...state })}
+                          onValueChange={value => {
+                            setShipmentQuoteId('')
+                            setSectionState({
+                              ...sectionState,
+                              shipping: { accepted: false, value },
+                              ...(!fixedFreightId && { freight: { accepted: false, value: null } })
+                            })
+                            const address = value.fullAddress.address
+
+                            if (!cart.weightLimitExceed && !fixedFreightId && !cart.palletLimitExceed) {
+                              getShippingQuotes(props, address.country.id, address.zip.zip)
+                            }
+                          }}
+                        />
+                        <Payment
+                          {...getComponentParameters(props, { name: 'payment', ...state })}
+                          isThirdPartyConnectionException={isThirdPartyConnectionException}
+                          payments={payments}
+                          onValueChange={value => {
+                            setSectionState({
+                              ...sectionState,
+                              payment: { accepted: false, value }
+                            })
+                          }}
+                        />
+                        <FreightSelection
+                          {...props}
+                          {...getComponentParameters(props, { name: 'freight', ...state })}
+                          shippingAddress={sectionState.shipping.value}
+                          fixedFreightId={fixedFreightId}
+                          orderTotal={orderTotal}
+                          onValueChange={value => {
+                            setSectionState({
+                              ...sectionState,
+                              freight: { accepted: false, value }
+                            })
+                          }}
+                        />
+                      </GridSections>
+                    </GridColumn>
+                    <GridColumn width={4}>
+                      <OrderSummary
+                        loading={loading}
+                        allAccepted={allAccepted}
+                        subTotalPrice={subTotalPrice}
+                        cart={props.cart}
+                        sectionState={sectionState}
+                        onButtonClick={() => submitButton(props, state)}
+                        isNotHazardousPermissions={!purchaseHazmatEligible && isAnyItemHazardous}
+                        submitButtonDisabled={
+                          (!purchaseHazmatEligible && isAnyItemHazardous) ||
+                          (openSection === 'review' && sectionState.review.errors) ||
+                          offerDetailIsFetching
+                        }
+                        buttonText={
+                          allAccepted ? (
+                            <FormattedMessage id='checkout.button.placeOrder' defaultMessage='Place Order'>
+                              {text => text}
+                            </FormattedMessage>
+                          ) : summaryButtonCaption ? (
+                            summaryButtonCaption
+                          ) : (
+                            ''
+                          )
+                        }
+                      />
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
+              </ContainerCheckout>
+            </DivScrollableContent>
+          </>
+        ) : null}
       </ContainerMain>
     </>
   )
@@ -360,6 +367,8 @@ Checkout.defaultProps = {
 function mapStateToProps(store) {
   return {
     applicationName: store?.auth?.identity?.appInfo?.applicationName,
+    isReady:
+      getSafe(() => store.auth.identity, null) !== null && getSafe(() => store.auth.identity.isAdmin, null) !== null,
     takeover:
       getSafe(() => !!store.auth.identity.company.id, false) && getSafe(() => store.auth.identity.isAdmin, false),
     companyName: getSafe(() => store.auth.identity.company.name, '')
