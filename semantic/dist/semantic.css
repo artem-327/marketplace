@@ -7031,7 +7031,7 @@ h5.ui.header .sub.header {
 }
 
 .ui.header .sub.header {
-  font-size: 1rem;
+  font-size: 0.8em;
 }
 
 .ui.small.header .sub.header {
@@ -7634,7 +7634,7 @@ a.ui.inverted.grey.header:hover {
 --------------------*/
 
 .ui.header:not(h1):not(h2):not(h3):not(h4):not(h5):not(h6) {
-  font-size: 1.28571429em;
+  font-size: 1em;
 }
 
 /*******************************
