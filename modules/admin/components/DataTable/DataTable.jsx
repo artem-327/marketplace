@@ -67,8 +67,8 @@ const DataTable = props => {
   const { loading, rows, datagrid, filterValue } = props
 
   const { tableName } = props.config
-  const { columns } = props.config.display
-  columns[0].allowReordering = false
+  let columns = props?.config?.display?.columns
+  Array.isArray(columns) ? columns[0].allowReordering = false : () => {}
 
   return (
     <div className='flex stretched listings-wrapper'>

@@ -59,8 +59,6 @@ export const getInitValues = popupValues => {
 export const getValidationSchema = () => {
   return Yup.object().shape({
     code: Yup.string().trim().required(errorMessages.requiredMessage),
-    priceMarkup: Yup.number()
-      .typeError(errorMessages.mustBeNumber)
-      .positive(errorMessages.positive)
+    priceMarkup: Yup.number().moreThan(0, errorMessages.greaterThan(0))
   })
 }
