@@ -1332,9 +1332,8 @@ class ModalDetail extends Component {
                                                 disabled:
                                                   !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                                 'data-test': 'modal_detail_expiration_date',
-                                                fluid: true
-                                                //! ! crashes on component calendar open if expirationDate is in past:
-                                                // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
+                                                fluid: true,
+                                                minDate: moment().add(1, 'days')
                                               }}
                                               name='edit.expirationDate'
                                             />

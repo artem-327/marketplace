@@ -98,7 +98,7 @@ const SaleReturnShipping = props => {
                         <Grid.Column width={8}>
                           <DateInput
                             inputProps={{
-                              // minDate: moment(),
+                              minDate: moment(),
                               fluid: true,
                               placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
                               onChange: async (event, val) => await onDateChange(event, val, errors, props, state, setState),

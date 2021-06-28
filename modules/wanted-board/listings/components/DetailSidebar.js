@@ -729,8 +729,8 @@ class DetailSidebar extends Component {
                               defaultMessage: '00/00/0000'
                             }),
                             clearable: true,
-                            disabled: values.neededNow !== false
-                            // minDate: moment() TypeError: Cannot read property 'position' of undefined
+                            disabled: values.neededNow !== false,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>
@@ -743,8 +743,8 @@ class DetailSidebar extends Component {
                               id: 'date.standardPlaceholder',
                               defaultMessage: '00/00/0000'
                             }),
-                            disabled: values.doesExpire !== true
-                            //  minDate: moment() TypeError: Cannot read property 'position' of undefined
+                            disabled: values.doesExpire !== true,
+                            minDate: moment()
                           }}
                         />
                       </GridColumn>

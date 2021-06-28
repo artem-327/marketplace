@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
-import { DatesRangeInput } from 'semantic-ui-calendar-react'
+import { DatesRangeInput } from 'semantic-ui-calendar-react-yz'
 import { ChevronLeft, ChevronRight } from 'react-feather'
 // Styles
 import { DivFlex, ButtonLeftArrows, ButtonRightArrows } from '../styles'
