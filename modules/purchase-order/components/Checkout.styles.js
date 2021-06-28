@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 import { Container as SemanticContainer, Grid, GridRow } from 'semantic-ui-react'
+import { Minimize2, LogOut } from 'react-feather'
 
 export const ContainerMain = styled(SemanticContainer)`
   position: fixed;
@@ -13,7 +14,7 @@ export const ContainerMain = styled(SemanticContainer)`
 
 export const DivScrollableContent = styled.div`
   position: fixed;
-  top: 80px;
+  top: ${({ takeover }) => takeover ? '110px' : '80px'};
   right: 0;
   bottom: 0;
   left: 0;
@@ -186,4 +187,43 @@ export const GridRowExpandedSelectionRow = styled(GridRow)`
       : 'border: solid 1px #dee2e6; background-color: #f8f9fb;'}
   ${props => (props.selection && !props.disabled ? 'cursor: pointer;' : '')}
   ${props => (props.disabled ? 'background-color: #edeef2;' : '')}
+`
+
+export const IconMinimize2 = styled(Minimize2)`
+  text-align: center;
+  padding-right: 10px;
+`
+
+export const ReturnToAdmin = styled(LogOut)`
+  height: 22px;
+  margin-left: 10px;
+  vertical-align: bottom;
+`
+
+export const CustomDiv = styled.div`
+  display: flex;
+  width: 100vw;
+  color: #848893;
+`
+
+export const Rectangle = styled.div`
+  left: 0;
+  width: 100vw;
+  background: #ff9d42 !important;
+  text-align: center !important;
+  background-color: #ffffff;
+  height: 30px;
+  color: #ffffff;
+  text-align: center;
+  font-size: 14px;
+  display: block;
+
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  + h1 {
+    align-self: center;
+  }
 `

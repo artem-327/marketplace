@@ -79,6 +79,7 @@ const Dashboard = props => {
     companySumOfPurchasesMonthly,
     companySumOfSalesMonthly,
     top10Buyers,
+    isReady,
     isAdmin,
     takeover,
     dailyStats,
@@ -118,6 +119,8 @@ const Dashboard = props => {
 
   return (
     <CustomGrid secondary='true' verticalAlign='middle' className='page-part'>
+      {isReady ? (
+        <>
       <Grid.Row>
         <Grid.Column width={15}>
           <Tutorial marginDashboard isTutorial={false} isBusinessVerification={true} />
@@ -499,6 +502,8 @@ const Dashboard = props => {
           </Grid.Column>
         </Grid.Row>
       ) : null}
+      </>
+      ) : null}
     </CustomGrid>
   )
 }
@@ -519,6 +524,7 @@ Dashboard.propTypes = {
   companySumOfSalesMonthly: array,
   top10Buyers: array,
   totalSumOfSalesMonthly: array,
+  isReady: bool,
   isAdmin: bool,
   takeover: bool,
   totalCompanyPartners: number
@@ -540,6 +546,7 @@ Dashboard.defaultProps = {
   companySumOfSalesMonthly: [],
   top10Buyers: [],
   totalSumOfSalesMonthly: [],
+  isReady: false,
   isAdmin: false,
   takeover: false,
   totalCompanyPartners: 0

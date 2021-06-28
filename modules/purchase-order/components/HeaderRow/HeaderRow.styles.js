@@ -2,10 +2,8 @@ import styled from 'styled-components'
 import { Image, Button, Grid, Popup, Container } from 'semantic-ui-react'
 
 export const DivHeaderRow = styled.div`
-  position: fixed;
   width: auto;
   height: 80px;
-  top: 0;
   right: 0;
   bottom: 0;
   left: 0;

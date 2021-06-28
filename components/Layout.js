@@ -485,6 +485,32 @@ class Layout extends Component {
           {renderCopyright ? copyrightContainer : null}
         </FlexContainer>
 
+        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
+        <GlobalSidebars>
+          {openGlobalAddFormName === 'inventory-my-products' && <ProductPopup openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'inventory-my-listings' && (
+            <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
+          {openGlobalAddFormName === 'my-account-locations' && (
+            <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
+          )}
+          {openGlobalAddFormName === 'my-network-connection' && (
+            <InviteModal
+              open={isOpenInviteModal}
+              onClose={triggerModal}
+              openGlobalAddForm={openGlobalAddForm}
+              search={search}
+              isError={isError}
+              loading={loadingNetworkConnection}
+              detailCompany={inviteDetailCompany}
+              buttonActionsDetailRow={buttonActionsDetailRow}
+            />
+          )}
+        </GlobalSidebars>
+        <ImmediateModal />
+
         {takeover ? (
           <CustomDiv>
             <Rectangle>
@@ -511,32 +537,6 @@ class Layout extends Component {
             </Rectangle>
           </CustomDiv>
         ) : null}
-
-        <Dimmer active={openGlobalAddFormName !== ''} style={{ opacity: '0.4' }} />
-        <GlobalSidebars>
-          {openGlobalAddFormName === 'inventory-my-products' && <ProductPopup openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'inventory-my-listings' && (
-            <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
-          )}
-          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
-          {openGlobalAddFormName === 'my-account-locations' && (
-            <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />
-          )}
-          {openGlobalAddFormName === 'my-network-connection' && (
-            <InviteModal
-              open={isOpenInviteModal}
-              onClose={triggerModal}
-              openGlobalAddForm={openGlobalAddForm}
-              search={search}
-              isError={isError}
-              loading={loadingNetworkConnection}
-              detailCompany={inviteDetailCompany}
-              buttonActionsDetailRow={buttonActionsDetailRow}
-            />
-          )}
-        </GlobalSidebars>
-        <ImmediateModal />
       </MainContainer>
     )
   }
