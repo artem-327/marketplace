@@ -5,7 +5,7 @@ import moment from 'moment'
 
 import { getFieldError, setFieldValue } from './helpers'
 
-import { DateInput } from 'semantic-ui-calendar-react'
+import { DateInput } from 'semantic-ui-calendar-react-yz'
 import { getLocaleDateFormat } from '../date-format'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 

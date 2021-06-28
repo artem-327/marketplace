@@ -110,7 +110,7 @@ const PurchaseOrderShipping = props => {
                         <Grid.Column width={8}>
                           <DateInput
                             inputProps={{
-                              //minDate: moment(),
+                              minDate: moment(),
                               fluid: true,
                               clearable: true,
                               placeholder: formatMessage({ id: 'global.selectDate', defaultMessage: 'Select Date' }),
