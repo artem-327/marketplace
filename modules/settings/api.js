@@ -393,5 +393,9 @@ export default {
     api
       .get(`/prodex/api/tradepass/my-tradepass`)
       .then(res => res.data)
-      .catch(err => console.error(err))
+      .catch(err => console.error(err)),
+  downloadStatement: (year, month, type) =>
+    api.get(`/prodex/api/accounting-documents/id/${type}/download-pdf`, {
+      responseType: 'blob'
+    })
 }
