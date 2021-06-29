@@ -562,7 +562,7 @@ export default withToastManager(
   connect(
     ({
       admin: { unNumbersFiltered, unNumbersFetching },
-      globalData: {packagingGroups, hazardClasses },
+      globalData: { packagingGroups, hazardClasses },
       settings: { nmfcNumbersFetching, nmfcNumbersFiltered }
     }) => ({
       packagingGroups,

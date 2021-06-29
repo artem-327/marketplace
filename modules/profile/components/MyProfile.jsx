@@ -19,7 +19,7 @@ import { initialMyProfileFormValues, MyProfileFormValidation } from '../constant
 const MyProfile = props => {
   useEffect(()=>{
     props.getUserMeData()
-    props.getLanguages()
+    if (!props.languages.length) props.getLanguages()
   }, [])
 
   const handleChangePassword = () => {
@@ -106,11 +106,7 @@ const MyProfile = props => {
                 inputProps={{
                   loading: languagesFetching
                 }}
-                options={languages.map(lang => ({
-                  key: lang.languageAbbreviation,
-                  text: lang.language,
-                  value: lang.language
-                }))}
+                options={languages}
               />
               <DivLabel>
                 <FormattedMessage id='profile.avatarPicture' defaultMessage='Avatar Picture' />

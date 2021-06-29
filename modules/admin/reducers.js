@@ -9,8 +9,6 @@ import {
   closeAddPopup,
   closeConfirmPopup,
   postDwollaAccount,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
   getMeasureTypesDataRequest,
   getAllUnitsOfMeasuresDataRequest,
   getAllUnNumbersDataRequest,
@@ -21,7 +19,6 @@ import {
   udpateEnabled,
   searchUnNumber,
   searchManufacturers,
-  getProductsCatalogRequest,
   registerDwollaAccount,
   closeRegisterDwollaAccount,
   openPopup,
@@ -46,8 +43,6 @@ import {
   postNewUserRequest,
   submitUserEdit,
   deleteUser,
-  getUserRoles,
-  getAdminRoles,
   searchCompany,
   initSearchCompany,
   searchTags,
@@ -83,10 +78,6 @@ export const initialState = {
   altCasNamesRows: [],
   measureTypes: [],
   unitsOfMeasures: [],
-  hazardClasses: [],
-  hazardClassesLoading: false,
-  packagingGroups: [],
-  packagingGroupsLoading: false,
   unNumbersFiltered: [],
   companiesRows: [],
   singleCompany: [],
@@ -106,8 +97,6 @@ export const initialState = {
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
-  productsHazardClasses: [],
-  productsPackagingGroups: [],
   searchedCasProducts: [],
   searchedUnNumbers: [],
   searchedManufacturers: [],
@@ -117,8 +106,6 @@ export const initialState = {
   editEchoProductInitTrig: false,
   currentUser: null,
   user: null,
-  userRoles: [],
-  adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   updating: false,
@@ -202,44 +189,6 @@ export default typeToReducer(
         ...state,
         popupValues: null,
         currentAddDwolla: null
-      }
-    },
-    [getHazardClassesDataRequest.pending]: (state, action) => {
-      return {
-        ...state,
-        hazardClassesLoading: true
-      }
-    },
-    [getHazardClassesDataRequest.rejected]: (state, action) => {
-      return {
-        ...state,
-        hazardClassesLoading: false
-      }
-    },
-    [getHazardClassesDataRequest.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        hazardClasses: action.payload,
-        hazardClassesLoading: false
-      }
-    },
-    [getPackagingGroupsDataRequest.pending]: (state, action) => {
-      return {
-        ...state,
-        packagingGroupsLoading: true
-      }
-    },
-    [getPackagingGroupsDataRequest.rejected]: (state, action) => {
-      return {
-        ...state,
-        packagingGroupsLoading: false
-      }
-    },
-    [getPackagingGroupsDataRequest.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        packagingGroups: action.payload,
-        packagingGroupsLoading: false
       }
     },
     [getMeasureTypesDataRequest.pending]: (state, action) => {
@@ -424,37 +373,6 @@ export default typeToReducer(
           text: manufacturer.name
         })),
         searchedManufacturersLoading: false
-      }
-    },
-    [getProductsCatalogRequest.pending]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getProductsCatalogRequest.rejected]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getProductsCatalogRequest.fulfilled]: (state, action) => {
-      const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
-        return {
-          key: id,
-          text: hClass.classCode + ': ' + hClass.description,
-          value: hClass.id
-        }
-      })
-      const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
-        return {
-          key: id,
-          text: pGroup.groupCode + ': ' + pGroup.description,
-          value: pGroup.id
-        }
-      })
-      return {
-        ...state,
-        productsHazardClasses: hazardClasses,
-        productsPackagingGroups: packagingGroups
       }
     },
     [registerDwollaAccount]: (state, action) => {
@@ -852,38 +770,6 @@ export default typeToReducer(
       return {
         ...state,
         loading: false
-      }
-    },
-    [getUserRoles.pending]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getUserRoles.rejected]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getUserRoles.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        userRoles: action.payload
-      }
-    },
-    [getAdminRoles.pending]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getAdminRoles.rejected]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getAdminRoles.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        adminRoles: action.payload
       }
     },
     [searchCompany.pending]: (state, action) => {

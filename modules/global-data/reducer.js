@@ -67,6 +67,7 @@ export const initialState = {
   units: [],
   unitsDropdown: [],
   unitsLoading: false,
+  weightUnits: [],
 
   measureTypes: [],
   measureTypesDropdown: [],
@@ -74,7 +75,16 @@ export const initialState = {
 
   languages: [],
   languagesDropdown: [],
-  languagesLoading: false
+  languagesLoading: false,
+
+  freightClassesDropdown:
+    [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500].map(fClass => {
+      return {
+        key: fClass,
+        text: fClass,
+        value: fClass
+      }
+    })
 }
 
 export default typeToReducer(
@@ -303,6 +313,15 @@ export default typeToReducer(
           value: unit.id
         }
       }),
+      weightUnits: payload
+        .filter(unit => unit.measureType.id === 1) // Weight only
+        .map((type, id) => {
+          return {
+            key: id,
+            text: type.name,
+            value: type.id
+          }
+        }),
       unitsLoading: false
     }),
 

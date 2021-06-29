@@ -28,15 +28,6 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
-  productsPackagingType: null,
-  packagingTypes: [],
-  productsUnitsType: [],
-  units: [],
-  packageWeightUnits: [],
-  productsFreightClasses: [],
-  productsHazardClasses: [],
-  productsPackagingGroups: [],
-  productDataLoading: false,
   deliveryAddressesRows: [],
   provinces: [],
   provincesDropDown: [],
@@ -112,8 +103,6 @@ export const initialState = {
       />
     )
   },
-  languages: [],
-  languagesFetching: false,
   companyGenericProduct: [],
   companyGenericProductFetching: false,
   nmfcNumbersFiltered: [],
@@ -605,70 +594,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
-      const packagingType = action.payload.productsTypes.map((type, id) => {
-        return {
-          key: id,
-          text: type.name,
-          value: type.id
-        }
-      })
-      const packagingUnitsType = action.payload.units.map((type, id) => {
-        return {
-          key: id,
-          text: type.name,
-          value: type.id
-        }
-      })
-      // TODO: Freight Classes - should be used same array as anywhere else
-      const fClassArray = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
-      const freightClasses = fClassArray.map(fClass => {
-        return {
-          key: fClass,
-          text: fClass,
-          value: fClass
-        }
-      })
-      const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
-        return {
-          key: id,
-          text: hClass.classCode + ': ' + hClass.description,
-          value: hClass.id
-        }
-      })
-      const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
-        return {
-          key: id,
-          text: pGroup.groupCode + ': ' + pGroup.description,
-          value: pGroup.id
-        }
-      })
-      const packageWeightUnits = action.payload.units
-        .filter(unit => unit.measureType.id === 1) // Weight only
-        .map((type, id) => {
-          return {
-            key: id,
-            text: type.name,
-            value: type.id
-          }
-        })
-
-      return {
-        ...state,
-        productDataLoading: false,
-        loaded: true,
-        //productsCatalogRows: rows,
-        productsPackagingType: packagingType,
-        packagingTypes: action.payload.productsTypes,
-        productsUnitsType: packagingUnitsType,
-        units: action.payload.units,
-        productsHazardClasses: hazardClasses,
-        productsFreightClasses: freightClasses,
-        productsPackagingGroups: packagingGroups,
-        packageWeightUnits: packageWeightUnits
-      }
-    }
-
     case AT.SETTINGS_SET_PRIMARY_BRANCH_PENDING:
     case AT.SETTINGS_SET_PRIMARY_USER_PENDING:
     case AT.DELETE_PRODUCT_PENDING:
@@ -972,20 +897,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
-      }
-    }
-
-    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING: {
-      return {
-        ...state,
-        productDataLoading: true
-      }
-    }
-
-    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED: {
-      return {
-        ...state,
-        productDataLoading: false
       }
     }
 
@@ -1413,30 +1324,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         verificationDocumentTypes: action.payload
-      }
-    }
-
-    /* GET_LANGUAGES */
-
-    case AT.GET_LANGUAGES_PENDING: {
-      return {
-        ...state,
-        languagesFetching: true
-      }
-    }
-
-    case AT.GET_LANGUAGES_FULFILLED: {
-      return {
-        ...state,
-        languages: payload,
-        languagesFetching: false
-      }
-    }
-
-    case AT.GET_LANGUAGES_REJECTED: {
-      return {
-        ...state,
-        languagesFetching: false
       }
     }
 

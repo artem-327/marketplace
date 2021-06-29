@@ -76,9 +76,18 @@ const ProductPopup = props => {
     setpackagingTypesReduced
   }
 
-  useEffect(() => {
-    function prepareAttachments() {
-      if (props.popupValues) {
+  useEffect(async () => {
+    await Promise.all([
+      !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
+      !props.unitsAll.length ? props.getUnits() : props.unitsAll,
+      !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
+      !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
+      !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
+    ])
+
+    if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+    if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
+      if (props?.popupValues?.attachments?.length) {
         const attachments = props.popupValues.attachments.map(att => ({
           id: att.id,
           name: att.name,
@@ -88,17 +97,6 @@ const ProductPopup = props => {
         setAttachments(attachments)
       }
     }
-
-    //async fetch data
-    async function fetchData() {
-      await props.getProductsCatalogRequest()
-      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
-      if (props.documentTypes.length === 0) await props.getDocumentTypes()
-      prepareAttachments()
-    }
-
-    if (!props?.unitsAll?.length) fetchData()
-    else if (attachments?.length !== props?.popupValues?.attachments?.length) prepareAttachments()
 
     if (props.popupValues?.packagingUnit) {
       filterPackagingTypes(
@@ -110,7 +108,8 @@ const ProductPopup = props => {
     } else {
       setpackagingTypesReduced(props.packagingType)
     }
-  }, [props?.unitsAll?.length, props?.popupValues?.attachments])
+  }, [])
+
 
   const {
     closePopup,

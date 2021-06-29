@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 //Components
 import Profile from './Profile'
 //Actions
-import { getLanguages } from '../../settings/actions'
+import { getLanguages } from '../../global-data/actions'
 import { getIdentity } from '../../auth/actions'
 import { changePassword, closeChangePasswordPopup, closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup, setPreferredLanguage, loadFile, saveAvatarPicture, deleteAvatarPicture } from '../actions'
 //Selectors
