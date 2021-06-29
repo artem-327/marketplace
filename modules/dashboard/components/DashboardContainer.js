@@ -5,6 +5,7 @@ import Dashboard from './Dashboard'
 import { getDashboardData, getDailyStatistics } from '../actions'
 // Selectors
 import {
+  makeGetIsReady,
   makeGetIsAdmin,
   makeGetTakeover,
   makeGetCompanySumOfPurchasesMonthly,
@@ -28,6 +29,7 @@ import {
 } from '../selectors'
 
 const makeMapStateToProps = () => {
+  const getIsReady = makeGetIsReady()
   const getIsAdmin = makeGetIsAdmin()
   const getTakeover = makeGetTakeover()
   const getCompanySumOfPurchasesMonthly = makeGetCompanySumOfPurchasesMonthly()
@@ -51,6 +53,7 @@ const makeMapStateToProps = () => {
   
   const mapStateToProps = (state) => {
     return {
+      isReady: getIsReady(state),
       isAdmin: getIsAdmin(state),
       takeover: getTakeover(state),
       companySumOfPurchasesMonthly: getCompanySumOfPurchasesMonthly(state),

@@ -809,7 +809,7 @@ class SubmitOfferPopup extends Component {
           name='lotExpirationDate'
           inputProps={{
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
-            //minDate: moment(), TypeError: Cannot read property 'position' of undefined
+            minDate: moment(),
             clearable: true,
             fluid: this.state.nextSubmit && fulfillmentType !== 'COMPLETE_SCHEDULE',
             placeholder: placeholder
@@ -833,7 +833,7 @@ class SubmitOfferPopup extends Component {
         <DateInput
           name={`items[${index}].fulfilledAt`}
           inputProps={{
-            //minDate: moment().add(1, 'days'), TypeError: Cannot read property 'position' of undefined
+            minDate: moment().add(1, 'days'),
             onChange: (e, { name, value }) => this.handleChange(e, { name, value: getStringISODate(value) }),
             clearable: true,
             fluid: this.state.nextSubmit && this.values.fulfillmentType !== 'COMPLETE_SCHEDULE'

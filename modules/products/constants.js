@@ -89,7 +89,7 @@ export const edit2Forms = {
  * @constant
  */
 export const importForm = {
-  'product-catalog': <ProductImportPopup />
+  'product-catalog': <ProductImportPopup companyGenericProduct={true} />
 }
 
 /**

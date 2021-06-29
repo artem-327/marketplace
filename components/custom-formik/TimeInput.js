@@ -6,7 +6,7 @@ import { getSafe } from '~/utils/functions'
 import { getFieldError, setFieldValue } from './helpers'
 import { Form } from 'semantic-ui-react'
 import moment from 'moment/moment'
-import { TimeInput as SemanticTimeInput } from 'semantic-ui-calendar-react'
+import { TimeInput as SemanticTimeInput } from 'semantic-ui-calendar-react-yz'
 
 export const FieldWrapper = styled(Form.Field)`
   > .field-label {

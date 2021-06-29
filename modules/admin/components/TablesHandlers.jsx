@@ -117,10 +117,18 @@ const TablesHandlers = props => {
             <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
               <PlusCircle />
               <FormattedMessage id='global.add' defaultMessage='Add' />
+              &nbsp;
               {config[currentTab].addEditText}
             </Button>
           </div>
-          <ColumnSettingButton divide={true} />
+          {
+            currentTab !== 'manufacturers' && 
+            currentTab !== 'grades' && 
+            currentTab !== 'forms' && 
+            currentTab !== 'conditions' && 
+            currentTab !== 'associations' && 
+            <ColumnSettingButton divide={true} />
+          }
         </div>
       </DivCustomRow>
     </PositionHeaderSettings>

@@ -17,7 +17,14 @@ export const deleteCompany = createAsyncAction('COMPANIES_DELETE_COMPANIES',  id
 export const takeOverCompany = id => {
   return async dispatch => {
     let payload = await api.takeOverCompany(id)
-    dispatch(updateIdentity(payload))
+    const company = await api.getCompanyDetails(payload.company.id)
+    dispatch(updateIdentity({
+      ...payload,
+      company: {
+        ...payload.company,
+        ...company
+      }
+    }))
     Router.push('/inventory/my-listings')
   }
 }

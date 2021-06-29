@@ -323,7 +323,12 @@ class Listings extends Component {
     const val = value === '' ? 0 : value
     const selectedSellerOption = this.props.searchedCompaniesDropdown.find(el => el.value === val)
     this.props.saveSellerOption(selectedSellerOption)
-    this.handleFiltersValue(this.state.filterValues)
+    this.handleFiltersValue({
+      ...this.state.filterValues,
+      ...(!!this.state.filterValues.SearchByNamesAndTags && {
+        ...this.state.filterValues.SearchByNamesAndTags.filters
+      })
+    })
   }
 
   handleSearchSellerChange = debounce(text => {
