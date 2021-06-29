@@ -1,8 +1,10 @@
 import { FormattedMessage } from 'react-intl'
 import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
+import moment from 'moment'
 // Services
 import { getSafe } from '../../../../utils/functions'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 // Styles
 import {
   DetailMessage,
@@ -13,6 +15,7 @@ import {
   AddressGrid,
   SpanIdValue
 } from '../../styles'
+import {GridRowMargin} from "../../../alerts/components/DetailMessages/ShippingQuoteRequest.styles";
 
 /**
  * RowDetail Component
@@ -41,11 +44,21 @@ const RowDetail = props => {
         <GridRow>
           <GridColumn>{address.zip}</GridColumn>
         </GridRow>
+
+        <GridRowMargin margin='10px 0 0'>
+          <GridColumn>
+            <FormattedMessage id='alerts.warehouseHours' defaultMessage='Warehouse Hours:' />
+          </GridColumn>
+        </GridRowMargin>
+        <GridRow>
+          <GridColumn>{address.warehouseHours}</GridColumn>
+        </GridRow>
       </AddressGrid>
     )
   }
 
   const { row } = props
+  const preferredDeliveryDate = getSafe(() => row.info.preferredDeliveryDate, false)
 
   return (
     <DetailMessage>
@@ -97,9 +110,9 @@ const RowDetail = props => {
                     <List.Item>
                       <List.Content>
                         <List.Header as='label'>
-                          <FormattedMessage id='alerts.maxPkgsPallet' defaultMessage='Max PKGS / Pallet' />
+                          <FormattedMessage id='alerts.palletCount' defaultMessage='Pallet Count' />
                         </List.Header>
-                        <List.Description as='span'>{item.maxPkgsPerPallet}</List.Description>
+                        <List.Description as='span'>{item.palletCount}</List.Description>
                       </List.Content>
                     </List.Item>
 
@@ -163,7 +176,8 @@ const RowDetail = props => {
               province: getSafe(() => row.info.originProvince, ''),
               city: getSafe(() => row.info.originCity, ''),
               streetAddress: getSafe(() => row.info.originStreet, ''),
-              zip: getSafe(() => row.info.originZip, '')
+              zip: getSafe(() => row.info.originZip, ''),
+              warehouseHours: getSafe(() => row.info.sellerWarehouseHours, 'N/A')
             }
           })}
           {displayAddress({
@@ -174,7 +188,8 @@ const RowDetail = props => {
               province: getSafe(() => row.info.destinationProvince, ''),
               city: getSafe(() => row.info.destinationCity, ''),
               streetAddress: getSafe(() => row.info.destinationStreet, ''),
-              zip: getSafe(() => row.info.destinationZip, '')
+              zip: getSafe(() => row.info.destinationZip, ''),
+              warehouseHours: getSafe(() => row.info.buyerWarehouseHours, 'N/A')
             }
           })}
         </div>
@@ -186,6 +201,16 @@ const RowDetail = props => {
                   <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
                   <SpanIdValue>
                     {getSafe(() => row.info.shippingQuoteRequestId, 'N/A')}
+                  </SpanIdValue>
+                </div>
+              </GridColumn>
+            </GridRow>
+            <GridRow>
+              <GridColumn>
+                <div style={{ float: 'right' }}>
+                  <FormattedMessage id='alerts.requestedDeliveryDate' defaultMessage='Requested delivery date:' />
+                  <SpanIdValue>
+                    {preferredDeliveryDate ? moment(preferredDeliveryDate).format(getLocaleDateFormat()) : 'N/A'}
                   </SpanIdValue>
                 </div>
               </GridColumn>

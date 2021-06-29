@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import {
     Grid,
+    GridRow,
     Label,
     Header,
     Image,
@@ -718,5 +719,11 @@ export const StyledStatusLabel = styled(Label)`
 export const ModalCustom = styled(Modal)`
   &.ui.modal > .actions {
     background: none !important;
+  }
+`
+
+export const GridRowMargin = styled(GridRow)`
+  &.row {
+    ${props => (props.margin ? `margin: ${props.margin} !important;` : '')};
   }
 `

@@ -1,4 +1,4 @@
-import { Table } from 'semantic-ui-react'
+import { Table, GridRow } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const AddressRow = styled.div`
@@ -128,4 +128,10 @@ export const DivCellHeader = styled.div`
 export const DivCellValue = styled.div`
   font-size: 14px;
   color: #20273a;
+`
+
+export const GridRowMargin = styled(GridRow)`
+  &.row {
+    ${props => (props.margin ? `margin: ${props.margin} !important;` : '')};
+  }
 `
