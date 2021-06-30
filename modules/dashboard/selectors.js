@@ -70,6 +70,9 @@ const getProductOffersValue = state => getIsAdmin(state) && !getTakeover(state)
 const getUsersCount = state => getIsAdmin(state) && !getTakeover(state) 
     ? getSafe(() => state.dashboard.data.totalUsersCount, 0) 
     : getSafe(() => state.dashboard.data.companyUsersCount, 0)
+const getCompaniesCount = state => getIsAdmin(state) && !getTakeover(state) 
+    ? getSafe(() => state.dashboard.data.totalCompaniesCount, 0) 
+    : 0
 const getProductOffers = state => getIsAdmin(state) && !getTakeover(state) 
     ? getSafe(() => state.dashboard.data.companyProductOffersCount, 0)
     : getSafe(() => state.dashboard.data.companyProductOffersCount, 0)
@@ -137,6 +140,9 @@ export const makeGetProductOffersValue = () => {
 }
 export const makeGetUsersCount = () => {
     return createSelector([getUsersCount], usersCount => usersCount)
+}
+export const makeGetCompaniesCount = () => {
+    return createSelector([getCompaniesCount], companiesCount => companiesCount)
 }
 export const makeGetProductOffers = () => {
     return createSelector([getProductOffers], productOffers => productOffers)

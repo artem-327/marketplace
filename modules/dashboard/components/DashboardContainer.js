@@ -21,6 +21,7 @@ import {
   makeGetCompanyProductsCount,
   makeGetProductOffersValue,
   makeGetUsersCount,
+  makeGetCompaniesCount,
   makeGetProductOffers,
   makeGetLoading,
   makeGetTotalSumOfSalesMonthly,
@@ -45,6 +46,7 @@ const makeMapStateToProps = () => {
   const getCompanyProductsCount = makeGetCompanyProductsCount()
   const getProductOffersValue = makeGetProductOffersValue()
   const getUsersCount = makeGetUsersCount()
+  const getCompaniesCount = makeGetCompaniesCount()
   const getProductOffers = makeGetProductOffers()
   const getLoading = makeGetLoading()
   const getTotalSumOfSalesMonthly = makeGetTotalSumOfSalesMonthly()
@@ -69,6 +71,7 @@ const makeMapStateToProps = () => {
       companyProductsCount: getCompanyProductsCount(state),
       productOffersValue: getProductOffersValue(state),
       usersCount: getUsersCount(state),
+      companiesCount: getCompaniesCount(state),
       productOffers: getProductOffers(state),
       loading: getLoading(state),
       totalSumOfSalesMonthly: getTotalSumOfSalesMonthly(state),
