@@ -382,7 +382,7 @@ class ProductImportPopup extends Component {
       case 'preview':
         const paramBroadcast =
           broadcastOption.indexOf('|') >= 0
-            ? `&broadcastTemplateId=${getSafe(() => parseInt(broadcastOption.split('|')[1]), '')}`
+            ? `&broadcastOption=${getSafe(() => broadcastOption.split('|')[0], '')}&broadcastTemplateId=${getSafe(() => parseInt(broadcastOption.split('|')[1]), '')}`
             : broadcastOption
             ? `&broadcastOption=${broadcastOption}`
             : null
