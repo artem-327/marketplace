@@ -318,7 +318,8 @@ class BankAccountsTable extends Component {
   }
 
   prepareLinkToAttachment = async (year, month, type) => {
-    let downloadedFile = await this.props.downloadStatement(year, month, type)
+    const { companyId } = this.props
+    let downloadedFile = await this.props.downloadStatement(companyId, year, month, type)
     const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
     const mimeType = fileName && getMimeType(fileName)
     const element = document.createElement('a')
@@ -339,6 +340,58 @@ class BankAccountsTable extends Component {
       }
     }
     return filename
+  }
+
+  getYearMonth = () => {
+    const date = new Date();
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    const fromYear = year - 2
+    const fromMonth = month + 1
+    let result = []
+    for (let y = year; y >= fromYear; y--) {
+      for(let m = 12; m > 0; m--) {
+        if(y == year) {
+          if(m <= month) {
+            let temp
+            if(m < 10)
+              temp = '' + y + '-0' + m
+            else
+              temp = '' + y + '-' + m
+            result.push({
+              key: temp,
+              text: temp,
+              value: temp
+            })
+          }
+        } else if (y == fromYear) {
+          if(m >= fromMonth) {
+            let temp
+            if(m < 10)
+              temp = '' + y + '-0' + m
+            else
+              temp = '' + y + '-' + m
+            result.push({
+              key: temp,
+              text: temp,
+              value: temp
+            })
+          }
+        } else {
+          let temp
+          if(m < 10)
+            temp = '' + y + '-0' + m
+          else
+            temp = '' + y + '-' + m
+          result.push({
+            key: temp,
+            text: temp,
+            value: temp
+          })
+        }
+      }
+    }
+    return result
   }
  
   getColumns = () => [
@@ -546,18 +599,7 @@ class BankAccountsTable extends Component {
                 name='seller'
                 selection
                 value={this.state.statementMonth}
-                options={[
-                  {
-                    key: 1,
-                    text: 'Jan 2020',
-                    value: '2020-1'
-                  },
-                  {
-                    key: 2,
-                    text: 'Feb 2020',
-                    value: '2020-2'
-                  }
-                ]}
+                options={this.getYearMonth()}
                 loading={false}
                 placeholder='Statement Month'
                 onChange={(e, { value }) => {this.setState({statementMonth: value})}}
@@ -931,7 +973,8 @@ const mapStateToProps = state => {
     institutId: state.settings.institutId,
     isOpenPopupDeleteInstitution: state.settings.isOpenPopupDeleteInstitution,
     isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts,
-    isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException
+    isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException,
+    companyId: state.auth.identity.company.id
   }
 }
 

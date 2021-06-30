@@ -1454,9 +1454,9 @@ export function getMyTradePass() {
   }
 }
 
-export function downloadStatement(year, month, type) {
+export function downloadStatement(companyId, year, month, type) {
   return {
     type: AT.DOWNLOAD_FINANCIAL_STATEMENT,
-    payload: api.downloadStatement(year, month, type)
+    payload: api.downloadStatement(companyId, year, month, type)
   }
 }
