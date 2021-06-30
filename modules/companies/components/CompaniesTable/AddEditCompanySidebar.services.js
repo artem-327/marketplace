@@ -229,8 +229,8 @@ export const submitCompany = async (values, actions, state, props) => {
       if (state.companyLogo) {
         let reader = new FileReader()
         reader.onload = async function () {
-          const data = await createCompany(payload)
-          await postCompanyLogo(data.id, state.companyLogo)
+          const {value} = await createCompany(payload)
+          await postCompanyLogo(value.id, state.companyLogo)
           datagrid.clear()
           datagrid.loadData()
           actions.setSubmitting(false)
