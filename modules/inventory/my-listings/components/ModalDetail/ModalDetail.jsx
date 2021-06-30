@@ -353,6 +353,7 @@ class ModalDetail extends Component {
                   let pricingTiers = values.priceTiers.pricingTiers.slice()
                   pricingTiers.splice(i, 1)
                   setFieldValue('priceTiers.pricingTiers', pricingTiers)
+                  this.setState({changedForm : true})
                 }}>
                 <Trash2 color='#f16844' />
               </DivTrash>
