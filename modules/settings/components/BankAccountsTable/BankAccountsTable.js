@@ -1,5 +1,6 @@
 import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
+import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
 import { Header, Modal, Form, Segment, Table, Dropdown } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
@@ -9,7 +10,7 @@ import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check } from 'react-feather'
 import { getMimeType } from '~/components/getMimeType'
@@ -310,11 +311,27 @@ class BankAccountsTable extends Component {
   }
 
   downloadStatement = async () => {
-    const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
+    if(this.state.statementMonth && this.state.documentType) {
+      const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
 
-    element.download = 'Transaction Statement'
-    document.body.appendChild(element) // Required for this to work in FireFox
-    element.click()
+      element.download = 'Transaction Statement'
+      document.body.appendChild(element) // Required for this to work in FireFox
+      element.click()
+    } else {
+      const { toastManager } = this.props
+      await toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='addBankAccounts.statement.selectFirst.title' defaultMessage='Select first!' />,
+          <FormattedMessage
+            id='addBankAccounts.statement.selectFirst.content'
+            defaultMessage='Select Transaction Statement Month and Type first, please!'
+          />
+        ),
+        {
+          appearance: 'warning'
+        }
+      )
+    }
   }
 
   prepareLinkToAttachment = async (year, month, type) => {
@@ -978,4 +995,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable))
+export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable)))

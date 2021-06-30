@@ -3353,6 +3353,8 @@
   "confirm.deactivate": "Do you really want to deactivate {item}?",
   "addBankAccounts.successfully.title": "Success!",
   "addBankAccounts.successfully.content": "Bank accounts were succesfully added.",
+  "addBankAccounts.statement.selectFirst.title": "Select first!",
+  "addBankAccounts.statement.selectFirst.content": "Select Transaction Statement Month and Type first, please!",
   "settings.tradeCriteria.description": "Trade Criteria are critical business factors that TradePass will use to pre-evaluate your potential customers and partners. Using proprietary technology, TradePass will verify these customers/partners exceed, meet, or are below your threshold for conducting business.",
   "settings.tradeCriteria.selectPaymentTerms": "Select your Payment Terms",
   "settings.tradeCriteria.daysBeyond.subLabel": "What Days Beyond Term (DBT) are you comfortable with your customers/partners having?",
