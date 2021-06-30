@@ -22,16 +22,6 @@ export async function getUnNumbersByString(value, limit = 30) {
   return data
 }
 
-export async function getMeasureTypes() {
-  const { data } = await api.get('/prodex/api/measure-types')
-  return data
-}
-
-export async function getAllUnitsOfMeasures() {
-  const { data } = await api.get('/prodex/api/units')
-  return data
-}
-
 export async function getDataRequest(config, values) {
   const { data } = await api.get(config.api.get.apiCall)
   return data

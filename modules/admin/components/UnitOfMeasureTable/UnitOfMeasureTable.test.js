@@ -9,7 +9,7 @@ import UnitOfMeasureTable from './UnitOfMeasureTable'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  getMeasureTypesDataRequest: () => {},
+  getMeasureTypes: () => {},
   openEditPopup: () => {},
   deleteUnit: () => {},
   rows: [],

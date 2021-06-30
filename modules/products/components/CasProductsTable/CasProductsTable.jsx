@@ -16,8 +16,8 @@ import { casProductsTableColumns } from '../../constants'
 const CasProductsTable = props => {
 
   useEffect(() => {
-    props.getHazardClassesDataRequest()
-    props.getPackagingGroupsDataRequest()
+    if (!props.hazardClasses.length) props.getHazardClasses()
+    if (!props.packagingGroups.length) props.getPackagingGroups()
   }, [])
 
   const getActions = () => {
@@ -99,8 +99,8 @@ CasProductsTable.propTypes = {
   openPopup: PropTypes.func,
   openEditAltNamesCasPopup: PropTypes.func,
   closeConfirmPopup: PropTypes.func,
-  getHazardClassesDataRequest: PropTypes.func,
-  getPackagingGroupsDataRequest: PropTypes.func,
+  getHazardClasses: PropTypes.func,
+  getPackagingGroups: PropTypes.func,
   deleteCasProduct: PropTypes.func,
   editedId: PropTypes.number,
   rows: PropTypes.array,
@@ -112,8 +112,8 @@ CasProductsTable.defaultProps = {
   openPopup: () => {},
   openEditAltNamesCasPopup: () => {},
   closeConfirmPopup: () => {},
-  getHazardClassesDataRequest: () => {},
-  getPackagingGroupsDataRequest: () => {},
+  getHazardClasses: () => {},
+  getPackagingGroups: () => {},
   deleteCasProduct: () => {},
   editedId: null,
   rows: [],

@@ -25,6 +25,7 @@ const CasProductSection = props => {
     items,
     toggle,
     hazardClasses,
+    hazardClassesLoading,
     formikProps
   } = props
 
@@ -109,6 +110,7 @@ const CasProductSection = props => {
                         }))}
                         name={item[1]}
                         inputProps={{
+                          loading: hazardClassesLoading,
                           multiple: true,
                           'data-test': `cas_product_sidebar_${item[1]}_inp`
                         }}
@@ -139,6 +141,7 @@ CasProductSection.propTypes = {
   items: PropTypes.array,
   toggle: PropTypes.string,
   hazardClasses: PropTypes.array,
+  hazardClassesLoading: PropTypes.bool,
   formikProps: PropTypes.object,
   label: PropTypes.any
 }
@@ -147,6 +150,7 @@ CasProductSection.defaultProps = {
   items: [],
   toggle: '',
   hazardClasses: [],
+  hazardClassesLoading: false,
   formikProps: {},
   label: ''
 }

@@ -103,14 +103,14 @@ const AddEditEchoProduct = props => {
     const {
       hazardClasses,
       packagingGroups,
-      getHazardClassesDataRequest,
-      getPackagingGroupsDataRequest,
+      getHazardClasses,
+      getPackagingGroups,
       listDocumentTypes,
       getDocumentTypes
     } = props
     try {
-      if (hazardClasses.length === 0) getHazardClassesDataRequest()
-      if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+      if (hazardClasses.length === 0) getHazardClasses()
+      if (packagingGroups.length === 0) getPackagingGroups()
       if (!listDocumentTypes || (listDocumentTypes && !listDocumentTypes.length)) getDocumentTypes()
     } catch (error) {
       console.error(error)
@@ -2206,8 +2206,8 @@ AddEditEchoProduct.propTypes = {
   searchManufacturers: PropTypes.func,
   editEchoProductChangeTab: PropTypes.func,
   loadEditEchoProduct: PropTypes.func,
-  getHazardClassesDataRequest: PropTypes.func,
-  getPackagingGroupsDataRequest: PropTypes.func,
+  getHazardClasses: PropTypes.func,
+  getPackagingGroups: PropTypes.func,
   getUnNumbersByString: PropTypes.func,
   searchProductGroups: PropTypes.func,
   getDocumentTypes: PropTypes.func,
@@ -2247,8 +2247,8 @@ AddEditEchoProduct.defaultProps = {
   searchManufacturers: () => {},
   editEchoProductChangeTab: () => {},
   loadEditEchoProduct: () => {},
-  getHazardClassesDataRequest: () => {},
-  getPackagingGroupsDataRequest: () => {},
+  getHazardClasses: () => {},
+  getPackagingGroups: () => {},
   getUnNumbersByString: () => {},
   searchProductGroups: () => {},
   getDocumentTypes: () => {},

@@ -42,8 +42,8 @@ const getCatEditedId = state => (!!state?.productsAdmin?.currentAddForm || !!sta
   : -1
 const getEditEchoProductEditTab = state => state?.productsAdmin?.editEchoProductEditTab
 const getEditEchoProductInitTrig = state => state?.productsAdmin?.editEchoProductInitTrig
-const getPackagingGroups = state => getSafe(() => state?.productsAdmin?.packagingGroups?.length, false)
-  ? state?.productsAdmin?.packagingGroups?.map((pGroup, id) => {
+const getPackagingGroups = state => getSafe(() => state?.globalData?.packagingGroups?.length, false)
+  ? state?.globalData?.packagingGroups?.map((pGroup, id) => {
       return {
         key: id,
         text: pGroup.groupCode,
@@ -52,8 +52,9 @@ const getPackagingGroups = state => getSafe(() => state?.productsAdmin?.packagin
       }
     })
   : []
-const getHazardClasses = state => getSafe(() => state?.productsAdmin?.hazardClasses?.length, false)
-  ? state?.productsAdmin?.hazardClasses?.map((d, id) => {
+const getPackagingGroupsLoading = state => state?.globalData?.packagingGroupsLoading
+const getHazardClasses = state => getSafe(() => state?.globalData?.hazardClasses?.length, false)
+  ? state?.globalData?.hazardClasses?.map((d, id) => {
       return {
         key: id,
         text: d.classCode,
@@ -62,6 +63,7 @@ const getHazardClasses = state => getSafe(() => state?.productsAdmin?.hazardClas
       }
     })
   : []
+const getHazardClassesLoading = state => state?.globalData?.hazardClassesLoading
 const getSearchedManufacturersLoading = state => state?.productsAdmin?.searchedManufacturersLoading
 const getSearchedManufacturers = state => state?.productsAdmin?.searchedManufacturers
 const getSearchedCasProducts = state => state?.productsAdmin?.searchedCasProducts
@@ -87,7 +89,7 @@ const getSearchedProductGroups = state => getSafe(() => state?.productsAdmin?.se
 const getSearchedProductGroupsLoading = state => state?.productsAdmin?.searchedProductGroupsLoading
 const getUpdating = state => state?.productsAdmin?.updating
 const getAltCasNamesRows = state => getSafe(() => state?.productsAdmin?.altCasNamesRows?.data, [])
-const getCasHazardClasses = state => state?.productsAdmin?.hazardClasses
+const getCasHazardClasses = state => state?.globalData?.hazardClasses
 const getGroupRows = ownProps => ownProps?.datagrid?.rows?.map((row, _i) => ({
   ...row,
   rawData: row,
@@ -197,8 +199,14 @@ export const makeGetEditEchoProductInitTrig = () => {
 export const makeGetPackagingGroups = () => {
   return createSelector([getPackagingGroups], packagingGroups => packagingGroups)
 }
+export const makeGetPackagingGroupsLoading = () => {
+  return createSelector([getPackagingGroupsLoading], getPackagingGroupsLoading => getPackagingGroupsLoading)
+}
 export const makeGetHazardClasses = () => {
   return createSelector([getHazardClasses], hazardClasses => hazardClasses)
+}
+export const makeGetHazardClassesLoading = () => {
+  return createSelector([getHazardClassesLoading], getHazardClassesLoading => getHazardClassesLoading)
 }
 export const makeGetSearchedManufacturersLoading = () => {
   return createSelector([getSearchedManufacturersLoading], searchedManufacturersLoading => searchedManufacturersLoading)

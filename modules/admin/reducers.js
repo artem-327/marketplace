@@ -9,8 +9,6 @@ import {
   closeAddPopup,
   closeConfirmPopup,
   postDwollaAccount,
-  getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest,
   getAllUnNumbersDataRequest,
   getUnNumbersByString,
   getPrimaryBranchProvinces,
@@ -76,8 +74,6 @@ export const initialState = {
   conditionsRows: [],
   casProductsRows: [],
   altCasNamesRows: [],
-  measureTypes: [],
-  unitsOfMeasures: [],
   unNumbersFiltered: [],
   companiesRows: [],
   singleCompany: [],
@@ -189,42 +185,6 @@ export default typeToReducer(
         ...state,
         popupValues: null,
         currentAddDwolla: null
-      }
-    },
-    [getMeasureTypesDataRequest.pending]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getMeasureTypesDataRequest.rejected]: (state, action) => {
-      return {
-        ...state
-      }
-    },
-    [getMeasureTypesDataRequest.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        measureTypes: action.payload
-      }
-    },
-    [getAllUnitsOfMeasuresDataRequest.pending]: (state, action) => {
-      return {
-        ...state,
-        loading: true
-      }
-    },
-    [getAllUnitsOfMeasuresDataRequest.rejected]: (state, action) => {
-      return {
-        ...state,
-        loading: false,
-        error: action.error
-      }
-    },
-    [getAllUnitsOfMeasuresDataRequest.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        loading: false,
-        unitsOfMeasures: action.payload
       }
     },
     [getAllUnNumbersDataRequest.pending]: (state, action) => {

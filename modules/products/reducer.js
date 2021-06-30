@@ -7,8 +7,6 @@ import {
   closePopup,
   openEditAltNamesCasPopup,
   closeConfirmPopup,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
   deleteCasProduct,
   postNewCasProductRequest,
   updateCasProductRequest,
@@ -66,8 +64,6 @@ export const initialState = {
   editPopupBoolean: false,
   deleteRowById: null,
   confirmMessage: null,
-  hazardClasses: [],
-  packagingGroups: [],
   casProductsRows: [],
   altCasNamesRows: [],
   editEchoProductEditTab: 0,
@@ -139,38 +135,6 @@ export default typeToReducer(
         ...state,
         deleteRowById: null,
         confirmMessage: null
-      }
-    },
-    [getHazardClassesDataRequest.pending]: state => {
-      return {
-        ...state
-      }
-    },
-    [getHazardClassesDataRequest.rejected]: state => {
-      return {
-        ...state
-      }
-    },
-    [getHazardClassesDataRequest.fulfilled]: (state, {payload}) => {
-      return {
-        ...state,
-        hazardClasses: payload.data
-      }
-    },
-    [getPackagingGroupsDataRequest.pending]: state => {
-      return {
-        ...state
-      }
-    },
-    [getPackagingGroupsDataRequest.rejected]: state => {
-      return {
-        ...state
-      }
-    },
-    [getPackagingGroupsDataRequest.fulfilled]: (state, {payload}) => {
-      return {
-        ...state,
-        packagingGroups: payload.data
       }
     },
     [deleteCasProduct.pending]: state => {

@@ -16,8 +16,6 @@ export const openEditAltNamesCasPopup = createAction('PRODUCTS_OPEN_EDIT_2_POPUP
   return { data }
 })
 export const closeConfirmPopup = createAction('PRODUCTS_CLOSE_CONFIRM_POPUP')
-export const getHazardClassesDataRequest = createAsyncAction('PRODUCTS_GET_HAZARD_CLASSES', () => api.getHazardClasses())
-export const getPackagingGroupsDataRequest = createAsyncAction('PRODUCTS_GET_PACKAGING_GROUPS', () => api.getPackagingGroups())
 export const deleteCasProduct = createAsyncAction('PRODUCTS_CAS_DELETE_PRODUCT', async (id) => {
   const response = await api.deleteCasProduct(id)
   Datagrid.removeRow(id)

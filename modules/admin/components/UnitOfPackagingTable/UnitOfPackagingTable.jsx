@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import ProdexTable from '../../../../components/table'
 // Services
 import { columns, getRows } from './UnitOfPackagingTable.services'
+import {getUnits} from "../../../global-data/actions";
 
 /**
  * UnitOfPackagingTable Component
@@ -12,8 +13,8 @@ import { columns, getRows } from './UnitOfPackagingTable.services'
  */
 const UnitOfPackagingTable = props => {
   useEffect(() => {
-    props.getMeasureTypesDataRequest()
-    props.getAllUnitsOfMeasuresDataRequest()
+    if (!props.measureOptions.length) props.getMeasureTypes()
+    if (!props.units.length) props.getUnits()
   }, [])
 
   const { loading, rows, datagrid, filterValue } = props
@@ -35,9 +36,11 @@ const UnitOfPackagingTable = props => {
 }
 
 UnitOfPackagingTable.propTypes = {
-  getAllUnitsOfMeasuresDataRequest: PropTypes.func,
+  getMeasureTypes: PropTypes.func,
+  measureOptions: PropTypes.array,
+  getUnits: PropTypes.func,
+  units: PropTypes.array,
   deleteUnitOfPackaging: PropTypes.func,
-  getMeasureTypesDataRequest: PropTypes.func,
   openEditPopup: PropTypes.func,
   deleteUnit: PropTypes.func,
   rows: PropTypes.array,
@@ -49,9 +52,11 @@ UnitOfPackagingTable.propTypes = {
 }
 
 UnitOfPackagingTable.defaultValues = {
-  getAllUnitsOfMeasuresDataRequest: () => {},
+  getUnits: () => {},
+  units: [],
   deleteUnitOfPackaging: () => {},
-  getMeasureTypesDataRequest: () => {},
+  getMeasureTypes: () => {},
+  measureOptions: [],
   openEditPopup: () => {},
   deleteUnit: () => {},
   rows: [],

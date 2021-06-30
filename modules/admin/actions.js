@@ -13,8 +13,6 @@ export const openAddPopup = createAction('ADMIN_OPEN_ADD_POPUP', currentTab => c
 export const closeAddPopup = createAction('ADMIN_CLOSE_ADD_POPUP')
 export const closeConfirmPopup = createAction('ADMIN_CLOSE_CONFIRM_POPUP')
 export const postDwollaAccount = createAsyncAction('ADMIN_CREATE_DWOLLA_ACCOUNT', (values, companyId) => api.postNewDwollaAccount(values, companyId))
-export const getMeasureTypesDataRequest = createAsyncAction('ADMIN_GET_MEASURE_TYPES', () => api.getMeasureTypes())
-export const getAllUnitsOfMeasuresDataRequest = createAsyncAction('ADMIN_GET_ALL_UNITS_OF_MEASURES', () => api.getAllUnitsOfMeasures())
 export const getAllUnNumbersDataRequest = createAsyncAction('ADMIN_GET_UN_NUMBERS', () => api.getAllUnNumbers())
 export const getUnNumbersByString = createAsyncAction('ADMIN_GET_UN_NUMBERS_BY_STRING', (value) => api.getUnNumbersByString(value))
 export const getPrimaryBranchProvinces = createAsyncAction('ADMIN_GET_PRIMARY_BRANCH_PROVINCES', (id) => api.getProvinces(id))

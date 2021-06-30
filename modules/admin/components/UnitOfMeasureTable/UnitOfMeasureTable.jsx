@@ -12,7 +12,7 @@ import { columns, getRows } from './UnitOfMeasureTable.services'
  */
 const UnitOfMeasureTable = props => {
   useEffect(() => {
-    props.getMeasureTypesDataRequest()
+    if (!props.measureOptions.length) props.getMeasureTypes()
   }, [])
   
   const { loading, rows, datagrid, filterValue } = props
@@ -34,7 +34,8 @@ const UnitOfMeasureTable = props => {
 }
 
 UnitOfMeasureTable.propTypes = {
-  getMeasureTypesDataRequest: PropTypes.func,
+  getMeasureTypes: PropTypes.func,
+  measureOptions: PropTypes.array,
   openEditPopup: PropTypes.func,
   deleteUnit: PropTypes.func,
   rows: PropTypes.array,
@@ -46,7 +47,8 @@ UnitOfMeasureTable.propTypes = {
 }
 
 UnitOfMeasureTable.defaultValues = {
-  getMeasureTypesDataRequest: () => {},
+  getMeasureTypes: () => {},
+  measureOptions: [],
   openEditPopup: () => {},
   deleteUnit: () => {},
   rows: [],
