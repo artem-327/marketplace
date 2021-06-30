@@ -312,7 +312,7 @@ class BankAccountsTable extends Component {
   downloadStatement = async () => {
     const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
 
-    element.download = 'Financial-Statement'
+    element.download = 'Transaction Statement'
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
   }
