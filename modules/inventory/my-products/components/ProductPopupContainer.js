@@ -3,7 +3,6 @@ import { withToastManager } from 'react-toast-notifications'
 import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 import {
-  getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
   searchUnNumber,
@@ -14,7 +13,13 @@ import {
   loadFile,
   removeAttachment
 } from '~/modules/settings/actions'
-import { getDocumentTypes } from '../../../global-data/actions'
+import {
+  getDocumentTypes,
+  getPackagingTypes,
+  getUnits,
+  getHazardClasses,
+  getPackagingGroups
+} from '../../../global-data/actions'
 
 import { closePopup } from '../../actions'
 import { addAttachment } from '~/modules/inventory/actions'
@@ -24,7 +29,6 @@ import ProductPopup from './ProductPopup'
 
 const mapDispatchToProps = {
   closePopup,
-  getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
   searchUnNumber,
@@ -35,7 +39,11 @@ const mapDispatchToProps = {
   removeAttachmentLinkCompanyProduct,
   loadFile,
   addAttachment,
-  removeAttachment
+  removeAttachment,
+  getPackagingTypes,
+  getUnits,
+  getHazardClasses,
+  getPackagingGroups
 }
 const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
   let settingsMap = new Map()
@@ -50,14 +58,14 @@ const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
     popupValues: simpleAdd.popupValues,
     companyGenericProduct: settings.companyGenericProduct,
     companyGenericProductFetching: settings.companyGenericProductFetching,
-    packagingType: settings.productsPackagingType,
-    packagingTypesAll: settings.packagingTypes,
-    productsUnitsType: settings.productsUnitsType,
-    packageWeightUnits: settings.packageWeightUnits,
-    unitsAll: settings.units,
-    freightClasses: settings.productsFreightClasses,
-    hazardClasses: settings.productsHazardClasses,
-    packagingGroups: settings.productsPackagingGroups,
+    packagingType: globalData.measureTypesDropdown,
+    packagingTypesAll: globalData.packagingTypes,
+    productsUnitsType: globalData.unitsDropdown,
+    packageWeightUnits: globalData.weightUnits,
+    unitsAll: globalData.units,
+    freightClasses: globalData.freightClassesDropdown,
+    hazardClasses: globalData.hazardClassesDropdown,
+    packagingGroups: globalData.packagingGroupsDropdown,
     searchedUnNumbers: settings.searchedUnNumbers,
     loading: settings.productDataLoading,
     documentTypes: globalData.documentTypesDropdown,

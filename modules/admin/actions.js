@@ -7,17 +7,12 @@ import { updateIdentity } from '../auth/actions'
 // Services
 import { Datagrid } from '../datagrid'
 
-
 export const openEditPopup = createAction('ADMIN_OPEN_EDIT_POPUP', editedData => editedData)
 export const closeEditPopup = createAction('ADMIN_CLOSE_EDIT_POPUP')
 export const openAddPopup = createAction('ADMIN_OPEN_ADD_POPUP', currentTab => currentTab)
 export const closeAddPopup = createAction('ADMIN_CLOSE_ADD_POPUP')
 export const closeConfirmPopup = createAction('ADMIN_CLOSE_CONFIRM_POPUP')
 export const postDwollaAccount = createAsyncAction('ADMIN_CREATE_DWOLLA_ACCOUNT', (values, companyId) => api.postNewDwollaAccount(values, companyId))
-export const getHazardClassesDataRequest = createAsyncAction('ADMIN_GET_HAZARD_CLASSES', () => api.getHazardClasses())
-export const getPackagingGroupsDataRequest = createAsyncAction('ADMIN_GET_PACKAGING_GROUPS', () => api.getPackagingGroups())
-export const getMeasureTypesDataRequest = createAsyncAction('ADMIN_GET_MEASURE_TYPES', () => api.getMeasureTypes())
-export const getAllUnitsOfMeasuresDataRequest = createAsyncAction('ADMIN_GET_ALL_UNITS_OF_MEASURES', () => api.getAllUnitsOfMeasures())
 export const getAllUnNumbersDataRequest = createAsyncAction('ADMIN_GET_UN_NUMBERS', () => api.getAllUnNumbers())
 export const getUnNumbersByString = createAsyncAction('ADMIN_GET_UN_NUMBERS_BY_STRING', (value) => api.getUnNumbersByString(value))
 export const getPrimaryBranchProvinces = createAsyncAction('ADMIN_GET_PRIMARY_BRANCH_PROVINCES', (id) => api.getProvinces(id))
@@ -26,13 +21,6 @@ export const getCompany = createAsyncAction('ADMIN_GET_FULL_COMPANY', (params) =
 export const udpateEnabled = createAsyncAction('ADMIN_ENABLED_COMPANY', (id, enabled) => api.udpateEnabled(id, enabled))
 export const searchUnNumber = createAsyncAction('ADMIN_SEARCH_UN_NUMBER', (pattern) => api.searchUnNumber(pattern))
 export const searchManufacturers = createAsyncAction('ADMIN_SEARCH_MANUFACTURERS', (text, limit = false) => api.searchManufacturers(text, limit))
-export const getProductsCatalogRequest = createAsyncAction('ADMIN_GET_PRODUCTS_CATALOG_DATA', async () => {
-  const [hazardClasses, packagingGroups] = await Promise.all([api.getHazardClasses(), api.getPackagingGroups()])
-  return {
-    hazardClasses: hazardClasses,
-    packagingGroups: packagingGroups
-  }
-})
 export const registerDwollaAccount = createAction('ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP', data => data)
 export const closeRegisterDwollaAccount = createAction('ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP')
 export const openPopup = createAction('ADMIN_OPEN_POPUP', data => ({ data }))
@@ -107,8 +95,6 @@ export const userSwitchEnableDisable = createAsyncAction('ADMIN_USER_SWITCH_ENAB
 export const postNewUserRequest = createAsyncAction('ADMIN_POST_NEW_USER', data => api.postNewUserRequest(data))
 export const submitUserEdit = createAsyncAction('ADMIN_EDIT_USER', (id, data) => api.submitUserEdit(id, data))
 export const deleteUser = createAsyncAction('ADMIN_DELETE_USER', id => api.deleteUser(id))
-export const getUserRoles = createAsyncAction('ADMIN_GET_ROLES', () => api.getUserRoles())
-export const getAdminRoles = createAsyncAction('ADMIN_GET_ADMIN_ROLES', () => api.getAdminRoles())
 export const searchCompany = createAsyncAction('ADMIN_SEARCH_COMPANY', (companyText, limit) => api.searchCompany(companyText, limit))
 export const initSearchCompany = createAsyncAction('ADMIN_INIT_SEARCH_COMPANY', id => api.getCompanyInfo(id))
 export const searchTags = createAsyncAction('ADMIN_SEARCH_TAGS', tag => api.searchTags({

@@ -3,8 +3,6 @@ import api from '../../api'
 import { generateQueryString } from '../../utils/functions'
 
 export default {
-  getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
-  getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
   deleteCasProduct: id => api.delete(`/prodex/api/cas-products/id/${id}`).then(() => id),
   postNewCasProduct: value => api.post('/prodex/api/cas-products', value),
   updateCasProduct: (id, value) => api.put(`/prodex/api/cas-products/id/${id}`, value)

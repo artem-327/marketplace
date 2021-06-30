@@ -62,7 +62,6 @@ export default {
     })
   },
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles?type=COMPANY_COMPATIBLE').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () => api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () => api.get('/prodex/api/branches/warehouses').then(response => response.data),
@@ -86,18 +85,6 @@ export default {
     return await api
       .post(`/prodex/api/company-products/datagrid?unmappedOnly=${data.unmapped}`, data.body)
       .then(response => response.data)
-  },
-  getProductTypes: async () => {
-    return await api.get('/prodex/api/packaging-types').then(response => response.data)
-  },
-  getUnitsType: async () => {
-    return await api.get('/prodex/api/units')
-  },
-  getHazardClasses: async () => {
-    return await api.get('/prodex/api/hazard-classes')
-  },
-  getPackagingGroups: async () => {
-    return await api.get('/prodex/api/packaging-groups')
   },
   getProductsWithRequiredParamPar: char =>
     api.get(`/prodex/api/product-templates?search=${char}`).then(response => response.data),
@@ -268,7 +255,6 @@ export default {
   getBusinessClassifications: () => api.get('/prodex/api/business-classifications').then(response => response.data),
   dwollaGetVerificationDocumentTypes: () =>
     api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
-  getLanguages: () => api.get('/prodex/api/cms/languages/').then(response => response.data),
   setPreferredLanguage: language =>
     api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
   searchCompanyGenericProduct: (searchQuery, limit) =>

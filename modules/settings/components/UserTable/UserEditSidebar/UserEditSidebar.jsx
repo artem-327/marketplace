@@ -17,9 +17,9 @@ import {
   getCompanyDetails,
   getUsersDataRequest,
   getCompanyUser,
-  getUser,
-  getRoles
+  getUser
 } from '../../../actions'
+import { getCompanyUserRoles } from '../../../../global-data/actions'
 import { searchSellMarketSegments, searchBuyMarketSegments } from '../../../../companies/actions'
 import { getIdentity } from '../../../../auth/actions'
 
@@ -97,7 +97,7 @@ const UserEditSidebar = props => {
         await getUser(sidebarValues?.id)
         await getCompanyUser(sidebarValues?.id)
       }
-      if (!userRoles.length) props.getRoles()
+      if (!userRoles.length) props.getCompanyUserRoles()
       if (companyId !== null) {
         const { value } = await props.getCompanyDetails(companyId)
         let branches = uniqueArrayByKey(
@@ -560,11 +560,11 @@ const mapDispatchToProps = {
   getUsersDataRequest,
   getCompanyUser,
   getUser,
-  getRoles
+  getCompanyUserRoles
 }
 
 const mapStateToProps = state => {
-  const { settings, companiesAdmin, auth } = state
+  const { settings, globalData, companiesAdmin, auth } = state
 
   return {
     currentUserId: getSafe(() => auth.identity.id, null),
@@ -572,8 +572,8 @@ const mapStateToProps = state => {
     companyId: getSafe(() => state.auth.identity.company.id, null),
     editTrig: settings.editTrig,
     updating: settings.updating,
-    userRoles: settings.roles,
-    userRolesLoading: settings.rolesLoading,
+    userRoles: globalData.companyUserRoles,
+    userRolesLoading: globalData.companyUserRolesLoading,
     userSettings: settings?.userSettings,
     sidebarValues: settings?.sidebarValues,
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({

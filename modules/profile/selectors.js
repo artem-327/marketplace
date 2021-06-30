@@ -3,8 +3,8 @@ import moment from 'moment'
 import { getSafe } from '../../utils/functions'
 
 const getChangePasswordPopup = state => state?.profile?.changePasswordPopup
-const getLanguages = state => state?.settings?.languages
-const getLanguagesFetching = state => state?.settings?.languagesFetching
+const getLanguages = state => state?.globalData?.languagesDropdown
+const getLanguagesFetching = state => state?.globalData?.languagesLoading
 const getTutorialCompleted = state => state?.auth?.identity?.tutorialCompleted
 const getPopupValues = state => state?.auth?.identity
 const getLastLoginAt = state => state?.auth?.identity?.lastLoginAt

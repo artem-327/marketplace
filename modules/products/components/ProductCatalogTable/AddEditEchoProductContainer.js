@@ -15,13 +15,11 @@ import {
   removeAttachment,
   editEchoProductChangeTab,
   loadEditEchoProduct,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
   getUnNumbersByString,
   searchProductGroups,
   searchCompany
 } from '../../../products/actions'
-import { getDocumentTypes } from '../../../global-data/actions'
+import { getDocumentTypes, getHazardClasses, getPackagingGroups } from '../../../global-data/actions'
 import {
   makeGetCurrentAddForm,
   makeGetCurrentEditForm,
@@ -56,8 +54,8 @@ const mapDispatchToProps = {
   searchManufacturers,
   editEchoProductChangeTab,
   loadEditEchoProduct,
-  getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest,
+  getHazardClasses,
+  getPackagingGroups,
   getUnNumbersByString,
   searchProductGroups,
   getDocumentTypes,

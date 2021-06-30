@@ -16,8 +16,6 @@ export const initialState = {
   isOpenSidebar: false,
   reRegisterP44Pending: false,
   currentUser: null,
-  userRoles: [],
-  adminRoles: [],
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   searchedCompaniesFilter: [],
@@ -130,20 +128,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentUser: action.payload
-      }
-    }
-
-    case AT.COMPANIES_GET_USER_ROLES_FULFILLED: {
-      return {
-        ...state,
-        userRoles: action.payload
-      }
-    }
-
-    case AT.COMPANIES_GET_ADMIN_ROLES_FULFILLED: {
-      return {
-        ...state,
-        adminRoles: action.payload
       }
     }
 

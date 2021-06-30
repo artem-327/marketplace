@@ -37,7 +37,6 @@ import {
   StyledModalHeader
 } from '../constants/layout'
 import { getDuplicatePackagingTypesByKey } from '../../../services/filters'
-import {getPackagingTypes, getProductForms, getProductGrades} from "../../global-data/actions";
 
 class WantedBoardFilter extends Component {
   state = {

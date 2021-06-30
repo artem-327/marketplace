@@ -75,12 +75,6 @@ export const userSwitchEnableDisable = createAsyncAction(
   id => api.userSwitchEnableDisable(id)
 )
 
-export const getUserRoles = createAsyncAction('COMPANIES_GET_USER_ROLES',  () => api.getUserRoles())
-
-export const getAdminRoles = createAsyncAction('COMPANIES_GET_ADMIN_ROLES',  () =>
-  api.getAdminRoles()
-)
-
 export const postNewUserRequest = createAsyncAction('COMPANIES_POST_NEW_USER', data =>
   api.postNewUserRequest(data)
 )

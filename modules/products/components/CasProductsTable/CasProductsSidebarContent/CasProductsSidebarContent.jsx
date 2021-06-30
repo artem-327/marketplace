@@ -35,7 +35,7 @@ const CasProductsSidebarContent = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    props.getHazardClassesDataRequest()
+    if (!props.hazardClasses.length) props.getHazardClasses()
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const filter = values.propertiesFilter
@@ -159,13 +159,13 @@ const CasProductsSidebarContent = props => {
 }
 
 CasProductsSidebarContent.propTypes = {
-  getHazardClassesDataRequest: PropTypes.func,
+  getHazardClasses: PropTypes.func,
   intl: PropTypes.object,
   formikProps: PropTypes.object
 }
 
 CasProductsSidebarContent.defaultProps = {
-  getHazardClassesDataRequest: () => {},
+  getHazardClasses: () => {},
   intl: {},
   formikProps: {}
 }

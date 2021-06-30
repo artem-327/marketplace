@@ -434,13 +434,6 @@ export function getUsersDataRequest() {
   }
 }
 
-export function getRoles() {
-  return {
-    type: AT.GET_ROLES_DATA,
-    payload: api.getRoles()
-  }
-}
-
 export function openRolesPopup(row) {
   return {
     type: AT.OPEN_ROLES_POPUP,
@@ -524,30 +517,6 @@ export function getCreditCardsDataRequest() {
       type: AT.GET_CREDIT_CARDS_DATA,
       async payload() {
         return creditCardsData
-      }
-    })
-  }
-}
-
-export function getProductsCatalogRequest(data) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
-      async payload() {
-        const [/*productCatalog,*/ productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
-          // typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) : api.getProductsCatalogByString(data),
-          api.getProductTypes(),
-          api.getUnitsType(),
-          api.getHazardClasses(),
-          api.getPackagingGroups()
-        ])
-        return {
-          // products: productCatalog,
-          productsTypes: productPacTypes,
-          units: units.data,
-          hazardClasses: hazardClasses.data,
-          packagingGroups: packagingGroups.data
-        }
       }
     })
   }
@@ -1129,8 +1098,6 @@ export const dwollaGetVerificationDocumentTypes = () => ({
   type: AT.SETTINGS_GET_VERIFICATION_DOCUMENT_TYPES,
   payload: api.dwollaGetVerificationDocumentTypes()
 })
-
-export const getLanguages = () => ({ type: AT.GET_LANGUAGES, payload: api.getLanguages() })
 
 export const setPreferredLanguage = lang => ({
   type: AT.SET_PREFERRED_LANGUAGE,

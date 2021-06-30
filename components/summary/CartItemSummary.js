@@ -12,12 +12,8 @@ import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 import * as Yup from 'yup'
 import { currency } from '../../constants/index'
-import {
-  getPackagingGroupsDataRequest,
-  getHazardClassesDataRequest,
-  getUnNumbersByString,
-  addUnNumber
-} from '../../modules/admin/actions'
+import { getUnNumbersByString, addUnNumber } from '../../modules/admin/actions'
+import { getHazardClasses, getPackagingGroups } from '../../modules/global-data/actions'
 import { getCart } from '../../modules/purchase-order/actions'
 import { getNmfcNumbersByString, addNmfcNumber } from '../../modules/settings/actions'
 import { generateToastMarkup, getSafe, getFloatOrNull, getIntOrNull } from '../../utils/functions'
@@ -63,10 +59,10 @@ class CartItemSummary extends Component {
   }
 
   async componentDidMount() {
-    const { hazardClasses, packagingGroups, getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
+    const { hazardClasses, packagingGroups, getHazardClasses, getPackagingGroups } = this.props
 
-    if (hazardClasses.length === 0) getHazardClassesDataRequest()
-    if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
+    if (hazardClasses.length === 0) getHazardClasses()
+    if (packagingGroups.length === 0) getPackagingGroups()
   }
 
   onHazmatPopup = async item => {
@@ -565,7 +561,8 @@ CartItemSummary.defaultProps = {
 export default withToastManager(
   connect(
     ({
-      admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching },
+      admin: { unNumbersFiltered, unNumbersFetching },
+      globalData: { packagingGroups, hazardClasses },
       settings: { nmfcNumbersFetching, nmfcNumbersFiltered }
     }) => ({
       packagingGroups,
@@ -591,8 +588,8 @@ export default withToastManager(
     }),
 
     {
-      getHazardClassesDataRequest,
-      getPackagingGroupsDataRequest,
+      getHazardClasses,
+      getPackagingGroups,
       getUnNumbersByString,
       addUnNumber,
       getNmfcNumbersByString,

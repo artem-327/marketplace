@@ -8,21 +8,28 @@ import {
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  getMeasureTypesDataRequest,
   deleteUnit
 } from '../../actions'
+import { getMeasureTypes } from '../../../global-data/actions'
 // Services
 import { withDatagrid } from '../../../datagrid'
 import { makeRows } from './UnitOfMeasureTable.services'
 // Selectors
-import { makeGetConfig, makeGetFilterValue, makeGetLoading, makeGetConfirmMessage, makeGetDeleteRowById } from '../../selectors'
+import {
+    makeGetConfig,
+    makeGetFilterValue,
+    makeGetLoading,
+    makeGetConfirmMessage,
+    makeGetDeleteRowById,
+    makeGetMeasureOptions
+} from '../../selectors'
 
 const mapDispatchToProps = {
     getDataRequest,
     openEditPopup,
     closeConfirmPopup,
     deleteConfirmation,
-    getMeasureTypesDataRequest,
+    getMeasureTypes,
     deleteUnit
 }
 
@@ -32,6 +39,7 @@ const makeMapStateToProps = () => {
     const getLoading = makeGetLoading()
     const getConfirmMessage = makeGetConfirmMessage()
     const getDeleteRowById = makeGetDeleteRowById()
+    const getMeasureOptions = makeGetMeasureOptions()
 
     const mapStateToProps = (state, { datagrid }) => {
         let cfg = getConfig(state)
@@ -42,7 +50,8 @@ const makeMapStateToProps = () => {
             filterValue: getFilterValue(state),
             loading: getLoading(state),
             confirmMessage: getConfirmMessage(state),
-            deleteRowById: getDeleteRowById(state)
+            deleteRowById: getDeleteRowById(state),
+            measureOptions: getMeasureOptions(state)
         }
     }
     return mapStateToProps

@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import { getSafe } from '../../utils/functions'
 import { config } from './constants'
 
-const getUnitsOfMeasures = state => getSafe(() => state.admin.unitsOfMeasures, [])
+const getUnits = state => getSafe(() => state.globalData.units, [])
 const getCurrentEditForm = state => getSafe(() => state.admin.currentEditForm, null)
 const getCurrentAddForm = state => getSafe(() => state.admin.currentAddForm, null)
 const getCurrentAddDwolla = state => getSafe(() => state.admin.currentAddDwolla, null)
@@ -20,15 +20,10 @@ const getConfirmMessage = state => getSafe(() => state.admin.confirmMessage, nul
 const getDeleteRowById = state => getSafe(() => state.admin.deleteRowById, null)
 const getlogisticsProvidersFetching = state => getSafe(() => state.admin.logisticsProvidersFetching, false)
 const getLogisticsProviders = state => getSafe(() => state.admin.logisticsProviders, [])
-const getMeasureOptions = state => state?.admin?.measureTypes?.map(d => {
-  return {
-    id: d.id,
-    text: d.name,
-    value: d.id
-  }
-})
+const getMeasureOptions = state => state.globalData.measureTypesDropdown
 
-export const makeGetDimensionUnits = () => createSelector([getUnitsOfMeasures], unitsOfMeasures => unitsOfMeasures?.filter(d=>{return d.measureType.name === "length"}).map(d => {
+export const makeGetUnits = () => createSelector([getUnits], units => units)
+export const makeGetDimensionUnits = () => createSelector([getUnits], units => units?.filter(d=>{return d.measureType.name === "length"}).map(d => {
     return {
       key: d.id,
       text: d.name,
@@ -36,7 +31,7 @@ export const makeGetDimensionUnits = () => createSelector([getUnitsOfMeasures], 
     }
   })
 )
-export const makeGetWeightUnits = () => createSelector([getUnitsOfMeasures], unitsOfMeasures => unitsOfMeasures?.filter(d=>{return d.measureType.name === "weight"}).map(d => {
+export const makeGetWeightUnits = () => createSelector([getUnits], units => units?.filter(d=>{return d.measureType.name === "weight"}).map(d => {
     return {
       key: d.id,
       text: d.name,

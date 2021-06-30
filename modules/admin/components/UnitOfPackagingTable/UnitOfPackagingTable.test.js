@@ -9,9 +9,9 @@ import UnitOfPackagingTable from './UnitOfPackagingTable'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  getAllUnitsOfMeasuresDataRequest: () => {},
+  getUnits: () => {},
   deleteUnitOfPackaging: () => {},
-  getMeasureTypesDataRequest: () => {},
+  getMeasureTypes: () => {},
   openEditPopup: () => {},
   deleteUnit: () => {},
   rows: [],

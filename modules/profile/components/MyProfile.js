@@ -5,7 +5,7 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validati
 import * as Yup from 'yup'
 import moment from 'moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { getLanguages } from '~/modules/settings/actions'
+import { getLanguages } from '../../global-data/actions'
 import { getSafe } from '~/utils/functions'
 import { FormattedDateTime } from '~/components/formatted-messages/'
 import { errorMessages, phoneValidation } from '~/constants/yupValidation'
@@ -58,7 +58,7 @@ class MyProfile extends Component {
   componentDidMount() {
     this.props.getUserMeData()
     // this.props.getCurrencies()
-    this.props.getLanguages()
+    if (!this.props.languages.length) this.props.getLanguages()
   }
 
   handleChangePassword = () => {
@@ -282,8 +282,8 @@ const mapStateToProps = state => {
     //   }
     // }),
     changePasswordPopup: state.profile.changePasswordPopup,
-    languages: state.settings.languages,
-    languagesFetching: state.settings.languagesFetching,
+    languages: state.globalData.languages,
+    languagesFetching: state.globalData.languagesLoading,
     tutorialCompleted: getSafe(() => state.auth.identity.tutorialCompleted, false),
     savingAvatarPicture: state.profile.savingAvatarPicture,
     identityLoading: state.auth.loading

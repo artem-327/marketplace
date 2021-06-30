@@ -8,26 +8,28 @@ import {
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  deleteUnitOfPackaging,
-  getMeasureTypesDataRequest,
-  getAllUnitsOfMeasuresDataRequest
+  deleteUnitOfPackaging
 } from '../../actions'
 import {
   getProductForms,
   getProductConditions,
   getProductGrades,
-  getPackagingTypes
+  getPackagingTypes,
+  getMeasureTypes,
+  getUnits
 } from '../../../global-data/actions'
 // Services
 import { withDatagrid } from '../../../datagrid'
 import { makeRows } from './UnitOfPackagingTable.services'
 // Selectors
 import {
-    makeGetConfig,
-    makeGetFilterValue,
-    makeGetLoading,
-    makeGetConfirmMessage,
-    makeGetDeleteRowById
+  makeGetConfig,
+  makeGetFilterValue,
+  makeGetLoading,
+  makeGetConfirmMessage,
+  makeGetDeleteRowById,
+  makeGetMeasureOptions,
+  makeGetUnits
 } from '../../selectors'
 
 const mapDispatchToProps = {
@@ -36,8 +38,8 @@ const mapDispatchToProps = {
     openEditPopup,
     closeConfirmPopup,
     deleteConfirmation,
-    getMeasureTypesDataRequest,
-    getAllUnitsOfMeasuresDataRequest,
+    getMeasureTypes,
+    getUnits,
     getProductForms,
     getProductConditions,
     getProductGrades,
@@ -50,6 +52,8 @@ const makeMapStateToProps = () => {
     const getLoading = makeGetLoading()
     const getConfirmMessage = makeGetConfirmMessage()
     const getDeleteRowById = makeGetDeleteRowById()
+    const getMeasureOptions = makeGetMeasureOptions()
+    const getMakeGetUnits = makeGetUnits()
 
     const mapStateToProps = (state, { datagrid }) => {
         let cfg = getConfig(state)
@@ -59,7 +63,9 @@ const makeMapStateToProps = () => {
             filterValue: getFilterValue(state),
             loading: getLoading(state),
             confirmMessage: getConfirmMessage(state),
-            deleteRowById: getDeleteRowById(state)
+            deleteRowById: getDeleteRowById(state),
+            measureOptions: getMeasureOptions(state),
+            units: getMakeGetUnits(state)
         }
     }
     return mapStateToProps
