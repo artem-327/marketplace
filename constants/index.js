@@ -146,3 +146,8 @@ export const currencyUSSymbol = 'US$'
  * @constant {string}
  */
  export const URL_PRIVACY = 'https://www.bluepallet.io/privacy'
+
+ /**
+  * @constant {string}
+  */
+  export const URL_ECA = 'https://www.bluepallet.io/eca'
