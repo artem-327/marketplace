@@ -9,7 +9,7 @@ import { logout } from '~/modules/auth/actions'
 import { triggerAgreementModal } from '~/modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 //Constants
-import { URL_TERMS } from '../../constants'
+import { URL_TERMS, URL_PRIVACY } from '../../constants'
 
 const TopMargedDiv = styled.div`
   margin-top: 15px;
@@ -54,22 +54,22 @@ class AgreementModal extends Component {
                       </a>
                     ),
                     echosTermsOfUse: (
-                      <a href='https://www.echosystem.com/terms-of-use' target='_blank'>
+                      <a href={URL_TERMS} target='_blank'>
                         {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
-                      <a href='https://www.echosystem.com/privacy-policy' target='_blank'>
+                      <a href={URL_PRIVACY} target='_blank'>
                         {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     ),
                     dwollasTermsOfService: (
-                      <a href='https://www.dwolla.com/legal/tos/' target='_blank'>
+                      <a href={URL_TERMS} target='_blank'>
                         {formatMessage({ id: 'verification.dwollasTOS' })}
                       </a>
                     ),
                     dwollasPrivacyPolicy: (
-                      <a href='https://www.dwolla.com/legal/privacy/' target='_blank'>
+                      <a href={URL_PRIVACY} target='_blank'>
                         {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     )
@@ -88,12 +88,12 @@ class AgreementModal extends Component {
                       </a>
                     ),
                     echosTermsOfUse: (
-                      <a href='https://www.echosystem.com/terms-of-use' target='_blank'>
+                      <a href={URL_TERMS} target='_blank'>
                         {formatMessage({ id: 'verification.termsOfUse' })}
                       </a>
                     ),
                     echosPrivacyPolicy: (
-                      <a href='https://www.echosystem.com/privacy-policy' target='_blank'>
+                      <a href={URL_PRIVACY} target='_blank'>
                         {formatMessage({ id: 'verification.privacyPolicy' })}
                       </a>
                     )
