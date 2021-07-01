@@ -314,7 +314,7 @@ class BankAccountsTable extends Component {
     if(this.state.statementMonth && this.state.documentType) {
       const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
 
-      element.download = 'Transaction Statement'
+      element.download = this.state.documentType === 'CSV' ? 'Transaction Statement.csv' : 'Transaction Statement'
       document.body.appendChild(element) // Required for this to work in FireFox
       element.click()
     } else {
@@ -599,7 +599,7 @@ class BankAccountsTable extends Component {
     const { formatMessage } = intl
     return (
       <Fragment>
-        <div>
+        <div className='flex stretched'>
           <ConfirmDeleteInstitution
             isOpenPopup={isOpenPopupDeleteInstitution}
             closePopup={closePopup}
