@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import TableHandlers from './TableHandlers'
@@ -22,6 +23,10 @@ class DocumentTypes extends Component {
   })
 
   render() {
+
+    if (!getSafe(() => this.props.auth.identity.isAdmin, false))
+      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+  
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <Container fluid className='flex stretched'>
@@ -39,9 +44,10 @@ class DocumentTypes extends Component {
   }
 }
 
-const mapStateToProps = ({ documentTypes }) => ({
-  currentEditForm: documentTypes.currentEditForm,
-  currentAddForm: documentTypes.currentAddForm
+const mapStateToProps = state => ({
+  currentEditForm: state.documentTypes.currentEditForm,
+  currentAddForm: state.documentTypes.currentAddForm,
+  auth: state.auth
 })
 
 export default connect(mapStateToProps, Actions)(DocumentTypes)
