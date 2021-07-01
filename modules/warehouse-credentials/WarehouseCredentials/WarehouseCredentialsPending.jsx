@@ -536,6 +536,9 @@ class WarehouseCredentialsPending extends Component {
     } = this.props
     const filterValue = this.state.filter
 
+    if (!getSafe(() => this.props.auth.identity.isAdmin, false))
+      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+
     return (
       <>
         <PositionHeaderSettings>
@@ -603,6 +606,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state, { datagrid }) => {
   return {
+    auth: state.auth,
     rows: datagrid.rows.map(r => {
       return {
         ...r,

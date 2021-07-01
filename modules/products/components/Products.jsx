@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Container } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 // Components
 import TablesHandlers from './TablesHandlersContainer'
 // Services
+import { getSafe } from '../../../utils/functions'
 import { withAuth } from '../../../hocs'
 import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
 // Constants
@@ -85,6 +87,9 @@ const Products = props => {
     return datagridApiMap[currentTab]
   }
 
+  if (!getSafe(() => props.auth.identity.isAdmin, false))
+    return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+
   return (
     <DatagridProvider apiConfig={getApiConfig()} preserveFilters skipInitLoad>
       <Container fluid className='flex stretched'>
@@ -108,7 +113,8 @@ Products.propTypes = {
   currentAddForm: PropTypes.bool,
   currentEditForm: PropTypes.bool,
   isOpenImportPopup: PropTypes.bool,
-  closeAddPopup: PropTypes.func
+  closeAddPopup: PropTypes.func,
+  auth: PropTypes.object
 }
 
 Products.defaultProps = {
@@ -117,7 +123,8 @@ Products.defaultProps = {
   currentAddForm: null,
   currentEditForm: null,
   isOpenImportPopup: false,
-  closeAddPopup: () => {}
+  closeAddPopup: () => {},
+  auth: {}
 }
 
 export default withDatagrid(withAuth(Products))

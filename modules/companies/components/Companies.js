@@ -4,13 +4,14 @@ import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TableHandlers from './TableHandlers'
 import { withAuth } from '../../../hocs'
 import { connect } from 'react-redux'
-
+import { FormattedMessage } from 'react-intl'
 import CompaniesTable from './CompaniesTable/Table'
 import UsersTable from './UsersTable/Table'
 import * as Actions from '../actions'
-
 import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
+// Services
+import { getSafe } from '../../../utils/functions'
 
 const tables = {
   companies: <CompaniesTable />,
@@ -77,6 +78,10 @@ class Companies extends Component {
 
   render() {
     const { currentTab, isOpenSidebar } = this.props
+
+    if (!getSafe(() => this.props.auth.identity.isAdmin, false))
+      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+    
     return (
       <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
         <Container fluid className='flex stretched'>
