@@ -607,7 +607,7 @@ class BankAccountsTable extends Component {
             reloadBankAccounts={reloadBankAccounts}
           />
 
-          <div style={{height: '150px'}}>
+          <div style={{height: '150px', position: 'sticky', zIndex: 501}}>
             <b>Financial Statement</b> <br/>
             <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
             <div>
