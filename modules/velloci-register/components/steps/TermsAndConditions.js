@@ -3,8 +3,8 @@ import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-//Constants
-import { URL_TERMS } from '../../../../constants'
+// Constants
+import { URL_TERMS, URL_PRIVACY, URL_ECA} from '../../../../constants'
 
 const GridTermsAndConditions = styled(Grid)`
   margin: 14px 16px !important;
@@ -64,7 +64,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
               {text => (
                 <>
                   {text}
-                  <LinkLabelCheckbox href='https://velloci.com/ecc' target='_blank'>
+                  <LinkLabelCheckbox href={URL_ECA} target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.electronicComunications.link'
                       defaultMessage='Electronic Communications Agreement'
@@ -91,7 +91,7 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
               {text => (
                 <>
                   {text}
-                  <LinkLabelCheckbox href='https://velloci.com/privacy_policy.pdf' target='_blank'>
+                  <LinkLabelCheckbox href={URL_PRIVACY} target='_blank'>
                     <FormattedMessage
                       id='velloci.termsAndConditions.privacyPolicy.link'
                       defaultMessage='Privacy Policy '
