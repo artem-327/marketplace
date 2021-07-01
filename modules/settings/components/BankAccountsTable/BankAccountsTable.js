@@ -1,7 +1,8 @@
 import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
+import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
-import { Header, Modal, Form, Segment, Label, Table } from 'semantic-ui-react'
+import { Header, Modal, Form, Segment, Table, Dropdown } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/components/Confirmable/confirm'
 import { Formik } from 'formik'
@@ -9,10 +10,10 @@ import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check } from 'react-feather'
-
+import { getMimeType } from '~/components/getMimeType'
 import {
   openPopup,
   closePopup,
@@ -20,7 +21,6 @@ import {
   getDwollaAccBalance,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
   deleteBankAccount,
   dwollaInitiateVerification,
   dwollaFinalizeVerification,
@@ -31,7 +31,8 @@ import {
   deleteInstitution,
   hideInactiveAccounts,
   openPopupDeleteInstitutions,
-  getCompanyDetails
+  getCompanyDetails,
+  downloadStatement
 } from '../../actions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -40,6 +41,12 @@ import ActionCell from '~/components/table/ActionCell'
 import ConfirmDeleteInstitution from './ConfirmDeleteInstitution'
 //Styles
 import { DivCircle, StatusLabel } from './styles'
+
+const ButtonDownload = styled(Button)`
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+  margin-left: 8px !important;
+`
 
 const Container = styled.div`
   overflow-y: auto;
@@ -62,13 +69,6 @@ const DivThirdExceptions = styled.div`
   padding: 30px;
   height: 80px !important;
   flex-grow: 0 !important;
-`
-
-const SpanText = styled.span`
-  white-space: nowrap !important;
-  text-overflow: ellipsis !important;
-  overflow: hidden !important;
-  font-weight: 500;
 `
 
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
@@ -281,7 +281,9 @@ class BankAccountsTable extends Component {
 
     this.state = {
       amount1: 0,
-      amount2: 0
+      amount2: 0,
+      statementMonth: '',
+      documentType: ''
     }
   }
 
@@ -308,6 +310,107 @@ class BankAccountsTable extends Component {
     }
   }
 
+  downloadStatement = async () => {
+    if(this.state.statementMonth && this.state.documentType) {
+      const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
+
+      element.download = 'Transaction Statement'
+      document.body.appendChild(element) // Required for this to work in FireFox
+      element.click()
+    } else {
+      const { toastManager } = this.props
+      await toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='addBankAccounts.statement.selectFirst.title' defaultMessage='Select first!' />,
+          <FormattedMessage
+            id='addBankAccounts.statement.selectFirst.content'
+            defaultMessage='Select Transaction Statement Month and Type first, please!'
+          />
+        ),
+        {
+          appearance: 'warning'
+        }
+      )
+    }
+  }
+
+  prepareLinkToAttachment = async (year, month, type) => {
+    const { companyId } = this.props
+    let downloadedFile = await this.props.downloadStatement(companyId, year, month, type)
+    const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
+    const mimeType = fileName && getMimeType(fileName)
+    const element = document.createElement('a')
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+    element.href = fileURL
+
+    return element
+  }
+
+  extractFileName = contentDispositionValue => {
+    var filename = ''
+    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
+      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
+      var matches = filenameRegex.exec(contentDispositionValue)
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '')
+      }
+    }
+    return filename
+  }
+
+  getYearMonth = () => {
+    const date = new Date();
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
+    const fromYear = year - 2
+    const fromMonth = month + 1
+    let result = []
+    for (let y = year; y >= fromYear; y--) {
+      for(let m = 12; m > 0; m--) {
+        if(y == year) {
+          if(m <= month) {
+            let temp
+            if(m < 10)
+              temp = '' + y + '-0' + m
+            else
+              temp = '' + y + '-' + m
+            result.push({
+              key: temp,
+              text: temp,
+              value: temp
+            })
+          }
+        } else if (y == fromYear) {
+          if(m >= fromMonth) {
+            let temp
+            if(m < 10)
+              temp = '' + y + '-0' + m
+            else
+              temp = '' + y + '-' + m
+            result.push({
+              key: temp,
+              text: temp,
+              value: temp
+            })
+          }
+        } else {
+          let temp
+          if(m < 10)
+            temp = '' + y + '-0' + m
+          else
+            temp = '' + y + '-' + m
+          result.push({
+            key: temp,
+            text: temp,
+            value: temp
+          })
+        }
+      }
+    }
+    return result
+  }
+ 
   getColumns = () => [
     { name: 'accountName', disabled: true },
     {
@@ -495,207 +598,249 @@ class BankAccountsTable extends Component {
     const { formatMessage } = intl
     return (
       <Fragment>
-        <ConfirmDeleteInstitution
-          isOpenPopup={isOpenPopupDeleteInstitution}
-          closePopup={closePopup}
-          deleteInstitution={deleteInstitution}
-          institutId={institutId}
-          reloadBankAccounts={reloadBankAccounts}
-        />
+        <div>
+          <ConfirmDeleteInstitution
+            isOpenPopup={isOpenPopupDeleteInstitution}
+            closePopup={closePopup}
+            deleteInstitution={deleteInstitution}
+            institutId={institutId}
+            reloadBankAccounts={reloadBankAccounts}
+          />
 
-        {isThirdPartyConnectionException && (
-          <DivThirdExceptions>
-            <FormattedMessage
-              id='payments.bankAccountCannnotRetrieved'
-              defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'>
-              {text => text}
-            </FormattedMessage>
-          </DivThirdExceptions>
-        )}
-        {!isThirdPartyConnectionException && bankAccounts.bankAccountList && !bankAccounts.documentOwner ? (
-          <div className='flex stretched settings_bankaccounts listings-wrapper'>
-            <ProdexTable
-              messages={
-                isThirdPartyConnectionException
-                  ? {
-                      noData: formatMessage({
-                        id: 'payments.bankAccountCannnotRetrieved',
-                        defaultMessage: 'Bank accounts cannot be retrieved at the moment. Please try again later.'
-                      })
-                    }
-                  : null
-              }
-              isBankTable
-              tableName='settings_bankaccounts'
-              rows={this.getRows(myRows)}
-              loading={loading}
-              columns={this.getColumns()}
-              filterValue={filterValue}
-              groupBy={['bankName']}
-              getChildGroups={rows =>
-                _(rows)
-                  .groupBy('bankName')
-                  .map(v => ({
-                    key: `${v[0].bankName}_${v[0].institution_id}_${v[0].id}`,
-                    childRows: v
-                  }))
-                  .value()
-              }
-              groupActions={row => {
-                return [
-                  this.props.isHideInactiveAccounts
-                    ? {
-                        text: formatMessage({
-                          id: 'settings.accounts.viewInactiveAccounts',
-                          defaultMessage: 'View Inactive Accounts'
-                        }),
-                        callback: async () => {
-                          try {
-                            await this.props.hideInactiveAccounts(false)
-                          } catch (e) {
-                            console.error(e)
-                          }
-                        }
-                      }
-                    : {
-                        text: formatMessage({
-                          id: 'settings.accounts.hideInactiveAccounts',
-                          defaultMessage: 'Hide Inactive Accounts'
-                        }),
-                        callback: async () => {
-                          try {
-                            await this.props.hideInactiveAccounts(true)
-                          } catch (e) {
-                            console.error(e)
-                          }
-                        }
-                      },
+          <div style={{height: '150px'}}>
+            <b>Financial Statement</b> <br/>
+            <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
+            <div>
+              <Dropdown
+                style={{ width: '500px', marginRight: '50px' }}
+                name='seller'
+                selection
+                value={this.state.statementMonth}
+                options={this.getYearMonth()}
+                loading={false}
+                placeholder='Statement Month'
+                onChange={(e, { value }) => {this.setState({statementMonth: value})}}
+              />
+              <Dropdown
+                style={{ width: '200px', marginRight: '50px' }}
+                name='seller'
+                selection
+                value={this.state.documentType}
+                options={[
                   {
-                    text: formatMessage({
-                      id: 'settings.accounts.deleteInstitutions',
-                      defaultMessage: 'Delete Institutions'
-                    }),
-                    callback: async row => {
-                      let [bankName, institutionId, id] = row.key.split('_')
-                      await this.props.openPopupDeleteInstitutions(institutionId)
-                    }
+                    key: 1,
+                    text: 'PDF',
+                    value: 'PDF'
+                  },
+                  {
+                    key: 2,
+                    text: 'CSV',
+                    value: 'CSV'
                   }
-                ]
-              }}
-              renderGroupLabel={({ row: { value }, groupLength }) => null}
-            />
+                ]}
+                loading={false}
+                placeholder='Document Type'
+                onChange={(e, { value }) => {this.setState({documentType: value})}}
+              />
+              <ButtonDownload primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download'>
+                <FormattedMessage id='global.download' defaultMessage='Download' />
+              </ButtonDownload>
+            </div>
           </div>
-        ) : null}
+          {isThirdPartyConnectionException && (
+            <DivThirdExceptions>
+              <FormattedMessage
+                id='payments.bankAccountCannnotRetrieved'
+                defaultMessage='Bank accounts cannot be retrieved at the moment. Please try again later.'>
+                {text => text}
+              </FormattedMessage>
+            </DivThirdExceptions>
+          )}
+          {!isThirdPartyConnectionException && bankAccounts.bankAccountList && !bankAccounts.documentOwner ? (
+            <div className='flex stretched settings_bankaccounts listings-wrapper'>
+              <ProdexTable
+                messages={
+                  isThirdPartyConnectionException
+                    ? {
+                        noData: formatMessage({
+                          id: 'payments.bankAccountCannnotRetrieved',
+                          defaultMessage: 'Bank accounts cannot be retrieved at the moment. Please try again later.'
+                        })
+                      }
+                    : null
+                }
+                isBankTable
+                tableName='settings_bankaccounts'
+                rows={this.getRows(myRows)}
+                loading={loading}
+                columns={this.getColumns()}
+                filterValue={filterValue}
+                groupBy={['bankName']}
+                getChildGroups={rows =>
+                  _(rows)
+                    .groupBy('bankName')
+                    .map(v => ({
+                      key: `${v[0].bankName}_${v[0].institution_id}_${v[0].id}`,
+                      childRows: v
+                    }))
+                    .value()
+                }
+                groupActions={row => {
+                  return [
+                    this.props.isHideInactiveAccounts
+                      ? {
+                          text: formatMessage({
+                            id: 'settings.accounts.viewInactiveAccounts',
+                            defaultMessage: 'View Inactive Accounts'
+                          }),
+                          callback: async () => {
+                            try {
+                              await this.props.hideInactiveAccounts(false)
+                            } catch (e) {
+                              console.error(e)
+                            }
+                          }
+                        }
+                      : {
+                          text: formatMessage({
+                            id: 'settings.accounts.hideInactiveAccounts',
+                            defaultMessage: 'Hide Inactive Accounts'
+                          }),
+                          callback: async () => {
+                            try {
+                              await this.props.hideInactiveAccounts(true)
+                            } catch (e) {
+                              console.error(e)
+                            }
+                          }
+                        },
+                    {
+                      text: formatMessage({
+                        id: 'settings.accounts.deleteInstitutions',
+                        defaultMessage: 'Delete Institutions'
+                      }),
+                      callback: async row => {
+                        let [bankName, institutionId, id] = row.key.split('_')
+                        await this.props.openPopupDeleteInstitutions(institutionId)
+                      }
+                    }
+                  ]
+                }}
+                renderGroupLabel={({ row: { value }, groupLength }) => null}
+              />
+            </div>
+          ) : null}
 
-        {!isThirdPartyConnectionException && (bankAccounts.accountStatus || bankAccounts.documentStatus) && (
-          <Container style={{ padding: '0 0 28px 0' }}>
-            {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
-              <>
-                <Table style={{ marginTop: 0, marginBottom: 30 }}>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell width={4}>
-                        <FormattedMessage
-                          id={`${method}.registrationStatus`}
-                          defaultMessage='Dwolla Registration Status'
-                        />
-                      </Table.HeaderCell>
-                      <Table.HeaderCell width={10}>
-                        <FormattedMessage id='dwolla.info' defaultMessage='Info' />
-                      </Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    <Table.Row>
-                      <Table.Cell>
-                        <FormattedMessage id={`${method}.registrationStatus.${accountStatus}`} />
-                      </Table.Cell>
-                      <Table.Cell>
-                        {bankAccounts.documentStatus ? (
-                          <>
+          {!isThirdPartyConnectionException && (bankAccounts.accountStatus || bankAccounts.documentStatus) && (
+            <Container style={{ padding: '0 0 28px 0' }}>
+              {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
+                <>
+                  <Table style={{ marginTop: 0, marginBottom: 30 }}>
+                    <Table.Header>
+                      <Table.Row>
+                        <Table.HeaderCell width={4}>
+                          <FormattedMessage
+                            id={`${method}.registrationStatus`}
+                            defaultMessage='Dwolla Registration Status'
+                          />
+                        </Table.HeaderCell>
+                        <Table.HeaderCell width={10}>
+                          <FormattedMessage id='dwolla.info' defaultMessage='Info' />
+                        </Table.HeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      <Table.Row>
+                        <Table.Cell>
+                          <FormattedMessage id={`${method}.registrationStatus.${accountStatus}`} />
+                        </Table.Cell>
+                        <Table.Cell>
+                          {bankAccounts.documentStatus ? (
+                            <>
+                              <FormattedMessage id={`${method}.info.${accountStatus}`} />
+                              &nbsp;
+                              <FormattedMessage id={`${method}.document.${documentRequired}`} />
+                            </>
+                          ) : (
                             <FormattedMessage id={`${method}.info.${accountStatus}`} />
-                            &nbsp;
-                            <FormattedMessage id={`${method}.document.${documentRequired}`} />
-                          </>
-                        ) : (
-                          <FormattedMessage id={`${method}.info.${accountStatus}`} />
-                        )}
-                      </Table.Cell>
-                    </Table.Row>
-                  </Table.Body>
-                </Table>
-              </>
-            )}
+                          )}
+                        </Table.Cell>
+                      </Table.Row>
+                    </Table.Body>
+                  </Table>
+                </>
+              )}
 
-            {bankAccounts.accountStatus && bankAccounts.documentOwner && (
-              <CustomDiv>
-                <FormattedMessage id={`${method}.document.owner.header1`}>{text => <h3>{text}</h3>}</FormattedMessage>
-                <FormattedMessage id={`${method}.document.owner.text1`}>{text => <div>{text}</div>}</FormattedMessage>
-                <FormattedMessage id={`${method}.document.owner.text2`}>{text => <div>{text}</div>}</FormattedMessage>
-                <FormattedMessage id={`${method}.document.owner.text3`}>{text => <div>{text}</div>}</FormattedMessage>
-              </CustomDiv>
-            )}
+              {bankAccounts.accountStatus && bankAccounts.documentOwner && (
+                <CustomDiv>
+                  <FormattedMessage id={`${method}.document.owner.header1`}>{text => <h3>{text}</h3>}</FormattedMessage>
+                  <FormattedMessage id={`${method}.document.owner.text1`}>{text => <div>{text}</div>}</FormattedMessage>
+                  <FormattedMessage id={`${method}.document.owner.text2`}>{text => <div>{text}</div>}</FormattedMessage>
+                  <FormattedMessage id={`${method}.document.owner.text3`}>{text => <div>{text}</div>}</FormattedMessage>
+                </CustomDiv>
+              )}
 
-            {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
-              <CustomDiv>
-                <FormattedMessage id={`${method}.document.explanatory.header1`}>
-                  {text => <h3>{text}</h3>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.text1`}>
-                  {text => <div>{text}</div>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.header2`}>
-                  {text => <h3>{text}</h3>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.text21`}>
-                  {text => <div>{text}</div>}
-                </FormattedMessage>
-                <br></br>
-                <li>
-                  <FormattedMessage id={`${method}.document.explanatory.BoldLi11`}>
-                    {text => <b>{text}</b>}
+              {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
+                <CustomDiv>
+                  <FormattedMessage id={`${method}.document.explanatory.header1`}>
+                    {text => <h3>{text}</h3>}
                   </FormattedMessage>
-                  <FormattedMessage id={`${method}.document.explanatory.TextLi11`}>
-                    {text => <span>{text}</span>}
+                  <FormattedMessage id={`${method}.document.explanatory.text1`}>
+                    {text => <div>{text}</div>}
                   </FormattedMessage>
-                </li>
-                <li>
-                  <FormattedMessage id={`${method}.document.explanatory.BoldLi12`}>
-                    {text => <b>{text}</b>}
+                  <FormattedMessage id={`${method}.document.explanatory.header2`}>
+                    {text => <h3>{text}</h3>}
                   </FormattedMessage>
-                  <FormattedMessage id={`${method}.document.explanatory.TextLi12`}>
-                    {text => <span>{text}</span>}
+                  <FormattedMessage id={`${method}.document.explanatory.text21`}>
+                    {text => <div>{text}</div>}
                   </FormattedMessage>
-                </li>
-                <li>
-                  <FormattedMessage id={`${method}.document.explanatory.BoldLi13`}>
-                    {text => <b>{text}</b>}
+                  <br></br>
+                  <li>
+                    <FormattedMessage id={`${method}.document.explanatory.BoldLi11`}>
+                      {text => <b>{text}</b>}
+                    </FormattedMessage>
+                    <FormattedMessage id={`${method}.document.explanatory.TextLi11`}>
+                      {text => <span>{text}</span>}
+                    </FormattedMessage>
+                  </li>
+                  <li>
+                    <FormattedMessage id={`${method}.document.explanatory.BoldLi12`}>
+                      {text => <b>{text}</b>}
+                    </FormattedMessage>
+                    <FormattedMessage id={`${method}.document.explanatory.TextLi12`}>
+                      {text => <span>{text}</span>}
+                    </FormattedMessage>
+                  </li>
+                  <li>
+                    <FormattedMessage id={`${method}.document.explanatory.BoldLi13`}>
+                      {text => <b>{text}</b>}
+                    </FormattedMessage>
+                    <FormattedMessage id={`${method}.document.explanatory.TextLi13`}>
+                      {text => <span>{text}</span>}
+                    </FormattedMessage>
+                  </li>
+                  <br></br>
+                  <FormattedMessage id={`${method}.document.explanatory.text22`}>
+                    {text => <div>{text}</div>}
                   </FormattedMessage>
-                  <FormattedMessage id={`${method}.document.explanatory.TextLi13`}>
-                    {text => <span>{text}</span>}
+                  <br></br>
+                  <FormattedMessage id={`${method}.document.explanatory.li21`}>
+                    {text => <li>{text}</li>}
                   </FormattedMessage>
-                </li>
-                <br></br>
-                <FormattedMessage id={`${method}.document.explanatory.text22`}>
-                  {text => <div>{text}</div>}
-                </FormattedMessage>
-                <br></br>
-                <FormattedMessage id={`${method}.document.explanatory.li21`}>
-                  {text => <li>{text}</li>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.li22`}>
-                  {text => <li>{text}</li>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.li23`}>
-                  {text => <li>{text}</li>}
-                </FormattedMessage>
-                <FormattedMessage id={`${method}.document.explanatory.li24`}>
-                  {text => <li>{text}</li>}
-                </FormattedMessage>
-              </CustomDiv>
-            )}
-          </Container>
-        )}
+                  <FormattedMessage id={`${method}.document.explanatory.li22`}>
+                    {text => <li>{text}</li>}
+                  </FormattedMessage>
+                  <FormattedMessage id={`${method}.document.explanatory.li23`}>
+                    {text => <li>{text}</li>}
+                  </FormattedMessage>
+                  <FormattedMessage id={`${method}.document.explanatory.li24`}>
+                    {text => <li>{text}</li>}
+                  </FormattedMessage>
+                </CustomDiv>
+              )}
+            </Container>
+          )}
+        </div>
       </Fragment>
     )
   }
@@ -719,7 +864,8 @@ const mapDispatchToProps = {
   deleteInstitution,
   hideInactiveAccounts,
   openPopupDeleteInstitutions,
-  getCompanyDetails
+  getCompanyDetails,
+  downloadStatement
 }
 
 const statusToLabel = {
@@ -844,8 +990,9 @@ const mapStateToProps = state => {
     institutId: state.settings.institutId,
     isOpenPopupDeleteInstitution: state.settings.isOpenPopupDeleteInstitution,
     isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts,
-    isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException
+    isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException,
+    companyId: state.auth.identity.company.id
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable))
+export default withToastManager(connect(mapStateToProps, mapDispatchToProps)(injectIntl(BankAccountsTable)))
