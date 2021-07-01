@@ -918,41 +918,6 @@ class AddCart extends Component {
         id: 'global.casIndexName',
         defaultMessage: 'Cas Index Name',
         name: `${prefix}casProduct.casIndexName`
-      }),
-      this.renderField({
-        id: 'global.recommendedUse',
-        defaultMessage: 'Recommended Uses',
-        name: `${prefix}casProduct.recommendedUse`
-      }),
-      this.renderField({
-        id: 'global.usesAdvisedAgainst',
-        defaultMessage: 'Uses Advised Against',
-        name: `${prefix}casProduct.usesAdvisedAgainst`
-      }),
-      this.renderField({
-        id: 'global.criticalTemperature',
-        defaultMessage: 'Critical Temperature',
-        name: `${prefix}casProduct.criticalTemperature`
-      }),
-      this.renderField({
-        id: 'global.gasDensity',
-        defaultMessage: 'Gas Density',
-        name: `${prefix}casProduct.gasDensity`
-      }),
-      this.renderField({
-        id: 'global.relativeDensity',
-        defaultMessage: 'Relative Density',
-        name: `${prefix}casProduct.relativeDensity`
-      }),
-      this.renderField({
-        id: 'global.flowTime',
-        defaultMessage: 'Flow Time (ISO 2431)',
-        name: `${prefix}casProduct.flowTimeIso2431`
-      }),
-      this.renderField({
-        id: 'global.heatOfCombustion',
-        defaultMessage: 'Heat of Combustion',
-        name: `${prefix}casProduct.heatOfCombustion`
       })
     ]
 
@@ -961,6 +926,43 @@ class AddCart extends Component {
 
     switch (this.state.regulatoryFilter) {
       case all.key:
+        markup.push(
+          this.renderField({
+            id: 'global.recommendedUse',
+            defaultMessage: 'Recommended Uses',
+            name: `${prefix}casProduct.recommendedUses`
+          }),
+          this.renderField({
+            id: 'global.usesAdvisedAgainst',
+            defaultMessage: 'Uses Advised Against',
+            name: `${prefix}casProduct.usesAdvisedAgainst`
+          }),
+          this.renderField({
+            id: 'global.criticalTemperature',
+            defaultMessage: 'Critical Temperature',
+            name: `${prefix}casProduct.criticalTemperature`
+          }),
+          this.renderField({
+            id: 'global.gasDensity',
+            defaultMessage: 'Gas Density',
+            name: `${prefix}casProduct.gasDensity`
+          }),
+          this.renderField({
+            id: 'global.relativeDensity',
+            defaultMessage: 'Relative Density',
+            name: `${prefix}casProduct.relativeDensity`
+          }),
+          this.renderField({
+            id: 'global.flowTime',
+            defaultMessage: 'Flow Time (ISO 2431)',
+            name: `${prefix}casProduct.flowTimeIso2431`
+          }),
+          this.renderField({
+            id: 'global.heatOfCombustion',
+            defaultMessage: 'Heat of Combustion',
+            name: `${prefix}casProduct.heatOfCombustion`
+          })
+        )
       case epa.key: {
         markup.push(
           this.renderField({
@@ -1019,7 +1021,6 @@ class AddCart extends Component {
         if (!dontBreak) break
       }
 
-      case all.key:
       case rightToKnow.key: {
         markup.push(
           this.renderDropdown({
@@ -1056,7 +1057,6 @@ class AddCart extends Component {
         if (!dontBreak) break
       }
 
-      case all.key:
       case dhs.key: {
         markup.push(
           this.renderField({
@@ -1135,7 +1135,6 @@ class AddCart extends Component {
         if (!dontBreak) break
       }
 
-      case all.key:
       case caProp65.key: {
         markup.push(
           this.renderField({
@@ -1163,7 +1162,6 @@ class AddCart extends Component {
         if (!dontBreak) break
       }
 
-      case all.key:
       case dea.key: {
         markup.push(
           this.renderDropdown({
@@ -1182,7 +1180,6 @@ class AddCart extends Component {
         if (!dontBreak) break
       }
 
-      case all.key:
       case international.key: {
         markup.push(
           this.renderDropdown({
@@ -1752,7 +1749,9 @@ class AddCart extends Component {
                 {this.renderField({
                   id: 'global.reportableQuantity',
                   defaultMessage: 'Reportable Quantity',
-                  name: `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantities`
+                  name: this.state.companyGenericProductGrouping === 'dot'
+                    ? `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantity`
+                    : `${prefix}${this.state.companyGenericProductGrouping}ReportableQuantities`
                 })}
                 {this.renderField({
                   id: 'global.enviromentalHazards',
