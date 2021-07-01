@@ -38,6 +38,8 @@
         return 'application/x-rar-compressed'
       case 'xml':
         return 'application/xml'
+      case 'csv':
+        return 'text/csv'
       default:
         return 'text/plain'
     }

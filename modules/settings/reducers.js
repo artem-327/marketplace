@@ -136,7 +136,8 @@ export const initialState = {
   insuranceRows: null,
   insuranceDocumentsTypes: [],
   insuranceDocumentsTypesLoading: false,
-  myTradePass: null
+  myTradePass: null,
+  downloading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -2009,6 +2010,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         myTradePass: payload
+      }
+    }
+
+    case AT.DOWNLOAD_FINANCIAL_STATEMENT_PENDING: {
+      return {
+        ...state,
+        downloading: true
+      }
+    }
+    case AT.DOWNLOAD_FINANCIAL_STATEMENT_FULFILLED:
+    case AT.DOWNLOAD_FINANCIAL_STATEMENT_REJECTED: {
+      return {
+        ...state,
+        downloading: false
       }
     }
 

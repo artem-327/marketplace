@@ -593,7 +593,8 @@ class BankAccountsTable extends Component {
       deleteInstitution,
       institutId,
       reloadBankAccounts,
-      isThirdPartyConnectionException
+      isThirdPartyConnectionException,
+      downloading
     } = this.props
     const { formatMessage } = intl
     return (
@@ -606,47 +607,50 @@ class BankAccountsTable extends Component {
             institutId={institutId}
             reloadBankAccounts={reloadBankAccounts}
           />
-
-          <div style={{height: '150px', position: 'sticky', zIndex: 501}}>
-            <b>Financial Statement</b> <br/>
-            <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
-            <div>
-              <Dropdown
-                style={{ width: '500px', marginRight: '50px' }}
-                name='seller'
-                selection
-                value={this.state.statementMonth}
-                options={this.getYearMonth()}
-                loading={false}
-                placeholder='Statement Month'
-                onChange={(e, { value }) => {this.setState({statementMonth: value})}}
-              />
-              <Dropdown
-                style={{ width: '200px', marginRight: '50px' }}
-                name='seller'
-                selection
-                value={this.state.documentType}
-                options={[
-                  {
-                    key: 1,
-                    text: 'PDF',
-                    value: 'PDF'
-                  },
-                  {
-                    key: 2,
-                    text: 'CSV',
-                    value: 'CSV'
-                  }
-                ]}
-                loading={false}
-                placeholder='Document Type'
-                onChange={(e, { value }) => {this.setState({documentType: value})}}
-              />
-              <ButtonDownload primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download'>
-                <FormattedMessage id='global.download' defaultMessage='Download' />
-              </ButtonDownload>
+          
+          { myRows.length > 0 ?
+            <div style={{height: '150px', position: 'sticky', zIndex: 501, backgroundColor: 'white', padding: '20px', borderRadius: '3px', border: '1px solid #ddd'}}>
+              <b>Financial Statement</b> <br/>
+              <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
+              <div>
+                <Dropdown
+                  style={{ width: '500px', marginRight: '50px' }}
+                  name='seller'
+                  selection
+                  value={this.state.statementMonth}
+                  options={this.getYearMonth()}
+                  loading={false}
+                  placeholder='Statement Month'
+                  onChange={(e, { value }) => {this.setState({statementMonth: value})}}
+                />
+                <Dropdown
+                  style={{ width: '200px', marginRight: '50px' }}
+                  name='seller'
+                  selection
+                  value={this.state.documentType}
+                  options={[
+                    {
+                      key: 1,
+                      text: 'PDF',
+                      value: 'PDF'
+                    },
+                    {
+                      key: 2,
+                      text: 'CSV',
+                      value: 'CSV'
+                    }
+                  ]}
+                  loading={false}
+                  placeholder='Document Type'
+                  onChange={(e, { value }) => {this.setState({documentType: value})}}
+                />
+                <ButtonDownload loading={downloading} primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download' disabled={downloading}>
+                  {downloading ? <></> : <FormattedMessage id='global.download' defaultMessage='Download' />}
+                </ButtonDownload>
+              </div>
             </div>
-          </div>
+          : <></>
+          }
           {isThirdPartyConnectionException && (
             <DivThirdExceptions>
               <FormattedMessage
@@ -991,7 +995,8 @@ const mapStateToProps = state => {
     isOpenPopupDeleteInstitution: state.settings.isOpenPopupDeleteInstitution,
     isLoadingAddedAccounts: state.settings.isLoadingAddedAccounts,
     isThirdPartyConnectionException: state.settings.isThirdPartyConnectionException,
-    companyId: state.auth.identity.company.id
+    companyId: state.auth.identity.company.id,
+    downloading: state.settings.downloading
   }
 }
 
