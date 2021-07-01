@@ -8,7 +8,7 @@ import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TablesHandlers from './TablesHandlers'
 import Table from './Table'
 import Tutorial from '../../tutorial/Tutorial'
-import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopup'
+import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopupContainer'
 
 // Services
 import { getSafe } from '../../../utils/functions'
