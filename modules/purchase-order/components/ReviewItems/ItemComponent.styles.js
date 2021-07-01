@@ -54,16 +54,13 @@ export const DivHeader = styled.div`
 `
 
 export const DivDropdownQuantityWrapper = styled.div`
-  z-index: 600;
-
   & > .field {
     > .ui.input {
       width: 65px !important;
     }
-    z-index: 601;
+
     > .ui.search.dropdown,
     > .ui.search.selection.dropdown {
-      z-index: 600 !important;
       min-height: 32px;
       height: 32px;
       width: 65px;
@@ -73,10 +70,6 @@ export const DivDropdownQuantityWrapper = styled.div`
 
       > input.search {
         padding: 8px 29px 6px 12px;
-      }
-
-      > div.visible.menu.transition {
-        z-index: 600 !important;
       }
     }
 
