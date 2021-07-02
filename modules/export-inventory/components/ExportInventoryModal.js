@@ -13,7 +13,7 @@ import { Button } from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
-import { HighSegment, FlexModal, FlexModalContent } from '~/modules/inventory/constants/layout'
+import { HighSegment, FlexModal, FlexModalContent } from '~/modules/inventory/styles'
 
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
