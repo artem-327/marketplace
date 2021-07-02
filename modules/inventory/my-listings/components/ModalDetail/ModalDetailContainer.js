@@ -1,6 +1,8 @@
 import { connect } from 'react-redux'
+import { injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+// Components
 import ModalDetail from './ModalDetail'
-import { withDatagrid } from '../../../../datagrid'
 
 //Actions
 import { getTemplates, broadcastChange } from '../../../../broadcast/actions'
@@ -64,6 +66,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (
   {
+    auth,
     simpleAdd: {
       autocompleteData,
       autocompleteDataLoading,
@@ -94,6 +97,7 @@ const mapStateToProps = (
   },
   { inventoryGrid }
 ) => ({
+  applicationName: auth?.identity?.appInfo?.applicationName,
   autocompleteData,
   autocompleteDataLoading,
   productFormsDropdown,
@@ -120,4 +124,4 @@ const mapStateToProps = (
   documentTypesDropdown: documentTypesDropdown
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModalDetail)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail)))

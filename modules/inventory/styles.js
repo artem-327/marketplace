@@ -548,3 +548,41 @@ export const TextAreaField = styled(TextArea)`
   border-radius: 4px !important;
   width: -webkit-fill-available !important;
 `
+
+export const SettingsGrid = styled(Grid)`
+  flex-direction: column !important;
+  margin-top: 0;
+  margin-bottom: 0 !important;
+  padding-bottom: 1em !important;
+
+  > .row {
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+    flex-shrink: 1 !important;
+    height: calc(100% + 1px) !important;
+    padding-bottom: 0 !important;
+
+    > .column {
+      flex-grow: 1 !important;
+      flex-shrink: 1 !important;
+      height: 100%;
+      padding-bottom: 0 !important;
+
+      > [class*='FixyWrapper'] {
+        height: 100%;
+
+        > .segment {
+          height: 100%;
+        }
+      }
+    }
+  }
+`
+
+export const CustomGridColumn = styled(Grid.Column)`
+  > form + .ui.segment {
+    margin-top: 0;
+  }
+  padding-top: '10px';
+  padding-bottom: '10px';
+`

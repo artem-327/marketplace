@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 //Styles
-import { HighSegment } from '../../../../../inventory/constants/layout'
+import { HighSegment } from '../../../../../inventory/styles'
 
 export const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;

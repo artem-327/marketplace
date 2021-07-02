@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { getSafe } from '~/utils/functions'
 import { injectIntl, FormattedMessage } from 'react-intl'
 
 // Components
@@ -10,7 +8,6 @@ import ProdexTable from '../../../../components/table'
 import Tutorial from '../../../tutorial/Tutorial'
 import ListingDetail from './ListingDetail/ListingDetail'
 import TableHandler from './TableHandler'
-import { Broadcast } from '../../../broadcast'
 import ModalPriceBook from './ModalPriceBook/ModalPriceBook'
 
 // Hooks

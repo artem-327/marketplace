@@ -1,4 +1,4 @@
-import { Fragment, Component } from 'react'
+import { Fragment } from 'react'
 import { connect } from 'react-redux'
 
 import { Grid, Button } from 'semantic-ui-react'
@@ -7,14 +7,14 @@ import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/dist/client/router'
 
-import { closeImportPopup } from '~/modules/settings/actions'
+import { closeImportPopup } from '../../../../settings/actions'
 
 const StyledButton = styled(Button)`
   min-width: 200px !important;
 `
 
-class ConfirmationPage extends Component {
-  createReport = result => {
+const ConfirmationPage = props => {
+  const createReport = result => {
     if (!result) return
     const clientMessage = result.clientMessage
     const recordCount = result.recordCount || 0
@@ -36,13 +36,7 @@ class ConfirmationPage extends Component {
         <Grid.Row style={{ 'padding-bottom': '1.25rem' }}>
           <FormattedMessage
             id={`settings.import${status}`}
-            defaultMessage={
-              status === 'Failed'
-                ? 'Import Failed'
-                : status === 'SomeFailed'
-                ? 'Some lines failed during import'
-                : 'Import success'
-            }
+            defaultMessage={ status === 'Failed' ? 'Import Failed' : status === 'SomeFailed' ? 'Some lines failed during import' : 'Import success' }
           />
         </Grid.Row>
 
@@ -97,37 +91,35 @@ class ConfirmationPage extends Component {
     )
   }
 
-  render() {
-    const { csvImportError, reloadFilter, productOffer, companyGenericProduct, companies } = this.props
+  const { csvImportError, reloadFilter, productOffer, companyGenericProduct, companies } = props
 
-    const titleViewMap = productOffer
-      ? 'MyInventory'
-      : companyGenericProduct
-      ? 'Products'
-      : companies
-      ? 'Companies'
-      : 'Company Products'
+  const titleViewMap = productOffer
+    ? 'MyInventory'
+    : companyGenericProduct
+    ? 'Products'
+    : companies
+    ? 'Companies'
+    : 'Company Products'
 
-    return (
-      <Grid centered padded>
-        {this.createReport(csvImportError)}
-        <Grid.Row>
-          <StyledButton
-            basic
-            primary
-            onClick={() => this.props.closeImportPopup(reloadFilter)}
-            data-test='settings_product_close_import'>
-            <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
-          </StyledButton>
-        </Grid.Row>
-        <Grid.Row>
-          <StyledButton primary onClick={this.props.toUpload} data-test='settings_product_to_upload'>
-            <FormattedMessage id='settings.uploadMore' defaultMessage='Upload more files' />
-          </StyledButton>
-        </Grid.Row>
-      </Grid>
-    )
-  }
+  return (
+    <Grid centered padded>
+      {createReport(csvImportError)}
+      <Grid.Row>
+        <StyledButton
+          basic
+          primary
+          onClick={() => props.closeImportPopup(reloadFilter)}
+          data-test='settings_product_close_import'>
+          <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
+        </StyledButton>
+      </Grid.Row>
+      <Grid.Row>
+        <StyledButton primary onClick={props.toUpload} data-test='settings_product_to_upload'>
+          <FormattedMessage id='settings.uploadMore' defaultMessage='Upload more files' />
+        </StyledButton>
+      </Grid.Row>
+    </Grid>
+  )
 }
 
 const mapDispatchToProps = {

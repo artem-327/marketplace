@@ -1,10 +1,7 @@
-import { Fragment, Component } from 'react'
+import { Fragment, Component, useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-
 import { FormattedMessage, injectIntl } from 'react-intl'
-
 import { Table, Dropdown, Grid, Input, Select, Button } from 'semantic-ui-react'
-import styled from 'styled-components'
 
 import {
   changeHeadersCSV,
@@ -23,12 +20,12 @@ import {
   postCSVMapCompanies,
   putCSVMapCompanies,
   deleteCSVMapCompanies
-} from '~/modules/settings/actions'
+} from '../../../../settings/actions'
 
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '../../../../../utils/functions'
 import _invert from 'lodash/invert'
 import { withToastManager } from 'react-toast-notifications'
-import { MapTable, SmallerTableCell } from '~/modules/inventory/my-products/components/Steps/constants/layout'
+import { MapTable, SmallerTableCell } from '../../../../inventory/my-products/components/Steps/constants/layout'
 
 const simpleCompanyGenericProductList = {
   constant: 'global',
@@ -305,20 +302,20 @@ const simpleCompaniesList = {
   ]
 }
 
-class Map extends Component {
-  state = {
+const Map = props => {
+  const [state, setState] = useState({
     newHeaders: null,
     isSavedMap: false,
     options: [],
     values: [],
     mapping: [],
     constant: ''
-  }
+  })
 
-  getMapping = mapperList => {
+  const getMapping = mapperList => {
     const {
       intl: { formatMessage }
-    } = this.props
+    } = props
 
     return mapperList.required
       .map(option => {
@@ -344,34 +341,34 @@ class Map extends Component {
       )
   }
 
-  componentDidMount = async () => {
+  useEffect(() => {
     const {
       intl: { formatMessage }
-    } = this.props
-    let { mapping } = this.state
+    } = props
+    let { mapping } = state
     let constant = ''
-    if (this.props.productOffer) {
-      this.props.getCSVMapProductOffer()
-      const mappingProductOffer = this.getMapping(simpleProductOfferList)
+    if (props.productOffer) {
+      props.getCSVMapProductOffer()
+      const mappingProductOffer = getMapping(simpleProductOfferList)
       constant = simpleProductOfferList.constant
       mapping = mappingProductOffer
-    } else if (this.props.companyGenericProduct) {
-      this.props.getCSVMapCompanyGenericProduct()
-      const mappingCompanyGenericProduct = this.getMapping(simpleCompanyGenericProductList)
+    } else if (props.companyGenericProduct) {
+      props.getCSVMapCompanyGenericProduct()
+      const mappingCompanyGenericProduct = getMapping(simpleCompanyGenericProductList)
       constant = simpleCompanyGenericProductList.constant
       mapping = mappingCompanyGenericProduct
-    } else if (this.props.companies) {
-      this.props.getCSVMapCompanies()
-      const mappingCompanies = this.getMapping(simpleCompaniesList)
+    } else if (props.companies) {
+      props.getCSVMapCompanies()
+      const mappingCompanies = getMapping(simpleCompaniesList)
       constant = simpleCompaniesList.constant
       mapping = mappingCompanies
     } else {
-      const mappingCompanyProduct = this.getMapping(simpleCompanyProductList)
+      const mappingCompanyProduct = getMapping(simpleCompanyProductList)
       constant = simpleCompanyProductList.constant
       mapping = mappingCompanyProduct
     }
 
-    this.setState({ newHeaders: this.props.CSV.headerCSV, mapping: mapping, constant: constant })
+    setState({ ...state, newHeaders: props.CSV.headerCSV, mapping: mapping, constant: constant })
 
     let a = mapping.sort(function (a, b) {
       let x = a.text.toLowerCase()
@@ -386,21 +383,21 @@ class Map extends Component {
     })
 
     let ar = []
-    for (let i = 0; i < this.props.CSV.headerCSV.length; i++) ar.push(Array.from(a))
+    for (let i = 0; i < props.CSV.headerCSV.length; i++) ar.push(Array.from(a))
 
     // try to prefill dropdowns
-    let values = Array(this.props.CSV.headerCSV.length).fill('')
-    if (!this.props.mappedHeader) {
-      const newHeaders = this.props.CSV.headerCSV
+    let values = Array(props.CSV.headerCSV.length).fill('')
+    if (!props.mappedHeader) {
+      const newHeaders = props.CSV.headerCSV
       values = values.map((value, vIndex) => {
-        const content = this.simplifyText(newHeaders[vIndex].content)
+        const content = simplifyText(newHeaders[vIndex].content)
         const foundItem = ar[vIndex].find(
-          option => this.simplifyText(option.value) === content || this.simplifyText(option.text) === content
+          option => simplifyText(option.value) === content || simplifyText(option.text) === content
         )
 
         if (foundItem) {
           newHeaders[vIndex].header = foundItem.value
-          ar = this.modifyOptionLists(
+          ar = modifyOptionLists(
             ar,
             getSafe(() => foundItem.value, null),
             vIndex
@@ -410,24 +407,24 @@ class Map extends Component {
         return getSafe(() => foundItem.value, '')
       })
 
-      const missingRequired = this.findNotSelectedRequired(values, mapping, constant)
+      const missingRequired = findNotSelectedRequired(values, mapping, constant)
 
-      this.props.changeHeadersCSV(newHeaders, missingRequired)
+      props.changeHeadersCSV(newHeaders, missingRequired)
     } else {
       values = values.map((value, vIndex) => {
-        const indexMap = this.props.mappedHeader[vIndex]
+        const indexMap = props.mappedHeader[vIndex]
 
-        if (indexMap.header) ar = this.modifyOptionLists(ar, indexMap.header, vIndex)
+        if (indexMap.header) ar = modifyOptionLists(ar, indexMap.header, vIndex)
 
         return getSafe(() => indexMap.header, '')
       })
     }
 
-    this.setState({ options: ar, values: values })
-  }
+    setState({ ...state, options: ar, values: values })
+  }, [])
 
-  modifyOptionLists = (options, value, notIndex, indexAdd) => {
-    const opts = this.state.mapping
+  const modifyOptionLists = (options, value, notIndex, indexAdd) => {
+    const opts = state.mapping
     for (let i = 0; i < options.length; i++) {
       if (i !== notIndex) {
         // Add previous value to all dropdowns options
@@ -453,7 +450,7 @@ class Map extends Component {
     return options
   }
 
-  simplifyText = text => {
+  const simplifyText = text => {
     // simplify text to compare
     return text
       .toLowerCase()
@@ -462,257 +459,14 @@ class Map extends Component {
       .replace(/s$/gi, '')
   }
 
-  render() {
-    const {
-      CSV,
-      selectedSavedMap,
-      intl: { formatMessage },
-      toastManager,
-      csvWithoutHeader
-    } = this.props
+  const findNotSelectedRequired = (values, mapping, constant) => {
+    if (!constant) constant = state.constant
 
-    const optionMaps =
-      this.props.maps &&
-      this.props.maps.map(map => ({
-        text: map.mapName,
-        value: map.id
-      }))
-
-    const { values } = this.state
-
-    csvWithoutHeader &&
-      CSV.bodyCSV[0].lineNumber !== 1 &&
-      CSV.bodyCSV.unshift({ lineNumber: 1, columns: CSV.headerCSV })
-    !csvWithoutHeader && CSV.bodyCSV[0].lineNumber === 1 && CSV.bodyCSV.shift()
-
-    return (
-      <Fragment>
-        {(this.props.productOffer || this.props.companyGenericProduct || this.props.companies) && (
-          <Grid centered padded>
-            <Grid.Row verticalAlign='middle'>
-              <Grid.Column width={5} textAlign='center'>
-                <Select
-                  placeholder={formatMessage({
-                    id: 'settings.selectSavedMap',
-                    defaultMessage: 'Select your saved map'
-                  })}
-                  noResultsMessage={formatMessage({
-                    id: 'settings.noSavedMaps',
-                    defaultMessage: 'There are no saved Maps yet.'
-                  })}
-                  value={getSafe(() => selectedSavedMap.id, '')}
-                  options={optionMaps}
-                  clearable
-                  //disabled={!optionMaps}
-                  onChange={this.selectSavedMap}
-                  search={true}
-                  selectOnBlur={false}
-                  data-test='settings_product_import_select_map'
-                  style={{ width: '100%' }}
-                />
-              </Grid.Column>
-              <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                {this.props.companyGenericProduct || this.props.productOffer || this.props.companies ? (
-                  <Button
-                    type='button'
-                    color='red'
-                    disabled={getSafe(() => !this.props.selectedSavedMap.id, true)}
-                    onClick={async () => {
-                      const mapName = this.props.selectedSavedMap.name
-                      if (this.props.companyGenericProduct)
-                        await this.props.deleteCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id)
-
-                      if (this.props.productOffer)
-                        await this.props.deleteCSVMapProductOffer(this.props.selectedSavedMap.id)
-
-                      if (this.props.companies) await this.props.deleteCSVMapCompanies(this.props.selectedSavedMap.id)
-                    }}
-                    style={{ width: '100%' }}>
-                    <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map'>
-                      {text => text}
-                    </FormattedMessage>
-                  </Button>
-                ) : null}
-              </Grid.Column>
-              <Grid.Column width={5} textAlign='center' data-test='settings_product_import_csv_name_inp'>
-                <Input
-                  placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })}
-                  onChange={this.inputMapName}
-                  style={{ width: '100%' }}
-                />
-              </Grid.Column>
-              <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
-                <Button
-                  type='button'
-                  onClick={async () => {
-                    const missingRequired = this.findNotSelectedRequired(values, this.state.mapping)
-                    if (missingRequired.length) {
-                      toastManager.add(
-                        generateToastMarkup(
-                          formatMessage({
-                            id: 'notifications.importMissingRequired.header',
-                            defaultMessage: 'Required Options'
-                          }),
-                          formatMessage(
-                            {
-                              id: 'notifications.importMissingRequired.content',
-                              defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(
-                                ', '
-                              )}`
-                            },
-                            { missingRequired: missingRequired.join(', ') }
-                          )
-                        ),
-                        { appearance: 'error' }
-                      )
-
-                      return false
-                    }
-
-                    const data =
-                      this.state.newHeaders &&
-                      this.state.newHeaders.reduce(
-                        (prev, next) => {
-                          if (next.header && next.content) prev[next.header] = next.content
-
-                          return prev
-                        },
-                        {
-                          headerLine: !this.props.csvWithoutHeader,
-                          mapName: this.props.mapName || 'Uno'
-                        }
-                      )
-                    let mapName = ''
-
-                    if (this.props.companyGenericProduct) {
-                      if (this.props.selectedSavedMap) {
-                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                        await this.props.putCSVMapCompanyGenericProduct(this.props.selectedSavedMap.id, {
-                          ...data,
-                          mapName: mapName
-                        })
-                      } else {
-                        mapName = this.props.mapName
-                        await this.props.postCSVMapCompanyGenericProduct({
-                          ...data,
-                          mapName: mapName
-                        })
-                      }
-
-                      this.props.getCSVMapCompanyGenericProduct()
-                    }
-                    if (this.props.productOffer) {
-                      if (this.props.selectedSavedMap) {
-                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                        await this.props.putCSVMapProductOffer(this.props.selectedSavedMap.id, {
-                          ...data,
-                          mapName: mapName
-                        })
-                      } else {
-                        mapName = this.props.mapName
-                        await this.props.postCSVMapProductOffer({
-                          ...data,
-                          mapName: mapName
-                        })
-                      }
-
-                      this.props.getCSVMapProductOffer()
-                    }
-
-                    if (this.props.companies) {
-                      if (this.props.selectedSavedMap) {
-                        mapName = this.props.mapName ? this.props.mapName : this.props.selectedSavedMap.mapName
-                        await this.props.putCSVMapCompanies(this.props.selectedSavedMap.id, {
-                          ...data,
-                          mapName: mapName
-                        })
-                      } else {
-                        mapName = this.props.mapName
-                        await this.props.postCSVMapCompanies({
-                          ...data,
-                          mapName: mapName
-                        })
-                      }
-
-                      this.props.getCSVMapCompanies()
-                    }
-                  }}
-                  style={{ width: '100%' }}>
-                  <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
-                </Button>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        )}
-        <MapTable celled padded textAlign='center'>
-          <Table.Header>
-            <Table.Row>
-              {csvWithoutHeader ? (
-                <Table.HeaderCell colSpan={CSV.bodyCSV.length > 4 ? 4 : CSV.bodyCSV.length}>
-                  <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
-                </Table.HeaderCell>
-              ) : (
-                <>
-                  <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
-                    <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
-                    <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
-                  </Table.HeaderCell>
-                </>
-              )}
-              <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
-                <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Header>
-          {CSV && values.length /* values.length is necessary for defaultValue */ && (
-            <Table.Body>
-              {CSV.headerCSV.map((lineHeader, lineIndex) => (
-                <Table.Row key={lineHeader.columnNumber}>
-                  {csvWithoutHeader ? null : <Table.Cell style={{ width: '130px' }}>{lineHeader.content}</Table.Cell>}
-                  {CSV.bodyCSV.map(line => {
-                    return line.columns.map(lineBody => {
-                      return (
-                        lineHeader.columnNumber === lineBody.columnNumber && (
-                          <SmallerTableCell className={`cols${CSV.bodyCSV.length}`}>
-                            <div>{lineBody.content}</div>
-                          </SmallerTableCell>
-                        )
-                      )
-                    })
-                  })}
-                  <Table.Cell style={{ width: '229px' }}>
-                    <Dropdown
-                      placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
-                      column_number={lineHeader.columnNumber}
-                      selection
-                      clearable
-                      options={this.state.options[lineHeader.columnNumber]}
-                      search={true}
-                      onChange={this.selectMapping}
-                      selectOnBlur={false}
-                      data-test='settings_product_import_csv_column_drpdn'
-                      value={getSafe(() => values[lineIndex], '')}
-                    />
-                  </Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          )}
-        </MapTable>
-      </Fragment>
-    )
-  }
-
-  findNotSelectedRequired = (values, mapping, constant) => {
-    if (!constant) constant = this.state.constant
-
-    if (!mapping) mapping = this.state.mapping
+    if (!mapping) mapping = state.mapping
 
     const {
       intl: { formatMessage }
-    } = this.props
+    } = props
 
     const required = mapping.reduce((requiredFields, mapField) => {
       if (mapField.required) requiredFields.push(mapField.value)
@@ -729,13 +483,13 @@ class Map extends Component {
     })
   }
 
-  selectSavedMap = (e, { value }) => {
-    const selectedMap = this.props.maps.find(map => map.id === value)
-    this.props.selectSavedMap(selectedMap)
+  const selectSavedMap = (e, { value }) => {
+    const selectedMap = props.maps.find(map => map.id === value)
+    props.selectSavedMap(selectedMap)
 
-    let { options, values, mapping } = this.state
+    let { options, values, mapping } = state
     const invSelectedMap = _invert(selectedMap)
-    let newHeaders = this.props.mappedHeader
+    let newHeaders = props.mappedHeader
 
     values = values.map((value, vIndex) => {
       const content = newHeaders[vIndex].content
@@ -747,36 +501,36 @@ class Map extends Component {
             if (v2Index !== vIndex && mapper === value2) {
               let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[v2Index].header)
               newHeaders[v2Index].header = ''
-              options = this.modifyOptionLists(options, '', v2Index, indexAdd)
+              options = modifyOptionLists(options, '', v2Index, indexAdd)
             }
           }.bind(this)
         )
         let indexAdd = mapping.findIndex(obj => obj.value === newHeaders[vIndex].header)
         newHeaders[vIndex].header = mapper
-        options = this.modifyOptionLists(options, mapper, vIndex, indexAdd)
+        options = modifyOptionLists(options, mapper, vIndex, indexAdd)
       }
 
       return getSafe(() => newHeaders[vIndex].header, '')
     })
 
-    const missingRequired = this.findNotSelectedRequired(values)
+    const missingRequired = findNotSelectedRequired(values)
 
-    this.props.changeHeadersCSV(newHeaders, missingRequired)
+    props.changeHeadersCSV(newHeaders, missingRequired)
 
-    this.setState({ options: options, values: values })
+    setState({ ...state, options: options, values: values })
   }
 
-  inputMapName = e => {
-    this.props.handleChangeMapCSVName(e.target.value)
+  const inputMapName = e => {
+    props.handleChangeMapCSVName(e.target.value)
   }
 
-  checkboxChange = () => {
-    this.props.handleSaveMapCSV()
+  const checkboxChange = () => {
+    props.handleSaveMapCSV()
   }
 
-  selectMapping = (e, { column_number, value }) => {
-    const { mapping } = this.state
-    const mappedHeader = this.props.mappedHeader ? this.props.mappedHeader : [...this.state.newHeaders]
+  const selectMapping = (e, { column_number, value }) => {
+    const { mapping } = state
+    const mappedHeader = props.mappedHeader ? props.mappedHeader : [...state.newHeaders]
     const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
         line['header'] = value
@@ -785,8 +539,8 @@ class Map extends Component {
       return line
     })
 
-    let options = this.state.options
-    let values = this.state.values
+    let options = state.options
+    let values = state.values
 
     let previousValue = values[column_number]
     values[column_number] = value
@@ -795,14 +549,253 @@ class Map extends Component {
     let indexAdd = opts.findIndex(obj => obj.value === previousValue)
 
     // add to or remove from option lists
-    options = this.modifyOptionLists(options, value, column_number, indexAdd)
+    options = modifyOptionLists(options, value, column_number, indexAdd)
 
-    const missingRequired = this.findNotSelectedRequired(values)
+    const missingRequired = findNotSelectedRequired(values)
 
-    this.setState({ options: options, values: values })
+    setState({ ...state, options: options, values: values })
 
-    this.props.changeHeadersCSV(newHeaders, missingRequired)
+    props.changeHeadersCSV(newHeaders, missingRequired)
   }
+
+  const {
+    CSV,
+    selectedSavedMap,
+    intl: { formatMessage },
+    toastManager,
+    csvWithoutHeader
+  } = props
+
+  const optionMaps =
+    props.maps &&
+    props.maps.map(map => ({
+      text: map.mapName,
+      value: map.id
+    }))
+
+  const { values } = state
+
+  csvWithoutHeader &&
+    CSV.bodyCSV[0].lineNumber !== 1 &&
+    CSV.bodyCSV.unshift({ lineNumber: 1, columns: CSV.headerCSV })
+  !csvWithoutHeader && CSV.bodyCSV[0].lineNumber === 1 && CSV.bodyCSV.shift()
+
+  return (
+    <Fragment>
+      {(props.productOffer || props.companyGenericProduct || props.companies) && (
+        <Grid centered padded>
+          <Grid.Row verticalAlign='middle'>
+            <Grid.Column width={5} textAlign='center'>
+              <Select
+                placeholder={formatMessage({
+                  id: 'settings.selectSavedMap',
+                  defaultMessage: 'Select your saved map'
+                })}
+                noResultsMessage={formatMessage({
+                  id: 'settings.noSavedMaps',
+                  defaultMessage: 'There are no saved Maps yet.'
+                })}
+                value={getSafe(() => selectedSavedMap.id, '')}
+                options={optionMaps}
+                clearable
+                //disabled={!optionMaps}
+                onChange={selectSavedMap}
+                search={true}
+                selectOnBlur={false}
+                data-test='settings_product_import_select_map'
+                style={{ width: '100%' }}
+              />
+            </Grid.Column>
+            <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
+              {props.companyGenericProduct || props.productOffer || props.companies ? (
+                <Button
+                  type='button'
+                  color='red'
+                  disabled={getSafe(() => !props.selectedSavedMap.id, true)}
+                  onClick={async () => {
+                    const mapName = props.selectedSavedMap.name
+                    if (props.companyGenericProduct)
+                      await props.deleteCSVMapCompanyGenericProduct(props.selectedSavedMap.id)
+
+                    if (props.productOffer)
+                      await props.deleteCSVMapProductOffer(props.selectedSavedMap.id)
+
+                    if (props.companies) await props.deleteCSVMapCompanies(props.selectedSavedMap.id)
+                  }}
+                  style={{ width: '100%' }}>
+                  <FormattedMessage id='settings.deleteMap' defaultMessage='Delete Map' />
+                </Button>
+              ) : null}
+            </Grid.Column>
+            <Grid.Column width={5} textAlign='center' data-test='settings_product_import_csv_name_inp'>
+              <Input
+                placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })}
+                onChange={inputMapName}
+                style={{ width: '100%' }}
+              />
+            </Grid.Column>
+            <Grid.Column width={3} textAlign='center' verticalAlign='middle'>
+              <Button
+                type='button'
+                onClick={async () => {
+                  const missingRequired = findNotSelectedRequired(values, state.mapping)
+                  if (missingRequired.length) {
+                    toastManager.add(
+                      generateToastMarkup(
+                        formatMessage({
+                          id: 'notifications.importMissingRequired.header',
+                          defaultMessage: 'Required Options'
+                        }),
+                        formatMessage(
+                          {
+                            id: 'notifications.importMissingRequired.content',
+                            defaultMessage: `To continue, you need to apply all required attribute mappings: ${missingRequired.join(
+                              ', '
+                            )}`
+                          },
+                          { missingRequired: missingRequired.join(', ') }
+                        )
+                      ),
+                      { appearance: 'error' }
+                    )
+
+                    return false
+                  }
+
+                  const data =
+                    state.newHeaders &&
+                    state.newHeaders.reduce(
+                      (prev, next) => {
+                        if (next.header && next.content) prev[next.header] = next.content
+
+                        return prev
+                      },
+                      {
+                        headerLine: !props.csvWithoutHeader,
+                        mapName: props.mapName || 'Uno'
+                      }
+                    )
+                  let mapName = ''
+
+                  if (props.companyGenericProduct) {
+                    if (props.selectedSavedMap) {
+                      mapName = props.mapName ? props.mapName : props.selectedSavedMap.mapName
+                      await props.putCSVMapCompanyGenericProduct(props.selectedSavedMap.id, {
+                        ...data,
+                        mapName: mapName
+                      })
+                    } else {
+                      mapName = props.mapName
+                      await props.postCSVMapCompanyGenericProduct({
+                        ...data,
+                        mapName: mapName
+                      })
+                    }
+
+                    props.getCSVMapCompanyGenericProduct()
+                  }
+                  if (props.productOffer) {
+                    if (props.selectedSavedMap) {
+                      mapName = props.mapName ? props.mapName : props.selectedSavedMap.mapName
+                      await props.putCSVMapProductOffer(props.selectedSavedMap.id, {
+                        ...data,
+                        mapName: mapName
+                      })
+                    } else {
+                      mapName = props.mapName
+                      await props.postCSVMapProductOffer({
+                        ...data,
+                        mapName: mapName
+                      })
+                    }
+
+                    props.getCSVMapProductOffer()
+                  }
+
+                  if (props.companies) {
+                    if (props.selectedSavedMap) {
+                      mapName = props.mapName ? props.mapName : props.selectedSavedMap.mapName
+                      await props.putCSVMapCompanies(props.selectedSavedMap.id, {
+                        ...data,
+                        mapName: mapName
+                      })
+                    } else {
+                      mapName = props.mapName
+                      await props.postCSVMapCompanies({
+                        ...data,
+                        mapName: mapName
+                      })
+                    }
+
+                    props.getCSVMapCompanies()
+                  }
+                }}
+                style={{ width: '100%' }}>
+                <FormattedMessage id='settings.saveMap' defaultMessage='Save Map' />
+              </Button>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      )}
+      <MapTable celled padded textAlign='center'>
+        <Table.Header>
+          <Table.Row>
+            {csvWithoutHeader ? (
+              <Table.HeaderCell colSpan={CSV.bodyCSV.length > 4 ? 4 : CSV.bodyCSV.length}>
+                <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
+              </Table.HeaderCell>
+            ) : (
+              <>
+                <Table.HeaderCell style={{ width: '130px', minWidth: '130px' }}>
+                  <FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' />
+                </Table.HeaderCell>
+                <Table.HeaderCell colSpan={CSV.bodyCSV.length > 3 ? 3 : CSV.bodyCSV.length}>
+                  <FormattedMessage id='settings.csvPreview' defaultMessage='Preview' />
+                </Table.HeaderCell>
+              </>
+            )}
+            <Table.HeaderCell style={{ width: '229px', minWidth: '229px' }}>
+              <FormattedMessage id='settings.mapping' defaultMessage='Mapping' />
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Header>
+        {CSV && values.length /* values.length is necessary for defaultValue */ && (
+          <Table.Body>
+            {CSV.headerCSV.map((lineHeader, lineIndex) => (
+              <Table.Row key={lineHeader.columnNumber}>
+                {csvWithoutHeader ? null : <Table.Cell style={{ width: '130px' }}>{lineHeader.content}</Table.Cell>}
+                {CSV.bodyCSV.map(line => {
+                  return line.columns.map(lineBody => {
+                    return (
+                      lineHeader.columnNumber === lineBody.columnNumber && (
+                        <SmallerTableCell className={`cols${CSV.bodyCSV.length}`}>
+                          <div>{lineBody.content}</div>
+                        </SmallerTableCell>
+                      )
+                    )
+                  })
+                })}
+                <Table.Cell style={{ width: '229px' }}>
+                  <Dropdown
+                    placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
+                    column_number={lineHeader.columnNumber}
+                    selection
+                    clearable
+                    options={state.options[lineHeader.columnNumber]}
+                    search={true}
+                    onChange={selectMapping}
+                    selectOnBlur={false}
+                    data-test='settings_product_import_csv_column_drpdn'
+                    value={getSafe(() => values[lineIndex], '')}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          </Table.Body>
+        )}
+      </MapTable>
+    </Fragment>
+  )
 }
 
 const mapDispatchToProps = {

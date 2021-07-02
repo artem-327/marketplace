@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
 import { func, bool, array } from 'prop-types'
 import { Trash2 } from 'react-feather'

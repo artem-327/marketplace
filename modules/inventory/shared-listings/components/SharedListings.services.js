@@ -6,10 +6,9 @@ import { Warning } from '@material-ui/icons'
 import { currency } from '../../../../constants/index'
 import { BROADCAST_OPTIONS } from './SharedListings.constants'
 //Styles
-import { DivIconOptions } from '../../constants/layout'
 import { NetworkDropdown, NetworkChevronDown } from '../../../../components/Network'
 //Services
-import { onClickBroadcast } from '../../my-listings/MyListings.services'
+import { onClickBroadcast } from '../../my-listings/components/MyListings.services'
 
 export const getActions = triggerPriceBookModal => {
   return [

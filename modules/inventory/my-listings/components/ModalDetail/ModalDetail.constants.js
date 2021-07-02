@@ -1,7 +1,8 @@
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { Image } from 'semantic-ui-react'
-//Styles
-import { DivIconOptions } from '../../../constants/layout'
+// Styles
+import { DivIconOptions } from '../../../styles'
+// Image
 import BluePalletLogoMini from '../../../../../assets/images/blue-pallet/guest-copy-9@3x.png'
 
 /**

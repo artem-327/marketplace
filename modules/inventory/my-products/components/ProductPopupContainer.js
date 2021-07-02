@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
 import { injectIntl } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 import {
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
@@ -12,7 +12,7 @@ import {
   removeAttachmentLinkCompanyProduct,
   loadFile,
   removeAttachment
-} from '~/modules/settings/actions'
+} from '../../../settings/actions'
 import {
   getDocumentTypes,
   getPackagingTypes,
@@ -21,10 +21,11 @@ import {
   getPackagingGroups
 } from '../../../global-data/actions'
 
+
 import { closePopup } from '../../actions'
-import { addAttachment } from '~/modules/inventory/actions'
-import { withDatagrid } from '~/modules/datagrid'
-import { palletDimensions } from '~/modules/settings/contants'
+import { addAttachment } from '../../../inventory/actions'
+import { withDatagrid } from '../../../datagrid'
+import { palletDimensions } from '../../../settings/contants'
 import ProductPopup from './ProductPopup'
 
 const mapDispatchToProps = {
@@ -38,12 +39,13 @@ const mapDispatchToProps = {
   addNmfcNumber,
   removeAttachmentLinkCompanyProduct,
   loadFile,
-  addAttachment,
+  addAttachment,  
   removeAttachment,
   getPackagingTypes,
   getUnits,
   getHazardClasses,
   getPackagingGroups
+
 }
 const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
   let settingsMap = new Map()
@@ -57,7 +59,7 @@ const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
     attachments: getSafe(() => settings.popupValues.attachments, []),
     popupValues: simpleAdd.popupValues,
     companyGenericProduct: settings.companyGenericProduct,
-    companyGenericProductFetching: settings.companyGenericProductFetching,
+    companyGenericProductFetching: settings.companyGenericProductFetching,    
     packagingType: globalData.measureTypesDropdown,
     packagingTypesAll: globalData.packagingTypes,
     productsUnitsType: globalData.unitsDropdown,

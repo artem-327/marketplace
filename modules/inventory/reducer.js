@@ -22,7 +22,6 @@ export const initialState = {
   updatingDatagrid: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
-  simpleEditOpen: false,
   popupValues: null,
   isOpenPopup: false,
   editTrig: false,
@@ -37,7 +36,6 @@ export const initialState = {
   datagridFilterReload: false,
   datagridFilterUpdate: false,
   pricingEditOpenId: null,
-  //isExportInventoryOpen: false,
   tableHandlersFilters: null,
   isOpenColumnSettingModal: false,
   myProductsUnmappedValue: 'ALL',
@@ -463,17 +461,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         autocompleteDataLoading: false
-      }
-    }
-
-    case AT.SIMPLE_EDIT_TRIGGER: {
-      let simpleEditOpen = !state.simpleEditOpen
-      if (payload.force !== null) simpleEditOpen = payload.force
-
-      return {
-        ...state,
-        simpleEditOpen,
-        popupValues: payload.popupValues
       }
     }
 

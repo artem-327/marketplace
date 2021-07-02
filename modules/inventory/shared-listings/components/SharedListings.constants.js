@@ -1,6 +1,6 @@
 import { FormattedMessage, injectIntl } from 'react-intl'
 //Styles
-import { DivIconOptions } from '../../constants/layout'
+import { DivIconOptions } from '../../styles'
 /**
  * @category Shared Listings
  * @constant {array}
@@ -10,9 +10,7 @@ export const COLUMNS = [
   {
     name: 'productName',
     title: (
-      <FormattedMessage id='sharedListings.internalProductName' defaultMessage='Internal Product Name'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.internalProductName' defaultMessage='Internal Product Name' />
     ),
     width: 320,
     sortPath: 'ProductOffer.companyProduct.intProductName',
@@ -21,9 +19,7 @@ export const COLUMNS = [
   {
     name: 'seller',
     title: (
-      <FormattedMessage id='sharedListings.seller' defaultMessage='Seller'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.seller' defaultMessage='Seller' />
     ),
     width: 200
     // ! ! sortPath: 'ProductOffer.cfPricePerUOM'
@@ -31,18 +27,14 @@ export const COLUMNS = [
   {
     name: 'packaging',
     title: (
-      <FormattedMessage id='sharedListings.packaging' defaultMessage='Packaging'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.packaging' defaultMessage='Packaging' />
     ),
     width: 150
   },
   {
     name: 'available',
     title: (
-      <FormattedMessage id='sharedListings.availablePkgs' defaultMessage='Available PKGs'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.availablePkgs' defaultMessage='Available PKGs' />
     ),
     width: 150,
     sortPath: 'ProductOffer.quantity'
@@ -50,9 +42,7 @@ export const COLUMNS = [
   {
     name: 'quantityShared',
     title: (
-      <FormattedMessage id='sharedListings.quantity' defaultMessage='Quantity'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.quantity' defaultMessage='Quantity' />
     ),
     width: 150,
     align: 'right',
@@ -61,9 +51,7 @@ export const COLUMNS = [
   {
     name: 'location',
     title: (
-      <FormattedMessage id='sharedListings.location' defaultMessage='Location'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.location' defaultMessage='Location' />
     ),
     width: 150,
     sortPath: 'ProductOffer.warehouse.warehouse'
@@ -71,9 +59,7 @@ export const COLUMNS = [
   {
     name: 'cost',
     title: (
-      <FormattedMessage id='sharedListings.cost' defaultMessage='Cost'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.cost' defaultMessage='Cost' />
     ),
     width: 150,
     align: 'right'
@@ -81,9 +67,7 @@ export const COLUMNS = [
   {
     name: 'price',
     title: (
-      <FormattedMessage id='sharedListings.price' defaultMessage='Price'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='sharedListings.price' defaultMessage='Price' />
     ),
     width: 200,
     align: 'right'

@@ -1,18 +1,15 @@
 import moment from 'moment'
 import * as val from 'yup'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 //Services
 import { getStringISODate, getLocaleDateFormat } from '../../../../../components/date-format'
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../utils/functions'
+
 /**
  * Validates divisibleBy in form
  * @category Inventory - My Listings
  * @method
- * @param {object}
- * @param {string}
- * @param {function}
- * @return {boolean}
  */
 val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   return this.test({
@@ -34,10 +31,6 @@ val.addMethod(val.number, 'divisibleBy', function (ref, message) {
  * Validates uniqueProperty in form
  * @category Inventory - My Listings
  * @method
- * @param {object}
- * @param {string}
- * @param {function}
- * @return {boolean}
  */
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('uniqueProperty', message, function (value) {

@@ -8,17 +8,17 @@ import { usePrevious } from '../../../../hooks'
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import BasicButton from '../../../../components/buttons/BasicButton'
-import { AttachmentManager } from '~/modules/attachments'
+import { AttachmentManager } from '../../../attachments'
 import UploadAttachment from '../../components/upload/UploadAttachment'
-import ProdexGrid from '~/components/table'
-import { FlexContent } from '~/modules/inventory/constants/layout'
+import ProdexGrid from '../../../../components/table'
+import { FlexContent } from '../../styles'
 import { X as XIcon } from 'react-feather'
-import ErrorFocus from '~/components/error-focus'
-import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
-import { Required } from '~/components/constants/layout'
+import ErrorFocus from '../../../../components/error-focus'
+import { CompanyGenericProductRequestForm } from '../../../company-generic-product-request'
+import { Required } from '../../../../components/constants/layout'
 import { AddBox } from '@material-ui/icons'
-import { CompanyProductMixtures } from '~/components/shared-components/'
-import { DisabledButtonWrapped } from '~/utils/components'
+import { CompanyProductMixtures } from '../../../../components/shared-components/'
+import { DisabledButtonWrapped } from '../../../../utils/components'
 
 // Styles
 import {
@@ -53,8 +53,8 @@ import {
   attachDocumentsUploadAttachment,
   handleChangePackagingType
 } from './ProductPopup.services'
-import confirm from '~/components/Confirmable/confirm'
-import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '../../../../utils/functions'
 
 const ProductPopup = props => {
   const [openUpload, setOpenUpload] = useState(false)
@@ -76,40 +76,42 @@ const ProductPopup = props => {
     setpackagingTypesReduced
   }
 
-  useEffect(async () => {
-    await Promise.all([
-      !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
-      !props.unitsAll.length ? props.getUnits() : props.unitsAll,
-      !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
-      !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
-      !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
-    ])
-
-    if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
-    if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
-      if (props?.popupValues?.attachments?.length) {
-        const attachments = props.popupValues.attachments.map(att => ({
-          id: att.id,
-          name: att.name,
-          documentType: att.documentType.name,
-          linked: true
-        }))
-        setAttachments(attachments)
+  useEffect(() => {
+    const init = async () => {
+      await Promise.all([
+        !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
+        !props.unitsAll.length ? props.getUnits() : props.unitsAll,
+        !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
+        !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
+        !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
+      ])
+  
+      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+      if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
+        if (props?.popupValues?.attachments?.length) {
+          const attachments = props.popupValues.attachments.map(att => ({
+            id: att.id,
+            name: att.name,
+            documentType: att.documentType.name,
+            linked: true
+          }))
+          setAttachments(attachments)
+        }
+      }
+  
+      if (props.popupValues?.packagingUnit) {
+        filterPackagingTypes(
+          popupValues.packagingUnit.id,
+          props.unitsAll,
+          props.packagingTypesAll,
+          setpackagingTypesReduced
+        )
+      } else {
+        setpackagingTypesReduced(props.packagingType)
       }
     }
-
-    if (props.popupValues?.packagingUnit) {
-      filterPackagingTypes(
-        popupValues.packagingUnit.id,
-        props.unitsAll,
-        props.packagingTypesAll,
-        setpackagingTypesReduced
-      )
-    } else {
-      setpackagingTypesReduced(props.packagingType)
-    }
+    init()
   }, [])
-
 
   const {
     closePopup,
@@ -697,9 +699,7 @@ const ProductPopup = props => {
                           rowActions={[
                             {
                               text: (
-                                <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
-                                  {text => text}
-                                </FormattedMessage>
+                                <FormattedMessage id='global.unlink' defaultMessage='Unlink' />
                               ),
                               callback: async row => {
                                 try {
@@ -782,9 +782,7 @@ const ProductPopup = props => {
               <DivBottomButtons className='bottom-buttons'>
                 {!openGlobalAddForm && (
                   <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </BasicButton>
                 )}
                 <Popup
@@ -807,18 +805,14 @@ const ProductPopup = props => {
                             }
                           })
                         }}>
-                        <FormattedMessage id='global.send' defaultMessage='Send'>
-                          {text => text}
-                        </FormattedMessage>
+                        <FormattedMessage id='global.send' defaultMessage='Send' />
                       </BasicButton>
                     </DisabledButtonWrapped>
                   }
                   content={
                     <FormattedMessage
                       id='settings.product.offerExists'
-                      defaultMessage='Product cannot be edited, as it already has ProductOffers linked to it.'>
-                      {text => text}
-                    </FormattedMessage>
+                      defaultMessage='Product cannot be edited, as it already has ProductOffers linked to it.' />
                   }
                 />
               </DivBottomButtons>

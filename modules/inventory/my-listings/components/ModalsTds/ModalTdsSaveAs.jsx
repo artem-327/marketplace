@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Formik } from 'formik'
 import { Modal } from 'semantic-ui-react'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import { func, bool, array } from 'prop-types'
-// Services
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { getSafe } from '~/utils/functions'
+// Services
 import { validationScheme, saveTdsTemplateAs } from './ModalsTds.services'
 // Constants
 import { initValues } from './ModalsTds.constants'

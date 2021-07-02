@@ -434,11 +434,6 @@ export const getAutocompleteData = ({ searchUrl }) => ({
   payload: api.getAutocompleteData(searchUrl)
 })
 
-export const simpleEditTrigger = (popupValues = {}, force = false) => ({
-  type: AT.SIMPLE_EDIT_TRIGGER,
-  payload: { popupValues, force }
-})
-
 export const modalDetailTrigger = (row = null, force = false, activeTab = 0) => {
   return {
     type: AT.MODAL_DETAIL_TRIGGER,

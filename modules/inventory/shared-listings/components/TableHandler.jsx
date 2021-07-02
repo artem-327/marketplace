@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import { Component, useEffect } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 import { useCallback, useState } from 'react'
@@ -18,115 +18,52 @@ import {
 import SearchByNamesAndTags from '../../../search'
 import { getSafe } from '../../../../utils/functions'
 
-class TableHandler extends Component {
-  state = {
-    location: '',
+const TableHandler = props => {
+  const [state, setState] = useState({
     SearchByNamesAndTags: null
-  }
+  })
 
-  /* used with <InputSearch/>
-  const debounceSetQuery = useCallback(
-    debounce(filter => this.props?.datagrid?.setSearch(filter, true, 'pageFilters'), 500), //
-    []
-  )
-  */
-
-  componentDidMount() {
-    const { sharedListingsFilters } = this.props
+  useEffect(() => {
+    const { sharedListingsFilters } = props
 
     if (sharedListingsFilters) {
-      this.setState(sharedListingsFilters)
+      setState(sharedListingsFilters)
       if (sharedListingsFilters) {
-        this.props.datagrid.clear()
-        this.handleFiltersValue(sharedListingsFilters)
+        props.datagrid.clear()
+        handleFiltersValue(sharedListingsFilters)
       }
     } else {
-      this.props.datagrid.clear()
-      this.handleFiltersValue(this.state)
+      props.datagrid.clear()
+      handleFiltersValue(state)
     }
-  }
 
-  componentWillUnmount() {
-    this.props.handleVariableSave('sharedListingsFilters', this.state)
-  }
+    return () => props.handleVariableSave('sharedListingsFilters', state)
+  }, [])
 
-  handleFiltersValue = debounce(filter => {
-    const { datagrid } = this.props
+  const handleFiltersValue = debounce(filter => {
+    const { datagrid } = props
     datagrid.setSearch(filter, true, 'pageFilters')
   }, 300)
 
-  SearchByNamesAndTagsChanged = data => {
-    this.setState({ SearchByNamesAndTags: data }, () => {
-      this.handleFiltersValue(this.state)
-    })
+  const SearchByNamesAndTagsChanged = data => {
+    setState({ SearchByNamesAndTags: data })
+    handleFiltersValue({ SearchByNamesAndTags: data })
   }
 
-  handleLocationChanged = data => {
-    this.setState({ location: data?.value }, () => this.handleFiltersValue(this.state))
-  }
+  const { sharedListingsFilters } = props
 
-  render() {
-    const { sharedListingsFilters } = this.props
-
-    const { location } = this.state
-
-    return (
-      <DivTableHandler>
-        <DivCustomSearchNameTags>
-          <SearchByNamesAndTags
-            onChange={this.SearchByNamesAndTagsChanged}
-            initFilterState={getSafe(() => sharedListingsFilters.SearchByNamesAndTags, null)}
-            filterType='sharedListings'
-            filterApply={false}
-          />
-          {/* <InputSearch
-          fluid
-          icon='search'
-          name='searchInput'
-          value={searchValue}
-          placeholder={this.props?.intl?.formatMessage({
-            id: 'settings.tables.products.search',
-            defaultMessage: 'Search product by name, code'
-          })}
-          onChange={(event, data) => {
-            setSearchValue(data?.value)
-            debounceSetQuery(data?.value) //FIXME prepare value for setSearch in datagrid
-          }}
-        /> */}
-        </DivCustomSearchNameTags>
-        {/* <DivTableHandlerColumn>
-          <DropdownType
-            name='location'
-            value={location}
-            placeholder={this.props?.intl?.formatMessage({
-              id: 'sharedListings.chooseLocation',
-              defaultMessage: 'Choose Location'
-            })}
-            selection
-            options={[
-              //FIXME
-              {
-                key: 'ALL',
-                text: 'Any Location',
-                value: ''
-              },
-              {
-                key: 'SOME',
-                text: 'Some Location',
-                value: 'SOME'
-              },
-              {
-                key: 'USA',
-                text: 'USA Location',
-                value: 'USA'
-              }
-            ]}
-            onChange={(event, data) => this.handleLocationChanged(data)}
-          />
-        </DivTableHandlerColumn> */}
-      </DivTableHandler>
-    )
-  }
+  return (
+    <DivTableHandler>
+      <DivCustomSearchNameTags>
+        <SearchByNamesAndTags
+          onChange={SearchByNamesAndTagsChanged}
+          initFilterState={getSafe(() => sharedListingsFilters.SearchByNamesAndTags, null)}
+          filterType='sharedListings'
+          filterApply={false}
+        />
+      </DivCustomSearchNameTags>
+    </DivTableHandler>
+  )
 }
 
 TableHandler.propTypes = {}

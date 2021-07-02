@@ -1,8 +1,8 @@
-// Services
-import { getSafe } from '~/utils/functions'
 import * as val from 'yup'
+// Services
+import { getSafe } from '../../../../../utils/functions'
 // Constants
-import { errorMessages } from '~/constants/yupValidation'
+import { errorMessages } from '../../../../../constants/yupValidation'
 
 /**
  * @param {object} props - { values, setValues, setFieldTouched, closeTdsModal }

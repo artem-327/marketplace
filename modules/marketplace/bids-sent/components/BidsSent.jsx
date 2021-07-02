@@ -19,7 +19,7 @@ import DeaPopup from '../../listings/components/ConfirmationPopups/DeaPopup'
 import DhsPopup from '../../listings/components/ConfirmationPopups/DhsPopup'
 
 // Styles
-import { CustomRowDiv } from '~/modules/inventory/constants/layout'
+import { CustomRowDiv } from '~/modules/inventory/styles'
 
 // Services
 import {
