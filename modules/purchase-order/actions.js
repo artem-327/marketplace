@@ -20,9 +20,9 @@ export const updateDeliveryAddress = (address, id) => ({
   payload: api.updateDeliveryAddress(address, id)
 })
 
-export const getShippingQuotes = (countryId, zip) => ({
+export const getShippingQuotes = (body) => ({
   type: AT.SHIPPING_QUOTES_FETCH,
-  payload: api.getShippingQuotes(countryId, zip)
+  payload: api.getShippingQuotes(body)
 })
 
 export const getCart = () => ({ type: AT.CART_FETCH, payload: api.getCart() })

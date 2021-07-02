@@ -1,4 +1,5 @@
 import api from '~/api'
+import { generateQueryString } from '../../utils/functions'
 
 export const getCart = () => api.get('/prodex/api/cart').then(response => response.data)
 export const getCartCountItems = () =>
@@ -26,9 +27,9 @@ export const getDwollaPayments = () =>
   api.get('/prodex/api/payments/bank-accounts/dwolla').then(response => response.data)
 export const getVellociPayments = () =>
   api.get('/prodex/api/payments/bank-accounts/velloci').then(response => response.data)
-export const getShippingQuotes = (countryId, zip) =>
+export const getShippingQuotes = (body) =>
   api
-    .get(`/prodex/api/shipment/cart?destinationCountryId=${countryId}&destinationZIP=${zip}`)
+    .get(`/prodex/api/shipment/cart-offers${generateQueryString(body)}`)
     .then(response => response.data)
 
 export const getRegions = search =>

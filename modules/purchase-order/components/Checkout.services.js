@@ -102,9 +102,13 @@ export const submitUpdateCartItem = async (props, state) => {
   confirmSection(state)
 }
 
-export const getShippingQuotes = async (props, countryId, zip) => {
+export const getShippingQuotes = async (props, value) => {
   try {
-    await props.getShippingQuotes(countryId, zip)
+    const body = value.warehouse
+      ? { warehouseId: value.id }
+      : { deliveryAddressId: value.id }
+
+    await props.getShippingQuotes(body)
   } catch (e) {
     console.error(e)
   }

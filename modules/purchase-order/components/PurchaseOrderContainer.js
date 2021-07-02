@@ -1,7 +1,5 @@
 import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
-import PurchaseOrder from './PurchaseOrder'
-import TmpBoth from './TmpBoth'
 import Checkout from './Checkout'
 //Actions
 import * as Actions from '../actions'

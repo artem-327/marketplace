@@ -288,7 +288,7 @@ const Checkout = props => {
                             const address = value.fullAddress.address
 
                             if (!cart.weightLimitExceed && !fixedFreightId && !cart.palletLimitExceed) {
-                              getShippingQuotes(props, address.country.id, address.zip.zip)
+                              getShippingQuotes(props, value)
                             }
                           }}
                         />
