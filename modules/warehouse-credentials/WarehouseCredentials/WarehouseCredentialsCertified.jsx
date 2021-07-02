@@ -42,7 +42,8 @@ class WarehouseCredentialsCertified extends Component {
   }
 
   componentDidMount() {
-    this.props.datagrid.loadData()
+    if (getSafe(() => this.props.auth.identity.isAdmin, false))
+      this.props.datagrid.loadData()
   }
 
   prepareLinkToAttachment = async (documentName, documentId) => {
