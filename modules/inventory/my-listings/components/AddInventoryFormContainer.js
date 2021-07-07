@@ -11,16 +11,22 @@ import {
   getProductConditions,
   getDocumentTypes,
 } from '../../../global-data/actions'
+// Selectors
+import { makeGetApplicationName } from '../../selectors'
 
-function mapStateToProps(store) {
-  return {
-    ...store.simpleAdd,
-    applicationName: store.auth.identity.appInfo.applicationName,
-    edit: (Router.router && Router.router.query.id) || false
+const makeMapStateToProps = () => {
+  const getApplicationName = makeGetApplicationName()
+  const mapStateToProps = (store) => {
+    return {
+      ...store.simpleAdd,
+      applicationName: getApplicationName(store),
+      edit: (Router.router && Router.router.query.id) || false
+    }
   }
+  return mapStateToProps
 }
 
-export default connect(mapStateToProps, {
+export default connect(makeMapStateToProps, {
   ...Actions,
   getProductGrades,
   getProductForms,

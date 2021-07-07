@@ -9,10 +9,11 @@ import { withDatagrid } from '../../../datagrid'
 import SharedListings from './SharedListings'
 
 //Selectors
-import { makeGetDatagridRows, getBroadcastTemplates } from '../../selectors'
+import { makeGetDatagridRows, makeGetBroadcastTemplates } from '../../selectors'
 
 const makeMapStateToProps = () => {
   const getRows = makeGetDatagridRows()
+  const getBroadcastTemplates = makeGetBroadcastTemplates()
 
   const mapStateToProps = (state, props) => {
     return {
