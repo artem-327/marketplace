@@ -1,9 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Formik } from 'formik'
-import { usePrevious } from '../../../../hooks'
-
+import { AddBox } from '@material-ui/icons'
 // Components
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -16,10 +14,8 @@ import { X as XIcon } from 'react-feather'
 import ErrorFocus from '../../../../components/error-focus'
 import { CompanyGenericProductRequestForm } from '../../../company-generic-product-request'
 import { Required } from '../../../../components/constants/layout'
-import { AddBox } from '@material-ui/icons'
 import { CompanyProductMixtures } from '../../../../components/shared-components/'
 import { DisabledButtonWrapped } from '../../../../utils/components'
-
 // Styles
 import {
   FormStyled,
@@ -35,10 +31,8 @@ import {
   DivCheckboxWrapper,
   InfoCustom
 } from './ProductPopup.styles'
-
 // Constants
 import { COLUMNS } from './ProductPopup.constants'
-
 // Services
 import {
   formValidation,

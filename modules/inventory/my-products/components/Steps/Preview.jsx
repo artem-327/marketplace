@@ -1,24 +1,9 @@
 import { useEffect } from 'react'
-import { connect } from 'react-redux'
-
-import { Table } from 'semantic-ui-react'
-
-import {
-  dataHeaderCSV,
-  postCSVMapCompanyGenericProduct,
-  putCSVMapCompanyGenericProduct,
-  postCSVMapProductOffer,
-  putCSVMapProductOffer,
-  postCSVMapCompanies,
-  putCSVMapCompanies
-} from '../../../../settings/actions'
 import _invert from 'lodash/invert'
 import { FormattedMessage } from 'react-intl'
-import styled from 'styled-components'
-
-const SmallerTableCell = styled(Table.Cell)`
-  font-size: 0.8em;
-`
+import { Table } from 'semantic-ui-react'
+// Styles
+import { SmallerTableCellSimple } from '../../../styles'
 
 const Preview = props => {
   const filteredHeader =
@@ -147,7 +132,7 @@ const Preview = props => {
                 filteredHeader.map(
                   header =>
                     header.columnNumber === cell.columnNumber && (
-                      <SmallerTableCell key={cell.columnNumber}>{cell.content}</SmallerTableCell>
+                      <SmallerTableCellSimple key={cell.columnNumber}>{cell.content}</SmallerTableCellSimple>
                     )
                 )
               )
@@ -159,25 +144,4 @@ const Preview = props => {
   )
 }
 
-const mapDispatchToProps = {
-  dataHeaderCSV,
-  postCSVMapCompanyGenericProduct,
-  putCSVMapCompanyGenericProduct,
-  postCSVMapProductOffer,
-  putCSVMapProductOffer,
-  postCSVMapCompanies,
-  putCSVMapCompanies
-}
-
-const mapStateToProps = state => {
-  return {
-    mappedHeader: state.settings.mappedHeaders,
-    CSV: state.settings.CSV,
-    isSaveMapCSV: state.settings.isSaveMapCSV,
-    mapName: state.settings.mapName,
-    selectedSavedMap: state.settings.selectedSavedMap,
-    csvWithoutHeader: state.settings.csvWithoutHeader
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Preview)
+export default Preview

@@ -1,8 +1,9 @@
 import * as Yup from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
-import { UnitOfPackaging } from '~/components/formatted-messages'
 import debounce from 'lodash/debounce'
-import { getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
+// Services
+import { errorMessages } from '../../../../constants/yupValidation'
+import { UnitOfPackaging } from '../../../../components/formatted-messages'
+import { getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '../../../../utils/functions'
 
 export const checkPalletParamsRequired = v => {
   return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)

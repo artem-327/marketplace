@@ -1,7 +1,8 @@
 import { Component } from 'react'
-import MyProductsPage from './components/MyProducts'
-import { DatagridProvider } from '~/modules/datagrid'
 import { connect } from 'react-redux'
+// Components
+import MyProductsPage from './components/MyProductsContainer'
+import { DatagridProvider } from '../../datagrid'
 
 class MyProducts extends Component {
   render() {

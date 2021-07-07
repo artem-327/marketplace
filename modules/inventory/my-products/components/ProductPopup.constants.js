@@ -4,18 +4,14 @@ export const COLUMNS = [
   {
     name: 'name',
     title: (
-      <FormattedMessage id='global.name' defaultMessage='Name'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='global.name' defaultMessage='Name' />
     ),
     width: 270
   },
   {
     name: 'documentTypeName',
     title: (
-      <FormattedMessage id='global.docType' defaultMessage='Document Type'>
-        {text => text}
-      </FormattedMessage>
+      <FormattedMessage id='global.docType' defaultMessage='Document Type' />
     ),
     width: 270
   }

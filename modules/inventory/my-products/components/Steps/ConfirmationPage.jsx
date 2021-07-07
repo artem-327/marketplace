@@ -1,17 +1,8 @@
 import { Fragment } from 'react'
-import { connect } from 'react-redux'
-
-import { Grid, Button } from 'semantic-ui-react'
-
-import styled from 'styled-components'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-import Router from 'next/dist/client/router'
-
-import { closeImportPopup } from '../../../../settings/actions'
-
-const StyledButton = styled(Button)`
-  min-width: 200px !important;
-`
+// Styles
+import { StyledButton } from '../../../styles'
 
 const ConfirmationPage = props => {
   const createReport = result => {
@@ -122,25 +113,4 @@ const ConfirmationPage = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeImportPopup
-}
-
-const mapStateToProps = state => {
-  return {
-    csvImportError: state.settings.csvImportError,
-    reloadFilter: {
-      props: {
-        currentTab:
-          Router && Router.router
-            ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : state.settings.tabsNames[0],
-        productsFilter: state.settings.productsFilter
-      },
-      value: state.settings.filterValue
-    },
-    myProductsUnmappedValue: state.settings.myProductsUnmappedValue
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ConfirmationPage)
+export default ConfirmationPage

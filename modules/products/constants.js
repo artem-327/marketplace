@@ -4,7 +4,7 @@ import CasProductsTable from './components/CasProductsTable/CasProductsTableCont
 import ProductCatalogTable from './components/ProductCatalogTable/TableContainer'
 import EditAltNamesCasProductsPopup from './components/CasProductsTable/EditAltNamesCasProductsPopupContainer'
 import EditAltNamesEchoProductPopup from './components/ProductCatalogTable/EditAltNamesEchoProductPopupContainer'
-import ProductImportPopup from '../inventory/my-products/components/ProductImportPopup'
+import ProductImportPopup from '../inventory/my-products/components/ProductImportPopupContainer'
 import CasProductsSidebar from './components/CasProductsTable/CasProductsSidebarContainer'
 import ProductGroupsTable from './components/ProductGroups/ProductGroupsTableContainer'
 import ProductGroupsPopup from './components/ProductGroups/ProductGroupsPopupContainer'

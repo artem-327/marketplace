@@ -1,7 +1,9 @@
 import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
 import { injectIntl } from 'react-intl'
-import { getSafe } from '../../../../utils/functions'
+// Components
+import ProductPopup from './ProductPopup'
+// Actions
 import {
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
@@ -20,13 +22,34 @@ import {
   getHazardClasses,
   getPackagingGroups
 } from '../../../global-data/actions'
-
-
 import { closePopup } from '../../actions'
 import { addAttachment } from '../../../inventory/actions'
+// Services
+import { getSafe } from '../../../../utils/functions'
 import { withDatagrid } from '../../../datagrid'
+// Constants
 import { palletDimensions } from '../../../settings/contants'
-import ProductPopup from './ProductPopup'
+// Selectors
+import {
+  makeGetAttachments,
+  makeGetPopupValues,
+  makeGetCompanyGenericProduct,
+  makeGetCompanyGenericProductFetching,
+  makeGetPackagingType,
+  makeGetPackagingTypesAll,
+  makeGetProductsUnitsType,
+  makeGetPackageWeightUnits,
+  makeGetUnitsAll,
+  makeGetFreightClasses,
+  makeGetHazardClasses,
+  makeGetPackagingGroups,
+  makeGetSearchedUnNumbers,
+  makeGetProductDataLoading,
+  makeGetDocumentTypesDropdown,
+  makeGetNmfcNumbersFetching,
+  makeGetNmfcNumbersFiltered,
+  makeGetSettingsMap
+} from '../../selectors'
 
 const mapDispatchToProps = {
   closePopup,
@@ -45,52 +68,57 @@ const mapDispatchToProps = {
   getUnits,
   getHazardClasses,
   getPackagingGroups
-
 }
-const mapStateToProps = ({ globalData ,settings, simpleAdd, auth }) => {
-  let settingsMap = new Map()
-  if (getSafe(() => auth.identity.settings.length, false)) {
-    for (let setting of auth.identity.settings) {
-      settingsMap.set(setting.key, setting.value)
+
+const makeMapStateToProps = () => {
+  const getAttachments = makeGetAttachments()
+  const getPopupValues = makeGetPopupValues()
+  const getCompanyGenericProduct = makeGetCompanyGenericProduct()
+  const getCompanyGenericProductFetching = makeGetCompanyGenericProductFetching()
+  const getPackagingType = makeGetPackagingType()
+  const getPackagingTypesAll = makeGetPackagingTypesAll()
+  const getProductsUnitsType = makeGetProductsUnitsType()
+  const getPackageWeightUnits = makeGetPackageWeightUnits()
+  const getUnitsAll = makeGetUnitsAll()
+  const getFreightClasses = makeGetFreightClasses()
+  const getHazardClasses = makeGetHazardClasses()
+  const getPackagingGroups = makeGetPackagingGroups()
+  const getSearchedUnNumbers = makeGetSearchedUnNumbers()
+  const getProductDataLoading = makeGetProductDataLoading()
+  const getDocumentTypesDropdown = makeGetDocumentTypesDropdown()
+  const getNmfcNumbersFetching = makeGetNmfcNumbersFetching()
+  const getNmfcNumbersFiltered = makeGetNmfcNumbersFiltered()
+  const getSettingsMap = makeGetSettingsMap()
+
+  const mapStateToProps = state => {
+    const settingsMap = getSettingsMap(state)
+
+    return {
+      attachments: getAttachments(state),
+      popupValues: getPopupValues(state),
+      companyGenericProduct: getCompanyGenericProduct(state),
+      companyGenericProductFetching: getCompanyGenericProductFetching(state),    
+      packagingType: getPackagingType(state),
+      packagingTypesAll: getPackagingTypesAll(state),
+      productsUnitsType: getProductsUnitsType(state),
+      packageWeightUnits: getPackageWeightUnits(state),
+      unitsAll: getUnitsAll(state),
+      freightClasses: getFreightClasses(state),
+      hazardClasses: getHazardClasses(state),
+      packagingGroups: getPackagingGroups(state),
+      searchedUnNumbers: getSearchedUnNumbers(state),
+      loading: getProductDataLoading(state),
+      documentTypes: getDocumentTypesDropdown(state),
+      nmfcNumbersFetching: getNmfcNumbersFetching(state),
+      nmfcNumbersFiltered: getNmfcNumbersFiltered(state),
+      palletWeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.weight), ''),
+      palletLengthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.length), ''),
+      palletWidthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.width), ''),
+      palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), ''),
+      palletWeightUnitInitFromSettings: 7 // 7 = pounds, lb
     }
   }
-
-  return {
-    attachments: getSafe(() => settings.popupValues.attachments, []),
-    popupValues: simpleAdd.popupValues,
-    companyGenericProduct: settings.companyGenericProduct,
-    companyGenericProductFetching: settings.companyGenericProductFetching,    
-    packagingType: globalData.measureTypesDropdown,
-    packagingTypesAll: globalData.packagingTypes,
-    productsUnitsType: globalData.unitsDropdown,
-    packageWeightUnits: globalData.weightUnits,
-    unitsAll: globalData.units,
-    freightClasses: globalData.freightClassesDropdown,
-    hazardClasses: globalData.hazardClassesDropdown,
-    packagingGroups: globalData.packagingGroupsDropdown,
-    searchedUnNumbers: settings.searchedUnNumbers,
-    loading: settings.productDataLoading,
-    documentTypes: globalData.documentTypesDropdown,
-    nmfcNumbersFetching: settings.nmfcNumbersFetching,
-    nmfcNumbersFiltered: settings.nmfcNumbersFiltered.map(d => {
-      return {
-        key: d.id,
-        text: d.code,
-        value: d.id,
-        content: (
-          <>
-            <strong>{d.code}</strong>
-            <div>{d.description}</div>
-          </>
-        )
-      }
-    }),
-    palletWeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.weight), ''),
-    palletLengthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.length), ''),
-    palletWidthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.width), ''),
-    palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), ''),
-    palletWeightUnitInitFromSettings: 7 // 7 = pounds, lb
-  }
+  return mapStateToProps
 }
 
-export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(withToastManager(ProductPopup))))
+export default withDatagrid(injectIntl(connect(makeMapStateToProps, mapDispatchToProps)(withToastManager(ProductPopup))))

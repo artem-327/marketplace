@@ -1,75 +1,32 @@
 import { useEffect, useState } from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
 import {
-  Header,
   Modal,
   Grid,
   Icon,
   Step,
-  ModalContent,
   Button,
   Checkbox,
   Dropdown,
   Dimmer,
-  Loader,
-  Segment
+  Loader
 } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import Router from 'next/dist/client/router'
-
-import {
-  closeImportPopup,
-  getStoredCSV,
-  postImportProductCSV,
-  postImportProductMap,
-  clearDataOfCSV,
-  closeImportPopupCancel,
-  postImportCompanyGenericProductCSV,
-  postImportCompanyGenericProductMap,
-  postImportProductOfferCSV,
-  postImportProductOfferMap,
-  handleSaveMapCSV,
-  postImportCompaniesCSV,
-  postImportCompaniesMap,
-  changeCsvHeader
-} from '../../../settings/actions'
-
-import Upload from './Steps/UploadCSV'
-import Map from './Steps/Map'
-import Preview from './Steps/Preview'
-import ConfirmationPage from './Steps/ConfirmationPage'
+import { FormattedMessage } from 'react-intl'
 import _invert from 'lodash/invert'
+// Components
+import Upload from './Steps/UploadCSV'
+import Map from './Steps/MapContainer'
+import Preview from './Steps/PreviewContainer'
+import ConfirmationPage from './Steps/ConfirmationPageContainer'
+// Services
 import confirm from '../../../../components/Confirmable/confirm'
 import { generateToastMarkup } from '../../../../utils/functions'
-import { withToastManager } from 'react-toast-notifications'
-import { OPTIONS_BROADCAST } from '../../my-listings/components/ModalDetail/ModalDetail.constants'
 import { getSafe } from '../../../../utils/functions'
-import { getTemplates, broadcastChange } from '../../../broadcast/actions'
+// Constants
+import { OPTIONS_BROADCAST } from '../../my-listings/components/ModalDetail/ModalDetail.constants'
 //Styles
-import { DivIconOptions, HeaderOptions } from '../../styles'
+import { DivIconOptions, HeaderOptions, StyledModal, StyledHeader, CheckboxContainer, DivSeeOffer } from '../../styles'
 // Hooks
 import { usePrevious } from '../../../../hooks'
-//Actions
-import { changeBroadcast } from '../../actions'
-const StyledModal = styled(ModalContent)`
-  height: 500px;
-  overflow: auto;
-`
-
-const StyledHeader = styled(Header)`
-  margin-bottom: 0;
-`
-
-const CheckboxContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-`
-
-const DivSeeOffer = styled.div`
-  width: 400px;
-`
 
 const ProductImportPopup = props => {
   const [state, setState] = useState({
@@ -415,53 +372,4 @@ const ProductImportPopup = props => {
   )
 }
 
-const mapDispatchToProps = {
-  closeImportPopup,
-  getStoredCSV,
-  postImportProductCSV,
-  postImportProductMap,
-  clearDataOfCSV,
-  closeImportPopupCancel,
-  postImportCompanyGenericProductCSV,
-  postImportCompanyGenericProductMap,
-  postImportProductOfferCSV,
-  postImportProductOfferMap,
-  handleSaveMapCSV,
-  postImportCompaniesCSV,
-  postImportCompaniesMap,
-  changeCsvHeader,
-  getTemplates,
-  changeBroadcast
-}
-
-const mapStateToProps = (state, { companies, companyGenericProduct }) => {
-  return {
-    applicationName: state?.auth?.identity?.appInfo?.applicationName,
-    csvFileId: state.settings.fileCSVId,
-    CSV: state.settings.CSV,
-    isSaveMapCSV: state.settings.isSaveMapCSV,
-    mappedDataHeaderCSV: state.settings.dataHeaderCSV,
-    mappedHeaders: state.settings.mappedHeaders,
-    missingRequired: state.settings.missingRequired,
-    selectedSavedMap: state.settings.selectedSavedMap,
-    csvImportError: state.settings.csvImportError,
-    reloadFilter: {
-      props: {
-        currentTab:
-          Router && Router.router
-            ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : state.settings.tabsNames[0],
-        productsFilter: state.settings.productsFilter
-      },
-      value: state.settings.filterValue
-    },
-    csvWithoutHeader: state.settings.csvWithoutHeader,
-    broadcastTemplates: getSafe(() => state.broadcast.templates, []),
-    broadcastOption: getSafe(() => state.simpleAdd.broadcastOption, null),
-    companies: getSafe(() => companies, false),
-    companyGenericProduct: getSafe(() => companyGenericProduct, false),
-    loading: state?.settings?.loading
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(ProductImportPopup)))
+export default ProductImportPopup

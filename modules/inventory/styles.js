@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-
-import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Dropdown, FormField, Header } from 'semantic-ui-react'
+import Dropzone from 'react-dropzone'
+import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, FormField, Header, ModalContent, Table, Button } from 'semantic-ui-react'
 import { TextArea } from 'formik-semantic-ui-fixed-validation'
 
 export const FlexSidebar = styled(Sidebar)`
@@ -585,4 +585,204 @@ export const CustomGridColumn = styled(Grid.Column)`
   }
   padding-top: '10px';
   padding-bottom: '10px';
+`
+
+export const StyledModal = styled(ModalContent)`
+  height: 500px;
+  overflow: auto;
+`
+
+export const StyledHeader = styled(Header)`
+  margin-bottom: 0;
+`
+
+export const CheckboxContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+`
+
+export const DivSeeOffer = styled.div`
+  width: 400px;
+`
+
+export const MapTable = styled(Table)`
+  width: 100%;
+  max-width: 100%;
+`
+
+export const SmallerTableCell = styled(Table.Cell)`
+  overflow-wrap: 'break-word';
+  font-size: 0.8em;
+
+  > div {
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+
+  &.cols1 {
+    width: calc(
+      88vw - 404px
+    ); /* 404 = 44px for wrapper padding and border; 130px for first column; 230px for last column */
+    max-width: 537px;
+
+    > div {
+      width: calc((88vw - 404px) - 25px);
+      max-width: 513px;
+    }
+  }
+
+  &.cols2 {
+    width: calc((88vw - 404px) / 2);
+    max-width: calc(537px / 2);
+
+    > div {
+      width: calc(((88vw - 404px) / 2) - 25px);
+      max-width: calc((537px / 2) - 24px);
+    }
+  }
+
+  &.cols3 {
+    width: calc((88vw - 404px) / 3);
+    max-width: calc(537px / 3);
+
+    > div {
+      width: calc(((88vw - 404px) / 3) - 25px);
+      max-width: calc((537px / 3) - 24px);
+    }
+  }
+
+  &.cols4 {
+    width: calc((88vw - 404px) / 3);
+    max-width: calc(537px / 3);
+
+    > div {
+      width: calc(((88vw - 404px) / 3) - 25px);
+      max-width: calc((537px / 3) - 24px);
+    }
+  }
+
+  @media (max-width: 1919px) {
+    max-width: 487px;
+
+    &.cols1 {
+      > div {
+        max-width: 463px;
+      }
+    }
+
+    &.cols2 {
+      max-width: calc(487px / 2);
+
+      > div {
+        max-width: calc((487px / 2) - 24px);
+      }
+    }
+
+    &.cols3 {
+      max-width: calc(487px / 3);
+
+      > div {
+        max-width: calc((487px / 3) - 24px);
+      }
+    }
+
+    &.cols4 {
+      max-width: calc(487px / 3);
+
+      > div {
+        max-width: calc((487px / 3) - 24px);
+      }
+    }
+  }
+
+  @media (max-width: 1199px) {
+    max-width: 447px;
+
+    &.cols1 {
+      > div {
+        max-width: 423px;
+      }
+    }
+
+    &.cols2 {
+      max-width: calc(447px / 2);
+
+      > div {
+        max-width: calc((447px / 2) - 24px);
+      }
+    }
+
+    &.cols3 {
+      max-width: calc(447px / 3);
+
+      > div {
+        max-width: calc((447px / 3) - 24px);
+      }
+    }
+
+    &.cols4 {
+      max-width: calc(447px / 3);
+
+      > div {
+        max-width: calc((447px / 3) - 24px);
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    &,
+    &.cols1,
+    &.cols2,
+    &.cols3,
+    &.cols4 {
+      width: 100%;
+      max-width: 100%;
+
+      > div {
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+  }
+`
+
+export const StyledButton = styled(Button)`
+  min-width: 200px !important;
+`
+
+export const SmallerTableCellSimple = styled(Table.Cell)`
+  font-size: 0.8em;
+`
+
+export const StyledDropzone = styled(Dropzone)`
+  display: flex;
+  border: 2px dashed #2599d5;
+  width: 300px;
+  height: 300px;
+  cursor: pointer;
+  &:hover {
+    border: 2px dashed #2599d5;
+    background-color: #eef7fc;
+  }
+  ${props =>
+    props.uploaded &&
+    `
+      border: 2px dashed #4cd137;
+      background-color: #f1fcef;
+    `
+  }
+  ${props =>
+    props.error &&
+    `
+      border: 2px dashed #f44336;
+      background-color: #ffebee;
+    `
+  }
+`
+
+export const StyledSegment = styled(Segment)`
+  margin: 0 !important;
+  background: transparent !important;
+  border: none !important;
 `

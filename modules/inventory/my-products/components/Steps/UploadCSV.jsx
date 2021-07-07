@@ -1,42 +1,11 @@
 import { useState } from 'react'
 import { connect } from 'react-redux'
-import styled from 'styled-components'
-
-import Dropzone from 'react-dropzone'
 import { Grid, Segment, Header, Icon, Form } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
+// Actions
 import { uploadCSVFile } from '../../../../settings/actions'
-
-const StyledDropzone = styled(Dropzone)`
-  display: flex;
-  border: 2px dashed #2599d5;
-  width: 300px;
-  height: 300px;
-  cursor: pointer;
-  &:hover {
-    border: 2px dashed #2599d5;
-    background-color: #eef7fc;
-  }
-  ${props =>
-    props.uploaded &&
-    `
-        border: 2px dashed #4cd137;
-        background-color: #f1fcef;
-      `}
-  ${props =>
-    props.error &&
-    `
-        border: 2px dashed #f44336;
-        background-color: #ffebee;
-      `}
-`
-
-const StyledSegment = styled(Segment)`
-  margin: 0 !important;
-  background: transparent !important;
-  border: none !important;
-`
+// Styles
+import { StyledDropzone, StyledSegment } from '../../../styles'
 
 const UploadCSV = props => {
   const [state, setState] = useState({

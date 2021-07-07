@@ -21,7 +21,7 @@ import ColumnSettingButton from '../../../../components/table/ColumnSettingButto
 import { InventoryFilter } from '../../../filter'
 // Services
 import { groupActions } from '../../../company-product-info/constants'
-import ProductImportPopup from '../../my-products/components/ProductImportPopup'
+import ProductImportPopup from '../../my-products/components/ProductImportPopupContainer'
 import { getSafe } from '../../../../utils/functions'
 import {
   columns,
