@@ -1,10 +1,8 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
-
 //Services
 import { downloadFile } from '../ListingDetail.services'
 import { getSafe } from '../../../../../../utils/functions'

@@ -1,8 +1,7 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
 //Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
 import {
@@ -124,7 +123,7 @@ const SDSTab = ({ row }) => {
 SDSTab.propTypes = {}
 SDSTab.defaultProps = {}
 
-function areEqual(prevProps, nextProps) {
+const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id
 }
 

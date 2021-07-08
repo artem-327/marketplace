@@ -33,10 +33,9 @@ import { SelectTemplates } from '../ModalsTds/ModalsTds.styles'
 import ErrorFocus from '../../../../../components/error-focus'
 //Services
 import { validationScheme, getEditValues } from './ModalDetail.services'
-import { getSafe, generateToastMarkup } from '../../../../../utils/functions'
+import { getSafe, generateToastMarkup, getMimeType } from '../../../../../utils/functions'
 import { getStringISODate } from '../../../../../components/date-format'
 import { onClickBroadcast } from '../MyListings.services'
-import { getMimeType } from '../../../../../components/getMimeType'
 //Styles
 import { PriceField } from '../../../../../styles/styledComponents'
 import {

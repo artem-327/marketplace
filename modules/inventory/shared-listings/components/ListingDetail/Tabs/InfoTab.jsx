@@ -7,7 +7,6 @@ import moment from 'moment'
 import { getLocaleDateFormat } from '../../../../../../components/date-format'
 // Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
-import { SegmentBottom } from '../../../../../my-network/components/DetailRow/DetailRow.style'
 import {
   SegmentGroupTab,
   GridColumnTitleSection,
@@ -15,6 +14,7 @@ import {
   GridColumnTabFieldValue,
   SegmentDetailRow
 } from '../ListingDetail.styles'
+
 /**
  * @category Inventory - Shared Listings
  * @component

@@ -1,11 +1,9 @@
-import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-//Components
+// Components
 import { Broadcast } from '../../../../broadcast'
-//Styles
+// Styles
 import { TdsHeader } from '../../../my-listings/components/ModalsTds/ModalsTds.styles'
 
 const ModalPriceBook = props => {

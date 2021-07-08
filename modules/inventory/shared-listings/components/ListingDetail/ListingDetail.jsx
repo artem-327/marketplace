@@ -1,15 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { Component, memo, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { ChevronsUp } from 'react-feather'
-
 // Components
-//import ErrorFocus from '../../../components/error-focus'
-import Header from './Header'
+import Header from './HeaderContainer'
 import Tabs from './Tabs/Tabs'
 // Hooks
 import { usePrevious } from '../../../../../hooks'
-
 // Styles
 import {
   DivCollapse,
@@ -17,9 +13,6 @@ import {
   DivCollapseText,
   DivTradePassLogo
 } from '../../../../my-network/components/DetailRow/DetailRow.style'
-
-// Services
-//import {} from './ListingDetail.services'
 
 const ListingDetail = props => {
   const [row, setRow] = useState(null)

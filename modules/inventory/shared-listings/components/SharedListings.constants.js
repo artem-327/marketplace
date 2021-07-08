@@ -1,6 +1,7 @@
-import { FormattedMessage, injectIntl } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 //Styles
 import { DivIconOptions } from '../../styles'
+
 /**
  * @category Shared Listings
  * @constant {array}

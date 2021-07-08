@@ -20,8 +20,7 @@ import {
 // Services
 import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
 import confirm from '../../../../components/Confirmable/confirm'
-import { getSafe, generateToastMarkup } from '../../../../utils/functions'
-import { getMimeType } from '../../../../components/getMimeType'
+import { getSafe, generateToastMarkup, getMimeType } from '../../../../utils/functions'
 // Styles
 import {
   CustomPaddedColumn,

@@ -1,21 +1,14 @@
-import { memo, useEffect, useRef } from 'react'
-import { connect } from 'react-redux'
+import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Image, Input, List } from 'semantic-ui-react'
+import { Grid, Image, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-import { Mail } from 'react-feather'
 // Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
-
 // Styles
 import {
   DivRectangle,
   DivName,
   DivAddress,
-  DivButtons,
-  BasicButtonCustom,
-  DivMail,
-  DivTextButton,
   ChevronLeftStyled,
   ChevronRightStyled,
   SegmentDetailRow,
@@ -23,11 +16,9 @@ import {
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
-import { getSafe } from '../../../../../utils/functions'
-
 // Services
 import { submitHandler } from './Header.services'
-import { updateMarkUp, getSharedProductOffer } from '../../../actions'
+import { getSafe } from '../../../../../utils/functions'
 
 /**
  * @category Inventory - Shared Listings
@@ -173,20 +164,4 @@ const Header = props => {
 
 Header.propTypes = {}
 
-function mapStateToProps(store) {
-  return {
-    loadingMarkup: store.simpleAdd.loadingMarkup
-  }
-}
-
-function areEqual(prevProps, nextProps) {
-  return (
-    prevProps?.row?.id === nextProps?.row?.id &&
-    prevProps?.values?.priceMultiplier === nextProps?.values?.priceMultiplier &&
-    prevProps?.loadingMarkup === nextProps?.loadingMarkup
-  )
-}
-
-const MemoHeader = memo(Header, areEqual)
-
-export default connect(mapStateToProps, { updateMarkUp, getSharedProductOffer })(MemoHeader)
+export default Header

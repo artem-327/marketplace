@@ -1,24 +1,12 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { injectIntl, FormattedMessage } from 'react-intl'
-
 // Components
 import ProdexTable from '../../../../components/table'
-import Tutorial from '../../../tutorial/Tutorial'
 import ListingDetail from './ListingDetail/ListingDetail'
-import TableHandler from './TableHandler'
+import TableHandler from './TableHandlerContainer'
 import ModalPriceBook from './ModalPriceBook/ModalPriceBook'
-
-// Hooks
-//import { usePrevious } from '../../../hooks'
-
-// Styles
-import { IconDown, IconUp } from './SharedListings.styles'
-
 // Services
 import { getRows } from './SharedListings.services'
-
 // Constants
 import { COLUMNS } from './SharedListings.constants'
 
@@ -154,4 +142,4 @@ SharedListings.propTypes = {
 
 SharedListings.defaultProps = {}
 
-export default injectIntl(SharedListings)
+export default SharedListings

@@ -1,20 +1,13 @@
-import { Component, useEffect } from 'react'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
-import { useCallback, useState } from 'react'
+import { useEffect } from 'react'
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
-import { injectIntl } from 'react-intl'
-
-//Styles
+// Styles
 import {
-  InputSearch,
-  DropdownType,
   DivTableHandler,
-  DivCustomSearchNameTags,
-  DivTableHandlerColumn
+  DivCustomSearchNameTags
 } from './SharedListings.styles'
-//Components
+// Components
 import SearchByNamesAndTags from '../../../search'
 import { getSafe } from '../../../../utils/functions'
 
@@ -68,10 +61,4 @@ const TableHandler = props => {
 
 TableHandler.propTypes = {}
 
-function mapStateToProps(store) {
-  return {
-    sharedListingsFilters: store.simpleAdd.sharedListingsFilters
-  }
-}
-
-export default injectIntl(connect(mapStateToProps, Actions)(TableHandler))
+export default TableHandler
