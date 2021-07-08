@@ -10,10 +10,9 @@ import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check } from 'react-feather'
-import { getMimeType } from '~/components/getMimeType'
 import {
   openPopup,
   closePopup,

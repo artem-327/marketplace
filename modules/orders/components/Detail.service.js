@@ -7,12 +7,11 @@ import { AttachmentManager } from '../../attachments'
 // Constants
 import * as OrdersHelper from '../../../components/helpers/Orders'
 import { columnsRelatedOrdersDetailDocuments } from '../constants'
-import { getMimeType } from '../../../components/getMimeType'
 import { currencyUSSymbol } from '../../../constants/index'
 // Styles
 import { CustomDivAddDocument } from './Detail.styles'
 // Services
-import { getSafe, getFormattedAddress, uniqueArrayByKey } from '../../../utils/functions'
+import { getSafe, getFormattedAddress, uniqueArrayByKey, getMimeType } from '../../../utils/functions'
 import { getLocaleDateFormat } from '../../../components/date-format'
 
 
