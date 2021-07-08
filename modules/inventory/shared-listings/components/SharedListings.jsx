@@ -10,6 +10,11 @@ import { getRows } from './SharedListings.services'
 // Constants
 import { COLUMNS } from './SharedListings.constants'
 
+/**
+ * SharedListings Component
+ * @category Inventory - Shared Listings
+ * @components
+ */
 const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 

@@ -14,6 +14,11 @@ import {
 // Styles
 import { MapTable, SmallerTableCell } from '../../../styles'
 
+/**
+ * Map Component
+ * @category Inventory - My Products
+ * @components
+ */
 const Map = props => {
   const [state, setState] = useState({
     newHeaders: null,

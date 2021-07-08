@@ -27,6 +27,7 @@ val.addMethod(val.number, 'divisibleBy', function (ref, message) {
     }
   })
 })
+
 /**
  * Validates uniqueProperty in form
  * @category Inventory - My Listings
@@ -54,6 +55,7 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
     return true
   })
 })
+
 /**
  * Validates form inputs
  * @category Inventory - My Listings

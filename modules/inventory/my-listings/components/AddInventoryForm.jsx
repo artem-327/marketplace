@@ -77,6 +77,11 @@ tabs.push(['costs', 'lots', 'origin', 'touchedLot'])
 // 3rd tab
 tabs.push([])
 
+/**
+ * AddInventoryForm Component
+ * @category Inventory - My Listings
+ * @components
+ */
 const AddInventoryForm = props => {
   const [state, setState] = useState({
     initialState: {},

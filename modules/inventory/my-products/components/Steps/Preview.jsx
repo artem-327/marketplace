@@ -5,6 +5,11 @@ import { Table } from 'semantic-ui-react'
 // Styles
 import { SmallerTableCellSimple } from '../../../styles'
 
+/**
+ * Preview Component
+ * @category Inventory - My Products
+ * @components
+ */
 const Preview = props => {
   const filteredHeader =
     props.mappedHeader &&

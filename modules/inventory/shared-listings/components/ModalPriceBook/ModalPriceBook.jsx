@@ -6,6 +6,11 @@ import { Broadcast } from '../../../../broadcast'
 // Styles
 import { TdsHeader } from '../../../my-listings/components/ModalsTds/ModalsTds.styles'
 
+/**
+ * ModalPriceBook Component
+ * @category Inventory - Shared Listings
+ * @components
+ */
 const ModalPriceBook = props => {
   return (
     <Modal open={props.isOpenPriceBookModal} onClose={() => props.triggerPriceBookModal(false, null)} closeIcon={true}>

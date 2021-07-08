@@ -22,6 +22,11 @@ import {
   DivNormalText
 } from '../ListingDetail.styles'
 
+/**
+ * DocumentsTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const DocumentsTab = props => {
   const { row } = props
   const attachments = row.attachments

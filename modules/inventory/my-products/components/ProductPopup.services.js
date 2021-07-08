@@ -5,10 +5,20 @@ import { errorMessages } from '../../../../constants/yupValidation'
 import { UnitOfPackaging } from '../../../../components/formatted-messages'
 import { getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '../../../../utils/functions'
 
+/**
+ * Check Pallet Params Required in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const checkPalletParamsRequired = v => {
   return !!(v.palletMinPkgs || v.palletMaxPkgs || v.palletWeight || v.palletLength || v.palletWidth || v.palletHeight)
 }
 
+/**
+ * Validation of form in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const formValidation = () =>
   Yup.lazy(values => {
     const palletParamsRequired = values.palletSaleOnly || checkPalletParamsRequired(values) ? true : false
@@ -101,6 +111,11 @@ export const formValidation = () =>
   })
 
 
+/**
+ * Filter Packaging Types in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const filterPackagingTypes = (id, unitsAll, packagingTypesAll, setpackagingTypesReduced) => {
   if (!unitsAll) return
   const unit = unitsAll.find(unit => unit.id === id)
@@ -121,6 +136,11 @@ export const filterPackagingTypes = (id, unitsAll, packagingTypesAll, setpackagi
   )
 }
 
+/**
+ * Initial Form Values in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const getInitialFormValues = props => {
   const {
     popupValues,
@@ -200,7 +220,11 @@ export const getInitialFormValues = props => {
   }
 }
 
-
+/**
+ * Submit handler in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const handlerSubmit = async (values, actions, props, attachments, setLoadSidebar) => {
   const {
     popupValues,
@@ -279,22 +303,39 @@ export const handlerSubmit = async (values, actions, props, attachments, setLoad
   }
 }
 
-
+/**
+ * Search handler Types in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleSearchChange = debounce((searchQuery, props) => {
   props.searchCompanyGenericProduct(searchQuery)
 }, 250)
 
-
+/**
+ * Search Nmfc Number Handler in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleSearchNmfcNumberChange = debounce((searchQuery, props) => {
   props.getNmfcNumbersByString(searchQuery)
 }, 250)
 
-
+/**
+ * Document Type change handler in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleChangeDocumentType = (e, name, value, state) => {
   state.setOpenUpload(true)
   state.setDocumentType(value)
 }
 
+/**
+ * Attach Documents Manager in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const attachDocumentsManager = (newDocuments, values, setFieldValue, state) => {
   const newDocArray = newDocuments.map(att => ({
     id: att.id,
@@ -306,6 +347,11 @@ export const attachDocumentsManager = (newDocuments, values, setFieldValue, stat
   state.setAttachments(docArray)
 }
 
+/**
+ * Attach Documents Upload in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const attachDocumentsUploadAttachment = (att, values, setFieldValue, state) => {
   const newDocArray = [
     {
@@ -319,6 +365,11 @@ export const attachDocumentsUploadAttachment = (att, values, setFieldValue, stat
   state.setAttachments(docArray)
 }
 
+/**
+ * Packaging Type change handler in Product Popup
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleChangePackagingType = (e, value, setFieldValue, values, props) => {
   const { packagingTypesAll } = props
   const selectedPackingType = packagingTypesAll.find(type => type.id === value)

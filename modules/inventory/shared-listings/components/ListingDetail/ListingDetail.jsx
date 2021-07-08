@@ -14,6 +14,11 @@ import {
   DivTradePassLogo
 } from '../../../../my-network/components/DetailRow/DetailRow.style'
 
+/**
+ * ListingDetail Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const ListingDetail = props => {
   const [row, setRow] = useState(null)
   const prevRow = usePrevious(props.row)

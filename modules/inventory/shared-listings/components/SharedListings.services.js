@@ -15,6 +15,11 @@ import { onClickBroadcast } from '../../my-listings/components/MyListings.servic
 import { getSafe, getLocationString } from '../../../../utils/functions'
 import { FormattedUnit } from '../../../../components/formatted-messages'
 
+/**
+ * Returns actions for Rows in SharedListings Component
+ * @category Inventory - Shared Listings
+ * @method
+ */
 export const getActions = triggerPriceBookModal => {
   return [
     {
@@ -26,7 +31,7 @@ export const getActions = triggerPriceBookModal => {
 
 /**
  * Added actions to the productName column and adjusted broadcast option in network column and returns rows.
- * @category Shared Listings
+ * @category Inventory - Shared Listings
  * @param {array} rows
  * @param {object} props
  * @returns {array}
@@ -199,7 +204,7 @@ export const getRows = (rows, props) => {
 }
 
 /**
- * @category Shared Listings
+ * @category Inventory - Shared Listings
  * @method
  * @param {object} row
  * @returns {{titleNumbers: string, value: JSX.Element}[]}
@@ -226,6 +231,11 @@ const getPriceColumns = row => {
   })
 }
 
+/**
+ * Get rows from datagrid in Container
+ * @category Inventory - Shared Listings
+ * @method
+ */
 export const getMappedRows = datagrid => datagrid.rows.map(po => {
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
   let price

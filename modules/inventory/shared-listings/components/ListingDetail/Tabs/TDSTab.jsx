@@ -12,6 +12,11 @@ import {
   DivNormalText
 } from '../ListingDetail.styles'
 
+/**
+ * TDSTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const TDSTab = ({ row }) => {
   let elementsTdsFields = row?.elementsTdsFields?.elements ? row?.elementsTdsFields?.elements : []
   elementsTdsFields = elementsTdsFields.filter(el => el.property !== '' && el.specifications !== '')

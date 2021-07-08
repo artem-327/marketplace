@@ -16,6 +16,7 @@ import {
 } from '../ListingDetail.styles'
 
 /**
+ * InfoTab Component
  * @category Inventory - Shared Listings
  * @component
  */

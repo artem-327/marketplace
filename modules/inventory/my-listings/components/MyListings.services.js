@@ -39,6 +39,11 @@ import {
 //Images
 import BluePalletLogoMini from '../../../../assets/images/blue-pallet/guest-copy-9@3x.png'
 
+/**
+ * columns in my listings
+ * @category Inventory - My Listings
+ * @method
+ */
 export const columns = [
     {
       name: 'productName',
@@ -209,7 +214,11 @@ export const columns = [
     }
 ]
 
-
+/**
+ * to Datagrid Filter
+ * @category Inventory - My Listings
+ * @method
+ */
 export const toDatagridFilter = savedFilter => {
     let { filters, ...rest } = savedFilter
 
@@ -307,6 +316,11 @@ const getActions = (props) => {
     ]
 }
 
+/**
+ * Search By Names and Tags
+ * @category Inventory - My Listings
+ * @method
+ */
 export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
     setState({
     ...state,
@@ -324,6 +338,11 @@ export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
     handleFiltersValue(filter, props)
 }
 
+/**
+ * get rows for components
+ * @category Inventory - My Listings
+ * @method
+ */
 export const getRows = (props, state, setState) => {
     const {
     datagrid,
@@ -825,6 +844,11 @@ const showMessage = (response, request = null, row, props, state, setState) => {
     })
 }
 
+/**
+ * group offer
+ * @category Inventory - My Listings
+ * @method
+ */
 export const groupOffer = async (request, row, props, state, setState) => {
     const { groupOffers, datagrid } = props
     try {
@@ -890,6 +914,11 @@ export const onClickBroadcast = (
   }
 }
 
+/**
+ * get rows from datagrid in container
+ * @category Inventory - My Listings
+ * @method
+ */
 export const getMappedRows = datagrid => datagrid.rows.map(po => {
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
   let fobPrice

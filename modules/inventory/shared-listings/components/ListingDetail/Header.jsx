@@ -21,6 +21,7 @@ import { submitHandler } from './Header.services'
 import { getSafe } from '../../../../../utils/functions'
 
 /**
+ * Header Component
  * @category Inventory - Shared Listings
  * @component
  */

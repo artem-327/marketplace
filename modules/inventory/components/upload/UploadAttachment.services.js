@@ -5,6 +5,11 @@ import { generateToastMarkup } from '../../../../utils/functions'
 // Styles
 import { StyledButton } from './UploadAttachment.styles'
 
+/**
+ * Remove File in UploadAttachment
+ * @category Inventory - Upload
+ * @method
+ */
 export const removeFile = (file, props) => {
     let poId = props.edit
     // delete attachment from database
@@ -27,6 +32,11 @@ export const removeFile = (file, props) => {
     }
 }
 
+/**
+ * On Drop Rejected in UploadAttachment
+ * @category Inventory - Upload
+ * @method
+ */
 export const onDropRejected = (blobs, props) => {
     let { fileMaxSize, toastManager } = props
     blobs.forEach(function (blob) {
@@ -70,6 +80,11 @@ const onUploadFail = (fileName, props) => {
     )
 }
 
+/**
+ * On Preview Drop in UploadAttachment
+ * @category Inventory - Upload
+ * @method
+ */
 export const onPreviewDrop = async (files, props, state, setState) => {
     let {
         loadFile,
@@ -185,6 +200,11 @@ const handleCancelFile = (index, state, setState) => {
     removeDuplicateFile(index, state, setState)
 }
 
+/**
+ * Render Duplicated Files Modal in UploadAttachment
+ * @category Inventory - Upload
+ * @method
+ */
 export const renderDuplicateFilesModal = (props, state, setState) => {
     return state.duplicateFiles.length ? (
         <Modal closeIcon onClose={() => setState({ ...state, duplicateFiles: [] })} open centered={false} size='small'>

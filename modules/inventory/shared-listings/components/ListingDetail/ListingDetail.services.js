@@ -19,6 +19,11 @@ const prepareLinkToAttachment = async (documentName, documentId, props) => {
   return element
 }
 
+/**
+ * File Download Handler in ListingDetail Component
+ * @category Inventory - Shared Listings
+ * @method
+ */
 export const downloadFile = async (documentName, documentId, props) => {
   try {
     const element = await prepareLinkToAttachment(documentName, documentId, props)
@@ -30,7 +35,7 @@ export const downloadFile = async (documentName, documentId, props) => {
   }
 }
 /**
- * @category Shared Listings
+ * @category Inventory - Shared Listings
  * @method
  * @param {array} property
  * @param {object} product

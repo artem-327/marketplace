@@ -10,8 +10,12 @@ import { initValues } from './ModalsTds.constants'
 // Styles
 import { TdsActions, TdsHeader, TemplateColumn, TemplateGrid, TemplateRow, TemplateTitle } from './ModalsTds.styles'
 
+/**
+ * ModalTdsSaveAs Component
+ * @component
+ * @category Inventory - My Listings
+ */
 const ModalTdsSaveAs = props => {
-
   const {
     open,
     intl: { formatMessage }

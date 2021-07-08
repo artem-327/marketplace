@@ -13,6 +13,11 @@ import {
   GridColumnNotesLabel
 } from '../ListingDetail.styles'
 
+/**
+ * NotesTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const NotesTab = ({ row }) => {
   return (
     <DivTableWrapper>

@@ -4,6 +4,11 @@ import { FormattedMessage } from 'react-intl'
 // Styles
 import { StyledButton } from '../../../styles'
 
+/**
+ * ConfirmationPage Component
+ * @category Inventory - My Products
+ * @components
+ */
 const ConfirmationPage = props => {
   const createReport = result => {
     if (!result) return

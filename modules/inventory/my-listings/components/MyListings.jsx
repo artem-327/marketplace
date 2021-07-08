@@ -46,6 +46,11 @@ import {
   CustomSearchNameTags
 } from './MyListings.styles'
 
+/**
+ * MyListings Component
+ * @category Inventory - My Listings
+ * @components
+ */
 const MyListings = props => {
   
   const [state, setState] = useState({

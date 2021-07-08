@@ -11,6 +11,11 @@ import {
 import SearchByNamesAndTags from '../../../search'
 import { getSafe } from '../../../../utils/functions'
 
+/**
+ * TableHandler Component
+ * @category Inventory - Shared Listings
+ * @components
+ */
 const TableHandler = props => {
   const [state, setState] = useState({
     SearchByNamesAndTags: null

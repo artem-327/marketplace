@@ -75,6 +75,7 @@ import { INDEX_TAB_PRICE_BOOK } from '../MyListings.constants'
 import { usePrevious } from '../../../../../hooks'
 
 /**
+ * ModalDetail Component
  * @component
  * @category Inventory - My Listings
  */

@@ -16,6 +16,11 @@ import { DropdownStyled } from './MyProducts.styles'
 // Hooks
 import { usePrevious } from '../../../../hooks'
 
+/**
+ * MyProducts Component
+ * @category Inventory - My Products
+ * @components
+ */
 const MyProducts = props => {
   const [state, setState] = useState({
     companyGenericProduct: [],

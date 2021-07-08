@@ -7,6 +7,11 @@ import { uploadCSVFile } from '../../../../settings/actions'
 // Styles
 import { StyledDropzone, StyledSegment } from '../../../styles'
 
+/**
+ * UploadCSV Component
+ * @category Inventory - My Products
+ * @components
+ */
 const UploadCSV = props => {
   const [state, setState] = useState({
     uploadedFile: null,

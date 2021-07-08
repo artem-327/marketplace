@@ -10,6 +10,11 @@ import { FileTextIcon, DivCircle } from './MyProducts.styles'
 // Services
 import { getSafe } from '../../../../utils/functions'
 
+/**
+ * Get rows from datagrid in Container
+ * @category Inventory - My Products
+ * @method
+ */
 export const getMappedRows = datagrid => datagrid.rows.map(product => {
     return {
     ...product,
@@ -56,12 +61,21 @@ export const getMappedRows = datagrid => datagrid.rows.map(product => {
     }
 })
 
-
+/**
+ * Filter handler in MyProducts Component
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleFiltersValue = debounce((filter, props) => {
     const { datagrid } = props
     datagrid.setSearch(filter, true, 'pageFilters')
 }, 300)
 
+/**
+ * Input Search change Filter handler in MyProducts Component
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleFilterChangeInputSearch = (data, props, state, setState) => {
     const filter = {
     ...state.filterValue,
@@ -71,6 +85,11 @@ export const handleFilterChangeInputSearch = (data, props, state, setState) => {
     handleFiltersValue(filter, props)
 }
 
+/**
+ * Mapped / Unmapped Filter handler in MyProducts Component
+ * @category Inventory - My Products
+ * @method
+ */
 export const handleFilterChangeMappedUnmapped = (data, props, state, setState) => {
     props.handleProductCatalogUnmappedValue(data.value)
 
@@ -165,6 +184,11 @@ const getProductStatus = product => {
     )
 }
 
+/**
+ * Get Rows in MyProducts Component
+ * @category Inventory - My Products
+ * @method
+ */
 export const getRows = (rows, props) => {
     const { openPopup } = props
 
@@ -184,6 +208,11 @@ export const getRows = (rows, props) => {
     })
 }
 
+/**
+ * Columns in MyProducts Component
+ * @category Inventory - My Products
+ * @method
+ */
 export const columns = [
     {
       name: 'intProductName',

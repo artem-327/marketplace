@@ -29,6 +29,11 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
     })
 })
 
+/**
+ * Validation of form.
+ * @category Inventory - My Listings
+ * @method
+ */
 export const validationSchema = min =>
     val.object().shape({
     pricingTiers: val.array().of(
@@ -54,6 +59,11 @@ export const validationSchema = min =>
     )
 })
 
+/**
+ * Render Pricing Tiers
+ * @category Inventory - My Listings
+ * @method
+ */
 export const renderPricingTiers = (values, setFieldValue, props, obj) => {
     const {
       intl: { formatMessage }
@@ -177,7 +187,11 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
     )
 }
 
-
+/**
+ * Submit form - add or edit Pricing Popup
+ * @category Inventory - My Listings
+ * @method
+ */
 export const submitForm = async (props, formikProps) => {
     const { closePricingEditPopup, rawData, datagrid, addProductOffer } = props
 

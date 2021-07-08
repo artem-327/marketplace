@@ -11,6 +11,11 @@ import { StyledForm } from './MyListings.styles'
 import { withDatagrid } from '../../../datagrid'
 import { validationSchema, renderPricingTiers, submitForm } from './QuickEditPricingPopup.services'
 
+/**
+ * QuickEditPricingPopup Component
+ * @category Inventory - My Listings
+ * @components
+ */
 const QuickEditPricingPopup = props => {
   let formikProps
   let obj
@@ -69,8 +74,4 @@ const QuickEditPricingPopup = props => {
   )
 }
 
-const mapStateToProps = state => {
-  return {}
-}
-
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(QuickEditPricingPopup)))
+export default withDatagrid(connect(null, { ...Actions })(injectIntl(QuickEditPricingPopup)))

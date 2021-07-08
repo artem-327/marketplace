@@ -24,6 +24,11 @@ import { getProperty } from '../ListingDetail.services'
 //Constants
 import { rightProperties, leftProperties } from '../ListingDetail.constants'
 
+/**
+ * SDSTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const SDSTab = ({ row }) => {
   let product = getSafe(() => row.companyProduct.companyGenericProduct, {})
   const mixtures = getSafe(() => product.elements, [])

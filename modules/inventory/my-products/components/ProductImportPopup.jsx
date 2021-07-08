@@ -28,6 +28,11 @@ import { DivIconOptions, HeaderOptions, StyledModal, StyledHeader, CheckboxConta
 // Hooks
 import { usePrevious } from '../../../../hooks'
 
+/**
+ * ProductImportPopup Component
+ * @category Inventory - My Products
+ * @components
+ */
 const ProductImportPopup = props => {
   const [state, setState] = useState({
     currentStep: 'upload',

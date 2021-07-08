@@ -56,6 +56,11 @@ tabs.push(['costs', 'lots', 'origin', 'touchedLot'])
 // 3rd tab
 tabs.push([])
 
+/**
+ * initial Values for Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const initValues = {
     additionalType: 'Unspecified',
     additional: [],
@@ -150,6 +155,11 @@ val.addMethod(val.string, 'minDateComparedTo', function (propertyName, message) 
     })
 })
 
+/**
+ * Validation of form in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const validationScheme = val.object().shape({
     costs: val.array().of(
     val.object().shape({
@@ -265,6 +275,11 @@ const accClick = (e, titleProps, state, setState) => {
     setState({ ...state, activeIndex: newIndex })
 }
 
+/**
+ * Get Processing Times in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const getProcessingTimes = () => {
     let processingTimes = []
 
@@ -278,6 +293,11 @@ export const getProcessingTimes = () => {
     return processingTimes
 }
 
+/**
+ * Get Price Tiers in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const getPriceTiers = max => {
     let priceTiers = []
 
@@ -292,6 +312,11 @@ export const getPriceTiers = max => {
     return priceTiers
 }
 
+/**
+ * Switch Tab in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const switchTab = (newTab, values, setFieldValue, state, setState) => {
     let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAvailable) : 0
     if (newTab === 1 && lotAmount > 0) {
@@ -363,6 +388,11 @@ const handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
     }
 }
 
+/**
+ * On Splits Change in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
     value = parseInt(value)
     const minimum = parseInt(values.minimum)
@@ -385,6 +415,11 @@ const attachDocuments = (newDocuments, values, setFieldValue) => {
     setFieldValue(`additional`, values.additional.concat(newDocuments))
 }
 
+/**
+ * Render Edit Documents in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const renderEditDocuments = (values, setFieldValue, validateForm, props) => {
     const {
     edit,
@@ -587,6 +622,11 @@ export const renderPricingTiers = (count, setFieldValue) => {
     )
 }
 
+/**
+ * Render Product Details in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const renderProductDetails = (values, validateForm, setFieldValue, props, state, setState) => {
     const { activeIndex } = state
 
@@ -851,10 +891,20 @@ export const renderProductDetails = (values, validateForm, setFieldValue, props,
     )
 }
 
+/**
+ * Reset Form in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const resetForm = (props) => {
     props.resetForm(initValues)
 }
 
+/**
+ * Go to List in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const goToList = (props) => {
     resetForm(props)
     Router.push('/inventory/my-listings')
@@ -878,6 +928,11 @@ const modifyCosts = (setFieldValue, values) => {
     }
 }
 
+/**
+ * Remove Lot in Add or Edit Inventory Form
+ * @category Inventory - My Listings
+ * @method
+ */
 export const removeLot = (lotHelpers, setFieldValue, values, lotIndex) => {
     if (values.costs.length) {
     for (let i = 0; i < values.costs.length; i++) {

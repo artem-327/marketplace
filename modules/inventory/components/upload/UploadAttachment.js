@@ -15,6 +15,11 @@ import { getDocumentTypes } from '../../../global-data/actions'
 // Styles
 import { DivUpload } from './UploadAttachment.styles'
 
+/**
+ * UploadAttachment Component
+ * @category Inventory - Upload
+ * @components
+ */
 const UploadAttachment = props => {
   const reactDropzoneRef = createRef()
   const [state, setState] = useState({

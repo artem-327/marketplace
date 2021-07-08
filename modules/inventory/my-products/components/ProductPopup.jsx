@@ -50,6 +50,11 @@ import {
 import confirm from '../../../../components/Confirmable/confirm'
 import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '../../../../utils/functions'
 
+/**
+ * ProductPopup Component
+ * @category Inventory - My Products
+ * @components
+ */
 const ProductPopup = props => {
   const [openUpload, setOpenUpload] = useState(false)
   const [documentType, setDocumentType] = useState(null)

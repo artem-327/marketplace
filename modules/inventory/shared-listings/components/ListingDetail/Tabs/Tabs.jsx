@@ -13,6 +13,11 @@ import SDSTab from './SDSTab'
 import DocumentsTab from './DocumentsTab'
 import NotesTab from './NotesTab'
 
+/**
+ * Tabs Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const Tabs = ({ row, activeTab, setActiveTab }) => {
   const panes = [
     {

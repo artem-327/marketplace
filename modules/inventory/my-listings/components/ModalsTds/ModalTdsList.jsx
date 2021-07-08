@@ -15,8 +15,12 @@ import {
   TemplateWrapper
 } from './ModalsTds.styles'
 
+/**
+ * ModalTdsList Component
+ * @component
+ * @category Inventory - My Listings
+ */
 const ModalTdsList = props => {
-
   const {
     open,
     tdsTemplates,
