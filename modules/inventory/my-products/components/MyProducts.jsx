@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Button, Input } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 import ProductPopup from './ProductPopupContainer'
@@ -75,8 +76,7 @@ const MyProducts = props => {
     loading,
     editedId,
     isOpenPopup,
-    isOpenImportPopup,
-    tutorialCompleted
+    isOpenImportPopup
   } = props
 
   let { filterValue } = state
@@ -184,6 +184,44 @@ const MyProducts = props => {
       {isOpenPopup && <ProductPopup />}
     </>
   )
+}
+
+MyProducts.propTypes = {
+  myProductsFilters: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object,
+  action: PropTypes.string,
+  rows: PropTypes.array,
+  actionId: PropTypes.number,
+  editedId: PropTypes.number,
+  loaded: PropTypes.bool,
+  loading: PropTypes.bool,
+  isOpenPopup: PropTypes.bool,
+  isOpenImportPopup: PropTypes.bool,
+  openPopup: PropTypes.func,
+  openImportPopup: PropTypes.func,
+  handleVariableSave: PropTypes.func,
+  handleProductCatalogUnmappedValue: PropTypes.func,
+  deleteProduct: PropTypes.func
+}
+
+MyProducts.defaultProps = {
+  myProductsFilters: null,
+  datagrid: {},
+  intl: {},
+  action: '',
+  rows: [],
+  actionId: null,
+  editedId: null,
+  loaded: false,
+  loading: false,
+  isOpenPopup: false,
+  isOpenImportPopup: false,
+  openPopup: () => {},
+  openImportPopup: () => {},
+  handleVariableSave: () => {},
+  handleProductCatalogUnmappedValue: () => {},
+  deleteProduct: () => {}
 }
 
 export default MyProducts

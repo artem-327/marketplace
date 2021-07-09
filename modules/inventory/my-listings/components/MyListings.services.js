@@ -345,19 +345,17 @@ export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
  */
 export const getRows = (props, state, setState) => {
     const {
-    datagrid,
-    pricingEditOpenId,
-    setPricingEditOpenId,
-    modalDetailTrigger,
-    toastManager,
-    closePricingEditPopup,
-    intl: { formatMessage },
-    broadcastTemplates,
-    isProductInfoOpen,
-    closePopup,
-    broadcastChange,
-    applicationName,
-    rows
+      datagrid,
+      pricingEditOpenId,
+      setPricingEditOpenId,
+      modalDetailTrigger,
+      intl: { formatMessage },
+      broadcastTemplates,
+      isProductInfoOpen,
+      closePopup,
+      broadcastChange,
+      applicationName,
+      rows
     } = props
     let title
 
@@ -876,8 +874,6 @@ export const groupOffer = async (request, row, props, state, setState) => {
   const {
     isProductInfoOpen,
     closePopup,
-    isExportInventoryOpen,
-    setExportModalOpenState,
     modalDetailTrigger
   } = modalProps
 

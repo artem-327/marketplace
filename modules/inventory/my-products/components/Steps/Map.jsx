@@ -2,6 +2,7 @@ import { Fragment, useState, useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Table, Dropdown, Grid, Input, Select, Button } from 'semantic-ui-react'
 import _invert from 'lodash/invert'
+import PropTypes from 'prop-types'
 // Services
 import { getSafe, generateToastMarkup } from '../../../../../utils/functions'
 // Constants
@@ -59,9 +60,6 @@ const Map = props => {
   }
 
   useEffect(() => {
-    const {
-      intl: { formatMessage }
-    } = props
     let { mapping } = state
     let constant = ''
     if (props.productOffer) {
@@ -509,6 +507,64 @@ const Map = props => {
       </MapTable>
     </Fragment>
   )
+}
+
+Map.propTypes = {
+  intl: PropTypes.object,
+  CSV: PropTypes.object,
+  selectedSavedMap: PropTypes.object,
+  productOffer: PropTypes.bool,
+  companyGenericProduct: PropTypes.bool,
+  companies: PropTypes.bool,
+  csvWithoutHeader: PropTypes.bool,
+  mappedHeader: PropTypes.array,
+  maps: PropTypes.array,
+  toastManager: PropTypes.any,
+  mapName: PropTypes.string,
+  changeHeadersCSV: PropTypes.func,
+  selectSavedMap: PropTypes.func,
+  handleChangeMapCSVName: PropTypes.func,
+  deleteCSVMapCompanyGenericProduct: PropTypes.func,
+  deleteCSVMapProductOffer: PropTypes.func,
+  deleteCSVMapCompanies: PropTypes.func,
+  putCSVMapCompanyGenericProduct: PropTypes.func,
+  postCSVMapCompanyGenericProduct: PropTypes.func,
+  getCSVMapCompanyGenericProduct: PropTypes.func,
+  putCSVMapProductOffer: PropTypes.func,
+  postCSVMapProductOffer: PropTypes.func,
+  getCSVMapProductOffer: PropTypes.func,
+  putCSVMapCompanies: PropTypes.func,
+  postCSVMapCompanies: PropTypes.func,
+  getCSVMapCompanies: PropTypes.func
+}
+
+Map.defaultProps = {
+  intl: {},
+  CSV: {},
+  selectedSavedMap: {},
+  productOffer: false,
+  companyGenericProduct: false,
+  companies: false,
+  csvWithoutHeader: false,
+  mappedHeader: [],
+  maps: [],
+  toastManager: null,
+  mapName: '',
+  changeHeadersCSV: () => {},
+  selectSavedMap: () => {},
+  handleChangeMapCSVName: () => {},
+  deleteCSVMapCompanyGenericProduct: () => {},
+  deleteCSVMapProductOffer: () => {},
+  deleteCSVMapCompanies: () => {},
+  putCSVMapCompanyGenericProduct: () => {},
+  postCSVMapCompanyGenericProduct: () => {},
+  getCSVMapCompanyGenericProduct: () => {},
+  putCSVMapProductOffer: () => {},
+  postCSVMapProductOffer: () => {},
+  getCSVMapProductOffer: () => {},
+  putCSVMapCompanies: () => {},
+  postCSVMapCompanies: () => {},
+  getCSVMapCompanies: () => {}
 }
 
 export default Map

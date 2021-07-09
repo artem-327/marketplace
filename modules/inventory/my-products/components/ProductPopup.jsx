@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Formik } from 'formik'
 import { AddBox } from '@material-ui/icons'
+import PropTypes from 'prop-types'
 // Components
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
@@ -822,6 +823,88 @@ const ProductPopup = props => {
       }}
     </Formik>
   )
+}
+
+ProductPopup.propTypes = {
+  packagingTypesAll: PropTypes.array,
+  packagingType: PropTypes.array,
+  unitsAll: PropTypes.array,
+  hazardClasses: PropTypes.array,
+  packagingGroups: PropTypes.array,
+  documentTypes: PropTypes.array,
+  attachments: PropTypes.array,
+  productsUnitsType: PropTypes.array,
+  freightClasses: PropTypes.array,
+  companyGenericProduct: PropTypes.array,
+  nmfcNumbersFiltered: PropTypes.array,
+  packageWeightUnits: PropTypes.array,
+  popupValues: PropTypes.object,
+  intl: PropTypes.object,
+  datagrid: PropTypes.object,
+  toastManager: PropTypes.any,
+  companyGenericProductFetching: PropTypes.bool,
+  nmfcNumbersFetching: PropTypes.bool,
+  loading: PropTypes.bool,
+  palletWeightInitFromSettings: PropTypes.string,
+  palletHeightInitFromSettings: PropTypes.string,
+  palletWidthInitFromSettings: PropTypes.string,
+  palletLengthInitFromSettings: PropTypes.string,
+  palletWeightUnitInitFromSettings: PropTypes.string,
+  getPackagingTypes: PropTypes.func,
+  getUnits: PropTypes.func,
+  getHazardClasses: PropTypes.func,
+  getPackagingGroups: PropTypes.func,
+  getDocumentTypes: PropTypes.func,
+  addNmfcNumber: PropTypes.func,
+  closePopup: PropTypes.func,
+  openGlobalAddForm: PropTypes.func,
+  removeAttachmentLinkCompanyProduct: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  handleSubmitProductEditPopup: PropTypes.func,
+  handleSubmitProductAddPopup: PropTypes.func,
+  searchCompanyGenericProduct: PropTypes.func,
+  getNmfcNumbersByString: PropTypes.func
+}
+
+ProductPopup.defaultProps = {
+  packagingTypesAll: [],
+  packagingType: [],
+  unitsAll: [],
+  hazardClasses: [],
+  packagingGroups: [],
+  documentTypes: [],
+  attachments: [],
+  productsUnitsType: [],
+  freightClasses: [],
+  companyGenericProduct: [],
+  nmfcNumbersFiltered: [],
+  packageWeightUnits: [],
+  popupValues: {},
+  intl: {},
+  datagrid: {},
+  toastManager: null,
+  companyGenericProductFetching: false,
+  nmfcNumbersFetching: false,
+  loading: false,
+  palletWeightInitFromSettings: '',
+  palletHeightInitFromSettings: '',
+  palletWidthInitFromSettings: '',
+  palletLengthInitFromSettings: '',
+  palletWeightUnitInitFromSettings: '',
+  getPackagingTypes: () => {},
+  getUnits: () => {},
+  getHazardClasses: () => {},
+  getPackagingGroups: () => {},
+  getDocumentTypes: () => {},
+  addNmfcNumber: () => {},
+  closePopup: () => {},
+  openGlobalAddForm: () => {},
+  removeAttachmentLinkCompanyProduct: () => {},
+  removeAttachment: () => {},
+  handleSubmitProductEditPopup: () => {},
+  handleSubmitProductAddPopup: () => {},
+  searchCompanyGenericProduct: () => {},
+  getNmfcNumbersByString: () => {}
 }
 
 export default ProductPopup

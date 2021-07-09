@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import _invert from 'lodash/invert'
 import { FormattedMessage } from 'react-intl'
 import { Table } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 // Styles
 import { SmallerTableCellSimple } from '../../../styles'
 
@@ -147,6 +148,42 @@ const Preview = props => {
       </Table.Body>
     </Table>
   )
+}
+
+Preview.propTypes = {
+  mappedHeader: PropTypes.array,
+  isSaveMapCSV: PropTypes.bool,
+  productOffer: PropTypes.bool,
+  companyGenericProduct: PropTypes.bool,
+  companies: PropTypes.bool,
+  mapName: PropTypes.string,
+  dataHeaderCSV: PropTypes.func,
+  putCSVMapCompanyGenericProduct: PropTypes.func,
+  putCSVMapProductOffer: PropTypes.func,
+  putCSVMapCompanies: PropTypes.func,
+  postCSVMapCompanyGenericProduct: PropTypes.func,
+  postCSVMapProductOffer: PropTypes.func,
+  postCSVMapCompanies: PropTypes.func,
+  selectedSavedMap: PropTypes.object,
+  CSV: PropTypes.object
+}
+
+Preview.defaultProps = {
+  mappedHeader: [],
+  isSaveMapCSV: false,
+  productOffer: false,
+  companyGenericProduct: false,
+  companies: false,
+  mapName: '',
+  dataHeaderCSV: () => {},
+  putCSVMapCompanyGenericProduct: () => {},
+  putCSVMapProductOffer: () => {},
+  putCSVMapCompanies: () => {},
+  postCSVMapCompanyGenericProduct: () => {},
+  postCSVMapProductOffer: () => {},
+  postCSVMapCompanies: () => {},
+  selectedSavedMap: {},
+  CSV: {}
 }
 
 export default Preview

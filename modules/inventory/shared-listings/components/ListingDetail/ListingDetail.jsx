@@ -70,9 +70,21 @@ const ListingDetail = props => {
 }
 
 ListingDetail.propTypes = {
-  //PropTypes.number
+  row: PropTypes.object,
+  values: PropTypes.object,
+  parentState: PropTypes.object,
+  datagrid: PropTypes.object,
+  onChange: PropTypes.func,
+  downloadAttachment: PropTypes.func
 }
 
-ListingDetail.defaultProps = {}
+ListingDetail.defaultProps = {
+  row: {},
+  values: {},
+  parentState: {},
+  datagrid: {},
+  onChange: () => {},
+  downloadAttachment: () => {}
+}
 
 export default ListingDetail

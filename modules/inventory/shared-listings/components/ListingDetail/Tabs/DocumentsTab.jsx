@@ -75,6 +75,14 @@ const DocumentsTab = props => {
   )
 }
 
-DocumentsTab.propTypes = {}
+DocumentsTab.propTypes = {
+  row: PropTypes.object,
+  downloadAttachment: PropTypes.func
+}
+
+DocumentsTab.defaultProps = {
+  row: {},
+  downloadAttachment: () => {}
+}
 
 export default connect(null, { downloadAttachment })(DocumentsTab)

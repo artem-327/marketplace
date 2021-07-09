@@ -32,6 +32,18 @@ const ModalPriceBook = props => {
   )
 }
 
-ModalPriceBook.propTypes = {}
+ModalPriceBook.propTypes = {
+  isOpenPriceBookModal: PropTypes.bool,
+  triggerPriceBookModal: PropTypes.func,
+  detailValues: PropTypes.object,
+  tableDatagrid: PropTypes.object
+}
+
+ModalPriceBook.defaultProps = {
+  isOpenPriceBookModal: false,
+  triggerPriceBookModal: () => {},
+  detailValues: {},
+  tableDatagrid: {}
+}
 
 export default injectIntl(ModalPriceBook)

@@ -1,6 +1,7 @@
 import { Fragment } from 'react'
 import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Styles
 import { StyledButton } from '../../../styles'
 
@@ -116,6 +117,26 @@ const ConfirmationPage = props => {
       </Grid.Row>
     </Grid>
   )
+}
+
+ConfirmationPage.propTypes = {
+  csvImportError: PropTypes.object,
+  reloadFilter: PropTypes.object,
+  productOffer: PropTypes.bool,
+  companyGenericProduct: PropTypes.bool,
+  companies: PropTypes.bool,
+  closeImportPopup: PropTypes.func,
+  toUpload: PropTypes.func
+}
+
+ConfirmationPage.defaultProps = {
+  csvImportError: null,
+  reloadFilter: null,
+  productOffer: false,
+  companyGenericProduct: false,
+  companies: false,
+  closeImportPopup: () => {},
+  toUpload: () => {}
 }
 
 export default ConfirmationPage

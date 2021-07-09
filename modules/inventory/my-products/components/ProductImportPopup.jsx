@@ -12,6 +12,7 @@ import {
 } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import _invert from 'lodash/invert'
+import PropTypes from 'prop-types'
 // Components
 import Upload from './Steps/UploadCSV'
 import Map from './Steps/MapContainer'
@@ -375,6 +376,80 @@ const ProductImportPopup = props => {
       </Modal.Actions>
     </Modal>
   )
+}
+
+ProductImportPopup.propTypes = {
+  csvFileId: PropTypes.number,
+  productOffer: PropTypes.bool,
+  companyGenericProduct: PropTypes.bool,
+  companies: PropTypes.bool,
+  csvWithoutHeader: PropTypes.bool,
+  loading: PropTypes.bool,
+  isSaveMapCSV: PropTypes.bool,
+  broadcastTemplates: PropTypes.array,
+  mappedHeaders: PropTypes.array,
+  missingRequired: PropTypes.array,
+  csvImportError: PropTypes.object,
+  reloadFilter: PropTypes.object,
+  mappedDataHeaderCSV: PropTypes.object,
+  selectedSavedMap: PropTypes.object,
+  intl: PropTypes.object,
+  CSV: PropTypes.any,
+  toastManager: PropTypes.any,
+  applicationName: PropTypes.string,
+  broadcastOption: PropTypes.string,
+  closeImportPopupCancel: PropTypes.func,
+  closeImportPopup: PropTypes.func,
+  getStoredCSV: PropTypes.func,
+  clearDataOfCSV: PropTypes.func,
+  getTemplates: PropTypes.func,
+  postImportProductOfferMap: PropTypes.func,
+  postImportCompanyGenericProductMap: PropTypes.func,
+  postImportCompaniesMap: PropTypes.func,
+  postImportProductMap: PropTypes.func,
+  postImportProductOfferCSV: PropTypes.func,
+  postImportCompanyGenericProductCSV: PropTypes.func,
+  postImportCompaniesCSV: PropTypes.func,
+  postImportProductCSV: PropTypes.func,
+  changeCsvHeader: PropTypes.func,
+  changeBroadcast: PropTypes.func
+}
+
+ProductImportPopup.defaultProps = {
+  csvFileId: null,
+  productOffer: false,
+  companyGenericProduct: false,
+  companies: false,
+  csvWithoutHeader: false,
+  loading: false,
+  isSaveMapCSV: false,
+  broadcastTemplates: [],
+  mappedHeaders: [],
+  missingRequired: [],
+  csvImportError: {},
+  reloadFilter: null,
+  mappedDataHeaderCSV: null,
+  selectedSavedMap: null,
+  intl: {},
+  CSV: null,
+  toastManager: null,
+  applicationName: '',
+  broadcastOption: '',
+  closeImportPopupCancel: () => {},
+  closeImportPopup: () => {},
+  getStoredCSV: () => {},
+  clearDataOfCSV: () => {},
+  getTemplates: () => {},
+  postImportProductOfferMap: () => {},
+  postImportCompanyGenericProductMap: () => {},
+  postImportCompaniesMap: () => {},
+  postImportProductMap: () => {},
+  postImportProductOfferCSV: () => {},
+  postImportCompanyGenericProductCSV: () => {},
+  postImportCompaniesCSV: () => {},
+  postImportProductCSV: () => {},
+  changeCsvHeader: () => {},
+  changeBroadcast: () => {}
 }
 
 export default ProductImportPopup

@@ -31,8 +31,6 @@ import {
   getDocumentTypes,
 } from '../../../../global-data/actions'
 import { openBroadcast } from '../../../../broadcast/actions'
-//Services
-import { getSafe } from '../../../../../utils/functions'
 // Selectors
 import {
   makeGetApplicationName,

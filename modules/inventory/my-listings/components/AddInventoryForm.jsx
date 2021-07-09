@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Form, Input, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 import {
   Modal,
   Input as SemanticInput,
@@ -124,12 +125,9 @@ const AddInventoryForm = props => {
     searchOrigins,
     searchedOrigins,
     searchedOriginsLoading,
-    searchedProductsLoading,
     warehousesList,
     addProductOffer,
     initialState,
-    editProductOffer,
-    uploadDocuments,
     loading,
     intl
   } = props
@@ -1273,24 +1271,6 @@ const AddInventoryForm = props => {
                                                       setFieldValue(`lots[${index}].attachments`, rows)
                                                     }
                                                   />
-                                                  {/* <UploadAttachment {...props}
-                                              attachments={values.lots[index].attachments}
-                                              name={`lots[${index}].attachments`}
-                                              type={1}
-                                              lot={true}
-                                              filesLimit={1}
-                                              fileMaxSize={20}
-                                              onChange={(files) => setFieldValue(
-                                                `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
-                                                {
-                                                  id: files.id,
-                                                  name: files.name,
-                                                  documentType: files.documentType
-                                                }
-                                              )}
-                                              data-test={`add_inventory_lots_${index}_attachments`}
-                                              emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
-                                            /> */}
                                                 </TableCellBig>
                                                 <TableCellMini textAlign='center'>
                                                   <Icon
@@ -1713,6 +1693,62 @@ const AddInventoryForm = props => {
       </Form>
     </div>
   )
+}
+
+AddInventoryForm.propTypes = {
+  searchedOriginsLoading: PropTypes.bool,
+  poCreated: PropTypes.bool,
+  loading: PropTypes.bool,
+  autocompleteDataLoading: PropTypes.bool,
+  searchedProducts: PropTypes.array,
+  documentTypesDropdown: PropTypes.array,
+  productConditionsDropdown: PropTypes.array,
+  productFormsDropdown: PropTypes.array,
+  productGradesDropdown: PropTypes.array,
+  searchedOrigins: PropTypes.array,
+  warehousesList: PropTypes.array,
+  autocompleteData: PropTypes.array,
+  initialState: PropTypes.object,
+  intl: PropTypes.object,
+  applicationName: PropTypes.string,
+  id: PropTypes.number,
+  searchOrigins: PropTypes.func,
+  addProductOffer: PropTypes.func,
+  getAutocompleteData: PropTypes.func,
+  resetForm: PropTypes.func,
+  initProductOfferEdit: PropTypes.func,
+  downloadAttachment: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  edit: PropTypes.any,
+  toastManager: PropTypes.any
+}
+
+AddInventoryForm.defaultProps = {
+  searchedOriginsLoading: false,
+  poCreated: false,
+  loading: false,
+  autocompleteDataLoading: false,
+  searchedProducts: [],
+  documentTypesDropdown: [],
+  productConditionsDropdown: [],
+  productFormsDropdown: [],
+  productGradesDropdown: [],
+  searchedOrigins: [],
+  warehousesList: [],
+  autocompleteData: [],
+  initialState: {},
+  intl: {},
+  applicationName: '',
+  id: null,
+  searchOrigins: () => {},
+  addProductOffer: () => {},
+  getAutocompleteData: () => {},
+  resetForm: () => {},
+  initProductOfferEdit: () => {},
+  downloadAttachment: () => {},
+  removeAttachment: () => {},
+  edit: false,
+  toastManager: null
 }
 
 export default injectIntl(AddInventoryForm)

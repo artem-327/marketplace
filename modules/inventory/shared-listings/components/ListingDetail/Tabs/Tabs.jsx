@@ -92,8 +92,17 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
   )
 }
 
-Tabs.propTypes = {}
-Tabs.defaultProps = {}
+Tabs.propTypes = {
+  row: PropTypes.object,
+  activeTab: PropTypes.number, 
+  setActiveTab: PropTypes.func
+}
+
+Tabs.defaultProps = {
+  row: {},
+  activeTab: null, 
+  setActiveTab: () => {}
+}
 
 const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id && prevProps?.actionTab === nextProps?.actionTab

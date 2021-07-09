@@ -57,8 +57,13 @@ const TDSTab = ({ row }) => {
   )
 }
 
-TDSTab.propTypes = {}
-TDSTab.defaultProps = {}
+TDSTab.propTypes = {
+  row: PropTypes.object
+}
+
+TDSTab.defaultProps = {
+  row: {}
+}
 
 const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id

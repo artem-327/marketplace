@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { connect } from 'react-redux'
 import { Grid, Segment, Header, Icon, Form } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
+import PropTypes from 'prop-types'
 // Actions
 import { uploadCSVFile } from '../../../../settings/actions'
 // Styles
@@ -63,6 +64,14 @@ const UploadCSV = props => {
       </Grid.Row>
     </Grid>
   )
+}
+
+UploadCSV.propTypes = {
+  uploadCSVFile: PropTypes.func
+}
+
+UploadCSV.defaultProps = {
+  uploadCSVFile: () => {}
 }
 
 const mapDispatchToProps = {

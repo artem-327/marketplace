@@ -163,6 +163,24 @@ const Header = props => {
   )
 }
 
-Header.propTypes = {}
+Header.propTypes = {
+  loadingMarkup: PropTypes.bool,
+  onChange: PropTypes.func,
+  updateMarkUp: PropTypes.func,
+  getSharedProductOffer: PropTypes.func,
+  row: PropTypes.object,
+  values: PropTypes.object,
+  datagrid: PropTypes.object
+}
+
+Header.defaultProps = {
+  loadingMarkup: false,
+  onChange: () => {},
+  updateMarkUp: () => {},
+  getSharedProductOffer: () => {},
+  row: {},
+  values: {},
+  datagrid: {}
+}
 
 export default Header

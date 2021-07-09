@@ -424,7 +424,6 @@ export const renderEditDocuments = (values, setFieldValue, validateForm, props) 
     const {
     edit,
     removeAttachment,
-    removeAttachmentLink,
     intl: { formatMessage }
     } = props
     const { additional, attachments, lots } = values

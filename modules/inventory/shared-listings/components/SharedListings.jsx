@@ -34,7 +34,6 @@ const SharedListings = props => {
   const {
     datagrid,
     rows,
-    activeTab,
     setActiveTab,
     isOpenPriceBookModal,
     getTemplates,
@@ -142,9 +141,31 @@ const SharedListings = props => {
 }
 
 SharedListings.propTypes = {
-  //PropTypes.number
+  rows: PropTypes.array,
+  broadcastTemplates: PropTypes.array,
+  isOpenPriceBookModal: PropTypes.bool,
+  setActiveTab: PropTypes.func,
+  getTemplates: PropTypes.func,
+  triggerPriceBookModal: PropTypes.func,
+  getMarkUp: PropTypes.func,
+  broadcastChange: PropTypes.func,
+  rowPriceBook: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
 }
 
-SharedListings.defaultProps = {}
+SharedListings.defaultProps = {
+  rows: [],
+  broadcastTemplates: [],
+  isOpenPriceBookModal: false,
+  setActiveTab: () => {},
+  getTemplates: () => {},
+  triggerPriceBookModal: () => {},
+  getMarkUp: () => {},
+  broadcastChange: () => {},
+  rowPriceBook: null,
+  datagrid: {},
+  intl: {}
+}
 
 export default SharedListings

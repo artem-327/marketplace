@@ -75,8 +75,13 @@ const NotesTab = ({ row }) => {
   )
 }
 
-NotesTab.propTypes = {}
-NotesTab.defaultProps = {}
+NotesTab.propTypes = {
+  row: PropTypes.object
+}
+
+NotesTab.defaultProps = {
+  row: {}
+}
 
 const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id

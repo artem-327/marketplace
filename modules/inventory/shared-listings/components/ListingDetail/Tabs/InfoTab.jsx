@@ -118,7 +118,12 @@ const InfoTab = ({ row }) => {
   }, [row])
 }
 
-InfoTab.propTypes = {}
-InfoTab.defaultProps = {}
+InfoTab.propTypes = {
+  row: PropTypes.object
+}
+
+InfoTab.defaultProps = {
+  row: {}
+}
 
 export default InfoTab

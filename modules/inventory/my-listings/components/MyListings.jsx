@@ -1,16 +1,9 @@
 import { useEffect, useState } from 'react'
-import {
-  CornerLeftDown,
-  PlusCircle,
-  Sliders
-} from 'react-feather'
-import {
-  Container,
-  Modal,
-  Button
-} from 'semantic-ui-react'
+import { CornerLeftDown, PlusCircle, Sliders } from 'react-feather'
+import { Container, Modal, Button } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
+import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
 import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
@@ -35,24 +28,16 @@ import { CustomRowDiv } from '../../styles'
 // Hooks
 import { usePrevious } from '../../../../hooks'
 //Constants
-import {
-  INDEX_TAB_EDIT,
-  BOOLEAN_TRUE
-} from './MyListings.constants'
+import { INDEX_TAB_EDIT, BOOLEAN_TRUE } from './MyListings.constants'
 // Styles
-import {
-  defaultHiddenColumns,
-  FiltersRow,
-  CustomSearchNameTags
-} from './MyListings.styles'
+import { defaultHiddenColumns, FiltersRow, CustomSearchNameTags } from './MyListings.styles'
 
 /**
  * MyListings Component
  * @category Inventory - My Listings
  * @components
  */
-const MyListings = props => {
-  
+const MyListings = props => {  
   const [state, setState] = useState({
     selectedRows: [],
     open: false,
@@ -331,6 +316,74 @@ const MyListings = props => {
       {openFilterPopup && <InventoryFilter onClose={() => setState({ ...state, openFilterPopup: false })} />}
     </>
   )
+}
+
+MyListings.propTypes = {
+  myListingsFilters: PropTypes.object,
+  advancedFilters: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object,
+  broadcastTemplates: PropTypes.array,
+  rows: PropTypes.array,
+  pricingEditOpenId: PropTypes.number,
+  editedId: PropTypes.number,
+  focusInput: PropTypes.string,
+  applicationName: PropTypes.string,
+  datagridFilterUpdate: PropTypes.bool,
+  isModalDetailOpen: PropTypes.bool,
+  isOpenImportPopup: PropTypes.bool,
+  updatingDatagrid: PropTypes.bool,
+  isProductInfoOpen: PropTypes.bool,
+  toastManager: PropTypes.any,
+  modalDetailTrigger: PropTypes.func,
+  applyDatagridFilter: PropTypes.func,
+  getTemplates: PropTypes.func,
+  setCompanyElligible: PropTypes.func,
+  handleVariableSave: PropTypes.func,
+  updateRow: PropTypes.func,
+  openImportPopup: PropTypes.func,
+  openPopup: PropTypes.func,
+  closeModalDetail: PropTypes.func,
+  deleteProductOffer: PropTypes.func,
+  setPricingEditOpenId: PropTypes.func,
+  closePopup: PropTypes.func,
+  broadcastChange: PropTypes.func,
+  patchBroadcast: PropTypes.func,
+  groupOffers: PropTypes.func
+}
+
+MyListings.defaultProps = {
+  myListingsFilters: null,
+  advancedFilters: null,
+  datagrid: {},
+  intl: {},
+  broadcastTemplates: [],
+  rows: [],
+  pricingEditOpenId: null,
+  editedId: null,
+  focusInput: '',
+  applicationName: '',
+  datagridFilterUpdate: false,
+  isModalDetailOpen: false,
+  isOpenImportPopup: false,
+  updatingDatagrid: false,
+  isProductInfoOpen: false,
+  toastManager: null,
+  modalDetailTrigger: () => {},
+  applyDatagridFilter: () => {},
+  getTemplates: () => {},
+  setCompanyElligible: () => {},
+  handleVariableSave: () => {},
+  updateRow: () => {},
+  openImportPopup: () => {},
+  openPopup: () => {},
+  closeModalDetail: () => {},
+  deleteProductOffer: () => {},
+  setPricingEditOpenId: () => {},
+  closePopup: () => {},
+  broadcastChange: () => {},
+  patchBroadcast: () => {},
+  groupOffers: () => {}
 }
 
 export default injectIntl(withToastManager(MyListings))

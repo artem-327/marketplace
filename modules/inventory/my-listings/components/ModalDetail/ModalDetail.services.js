@@ -1,10 +1,36 @@
 import moment from 'moment'
 import * as val from 'yup'
 import { FormattedMessage } from 'react-intl'
-//Services
+import {
+  Grid,
+  GridRow,
+  GridColumn,
+  Label
+} from 'semantic-ui-react'
+import { Trash2 } from 'react-feather'
+import _, { debounce } from 'lodash'
+import { Input } from 'formik-semantic-ui-fixed-validation'
+// Components
+import { Required } from '../../../../../components/constants/layout'
+// Services
 import { getStringISODate, getLocaleDateFormat } from '../../../../../components/date-format'
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../utils/functions'
+// Styles
+import { PriceField } from '../../../../../styles/styledComponents'
+import {
+  InputWrapper,
+  SmallGrid,
+  InputLabeledWrapper,
+} from '../../../styles'
+import {
+  DivLevel,
+  DivTrash,
+  PricingIcon,
+} from './ModalDetail.styles'
+// Constants
+import { INDEX_TAB_PRICE_BOOK } from '../MyListings.constants'
+import { INIT_VALUES } from './ModalDetail.constants'
 
 /**
  * Validates divisibleBy in form
@@ -177,7 +203,7 @@ export const validationScheme = val.lazy(values => {
  * @param {object} detailValues
  * @returns {object}
  */
-export const getEditValues = detailValues => {
+const getEditValues = detailValues => {
   let tdsFields = null
   //Convert tdsFields string array of objects to array
   if (getSafe(() => detailValues.tdsFields, '')) {
@@ -247,4 +273,406 @@ export const getEditValues = detailValues => {
       attachments: getSafe(() => detailValues.attachments.map(att => ({ ...att, linked: true })), [])
     }
   }
+}
+
+export const fetchIfNoData = (name, fn, props) => {
+  if (props[name].length === 0) fn()
+}
+
+export const loadProductOffer = async (id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew) => {
+  const data = await props.getProductOffer(id)
+  if (shouldSwitchTab) {
+    switchTab(props, state, setState, props.modalActiveTab, data.value.data)
+  }
+
+  props.searchOrigins(
+    getSafe(() => data.value.data.origin.name, ''),
+    200
+  )
+  if (data.value.data.companyProduct) {
+    searchProducts(data.value.data.companyProduct.intProductName, props)
+  }
+  setState({
+    ...state,
+    detailValues: data.value.data,
+    initValues: { ...INIT_VALUES, ...getEditValues(data.value.data) }
+  })
+  if(formikPropsNew) resetFormNew()
+}
+
+export const validateSaveOrSwitchToErrors = async (props, state, setState, formikPropsNew, callback = null) => {
+  const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = formikPropsNew
+
+  //! !if (Object.keys(touched).length || state.edited && !state.saved) {
+  if (state.edited) {
+    // Form edited and not saved yet
+    validateForm().then(err => {
+      const errors = Object.keys(err)
+      if (errors.length && errors[0] !== 'isCanceled') {
+        // Edited, Errors found
+        submitForm() // to show errors
+        switchToErrors(props, state, setState, Object.keys(err))
+        return
+      } else {
+        // Edited, Errors not found, try to save
+        confirm(
+          <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
+          <FormattedMessage
+            id='confirm.global.unsavedChanges.content'
+            defaultMessage='You have unsaved changes. Do you wish to save them?'
+          />
+        ).then(
+            async () => {
+              // Confirm
+              if (await submitFormFunc(values, setSubmitting, setTouched, props, state, setState).sendSuccess) {
+                if (callback) callback()
+              }
+            },
+            () => {
+              // Cancel
+              if (callback) callback()
+            }
+          )
+          .catch(() => {})
+          .finally(() => setState({ ...state, edited: false }))
+        return
+      }
+    })
+  } else {
+    // Form not modified
+    if (callback) callback()
+  }
+}
+
+export const changedForm = (isChanged, state, setState) => {
+  setState({ ...state, changedForm: isChanged })
+}
+
+const handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
+  // be sure that splits is integer and larger than 0
+  splits = parseInt(splits)
+  if (splits < 1 || isNaN(splits)) return false
+
+  // correct quantity before anchor calculation
+  if (quantity > 0) quantity -= splits
+
+  const prices = getSafe(() => values.priceTiers.pricingTiers, [])
+
+  for (let i = 0; i < prices.length; i++) {
+    const qtyFrom = parseInt(prices[i].quantityFrom)
+
+    // get level quantity (must be larger than previous level quantity)
+    let anchor = Math.max(qtyFrom, ++quantity)
+    if (!parseInt(values.priceTiers.pricingTiers[i].manuallyModified)) {
+      // if not manually modified then change quantity value
+      quantity = Math.ceil(anchor / splits) * splits
+      setFieldValue(`priceTiers.pricingTiers[${i}].quantityFrom`, quantity)
+    } else {
+      // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
+      quantity = Math.max(qtyFrom, quantity)
+    }
+  }
+}
+
+export const onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
+  value = parseInt(value)
+  const minimum = parseInt(values.edit.minimum)
+
+  handleQuantities(setFieldValue, values, value)
+
+  if (isNaN(value) || isNaN(minimum)) return false
+
+  if (minimum !== value && minimum % value !== 0) {
+    await setFieldValue('edit.minimum', value)
+  }
+
+  validateForm()
+}, 250)
+
+export const renderPricingTiers = (props, state, setState, formikPropsNew, pricingTiers) => {
+  if (!pricingTiers || !getSafe(() => pricingTiers.length, '')) return
+  let tiers = []
+
+  if(formikPropsNew) {
+    const { setFieldValue, values } = formikPropsNew
+    for (let i = 0; i < pricingTiers.length; i++) {
+      tiers.push(
+        <GridRow>
+          <GridColumn computer={1} textAlign='center'>
+            <DivLevel name={`priceTiers.pricingTiers[${i}].level`}>{i + 1}</DivLevel>
+          </GridColumn>
+
+          <GridColumn computer={2} textAlign='center'>
+            <PricingIcon className='greater than equal' />
+          </GridColumn>
+
+          <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`}>
+            <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
+          </GridColumn>
+
+          <GridColumn computer={5} data-test={`add_inventory_quantityFrom_${i}_inp`}>
+            <Input
+              name={`priceTiers.pricingTiers[${i}].quantityFrom`}
+              inputProps={{
+                type: 'number',
+                min: 1,
+                value: null,
+                onChange: (e, { value }) => {
+                  setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
+                  if (i === 0) setFieldValue('edit.minimum', value)
+                },
+                placeholder: '0',
+                disabled: i === 0
+              }}
+            />
+          </GridColumn>
+
+          <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
+            {inputWrapper(
+              `priceTiers.pricingTiers[${i}].price`,
+              {
+                type: 'number',
+                step: '0.001',
+                min: 0.001,
+                value: null,
+                placeholder: '0.000'
+              },
+              null,
+              props.currencySymbol
+            )}
+          </GridColumn>
+          <GridColumn computer={1} textAlign='center'>
+            {i > 0 ? (
+              <DivTrash
+                onClick={() => {
+                  let pricingTiers = values.priceTiers.pricingTiers.slice()
+                  pricingTiers.splice(i, 1)
+                  setFieldValue('priceTiers.pricingTiers', pricingTiers)
+                  setState({...state, changedForm : true})
+                }}>
+                <Trash2 color='#f16844' />
+              </DivTrash>
+            ) : null}
+          </GridColumn>
+          <GridColumn computer={1}></GridColumn>
+        </GridRow>
+      )
+    }
+  }
+
+  return (
+    <>
+      <Grid key={0}>
+        <GridColumn computer={2}>
+          <FormattedMessage id='addInventory.level' defaultMessage='Level' />
+        </GridColumn>
+        <GridColumn computer={2} />
+        <GridColumn computer={6}>
+          <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
+          <Required />
+        </GridColumn>
+        <GridColumn computer={6}>
+          <FormattedMessage id='addInventory.fobPrice' defaultMessage='FOB Price' />
+          <Required />
+        </GridColumn>
+      </Grid>
+      <SmallGrid verticalAlign='top'>{tiers}</SmallGrid>
+    </>
+  )
+}
+
+const saveBroadcastRules = async (state, setState) => {
+  setState({ ...state, saveBroadcast: state.saveBroadcast + 1 })
+}
+
+export const searchProducts = debounce((text, props) => {
+  props.getAutocompleteData({
+    searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
+  })
+}, 250)
+
+export const submitFormFunc = async (values, setSubmitting, setTouched, props, state, setState) => {
+  const { addProductOffer, datagrid } = props
+  const { detailValues, attachmentFiles } = state
+  let isEdit = getSafe(() => detailValues.id, null)
+  let isGrouped = getSafe(() => detailValues.grouped, false)
+  let sendSuccess = false
+  let data = null
+  let tdsFields = []
+  if (getSafe(() => values.edit.tdsFields.length, '')) {
+    values.edit.tdsFields.forEach((item, index) => {
+      if (getSafe(() => item.property, '')) tdsFields.push(item)
+    })
+  }
+
+  await new Promise(resolve => {
+    setState({ ...state, edited: false })
+    resolve()
+  })
+
+  setSubmitting(false)
+  let obj = {}
+  switch (state.activeTab) {
+    case 0:
+    case 1:
+    case 2:
+    case 4:
+      obj = {
+        ...values.edit,
+        expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
+        leadTime: values.edit.leadTime,
+        lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
+        lotNumber: values.edit.lotNumber,
+        lotManufacturedDate: values.edit.lotManufacturedDate
+          ? getStringISODate(values.edit.lotManufacturedDate)
+          : null,
+        pkgAvailable: parseInt(values.edit.pkgAvailable),
+        pricingTiers: values.priceTiers.pricingTiers.length
+          ? values.priceTiers.pricingTiers
+          : [
+              {
+                quantityFrom: values.edit.minimum,
+                price: values.edit.fobPrice
+              }
+            ],
+        productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
+        costPerUOM:
+          values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM),
+        tdsFields: tdsFields.length ? JSON.stringify(tdsFields) : ''
+      }
+      break
+    case 3:
+      saveBroadcastRules(state, setState)
+      setTouched({})
+      setState({ ...state, changedForm: false, edited: false })
+      break
+  }
+
+  if (Object.keys(obj).length) {
+    try {
+      data = await addProductOffer(obj, isEdit, false, isGrouped, attachmentFiles)
+      if (isEdit) {
+        datagrid.updateRow(data.id, () => data)
+      } else {
+        datagrid.loadData()
+      }
+
+      setState({
+        ...state,
+        detailValues: { ...data, id: isEdit ? data.id : null },
+        initValues: { ...INIT_VALUES, ...getEditValues(data) },
+        edited: false
+      })
+      sendSuccess = true
+    } catch (e) {
+      console.error(e)
+      let entityId = getSafe(() => e.response.data.entityId, null)
+
+      if (entityId) {
+        await confirm(
+          <FormattedMessage
+            id='notifications.productOffer.alreadyExists.header'
+            defaultMessage='Product Offer already exists'
+          />,
+          <FormattedMessage
+            id='notifications.productOffer.alreadyExists.content'
+            defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
+          />
+        )
+          .then(async () => {
+            let po = await addProductOffer(obj, entityId, false, isGrouped, attachmentFiles)
+            datagrid.updateRow(entityId, () => po.value)
+            setState({
+              ...state,
+              detailValues: po.value,
+              initValues: { ...INIT_VALUES, ...getEditValues(po.value) },
+              edited: false
+            })
+            sendSuccess = true
+          })
+          .catch(_)
+      }
+    } finally {
+      setTouched({})
+      setState({ ...state, changedForm: false, attachmentFiles: [] })
+    }
+  }
+
+  return { sendSuccess, data }
+}
+
+export const switchTab = async (props, state, setState, newTab, data = null) => {
+  setState({
+    ...state,
+    activeTab: newTab
+  })
+  try {
+    if (newTab === INDEX_TAB_PRICE_BOOK) {
+      await props.openBroadcast(data ? data : state.detailValues).then(async () => {
+        setState({ ...state, broadcastLoading: false, activeTab: newTab })
+      })
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const switchToErrors = (props, state, setState, errors) => {
+  const tabs = Object.keys(errors)
+
+  // switch tab only if there is no error on active tab
+  if (tabs.includes(state.tabs[state.activeTab])) {
+    switch (tabs[0]) {
+      case 'priceTiers':
+        switchTab(props, state, setState, 4)
+        const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
+        if (Array.isArray(priceErrors)) {
+          const index = priceErrors.findIndex(o => typeof o !== 'undefined')
+          document
+            .getElementsByName(`priceTiers.pricingTiers[${index}].${Object.keys(priceErrors[index])[0]}`)[0]
+            .focus()
+        } else {
+          document.getElementsByName('priceTiers.' + Object.keys(errors.priceTiers)[0])[0].focus()
+        }
+        break
+    }
+  }
+}
+
+export const handleChangeProduct = (value, setFieldValue, props, state, setState) => {
+  if (!value) return
+  const { autocompleteData } = props
+  if (getSafe(() => autocompleteData.length, false)) {
+    const companyProduct = autocompleteData.find(product => product.id === value)
+    if (getSafe(() => companyProduct.palletMinPkgs, false))
+      setFieldValue('edit.minimum', companyProduct.palletMinPkgs)
+  }
+  setState({ ...state, edited: true })
+}
+
+export const onChange = debounce((state, setState) => setState({ ...state, edited: true }), 200)
+
+export const inputWrapper = (name, inputProps, label, labelText) => {
+  return (
+    <InputWrapper>
+      {label && <div className='field-label'>{label}</div>}
+      <div>
+        <PriceField inputProps={inputProps} name={name} />
+        <Label>{labelText}</Label>
+      </div>
+    </InputWrapper>
+  )
+}
+
+export const inputLabeledWrapper = (name, inputProps, label) => {
+  return (
+    <InputLabeledWrapper>
+      {label && <div className='field-label'>{label}</div>}
+      <Input inputProps={inputProps} name={name} />
+    </InputLabeledWrapper>
+  )
+}
+
+export const closeTdsModal = (state, setState) => {
+  setState({ ...state, openedTdsList: false, openedTdsSaveAs: false })
 }

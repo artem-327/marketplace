@@ -125,8 +125,13 @@ const SDSTab = ({ row }) => {
   )
 }
 
-SDSTab.propTypes = {}
-SDSTab.defaultProps = {}
+SDSTab.propTypes = {
+  row: PropTypes.object
+}
+
+SDSTab.defaultProps = {
+  row: {}
+}
 
 const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id

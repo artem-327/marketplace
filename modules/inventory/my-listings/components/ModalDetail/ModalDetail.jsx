@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Button, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Form, Label } from 'semantic-ui-react'
 import { Formik, FieldArray } from 'formik'
 import _, { debounce } from 'lodash'
 import {
@@ -16,11 +15,13 @@ import {
   Icon,
   Popup,
   FormField,
-  Modal
+  Modal,
+  Form
 } from 'semantic-ui-react'
-import { Plus, Trash2, ChevronDown, ChevronUp, Folder } from 'react-feather'
+import { Plus, ChevronDown, ChevronUp, Folder } from 'react-feather'
 import moment from 'moment'
 import { Warning } from '@material-ui/icons'
+import PropTypes from 'prop-types'
 //Components
 import { DateInput } from '../../../../../components/custom-formik'
 import confirm from '../../../../../components/Confirmable/confirm'
@@ -32,20 +33,32 @@ import { Required } from '../../../../../components/constants/layout'
 import { SelectTemplates } from '../ModalsTds/ModalsTds.styles'
 import ErrorFocus from '../../../../../components/error-focus'
 //Services
-import { validationScheme, getEditValues } from './ModalDetail.services'
-import { getSafe, generateToastMarkup, getMimeType } from '../../../../../utils/functions'
-import { getStringISODate } from '../../../../../components/date-format'
+import { 
+  validationScheme,
+  fetchIfNoData,
+  loadProductOffer,
+  validateSaveOrSwitchToErrors,
+  changedForm,
+  onSplitsChange,
+  renderPricingTiers,
+  searchProducts,
+  submitFormFunc,
+  switchTab,
+  switchToErrors,
+  handleChangeProduct,
+  onChange,
+  inputWrapper,
+  inputLabeledWrapper,
+  closeTdsModal
+} from './ModalDetail.services'
+import { getSafe, generateToastMarkup } from '../../../../../utils/functions'
 import { onClickBroadcast } from '../MyListings.services'
 //Styles
-import { PriceField } from '../../../../../styles/styledComponents'
 import {
   FlexModal,
   FlexTabs,
   FlexModalContent,
   HighSegment,
-  InputWrapper,
-  SmallGrid,
-  InputLabeledWrapper,
   DivIconOptions,
   HeaderOptions,
   GridColumnOptionalInformation,
@@ -55,14 +68,11 @@ import {
   GridFields,
   DivRequiredFields,
   DivTitle,
-  DivLevel,
   DivButtonPlus,
-  DivTrash,
   DivIconPlusCircle,
   IconPlusCircle,
   IconTrash,
   DivAddInputTds,
-  PricingIcon,
   GridColumnRequired,
   CustomGridColumn,
   CustomGridRow,
@@ -70,7 +80,6 @@ import {
 } from './ModalDetail.styles'
 //Constants
 import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
-import { INDEX_TAB_PRICE_BOOK } from '../MyListings.constants'
 // Hooks
 import { usePrevious } from '../../../../../hooks'
 
@@ -104,100 +113,28 @@ const ModalDetail = props => {
   useEffect(() => {
     const {
       detailValues,
-      getProductConditions,
       getProductForms,
       getProductGrades,
       getWarehouses,
       searchOrigins,
-      searchManufacturers,
       modalActiveTab
     } = props
     if (detailValues) {
-      loadProductOffer(detailValues.id) // Start editing, reload product offer
+      loadProductOffer(detailValues.id, null, props, state, setState, formikPropsNew, resetFormNew) // Start editing, reload product offer
     } else {
       searchOrigins('', 200)
     }
-    fetchIfNoData('productFormsDropdown', getProductForms)
-    fetchIfNoData('productGradesDropdown', getProductGrades)
-    fetchIfNoData('warehousesList', getWarehouses)
+    fetchIfNoData('productFormsDropdown', getProductForms, props)
+    fetchIfNoData('productGradesDropdown', getProductGrades, props)
+    fetchIfNoData('warehousesList', getWarehouses, props)
 
-    switchTab(modalActiveTab, detailValues)
+    switchTab(props, state, setState, modalActiveTab, detailValues)
     if (detailValues?.minPkg) {
       detailValues?.minPkg > detailValues?.pkgAvailable
         ? setState({ ...state, isOverMinPkgs: true })
         : setState({ ...state, isOverMinPkgs: false })
     }
   }, [])
-
-  const fetchIfNoData = (name, fn) => {
-    if (props[name].length === 0) fn()
-  }
-
-  const loadProductOffer = async (id, shouldSwitchTab) => {
-    const data = await props.getProductOffer(id)
-    if (shouldSwitchTab) {
-      switchTab(props.modalActiveTab, data.value.data)
-    }
-
-    props.searchOrigins(
-      getSafe(() => data.value.data.origin.name, ''),
-      200
-    )
-    if (data.value.data.companyProduct) {
-      searchProducts(data.value.data.companyProduct.intProductName)
-    }
-    setState({
-      ...state,
-      detailValues: data.value.data,
-      initValues: { ...INIT_VALUES, ...getEditValues(data.value.data) }
-    })
-    if(formikPropsNew) resetFormNew()
-  }
-
-  const validateSaveOrSwitchToErrors = async (callback = null) => {
-    const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = formikPropsNew
-
-    //! !if (Object.keys(touched).length || state.edited && !state.saved) {
-    if (state.edited) {
-      // Form edited and not saved yet
-      validateForm().then(err => {
-        const errors = Object.keys(err)
-        if (errors.length && errors[0] !== 'isCanceled') {
-          // Edited, Errors found
-          submitForm() // to show errors
-          switchToErrors(Object.keys(err))
-          return
-        } else {
-          // Edited, Errors not found, try to save
-          confirm(
-            <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-            <FormattedMessage
-              id='confirm.global.unsavedChanges.content'
-              defaultMessage='You have unsaved changes. Do you wish to save them?'
-            />
-          )
-            .then(
-              async () => {
-                // Confirm
-                if (await submitFormFunc(values, setSubmitting, setTouched).sendSuccess) {
-                  if (callback) callback()
-                }
-              },
-              () => {
-                // Cancel
-                if (callback) callback()
-              }
-            )
-            .catch(() => {})
-            .finally(() => setState({ ...state, edited: false }))
-          return
-        }
-      })
-    } else {
-      // Form not modified
-      if (callback) callback()
-    }
-  }
 
   const prevEditProductOfferInitTrig = usePrevious(props.editProductOfferInitTrig)
   const prevModalActiveTab = usePrevious(props.modalActiveTab)
@@ -212,391 +149,28 @@ const ModalDetail = props => {
         // Edit mode
         if (!prevModalActiveTab) {
           // Add new to Edit mode
-          validateSaveOrSwitchToErrors(() => {
-            loadProductOffer(props.detailValues.id, shouldSwitchTab)
+          validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
+            loadProductOffer(props.detailValues.id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
           })
         } else {
           // Edit to Edit mode
-          validateSaveOrSwitchToErrors(() => {
-            loadProductOffer(props.detailValues.id, shouldSwitchTab)
+          validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
+            loadProductOffer(props.detailValues.id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
           })
         }
       } else {
         // Add new mode
-        validateSaveOrSwitchToErrors(() => {
+        validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
           setState({ ...state, detailValues: null, initValues: INIT_VALUES })
           resetFormNew()
           props.searchOrigins('', 200)
           if (shouldSwitchTab) {
-            switchTab(props.modalActiveTab)
+            switchTab(props, state, setState, props.modalActiveTab)
           }
         })
       }
     }
   }, [props.editProductOfferInitTrig, props.modalActiveTab])
-
-  const changedForm = (isChanged = true) => {
-    setState({ ...state, changedForm: isChanged })
-  }
-
-  const handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
-    // be sure that splits is integer and larger than 0
-    splits = parseInt(splits)
-    if (splits < 1 || isNaN(splits)) return false
-
-    // correct quantity before anchor calculation
-    if (quantity > 0) quantity -= splits
-
-    const prices = getSafe(() => values.priceTiers.pricingTiers, [])
-
-    for (let i = 0; i < prices.length; i++) {
-      const qtyFrom = parseInt(prices[i].quantityFrom)
-
-      // get level quantity (must be larger than previous level quantity)
-      let anchor = Math.max(qtyFrom, ++quantity)
-      if (!parseInt(values.priceTiers.pricingTiers[i].manuallyModified)) {
-        // if not manually modified then change quantity value
-        quantity = Math.ceil(anchor / splits) * splits
-        setFieldValue(`priceTiers.pricingTiers[${i}].quantityFrom`, quantity)
-      } else {
-        // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
-        quantity = Math.max(qtyFrom, quantity)
-      }
-    }
-  }
-
-  const onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
-    value = parseInt(value)
-    const minimum = parseInt(values.edit.minimum)
-
-    handleQuantities(setFieldValue, values, value)
-
-    if (isNaN(value) || isNaN(minimum)) return false
-
-    if (minimum !== value && minimum % value !== 0) {
-      await setFieldValue('edit.minimum', value)
-    }
-
-    validateForm()
-  }, 250)
-
-  const renderPricingTiers = pricingTiers => {
-    if (!pricingTiers || !getSafe(() => pricingTiers.length, '')) return
-    let tiers = []
-
-    if(formikPropsNew) {
-    console.log(pricingTiers)
-      const { setFieldValue, values } = formikPropsNew
-      for (let i = 0; i < pricingTiers.length; i++) {
-        tiers.push(
-          <GridRow>
-            <GridColumn computer={1} textAlign='center'>
-              <DivLevel name={`priceTiers.pricingTiers[${i}].level`}>{i + 1}</DivLevel>
-            </GridColumn>
-
-            <GridColumn computer={2} textAlign='center'>
-              <PricingIcon className='greater than equal' />
-            </GridColumn>
-
-            <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`}>
-              <Input name={`priceTiers.pricingTiers[${i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
-            </GridColumn>
-
-            <GridColumn computer={5} data-test={`add_inventory_quantityFrom_${i}_inp`}>
-              <Input
-                name={`priceTiers.pricingTiers[${i}].quantityFrom`}
-                inputProps={{
-                  type: 'number',
-                  min: 1,
-                  value: null,
-                  onChange: (e, { value }) => {
-                    setFieldValue(`priceTiers.pricingTiers[${i}].manuallyModified`, 1)
-                    if (i === 0) setFieldValue('edit.minimum', value)
-                  },
-                  placeholder: '0',
-                  disabled: i === 0
-                }}
-              />
-            </GridColumn>
-
-            <GridColumn computer={5} data-test={`add_inventory_price_${i}_inp`}>
-              {inputWrapper(
-                `priceTiers.pricingTiers[${i}].price`,
-                {
-                  type: 'number',
-                  step: '0.001',
-                  min: 0.001,
-                  value: null,
-                  placeholder: '0.000'
-                },
-                null,
-                props.currencySymbol
-              )}
-            </GridColumn>
-            <GridColumn computer={1} textAlign='center'>
-              {i > 0 ? (
-                <DivTrash
-                  onClick={() => {
-                    let pricingTiers = values.priceTiers.pricingTiers.slice()
-                    pricingTiers.splice(i, 1)
-                    setFieldValue('priceTiers.pricingTiers', pricingTiers)
-                    setState({...state, changedForm : true})
-                  }}>
-                  <Trash2 color='#f16844' />
-                </DivTrash>
-              ) : null}
-            </GridColumn>
-            <GridColumn computer={1}></GridColumn>
-          </GridRow>
-        )
-      }
-    }
-
-    return (
-      <>
-        <Grid key={0}>
-          <GridColumn computer={2}>
-            <FormattedMessage id='addInventory.level' defaultMessage='Level' />
-          </GridColumn>
-          <GridColumn computer={2} />
-          <GridColumn computer={6}>
-            <FormattedMessage id='global.quantity' defaultMessage='Quantity' />
-            <Required />
-          </GridColumn>
-          <GridColumn computer={6}>
-            <FormattedMessage id='addInventory.fobPrice' defaultMessage='FOB Price' />
-            <Required />
-          </GridColumn>
-        </Grid>
-        <SmallGrid verticalAlign='top'>{tiers}</SmallGrid>
-      </>
-    )
-  }
-
-  const saveBroadcastRules = async () => {
-    setState({ ...state, saveBroadcast: state.saveBroadcast + 1 })
-  }
-
-  const searchProducts = debounce(text => {
-    props.getAutocompleteData({
-      searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
-    })
-  }, 250)
-
-  const submitFormFunc = async (values, setSubmitting, setTouched, savedButtonClicked = false) => {
-    const { addProductOffer, datagrid, openGlobalAddForm } = props
-    const { detailValues, attachmentFiles } = state
-    let isEdit = getSafe(() => detailValues.id, null)
-    let isGrouped = getSafe(() => detailValues.grouped, false)
-    let sendSuccess = false
-    let data = null
-    let tdsFields = []
-    if (getSafe(() => values.edit.tdsFields.length, '')) {
-      values.edit.tdsFields.forEach((item, index) => {
-        if (getSafe(() => item.property, '')) tdsFields.push(item)
-      })
-    }
-
-    await new Promise(resolve => {
-      setState({ ...state, edited: false })
-      resolve()
-    })
-
-    setSubmitting(false)
-    let obj = {}
-    switch (state.activeTab) {
-      case 0:
-      case 1:
-      case 2:
-      case 4:
-        obj = {
-          ...values.edit,
-          expirationDate: values.edit.doesExpire ? getStringISODate(values.edit.expirationDate) : null,
-          leadTime: values.edit.leadTime,
-          lotExpirationDate: values.edit.lotExpirationDate ? getStringISODate(values.edit.lotExpirationDate) : null,
-          lotNumber: values.edit.lotNumber,
-          lotManufacturedDate: values.edit.lotManufacturedDate
-            ? getStringISODate(values.edit.lotManufacturedDate)
-            : null,
-          pkgAvailable: parseInt(values.edit.pkgAvailable),
-          pricingTiers: values.priceTiers.pricingTiers.length
-            ? values.priceTiers.pricingTiers
-            : [
-                {
-                  quantityFrom: values.edit.minimum,
-                  price: values.edit.fobPrice
-                }
-              ],
-          productGrades: values.edit.productGrades.length ? values.edit.productGrades : [],
-          costPerUOM:
-            values.edit.costPerUOM === null || values.edit.costPerUOM === '' ? null : Number(values.edit.costPerUOM),
-          tdsFields: tdsFields.length ? JSON.stringify(tdsFields) : ''
-        }
-        break
-      case 3:
-        saveBroadcastRules()
-        setTouched({})
-        setState({ ...state, changedForm: false, edited: false })
-        break
-    }
-
-    if (Object.keys(obj).length) {
-      try {
-        data = await addProductOffer(obj, isEdit, false, isGrouped, attachmentFiles)
-        if (isEdit) {
-          !openGlobalAddForm && datagrid.updateRow(data.id, () => data)
-        } else {
-          !openGlobalAddForm && datagrid.loadData()
-        }
-
-        setState({
-          ...state,
-          detailValues: { ...data, id: isEdit ? data.id : null },
-          initValues: { ...INIT_VALUES, ...getEditValues(data) },
-          edited: false
-        })
-        sendSuccess = true
-      } catch (e) {
-        console.error(e)
-        let entityId = getSafe(() => e.response.data.entityId, null)
-
-        if (entityId) {
-          await confirm(
-            <FormattedMessage
-              id='notifications.productOffer.alreadyExists.header'
-              defaultMessage='Product Offer already exists'
-            />,
-            <FormattedMessage
-              id='notifications.productOffer.alreadyExists.content'
-              defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
-            />
-          )
-            .then(async () => {
-              let po = await addProductOffer(obj, entityId, false, isGrouped, attachmentFiles)
-              !openGlobalAddForm && datagrid.updateRow(entityId, () => po.value)
-              setState({
-                ...state,
-                detailValues: po.value,
-                initValues: { ...INIT_VALUES, ...getEditValues(po.value) },
-                edited: false
-              })
-              sendSuccess = true
-            })
-            .catch(_)
-        }
-      } finally {
-        setTouched({})
-        setState({ ...state, changedForm: false, attachmentFiles: [] })
-      }
-    }
-
-    return { sendSuccess, data }
-  }
-
-  const switchTab = async (newTab, data = null) => {
-    setState({
-      ...state,
-      activeTab: newTab
-    })
-    try {
-      if (newTab === INDEX_TAB_PRICE_BOOK) {
-        await props.openBroadcast(data ? data : state.detailValues).then(async () => {
-          setState({ ...state, broadcastLoading: false, activeTab: newTab })
-        })
-      }
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  const switchToErrors = errors => {
-    const { toastManager } = props
-    const tabs = Object.keys(errors)
-
-    // switch tab only if there is no error on active tab
-    if (tabs.includes(state.tabs[state.activeTab])) {
-      switch (tabs[0]) {
-        case 'priceTiers':
-          switchTab(4)
-          const priceErrors = errors.priceTiers[Object.keys(errors.priceTiers)[0]]
-          if (Array.isArray(priceErrors)) {
-            const index = priceErrors.findIndex(o => typeof o !== 'undefined')
-            document
-              .getElementsByName(`priceTiers.pricingTiers[${index}].${Object.keys(priceErrors[index])[0]}`)[0]
-              .focus()
-          } else {
-            document.getElementsByName('priceTiers.' + Object.keys(errors.priceTiers)[0])[0].focus()
-          }
-          break
-      }
-    }
-  }
-
-  const prepareLinkToAttachment = async documentId => {
-    let downloadedFile = await props.downloadAttachment(documentId)
-    const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
-    const mimeType = fileName && getMimeType(fileName)
-    const element = document.createElement('a')
-    const file = new Blob([downloadedFile.value.data], { type: mimeType })
-    let fileURL = URL.createObjectURL(file)
-    element.href = fileURL
-
-    return element
-  }
-
-  const extractFileName = contentDispositionValue => {
-    var filename = ''
-    if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
-      var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/
-      var matches = filenameRegex.exec(contentDispositionValue)
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, '')
-      }
-    }
-    return filename
-  }
-
-  const hasEdited = values => {
-    return !_.isEqual(getEditValues(state.detailValues), values)
-  }
-
-  const handleChangeProduct = (e, value, setFieldValue) => {
-    if (!value) return
-    const { autocompleteData } = props
-    if (getSafe(() => autocompleteData.length, false)) {
-      const companyProduct = autocompleteData.find(product => product.id === value)
-      if (getSafe(() => companyProduct.palletMinPkgs, false))
-        setFieldValue('edit.minimum', companyProduct.palletMinPkgs)
-    }
-    setState({ ...state, edited: true })
-  }
-
-  const onChange = debounce(() => setState({ ...state, edited: true }), 200)
-
-  const inputWrapper = (name, inputProps, label, labelText) => {
-    return (
-      <InputWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <div>
-          <PriceField inputProps={inputProps} name={name} />
-          <Label>{labelText}</Label>
-        </div>
-      </InputWrapper>
-    )
-  }
-
-  const inputLabeledWrapper = (name, inputProps, label) => {
-    return (
-      <InputLabeledWrapper>
-        {label && <div className='field-label'>{label}</div>}
-        <Input inputProps={inputProps} name={name} />
-      </InputLabeledWrapper>
-    )
-  }
-
-  const closeTdsModal = () => {
-    setState({ ...state, openedTdsList: false, openedTdsSaveAs: false })
-  }
 
   let {
     productFormsDropdown,
@@ -615,7 +189,6 @@ const ModalDetail = props => {
     removeAttachmentLinkProductOffer,
     removeAttachment,
     currencySymbol,
-    openGlobalAddForm,
     datagrid,
     isLoadingBroadcast,
     autocompleteDataLoading,
@@ -688,9 +261,7 @@ const ModalDetail = props => {
       }
     })
   ])
-
-  // const { toggleFilter } = props
-
+  
   return (
     <>
       <Formik
@@ -698,7 +269,7 @@ const ModalDetail = props => {
         initialValues={state.initValues}
         validationSchema={validationScheme}
         onSubmit={async (values, { setSubmitting, setTouched }) => {
-          await submitFormFunc(values, setSubmitting, setTouched)
+          await submitFormFunc(values, setSubmitting, setTouched, props, state, setState)
         }}>
         {formikProps => {
           let {
@@ -709,7 +280,6 @@ const ModalDetail = props => {
             setValues,
             setFieldValue,
             validateForm,
-            validateField,
             submitForm,
             setSubmitting,
             resetForm
@@ -718,14 +288,14 @@ const ModalDetail = props => {
           resetFormNew = resetForm
           formikPropsNew = formikProps
           return (
-            <Form onChange={onChange}>
+            <Form onChange={() => onChange(state, setState)}>
               <FlexModal
                 open={true}
                 closeIcon
                 onClose={e => {
                   e.stopPropagation()
                   setState({ ...state, edited: false })
-                  openGlobalAddForm ? openGlobalAddForm('') : props.closeModalDetail()
+                  props.closeModalDetail()
                 }}>
                 <FlexModalContent>
                   <Dimmer inverted active={loading || autocompleteDataLoading || searchedOriginsLoading}>
@@ -774,12 +344,12 @@ const ModalDetail = props => {
                                       // stop when errors found
                                       if (Object.keys(r).length) {
                                         submitForm() // show errors
-                                        switchToErrors(r)
+                                        switchToErrors(props, state, setState, r)
                                         return false
                                       }
 
                                       // if validation is correct - switch tabs
-                                      switchTab(0)
+                                      switchTab(props, state, setState, 0)
                                     })
                                     .catch(e => {
                                       console.error(e)
@@ -849,9 +419,9 @@ const ModalDetail = props => {
                                                     selection: true,
                                                     clearable: true,
                                                     onChange: (e, { value }) =>
-                                                      handleChangeProduct(e, value, setFieldValue),
+                                                      handleChangeProduct(value, setFieldValue, props, state, setState),
                                                     onSearchChange: (e, { searchQuery }) =>
-                                                      searchQuery.length > 0 && searchProducts(searchQuery)
+                                                      searchQuery.length > 0 && searchProducts(searchQuery, props)
                                                   }}
                                                 />
                                               </FormField>
@@ -873,7 +443,7 @@ const ModalDetail = props => {
                                                   options={warehousesList}
                                                   inputProps={{
                                                     disabled: detailValues && detailValues.grouped,
-                                                    onChange: onChange,
+                                                    onChange: () => onChange(state, setState),
                                                     selection: true,
                                                     value: 0,
                                                     fluid: true,
@@ -1063,7 +633,7 @@ const ModalDetail = props => {
                                                   name='edit.inStock'
                                                   options={OPTIONS_YES_NO}
                                                   inputProps={{
-                                                    onChange: onChange,
+                                                    onChange: () => onChange(state, setState),
                                                     disabled: detailValues && detailValues.grouped,
                                                     'data-test': 'add_inventory_instock',
                                                     fluid: true
@@ -1109,7 +679,7 @@ const ModalDetail = props => {
                                         <Dropdown
                                           name='edit.broadcastOption'
                                           inputProps={{
-                                            onChange: onChange,
+                                            onChange: () => onChange(state, setState),
                                             'data-test': 'add_inventory_whoShouldSee',
                                             fluid: true,
                                             closeOnChange: true,
@@ -1160,7 +730,7 @@ const ModalDetail = props => {
                                           name='edit.shared'
                                           options={OPTIONS_YES_NO}
                                           inputProps={{
-                                            onChange: onChange,
+                                            onChange: () => onChange(state, setState),
                                             'data-test': 'add_inventory_shared',
                                             fluid: true
                                           }}
@@ -1181,7 +751,7 @@ const ModalDetail = props => {
                                           name='edit.acceptBids'
                                           options={OPTIONS_YES_NO}
                                           inputProps={{
-                                            onChange: onChange,
+                                            onChange: () => onChange(state, setState),
                                             'data-test': 'add_inventory_acceptBids',
                                             fluid: true
                                           }}
@@ -1231,7 +801,7 @@ const ModalDetail = props => {
                                               name='edit.doesExpire'
                                               options={OPTIONS_YES_NO}
                                               inputProps={{
-                                                onChange: onChange,
+                                                onChange: () => onChange(state, setState),
                                                 disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'add_inventory_doesExpire',
                                                 fluid: true
@@ -1269,7 +839,7 @@ const ModalDetail = props => {
                                               name='edit.productForm'
                                               options={productFormsDropdown}
                                               inputProps={{
-                                                onChange: onChange,
+                                                onChange: () => onChange(state, setState),
                                                 disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'new_inventory_form_drpdn',
                                                 placeholder: (
@@ -1298,7 +868,7 @@ const ModalDetail = props => {
                                                     defaultMessage='Select Grades'
                                                   />
                                                 ),
-                                                onChange: onChange,
+                                                onChange: () => onChange(state, setState),
                                                 'data-test': 'new_inventory_grade_drpdn',
                                                 disabled: detailValues && detailValues.grouped,
                                                 selection: true,
@@ -1336,7 +906,7 @@ const ModalDetail = props => {
                                               name='edit.origin'
                                               options={searchedOrigins}
                                               inputProps={{
-                                                onChange: onChange,
+                                                onChange: () => onChange(state, setState),
                                                 'data-test': 'new_inventory_origin_drpdn',
                                                 size: 'large',
                                                 minCharacters: 0,
@@ -1387,7 +957,7 @@ const ModalDetail = props => {
                                               name='edit.conforming'
                                               options={LIST_CONFORMING}
                                               inputProps={{
-                                                onChange: onChange,
+                                                onChange: () => onChange(state, setState),
                                                 disabled: detailValues && detailValues.grouped,
                                                 'data-test': 'new_inventory_conforming_drpdn',
                                                 fluid: true
@@ -1512,12 +1082,12 @@ const ModalDetail = props => {
                                       // stop when errors found
                                       if (Object.keys(r).length) {
                                         submitForm() // show errors
-                                        switchToErrors(r)
+                                        switchToErrors(props, state, setState, r)
                                         return false
                                       }
 
                                       // if validation is correct - switch tabs
-                                      switchTab(1)
+                                      switchTab(props, state, setState, 1)
                                     })
                                     .catch(e => {
                                       console.error(e)
@@ -1536,7 +1106,7 @@ const ModalDetail = props => {
                                         open={openedTdsList}
                                         tdsTemplates={tdsTemplates}
                                         tdsTemplatesLoading={tdsTemplatesLoading}
-                                        closeTdsModal={closeTdsModal}
+                                        closeTdsModal={() => closeTdsModal(state, setState)}
                                         deleteTdsTemplate={props.deleteTdsTemplate}
                                         values={values}
                                         setValues={setValues}
@@ -1684,12 +1254,12 @@ const ModalDetail = props => {
                                       // stop when errors found
                                       if (Object.keys(r).length) {
                                         submitForm() // show errors
-                                        switchToErrors(r)
+                                        switchToErrors(props, state, setState, r)
                                         return false
                                       }
 
                                       // if validation is correct - switch tabs
-                                      switchTab(2)
+                                      switchTab(props, state, setState, 2)
                                     })
                                     .catch(e => {
                                       console.error(e)
@@ -1754,13 +1324,13 @@ const ModalDetail = props => {
                                       // stop when errors found
                                       if (Object.keys(r).length) {
                                         submitForm() // show errors
-                                        switchToErrors(r)
+                                        switchToErrors(props, state, setState, r)
                                         return false
                                       }
 
                                       // if validation is correct - switch tabs
 
-                                      switchTab(3)
+                                      switchTab(props, state, setState, 3)
                                     })
                                     .catch(e => {
                                       console.error(e)
@@ -1785,7 +1355,7 @@ const ModalDetail = props => {
                                     isPrepared={!state.broadcastLoading}
                                     asModal={true}
                                     saveBroadcast={state.saveBroadcast}
-                                    changedForm={changedForm}
+                                    changedForm={(isChanged = true) => changedForm(isChanged, state, setState)}
                                     close={props.closeModalDetail}
                                     detailValues={detailValues}
                                     inventoryGrid={datagrid}
@@ -1820,12 +1390,12 @@ const ModalDetail = props => {
                                       // stop when errors found
                                       if (Object.keys(r).length) {
                                         submitForm() // show errors
-                                        switchToErrors(r)
+                                        switchToErrors(props, state, setState, r)
                                         return false
                                       }
 
                                       // if validation is correct - switch tabs
-                                      switchTab(4)
+                                      switchTab(props, state, setState, 4)
                                     })
                                     .catch(e => {
                                       console.error(e)
@@ -1868,7 +1438,7 @@ const ModalDetail = props => {
                                   </GridRow>
                                   {/* <Grid> */}
                                   <GridRow>
-                                    <GridColumn>{renderPricingTiers(values.priceTiers.pricingTiers)}</GridColumn>
+                                    <GridColumn>{renderPricingTiers(props, state, setState, formikPropsNew, values.priceTiers.pricingTiers)}</GridColumn>
                                   </GridRow>
                                   <GridRow>
                                     <GridColumn verticalAlign='middle'>
@@ -1900,7 +1470,7 @@ const ModalDetail = props => {
                         inputProps={{ type: 'button' }}
                         onClick={() => {
                           setState({ ...state, edited: false })
-                          openGlobalAddForm ? openGlobalAddForm('') : props.closeModalDetail()
+                          props.closeModalDetail()
                         }}
                         data-test='modal_inventory_cancel'>
                         {Object.keys(touched).length || state.changedForm
@@ -1921,7 +1491,7 @@ const ModalDetail = props => {
                       ) : null}
                       <ModalTdsSaveAs
                         open={openedTdsSaveAs}
-                        closeTdsModal={closeTdsModal}
+                        closeTdsModal={() => closeTdsModal(state, setState)}
                         saveTdsAsTemplate={props.saveTdsAsTemplate}
                         tdsFields={values.edit.tdsFields}
                       />
@@ -1933,16 +1503,16 @@ const ModalDetail = props => {
                         onClick={() => {
                           // Dont validate if it is a broadcast tab
                           if (state.activeTab === 3) {
-                            submitFormFunc(values, setSubmitting, setTouched)
+                            submitFormFunc(values, setSubmitting, setTouched, props, state, setState)
                             return true
                           }
 
                           return validateForm().then(async r => {
                             if (Object.keys(r).length && state.activeTab !== 2) {
-                              switchToErrors(r)
+                              switchToErrors(props, state, setState, r)
                               submitForm() // to show errors
                             } else {
-                              let { data } = await submitFormFunc(values, setSubmitting, setTouched)
+                              let { data } = await submitFormFunc(values, setSubmitting, setTouched, props, state, setState)
                               if (data && !getSafe(() => state.detailValues.id, false)) {
                                 confirm(
                                   formatMessage({
@@ -1990,6 +1560,86 @@ const ModalDetail = props => {
       </Formik>
     </>
   )
+}
+
+ModalDetail.propTypes = {
+  detailValues: PropTypes.object,
+  intl: PropTypes.object,
+  datagrid: PropTypes.object,
+  modalActiveTab: PropTypes.number,
+  editProductOfferInitTrig: PropTypes.bool,
+  loading: PropTypes.bool,
+  isLoadingBroadcast: PropTypes.bool,
+  autocompleteDataLoading: PropTypes.bool,
+  searchedOriginsLoading: PropTypes.bool,
+  tdsTemplatesLoading: PropTypes.bool,
+  productFormsDropdown: PropTypes.array,
+  productGradesDropdown: PropTypes.array,
+  searchedOrigins: PropTypes.array,
+  warehousesList: PropTypes.array,
+  documentTypesDropdown: PropTypes.array,
+  broadcastTemplates: PropTypes.array,
+  tdsTemplates: PropTypes.array,
+  autocompleteData: PropTypes.array,
+  toastManager: PropTypes.any,
+  applicationName: PropTypes.string,
+  currencySymbol: PropTypes.string,
+  loadFile: PropTypes.func,
+  addAttachment: PropTypes.func,
+  removeAttachmentLinkProductOffer: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  broadcastChange: PropTypes.func,
+  getProductForms: PropTypes.func,
+  getProductGrades: PropTypes.func,
+  getWarehouses: PropTypes.func,
+  searchOrigins: PropTypes.func,
+  closeModalDetail: PropTypes.func,
+  deleteTdsTemplate: PropTypes.func,
+  getTdsTemplates: PropTypes.func,
+  saveTdsAsTemplate: PropTypes.func,
+  getAutocompleteData: PropTypes.func,
+  addProductOffer: PropTypes.func,
+  openBroadcast: PropTypes.func
+}
+
+ModalDetail.defaultProps = {
+  detailValues: {},
+  intl: {},
+  datagrid: {},
+  modalActiveTab: 0,
+  editProductOfferInitTrig: false,
+  loading: false,
+  isLoadingBroadcast: false,
+  autocompleteDataLoading: false,
+  searchedOriginsLoading: false,
+  tdsTemplatesLoading: false,
+  productFormsDropdown: [],
+  productGradesDropdown: [],
+  searchedOrigins: [],
+  warehousesList: [],
+  documentTypesDropdown: [],
+  broadcastTemplates: [],
+  tdsTemplates: [],
+  autocompleteData: [],
+  toastManager: null,
+  applicationName: '',
+  currencySymbol: '$',
+  loadFile: () => {},
+  addAttachment: () => {},
+  removeAttachmentLinkProductOffer: () => {},
+  removeAttachment: () => {},
+  broadcastChange: () => {},
+  getProductForms: () => {},
+  getProductGrades: () => {},
+  getWarehouses: () => {},
+  searchOrigins: () => {},
+  closeModalDetail: () => {},
+  deleteTdsTemplate: () => {},
+  getTdsTemplates: () => {},
+  saveTdsAsTemplate: () => {},
+  getAutocompleteData: () => {},
+  addProductOffer: () => {},
+  openBroadcast: () => {}
 }
 
 export default ModalDetail

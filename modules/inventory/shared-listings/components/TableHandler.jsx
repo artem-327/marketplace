@@ -64,6 +64,16 @@ const TableHandler = props => {
   )
 }
 
-TableHandler.propTypes = {}
+TableHandler.propTypes = {
+  sharedListingsFilters: PropTypes.object,
+  datagrid: PropTypes.object,
+  handleVariableSave: PropTypes.func
+}
+
+TableHandler.defaultProps = {
+  sharedListingsFilters: {},
+  datagrid: {},
+  handleVariableSave: () => {}
+}
 
 export default TableHandler

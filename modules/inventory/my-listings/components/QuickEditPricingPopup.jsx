@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { Grid } from 'semantic-ui-react'
 import { Button } from 'formik-semantic-ui-fixed-validation'
+import PropTypes from 'prop-types'
 // Actions
 import * as Actions from '../../actions'
 // Styles
@@ -72,6 +73,26 @@ const QuickEditPricingPopup = props => {
       }}
     </StyledForm>
   )
+}
+
+QuickEditPricingPopup.propTypes = {
+  focusInput: PropTypes.string,
+  intl: PropTypes.object,
+  rawData: PropTypes.object,
+  datagrid: PropTypes.object,
+  closePricingEditPopup: PropTypes.func,
+  handlechange: PropTypes.func,
+  addProductOffer: PropTypes.func
+}
+
+QuickEditPricingPopup.defaultProps = {
+  focusInput: '',
+  intl: {},
+  rawData: {},
+  datagrid: {},
+  closePricingEditPopup: () => {},
+  handlechange: () => {},
+  addProductOffer: () => {}
 }
 
 export default withDatagrid(connect(null, { ...Actions })(injectIntl(QuickEditPricingPopup)))
