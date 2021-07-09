@@ -1,4 +1,6 @@
+// Api
 import api from '../../api'
+// Services
 import { generateQueryString } from '../../utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
@@ -65,14 +67,6 @@ export async function getWarehouses() {
   return response
 }
 
-export function linkAttachment(isLot, itemId, aId) {
-  return api.post(
-    `/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${
-      isLot ? 'lotId' : 'productOfferId'
-    }=${itemId}`
-  )
-}
-
 export function loadFile(attachment) {
   return api({
     baseURL: '',
@@ -129,9 +123,6 @@ export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response
 export const groupOffers = request =>
   api.post(`/prodex/api/product-offers/group-offers/`, request).then(response => response.data)
 
-export const detachOffers = productOfferIds =>
-  api.post(`/prodex/api/product-offers/detach-offers/`, productOfferIds).then(response => response.data)
-
 export const attachmentLinksToProductOffer = (attachmentId, productOfferId) =>
   api.post(
     `/prodex/api/attachment-links/to-product-offer?attachmentId=${attachmentId}&productOfferId=${productOfferId}`
@@ -150,9 +141,6 @@ export function updateMarkUp(poId, values) {
     .then(response => response.data)
     .catch(e => console.error(e))
 }
-
-//TODO missing implementation ???
-export const addVerificationDocuments = (attachment, type) => attachment
 
 export const saveTdsAsTemplate = (templateName, tdsFields) =>
   api

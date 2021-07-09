@@ -1,15 +1,16 @@
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
-//Components
+// Components
 import SharedListings from './SharedListings'
-//Actions
+// Actions
 import * as Actions from '../../actions'
 import { getTemplates, broadcastChange } from '../../../broadcast/actions'
+import { openBroadcast } from '../../../broadcast/actions'
 // Services
 import { getMappedRows } from './SharedListings.services'
-//HOC
+// HOC
 import { withDatagrid } from '../../../datagrid'
-//Selectors
+// Selectors
 import { makeGetBroadcastTemplates } from '../../selectors'
 
 const makeMapStateToProps = () => {
@@ -28,7 +29,8 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = {
   ...Actions,
   getTemplates,
-  broadcastChange
+  broadcastChange,
+  openBroadcast
 }
 
 export default injectIntl(withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(SharedListings)))

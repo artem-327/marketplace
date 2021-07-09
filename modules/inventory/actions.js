@@ -1,22 +1,19 @@
-import * as AT from './action-types'
-import * as api from './api'
 import moment from 'moment'
-import { getSafe } from '~/utils/functions'
-//Actions
-import { openBroadcast } from '../broadcast/actions'
-// import { createAsyncAction } from 'redux-promise-middleware-actions'
-
-// import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
-import { Datagrid } from '~/modules/datagrid'
-
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+// Api
+import * as api from './api'
+// Actions
 import {
   getDocumentTypes,
   getProductConditions,
   getProductForms,
   getProductGrades
 } from '../global-data/actions.js'
+// Services
+import { Datagrid } from '../datagrid'
+import { getSafe } from '../../utils/functions'
 
-export function initProductOfferEdit(id) {
+export const initProductOfferEdit = (id) => {
   return async dispatch => {
     dispatch(getDocumentTypes())
     dispatch(getProductConditions())
@@ -31,48 +28,17 @@ export function initProductOfferEdit(id) {
     }
   }
 }
-/** This implementation of addAttachment action couldn't be use for UploadAttachment component.
- *  UploadAttachment component expect return Promise from addAttachment action.
- *  This implementation doesn't return anything.
- */
-// export function addAttachment(attachment, type, additionalParams = {}) {
-//   return async dispatch => {
-//     await dispatch({
-//       type: AT.INVENTORY_ADD_ATTACHMENT,
-//       payload: api.addAttachment(attachment, type, additionalParams)
-//     })
-//     Datagrid && Datagrid.loadData()
-//   }
-// }
-
-export function addAttachment(attachment, type, additionalParams = {}) {
-  return {
-    type: AT.INVENTORY_ADD_ATTACHMENT,
-    async payload() {
-      const data = await api.addAttachment(attachment, type, additionalParams)
-      Datagrid && Datagrid.loadData()
-      return data
-    }
-  }
-}
-
-export function addVerificationDocuments(attachment, type) {
-  return {
-    type: AT.INVENTORY_ADD_VERIFICATION_DOCUMENTS,
-    async payload() {
-      return await api.addVerificationDocuments(attachment, type)
-    }
-  }
-}
-
-export const updateAttachment = (id, payload) => {
-  return async dispatch => {
-    await dispatch({ type: AT.INVENTORY_UPDATE_ATTACHMENT, payload: api.updateAttachment(id, payload) })
-    Datagrid.loadData()
-  }
-}
-
-export function addProductOffer(values, poId = false, simple = false, isGrouped = false, attachmentFiles = []) {
+export const addAttachment = createAsyncAction('INVENTORY_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
+  const data = await api.addAttachment(attachment, type, additionalParams)
+  Datagrid && Datagrid.loadData()
+  return data
+})
+export const updateAttachment = createAsyncAction('INVENTORY_UPDATE_ATTACHMENT', async (id, payload) => {
+  const data = await api.updateAttachment(id, payload)
+  Datagrid.loadData()
+  return data
+})
+export const addProductOffer = createAsyncAction('INVENTORY_ADD_PRODUCT_OFFER', async (values, poId = false, simple = false, isGrouped = false, attachmentFiles = []) => {
   let params = {}
 
   if (!simple) {
@@ -170,433 +136,104 @@ export function addProductOffer(values, poId = false, simple = false, isGrouped 
       paramsCleaned[paramKeys[i]] = params[paramKeys[i]]
     }
   }
-  return async dispatch => {
-    if (poId) {
-      if (attachmentFiles && attachmentFiles.length) {
-        attachmentFiles.forEach(attachment => {
-          dispatch({
-            type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
-            payload: api.attachmentLinksToProductOffer(attachment.id, poId)
-          })
-        })
-      }
-      if (isGrouped) {
-        const response = await api.updateGroupedProductOffer(poId, {
-          pkgAvailable: paramsCleaned.pkgAvailable,
-          lotNumber: paramsCleaned.lotNumber
-        })
-        await dispatch({
-          type: AT.INVENTORY_EDIT_GROUPED_PRODUCT_OFFER,
-          payload: response
-        })
-        return response
-      } else {
-        const response = await dispatch({
-          type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
-          payload: api.updateProductOffer(poId, paramsCleaned)
-        })
-        return response.value
-      }
-    } else {
-      const newProd = await dispatch({
-        type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-        payload: api.addProductOffer(paramsCleaned)
+
+  if (poId) {
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        api.attachmentLinksToProductOffer(attachment.id, poId)
       })
-
-      if (attachmentFiles && attachmentFiles.length) {
-        attachmentFiles.forEach(attachment => {
-          dispatch({
-            type: AT.ATTACHMENT_LINKS_TO_PRODUCT_OFFER,
-            payload: api.attachmentLinksToProductOffer(attachment.id, newProd.value.data.id)
-          })
-        })
-      }
-      return newProd.value
     }
-  }
-}
-
-export function downloadAttachment(id) {
-  return {
-    type: AT.INVENTORY_DOWNLOAD_ATTACHMENT,
-    payload: api.downloadAttachment(id)
-  }
-}
-
-export function downloadAttachmentPdf(id) {
-  return {
-    type: AT.INVENTORY_DOWNLOAD_ATTACHMENT_PDF,
-    payload: api.downloadAttachmentPdf(id)
-  }
-}
-
-export function errorTooLarge(fileName, fileMaxSize) {
-  return {
-    type: AT.ERROR_TOO_LARGE_FILE,
-    payload: {
-      fileName: blob.name,
-      maxSize: fileMaxSize
+    if (isGrouped) {
+      const response = await api.updateGroupedProductOffer(poId, {
+        pkgAvailable: paramsCleaned.pkgAvailable,
+        lotNumber: paramsCleaned.lotNumber
+      })
+      return response
+    } else {
+      const response = await api.updateProductOffer(poId, paramsCleaned)
+      return response.value
     }
-  }
-}
+  } else {
+    const newProd = await api.addProductOffer(paramsCleaned)
 
-export function errorUploadFail(fileName) {
-  return {
-    type: AT.ERROR_UPLOAD_FILE_FAILED,
-    payload: {
-      fileName: fileName
+    if (attachmentFiles && attachmentFiles.length) {
+      attachmentFiles.forEach(attachment => {
+        api.attachmentLinksToProductOffer(attachment.id, newProd.value.data.id)
+      })
     }
+    return newProd.value
   }
-}
-
-export function fillProduct(product) {
-  return {
-    type: AT.INVENTORY_FILL_PRODUCT,
-    payload: {
-      data: [
-        {
-          text: product.casProduct.casIndexName,
-          value: product,
-          key: product.casProduct.id
-        }
-      ]
-    }
-  }
-}
-
-export function findProducts(search) {
-  return {
-    type: AT.INVENTORY_FIND_PRODUCTS,
-    payload: api.findProducts(search)
-  }
-}
-
-export const getProductOffer = productOfferId => ({
-  type: AT.INVENTORY_GET_PRODUCT_OFFER,
-  payload: api.getProductOffer(productOfferId)
 })
-
-export const getSharedProductOffer = productOfferId => ({
-  type: AT.INVENTORY_GET_SHARED_PRODUCT_OFFER,
-  payload: api.getSharedProductOffer(productOfferId)
+export const downloadAttachment = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT', id => api.downloadAttachment(id))
+export const downloadAttachmentPdf = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT_PDF', id => api.downloadAttachmentPdf(id))
+export const findProducts = createAsyncAction('INVENTORY_FIND_PRODUCTS', search => api.findProducts(search))
+export const getProductOffer = createAsyncAction('INVENTORY_GET_PRODUCT_OFFER', productOfferId => api.getProductOffer(productOfferId))
+export const getSharedProductOffer = createAsyncAction('INVENTORY_GET_SHARED_PRODUCT_OFFER', productOfferId => api.getSharedProductOffer(productOfferId))
+export const deleteProductOffer = createAsyncAction('INVENTORY_DELETE_PRODUCT_OFFER', async productOfferId => {
+  await api.deleteProductOffer(productOfferId)
+  return productOfferId
 })
-
-export function deleteProductOffer(productOfferId) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.INVENTORY_DELETE_PRODUCT_OFFER,
-      async payload() {
-        await api.deleteProductOffer(productOfferId)
-        return productOfferId
-      }
-    })
-    // dispatch(getMyProductOffers())
-  }
-}
-
-export function getWarehouses() {
+export const getWarehouses = createAsyncAction('INVENTORY_GET_WAREHOUSES', () => api.getWarehouses())
+export const loadFile = createAsyncAction('INVENTORY_LOAD_FILE', (attachment) => api.loadFile(attachment))
+export const patchBroadcast = createAsyncAction('INVENTORY_PATCH_BROADCAST', async (broadcasted, productOfferId, oldStatus) => {
+  const response = await api.patchBroadcast(broadcasted, productOfferId)
   return {
-    type: AT.INVENTORY_GET_WAREHOUSES,
-    payload: api.getWarehouses()
+    broadcasted: response.status === 200 ? response.data : oldStatus,
+    productOfferId
   }
-}
-
-export function linkAttachment(isLot, itemId, aId) {
-  return {
-    type: AT.INVENTORY_LINK_ATTACHMENT,
-    payload: api.linkAttachment(isLot, itemId, aId)
-  }
-}
-
-export function loadFile(attachment) {
-  return {
-    type: AT.INVENTORY_LOAD_FILE,
-    payload: api.loadFile(attachment)
-  }
-}
-
-export function patchBroadcast(broadcasted, productOfferId, oldStatus) {
-  return {
-    type: AT.INVENTORY_PATCH_BROADCAST,
-    async payload() {
-      const response = await api.patchBroadcast(broadcasted, productOfferId)
-
-      return {
-        broadcasted: response.status === 200 ? response.data : oldStatus,
-        productOfferId
-      }
-    }
-  }
-}
-
-export function removeAttachmentLink(isLot, itemId, aId) {
-  return {
-    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK,
-    payload: api.removeAttachmentLink(isLot, itemId, aId)
-  }
-}
-
-export function removeAttachment(aId) {
-  return async dispatch => {
-    await dispatch({ type: AT.INVENTORY_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
-    Datagrid.removeRow(aId)
-  }
-}
-
-export function resetForm(initValues) {
-  return {
-    type: AT.INVENTORY_RESET_FORM,
-    payload: {
-      data: {
-        ...initValues
-      }
-    }
-  }
-}
-
-export function searchManufacturers(text, limit = false) {
-  return {
-    type: AT.INVENTORY_SEARCH_MANUFACTURERS,
-    async payload() {
-      const response = await api.searchManufacturers(text, limit)
-
-      return {
-        data: response.data
-          ? response.data.map(p => ({
-              text: p.name,
-              value: p.id,
-              key: p.id
-            }))
-          : []
-      }
-    }
-  }
-}
-
-export function searchOrigins(text, limit = false) {
-  return {
-    type: AT.INVENTORY_SEARCH_ORIGINS,
-    async payload() {
-      const response = await api.searchOrigins(text, limit)
-
-      return {
-        data: response.data
-          ? response.data.map(p => ({
-              text: p.name,
-              value: p.id,
-              key: p.id
-            }))
-          : []
-      }
-    }
-  }
-}
-
-// export function searchProducts(text) {
-//   return {
-//     type: AT.INVENTORY_SEARCH_PRODUCTS,
-//     async payload() {
-//       const response = await api.searchProducts(text)
-
-//       return {
-//         data: response.data ? response.data.map(p => ({
-//           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
-//           value: p,
-//           key: p.casProduct ? p.casProduct.id : '',
-//           id: p ? p.id : '',
-//           name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
-//           casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
-//         })) : []
-//       }
-//     }
-//   }
-// }
-
-export function uploadDocuments(isLot, productOfferId, fileIds) {
-  let files = [](function loop(j) {
-    if (j < fileIds.length)
-      new Promise((resolve, reject) => {
-        files[j] = fileIds[j].id.id
-        linkAttachment(isLot, productOfferId, files[j])
-          .then(() => {
-            resolve()
-          })
-          .catch(e => {
-            // TODO: solve errors
-            reject()
-          })
-      }).then(loop.bind(null, j + 1))
-  })(0)
-}
-
-export const getAutocompleteData = ({ searchUrl }) => ({
-  type: AT.GET_AUTOCOMPLETE_DATA,
-  payload: api.getAutocompleteData(searchUrl)
 })
-
-export const modalDetailTrigger = (row = null, force = false, activeTab = 0) => {
+export const removeAttachmentLink = createAsyncAction('INVENTORY_REMOVE_ATTACHMENT_LINK', (isLot, itemId, aId) => api.removeAttachmentLink(isLot, itemId, aId))
+export const removeAttachment = createAsyncAction('INVENTORY_REMOVE_ATTACHMENT', async (aId) => {
+  const data = await api.removeAttachment(aId)
+  Datagrid.removeRow(aId)
+  return data
+})
+export const searchManufacturers = createAsyncAction('INVENTORY_SEARCH_MANUFACTURERS', async (text, limit = false) => {
+  const response = await api.searchManufacturers(text, limit)
   return {
-    type: AT.MODAL_DETAIL_TRIGGER,
-    payload: { force: force, activeTab: activeTab, row: row }
+    data: response.data
+      ? response.data.map(p => ({
+          text: p.name,
+          value: p.id,
+          key: p.id
+        }))
+      : []
   }
-}
-
-export function closeModalDetail() {
+})
+export const searchOrigins = createAsyncAction('INVENTORY_SEARCH_ORIGINS', async (text, limit = false) => {
+  const response = await api.searchOrigins(text, limit)
   return {
-    type: AT.INVENTORY_CLOSE_MODAL
+    data: response.data
+      ? response.data.map(p => ({
+          text: p.name,
+          value: p.id,
+          key: p.id
+        }))
+      : []
   }
-}
-
-export function groupOffers(request) {
-  return {
-    type: AT.INVENTORY_GROUP_OFFERS,
-    payload: api.groupOffers(request)
-  }
-}
-
-export function detachOffers(productOfferIds) {
-  return {
-    type: AT.INVENTORY_DETACH_OFFERS,
-    payload: api.detachOffers(productOfferIds)
-  }
-}
-export function applyDatagridFilter(filter, reload = true) {
-  return {
-    type: AT.INVENTORY_APPLY_FILTER,
-    payload: { filter, reload }
-  }
-}
-
-export function removeAttachmentLinkProductOffer(attachmentId, productOfferId) {
-  return {
-    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK_PRODUCT_OFFER,
-    async payload() {
-      return await api.removeAttachmentLinkProductOffer(attachmentId, productOfferId)
-    }
-  }
-}
-
-export function setPricingEditOpenId(id) {
-  return {
-    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
-    payload: id
-  }
-}
-
-export function closePricingEditPopup() {
-  return {
-    type: AT.INVENTORY_SET_PRICING_EDIT_OPEN_ID,
-    payload: null
-  }
-}
-
-/*export function setExportModalOpenState(open) {
-  return {
-    type: AT.INVENTORY_SET_EXPORT_MODAL_OPEN_STATE,
-    payload: open
-  }
-}*/
-
-export function handleVariableSave(variable, value) {
-  return {
-    type: AT.INVENTORY_HANDLE_VARIABLE_CHANGE,
-    payload: { variable, value }
-  }
-}
-
-export function toggleColumnSettingModal(isOpen) {
-  return {
-    type: AT.TOGGLE_COLUMN_SETTING_MODAL,
-    payload: isOpen
-  }
-}
-export function handleProductCatalogUnmappedValue(value) {
-  return async dispatch => {
-    dispatch({
-      type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
-      payload: value
-    })
-  }
-}
-
-export function openPopup(rows = null) {
-  return {
-    type: AT.INVENTORY_OPEN_POPUP,
-    payload: rows
-  }
-}
-
-export function closePopup(rows = null) {
-  return {
-    type: AT.INVENTORY_CLOSE_POPUP,
-    payload: rows
-  }
-}
-
-export function saveTdsAsTemplate(templateName, tdsFields) {
-  return {
-    type: AT.TDS_SAVE_AS_TEMPLATE,
-    async payload() {
-      return await api.saveTdsAsTemplate(templateName, tdsFields)
-    }
-  }
-}
-
-export function getTdsTemplates() {
-  return {
-    type: AT.TDS_GET_TEMPLATES,
-    async payload() {
-      return await api.getTdsTemplates()
-    }
-  }
-}
-
-export function deleteTdsTemplate(templateId) {
-  return {
-    type: AT.TDS_DELETE_TEMPLATE,
-    async payload() {
-      const response = await api.deleteTdsTemplate(templateId)
-      return templateId
-    }
-  }
-}
-
-export function changeBroadcast(broadcastOption) {
-  return {
-    type: AT.CHANGE_BROADCAST,
-    payload: broadcastOption
-  }
-}
-
-export function getMarkUp(poId) {
-  return {
-    type: AT.INVENTORY_GET_MARKUP,
-    payload: api.getMarkUp(poId)
-  }
-}
-
-export function updateMarkUp(poId, values) {
-  return {
-    type: AT.INVENTORY_UPDATE_MARKUP,
-    payload: api.updateMarkUp(poId, values)
-  }
-}
-
-export function setActiveTab(tab) {
-  return {
-    type: AT.SET_ACTIVE_TAB,
-    payload: tab
-  }
-}
-
-export function triggerPriceBookModal(isOpen, rowPriceBook) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.TRIGGER_PRICE_BOOK_MODAL,
-      payload: { isOpen, rowPriceBook }
-    })
-    if (rowPriceBook && isOpen) {
-      await dispatch(openBroadcast(rowPriceBook))
-    }
-  }
-}
+})
+export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA', ({ searchUrl }) => api.getAutocompleteData(searchUrl))
+export const groupOffers = createAsyncAction('INVENTORY_GROUP_OFFERS', (request) => api.groupOffers(request))
+export const removeAttachmentLinkProductOffer = createAsyncAction('INVENTORY_REMOVE_ATTACHMENT_LINK_PRODUCT_OFFER', (attachmentId, productOfferId) => api.removeAttachmentLinkProductOffer(attachmentId, productOfferId))
+export const saveTdsAsTemplate = createAsyncAction('TDS_SAVE_AS_TEMPLATE', (templateName, tdsFields) => api.saveTdsAsTemplate(templateName, tdsFields))
+export const getTdsTemplates = createAsyncAction('TDS_GET_TEMPLATES', () => api.getTdsTemplates())
+export const deleteTdsTemplate = createAsyncAction('TDS_DELETE_TEMPLATE', async (templateId) => {
+  await api.deleteTdsTemplate(templateId)
+  return templateId
+})
+export const getMarkUp = createAsyncAction('INVENTORY_GET_MARKUP', poId => api.getMarkUp(poId))
+export const updateMarkUp = createAsyncAction('INVENTORY_UPDATE_MARKUP', (poId, values) => api.updateMarkUp(poId, values))
+export const modalDetailTrigger = createAction('MODAL_DETAIL_TRIGGER', (row = null, force = false, activeTab = 0) => ({ force: force, activeTab: activeTab, row: row }))
+export const closeModalDetail = createAction('INVENTORY_CLOSE_MODAL')
+export const applyDatagridFilter = createAction('INVENTORY_APPLY_FILTER', (filter, reload = true) => ({ filter, reload }))
+export const setPricingEditOpenId = createAction('INVENTORY_SET_PRICING_EDIT_OPEN_ID', id => id)
+export const closePricingEditPopup = createAction('INVENTORY_SET_PRICING_EDIT_OPEN_ID', () => null)
+export const handleVariableSave = createAction('INVENTORY_HANDLE_VARIABLE_CHANGE', (variable, value) => ({ variable, value }))
+export const toggleColumnSettingModal = createAction('TOGGLE_COLUMN_SETTING_MODAL', isOpen => isOpen)
+export const handleProductCatalogUnmappedValue = createAction('HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE', value => value)
+export const openPopup = createAction('INVENTORY_OPEN_POPUP', (rows = null) => rows)
+export const closePopup = createAction('INVENTORY_CLOSE_POPUP', (rows = null) => rows)
+export const resetForm = createAction('INVENTORY_RESET_FORM', initValues => ({data: {...initValues}}))
+export const changeBroadcast = createAction('CHANGE_BROADCAST', broadcastOption => broadcastOption)
+export const setActiveTab = createAction('SET_ACTIVE_TAB', tab => tab)
+export const triggerPriceBookModal = createAction('TRIGGER_PRICE_BOOK_MODAL', (isOpen, rowPriceBook) => ({ isOpen, rowPriceBook }))
