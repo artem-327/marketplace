@@ -1,6 +1,6 @@
-import reducer, { initialState } from './reducers'
+import reducer, { initialState } from './reducer'
 
-describe('`Admin` reducers', () => {
+describe('`Inventory` reducers', () => {
   test('when previous state is undefined, return false', () => {
     const newState = reducer(undefined, {})
     expect(newState).toStrictEqual(initialState)

@@ -4,7 +4,7 @@ import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 // Utils
 import { findByTestAttr, checkProps } from '../../../../test/testUtils'
 //Components
-import InviteModal from './InviteModal'
+import UploadAttachment from './UploadAttachment'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
@@ -27,18 +27,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<InviteModal {...setupProps} />)
+  return shallow(<UploadAttachment {...setupProps} />)
 }
 
 /**
- * @test { InviteModal }
+ * @test { UploadAttachment }
  */
-describe('`InviteModal` render component', () => {
+describe('`UploadAttachment` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(InviteModal, defaultProps)
+    checkProps(UploadAttachment, defaultProps)
   })
 
-  test('renders InviteModal component to be there', () => {
+  test('renders UploadAttachment component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

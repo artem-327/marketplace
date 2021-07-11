@@ -2,22 +2,20 @@ import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
-import { findByTestAttr, checkProps } from '../../../../test/testUtils'
+import { findByTestAttr, checkProps } from '../../../../../test/testUtils'
 //Components
-import InviteModal from './InviteModal'
+import ModalTdsList from './ModalTdsList'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  className: '',
-  content: '',
-  files: [],
-  type: '',
-  uploadClass: '',
-  uploadedClass: '',
-  acceptFiles: '',
-  listDocumentTypes: [],
-  noWrapperStyles: false
+  open: false,
+  closeTdsModal: () => {},
+  setValues: () => {},
+  setFieldTouched: () => {},
+  deleteTdsTemplate: () => {},
+  tdsTemplatesLoading: false,
+  tdsTemplates: []
 }
 
 /**
@@ -27,18 +25,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<InviteModal {...setupProps} />)
+  return shallow(<ModalTdsList {...setupProps} />)
 }
 
 /**
- * @test { InviteModal }
+ * @test { ModalTdsList }
  */
-describe('`InviteModal` render component', () => {
+describe('`ModalTdsList` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(InviteModal, defaultProps)
+    checkProps(ModalTdsList, defaultProps)
   })
 
-  test('renders InviteModal component to be there', () => {
+  test('renders ModalTdsList component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

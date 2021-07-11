@@ -4,20 +4,27 @@ import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 // Utils
 import { findByTestAttr, checkProps } from '../../../../test/testUtils'
 //Components
-import InviteModal from './InviteModal'
+import MyProducts from './MyProducts'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  className: '',
-  content: '',
-  files: [],
-  type: '',
-  uploadClass: '',
-  uploadedClass: '',
-  acceptFiles: '',
-  listDocumentTypes: [],
-  noWrapperStyles: false
+  myProductsFilters: null,
+  datagrid: {},
+  intl: {},
+  action: '',
+  rows: [],
+  actionId: null,
+  editedId: null,
+  loaded: false,
+  loading: false,
+  isOpenPopup: false,
+  isOpenImportPopup: false,
+  openPopup: () => {},
+  openImportPopup: () => {},
+  handleVariableSave: () => {},
+  handleProductCatalogUnmappedValue: () => {},
+  deleteProduct: () => {}
 }
 
 /**
@@ -27,18 +34,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<InviteModal {...setupProps} />)
+  return shallow(<MyProducts {...setupProps} />)
 }
 
 /**
- * @test { InviteModal }
+ * @test { MyProducts }
  */
-describe('`InviteModal` render component', () => {
+describe('`MyProducts` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(InviteModal, defaultProps)
+    checkProps(MyProducts, defaultProps)
   })
 
-  test('renders InviteModal component to be there', () => {
+  test('renders MyProducts component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

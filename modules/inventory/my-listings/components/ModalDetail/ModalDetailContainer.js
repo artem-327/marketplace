@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 // Components
 import ModalDetail from './ModalDetail'
@@ -140,4 +139,4 @@ const makeMapStateToProps = () => {
   return mapStateToProps
 }
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(ModalDetail)))
+export default connect(makeMapStateToProps, mapDispatchToProps)(withToastManager(ModalDetail))

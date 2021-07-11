@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import ProductImportPopup from './ProductImportPopup'
 // Actions
@@ -98,4 +97,4 @@ const makeMapStateToProps = () => {
     }
     return mapStateToProps
 }
-export default connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(ProductImportPopup)))
+export default connect(makeMapStateToProps, mapDispatchToProps)(withToastManager(ProductImportPopup))

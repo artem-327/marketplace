@@ -96,10 +96,7 @@ const MyProducts = props => {
                   icon='search'
                   name='searchInput'
                   value={filterValue ? filterValue.searchInput : ''}
-                  placeholder={formatMessage({
-                    id: 'settings.tables.products.search',
-                    defaultMessage: 'Search product by name, code'
-                  })}
+                  placeholder={<FormattedMessage id='settings.tables.products.search' defaultMessage='Search product by name, code' />}
                   onChange={(e, data) => handleFilterChangeInputSearch(data, props, state, setState)}
                 />
               </div>
@@ -109,25 +106,22 @@ const MyProducts = props => {
               <div className='column'>
                 <DropdownStyled
                   style={{ width: '200px' }}
-                  placeholder={formatMessage({
-                    id: 'operations.tables.companyProductCatalog.MappedText',
-                    defaultMessage: 'Select mapped/unmapped only'
-                  })}
+                  placeholder={<FormattedMessage id='operations.tables.companyProductCatalog.MappedText' defaultMessage='Select mapped/unmapped only' />}
                   selection
                   options={[
                     {
                       key: 0,
-                      text: formatMessage({ id: 'operations.noSelection', defaultMessage: 'All' }),
+                      text: <FormattedMessage id='operations.noSelection' defaultMessage='All' />,
                       value: 'ALL'
                     },
                     {
                       key: 1,
-                      text: formatMessage({ id: 'operations.unmapped', defaultMessage: 'Unmapped Only' }),
+                      text: <FormattedMessage id='operations.unmapped' defaultMessage='Unmapped Only' />,
                       value: 'UNMAPPED'
                     },
                     {
                       key: 2,
-                      text: formatMessage({ id: 'operations.mappedOnly', defaultMessage: 'Mapped Only' }),
+                      text: <FormattedMessage id='operations.mappedOnly' defaultMessage='Mapped Only' />,
                       value: 'MAPPED'
                     }
                   ]}

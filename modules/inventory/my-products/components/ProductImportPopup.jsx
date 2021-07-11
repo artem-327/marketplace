@@ -13,6 +13,7 @@ import {
 import { FormattedMessage } from 'react-intl'
 import _invert from 'lodash/invert'
 import PropTypes from 'prop-types'
+import { injectIntl } from 'react-intl'
 // Components
 import Upload from './Steps/UploadCSV'
 import Map from './Steps/MapContainer'
@@ -452,4 +453,4 @@ ProductImportPopup.defaultProps = {
   changeBroadcast: () => {}
 }
 
-export default ProductImportPopup
+export default injectIntl(ProductImportPopup)

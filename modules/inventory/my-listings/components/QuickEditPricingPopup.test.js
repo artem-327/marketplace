@@ -4,20 +4,18 @@ import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 // Utils
 import { findByTestAttr, checkProps } from '../../../../test/testUtils'
 //Components
-import InviteModal from './InviteModal'
+import QuickEditPricingPopup from './QuickEditPricingPopup'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  className: '',
-  content: '',
-  files: [],
-  type: '',
-  uploadClass: '',
-  uploadedClass: '',
-  acceptFiles: '',
-  listDocumentTypes: [],
-  noWrapperStyles: false
+  focusInput: '',
+  intl: {},
+  rawData: {},
+  datagrid: {},
+  closePricingEditPopup: () => {},
+  handlechange: () => {},
+  addProductOffer: () => {}
 }
 
 /**
@@ -27,18 +25,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<InviteModal {...setupProps} />)
+  return shallow(<QuickEditPricingPopup {...setupProps} />)
 }
 
 /**
- * @test { InviteModal }
+ * @test { QuickEditPricingPopup }
  */
-describe('`InviteModal` render component', () => {
+describe('`QuickEditPricingPopup` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(InviteModal, defaultProps)
+    checkProps(QuickEditPricingPopup, defaultProps)
   })
 
-  test('renders InviteModal component to be there', () => {
+  test('renders QuickEditPricingPopup component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

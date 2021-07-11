@@ -2,22 +2,17 @@ import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
-import { findByTestAttr, checkProps } from '../../../../test/testUtils'
+import { findByTestAttr, checkProps } from '../../../../../test/testUtils'
 //Components
-import InviteModal from './InviteModal'
+import ModalTdsSaveAs from './ModalTdsSaveAs'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  className: '',
-  content: '',
-  files: [],
-  type: '',
-  uploadClass: '',
-  uploadedClass: '',
-  acceptFiles: '',
-  listDocumentTypes: [],
-  noWrapperStyles: false
+  open: false,
+  closeTdsModal: () => {},
+  saveTdsAsTemplate: () => {},
+  tdsFields: []
 }
 
 /**
@@ -27,18 +22,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<InviteModal {...setupProps} />)
+  return shallow(<ModalTdsSaveAs {...setupProps} />)
 }
 
 /**
- * @test { InviteModal }
+ * @test { ModalTdsSaveAs }
  */
-describe('`InviteModal` render component', () => {
+describe('`ModalTdsSaveAs` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(InviteModal, defaultProps)
+    checkProps(ModalTdsSaveAs, defaultProps)
   })
 
-  test('renders InviteModal component to be there', () => {
+  test('renders ModalTdsSaveAs component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })
