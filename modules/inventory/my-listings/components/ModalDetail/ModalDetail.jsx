@@ -22,6 +22,7 @@ import { Plus, ChevronDown, ChevronUp, Folder } from 'react-feather'
 import moment from 'moment'
 import { Warning } from '@material-ui/icons'
 import PropTypes from 'prop-types'
+import { injectIntl } from 'react-intl'
 //Components
 import { DateInput } from '../../../../../components/custom-formik'
 import confirm from '../../../../../components/Confirmable/confirm'
@@ -1642,4 +1643,4 @@ ModalDetail.defaultProps = {
   openBroadcast: () => {}
 }
 
-export default ModalDetail
+export default injectIntl(ModalDetail)

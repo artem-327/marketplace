@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 // Components
 import SharedListings from './SharedListings'
 // Actions
@@ -33,4 +32,4 @@ const mapDispatchToProps = {
   openBroadcast
 }
 
-export default injectIntl(withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(SharedListings)))
+export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(SharedListings))

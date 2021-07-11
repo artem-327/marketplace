@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
@@ -168,4 +169,4 @@ SharedListings.defaultProps = {
   intl: {}
 }
 
-export default SharedListings
+export default injectIntl(SharedListings)

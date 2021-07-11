@@ -130,7 +130,7 @@ const Preview = props => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {CSV.bodyCSV.map((row, i) => (
+        {CSV?.bodyCSV?.map((row, i) => (
           <Table.Row key={i}>
             {row.columns.map(cell => {
               return (
