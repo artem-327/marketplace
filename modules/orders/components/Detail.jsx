@@ -589,13 +589,6 @@ const Detail = props => {
                                   </TableRowData>
                                 </Table.Header>
                                 <Table.Body>
-                                  {/* Commented based on https://bluepallet.atlassian.net/browse/DT-333 */}
-                                  {/* <TableRowData>
-                                    <Table.Cell>
-                                      <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
-                                  </TableRowData> */}
                                   {order?.transactionFee ? (
                                     <TableRowData>
                                       <Table.Cell>
