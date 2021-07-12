@@ -52,10 +52,6 @@ export const getInitialFormValues = sidebarValues => {
     epaReceive: getSafe(() => sidebarValues.epaReceive, false),
     epaReceiveFlag: getSafe(() => sidebarValues.epaReceive, false) || getSafe(() => sidebarValues.epaReceiveVerify, false),
     epaCertificateFile: getSafe(() => sidebarValues.epaCertificateFile.name, null),
-    taxExemptReceive: getSafe(() => sidebarValues.taxExemptReceive, false),
-    taxExemptReceiveFlag: getSafe(() => sidebarValues.taxExemptReceive, false) || getSafe(() => sidebarValues.taxExemptReceiveVerify, false),
-    taxExemptCertificateFile: getSafe(() => sidebarValues.taxExemptCertificateFile.name, null),
-    //warehouse: getSafe(() => sidebarValues.warehouse, false),
     deliveryAddress: {
       address: {
         streetAddress: getSafe(() => sidebarValues.deliveryAddress.address.streetAddress, ''),
@@ -118,7 +114,6 @@ export const submitHandler = async (values, helpers) => {
   requestData = {
     deaListReceiveFlag: values.deaListReceiveFlag,
     epaReceiveFlag: values.epaReceiveFlag,
-    taxExemptReceiveFlag: values.taxExemptReceiveFlag,
     deliveryAddress: {
       ...values.deliveryAddress,
       readyTime:

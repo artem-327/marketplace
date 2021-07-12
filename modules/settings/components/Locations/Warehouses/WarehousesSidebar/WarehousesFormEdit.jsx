@@ -46,7 +46,6 @@ const WarehousesFormEdit = ({
   sidebarValues,
   addAttachment,
   addDeaAttachment,
-  addTaxExemptAttachment,
   loadFile,
   removeAttachment,
   attachmentFiles,
@@ -57,7 +56,6 @@ const WarehousesFormEdit = ({
   const { formatMessage } = intl
   const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
   const deaDocumentType = 17
-  const taxExemptionType = 13
   const fileMaxSize = 20
   return (
     <>
@@ -300,92 +298,6 @@ const WarehousesFormEdit = ({
           </>
         )}
         <HorizontalRule />
-        <FormGroup data-test='settings_warehouse_popup_certifications_tax_drpdn'>
-          <Dropdown
-            label={formatMessage({
-              id: 'settings.certifications.taxExemptPurchase',
-              defaultMessage:
-                'Will this location receive tax exempt purchases? (not applicable for AK, OR, MT, VT or DE)'
-            })}
-            name='taxExemptReceiveFlag'
-            options={[
-              {
-                text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
-                value: false
-              },
-              {
-                text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
-                value: true
-              }
-            ]}
-            inputProps={{
-              disabled: !sidebarValues
-            }}
-          />
-        </FormGroup>
-        {values.taxExemptReceiveFlag && (
-          <>
-            <p>
-              <FormattedMessage
-                id='settings.certifications.dea.paragraph'
-                defaultMessage='Any location receiving chemicals published on the DEA List I must provide the appropriate certifications before an order can be placed.  You may upload the certifications below for verification.'
-              />
-            </p>
-            <UploadAttachment
-              {...sidebarValues}
-              attachments={formikProps.values.attachments.filter(
-                att => getSafe(() => att.documentType.id, 0) === taxExemptionType
-              )}
-              //removeAttachment={removeAttachment}
-              hideAttachments={true}
-              edit={getSafe(() => sidebarValues.id, '')}
-              name='attachments'
-              type={taxExemptionType.toString()}
-              filesLimit={1}
-              fileMaxSize={fileMaxSize}
-              //listDocumentTypes={this.props.listDocumentTypes}
-              noWrapperStyles
-              onChange={files => {
-                addCertificateAttachment(files, sidebarValues?.id, listDocumentTypes, toastManager, formikProps, {
-                  loadFile,
-                  addAttachment: addTaxExemptAttachment
-                })
-                formikProps.setFieldValue('taxExemptCertificateFile', files[0].name)
-              }}
-              onRemoveFile={async id => {
-                await formikProps.setFieldValue(
-                  'attachments',
-                  formikProps.values.reduce((filteredAttachments, att) => {
-                    if (att.documentType !== taxExemptionType) filteredAttachments.push(att)
-
-                    return filteredAttachments
-                  }, [])
-                )
-              }}
-              data-test='settings_warehouse_popup_certifications_dea_file'
-              emptyContent={
-                <DivBrowseFile background='white'>
-                  {formikProps.values.taxExemptCertificateFile ? formikProps.values.taxExemptCertificateFile : (
-                    <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
-                  )}
-                  <DivIcon>
-                    <ImageResized src={sidebarValues?.taxExemptReceive ? GreenIcon : RedIcon} />
-                  </DivIcon>
-                </DivBrowseFile>
-              }
-              uploadedContent={
-                <DivBrowseFile>
-                  {formikProps.values.taxExemptCertificateFile ? formikProps.values.taxExemptCertificateFile : (
-                    <FormattedMessage id='settings.certifications.taxExempt.fileText' defaultMessage='State Exempt Certificate' />
-                  )}
-                  <DivIcon>
-                    <ImageResized src={sidebarValues?.taxExemptReceive ? GreenIcon : RedIcon} />
-                  </DivIcon>
-                </DivBrowseFile>
-              }
-            />
-          </>
-        )}
       </SegmentCertifications>
 
       <DivHeader>
