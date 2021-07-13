@@ -82,6 +82,7 @@ export const handleFilterChangeInputSearch = (data, props, state, setState) => {
     [data.name]: data.value
     }
     setState({ ...state, filterValue: filter })
+    props.handleVariableSave('myProductsFilters', { ...state, filterValue: filter })
     handleFiltersValue(filter, props)
 }
 
@@ -98,6 +99,7 @@ export const handleFilterChangeMappedUnmapped = (data, props, state, setState) =
     [data.name]: data.value
     }
     setState({ ...state, filterValue: filter })
+    props.handleVariableSave('myProductsFilters', { ...state, filterValue: filter })
     handleFiltersValue(filter, props)
 }
 

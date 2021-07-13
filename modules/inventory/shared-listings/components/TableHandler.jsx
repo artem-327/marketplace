@@ -26,16 +26,12 @@ const TableHandler = props => {
 
     if (sharedListingsFilters) {
       setState(sharedListingsFilters)
-      if (sharedListingsFilters) {
-        props.datagrid.clear()
-        handleFiltersValue(sharedListingsFilters)
-      }
+      props.datagrid.clear()
+      handleFiltersValue(sharedListingsFilters)
     } else {
       props.datagrid.clear()
       handleFiltersValue(state)
     }
-
-    return () => props.handleVariableSave('sharedListingsFilters', state)
   }, [])
 
   const handleFiltersValue = debounce(filter => {
@@ -45,17 +41,16 @@ const TableHandler = props => {
 
   const SearchByNamesAndTagsChanged = data => {
     setState({ SearchByNamesAndTags: data })
+    props.handleVariableSave('sharedListingsFilters', { SearchByNamesAndTags: data })
     handleFiltersValue({ SearchByNamesAndTags: data })
   }
-
-  const { sharedListingsFilters } = props
 
   return (
     <DivTableHandler>
       <DivCustomSearchNameTags>
         <SearchByNamesAndTags
           onChange={SearchByNamesAndTagsChanged}
-          initFilterState={getSafe(() => sharedListingsFilters.SearchByNamesAndTags, null)}
+          initFilterState={getSafe(() => props.sharedListingsFilters.SearchByNamesAndTags, null)}
           filterType='sharedListings'
           filterApply={false}
         />

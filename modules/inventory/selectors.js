@@ -96,6 +96,7 @@ const getMapName = store => getSafe(() => store.settings.mapName, null)
 const getMaps = store => getSafe(() => store.settings.maps, null)
 const getSharedListingsFilters = store => getSafe(() => store.simpleAdd.sharedListingsFilters, null)
 const getLoadingMarkup = store => getSafe(() => store.simpleAdd.loadingMarkup, false)
+const getMyProductsFilters = store => getSafe(() => store.simpleAdd.myProductsFilters, null)
 
 export const makeGetBroadcastTemplates = () => createSelector([getBroadcastTemplates], broadcastTemplates => broadcastTemplates)
 export const makeGetApplicationName = () => createSelector([getApplicationName], applicationName => applicationName)
@@ -159,3 +160,4 @@ export const makeGetMapName = () => createSelector([getMapName], mapName => mapN
 export const makeGetMaps = () => createSelector([getMaps], maps => maps)
 export const makeGetSharedListingsFilters = () => createSelector([getSharedListingsFilters], sharedListingsFilters => sharedListingsFilters)
 export const makeGetLoadingMarkup = () => createSelector([getLoadingMarkup], loadingMarkup => loadingMarkup)
+export const makeGetMyProductsFilters = () => createSelector([getMyProductsFilters], myProductsFilters => myProductsFilters)

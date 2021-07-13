@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Button, Input } from 'semantic-ui-react'
+import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
@@ -35,7 +36,7 @@ const MyProducts = props => {
     const { myProductsFilters } = props
 
     if (myProductsFilters) {
-      setState({...state, ...myProductsFilters})
+      setState(myProductsFilters)
       const filter = myProductsFilters.filterValue
       if (filter) {
         props.datagrid.clear()
@@ -48,8 +49,6 @@ const MyProducts = props => {
         handleFiltersValue(filter, props)
       }
     }
-
-    return () => props.handleVariableSave('myProductsFilters', state)
   }, [])
 
   const prevProps = usePrevious(props)
@@ -71,16 +70,13 @@ const MyProducts = props => {
     rows,
     openPopup,
     openImportPopup,
-    intl,
+    intl: {formatMessage},
     datagrid,
     loading,
     editedId,
     isOpenPopup,
     isOpenImportPopup
   } = props
-
-  let { filterValue } = state
-  const { formatMessage } = intl
 
   return (
     <>
@@ -95,8 +91,11 @@ const MyProducts = props => {
                   style={{ width: '370px' }}
                   icon='search'
                   name='searchInput'
-                  value={filterValue ? filterValue.searchInput : ''}
-                  placeholder={<FormattedMessage id='settings.tables.products.search' defaultMessage='Search product by name, code' />}
+                  value={state.filterValue.searchInput}
+                  placeholder={formatMessage({
+                    id: 'settings.tables.products.search',
+                    defaultMessage: 'Search product by name, code'
+                  })}
                   onChange={(e, data) => handleFilterChangeInputSearch(data, props, state, setState)}
                 />
               </div>
@@ -106,7 +105,10 @@ const MyProducts = props => {
               <div className='column'>
                 <DropdownStyled
                   style={{ width: '200px' }}
-                  placeholder={<FormattedMessage id='operations.tables.companyProductCatalog.MappedText' defaultMessage='Select mapped/unmapped only' />}
+                  placeholder={formatMessage({
+                    id: 'operations.tables.companyProductCatalog.MappedText',
+                    defaultMessage: 'Select mapped/unmapped only'
+                  })}
                   selection
                   options={[
                     {
@@ -126,7 +128,7 @@ const MyProducts = props => {
                     }
                   ]}
                   name='productType'
-                  value={filterValue.productType}
+                  value={state.filterValue.productType}
                   onChange={(e, data) => handleFilterChangeMappedUnmapped(data, props, state, setState)}
                   data-test='settings_dwolla_unmapped_only_drpdn'
                 />
@@ -218,4 +220,4 @@ MyProducts.defaultProps = {
   deleteProduct: () => {}
 }
 
-export default MyProducts
+export default injectIntl(MyProducts)
