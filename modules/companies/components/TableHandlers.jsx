@@ -33,8 +33,6 @@ import { TEXTS_TABLE } from './TablesHandlers.constants'
 // Styles
 import { PositionHeaderSettings, DivCustomRow } from './TablesHandlers.styles'
 
-const stateValueRef = createRef() // Needed ref for useEffect/return function to access the latest state
-
 const TablesHandlers = props => {
   const [state, setState] = useState(
     {
@@ -61,8 +59,6 @@ const TablesHandlers = props => {
 
   const prevCurrentTab = usePrevious(currentTab)
 
-  stateValueRef.current = state     // Needed ref for useEffect/return function to access the latest state
-
   useEffect(() => {
     const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
@@ -71,11 +67,6 @@ const TablesHandlers = props => {
     } else {
       let filterValue = state[currentTab]
       handleFiltersValue(filterValue, props)
-    }
-
-    return () => {
-      // Needed to use ref here to access the latest state
-      props.saveFilters(stateValueRef.current)
     }
   }, [])
 

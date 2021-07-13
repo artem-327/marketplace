@@ -57,6 +57,14 @@ export const handleFilterChangeInputSearch = (e, data, state, setState, props) =
     ...state[currentTab],
     [data.name]: data.value
   }
+
+  props.saveFilters({
+    ...state,
+    [currentTab]: {
+      ...state[currentTab],
+      [data.name]: data.value
+    }
+  })
   handleFiltersValue(filter, props)
 }
 
