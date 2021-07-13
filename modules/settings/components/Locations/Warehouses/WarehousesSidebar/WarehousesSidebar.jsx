@@ -17,7 +17,6 @@ import {
   removeAttachment,
   addAttachment,
   addDeaAttachment,
-  addTaxExemptAttachment,
   loadFile,
   setAttachmentFiles
 } from '../../../../actions'
@@ -73,7 +72,6 @@ class WarehousesSidebar extends Component {
       removeAttachment,
       addAttachment,
       addDeaAttachment,
-      addTaxExemptAttachment,
       loadFile,
       sidebarValues,
       attachmentFiles,
@@ -90,7 +88,6 @@ class WarehousesSidebar extends Component {
             formikProps={formikProps}
             addAttachment={addAttachment}
             addDeaAttachment={addDeaAttachment}
-            addTaxExemptAttachment={addTaxExemptAttachment}
             loadFile={loadFile}
             removeAttachment={removeAttachment}
             attachmentFiles={attachmentFiles}
@@ -268,7 +265,6 @@ const mapDispatchToProps = {
   removeAttachment,
   addAttachment,
   addDeaAttachment,
-  addTaxExemptAttachment,
   loadFile,
   setAttachmentFiles
 }
