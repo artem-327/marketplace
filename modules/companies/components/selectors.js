@@ -68,8 +68,6 @@ export const makeGetCompaniesDatagridRows = () => {
 const getEditId = state => state.companiesAdmin.popupValues && state.companiesAdmin.popupValues.id
 const getLoading = state => state.companiesAdmin.loading
 const getEditedId = state => state.companiesAdmin.editedId
-const getUserRoles = state => state.globalData.companyUserRoles
-const getAdminRoles = state => state.globalData.adminRoles.map(d => d.id)
 const getIsOpenSidebar = state => state.companiesAdmin.isOpenSidebar
 const getCompanyListDataRequest = state => state.companiesAdmin.companyListDataRequest
 const getReRegisterP44Pending = state => state.companiesAdmin.reRegisterP44Pending
@@ -77,8 +75,6 @@ const getReRegisterP44Pending = state => state.companiesAdmin.reRegisterP44Pendi
 export const makeGetEditId = () => createSelector([getEditId], editId => editId)
 export const makeGetLoading = () => createSelector([getLoading], loading => loading)
 export const makeGetEditedId = () => createSelector([getEditedId], editedId => editedId)
-export const makeGetUserRoles = () => createSelector([getUserRoles], userRoles => userRoles)
-export const makeGetAdminRoles = () => createSelector([getAdminRoles], adminRoles => adminRoles)
 export const makeIsOpenSidebar = () => createSelector([getIsOpenSidebar], adminRoles => adminRoles)
 export const makeCompanyListDataRequest = () => createSelector([getCompanyListDataRequest], adminRoles => adminRoles)
 export const makeReRegisterP44Pending = () => createSelector([getReRegisterP44Pending], adminRoles => adminRoles)
