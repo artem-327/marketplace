@@ -115,7 +115,6 @@ const ProductPopup = props => {
 
   const {
     closePopup,
-    openGlobalAddForm,
     productsUnitsType,
     popupValues,
     freightClasses,
@@ -144,7 +143,7 @@ const ProductPopup = props => {
       initialValues={getInitialFormValues(props)}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
+      onReset={() => closePopup()}
       onSubmit={(values, actions) => handlerSubmit(values, actions, props, attachments, setLoadSidebar)}
       loading={loading}>
       {formikProps => {
@@ -162,7 +161,7 @@ const ProductPopup = props => {
                 <>
                   <div>
                     <span>
-                      {openGlobalAddForm || !popupValues ? (
+                      {!popupValues ? (
                         <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
                       ) : (
                         <FormattedMessage id='global.editProduct' defaultMessage='Edit Product' />
@@ -172,7 +171,7 @@ const ProductPopup = props => {
                   </div>
                   <div style={{ position: 'absolute', right: '20px' }}>
                     <XIcon
-                      onClick={() => (openGlobalAddForm ? openGlobalAddForm('') : closePopup())}
+                      onClick={() => closePopup()}
                       className='close-icon'
                     />
                   </div>
@@ -780,11 +779,9 @@ const ProductPopup = props => {
               </FlexContent>
 
               <DivBottomButtons className='bottom-buttons'>
-                {!openGlobalAddForm && (
-                  <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
-                  </BasicButton>
-                )}
+                <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                </BasicButton>
                 <Popup
                   disabled={editable}
                   trigger={
@@ -857,7 +854,6 @@ ProductPopup.propTypes = {
   getDocumentTypes: PropTypes.func,
   addNmfcNumber: PropTypes.func,
   closePopup: PropTypes.func,
-  openGlobalAddForm: PropTypes.func,
   removeAttachmentLinkCompanyProduct: PropTypes.func,
   removeAttachment: PropTypes.func,
   handleSubmitProductEditPopup: PropTypes.func,
@@ -898,7 +894,6 @@ ProductPopup.defaultProps = {
   getDocumentTypes: () => {},
   addNmfcNumber: () => {},
   closePopup: () => {},
-  openGlobalAddForm: () => {},
   removeAttachmentLinkCompanyProduct: () => {},
   removeAttachment: () => {},
   handleSubmitProductEditPopup: () => {},

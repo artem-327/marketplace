@@ -231,8 +231,7 @@ export const handlerSubmit = async (values, actions, props, attachments, setLoad
     handleSubmitProductEditPopup,
     handleSubmitProductAddPopup,
     datagrid,
-    closePopup,
-    openGlobalAddForm
+    closePopup
   } = props
   delete values.casProducts
 
@@ -289,12 +288,9 @@ export const handlerSubmit = async (values, actions, props, attachments, setLoad
     } else {
       await handleSubmitProductAddPopup(formValues, attachments)
     }
-    if (!!openGlobalAddForm) {
-      openGlobalAddForm('')
-    } else {
-      datagrid.loadData()
-      closePopup()
-    }
+    
+    datagrid.loadData()
+    closePopup()
   } catch (e) {
     console.error(e)
   } finally {

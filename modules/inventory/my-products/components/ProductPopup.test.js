@@ -40,7 +40,6 @@ const defaultProps = {
   getDocumentTypes: () => {},
   addNmfcNumber: () => {},
   closePopup: () => {},
-  openGlobalAddForm: () => {},
   removeAttachmentLinkCompanyProduct: () => {},
   removeAttachment: () => {},
   handleSubmitProductEditPopup: () => {},
