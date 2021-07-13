@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Button, Input } from 'semantic-ui-react'
+import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 // Components
 import ProdexTable from '../../../../components/table'
@@ -219,4 +220,4 @@ MyProducts.defaultProps = {
   deleteProduct: () => {}
 }
 
-export default MyProducts
+export default injectIntl(MyProducts)

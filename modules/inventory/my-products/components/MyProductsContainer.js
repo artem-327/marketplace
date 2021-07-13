@@ -1,6 +1,5 @@
 import { connect } from 'react-redux'
 import Router from 'next/router'
-import { injectIntl } from 'react-intl'
 // Components
 import MyProducts from './MyProducts'
 import { withDatagrid } from '../../../datagrid'
@@ -44,5 +43,5 @@ export default withDatagrid(
     openPopup,
     handleProductCatalogUnmappedValue,
     handleVariableSave
-    })(injectIntl(MyProducts))
+    })(MyProducts)
 )
