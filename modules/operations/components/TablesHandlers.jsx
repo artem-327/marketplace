@@ -35,7 +35,7 @@ import { textsTable } from '../constants'
  * @components
  */
 const TablesHandlers = props => {
-  let formikProps
+  let formikPropsNew
   const prevCurrentTab = usePrevious(props.currentTab)
   
   const [state, setState] = useState({
@@ -71,21 +71,11 @@ const TablesHandlers = props => {
     const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
     if (tableHandlersFilters) {
-      initFilterValues(tableHandlersFilters, props, formikProps, setState)
+      initFilterValues(tableHandlersFilters, props, formikPropsNew, setState)
     } else {
       let filterValue = state[currentTab]
-      if (currentTab === 'orders') {
-        const status = localStorage['operations-orders-status-filter']
-        filterValue = {
-          ...filterValue,
-          status: status ? status : filterValue.status
-        }
-        setState({ ...state, orders: filterValue }) // ! ! Otestovat
-      }
-      handleFiltersValue(filterValue, props, formikProps)
+      handleFiltersValue(filterValue, props, formikPropsNew)
     }
-
-    return () => { props.saveFilters(state) }
   }, [])
 
   useEffect(() => {
@@ -94,14 +84,6 @@ const TablesHandlers = props => {
       if (currentTab === '') return
 
       let filterValue = state[currentTab]
-      if (currentTab === 'orders') {
-        const status = localStorage['operations-orders-status-filter']
-        filterValue = {
-          ...filterValue,
-          status: status ? status : filterValue.status
-        }
-        setState({ ...state, orders: filterValue })
-      }
       handleFiltersValue(filterValue, props, formikProps)
     }
   }, [props.currentTab])
@@ -158,7 +140,7 @@ const TablesHandlers = props => {
         onSubmit={() => {}}
         validateOnChange={true}
         render={formikProps => {
-          formikProps = formikProps
+          formikPropsNew = formikProps
 
           switch (currentTab) {
             case 'company-product-catalog':
