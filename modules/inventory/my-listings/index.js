@@ -1,6 +1,7 @@
+// Components
 import MyListingsContainer from './components/MyListingsContainer'
-import { DatagridProvider } from '~/modules/datagrid'
-import { CompanyProductInfo } from '~/modules/company-product-info'
+import { DatagridProvider } from '../../datagrid'
+import { CompanyProductInfo } from '../../company-product-info'
 
 const MyListings = () => (
   <>

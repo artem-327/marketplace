@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HighSegment } from '../../../../inventory/constants/layout'
+import { HighSegment } from '../../../../inventory/styles'
 import { Form, Button } from 'formik-semantic-ui-fixed-validation'
 
 export const CustomHighSegment = styled(HighSegment)`

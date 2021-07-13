@@ -1,21 +1,14 @@
-import { memo, useEffect, useRef } from 'react'
-import { connect } from 'react-redux'
+import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Image, Input, List } from 'semantic-ui-react'
+import { Grid, Image, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-import { Mail } from 'react-feather'
 // Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
-
 // Styles
 import {
   DivRectangle,
   DivName,
   DivAddress,
-  DivButtons,
-  BasicButtonCustom,
-  DivMail,
-  DivTextButton,
   ChevronLeftStyled,
   ChevronRightStyled,
   SegmentDetailRow,
@@ -23,13 +16,12 @@ import {
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
-import { getSafe } from '../../../../../utils/functions'
-
 // Services
 import { submitHandler } from './Header.services'
-import { updateMarkUp, getSharedProductOffer } from '../../../actions'
+import { getSafe } from '../../../../../utils/functions'
 
 /**
+ * Header Component
  * @category Inventory - Shared Listings
  * @component
  */
@@ -46,7 +38,7 @@ const Header = props => {
   const priceColumnsLength = row?.priceColumns?.length
   const { pricingTabIndex } = values
   const priceColumns =
-    priceColumnsLength > 4 ? row.priceColumns.slice(pricingTabIndex, pricingTabIndex + 4) : row.priceColumns
+    priceColumnsLength > 4 ? row?.priceColumns?.slice(pricingTabIndex, pricingTabIndex + 4) : row?.priceColumns
 
   return (
     <SegmentGroupHeader horizontal $noneBorder>
@@ -66,27 +58,6 @@ const Header = props => {
             <GridColumnDetail width={11}>
               <DivName> {row?.companyProduct?.intProductName}</DivName>
               <DivAddress>{row?.address}</DivAddress>
-              <DivButtons>
-                {/* <BasicButtonCustom
-                  fluid
-                  onClick={() => console.log('click message seller')}
-                  data-test='shared_listings_message_seller_btn'>
-                  <DivTextButton>
-                    <DivMail>
-                      <Mail size='14' color='black' />
-                    </DivMail>
-                    <span>
-                      <FormattedMessage id='sharedListings.detailRow.messageSeller' defaultMessage='Message Seller' />
-                    </span>
-                  </DivTextButton>
-                </BasicButtonCustom>
-                <BasicButtonCustom
-                  fluid
-                  onClick={() => console.log('click TradePass')}
-                  data-test='shared_listings_trade_pass_btn'>
-                  <FormattedMessage id='sharedListings.detailRow.tradePass' defaultMessage='TradePass' />
-                </BasicButtonCustom> */}
-              </DivButtons>
             </GridColumnDetail>
           </Grid.Row>
         </StyledGrid>
@@ -104,7 +75,7 @@ const Header = props => {
             <GridColumnDetail width={16}>
               <TableSegment $oldDesign={true}>
                 <StyledList divided relaxed horizontal size='large' $oldDesign={true}>
-                  {priceColumns.map((p, i) => (
+                  {priceColumns?.map((p, i) => (
                     <List.Item key={i}>
                       <List.Content>
                         <List.Header as='label'>
@@ -192,22 +163,24 @@ const Header = props => {
   )
 }
 
-Header.propTypes = {}
-
-function mapStateToProps(store) {
-  return {
-    loadingMarkup: store.simpleAdd.loadingMarkup
-  }
+Header.propTypes = {
+  loadingMarkup: PropTypes.bool,
+  onChange: PropTypes.func,
+  updateMarkUp: PropTypes.func,
+  getSharedProductOffer: PropTypes.func,
+  row: PropTypes.object,
+  values: PropTypes.object,
+  datagrid: PropTypes.object
 }
 
-function areEqual(prevProps, nextProps) {
-  return (
-    prevProps?.row?.id === nextProps?.row?.id &&
-    prevProps?.values?.priceMultiplier === nextProps?.values?.priceMultiplier &&
-    prevProps?.loadingMarkup === nextProps?.loadingMarkup
-  )
+Header.defaultProps = {
+  loadingMarkup: false,
+  onChange: () => {},
+  updateMarkUp: () => {},
+  getSharedProductOffer: () => {},
+  row: {},
+  values: {},
+  datagrid: {}
 }
 
-const MemoHeader = memo(Header, areEqual)
-
-export default connect(mapStateToProps, { updateMarkUp, getSharedProductOffer })(MemoHeader)
+export default Header

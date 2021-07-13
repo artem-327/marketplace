@@ -1,6 +1,6 @@
 import SharedListingsContainer from './components/SharedListingsContainer'
-import { DatagridProvider } from '~/modules/datagrid'
-import { getSafe } from '~/utils/functions'
+import { DatagridProvider } from '../../datagrid'
+import { getSafe } from '../../../utils/functions'
 
 const SharedListings = () => (
   <>

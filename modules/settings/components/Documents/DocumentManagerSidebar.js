@@ -23,7 +23,7 @@ import Router from 'next/router'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/styles'
 import { UploadCloud } from 'react-feather'
 import get from 'lodash/get'
 

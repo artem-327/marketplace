@@ -1,6 +1,6 @@
 import reducer, { initialState } from './reducers'
 
-describe('`My Network` reducers', () => {
+describe('`Admin` reducers', () => {
   test('when previous state is undefined, return false', () => {
     const newState = reducer(undefined, {})
     expect(newState).toStrictEqual(initialState)

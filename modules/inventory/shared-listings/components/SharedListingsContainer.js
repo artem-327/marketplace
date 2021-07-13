@@ -1,22 +1,23 @@
 import { connect } from 'react-redux'
-//Actions
+// Components
+import SharedListings from './SharedListings'
+// Actions
 import * as Actions from '../../actions'
 import { getTemplates, broadcastChange } from '../../../broadcast/actions'
-
-//HOC
+import { openBroadcast } from '../../../broadcast/actions'
+// Services
+import { getMappedRows } from './SharedListings.services'
+// HOC
 import { withDatagrid } from '../../../datagrid'
-//Components
-import SharedListings from './SharedListings'
-
-//Selectors
-import { makeGetDatagridRows, getBroadcastTemplates } from '../../selectors'
+// Selectors
+import { makeGetBroadcastTemplates } from '../../selectors'
 
 const makeMapStateToProps = () => {
-  const getRows = makeGetDatagridRows()
+  const getBroadcastTemplates = makeGetBroadcastTemplates()
 
-  const mapStateToProps = (state, props) => {
+  const mapStateToProps = (state, {datagrid}) => {
     return {
-      rows: getRows(props), //Memoized. Recalculate rows only if in prevProps.datagrid.rows !== props.datagrid.rows
+      rows: getMappedRows(datagrid), //Memoized. Recalculate rows only if in prevProps.datagrid.rows !== props.datagrid.rows
       ...state.simpleAdd,
       broadcastTemplates: getBroadcastTemplates(state) //Not memoized.
     }
@@ -27,7 +28,8 @@ const makeMapStateToProps = () => {
 const mapDispatchToProps = {
   ...Actions,
   getTemplates,
-  broadcastChange
+  broadcastChange,
+  openBroadcast
 }
 
 export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(SharedListings))

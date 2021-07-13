@@ -16,7 +16,7 @@ import ColumnSettingButton from '~/components/table/ColumnSettingButton'
 import Tutorial from '~/modules/tutorial/Tutorial'
 
 // Styles
-import { CustomRowDiv } from '~/modules/inventory/constants/layout'
+import { CustomRowDiv } from '~/modules/inventory/styles'
 
 // Services
 import { setInitFilters, handleFilterChangeInputSearch, getRows, handleUpdateFinished } from './BidsReceived.services'

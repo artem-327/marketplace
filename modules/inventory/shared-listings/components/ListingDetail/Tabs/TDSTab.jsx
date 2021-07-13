@@ -2,7 +2,6 @@ import { memo } from 'react'
 import PropTypes from 'prop-types'
 import { GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
 //Styles
 import {
   DivTableWrapper,
@@ -13,6 +12,11 @@ import {
   DivNormalText
 } from '../ListingDetail.styles'
 
+/**
+ * TDSTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const TDSTab = ({ row }) => {
   let elementsTdsFields = row?.elementsTdsFields?.elements ? row?.elementsTdsFields?.elements : []
   elementsTdsFields = elementsTdsFields.filter(el => el.property !== '' && el.specifications !== '')
@@ -53,10 +57,15 @@ const TDSTab = ({ row }) => {
   )
 }
 
-TDSTab.propTypes = {}
-TDSTab.defaultProps = {}
+TDSTab.propTypes = {
+  row: PropTypes.object
+}
 
-function areEqual(prevProps, nextProps) {
+TDSTab.defaultProps = {
+  row: {}
+}
+
+const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id
 }
 

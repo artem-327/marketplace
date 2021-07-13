@@ -1,8 +1,7 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import PropTypes from 'prop-types'
 import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
 //Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
 import {
@@ -25,6 +24,11 @@ import { getProperty } from '../ListingDetail.services'
 //Constants
 import { rightProperties, leftProperties } from '../ListingDetail.constants'
 
+/**
+ * SDSTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const SDSTab = ({ row }) => {
   let product = getSafe(() => row.companyProduct.companyGenericProduct, {})
   const mixtures = getSafe(() => product.elements, [])
@@ -121,10 +125,15 @@ const SDSTab = ({ row }) => {
   )
 }
 
-SDSTab.propTypes = {}
-SDSTab.defaultProps = {}
+SDSTab.propTypes = {
+  row: PropTypes.object
+}
 
-function areEqual(prevProps, nextProps) {
+SDSTab.defaultProps = {
+  row: {}
+}
+
+const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id
 }
 

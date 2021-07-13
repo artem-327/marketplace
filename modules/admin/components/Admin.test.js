@@ -28,14 +28,14 @@ const setup = (props = {}) => {
 }
 
 /**
- * @test {BasicButton }
+ * @test { Admin }
  */
-describe('`BasicButton` render component', () => {
+describe('`Admin` render component', () => {
   test('does not throw warning with expected props', () => {
     checkProps(Admin, defaultProps)
   })
 
-  test('renders BasicButton component to be there', () => {
+  test('renders Admin component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

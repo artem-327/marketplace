@@ -1,4 +1,6 @@
 import { connect } from 'react-redux'
+import { withAuth } from '../../../hocs'
+import { withDatagrid } from '../../datagrid'
 import Products from './Products'
 import * as Actions from '../actions'
 import {
@@ -29,4 +31,4 @@ const makeMapStateToProps = () => {
   return mapStateToProps
 }
 
-export default connect(makeMapStateToProps, Actions)(Products)
+export default withDatagrid(withAuth(connect(makeMapStateToProps, Actions)(Products)))

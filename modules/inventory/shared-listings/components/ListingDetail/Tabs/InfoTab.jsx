@@ -7,7 +7,6 @@ import moment from 'moment'
 import { getLocaleDateFormat } from '../../../../../../components/date-format'
 // Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
-import { SegmentBottom } from '../../../../../my-network/components/DetailRow/DetailRow.style'
 import {
   SegmentGroupTab,
   GridColumnTitleSection,
@@ -15,7 +14,9 @@ import {
   GridColumnTabFieldValue,
   SegmentDetailRow
 } from '../ListingDetail.styles'
+
 /**
+ * InfoTab Component
  * @category Inventory - Shared Listings
  * @component
  */
@@ -117,7 +118,12 @@ const InfoTab = ({ row }) => {
   }, [row])
 }
 
-InfoTab.propTypes = {}
-InfoTab.defaultProps = {}
+InfoTab.propTypes = {
+  row: PropTypes.object
+}
+
+InfoTab.defaultProps = {
+  row: {}
+}
 
 export default InfoTab

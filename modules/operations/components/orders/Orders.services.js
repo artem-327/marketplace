@@ -7,10 +7,9 @@ import ProdexGrid from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 import { ArrayToFirstItem } from '../../../../components/formatted-messages'
 // Services
-import { getSafe } from '../../../../utils/functions'
+import { getSafe, getMimeType } from '../../../../utils/functions'
 import * as OrdersHelper from '../../../../components/helpers/Orders'
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { getMimeType } from '../../../../components/getMimeType'
 // Constants
 import { currency } from '../../../../constants/index'
 // Styles

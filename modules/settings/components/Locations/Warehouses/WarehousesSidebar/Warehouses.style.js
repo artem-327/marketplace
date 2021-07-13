@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { HighSegment } from '../../../../../inventory/constants/layout'
+import { HighSegment } from '../../../../../inventory/styles'
 import { Menu } from 'semantic-ui-react'
 
 export const HighSegmentCustom = styled(HighSegment)`

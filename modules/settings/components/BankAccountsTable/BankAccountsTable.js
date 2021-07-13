@@ -10,10 +10,9 @@ import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
-import { getSafe, generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check } from 'react-feather'
-import { getMimeType } from '~/components/getMimeType'
 import {
   openPopup,
   closePopup,
@@ -314,7 +313,7 @@ class BankAccountsTable extends Component {
     if(this.state.statementMonth && this.state.documentType) {
       const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
 
-      element.download = 'Transaction Statement'
+      element.download = this.state.documentType === 'CSV' ? 'Transaction Statement.csv' : 'Transaction Statement'
       document.body.appendChild(element) // Required for this to work in FireFox
       element.click()
     } else {
@@ -599,7 +598,7 @@ class BankAccountsTable extends Component {
     const { formatMessage } = intl
     return (
       <Fragment>
-        <div>
+        <div className='flex stretched'>
           <ConfirmDeleteInstitution
             isOpenPopup={isOpenPopupDeleteInstitution}
             closePopup={closePopup}

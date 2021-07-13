@@ -21,7 +21,7 @@ import { openImportPopup } from '../../settings/actions'
 
 // Components
 import { withDatagrid } from '../../datagrid'
-import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopup'
+import ProductImportPopup from '../../inventory/my-products/components/ProductImportPopupContainer'
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 
 //Hooks

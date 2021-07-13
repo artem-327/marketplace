@@ -1,33 +1,47 @@
-import ActionCell from '../../../../components/table/ActionCell'
-import { Popup, Header } from 'semantic-ui-react'
+import { Popup, Header, Image } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Warning } from '@material-ui/icons'
+import moment from 'moment'
+// Components
+import ActionCell from '../../../../components/table/ActionCell'
 //Constants
 import { currency } from '../../../../constants/index'
 import { BROADCAST_OPTIONS } from './SharedListings.constants'
 //Styles
-import { DivIconOptions } from '../../constants/layout'
 import { NetworkDropdown, NetworkChevronDown } from '../../../../components/Network'
+import { DivSeller, SpanSellerName, CapitalizedText } from './SharedListings.styles'
 //Services
-import { onClickBroadcast } from '../../my-listings/MyListings.services'
+import { onClickBroadcast } from '../../my-listings/components/MyListings.services'
+import { getSafe, getLocationString } from '../../../../utils/functions'
+import { FormattedUnit } from '../../../../components/formatted-messages'
 
-export const getActions = triggerPriceBookModal => {
+/**
+ * Returns actions for Rows in SharedListings Component
+ * @category Inventory - Shared Listings
+ * @method
+ */
+export const getActions = (triggerPriceBookModal, openBroadcast) => {
   return [
     {
       text: 'Price Book',
-      callback: row => triggerPriceBookModal(true, row)
+      callback: row => {
+        triggerPriceBookModal(true, row)
+        openBroadcast(row)
+      }
     }
   ]
 }
+
 /**
  * Added actions to the productName column and adjusted broadcast option in network column and returns rows.
- * @category Shared Listings
+ * @category Inventory - Shared Listings
  * @param {array} rows
  * @param {object} props
  * @returns {array}
  */
 export const getRows = (rows, props) => {
   const {
+    openBroadcast,
     triggerPriceBookModal,
     broadcastTemplates,
     broadcastChange,
@@ -116,7 +130,7 @@ export const getRows = (rows, props) => {
       productName: (
         <ActionCell
           row={r}
-          getActions={() => getActions(triggerPriceBookModal)}
+          getActions={() => getActions(triggerPriceBookModal, openBroadcast)}
           content={r.productName}
           rightAlignedContent={
             r.expired || productStatusText ? (
@@ -160,11 +174,9 @@ export const getRows = (rows, props) => {
             r?.resellerBroadcastOption?.key === 'BROADCAST_TEMPLATE'
               ? `BROADCAST_TEMPLATE|${broadcastTemplates[0].id}`
               : r?.resellerBroadcastOption?.key
-          } //FIXME when BE works with custom template and returns broadcastTemplateResponse.
-          //r.broadcastTemplateResponse ? r.broadcastOption + '|' + r.broadcastTemplateResponse.id : r.broadcastOption
+          }
           loading={!!r.isBroadcastLoading}
           closeOnChange
-          //onChange={this.broadcastChange}
           options={options.map((option, optIndex) => {
             return {
               key: option.id ? option.id : optIndex * -1 - 1,
@@ -174,6 +186,7 @@ export const getRows = (rows, props) => {
               onClick: () => {
                 if (option.value === 'CUSTOM_RULES') {
                   triggerPriceBookModal(true, r)
+                  openBroadcast(r)
                 } else {
                   onClickBroadcast(
                     r,
@@ -196,12 +209,12 @@ export const getRows = (rows, props) => {
 }
 
 /**
- * @category Shared Listings
+ * @category Inventory - Shared Listings
  * @method
  * @param {object} row
  * @returns {{titleNumbers: string, value: JSX.Element}[]}
  */
-export const getPriceColumns = row => {
+const getPriceColumns = row => {
   if (!row) return
   return row?.pricingTiers?.map((p, i) => {
     return {
@@ -222,3 +235,106 @@ export const getPriceColumns = row => {
     }
   })
 }
+
+/**
+ * Get rows from datagrid in Container
+ * @category Inventory - Shared Listings
+ * @method
+ */
+export const getMappedRows = datagrid => datagrid.rows.map(po => {
+  const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
+  let price
+  let address = po?.warehouse?.deliveryAddress?.address?.city
+
+  if (po?.warehouse?.deliveryAddress?.address?.province?.abbreviation) {
+    address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.province?.abbreviation}`
+  } else {
+    address = `${address}, ${po?.warehouse?.deliveryAddress?.address?.country?.code}`
+  }
+  try {
+    if (po.pricingTiers.length > 1)
+      price = (
+        <>
+          <FormattedNumber
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
+            style='currency'
+            currency={currency}
+            value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
+          />
+          - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].pricePerUOM} />{' '}
+          {qtyPart && `/ ${qtyPart}`}{' '}
+        </>
+      )
+    else
+      price = (
+        <>
+          <FormattedNumber
+            minimumFractionDigits={3}
+            maximumFractionDigits={3}
+            style='currency'
+            currency={currency}
+            value={getSafe(() => po.pricingTiers[0].pricePerUOM)}
+          />
+          {qtyPart && `/ ${qtyPart}`}{' '}
+        </>
+      )
+  } catch (e) {
+    console.error(e)
+  }
+
+  let tdsFields = null
+  //Convert tdsFields string array of objects to array
+  if (getSafe(() => po.tdsFields, '')) {
+    let newJson = po.tdsFields.replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+    newJson = newJson.replace(/'/g, '"')
+    tdsFields = JSON.parse(newJson)
+  }
+
+  return {
+    ...po,
+
+    rawData: {
+      ...po,
+      elementsTdsFields: { elements: getSafe(() => tdsFields, [{ property: '', specifications: '' }]) },
+      address,
+      priceColumns: getPriceColumns(po)
+    },
+    groupProductName: getSafe(() => po.companyProduct.intProductName, 'Unmapped'),
+    seller: (
+      <DivSeller key={po.id}>
+        <Image verticalAlign='middle' size='mini' spaced={true} src={po?.createdBy?.company?.avatarUrl} />
+        <SpanSellerName>{po?.owner?.cfDisplayName}</SpanSellerName>
+      </DivSeller>
+    ),
+    expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
+    productName: getSafe(() => po.companyProduct.intProductName, 'N/A'),
+    //seller: getSafe(() => po.owner.cfDisplayName, 'N/A'),
+    packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
+    packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
+    packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
+    qtyPart: qtyPart,
+    available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
+    location: getLocationString(po),
+    cost: po.costPerUOM ? (
+      <FormattedNumber
+        minimumFractionDigits={3}
+        maximumFractionDigits={3}
+        style='currency'
+        currency={currency}
+        value={po.costPerUOM}
+      />
+    ) : (
+      'N/A'
+    ),
+    price,
+    packaging: (
+      <>
+        {`${po.companyProduct.packagingSize} ${po.companyProduct.packagingUnit.nameAbbreviation} `}
+        <CapitalizedText>{po.companyProduct.packagingType.name}</CapitalizedText>{' '}
+      </>
+    ),
+    quantityShared:
+      qtyPart && po?.quantity ? <FormattedUnit unit={qtyPart} separator=' ' value={po?.quantity} /> : 'N/A'
+  }
+})

@@ -1,13 +1,16 @@
-import React from 'react'
 import PropTypes from 'prop-types'
-import { Modal, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-//Components
+// Components
 import { Broadcast } from '../../../../broadcast'
-//Styles
+// Styles
 import { TdsHeader } from '../../../my-listings/components/ModalsTds/ModalsTds.styles'
 
+/**
+ * ModalPriceBook Component
+ * @category Inventory - Shared Listings
+ * @components
+ */
 const ModalPriceBook = props => {
   return (
     <Modal open={props.isOpenPriceBookModal} onClose={() => props.triggerPriceBookModal(false, null)} closeIcon={true}>
@@ -29,6 +32,18 @@ const ModalPriceBook = props => {
   )
 }
 
-ModalPriceBook.propTypes = {}
+ModalPriceBook.propTypes = {
+  isOpenPriceBookModal: PropTypes.bool,
+  triggerPriceBookModal: PropTypes.func,
+  detailValues: PropTypes.object,
+  tableDatagrid: PropTypes.object
+}
+
+ModalPriceBook.defaultProps = {
+  isOpenPriceBookModal: false,
+  triggerPriceBookModal: () => {},
+  detailValues: {},
+  tableDatagrid: {}
+}
 
 export default injectIntl(ModalPriceBook)

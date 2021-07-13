@@ -16,7 +16,7 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { getSafe } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/styles'
 import { Required } from '~/components/constants/layout'
 import { removeEmpty } from '~/utils/functions'
 import { TimeInput } from '~/components/custom-formik/'

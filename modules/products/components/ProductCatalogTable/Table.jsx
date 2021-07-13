@@ -2,16 +2,15 @@ import { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment/moment'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Dropdown, Icon } from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 import { Popup } from 'semantic-ui-react'
 // Components
 import ProdexTable from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 // Services
-import { getSafe } from '../../../../utils/functions'
+import { getSafe, getMimeType } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { getMimeType } from '../../../../components/getMimeType'
 // Styles
 import { Circle } from '../../styles'
 // Constants

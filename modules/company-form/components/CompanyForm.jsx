@@ -8,7 +8,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
-import { getSafe } from '~/utils/functions'
+import { getSafe, getMimeType } from '../../../utils/functions'
 import styled from 'styled-components'
 import { Trash, UploadCloud, Image as ImageIcon } from 'react-feather'
 
@@ -169,25 +169,8 @@ class CompanyForm extends Component {
     return null
   }
 
-  getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-    switch (documentExtension) {
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      default:
-        return false
-    }
-  }
-
   selectLogo = file => {
-    if (this.getMimeType(file.name)) {
+    if (getMimeType(file.name)) {
       this.props.selectLogo(file)
     } else {
       this.props.toastManager.add(

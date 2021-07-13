@@ -1,23 +1,6 @@
-import { generateToastMarkup } from '~/utils/functions'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
-
-const getMimeType = documentName => {
-  const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-  switch (documentExtension) {
-    case 'gif':
-      return 'image/gif'
-    case 'png':
-      return 'image/png'
-    case 'jpg':
-    case 'jpeg':
-      return 'image/jpeg'
-    case 'svg':
-      return 'image/svg'
-    default:
-      return false
-  }
-}
+import { generateToastMarkup, getMimeType } from '../../utils/functions'
+import { FormattedMessage } from 'react-intl'
+import { Image } from 'semantic-ui-react'
 
 export const getPicture = props => {
   if (props.picture) {

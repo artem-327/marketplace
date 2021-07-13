@@ -1,10 +1,8 @@
-import React from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
-
 //Services
 import { downloadFile } from '../ListingDetail.services'
 import { getSafe } from '../../../../../../utils/functions'
@@ -24,6 +22,11 @@ import {
   DivNormalText
 } from '../ListingDetail.styles'
 
+/**
+ * DocumentsTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const DocumentsTab = props => {
   const { row } = props
   const attachments = row.attachments
@@ -72,6 +75,14 @@ const DocumentsTab = props => {
   )
 }
 
-DocumentsTab.propTypes = {}
+DocumentsTab.propTypes = {
+  row: PropTypes.object,
+  downloadAttachment: PropTypes.func
+}
+
+DocumentsTab.defaultProps = {
+  row: {},
+  downloadAttachment: () => {}
+}
 
 export default connect(null, { downloadAttachment })(DocumentsTab)

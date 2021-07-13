@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
 import { func, bool, array } from 'prop-types'
 import { Trash2 } from 'react-feather'
@@ -16,8 +15,12 @@ import {
   TemplateWrapper
 } from './ModalsTds.styles'
 
+/**
+ * ModalTdsList Component
+ * @component
+ * @category Inventory - My Listings
+ */
 const ModalTdsList = props => {
-
   const {
     open,
     tdsTemplates,

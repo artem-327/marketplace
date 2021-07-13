@@ -6,14 +6,14 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 import styled from 'styled-components'
 
-import { getSafe, uniqueArrayByKey } from '~/utils/functions'
+import { getMimeType, uniqueArrayByKey } from '~/utils/functions'
 import ProdexGrid from '~/components/table'
 
 import { Button } from 'formik-semantic-ui-fixed-validation'
 import { Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 
-import { HighSegment, FlexModal, FlexModalContent } from '~/modules/inventory/constants/layout'
+import { HighSegment, FlexModal, FlexModalContent } from '~/modules/inventory/styles'
 
 const CustomHighSegment = styled(HighSegment)`
   margin: 0 !important;
@@ -145,48 +145,6 @@ class ExportInventoryModal extends Component {
     this.handleFiltersValue({ company: value })
   }
 
-  getMimeType = documentName => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
-
-    switch (documentExtension) {
-      case 'doc':
-        return 'application/msword'
-      case 'docx':
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-      case 'ppt':
-        return 'application/vnd.ms-powerpoint'
-      case 'pptx':
-        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-      case 'xls':
-        return 'application/vnd.ms-excel'
-      case 'xlsx':
-        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      case 'gif':
-        return 'image/gif'
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg'
-      case 'pdf':
-        return 'application/pdf'
-      case '7z':
-        return 'application/x-7z-compressed'
-      case 'zip':
-        return 'application/zip'
-      case 'tar':
-        return 'application/x-tar'
-      case 'rar':
-        return 'application/x-rar-compressed'
-      case 'xml':
-        return 'application/xml'
-      default:
-        return 'text/plain'
-    }
-  }
-
   extractFileName = contentDispositionValue => {
     var filename = ''
     if (contentDispositionValue && contentDispositionValue.indexOf('attachment') !== -1) {
@@ -205,7 +163,7 @@ class ExportInventoryModal extends Component {
     try {
       let downloadedFile = await exportProductOffer(this.state.selectedBranches)
       const fileName = this.extractFileName(downloadedFile.value.headers['content-disposition'])
-      const mimeType = fileName && this.getMimeType(fileName)
+      const mimeType = fileName && getMimeType(fileName)
       const element = document.createElement('a')
       const file = new Blob([downloadedFile.value.data], { type: mimeType })
       element.href = URL.createObjectURL(file)

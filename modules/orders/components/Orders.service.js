@@ -15,8 +15,7 @@ import { HEADER_ATTRIBUTES, CONTENT_ATTRIBUTES } from '../constants'
 // Services
 import * as OrdersHelper from '../../../components/helpers/Orders'
 import { getLocaleDateFormat } from '../../../components/date-format'
-import { getMimeType } from '../../../components/getMimeType'
-import { getSafe } from '../../../utils/functions'
+import { getSafe, getMimeType } from '../../../utils/functions'
 import { uniqueArrayByKey } from '../../../utils/functions'
 import { errorMessages, dateValidation } from '../../../constants/yupValidation'
 // Styles

@@ -1,30 +1,21 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
+import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
-import { getSafe } from '~/utils/functions'
-import { injectIntl, FormattedMessage } from 'react-intl'
-
 // Components
 import ProdexTable from '../../../../components/table'
-import Tutorial from '../../../tutorial/Tutorial'
 import ListingDetail from './ListingDetail/ListingDetail'
-import TableHandler from './TableHandler'
-import { Broadcast } from '../../../broadcast'
+import TableHandler from './TableHandlerContainer'
 import ModalPriceBook from './ModalPriceBook/ModalPriceBook'
-
-// Hooks
-//import { usePrevious } from '../../../hooks'
-
-// Styles
-import { IconDown, IconUp } from './SharedListings.styles'
-
 // Services
 import { getRows } from './SharedListings.services'
-
 // Constants
 import { COLUMNS } from './SharedListings.constants'
 
+/**
+ * SharedListings Component
+ * @category Inventory - Shared Listings
+ * @components
+ */
 const SharedListings = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
@@ -44,7 +35,6 @@ const SharedListings = props => {
   const {
     datagrid,
     rows,
-    activeTab,
     setActiveTab,
     isOpenPriceBookModal,
     getTemplates,
@@ -152,9 +142,31 @@ const SharedListings = props => {
 }
 
 SharedListings.propTypes = {
-  //PropTypes.number
+  rows: PropTypes.array,
+  broadcastTemplates: PropTypes.array,
+  isOpenPriceBookModal: PropTypes.bool,
+  setActiveTab: PropTypes.func,
+  getTemplates: PropTypes.func,
+  triggerPriceBookModal: PropTypes.func,
+  getMarkUp: PropTypes.func,
+  broadcastChange: PropTypes.func,
+  rowPriceBook: PropTypes.object,
+  datagrid: PropTypes.object,
+  intl: PropTypes.object
 }
 
-SharedListings.defaultProps = {}
+SharedListings.defaultProps = {
+  rows: [],
+  broadcastTemplates: [],
+  isOpenPriceBookModal: false,
+  setActiveTab: () => {},
+  getTemplates: () => {},
+  triggerPriceBookModal: () => {},
+  getMarkUp: () => {},
+  broadcastChange: () => {},
+  rowPriceBook: null,
+  datagrid: {},
+  intl: {}
+}
 
 export default injectIntl(SharedListings)

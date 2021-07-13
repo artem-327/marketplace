@@ -1,5 +1,11 @@
+// Services
 import { removeEmpty } from '../../../../../utils/functions'
 
+/**
+ * Submit Handler in ListingDetail Header
+ * @category Inventory - Shared Listings
+ * @method
+ */
 export const submitHandler = async (values, props) => {
   const { updateMarkUp, getSharedProductOffer, datagrid } = props
 

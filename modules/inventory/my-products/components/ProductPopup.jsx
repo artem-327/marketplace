@@ -1,25 +1,22 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Formik } from 'formik'
-import { usePrevious } from '../../../../hooks'
-
+import { AddBox } from '@material-ui/icons'
+import PropTypes from 'prop-types'
 // Components
 import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import BasicButton from '../../../../components/buttons/BasicButton'
-import { AttachmentManager } from '~/modules/attachments'
+import { AttachmentManager } from '../../../attachments'
 import UploadAttachment from '../../components/upload/UploadAttachment'
-import ProdexGrid from '~/components/table'
-import { FlexContent } from '~/modules/inventory/constants/layout'
+import ProdexGrid from '../../../../components/table'
+import { FlexContent } from '../../styles'
 import { X as XIcon } from 'react-feather'
-import ErrorFocus from '~/components/error-focus'
-import { CompanyGenericProductRequestForm } from '~/modules/company-generic-product-request'
-import { Required } from '~/components/constants/layout'
-import { AddBox } from '@material-ui/icons'
-import { CompanyProductMixtures } from '~/components/shared-components/'
-import { DisabledButtonWrapped } from '~/utils/components'
-
+import ErrorFocus from '../../../../components/error-focus'
+import { CompanyGenericProductRequestForm } from '../../../company-generic-product-request'
+import { Required } from '../../../../components/constants/layout'
+import { CompanyProductMixtures } from '../../../../components/shared-components/'
+import { DisabledButtonWrapped } from '../../../../utils/components'
 // Styles
 import {
   FormStyled,
@@ -35,10 +32,8 @@ import {
   DivCheckboxWrapper,
   InfoCustom
 } from './ProductPopup.styles'
-
 // Constants
 import { COLUMNS } from './ProductPopup.constants'
-
 // Services
 import {
   formValidation,
@@ -53,9 +48,14 @@ import {
   attachDocumentsUploadAttachment,
   handleChangePackagingType
 } from './ProductPopup.services'
-import confirm from '~/components/Confirmable/confirm'
-import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '~/utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+import { generateToastMarkup, getSafe, uniqueArrayByKey, getDesiredCasProductsProps } from '../../../../utils/functions'
 
+/**
+ * ProductPopup Component
+ * @category Inventory - My Products
+ * @components
+ */
 const ProductPopup = props => {
   const [openUpload, setOpenUpload] = useState(false)
   const [documentType, setDocumentType] = useState(null)
@@ -76,40 +76,42 @@ const ProductPopup = props => {
     setpackagingTypesReduced
   }
 
-  useEffect(async () => {
-    await Promise.all([
-      !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
-      !props.unitsAll.length ? props.getUnits() : props.unitsAll,
-      !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
-      !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
-      !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
-    ])
-
-    if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
-    if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
-      if (props?.popupValues?.attachments?.length) {
-        const attachments = props.popupValues.attachments.map(att => ({
-          id: att.id,
-          name: att.name,
-          documentType: att.documentType.name,
-          linked: true
-        }))
-        setAttachments(attachments)
+  useEffect(() => {
+    const init = async () => {
+      await Promise.all([
+        !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
+        !props.unitsAll.length ? props.getUnits() : props.unitsAll,
+        !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
+        !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
+        !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
+      ])
+  
+      if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
+      if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
+        if (props?.popupValues?.attachments?.length) {
+          const attachments = props.popupValues.attachments.map(att => ({
+            id: att.id,
+            name: att.name,
+            documentType: att.documentType.name,
+            linked: true
+          }))
+          setAttachments(attachments)
+        }
+      }
+  
+      if (props.popupValues?.packagingUnit) {
+        filterPackagingTypes(
+          popupValues.packagingUnit.id,
+          props.unitsAll,
+          props.packagingTypesAll,
+          setpackagingTypesReduced
+        )
+      } else {
+        setpackagingTypesReduced(props.packagingType)
       }
     }
-
-    if (props.popupValues?.packagingUnit) {
-      filterPackagingTypes(
-        popupValues.packagingUnit.id,
-        props.unitsAll,
-        props.packagingTypesAll,
-        setpackagingTypesReduced
-      )
-    } else {
-      setpackagingTypesReduced(props.packagingType)
-    }
+    init()
   }, [])
-
 
   const {
     closePopup,
@@ -697,9 +699,7 @@ const ProductPopup = props => {
                           rowActions={[
                             {
                               text: (
-                                <FormattedMessage id='global.unlink' defaultMessage='Unlink'>
-                                  {text => text}
-                                </FormattedMessage>
+                                <FormattedMessage id='global.unlink' defaultMessage='Unlink' />
                               ),
                               callback: async row => {
                                 try {
@@ -782,9 +782,7 @@ const ProductPopup = props => {
               <DivBottomButtons className='bottom-buttons'>
                 {!openGlobalAddForm && (
                   <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                      {text => text}
-                    </FormattedMessage>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </BasicButton>
                 )}
                 <Popup
@@ -807,18 +805,14 @@ const ProductPopup = props => {
                             }
                           })
                         }}>
-                        <FormattedMessage id='global.send' defaultMessage='Send'>
-                          {text => text}
-                        </FormattedMessage>
+                        <FormattedMessage id='global.send' defaultMessage='Send' />
                       </BasicButton>
                     </DisabledButtonWrapped>
                   }
                   content={
                     <FormattedMessage
                       id='settings.product.offerExists'
-                      defaultMessage='Product cannot be edited, as it already has ProductOffers linked to it.'>
-                      {text => text}
-                    </FormattedMessage>
+                      defaultMessage='Product cannot be edited, as it already has ProductOffers linked to it.' />
                   }
                 />
               </DivBottomButtons>
@@ -829,6 +823,88 @@ const ProductPopup = props => {
       }}
     </Formik>
   )
+}
+
+ProductPopup.propTypes = {
+  packagingTypesAll: PropTypes.array,
+  packagingType: PropTypes.array,
+  unitsAll: PropTypes.array,
+  hazardClasses: PropTypes.array,
+  packagingGroups: PropTypes.array,
+  documentTypes: PropTypes.array,
+  attachments: PropTypes.array,
+  productsUnitsType: PropTypes.array,
+  freightClasses: PropTypes.array,
+  companyGenericProduct: PropTypes.array,
+  nmfcNumbersFiltered: PropTypes.array,
+  packageWeightUnits: PropTypes.array,
+  popupValues: PropTypes.object,
+  intl: PropTypes.object,
+  datagrid: PropTypes.object,
+  toastManager: PropTypes.any,
+  companyGenericProductFetching: PropTypes.bool,
+  nmfcNumbersFetching: PropTypes.bool,
+  loading: PropTypes.bool,
+  palletWeightInitFromSettings: PropTypes.string,
+  palletHeightInitFromSettings: PropTypes.string,
+  palletWidthInitFromSettings: PropTypes.string,
+  palletLengthInitFromSettings: PropTypes.string,
+  palletWeightUnitInitFromSettings: PropTypes.string,
+  getPackagingTypes: PropTypes.func,
+  getUnits: PropTypes.func,
+  getHazardClasses: PropTypes.func,
+  getPackagingGroups: PropTypes.func,
+  getDocumentTypes: PropTypes.func,
+  addNmfcNumber: PropTypes.func,
+  closePopup: PropTypes.func,
+  openGlobalAddForm: PropTypes.func,
+  removeAttachmentLinkCompanyProduct: PropTypes.func,
+  removeAttachment: PropTypes.func,
+  handleSubmitProductEditPopup: PropTypes.func,
+  handleSubmitProductAddPopup: PropTypes.func,
+  searchCompanyGenericProduct: PropTypes.func,
+  getNmfcNumbersByString: PropTypes.func
+}
+
+ProductPopup.defaultProps = {
+  packagingTypesAll: [],
+  packagingType: [],
+  unitsAll: [],
+  hazardClasses: [],
+  packagingGroups: [],
+  documentTypes: [],
+  attachments: [],
+  productsUnitsType: [],
+  freightClasses: [],
+  companyGenericProduct: [],
+  nmfcNumbersFiltered: [],
+  packageWeightUnits: [],
+  popupValues: {},
+  intl: {},
+  datagrid: {},
+  toastManager: null,
+  companyGenericProductFetching: false,
+  nmfcNumbersFetching: false,
+  loading: false,
+  palletWeightInitFromSettings: '',
+  palletHeightInitFromSettings: '',
+  palletWidthInitFromSettings: '',
+  palletLengthInitFromSettings: '',
+  palletWeightUnitInitFromSettings: '',
+  getPackagingTypes: () => {},
+  getUnits: () => {},
+  getHazardClasses: () => {},
+  getPackagingGroups: () => {},
+  getDocumentTypes: () => {},
+  addNmfcNumber: () => {},
+  closePopup: () => {},
+  openGlobalAddForm: () => {},
+  removeAttachmentLinkCompanyProduct: () => {},
+  removeAttachment: () => {},
+  handleSubmitProductEditPopup: () => {},
+  handleSubmitProductAddPopup: () => {},
+  searchCompanyGenericProduct: () => {},
+  getNmfcNumbersByString: () => {}
 }
 
 export default ProductPopup

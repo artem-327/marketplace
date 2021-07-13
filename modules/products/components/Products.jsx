@@ -6,8 +6,7 @@ import { FormattedMessage } from 'react-intl'
 import TablesHandlers from './TablesHandlersContainer'
 // Services
 import { getSafe } from '../../../utils/functions'
-import { withAuth } from '../../../hocs'
-import { DatagridProvider, withDatagrid, Datagrid } from '../../datagrid'
+import { DatagridProvider } from '../../datagrid'
 // Constants
 import { tables, addForms, editForms, importForm, edit2Forms, sidebars } from '../constants'
 
@@ -127,4 +126,4 @@ Products.defaultProps = {
   auth: {}
 }
 
-export default withDatagrid(withAuth(Products))
+export default Products

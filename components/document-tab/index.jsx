@@ -12,7 +12,7 @@ import confirm from '~/components/Confirmable/confirm'
 import { UploadCloud } from 'react-feather'
 import { downloadAttachment, addAttachment } from '~/modules/inventory/actions'
 //Services
-import { getMimeType } from './services'
+import { getMimeType } from '../../utils/functions'
 //Styles
 import {
   DivFields,

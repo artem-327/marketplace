@@ -1,8 +1,7 @@
 import { memo } from 'react'
 import PropTypes from 'prop-types'
-import { Grid, Tab, Menu } from 'semantic-ui-react'
-import { FormattedMessage, injectIntl } from 'react-intl'
-
+import { Menu } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 //Styles
 import { StyledGrid } from '../../../../../../components/detail-row/styles'
 import { GridColumnDetail } from '../../../../../my-network/components/DetailRow/DetailRow.style'
@@ -14,6 +13,11 @@ import SDSTab from './SDSTab'
 import DocumentsTab from './DocumentsTab'
 import NotesTab from './NotesTab'
 
+/**
+ * Tabs Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const Tabs = ({ row, activeTab, setActiveTab }) => {
   const panes = [
     {
@@ -88,10 +92,19 @@ const Tabs = ({ row, activeTab, setActiveTab }) => {
   )
 }
 
-Tabs.propTypes = {}
-Tabs.defaultProps = {}
+Tabs.propTypes = {
+  row: PropTypes.object,
+  activeTab: PropTypes.number, 
+  setActiveTab: PropTypes.func
+}
 
-function areEqual(prevProps, nextProps) {
+Tabs.defaultProps = {
+  row: {},
+  activeTab: null, 
+  setActiveTab: () => {}
+}
+
+const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id && prevProps?.actionTab === nextProps?.actionTab
 }
 

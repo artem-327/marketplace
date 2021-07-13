@@ -5,11 +5,10 @@ import { FormattedMessage, FormattedNumber } from 'react-intl'
 import ProdexGrid from '../../../../components/table'
 // Services
 import { getLocaleDateFormat } from '../../../../components/date-format'
-import { getSafe, getFormattedAddress } from '../../../../utils/functions'
+import { getSafe, getFormattedAddress, getMimeType } from '../../../../utils/functions'
 import * as OrdersHelper from '../../../../components/helpers/Orders'
 // Constants
 import { currency } from '../../../../constants/index'
-import { getMimeType } from '../../../../components/getMimeType'
 
 /**
  * action Required function used in DetailContainer

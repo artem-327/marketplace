@@ -1,20 +1,17 @@
-import { Fragment, Component } from 'react'
-import { connect } from 'react-redux'
-
-import { Grid, Button } from 'semantic-ui-react'
-
-import styled from 'styled-components'
+import { Fragment } from 'react'
+import { Grid } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-import Router from 'next/dist/client/router'
+import PropTypes from 'prop-types'
+// Styles
+import { StyledButton } from '../../../styles'
 
-import { closeImportPopup } from '~/modules/settings/actions'
-
-const StyledButton = styled(Button)`
-  min-width: 200px !important;
-`
-
-class ConfirmationPage extends Component {
-  createReport = result => {
+/**
+ * ConfirmationPage Component
+ * @category Inventory - My Products
+ * @components
+ */
+const ConfirmationPage = props => {
+  const createReport = result => {
     if (!result) return
     const clientMessage = result.clientMessage
     const recordCount = result.recordCount || 0
@@ -36,13 +33,7 @@ class ConfirmationPage extends Component {
         <Grid.Row style={{ 'padding-bottom': '1.25rem' }}>
           <FormattedMessage
             id={`settings.import${status}`}
-            defaultMessage={
-              status === 'Failed'
-                ? 'Import Failed'
-                : status === 'SomeFailed'
-                ? 'Some lines failed during import'
-                : 'Import success'
-            }
+            defaultMessage={ status === 'Failed' ? 'Import Failed' : status === 'SomeFailed' ? 'Some lines failed during import' : 'Import success' }
           />
         </Grid.Row>
 
@@ -97,58 +88,55 @@ class ConfirmationPage extends Component {
     )
   }
 
-  render() {
-    const { csvImportError, reloadFilter, productOffer, companyGenericProduct, companies } = this.props
+  const { csvImportError, reloadFilter, productOffer, companyGenericProduct, companies } = props
 
-    const titleViewMap = productOffer
-      ? 'MyInventory'
-      : companyGenericProduct
-      ? 'Products'
-      : companies
-      ? 'Companies'
-      : 'Company Products'
+  const titleViewMap = productOffer
+    ? 'MyInventory'
+    : companyGenericProduct
+    ? 'Products'
+    : companies
+    ? 'Companies'
+    : 'Company Products'
 
-    return (
-      <Grid centered padded>
-        {this.createReport(csvImportError)}
-        <Grid.Row>
-          <StyledButton
-            basic
-            primary
-            onClick={() => this.props.closeImportPopup(reloadFilter)}
-            data-test='settings_product_close_import'>
-            <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
-          </StyledButton>
-        </Grid.Row>
-        <Grid.Row>
-          <StyledButton primary onClick={this.props.toUpload} data-test='settings_product_to_upload'>
-            <FormattedMessage id='settings.uploadMore' defaultMessage='Upload more files' />
-          </StyledButton>
-        </Grid.Row>
-      </Grid>
-    )
-  }
+  return (
+    <Grid centered padded>
+      {createReport(csvImportError)}
+      <Grid.Row>
+        <StyledButton
+          basic
+          primary
+          onClick={() => props.closeImportPopup(reloadFilter)}
+          data-test='settings_product_close_import'>
+          <FormattedMessage id={`settings.view${titleViewMap}`} defaultMessage={`View ${titleViewMap}`} />
+        </StyledButton>
+      </Grid.Row>
+      <Grid.Row>
+        <StyledButton primary onClick={props.toUpload} data-test='settings_product_to_upload'>
+          <FormattedMessage id='settings.uploadMore' defaultMessage='Upload more files' />
+        </StyledButton>
+      </Grid.Row>
+    </Grid>
+  )
 }
 
-const mapDispatchToProps = {
-  closeImportPopup
+ConfirmationPage.propTypes = {
+  csvImportError: PropTypes.object,
+  reloadFilter: PropTypes.object,
+  productOffer: PropTypes.bool,
+  companyGenericProduct: PropTypes.bool,
+  companies: PropTypes.bool,
+  closeImportPopup: PropTypes.func,
+  toUpload: PropTypes.func
 }
 
-const mapStateToProps = state => {
-  return {
-    csvImportError: state.settings.csvImportError,
-    reloadFilter: {
-      props: {
-        currentTab:
-          Router && Router.router
-            ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type)
-            : state.settings.tabsNames[0],
-        productsFilter: state.settings.productsFilter
-      },
-      value: state.settings.filterValue
-    },
-    myProductsUnmappedValue: state.settings.myProductsUnmappedValue
-  }
+ConfirmationPage.defaultProps = {
+  csvImportError: null,
+  reloadFilter: null,
+  productOffer: false,
+  companyGenericProduct: false,
+  companies: false,
+  closeImportPopup: () => {},
+  toUpload: () => {}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConfirmationPage)
+export default ConfirmationPage

@@ -5,8 +5,7 @@ import { Icon, Button } from 'semantic-ui-react'
 import ProdexGrid from '../../../../components/table'
 import ActionCell from '../../../../components/table/ActionCell'
 //Services
-import { getSafe } from '../../../../utils/functions'
-import { getMimeType } from '../../../../components/getMimeType'
+import { getSafe, getMimeType } from '../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import confirm from '../../../../components/Confirmable/confirm'
 // Styles

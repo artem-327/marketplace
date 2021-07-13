@@ -27,14 +27,14 @@ const setup = (props = {}) => {
 }
 
 /**
- * @test {BasicButton }
+ * @test {Popup }
  */
-describe('`BasicButton` render component', () => {
+describe('`Popup` render component', () => {
   test('does not throw warning with expected props', () => {
     checkProps(Popup, defaultProps)
   })
 
-  test('renders BasicButton component to be there', () => {
+  test('renders Popup component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

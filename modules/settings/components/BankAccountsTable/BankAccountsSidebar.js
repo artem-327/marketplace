@@ -14,7 +14,7 @@ import { getSafe } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 import { Required } from '~/components/constants/layout'
 import ErrorFocus from '~/components/error-focus'
-import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/constants/layout'
+import { FlexSidebar, HighSegment, FlexContent } from '~/modules/inventory/styles'
 import styled from 'styled-components'
 
 const CustomHighSegment = styled(HighSegment)`

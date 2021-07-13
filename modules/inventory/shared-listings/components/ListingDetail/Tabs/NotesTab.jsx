@@ -1,8 +1,6 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 import PropTypes from 'prop-types'
-import { GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-
 //Styles
 import {
   DivTableWrapper,
@@ -15,6 +13,11 @@ import {
   GridColumnNotesLabel
 } from '../ListingDetail.styles'
 
+/**
+ * NotesTab Component
+ * @category Inventory - Shared Listings
+ * @component
+ */
 const NotesTab = ({ row }) => {
   return (
     <DivTableWrapper>
@@ -72,10 +75,15 @@ const NotesTab = ({ row }) => {
   )
 }
 
-NotesTab.propTypes = {}
-NotesTab.defaultProps = {}
+NotesTab.propTypes = {
+  row: PropTypes.object
+}
 
-function areEqual(prevProps, nextProps) {
+NotesTab.defaultProps = {
+  row: {}
+}
+
+const areEqual = (prevProps, nextProps) => {
   return prevProps?.row?.id === nextProps?.row?.id
 }
 
