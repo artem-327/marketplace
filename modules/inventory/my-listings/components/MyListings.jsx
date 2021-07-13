@@ -109,7 +109,6 @@ const MyListings = props => {
     return () => {
       const { isModalDetailOpen, closeModalDetail, isProductInfoOpen, closePopup } = props
 
-      props.handleVariableSave('myListingsFilters', state.filterValues)
       if (isModalDetailOpen) closeModalDetail()
       if (isProductInfoOpen) closePopup()
     }

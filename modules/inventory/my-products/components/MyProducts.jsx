@@ -48,8 +48,6 @@ const MyProducts = props => {
         handleFiltersValue(filter, props)
       }
     }
-
-    return props.handleVariableSave('myProductsFilters', state)
   }, [])
 
   const prevProps = usePrevious(props)
