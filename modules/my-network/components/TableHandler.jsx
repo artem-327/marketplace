@@ -10,9 +10,6 @@ import InviteModal from './InviteModal/InviteModal'
 import BluePalletModal from './BluePalletModal/BluePalletModal'
 //Styles
 import { ContainerCustom, InputSearch, DropdownType, DivButon } from '../MyNetwork.styles'
-//Constants
-import { NETWORK_TYPES } from '../constants'
-import { Key } from 'react-feather'
 //Actions
 import { triggerModal, search, buttonActionsDetailRow, hideBluePallet } from '../actions'
 //Services
@@ -55,21 +52,6 @@ const TableHandler = props => {
           debounceSetQuery(data?.value, 'companyName')
         }}
       />
-
-      {/* <DropdownType
-        name='networkStatus'
-        value={networkStatus}
-        placeholder={props?.intl?.formatMessage({
-          id: 'myNetworks.filterByType',
-          defaultMessage: 'Filter by type'
-        })}
-        selection
-        options={NETWORK_TYPES}
-        onChange={(event, data) => {
-          setNetworkStatus(data?.value)
-          props?.datagrid?.setQuery({ status: data?.value })
-        }}
-      /> */}
       <InviteModal
         onClose={props?.triggerModal}
         open={props?.isOpenModal}

@@ -1,5 +1,5 @@
-import { Component } from 'react'
 import { Container } from 'semantic-ui-react'
+import { useEffect } from 'react'
 import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TableHandlers from './TableHandlers'
 import { withAuth } from '../../../hocs'
@@ -23,14 +23,14 @@ const sidebars = {
   users: <UsersSidebar />
 }
 
-class Companies extends Component {
-  componentWillUnmount() {
-    const { isOpenSidebar, closePopup } = this.props
-    if (isOpenSidebar) closePopup()
-  }
+const Companies = props => {
+  useEffect(() => {
+    const { isOpenSidebar, closePopup } = props
+    if (isOpenSidebar) return closePopup()
+  }, [])
 
-  getApiConfig = () => {
-    const { currentTab } = this.props
+  const getApiConfig = () => {
+    const { currentTab } = props
     const datagridApiMap = {
       companies: {
         url: '/prodex/api/companies/datagrid',
@@ -70,32 +70,30 @@ class Companies extends Component {
     return datagridApiMap[currentTab]
   }
 
-  renderContent = () => {
-    const { currentTab } = this.props
+  const renderContent = () => {
+    const { currentTab } = props
 
     return <>{tables[currentTab] || <p>This page is still under construction</p>}</>
   }
 
-  render() {
-    const { currentTab, isOpenSidebar } = this.props
+  const { currentTab, isOpenSidebar } = props
 
-    if (!getSafe(() => this.props.auth.identity.isAdmin, false))
-      return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-    
-    return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters={true} skipInitLoad>
-        <Container fluid className='flex stretched'>
-          <div style={{ padding: '20px 30px 0' }}>
-            <TableHandlers currentTab={currentTab} />
-          </div>
-          <div style={{ padding: '20px 30px' }} className='flex stretched'>
-            {this.renderContent()}
-          </div>
-        </Container>
-        {isOpenSidebar && sidebars[currentTab]}
-      </DatagridProvider>
-    )
-  }
+  if (!getSafe(() => props.auth.identity.isAdmin, false))
+    return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
+  
+  return (
+    <DatagridProvider apiConfig={getApiConfig()} preserveFilters={true} skipInitLoad>
+      <Container fluid className='flex stretched'>
+        <div style={{ padding: '20px 30px 0' }}>
+          <TableHandlers currentTab={currentTab} />
+        </div>
+        <div style={{ padding: '20px 30px' }} className='flex stretched'>
+          {renderContent()}
+        </div>
+      </Container>
+      {isOpenSidebar && sidebars[currentTab]}
+    </DatagridProvider>
+  )
 }
 
 const mapStateToProps = state => {
