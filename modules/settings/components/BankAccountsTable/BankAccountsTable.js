@@ -44,7 +44,6 @@ import { DivCircle, StatusLabel } from './styles'
 const ButtonDownload = styled(Button)`
   background-color: #2599d5 !important;
   color: #ffffff !important;
-  margin-left: 8px !important;
 `
 
 const Container = styled.div`
@@ -643,8 +642,8 @@ class BankAccountsTable extends Component {
                   placeholder='Document Type'
                   onChange={(e, { value }) => {this.setState({documentType: value})}}
                 />
-                <ButtonDownload loading={downloading} primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download' disabled={downloading}>
-                  {downloading ? <></> : <FormattedMessage id='global.download' defaultMessage='Download' />}
+                <ButtonDownload loading={downloading} primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download'>
+                  <FormattedMessage id='global.download' defaultMessage='Download' />
                 </ButtonDownload>
               </div>
             </div>
@@ -735,7 +734,7 @@ class BankAccountsTable extends Component {
           ) : null}
 
           {!isThirdPartyConnectionException && (bankAccounts.accountStatus || bankAccounts.documentStatus) && (
-            <Container style={{ padding: '0 0 28px 0' }}>
+            <Container style={{ padding: '28px 0' }}>
               {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
                 <>
                   <Table style={{ marginTop: 0, marginBottom: 30 }}>
