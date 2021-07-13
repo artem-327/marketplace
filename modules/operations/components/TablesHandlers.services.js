@@ -54,29 +54,21 @@ export const validationSchema = Yup.lazy(values => {
 export const initFilterValues = (initTableHandlersFilters, props, formikProps, setState) => {
     const { currentTab } = props
     if (currentTab === '') return
-    const status = localStorage['operations-orders-status-filter']
-
-    const tableHandlersFilters = {
-    ...initTableHandlersFilters,
-    orders: {
-        ...initTableHandlersFilters.orders,
-        status: status ? status : initTableHandlersFilters.orders.status
-    }
-    }
-    setState({ ...tableHandlersFilters })
+    
+    setState({ ...initTableHandlersFilters })
 
     if(formikProps) {
-    const { setValues, setFieldTouched } = formikProps
+      const { setValues, setFieldTouched } = formikProps
 
-    setValues({
-        dateFrom: tableHandlersFilters.orders.dateFrom,
-        dateTo: tableHandlersFilters.orders.dateTo,
-        orderId: tableHandlersFilters.orders.orderId
-    })
-    setFieldTouched('dateFrom', true, true)
+      setValues({
+          dateFrom: initTableHandlersFilters.orders.dateFrom,
+          dateTo: initTableHandlersFilters.orders.dateTo,
+          orderId: initTableHandlersFilters.orders.orderId
+      })
+      setFieldTouched('dateFrom', true, true)
     }
 
-    handleFiltersValue(tableHandlersFilters[currentTab], props, formikProps)
+    handleFiltersValue(initTableHandlersFilters[currentTab], props, formikProps)
 }
 
 /**
@@ -92,13 +84,13 @@ export const handleFiltersValue = debounce((value, props, formikProps) => {
 
     let filter = value
     if (currentTab === 'orders') {
-    filter = {
+      filter = {
         ...value,
         status: getSafe(() => OrdersFilters[value.status].filters, ''),
         orderId: !orderIdError && value.orderId ? value.orderId : '',
         dateFrom: value.dateFrom && !dateFromError ? getStringISODate(value.dateFrom) : '',
         dateTo: value.dateTo ? moment(getStringISODate(value.dateTo)).endOf('day').format() : ''
-    }
+      }
     }
     datagrid.setSearch(filter, true, 'pageFilters')
 }, 500)
@@ -121,26 +113,30 @@ export const handleFilterChangeMappedUnmapped = (value, props, formikProps, stat
  * @services
  */
 export const handleFilterChangeInputSearch = (data, props, formikProps, state, setState) => {
-    const { currentTab } = props
-    if (currentTab === '') return
+  const { currentTab } = props
+  if (currentTab === '') return
 
-    setState({
+  setState({
     ...state,
     [currentTab]: {
-        ...state[currentTab],
-        [data.name]: data.value
+      ...state[currentTab],
+      [data.name]: data.value
     }
-    })
+  })
 
-    if (currentTab === 'orders' && data.name === 'status') {
-    localStorage['operations-orders-status-filter'] = data.value
+  props.saveFilters({
+    ...state,
+    [currentTab]: {
+      ...state[currentTab],
+      [data.name]: data.value
     }
+  })
 
-    const filter = {
+  const filter = {
     ...state[currentTab],
     [data.name]: data.value
-    }
-    handleFiltersValue(filter, props, formikProps)
+  }
+  handleFiltersValue(filter, props, formikProps)
 }
 
 /**

@@ -323,18 +323,21 @@ const getActions = (props) => {
  */
 export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
     setState({
-    ...state,
-    filterValues: {
-        ...state.filterValues,
-        SearchByNamesAndTags: data
-    }
+      ...state,
+      filterValues: {
+        SearchByNamesAndTags: data,
+        ...(!!data && {
+          ...data.filters
+        })
+      }
     })
     const filter = {
-    ...state.filterValues,
-    ...(!!data && {
+      SearchByNamesAndTags: data,
+      ...(!!data && {
         ...data.filters
-    })
+      })
     }
+    props.handleVariableSave('myListingsFilters', filter)
     handleFiltersValue(filter, props)
 }
 

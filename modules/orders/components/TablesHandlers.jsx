@@ -15,8 +15,6 @@ import { getSafe } from '../../../utils/functions'
 import { validationSchema } from './Orders.service'
 // Constants
 import { filters } from '../constants'
-//Hooks
-import { usePrevious } from '../../../hooks'
 // Styles
 import {
   PositionHeaderSettings,
@@ -39,106 +37,37 @@ const TablesHandlers = props => {
     }
   })
 
-  const prevCurrentTab = usePrevious(props.currentTab)
-  let formikProps = {}
+  let formikPropsNew
 
   useEffect(() => {
     const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
 
+    props.datagrid.clear()
     if (tableHandlersFilters) {
-      initFilterValues(tableHandlersFilters)
-    } else {
-      let allFilters = state
-
-      const statusSales = localStorage['orders-status-filter-sales']
-      const statusPurchase = localStorage['orders-status-filter-purchase']
-
-      allFilters = {
-        ...allFilters,
-        purchase: {
-          ...allFilters.purchase,
-          status: statusPurchase ? statusPurchase : allFilters.purchase.status
-        },
-        sales: {
-          ...allFilters.sales,
-          status: statusSales ? statusSales : allFilters.sales.status
-        }
-      }
-
-      setState(allFilters)
-      handleFiltersValue(allFilters[currentTab])
-    }
-
-    return props.saveFilters(state)
-  }, [])
-
-  useEffect(() => {
-    if (typeof prevCurrentTab !== 'undefined') {
-      const { currentTab } = props
-      if (currentTab === '') return
-
-      let filterValue = state[currentTab]
-      const status = localStorage[`orders-status-filter-${currentTab}`]
-      filterValue = {
-        ...filterValue,
-        status: status ? status : filterValue.status
-      }
+      setState(tableHandlersFilters)
+      let filterValue = tableHandlersFilters[currentTab]
       
-      if(Object.keys(formikProps).length > 0) {
-        const { setValues, setFieldTouched } = formikProps
+      if(formikPropsNew && Object.keys(formikPropsNew).length > 0) {
+        const { setValues, setFieldTouched } = formikPropsNew
         setValues({
           dateFrom: filterValue.dateFrom,
           dateTo: filterValue.dateTo,
           orderId: filterValue.orderId
         })
         setFieldTouched('dateFrom', true, true)
-
-        setState({ ...state, [currentTab]: filterValue })
       }    
 
-      props.datagrid.clear()
-      handleFiltersValue(filterValue)
+      handleFiltersValue(tableHandlersFilters[currentTab])
+    } else {
+      handleFiltersValue(state[currentTab])
     }
-  }, [props.currentTab])
-
-  const initFilterValues = initTableHandlersFilters => {
-    const { currentTab } = props
-    if (currentTab === '') return
-    const statusSales = localStorage['orders-status-filter-sales']
-    const statusPurchase = localStorage['orders-status-filter-purchase']
-
-    const tableHandlersFilters = {
-      ...initTableHandlersFilters,
-      purchase: {
-        ...initTableHandlersFilters.purchase,
-        status: statusPurchase ? statusPurchase : initTableHandlersFilters.purchase.status
-      },
-      sales: {
-        ...initTableHandlersFilters.sales,
-        status: statusSales ? statusSales : initTableHandlersFilters.sales.status
-      }
-    }
-    setState(tableHandlersFilters)
-
-    if(Object.keys(formikProps).length > 0) {
-      const { setValues, setFieldTouched } = formikProps
-
-      setValues({
-        dateFrom: tableHandlersFilters[currentTab].dateFrom,
-        dateTo: tableHandlersFilters[currentTab].dateTo,
-        orderId: tableHandlersFilters[currentTab].orderId
-      })
-      setFieldTouched('dateFrom', true, true)
-    }
-
-    handleFiltersValue(tableHandlersFilters[currentTab])
-  }
+  }, [])
 
   const handleFiltersValue = value => {
     const { datagrid } = props
-    const orderIdError = getSafe(() => formikProps.errors.orderId, false)
-    const dateFromError = getSafe(() => formikProps.errors.dateFrom, false)
+    const orderIdError = getSafe(() => formikPropsNew.errors.orderId, false)
+    const dateFromError = getSafe(() => formikPropsNew.errors.dateFrom, false)
 
     let filterValue = {
       status: getSafe(() => filters[value.status].filters, ''),
@@ -160,7 +89,14 @@ const TablesHandlers = props => {
         [data.name]: data.value
       }
     })
-    if (data.name === 'status') localStorage[`orders-status-filter-${currentTab}`] = data.value
+
+    props.saveFilters({
+      ...state,
+      [currentTab]: {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+    })
 
     const filter = {
       ...state[currentTab],
@@ -183,7 +119,7 @@ const TablesHandlers = props => {
         onSubmit={() => {}}
         validateOnChange={true}
         render={formikProps => {
-          formikProps = formikProps
+          formikPropsNew = formikProps
 
           return (
             <>
