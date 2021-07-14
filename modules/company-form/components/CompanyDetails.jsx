@@ -526,13 +526,10 @@ function mapStateToProps(state) {
     loading: getSafe(() => state.businessTypes.loading, false),
     deleting: getSafe(() => state.simpleAdd.updatingDatagrid, false),
     associations: getSafe(() => state.businessTypes.associations, []),
-    documentTypes: getSafe(() => state.globalData.documentTypes, []),
-    documentTypesLoading: getSafe(() => state.globalData.documentTypesLoading, false),
-    documentTypesFederalOwnershipCertifications: getSafe(
-      () => state.globalData.documentTypesFederalOwnershipCertifications,
-      []
-    ),
-    documentTypesManagementCertifications: getSafe(() => state.globalData.documentTypesManagementCertifications, []),
+    documentTypes: state.globalData.documentTypes,
+    documentTypesLoading: state.globalData.documentTypesLoading,
+    documentTypesFederalOwnershipCertifications: state.globalData.documentTypesFederalOwnershipCertifications,
+    documentTypesManagementCertifications: state.globalData.documentTypesManagementCertifications,
     companyLegalDocs: getSafe(() => state.businessTypes.companyLegalDocs, []),
     companyLegalDocsLoading: getSafe(() => state.businessTypes.companyLegalDocsLoading, false),
     managementCertificationsDocs: getSafe(() => state.businessTypes.managementCertificationsDocs, []),

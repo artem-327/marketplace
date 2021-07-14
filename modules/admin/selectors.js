@@ -2,7 +2,7 @@ import { createSelector } from 'reselect'
 import { getSafe } from '../../utils/functions'
 import { config } from './constants'
 
-const getUnits = state => getSafe(() => state.globalData.units, [])
+const getUnits = state => state.globalData.units
 const getCurrentEditForm = state => getSafe(() => state.admin.currentEditForm, null)
 const getCurrentAddForm = state => getSafe(() => state.admin.currentAddForm, null)
 const getCurrentAddDwolla = state => getSafe(() => state.admin.currentAddDwolla, null)
@@ -14,15 +14,12 @@ const getUpdating = state => getSafe(() => state.admin.updating, false)
 const getEditId = state => getSafe(() => state.admin.popupValues.id, null)
 const getFilterValue = state => getSafe(() => state.admin.filterValue, '')
 const getLoading = state => getSafe(() => state.admin.loading, false)
-const getCountries = state => getSafe(() => state.globalData.countries, [])
 const getConfig = state => getSafe(() => state.admin.config, config)
 const getConfirmMessage = state => getSafe(() => state.admin.confirmMessage, null)
 const getDeleteRowById = state => getSafe(() => state.admin.deleteRowById, null)
 const getlogisticsProvidersFetching = state => getSafe(() => state.admin.logisticsProvidersFetching, false)
 const getLogisticsProviders = state => getSafe(() => state.admin.logisticsProviders, [])
-const getMeasureOptions = state => state.globalData.measureTypesDropdown
 
-export const makeGetUnits = () => createSelector([getUnits], units => units)
 export const makeGetDimensionUnits = () => createSelector([getUnits], units => units?.filter(d=>{return d.measureType.name === "length"}).map(d => {
     return {
       key: d.id,
@@ -50,10 +47,8 @@ export const makeGetUpdating = () => createSelector([getUpdating], updating => u
 export const makeGetEditId = () => createSelector([getEditId], editId => editId)
 export const makeGetFilterValue = () => createSelector([getFilterValue], filterValue => filterValue)
 export const makeGetLoading = () => createSelector([getLoading], loading => loading)
-export const makeGetCountries = () => createSelector([getCountries], countries => countries)
 export const makeGetConfig = () => createSelector([getConfig], config => config)
 export const makeGetConfirmMessage = () => createSelector([getConfirmMessage], confirmMessage => confirmMessage)
 export const makeGetDeleteRowById = () => createSelector([getDeleteRowById], deleteRowById => deleteRowById)
 export const makeGetlogisticsProvidersFetching = () => createSelector([getlogisticsProvidersFetching], logisticsProvidersFetching => logisticsProvidersFetching)
 export const makeGetLogisticsProviders = () => createSelector([getLogisticsProviders], logisticsProviders => logisticsProviders)
-export const makeGetMeasureOptions = () => createSelector([getMeasureOptions], measureOptions => measureOptions)

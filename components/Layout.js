@@ -570,7 +570,7 @@ const mapStateToProps = state => {
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover:
       getSafe(() => !!state.auth.identity.company.id, false) && getSafe(() => state.auth.identity.isAdmin, false),
-    countries: getSafe(() => state.globalData.countries, []),
+    countries: state.globalData.countries,
     companyId: getSafe(() => state.auth.identity.company.id, false),
     hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false),
     companyLogo: getSafe(() => state.businessTypes.companyLogo, null),

@@ -27,10 +27,10 @@ import {
   makeGetFilterValue,
   makeGetLoading,
   makeGetConfirmMessage,
-  makeGetDeleteRowById,
-  makeGetMeasureOptions,
-  makeGetUnits
+  makeGetDeleteRowById
 } from '../../selectors'
+
+import { makeGetMeasureTypesDropdown, makeGetUnits } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     getDataRequest,
@@ -52,7 +52,7 @@ const makeMapStateToProps = () => {
     const getLoading = makeGetLoading()
     const getConfirmMessage = makeGetConfirmMessage()
     const getDeleteRowById = makeGetDeleteRowById()
-    const getMeasureOptions = makeGetMeasureOptions()
+    const getMeasureOptions = makeGetMeasureTypesDropdown()
     const getMakeGetUnits = makeGetUnits()
 
     const mapStateToProps = (state, { datagrid }) => {

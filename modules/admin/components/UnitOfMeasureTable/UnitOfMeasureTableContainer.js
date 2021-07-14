@@ -20,9 +20,9 @@ import {
     makeGetFilterValue,
     makeGetLoading,
     makeGetConfirmMessage,
-    makeGetDeleteRowById,
-    makeGetMeasureOptions
+    makeGetDeleteRowById
 } from '../../selectors'
+import { makeGetMeasureTypesDropdown } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     getDataRequest,
@@ -39,7 +39,7 @@ const makeMapStateToProps = () => {
     const getLoading = makeGetLoading()
     const getConfirmMessage = makeGetConfirmMessage()
     const getDeleteRowById = makeGetDeleteRowById()
-    const getMeasureOptions = makeGetMeasureOptions()
+    const getMeasureOptions = makeGetMeasureTypesDropdown()
 
     const mapStateToProps = (state, { datagrid }) => {
         let cfg = getConfig(state)

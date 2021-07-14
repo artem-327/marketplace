@@ -169,7 +169,7 @@ UploadAttachment.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  listDocumentTypes: getSafe(() => state.globalData.documentTypesDropdown, [])
+  listDocumentTypes: state.globalData.documentTypesDropdown
 })
 
 export default withToastManager(connect(mapStateToProps, { getDocumentTypes })(UploadAttachment))

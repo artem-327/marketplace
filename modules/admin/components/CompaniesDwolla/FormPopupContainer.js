@@ -10,7 +10,8 @@ import {
 // Services
 import { getCountries } from '../../../global-data/actions'
 // Selectors
-import { makeGetPopupValues, makeGetCountries } from '../../selectors'
+import { makeGetPopupValues } from '../../selectors'
+import { makeGetCountries } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     closeRegisterDwollaAccount,
