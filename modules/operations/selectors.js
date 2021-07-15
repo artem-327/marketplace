@@ -17,8 +17,6 @@ const getFilterValue = state => getSafe(() => state.operations.filterValue, '')
 const getLoading = state => getSafe(() => state.operations.loading, false)
 const getEchoSupportPhone = state => getSafe(() => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value, 'N/A')
 const getIsPaymentCancellable = state => getSafe(() => state.operations.orderDetailData.isPaymentCancellable, false)
-const getListDocumentTypes = state => state.globalData.documentTypesDropdown
-const getDocumentTypesFetching = state => state.globalData.documentTypesLoading
 const getDatagridFilterUpdate = state => getSafe(() => state.orders.datagridFilterUpdate, false)
 const getOrderAccountingDocuments = state => getSafe(() => state.operations.orderAccountingDocuments, [])
 const getOrderAccountingDocumentsLoading = state => getSafe(() => state.operations.orderAccountingDocumentsLoading, false)
@@ -73,12 +71,6 @@ export const makeGetEchoSupportPhone = () => {
 }
 export const makeGetIsPaymentCancellable = () => {
     return createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
-}
-export const makeGetListDocumentTypes = () => {
-    return createSelector([getListDocumentTypes], listDocumentTypes => listDocumentTypes)
-}
-export const makeGetDocumentTypesFetching = () => {
-    return createSelector([getDocumentTypesFetching], documentTypesFetching => documentTypesFetching)
 }
 export const makeGetDatagridFilterUpdate = () => {
     return createSelector([getDatagridFilterUpdate], datagridFilterUpdate => datagridFilterUpdate)

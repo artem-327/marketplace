@@ -35,8 +35,6 @@ import {
   makeGetApplicationName,
   makeGetAutocompleteData,
   makeGetAutocompleteDataLoading,
-  makeGetProductFormsDropdown,
-  makeGetProductGradesDropdown,
   makeGetLoading,
   makeGetModalActiveTab,
   makeGetIsModalDetailOpen,
@@ -53,9 +51,14 @@ import {
   makeGetBroadcastTemplates,
   makeGetTdsTemplatesLoading,
   makeGetTdsTemplates,
-  makeGetBroadcastOption,
-  makeGetDocumentTypesDropdown
+  makeGetBroadcastOption
 } from '../../../selectors'
+
+import {
+  makeGetProductFormsDropdown,
+  makeGetProductGradesDropdown,
+  makeGetDocumentTypesDropdown
+} from '../../../../global-data/selectors'
 
 const mapDispatchToProps = {
   modalDetailTrigger,

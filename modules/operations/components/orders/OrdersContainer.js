@@ -12,9 +12,7 @@ import { getDocumentTypes } from '../../../global-data/actions'
 import { withDatagrid } from '../../../datagrid'
 import { getRows } from './Orders.services'
 // Selectors
-import { 
-  makeGetListDocumentTypes,
-  makeGetDocumentTypesFetching,
+import {
   makeGetDatagridFilterUpdate, 
   makeGetOrderAccountingDocuments,
   makeGetOrderAccountingDocumentsLoading,
@@ -22,9 +20,14 @@ import {
   makeGetOrderProcessing
 } from '../../selectors'
 
+import {
+  makeGetDocumentTypesDropdown,
+  makeGetDocumentTypesLoading
+} from '../../../global-data/selectors'
+
 const makeMapStateToProps = () => {
-  const getListDocumentTypes = makeGetListDocumentTypes()
-  const getDocumentTypesFetching = makeGetDocumentTypesFetching()
+  const getListDocumentTypes = makeGetDocumentTypesDropdown()
+  const getDocumentTypesFetching = makeGetDocumentTypesLoading()
   const getDatagridFilterUpdate = makeGetDatagridFilterUpdate()
   const getOrderAccountingDocuments = makeGetOrderAccountingDocuments()
   const getOrderAccountingDocumentsLoading = makeGetOrderAccountingDocumentsLoading()

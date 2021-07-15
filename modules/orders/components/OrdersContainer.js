@@ -16,8 +16,6 @@ import {
   makeGetIsOpen,
   makeGetFilterData,
   makeGetActiveStatus,
-  makeGetListDocumentTypes,
-  makeGetDocumentTypesFetching,
   makeGetTutorialCompleted,
   makeGetRelatedOrders,
   makeGetLoadRelatedOrders,
@@ -26,12 +24,17 @@ import {
   makeGetTableHandlersFilters
 } from '../selectors'
 
+import {
+  makeGetDocumentTypesDropdown,
+  makeGetDocumentTypesLoading
+} from '../../global-data/selectors'
+
 const makeMapStateToProps = () => {
   const getIsOpen = makeGetIsOpen()
   const getFilterData = makeGetFilterData()
   const getActiveStatus = makeGetActiveStatus()
-  const getListDocumentTypes = makeGetListDocumentTypes()
-  const getDocumentTypesFetching = makeGetDocumentTypesFetching()
+  const getListDocumentTypes = makeGetDocumentTypesDropdown()
+  const getDocumentTypesFetching = makeGetDocumentTypesLoading()
   const getTutorialCompleted = makeGetTutorialCompleted()
   const getRelatedOrders = makeGetRelatedOrders()
   const getLoadRelatedOrders = makeGetLoadRelatedOrders()

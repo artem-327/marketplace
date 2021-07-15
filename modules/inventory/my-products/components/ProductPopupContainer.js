@@ -35,21 +35,24 @@ import {
   makeGetPopupValues,
   makeGetCompanyGenericProduct,
   makeGetCompanyGenericProductFetching,
-  makeGetPackagingType,
-  makeGetPackagingTypesAll,
-  makeGetProductsUnitsType,
-  makeGetPackageWeightUnits,
-  makeGetUnitsAll,
-  makeGetFreightClasses,
-  makeGetHazardClasses,
-  makeGetPackagingGroups,
   makeGetSearchedUnNumbers,
   makeGetProductDataLoading,
-  makeGetDocumentTypesDropdown,
   makeGetNmfcNumbersFetching,
   makeGetNmfcNumbersFiltered,
   makeGetSettingsMap
 } from '../../selectors'
+
+import {
+  makeGetDocumentTypesDropdown,
+  makeGetMeasureTypesDropdown,
+  makeGetPackagingTypes,
+  makeGetUnitsDropdown,
+  makeGetWeightUnits,
+  makeGetUnits,
+  makeGetFreightClassesDropdown,
+  makeGetHazardClassesDropdown,
+  makeGetPackagingGroupsDropdown
+} from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
   closePopup,
@@ -75,14 +78,14 @@ const makeMapStateToProps = () => {
   const getPopupValues = makeGetPopupValues()
   const getCompanyGenericProduct = makeGetCompanyGenericProduct()
   const getCompanyGenericProductFetching = makeGetCompanyGenericProductFetching()
-  const getPackagingType = makeGetPackagingType()
-  const getPackagingTypesAll = makeGetPackagingTypesAll()
-  const getProductsUnitsType = makeGetProductsUnitsType()
-  const getPackageWeightUnits = makeGetPackageWeightUnits()
-  const getUnitsAll = makeGetUnitsAll()
-  const getFreightClasses = makeGetFreightClasses()
-  const getHazardClasses = makeGetHazardClasses()
-  const getPackagingGroups = makeGetPackagingGroups()
+  const getPackagingType = makeGetMeasureTypesDropdown()
+  const getPackagingTypesAll = makeGetPackagingTypes()
+  const getProductsUnitsType = makeGetUnitsDropdown()
+  const getPackageWeightUnits = makeGetWeightUnits()
+  const getUnitsAll = makeGetUnits()
+  const getFreightClasses = makeGetFreightClassesDropdown()
+  const getHazardClasses = makeGetHazardClassesDropdown()
+  const getPackagingGroups = makeGetPackagingGroupsDropdown()
   const getSearchedUnNumbers = makeGetSearchedUnNumbers()
   const getProductDataLoading = makeGetProductDataLoading()
   const getDocumentTypesDropdown = makeGetDocumentTypesDropdown()

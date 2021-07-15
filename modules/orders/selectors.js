@@ -16,7 +16,6 @@ const getOpenedSaleReviewCreditRequest = state => state?.orders?.openedSaleRevie
 const getOpenedPurchaseOrderShipping = state => state?.orders?.openedPurchaseOrderShipping
 const getAction = state => getSafe(() => state.orders.detail.orderStatus.toString(), 0) + getSafe(() => state.orders.detail.shippingStatus.toString(), 0)
 const getopendSaleAttachingProductOffer = state => state?.orders?.opendSaleAttachingProductOffer
-const getListDocumentTypes = state => state.globalData.documentTypesDropdown
 const getLoadingRelatedDocuments = state => state?.orders?.loadingRelatedDocuments
 const getIsAdmin = state => getSafe(() => state.auth.identity.isAdmin, false)
 const getIsCompanyAdmin = state => getSafe(() => state.auth.identity.isCompanyAdmin, false)
@@ -28,7 +27,6 @@ const getAppInfo = state => state?.auth?.identity?.appInfo
 const getIsOpen = state => state?.isOpen
 const getFilterData = state => state?.forms?.filter
 const getActiveStatus = state => state?.orders?.statusFilter
-const getDocumentTypesFetching = state => state.globalData.documentTypesLoading
 const getTutorialCompleted = state => getSafe(() => state.auth.identity.tutorialCompleted, false)
 const getRelatedOrders = state => state?.orders?.relatedOrders
 const getLoadRelatedOrders = state => state?.orders?.loadRelatedOrders
@@ -93,7 +91,6 @@ export const makeGetOpenedSaleReviewCreditRequest = () => createSelector([getOpe
 export const makeGetOpenedPurchaseOrderShipping = () => createSelector([getOpenedPurchaseOrderShipping], openedPurchaseOrderShipping => openedPurchaseOrderShipping)
 export const makeGetAction = () => createSelector([getAction], action => action)
 export const makeGetopendSaleAttachingProductOffer = () => createSelector([getopendSaleAttachingProductOffer], opendSaleAttachingProductOffer => opendSaleAttachingProductOffer)
-export const makeGetListDocumentTypes = () => createSelector([getListDocumentTypes], listDocumentTypes => listDocumentTypes)
 export const makeGetLoadingRelatedDocuments = () => createSelector([getLoadingRelatedDocuments], loadingRelatedDocuments => loadingRelatedDocuments)
 export const makeGetIsAdmin = () => createSelector([getIsAdmin], isAdmin => isAdmin)
 export const makeGetIsCompanyAdmin = () => createSelector([getIsCompanyAdmin], isCompanyAdmin => isCompanyAdmin)
@@ -105,7 +102,6 @@ export const makeGetAppInfo = () => createSelector([getAppInfo], appInfo => appI
 export const makeGetIsOpen = () => createSelector([getIsOpen], isOpen => isOpen)
 export const makeGetFilterData = () => createSelector([getFilterData], filterData => filterData)
 export const makeGetActiveStatus = () => createSelector([getActiveStatus], activeStatus => activeStatus)
-export const makeGetDocumentTypesFetching = () => createSelector([getDocumentTypesFetching], documentTypesFetching => documentTypesFetching)
 export const makeGetTutorialCompleted = () => createSelector([getTutorialCompleted], tutorialCompleted => tutorialCompleted)
 export const makeGetRelatedOrders = () => createSelector([getRelatedOrders], relatedOrders => relatedOrders)
 export const makeGetLoadRelatedOrders = () => createSelector([getLoadRelatedOrders], loadRelatedOrders => loadRelatedOrders)

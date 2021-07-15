@@ -7,7 +7,8 @@ import { getLanguages } from '../../global-data/actions'
 import { getIdentity } from '../../auth/actions'
 import { changePassword, closeChangePasswordPopup, closePopup, getUserMeData, getCurrencies, updateMyProfile, openChangePasswordPopup, setPreferredLanguage, loadFile, saveAvatarPicture, deleteAvatarPicture } from '../actions'
 //Selectors
-import { makeGetChangePasswordPopup, makeGetLanguages, makeGetLanguagesFetching, makeGetTutorialCompleted, makeGetPopupValues } from '../selectors'
+import { makeGetChangePasswordPopup, makeGetTutorialCompleted, makeGetPopupValues } from '../selectors'
+import { makeGetLanguagesDropdown, makeGetLanguagesLoading } from '../../global-data/selectors'
 
 const mapDispatchToProps = {
   changePassword,
@@ -27,8 +28,8 @@ const mapDispatchToProps = {
 
 const makeMapStateToProps = () => {
   const getChangePasswordPopup = makeGetChangePasswordPopup()
-  const getLanguages = makeGetLanguages()
-  const getLanguagesFetching = makeGetLanguagesFetching()
+  const getLanguages = makeGetLanguagesDropdown()
+  const getLanguagesFetching = makeGetLanguagesLoading()
   const getTutorialCompleted = makeGetTutorialCompleted()
   const getPopupValues = makeGetPopupValues()
 
