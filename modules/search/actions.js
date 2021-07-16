@@ -39,7 +39,7 @@ export const searchCasElements = filter => ({
     orFilters: [
       { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${filter.toString()}%`] },
       { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${filter.toString()}%`] },
-      // { operator: 'LIKE', path: 'CasProduct.alternativeName', values: [`%${filter.toString()}%`] }
+      { operator: 'LIKE', path: 'CasProduct.alternativeName', values: [`%${filter.toString()}%`] }
     ],
     pageNumber: 0,
     pageSize: 10
