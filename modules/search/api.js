@@ -16,3 +16,5 @@ export const searchProductOffersInventory = (filter, filterType) => {
   }
   return api.post(url, filter).then(response => response.data)
 }
+
+export const searchCasElements = filter => api.post(`/prodex/api/cas-products/datagrid`, filter).then(response => response.data)

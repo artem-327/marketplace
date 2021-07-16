@@ -3,13 +3,13 @@ import * as AT from './action-types'
 export const initialState = {
   tags: [],
   productOffers: [],
+  casElements: [],
   loadingNames: false,
-  loadingTags: false
+  loadingTags: false,
+  loadingCAS: false
 }
 
 export default function reducer(state = initialState, action) {
-  const { payload } = action
-
   switch (action.type) {
     case AT.SEARCH_TAGS_PENDING: {
       return { ...state, loadingTags: true }
@@ -36,6 +36,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         productOffers: action.payload,
         loadingNames: false
+      }
+    }
+
+    case AT.SEARCH_CAS_ELEMENTS_PENDING: {
+      return { ...state, loadingCAS: true }
+    }
+    case AT.SEARCH_CAS_ELEMENTS_REJECTED: {
+      return { ...state, loadingCAS: false }
+    }
+    case AT.SEARCH_CAS_ELEMENTS_FULFILLED: {
+      return {
+        ...state,
+        casElements: action.payload,
+        loadingCAS: false
       }
     }
 

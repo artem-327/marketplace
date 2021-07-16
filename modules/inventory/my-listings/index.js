@@ -21,13 +21,22 @@ const MyListings = () => (
             )
           }
           if (v && v.filterTags && v.filterTags.length > 0) {
-            filters.and = v.filterTags.map(idTag => {
+            filters.and.push(v.filterTags.map(idTag => {
               return {
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
                 values: [idTag]
               }
-            })
+            }))
+          }
+          if (v && v.filterCAS && v.filterCAS.length > 0) {
+            filters.and.push(v.filterCAS.map(idCAS => {
+              return {
+                operator: 'EQUALS',
+                path: 'ProductOffer.companyProduct.companyGenericProduct.elements.id',
+                values: [idCAS]
+              }
+            }))
           }
           return filters
         }
