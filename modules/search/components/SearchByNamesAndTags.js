@@ -93,7 +93,8 @@ class SearchByNamesAndTags extends Component {
 
   handleClick = (e, data, typeTag = false) => {
     // when selected new filter - scroll top to 0 to prepare table for safe redraw
-    this.refDropdownMenu.current.ref.current.closest('.container').querySelector('.table-responsive').scrollTop = 0
+    try { this.refDropdownMenu.current.ref.current.closest('.container').querySelector('.table-responsive').scrollTop = 0 }
+    catch(err) {}
 
     const { productOffers, tags } = this.props
     if (!data) return
