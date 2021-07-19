@@ -1,6 +1,6 @@
 import { createRef, Component, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import PropTypes from 'prop-types'
 import { Grid, Input, Dropdown, Dimmer, Loader } from 'semantic-ui-react'
 import { debounce } from 'lodash'
@@ -9,7 +9,7 @@ import { Datagrid } from '../../datagrid'
 import { withDatagrid } from '../../datagrid'
 import { uniqueArrayByKey, getSafe } from '../../../utils/functions'
 //actions
-import { searchTags, searchProductOffersInventory, clearProductOffers } from '../actions'
+import { searchTags, searchProductOffersInventory, searchCasElements , clearProductOffers } from '../actions'
 //stylesheet
 import styled from 'styled-components'
 
@@ -52,7 +52,7 @@ class SearchByNamesAndTags extends Component {
     this.state = {
       filterName: '',
       filterTags: [],
-      filterTagsValues: [],
+      filterCAS: [],
       active: [],
       usedOptions: [],
       searchQuery: ''
@@ -83,6 +83,7 @@ class SearchByNamesAndTags extends Component {
     try {
       this.props.searchProductOffersInventory(searchQuery, this.props.filterType)
       this.props.searchTags(searchQuery)
+      this.props.searchCasElements(searchQuery)
     } catch (error) {
       console.error(error)
     }
@@ -91,38 +92,40 @@ class SearchByNamesAndTags extends Component {
     }
   }, 150)
 
-  handleClick = (e, data, typeTag = false) => {
+  handleClick = (e, data, type) => {
     // when selected new filter - scroll top to 0 to prepare table for safe redraw
     try {this.refDropdownMenu.current.ref.current.closest('.container').querySelector('.table-responsive').scrollTop = 0}
     catch(err) {}
 
-    const { productOffers, tags } = this.props
+    const { productOffers, tags, casElements } = this.props
     if (!data) return
     e && e.persist()
-    //this.refDropdownMenu.current.close()
-    //this.refDropdownMenu.current.state.searchQuery = data.text
-    //this.refDropdownMenu.current.props.onSearchChange(null, { searchQuery: data.text })
 
     let active = this.state.active.slice()
     active.push(data.value)
 
     let usedOptions = this.state.usedOptions.slice()
-    if (typeTag) {
+    if (type === 't') {
       const option = tags.find(option => option.value === data.value)
       if (option) usedOptions.push(option)
-    } else {
+    } else if (type === 'p') {
       const option = productOffers.find(option => option.value === data.value)
+      if (option) usedOptions.push(option)
+    } else if (type === 'c') {
+      const option = casElements.find(option => option.value === data.value)
       if (option) usedOptions.push(option)
     }
 
     let filterName = [],
-      filterTags = []
+      filterTags = [],
+      filterCAS = []
     active.forEach(val => {
       if (val.charAt(0) === 'p') filterName.push(val.substring(2))
       if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
+      if (val.charAt(0) === 'c') filterCAS.push(parseInt(val.substring(2)))
     })
 
-    const filters = { filterName, filterTags }
+    const filters = { filterName, filterTags, filterCAS }
 
     this.props.onChange({
       filters,
@@ -141,13 +144,15 @@ class SearchByNamesAndTags extends Component {
     })
 
     let filterName = [],
-      filterTags = []
+      filterTags = [],
+      filterCAS = []
     data.value.forEach(val => {
       if (val.charAt(0) === 'p') filterName.push(val.substring(2))
       if (val.charAt(0) === 't') filterTags.push(parseInt(val.substring(2)))
+      if (val.charAt(0) === 'c') filterCAS.push(parseInt(val.substring(2)))
     })
 
-    const filters = { filterName, filterTags }
+    const filters = { filterName, filterTags, filterCAS }
 
     this.props.onChange({
       filters,
@@ -162,6 +167,7 @@ class SearchByNamesAndTags extends Component {
     const {
       tags,
       productOffers,
+      casElements,
       loading,
       intl: { formatMessage }
     } = this.props
@@ -173,7 +179,9 @@ class SearchByNamesAndTags extends Component {
       .slice()
       .filter(el => !active.length || !active.some(opt => opt === el.value))
 
-    const allOptions = uniqueArrayByKey(productOffers.concat(tags).concat(usedOptions), 'key')
+    const searchedCasElements = casElements.slice().filter(el => !active.length || !active.some(opt => opt === el.value))
+
+    const allOptions = uniqueArrayByKey(productOffers.concat(tags).concat(casElements).concat(usedOptions), 'key')
 
     return (
       <Fragment>
@@ -205,6 +213,10 @@ class SearchByNamesAndTags extends Component {
               <Dimmer inverted active={loading}>
                 <Loader />
               </Dimmer>
+              <Dropdown.Divider />
+              <DivSearchTitleInOption>
+                <FormattedMessage id='search.showByName' defaultMessage='Show all products by name:' />
+              </DivSearchTitleInOption>
               {getSafe(() => searchedProductOffers.length, '')
                 ? searchedProductOffers.map((option, i) => {
                     return option && option.text ? (
@@ -213,24 +225,43 @@ class SearchByNamesAndTags extends Component {
                         text={option.text}
                         value={option.value}
                         active={active.some(val => val === option.value)}
-                        onClick={(e, data) => this.handleClick(e, data)}
+                        onClick={(e, data) => this.handleClick(e, data, 'p')}
                       />
                     ) : null
                   })
                 : null}
               <Dropdown.Divider />
-              <DivSearchTitleInOption>Show all product by tag:</DivSearchTitleInOption>
+              <DivSearchTitleInOption>
+                <FormattedMessage id='search.showByTag' defaultMessage='Show all products by tag:' />
+              </DivSearchTitleInOption>
               <DivTags>
                 <DivItem>
                   {searchedTags.map(tag => (
                     <DivRectangleTag
                       key={tag.value}
-                      onClick={e => this.handleClick(e, { value: tag.value, text: tag.text }, true)}>
+                      onClick={e => this.handleClick(e, { value: tag.value, text: tag.text }, 't')}>
                       {tag.text}
                     </DivRectangleTag>
                   ))}
                 </DivItem>
               </DivTags>
+              <Dropdown.Divider />
+              <DivSearchTitleInOption>
+                <FormattedMessage id='search.showByElements' defaultMessage='Show all products by elements:' />
+              </DivSearchTitleInOption>
+              {getSafe(() => searchedCasElements.length, '')
+                ? searchedCasElements.map((cas, i) => {
+                    return cas && cas.text ? (
+                      <Dropdown.Item
+                        key={cas.key}
+                        text={cas.text}
+                        value={cas.value}
+                        active={active.some(val => val === cas.value)}
+                        onClick={(e, data) => this.handleClick(e, data, 'c')}
+                      />
+                    ) : null
+                  })
+                : null}
             </Dropdown.Menu>
           </StyledDropdown>
         </Grid.Column>
@@ -262,7 +293,7 @@ SearchByNamesAndTags.defaultProps = {
 }
 
 const mapStateToProps = state => ({
-  loading: state.search.loadingNames || state.search.loadingTags,
+  loading: state.search.loadingNames || state.search.loadingTags || state.search.loadingCAS,
   tags: getSafe(() => state.search.tags.length, '')
     ? state.search.tags.map(tag => {
         return {
@@ -283,11 +314,20 @@ const mapStateToProps = state => ({
           value: `p_${getSafe(() => product.intProductName, '')}`
         }
       })
+    : [],
+  casElements: getSafe(() => state.search.casElements.length, '')
+    ? state.search.casElements.map(cas => {
+        return {
+          key: `c_${cas.id}`,
+          text: `${cas.casIndexName} (${cas.casNumber})`,
+          value: `c_${cas.id}`
+        }
+      })
     : []
 })
 
 export default withDatagrid(
-  connect(mapStateToProps, { searchTags, searchProductOffersInventory, clearProductOffers })(
+  connect(mapStateToProps, { searchTags, searchProductOffersInventory, searchCasElements, clearProductOffers })(
     injectIntl(SearchByNamesAndTags)
   )
 )
