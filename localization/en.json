@@ -3467,6 +3467,9 @@
   "insurance.carrier": "CARRIER",
   "insurance.coverage": "COVERAGE",
   "insurance.expiration": "EXPIRATION",
+  "search.showByName": "Show all products by name:",
+  "search.showByTag": "Show all products by tag:",
+  "search.showByElements": "Show all products by elements:",
   "inventory.isBelowMin": "The available quantity is below the min quantity",
   "priceBook.noElementsChanged": "There are no elements to be changed"
 }

@@ -15,7 +15,7 @@ const SharedListings = () => (
           // TODO - add location filter
 
           if (filterName.length > 0) {
-            filterName.forEach(
+            filterName.map(
               name =>
                 (filters.or = filters.or.concat([
                   { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
@@ -23,13 +23,22 @@ const SharedListings = () => (
                 ]))
             )
           }
-          if (filterTags.length > 0) {
-            filters.and = filterTags.map(idTag => {
-              return {
+          if (v && v.filterTags && v.filterTags.length > 0) {
+            v.filterTags.map(idTag => {
+              filters.and =  filters.and.concat([{
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
                 values: [idTag]
-              }
+              }])
+            })
+          }
+          if (v && v.filterCAS && v.filterCAS.length > 0) {
+            v.filterCAS.map(idCAS => {
+              filters.and =  filters.and.concat([{
+                operator: 'EQUALS',
+                path: 'ProductOffer.companyProduct.companyGenericProduct.elements.id',
+                values: [idCAS]
+              }])
             })
           }
           return filters
