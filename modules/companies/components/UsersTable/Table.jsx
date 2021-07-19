@@ -36,10 +36,13 @@ import {
   makeGetUsersDatagridRows,
   makeGetEditId,
   makeGetLoading,
-  makeGetEditedId,
-  makeGetUserRoles,
-  makeGetAdminRoles
+  makeGetEditedId
 } from '../selectors'
+
+import {
+  makeGetAdminRoles,
+  makeGetUserRoles
+} from '../../../global-data/selectors'
 
 const makeMapStateToProps = () => {
   const getRows = makeGetUsersDatagridRows()
@@ -48,7 +51,6 @@ const makeMapStateToProps = () => {
   const getEditedId = makeGetEditedId()
   const getUserRoles = makeGetUserRoles()
   const getAdminRoles = makeGetAdminRoles()
-
 
   const mapStateToProps = (state, props) => {
     const currentUser = state.companiesAdmin.currentUser

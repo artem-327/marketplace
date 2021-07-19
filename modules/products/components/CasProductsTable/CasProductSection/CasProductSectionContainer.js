@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
 import CasProductSection from './CasProductSection'
-import { makeGetCasHazardClasses, makeGetHazardClassesLoading } from '../../../selectors'
+import { makeGetHazardClassesLoading, makeGetHazardClasses } from '../../../../global-data/selectors'
 
 const makeMapStateToProps = () => {
-  const getCasHazardClasses = makeGetCasHazardClasses()
+  const getCasHazardClasses = makeGetHazardClasses()
   const getHazardClassesLoading = makeGetHazardClassesLoading()
 
   const mapStateToProps = (state) => {

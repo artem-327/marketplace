@@ -12,10 +12,12 @@ import {
   makeGetEditedId,
   makeGetCasRows,
   makeGetHazardClasses,
-  makeGetHazardClassesLoading,
-  makeGetPackagingGroups,
-  makeGetPackagingGroupsLoading
+  makeGetPackagingGroups
 } from '../../selectors'
+import {
+  makeGetPackagingGroupsLoading,
+  makeGetHazardClassesLoading
+} from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
   openPopup,

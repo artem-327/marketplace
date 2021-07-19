@@ -23,7 +23,6 @@ import {
   makeGetOpenedPurchaseOrderShipping,
   makeGetAction,
   makeGetopendSaleAttachingProductOffer,
-  makeGetListDocumentTypes,
   makeGetLoadingRelatedDocuments,
   makeGetIsAdmin,
   makeGetIsCompanyAdmin,
@@ -33,6 +32,10 @@ import {
   makeGetopenedDisputedRequest,
   makeGetAppInfo
 } from '../selectors'
+
+import {
+  makeGetDocumentTypesDropdown
+} from '../../global-data/selectors'
 
 const makeMapStateToProps = () => {
   const getEchoSupportPhone = makeGetEchoSupportPhone()
@@ -49,7 +52,7 @@ const makeMapStateToProps = () => {
   const getOpenedPurchaseOrderShipping = makeGetOpenedPurchaseOrderShipping()
   const getAction = makeGetAction()
   const getopendSaleAttachingProductOffer = makeGetopendSaleAttachingProductOffer()
-  const getListDocumentTypes = makeGetListDocumentTypes()
+  const getListDocumentTypes = makeGetDocumentTypesDropdown()
   const getLoadingRelatedDocuments = makeGetLoadingRelatedDocuments()
   const getIsAdmin = makeGetIsAdmin()
   const getIsCompanyAdmin = makeGetIsCompanyAdmin()

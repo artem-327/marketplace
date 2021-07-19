@@ -4,7 +4,8 @@ import AddNewUnitOfMeasurePopup from './AddNewUnitOfMeasurePopup'
 // Actions
 import { closeAddPopup, postNewRequest } from '../../actions'
 // Selectors
-import { makeGetConfig, makeGetMeasureOptions } from '../../selectors'
+import { makeGetConfig } from '../../selectors'
+import { makeGetMeasureTypesDropdown } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     closeAddPopup,
@@ -13,7 +14,7 @@ const mapDispatchToProps = {
 
 const makeMapStateToProps = () => {
     const getConfig = makeGetConfig()
-    const getMeasureOptions = makeGetMeasureOptions()
+    const getMeasureOptions = makeGetMeasureTypesDropdown()
     
     const mapStateToProps = state => {
         let cfg = getConfig(state)

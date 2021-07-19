@@ -10,7 +10,8 @@ import {
   getPackagingTypes
 } from '../../../global-data/actions'
 // Selectors
-import { makeGetConfig, makeGetPopupValues, makeGetMeasureOptions, makeGetDimensionUnits, makeGetWeightUnits } from '../../selectors'
+import { makeGetConfig, makeGetPopupValues, makeGetDimensionUnits, makeGetWeightUnits } from '../../selectors'
+import { makeGetMeasureTypesDropdown } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     closeEditPopup,
@@ -24,7 +25,7 @@ const mapDispatchToProps = {
 const makeMapStateToProps = () => {
     const getConfig = makeGetConfig()
     const getPopupValues = makeGetPopupValues()
-    const getMeasureOptions = makeGetMeasureOptions()
+    const getMeasureOptions = makeGetMeasureTypesDropdown()
     const getDimensionUnits = makeGetDimensionUnits()
     const getWeightUnits = makeGetWeightUnits()
 

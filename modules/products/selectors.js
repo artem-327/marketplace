@@ -42,28 +42,22 @@ const getCatEditedId = state => (!!state?.productsAdmin?.currentAddForm || !!sta
   : -1
 const getEditEchoProductEditTab = state => state?.productsAdmin?.editEchoProductEditTab
 const getEditEchoProductInitTrig = state => state?.productsAdmin?.editEchoProductInitTrig
-const getPackagingGroups = state => getSafe(() => state?.globalData?.packagingGroups?.length, false)
-  ? state?.globalData?.packagingGroups?.map((pGroup, id) => {
-      return {
-        key: id,
-        text: pGroup.groupCode,
-        value: pGroup.id,
-        content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
-      }
-    })
-  : []
-const getPackagingGroupsLoading = state => state?.globalData?.packagingGroupsLoading
-const getHazardClasses = state => getSafe(() => state?.globalData?.hazardClasses?.length, false)
-  ? state?.globalData?.hazardClasses?.map((d, id) => {
-      return {
-        key: id,
-        text: d.classCode,
-        value: d.id,
-        content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
-      }
-    })
-  : []
-const getHazardClassesLoading = state => state?.globalData?.hazardClassesLoading
+const getPackagingGroups = state => state.globalData.packagingGroups.map((pGroup, id) => {
+  return {
+    key: id,
+    text: pGroup.groupCode,
+    value: pGroup.id,
+    content: <Header content={pGroup.groupCode} subheader={pGroup.description} style={{ fontSize: '1em' }} />
+  }
+})
+const getHazardClasses = state => state.globalData.hazardClasses.map((d, id) => {
+  return {
+    key: id,
+    text: d.classCode,
+    value: d.id,
+    content: <Header content={d.classCode} subheader={d.description} style={{ fontSize: '1em' }} />
+  }
+})
 const getSearchedManufacturersLoading = state => state?.productsAdmin?.searchedManufacturersLoading
 const getSearchedManufacturers = state => state?.productsAdmin?.searchedManufacturers
 const getSearchedCasProducts = state => state?.productsAdmin?.searchedCasProducts
@@ -78,9 +72,8 @@ const getUnNumbersFiltered = state => getSafe(() => state?.productsAdmin?.unNumb
     })
   : []
 const getUnNumbersFetching = state => state?.productsAdmin?.unNumbersFetching
-const getDocumentTypes = state => state?.globalData?.documentTypes
 const getSearchedProductGroups = state => getSafe(() => state?.productsAdmin?.searchedProductGroups?.length, false)
-  ? state?.productsAdmin?.searchedProductGroups?.map(d => ({
+  ? state.productsAdmin.searchedProductGroups.map(d => ({
       key: d.id,
       text: d.name,
       value: d.id
@@ -89,7 +82,6 @@ const getSearchedProductGroups = state => getSafe(() => state?.productsAdmin?.se
 const getSearchedProductGroupsLoading = state => state?.productsAdmin?.searchedProductGroupsLoading
 const getUpdating = state => state?.productsAdmin?.updating
 const getAltCasNamesRows = state => getSafe(() => state?.productsAdmin?.altCasNamesRows?.data, [])
-const getCasHazardClasses = state => state?.globalData?.hazardClasses
 const getGroupRows = ownProps => ownProps?.datagrid?.rows?.map((row, _i) => ({
   ...row,
   rawData: row,
@@ -199,14 +191,8 @@ export const makeGetEditEchoProductInitTrig = () => {
 export const makeGetPackagingGroups = () => {
   return createSelector([getPackagingGroups], packagingGroups => packagingGroups)
 }
-export const makeGetPackagingGroupsLoading = () => {
-  return createSelector([getPackagingGroupsLoading], getPackagingGroupsLoading => getPackagingGroupsLoading)
-}
 export const makeGetHazardClasses = () => {
   return createSelector([getHazardClasses], hazardClasses => hazardClasses)
-}
-export const makeGetHazardClassesLoading = () => {
-  return createSelector([getHazardClassesLoading], getHazardClassesLoading => getHazardClassesLoading)
 }
 export const makeGetSearchedManufacturersLoading = () => {
   return createSelector([getSearchedManufacturersLoading], searchedManufacturersLoading => searchedManufacturersLoading)
@@ -223,9 +209,6 @@ export const makeGetUnNumbersFiltered = () => {
 export const makeGetUnNumbersFetching = () => {
   return createSelector([getUnNumbersFetching], unNumbersFetching => unNumbersFetching)
 }
-export const makeGetDocumentTypes = () => {
-  return createSelector([getDocumentTypes], documentTypes => documentTypes)
-}
 export const makeGetSearchedProductGroups = () => {
   return createSelector([getSearchedProductGroups], searchedProductGroups => searchedProductGroups)
 }
@@ -237,9 +220,6 @@ export const makeGetUpdating = () => {
 }
 export const makeGetAltCasNamesRows = () => {
   return createSelector([getAltCasNamesRows], altCasNamesRows => altCasNamesRows)
-}
-export const makeGetCasHazardClasses = () => {
-  return createSelector([getCasHazardClasses], hazardClasses => hazardClasses)
 }
 export const makeGetGroupRows = () => {
   return createSelector([getGroupRows], rows => rows)

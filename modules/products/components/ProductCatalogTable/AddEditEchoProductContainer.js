@@ -34,12 +34,12 @@ import {
   makeGetLoading,
   makeGetUnNumbersFiltered,
   makeGetUnNumbersFetching,
-  makeGetDocumentTypes,
   makeGetSearchedProductGroups,
   makeGetSearchedProductGroupsLoading,
   makeGetSearchedCompanies,
   makeGetSearchedCompaniesLoading
 } from '../../selectors'
+import { makeGetDocumentTypes } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
   loadFile,
