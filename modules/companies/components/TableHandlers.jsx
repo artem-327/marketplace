@@ -42,8 +42,7 @@ const TablesHandlers = props => {
       users: {
         searchInput: '',
         company: ''
-      },
-      selectedCompanyOption: ''
+      }
     }
   )
 
@@ -54,13 +53,14 @@ const TablesHandlers = props => {
     isOpenImportPopup,
     currentTab,
     searchedCompaniesFilterLoading,
-    searchedCompaniesFilter
+    searchedCompaniesFilter,
+    tableHandlersFilters
   } = props
 
   const prevCurrentTab = usePrevious(currentTab)
+  const prevTableHandlersFilters = usePrevious(tableHandlersFilters)
 
   useEffect(() => {
-    const { tableHandlersFilters, currentTab } = props
     if (currentTab === '') return
     if (tableHandlersFilters) {
       initFilterValues(tableHandlersFilters, state, setState, props)
@@ -71,26 +71,38 @@ const TablesHandlers = props => {
   }, [])
 
   useEffect(() => {
-    if (typeof prevCurrentTab !== 'undefined') {  // To avoid call on 'componentDidMount'
-      const { currentTab } = props
+    if (typeof prevTableHandlersFilters !== 'undefined') {
       if (currentTab === '') return
+      if (tableHandlersFilters) {
+        setState(tableHandlersFilters)
+        let filterValue = tableHandlersFilters[currentTab]
+        handleFiltersValue(filterValue, props)
+      } else {
+        setState(
+          {
+            companies: {
+              searchInput: ''
+            },
+            users: {
+              searchInput: '',
+              company: ''
+            }
+          }
+        )
+      }
+    }
+  }, [tableHandlersFilters])
 
+  useEffect(() => {
+    if (typeof prevCurrentTab !== 'undefined') {
+      if (currentTab === '') return
       let filterValue = state[currentTab]
       handleFiltersValue(filterValue, props)
     }
   }, [currentTab])
 
   const { formatMessage } = intl
-  const { selectedCompanyOption } = state
   const item = TEXTS_TABLE[currentTab]
-
-  let allCompanyOptions
-  if (selectedCompanyOption) {
-    allCompanyOptions = uniqueArrayByKey(searchedCompaniesFilter.concat([selectedCompanyOption]), 'key')
-  } else {
-    allCompanyOptions = searchedCompaniesFilter
-  }
-
   const filterValue = state[currentTab]
 
   return (
@@ -120,7 +132,7 @@ const TablesHandlers = props => {
                 icon='search'
                 selection
                 clearable
-                options={allCompanyOptions}
+                options={searchedCompaniesFilter}
                 search={options => options}
                 value={filterValue.company}
                 loading={searchedCompaniesFilterLoading}
@@ -148,9 +160,7 @@ const TablesHandlers = props => {
               primary onClick={() => openSidebar(null, currentTab)}
             >
               <PlusCircle />
-              <FormattedMessage id={item.BtnAddText} defaultMessage='Add'>
-                {text => `${text} `}
-              </FormattedMessage>
+              <FormattedMessage id={item.BtnAddText} defaultMessage='Add' />
             </Button>
           </div>
           <ColumnSettingButton divide={true} />
