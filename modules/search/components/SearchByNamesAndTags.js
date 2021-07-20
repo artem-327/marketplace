@@ -45,6 +45,10 @@ const StyledDropdown = styled(Dropdown)`
   }
 `
 
+const DivAddHeightBottom = styled.div`
+  height: 10px;
+`
+
 class SearchByNamesAndTags extends Component {
   constructor(props) {
     super(props)
@@ -262,6 +266,7 @@ class SearchByNamesAndTags extends Component {
                     ) : null
                   })
                 : null}
+              <DivAddHeightBottom />
             </Dropdown.Menu>
           </StyledDropdown>
         </Grid.Column>
