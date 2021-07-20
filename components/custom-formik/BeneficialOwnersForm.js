@@ -80,7 +80,11 @@ class BeneficialOwnersForm extends Component {
               name={`beneficialOwners[${i}].ssn`}
             />
             <DateInput
-              inputProps={{ fluid: true }}
+              inputProps={{
+                fluid: true,
+                placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
+                clearable: true
+              }}
               label={
                 <>
                   {formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
@@ -89,6 +93,7 @@ class BeneficialOwnersForm extends Component {
               }
               name={`beneficialOwners[${i}].dateOfBirth`}
               inputOnly
+              addSeparator
             />
           </FormGroup>
         </>

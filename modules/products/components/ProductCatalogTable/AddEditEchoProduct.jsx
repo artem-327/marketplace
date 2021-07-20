@@ -753,6 +753,8 @@ const AddEditEchoProduct = props => {
           <FormattedMessage id={id} defaultMessage={defaultMessage} />
         </>
       }
+      inputOnly
+      addSeparator
     />
   )
 

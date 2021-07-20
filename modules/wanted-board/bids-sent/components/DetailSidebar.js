@@ -427,12 +427,14 @@ class DetailSidebar extends Component {
                           inputProps={{
                             'data-test': 'my_offer_expiration_date_inp',
                             placeholder: formatMessage({
-                              id: 'date.standardPlaceholder',
-                              defaultMessage: '00/00/0000'
+                              id: 'date.standardFormat',
+                              defaultMessage: 'MM/DD/YYYY'
                             }),
                             minDate: moment(),
                             clearable: true
                           }}
+                          inputOnly
+                          addSeparator
                         />
                       </GridColumn>
                     </GridRow>

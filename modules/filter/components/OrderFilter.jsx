@@ -143,20 +143,24 @@ class OrderFilter extends Component {
                         <DateInput
                           inputProps={{
                             fluid: true,
-                            placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                            placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                             clearable: true
                           }}
                           label={<FormattedMessage id='global.from' defaultMessage='From' />}
                           name='orderFrom.value'
+                          inputOnly
+                          addSeparator
                         />
                         <DateInput
                           inputProps={{
                             fluid: true,
-                            placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                            placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                             clearable: true
                           }}
                           label={<FormattedMessage id='global.to' defaultMessage='To' />}
                           name='orderTo.value'
+                          inputOnly
+                          addSeparator
                         />
                       </FormGroup>
                     </AccordionContent>

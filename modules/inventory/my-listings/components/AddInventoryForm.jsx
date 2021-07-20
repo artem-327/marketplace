@@ -454,6 +454,7 @@ const AddInventoryForm = props => {
                                       <DateInput
                                         inputProps={{
                                           disabled: !values.doesExpire,
+                                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                           'data-test': 'add_inventory_product_expirationDate_dtin'
                                         }}
                                         label={formatMessage({
@@ -461,6 +462,8 @@ const AddInventoryForm = props => {
                                           defaultMessage: 'Expiration Date'
                                         })}
                                         name='expirationDate'
+                                        inputOnly
+                                        addSeparator
                                       />
                                     </GridColumn>
                                   </InnerRow>
@@ -1229,16 +1232,22 @@ const AddInventoryForm = props => {
                                                   <DateInput
                                                     name={`lots[${index}].manufacturedDate`}
                                                     inputProps={{
+                                                      placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                                       'data-test': 'add_inventory_product_manufacturedDate_dtin'
                                                     }}
+                                                    inputOnly
+                                                    addSeparator
                                                   />
                                                 </TableCellBig>
                                                 <TableCellBig>
                                                   <DateInput
                                                     name={`lots[${index}].expirationDate`}
                                                     inputProps={{
+                                                      placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                                       'data-test': 'add_inventory_product_expirationDate_dtin'
                                                     }}
+                                                    inputOnly
+                                                    addSeparator
                                                   />
                                                 </TableCellBig>
                                                 <TableCellBig>
