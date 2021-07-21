@@ -42,7 +42,8 @@ const TablesHandlers = props => {
       users: {
         searchInput: '',
         company: ''
-      }
+      },
+      selectedCompanyOption: []
     }
   )
 
@@ -59,6 +60,7 @@ const TablesHandlers = props => {
 
   const prevCurrentTab = usePrevious(currentTab)
   const prevTableHandlersFilters = usePrevious(tableHandlersFilters)
+  const prevSearchedCompaniesFilter = usePrevious(searchedCompaniesFilter)
 
   useEffect(() => {
     if (currentTab === '') return
@@ -80,6 +82,7 @@ const TablesHandlers = props => {
       } else {
         setState(
           {
+            ...state,
             companies: {
               searchInput: ''
             },
@@ -101,9 +104,18 @@ const TablesHandlers = props => {
     }
   }, [currentTab])
 
+  useEffect(() => {
+    if (typeof prevSearchedCompaniesFilter !== 'undefined') {
+      if(searchedCompaniesFilter.length) {
+        setState({...state, selectedCompanyOption: searchedCompaniesFilter})
+      }
+    }
+  }, [searchedCompaniesFilter])
+
   const { formatMessage } = intl
   const item = TEXTS_TABLE[currentTab]
   const filterValue = state[currentTab]
+  const { selectedCompanyOption } = state
 
   return (
     <PositionHeaderSettings>
@@ -132,7 +144,7 @@ const TablesHandlers = props => {
                 icon='search'
                 selection
                 clearable
-                options={searchedCompaniesFilter}
+                options={selectedCompanyOption}
                 search={options => options}
                 value={filterValue.company}
                 loading={searchedCompaniesFilterLoading}
