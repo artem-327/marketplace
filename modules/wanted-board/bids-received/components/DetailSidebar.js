@@ -777,13 +777,15 @@ class DetailSidebar extends Component {
                           inputProps={{
                             'data-test': 'my_requested_items_sidebar_neededAt_inp',
                             placeholder: formatMessage({
-                              id: 'date.standardPlaceholder',
-                              defaultMessage: '00/00/0000'
+                              id: 'date.standardFormat',
+                              defaultMessage: 'MM/DD/YYYY'
                             }),
                             clearable: true,
                             disabled: values.neededNow !== false,
                             minDate: moment()
                           }}
+                          inputOnly
+                          addSeparator
                         />
                       </GridColumn>
                       <GridColumn width={8}>
@@ -792,12 +794,14 @@ class DetailSidebar extends Component {
                           inputProps={{
                             'data-test': 'my_requested_items_sidebar_expiresAt_inp',
                             placeholder: formatMessage({
-                              id: 'date.standardPlaceholder',
-                              defaultMessage: '00/00/0000'
+                              id: 'date.standardFormat',
+                              defaultMessage: 'MM/DD/YYYY'
                             }),
                             disabled: values.doesExpire !== true,
                             minDate: moment()
                           }}
+                          inputOnly
+                          addSeparator
                         />
                       </GridColumn>
                     </GridRow>
