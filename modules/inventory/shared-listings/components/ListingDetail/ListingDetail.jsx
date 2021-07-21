@@ -4,8 +4,6 @@ import { ChevronsUp } from 'react-feather'
 // Components
 import Header from './HeaderContainer'
 import Tabs from './Tabs/Tabs'
-// Hooks
-import { usePrevious } from '../../../../../hooks'
 // Styles
 import {
   DivCollapse,
@@ -20,17 +18,9 @@ import {
  * @component
  */
 const ListingDetail = props => {
-  const [row, setRow] = useState(null)
-  const prevRow = usePrevious(props.row)
-  
-  useEffect(() => {
-    if (typeof prevRow !== 'undefined') {
-      setRow(props.row)
-    }
-  }, [props.row])
-
-  const { values, onChange, parentState, datagrid } = props
+  const { values, onChange, parentState, datagrid, row } = props
   const { expandedRowIds, setExpandedRowIds } = parentState
+
   return (
     <>
       <Header
