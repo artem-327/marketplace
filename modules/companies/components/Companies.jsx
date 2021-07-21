@@ -8,6 +8,7 @@ import { FormattedMessage } from 'react-intl'
 import CompaniesTable from './CompaniesTable/Table'
 import UsersTable from './UsersTable/Table'
 import * as Actions from '../actions'
+import { displayErrorForbidden } from '../../errors/actions'
 import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
 // Services
@@ -25,7 +26,8 @@ const sidebars = {
 
 const Companies = props => {
   useEffect(() => {
-    const { isOpenSidebar, closePopup } = props
+    const { isOpenSidebar, closePopup, displayErrorForbidden } = props
+    if (!getSafe(() => props.auth.identity.isAdmin, false)) displayErrorForbidden()
     if (isOpenSidebar) return closePopup()
   }, [])
 
@@ -78,9 +80,8 @@ const Companies = props => {
 
   const { currentTab, isOpenSidebar } = props
 
-  if (!getSafe(() => props.auth.identity.isAdmin, false))
-    return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-  
+  if (!getSafe(() => props.auth.identity.isAdmin, false)) return null
+
   return (
     <DatagridProvider apiConfig={getApiConfig()} preserveFilters={true} skipInitLoad>
       <Container fluid className='flex stretched'>
@@ -103,4 +104,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default withAuth(connect(mapStateToProps, Actions)(Companies))
+export default withAuth(connect(mapStateToProps, { Actions, displayErrorForbidden })(Companies))
