@@ -562,6 +562,8 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
         ...state,
         detailValues: { ...data, id: isEdit ? data.id : null },
         initValues: { ...INIT_VALUES, ...getEditValues(data) },
+        changedForm: false,
+        attachmentFiles: [],
         edited: false
       })
       sendSuccess = true
@@ -587,6 +589,8 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
               ...state,
               detailValues: po.value,
               initValues: { ...INIT_VALUES, ...getEditValues(po.value) },
+              changedForm: false,
+              attachmentFiles: [],
               edited: false
             })
             sendSuccess = true
@@ -595,7 +599,6 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
       }
     } finally {
       setTouched({})
-      setState({ ...state, changedForm: false, attachmentFiles: [] })
     }
   }
 
