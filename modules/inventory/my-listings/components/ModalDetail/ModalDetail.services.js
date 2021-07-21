@@ -550,7 +550,8 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
 
   if (Object.keys(obj).length) {
     try {
-      data = await addProductOffer(obj, isEdit, false, isGrouped, attachmentFiles)
+      const { value } = await addProductOffer(obj, isEdit, false, isGrouped, attachmentFiles)
+      data = value
       if (isEdit) {
         datagrid.updateRow(data.id, () => data)
       } else {

@@ -171,7 +171,6 @@ const AddInventoryForm = props => {
         className='flex stretched'
         style={{ padding: '20px' }}>
         {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-          submitForm = submitForm
           return (
             <>
               <Modal closeIcon onClose={() => resetForm(props)} open={props.poCreated} size='tiny'>

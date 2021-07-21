@@ -285,7 +285,6 @@ const ModalDetail = props => {
             setSubmitting,
             resetForm
           } = formikProps
-          values = values
           resetFormNew = resetForm
           formikPropsNew = formikProps
           return (
