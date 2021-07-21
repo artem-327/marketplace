@@ -10,7 +10,7 @@ const Listings = props => {
     searchToFilter: v => {
       let filters = { or: [], and: [] }
       if (v && v.filterName && v.filterName.length > 0) {
-        v.filterName.map(name =>
+        v.filterName.map(name => {
           filters.or = filters.or.concat(
             [
               // { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
@@ -27,11 +27,11 @@ const Listings = props => {
               }
             ]
           )
-        )
+        })
       }
       if (v && v.filterTags && v.filterTags.length > 0) {
         v.filterTags.map(idTag => {
-          filters.and =  filters.and.concat([{
+          filters.or =  filters.or.concat([{
             operator: 'EQUALS',
             path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
             values: [idTag]
@@ -40,7 +40,7 @@ const Listings = props => {
       }
       if (v && v.filterCAS && v.filterCAS.length > 0) {
         v.filterCAS.map(idCAS => {
-          filters.and =  filters.and.concat([{
+          filters.or =  filters.or.concat([{
             operator: 'EQUALS',
             path: 'ProductOffer.companyProduct.companyGenericProduct.elements.casProduct.id',
             values: [idCAS]
