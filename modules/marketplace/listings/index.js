@@ -42,7 +42,7 @@ const Listings = props => {
         v.filterCAS.map(idCAS => {
           filters.and =  filters.and.concat([{
             operator: 'EQUALS',
-            path: 'ProductOffer.companyProduct.companyGenericProduct.elements.id',
+            path: 'ProductOffer.companyProduct.companyGenericProduct.elements.casProduct.id',
             values: [idCAS]
           }])
         })
