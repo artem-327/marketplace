@@ -73,17 +73,21 @@ export const handleFilterChangeInputSearch = (e, data, state, setState, props) =
  * @category Companies
  * @method
  * @param {object} data filter name/value
+ * @param {array} allCompanyOptions company options name/value
  * @param {object} state object with state values
  * @param {function} setState object with set state Hook functions
  * @param {object} props object with all props (actions, init data, ...)
  * @return {none}
  */
-export const handleFilterChangeCompany = (e, data, state, setState, props) => {
+export const handleFilterChangeCompany = (e, data, allCompanyOptions, state, setState, props) => {
   const { currentTab } = props
   if (currentTab === '') return
 
+  const selectedCompanyOption = allCompanyOptions.find(el => el.value === data.value)
+
   setState({
     ...state,
+    selectedCompanyOption,
     [currentTab]: {
       ...state[currentTab],
       [data.name]: data.value
@@ -97,6 +101,7 @@ export const handleFilterChangeCompany = (e, data, state, setState, props) => {
 
   props.saveFilters({
     ...state,
+    selectedCompanyOption,
     [currentTab]: {
       ...state[currentTab],
       [data.name]: data.value
