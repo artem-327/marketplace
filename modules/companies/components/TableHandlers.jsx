@@ -43,7 +43,7 @@ const TablesHandlers = props => {
         searchInput: '',
         company: ''
       },
-      selectedCompanyOption: []
+      selectedCompanyOption: ''
     }
   )
 
@@ -89,7 +89,8 @@ const TablesHandlers = props => {
             users: {
               searchInput: '',
               company: ''
-            }
+            },
+            selectedCompanyOption: ''
           }
         )
       }
@@ -104,18 +105,17 @@ const TablesHandlers = props => {
     }
   }, [currentTab])
 
-  useEffect(() => {
-    if (typeof prevSearchedCompaniesFilter !== 'undefined') {
-      if(searchedCompaniesFilter.length) {
-        setState({...state, selectedCompanyOption: searchedCompaniesFilter})
-      }
-    }
-  }, [searchedCompaniesFilter])
-
   const { formatMessage } = intl
   const item = TEXTS_TABLE[currentTab]
   const filterValue = state[currentTab]
   const { selectedCompanyOption } = state
+
+  let allCompanyOptions
+  if (selectedCompanyOption) {
+    allCompanyOptions = uniqueArrayByKey(searchedCompaniesFilter.concat([selectedCompanyOption]), 'key')
+  } else {
+    allCompanyOptions = searchedCompaniesFilter
+  }
 
   return (
     <PositionHeaderSettings>
@@ -144,14 +144,14 @@ const TablesHandlers = props => {
                 icon='search'
                 selection
                 clearable
-                options={selectedCompanyOption}
+                options={allCompanyOptions}
                 search={options => options}
                 value={filterValue.company}
                 loading={searchedCompaniesFilterLoading}
                 onSearchChange={(e, { searchQuery }) => {
                   searchQuery.length > 0 && searchCompanies(searchQuery, props)
                 }}
-                onChange={(e, data) => handleFilterChangeCompany(e, data, state, setState, props)}
+                onChange={(e, data) => handleFilterChangeCompany(e, data, allCompanyOptions, state, setState, props)}
               />
             </div>
           )}
