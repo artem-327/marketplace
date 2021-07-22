@@ -15,17 +15,16 @@ const SharedListings = () => (
           // TODO - add location filter
 
           if (filterName.length > 0) {
-            filterName.map(
-              name =>
-                (filters.or = filters.or.concat([
-                  { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
-                  { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] }
-                ]))
-            )
+            filterName.map(name => {
+              filters.or = filters.or.concat([
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
+                { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] }
+              ])
+            })
           }
           if (v && v.filterTags && v.filterTags.length > 0) {
             v.filterTags.map(idTag => {
-              filters.and =  filters.and.concat([{
+              filters.or =  filters.or.concat([{
                 operator: 'EQUALS',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
                 values: [idTag]
@@ -34,9 +33,9 @@ const SharedListings = () => (
           }
           if (v && v.filterCAS && v.filterCAS.length > 0) {
             v.filterCAS.map(idCAS => {
-              filters.and =  filters.and.concat([{
+              filters.or =  filters.or.concat([{
                 operator: 'EQUALS',
-                path: 'ProductOffer.companyProduct.companyGenericProduct.elements.id',
+                path: 'ProductOffer.companyProduct.companyGenericProduct.elements.casProduct.id',
                 values: [idCAS]
               }])
             })

@@ -174,8 +174,11 @@ class DocumentPopup extends Component {
                         </FormattedMessage>
                       }
                       inputProps={{
+                        placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                         clearable: true
                       }}
+                      inputOnly
+                      addSeparator
                     />
                     <Input
                       name='issuer'
@@ -196,8 +199,11 @@ class DocumentPopup extends Component {
                         </FormattedMessage>
                       }
                       inputProps={{
+                        placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                         clearable: true
                       }}
+                      inputOnly
+                      addSeparator
                     />
 
                     <Dropdown

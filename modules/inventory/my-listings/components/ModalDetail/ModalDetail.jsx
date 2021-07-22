@@ -285,7 +285,6 @@ const ModalDetail = props => {
             setSubmitting,
             resetForm
           } = formikProps
-          values = values
           resetFormNew = resetForm
           formikPropsNew = formikProps
           return (
@@ -822,11 +821,12 @@ const ModalDetail = props => {
                                               disabled:
                                                 !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                               'data-test': 'modal_detail_expiration_date',
+                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
-                                              //! ! crashes on component calendar open if expirationDate is in past:
-                                              // minDate: moment().add(1, 'days') TypeError: Cannot read property 'position' of undefined
-                                            }}
+                                              }}
                                             name='edit.expirationDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                       </CustomGridRow>
@@ -944,9 +944,12 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_exp_date',
                                               disabled: detailValues && detailValues.grouped,
+                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>
@@ -976,10 +979,13 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_mfg_date',
                                               disabled: detailValues && detailValues.grouped,
+                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               maxDate: moment(),
                                               fluid: true
                                             }}
                                             name='edit.lotManufacturedDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>

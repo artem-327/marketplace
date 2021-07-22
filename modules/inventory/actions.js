@@ -151,17 +151,17 @@ export const addProductOffer = createAsyncAction('INVENTORY_ADD_PRODUCT_OFFER', 
       return response
     } else {
       const response = await api.updateProductOffer(poId, paramsCleaned)
-      return response.value
+      return response
     }
   } else {
     const newProd = await api.addProductOffer(paramsCleaned)
 
     if (attachmentFiles && attachmentFiles.length) {
       attachmentFiles.forEach(attachment => {
-        api.attachmentLinksToProductOffer(attachment.id, newProd.value.data.id)
+        api.attachmentLinksToProductOffer(attachment.id, newProd.id)
       })
     }
-    return newProd.value
+    return newProd
   }
 })
 export const downloadAttachment = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT', id => api.downloadAttachment(id))

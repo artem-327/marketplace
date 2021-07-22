@@ -86,8 +86,14 @@ const FormPopup = props => {
                         <DateInput
                           label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />}
                           name='dwollaController.dateOfBirth'
-                          inputProps={{ 'data-test': 'admin_popup_company_dwolla_birth_dtin' }}
+                          inputProps={{
+                            fluid: true,
+                            placeholder: <FormattedMessage id='date.standardFormat' defaultMessage='MM/DD/YYYY' />,
+                            clearable: true,
+                            'data-test': 'admin_popup_company_dwolla_birth_dtin'
+                          }}
                           inputOnly
+                          addSeparator
                         />
                         <Input
                           label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />}

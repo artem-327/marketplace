@@ -65,7 +65,10 @@ const DeliveryDatePopup = props => {
                       initialDate: minDate,
                       minDate,
                       clearable: true,
+                      placeholder: <FormattedMessage id='date.standardFormat' defaultMessage='MM/DD/YYYY' />
                     }}
+                    inputOnly
+                    addSeparator
                   />
                 </DivContent>
                 <DivButtons>

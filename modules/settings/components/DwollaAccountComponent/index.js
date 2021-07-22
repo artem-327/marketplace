@@ -271,15 +271,18 @@ class BankAccountsPopup extends Component {
                           label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
                           name='dwollaController.jobTitle'
                         />
-                        {/* <Input inputProps={{ placeholder: 'YYYY-MM-DD' }} label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })} name='dwollaController.dateOfBirth' /> */}
                         <DateInput
+                          inputProps={{
+                            fluid: true,
+                            placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
+                            clearable: true
+                          }}
                           label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
                           name='dwollaController.dateOfBirth'
                           inputOnly
+                          addSeparator
                         />
                       </FormGroup>
-                      {/* <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_dateOfBirth_inp'>
-                    </FormGroup> */}
                     </Accordion.Content>
                   </Accordion>
                   <RightAlignedDiv>
