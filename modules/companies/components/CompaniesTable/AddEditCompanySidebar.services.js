@@ -231,6 +231,7 @@ export const submitCompany = async (values, actions, state, props) => {
         reader.onload = async function () {
           const {value} = await createCompany(payload)
           await postCompanyLogo(value.id, state.companyLogo)
+          props.saveFilters(null)
           datagrid.clear()
           datagrid.loadData()
           actions.setSubmitting(false)
@@ -239,6 +240,7 @@ export const submitCompany = async (values, actions, state, props) => {
         reader.readAsBinaryString(state.companyLogo)
       } else {
         await createCompany(payload)
+        props.saveFilters(null)
         datagrid.clear()
         datagrid.loadData()
         actions.setSubmitting(false)
