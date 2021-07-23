@@ -12,7 +12,9 @@ import {
   ChevronLeftStyled,
   ChevronRightStyled,
   SegmentDetailRow,
-  InputMarkup
+  InputMarkup,
+  DivFlexRow,
+  DivSimpleColumn
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
 import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
@@ -50,14 +52,16 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
-            <GridColumnDetail width={5} textAlign='center' verticalAlign='middle'>
-              <DivRectangle>
-                <Image verticalAlign='middle' src={row?.owner?.logoUrl} fluid rounded size='tiny' />
-              </DivRectangle>
-            </GridColumnDetail>
-            <GridColumnDetail width={11}>
-              <DivName> {row?.companyProduct?.intProductName}</DivName>
-              <DivAddress>{row?.address}</DivAddress>
+            <GridColumnDetail width={16}>
+              <DivFlexRow>
+                <DivRectangle>
+                  <Image verticalAlign='middle' src={row?.owner?.logoUrl} fluid rounded size='tiny' />
+                </DivRectangle>
+                <DivSimpleColumn>
+                  <DivName> {row?.companyProduct?.intProductName}</DivName>
+                  <DivAddress>{row?.address}</DivAddress>
+                </DivSimpleColumn>
+              </DivFlexRow>
             </GridColumnDetail>
           </Grid.Row>
         </StyledGrid>
