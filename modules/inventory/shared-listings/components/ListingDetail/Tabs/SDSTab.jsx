@@ -15,7 +15,9 @@ import {
   GridStyledTds,
   GridColumnCustom,
   DivTdsTableHeader,
-  DivTdsPropertyText
+  DivTdsPropertyText,
+  DivFlexRow,
+  DivFlexRowSpace
 } from '../ListingDetail.styles'
 import { getSafe } from '../../../../../../utils/functions'
 //Services
@@ -67,36 +69,39 @@ const SDSTab = ({ row }) => {
             <Grid.Column>
               <GridStyledTds>
                 <Grid.Row>
-                  <GridColumnCustom width={10} value='padding: 0 12px 0 0 !important;'>
-                    <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.elementName' defaultMessage='Element Name' />
-                    </DivTdsTableHeader>
+                  <GridColumnCustom width={16} value='padding: 0 12px 0 0 !important;'>
+                    <DivFlexRowSpace>
+                      <DivTdsTableHeader value='text-overflow: ellipsis; overflow: hidden;'>
+                        <FormattedMessage id='sharedListings.detailRow.elementName' defaultMessage='Element Name' />
+                      </DivTdsTableHeader>
+                      <DivFlexRow>
+                        <DivTdsTableHeader value='padding-left: 20px; width: 130px;'>
+                          <FormattedMessage id='sharedListings.detailRow.casNumber' defaultMessage='CAS Number' />
+                        </DivTdsTableHeader>
+                        <DivTdsTableHeader value='padding-left: 20px; width: 105px;'>
+                          <FormattedMessage id='sharedListings.detailRow.assay' defaultMessage='Assay' />
+                        </DivTdsTableHeader>
+                      </DivFlexRow>
+                    </DivFlexRowSpace>
                   </GridColumnCustom>
-                  <Grid.Column width={4}>
-                    <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.casNumber' defaultMessage='CAS Number' />
-                    </DivTdsTableHeader>
-                  </Grid.Column>
-                  <Grid.Column width={2}>
-                    <DivTdsTableHeader>
-                      <FormattedMessage id='sharedListings.detailRow.assay' defaultMessage='Assay' />
-                    </DivTdsTableHeader>
-                  </Grid.Column>
                 </Grid.Row>
               </GridStyledTds>
               <GridStyledTds bordered='true'>
                 {mixtures.map((el, index) => (
                   <Grid.Row key={index}>
-                    <Grid.Column width={10}>
-                      <DivTdsPropertyText>{getSafe(() => el.displayName, '')}</DivTdsPropertyText>
-                    </Grid.Column>
-                    <Grid.Column width={4}>
-                      <DivTdsPropertyText>{getSafe(() => el.casProduct.casNumber, '')}</DivTdsPropertyText>
-                    </Grid.Column>
-                    <Grid.Column width={2}>
-                      <DivTdsPropertyText>
-                        <FormattedAssay min={el.assayMin} max={el.assayMax} />
-                      </DivTdsPropertyText>
+                    <Grid.Column width={16}>
+                      <DivFlexRowSpace>
+                        <DivTdsPropertyText value='text-overflow: ellipsis; overflow: hidden;'>
+                          {getSafe(() => el.displayName, '')}</DivTdsPropertyText>
+                        <DivFlexRow>
+                          <DivTdsPropertyText value='padding-left: 20px; width: 130px;'>
+                            {getSafe(() => el.casProduct.casNumber, '')}
+                          </DivTdsPropertyText>
+                          <DivTdsPropertyText value='padding-left: 20px; width: 105px;'>
+                            <FormattedAssay min={el.assayMin} max={el.assayMax} />
+                          </DivTdsPropertyText>
+                      </DivFlexRow>
+                      </DivFlexRowSpace>
                     </Grid.Column>
                   </Grid.Row>
                 ))}
