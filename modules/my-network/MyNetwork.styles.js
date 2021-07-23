@@ -68,3 +68,7 @@ export const SpanDate = styled.span`
 export const DivDate = styled.div`
   height: 100%;
 `
+
+export const DivPercentageIconWrapper = styled.div`
+  height: 50px;
+`

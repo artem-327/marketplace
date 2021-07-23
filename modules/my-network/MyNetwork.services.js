@@ -11,7 +11,8 @@ import {
   BMember,
   DivMember,
   SpanDate,
-  DivDate
+  DivDate,
+  DivPercentageIconWrapper
 } from './MyNetwork.styles'
 //Constants
 import { COLORS, CONNECTIONS_STATUSES } from './constants'
@@ -20,6 +21,9 @@ import { getLocaleDateFormat } from '../../components/date-format'
 
 //Actions
 import { buttonActionsDetailRow, connectionsStatuses } from './actions'
+
+//Components
+import PercentageIcon from '../../components/percentage-icon/PercentageIcon'
 
 /**
  * @category My Network
@@ -158,7 +162,12 @@ export const getRowDetail = (row, detailRow) => {
     transactions: row?.connectedCompany?.transactionsCount || 0,
     averageValue: row?.connectedCompany?.averageTransactionValue || 0,
     connectionStatus: getStatusLabel(row?.status),
-    eligibilityCriteria: getCriteriaLabel(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
+    riskMatch: (
+      <DivPercentageIconWrapper>
+        <PercentageIcon value={35} />
+      </DivPercentageIconWrapper>
+    ),
+      //! !getCriteriaLabel(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria)
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
     tradeCriteria: getTradeCriteriaValues(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
