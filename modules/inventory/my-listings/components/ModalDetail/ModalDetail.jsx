@@ -107,9 +107,9 @@ const ModalDetail = props => {
     attachmentFiles: [],
     isOpenOptionalInformation: false,
     openedTdsList: false,
-    openedTdsSaveAs: false,
-    isOverMinPkgs: false
+    openedTdsSaveAs: false
   })
+  const [isOverMinPkgs, setIsOverMinPkgs] = useState(false)
 
   useEffect(() => {
     const {
@@ -132,8 +132,8 @@ const ModalDetail = props => {
     switchTab(props, state, setState, modalActiveTab, detailValues)
     if (detailValues?.minPkg) {
       detailValues?.minPkg > detailValues?.pkgAvailable
-        ? setState({ ...state, isOverMinPkgs: true })
-        : setState({ ...state, isOverMinPkgs: false })
+        ? setIsOverMinPkgs(true)
+        : setIsOverMinPkgs(false)
     }
   }, [])
 
@@ -141,7 +141,7 @@ const ModalDetail = props => {
   const prevModalActiveTab = usePrevious(props.modalActiveTab)
 
   useEffect(() => {
-    if (typeof prevEditProductOfferInitTrig !== 'undefined') {
+    if (typeof prevEditProductOfferInitTrig !== 'undefined' && typeof prevModalActiveTab !== 'undefined') {
       const shouldSwitchTab =
         (props.modalActiveTab > -1 && prevModalActiveTab !== props.modalActiveTab) ||
         state.activeTab === 3 /* To Reload Broadcast rules */
@@ -200,7 +200,7 @@ const ModalDetail = props => {
     autocompleteData,
     applicationName
   } = props
-  const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = state
+  const { openedTdsList, openedTdsSaveAs } = state
 
   const optionsProduct = autocompleteData.map((el, i) => {
     const code = getSafe(() => el.intProductCode, '')
@@ -514,8 +514,8 @@ const ModalDetail = props => {
                                                         setFieldValue('edit.pkgAvailable', value)
                                                         if (values?.edit?.minimum) {
                                                           values.edit.minimum > value
-                                                            ? setState({ ...state, isOverMinPkgs: true })
-                                                            : setState({ ...state, isOverMinPkgs: false })
+                                                            ? setIsOverMinPkgs(true)
+                                                            : setIsOverMinPkgs(false)
                                                         }
                                                       }
                                                     }
@@ -561,8 +561,8 @@ const ModalDetail = props => {
                                                       }
                                                       if (values?.edit?.pkgAvailable && !isNaN(value)) {
                                                         values.edit.pkgAvailable < value
-                                                          ? setState({ ...state, isOverMinPkgs: true })
-                                                          : setState({ ...state, isOverMinPkgs: false })
+                                                          ? setIsOverMinPkgs(true)
+                                                          : setIsOverMinPkgs(false)
                                                       }
                                                     }
                                                   }}
