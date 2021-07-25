@@ -41,8 +41,14 @@ const TableHandler = props => {
 
   const SearchByNamesAndTagsChanged = data => {
     setState({ SearchByNamesAndTags: data })
-    props.handleVariableSave('sharedListingsFilters', { SearchByNamesAndTags: data })
-    handleFiltersValue({ SearchByNamesAndTags: data })
+    const filter = {
+      SearchByNamesAndTags: data,
+      ...(!!data && {
+        ...data.filters
+      })
+    }
+    props.handleVariableSave('sharedListingsFilters', filter)
+    handleFiltersValue(filter)
   }
 
   return (
