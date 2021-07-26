@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="11.4800" tests="1" failures="0">
+  <testsuite name="Root Suite" timestamp="2021-07-26T16:06:57" tests="0" file="cypress/integration/onboarding.spec.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Onboarding" timestamp="2021-07-26T16:06:57" tests="1" time="11.4800" failures="0">
+    <testcase name="Onboarding successfully visits the onboarding module" time="11.4800" classname="successfully visits the onboarding module">
+    </testcase>
+  </testsuite>
+</testsuites>

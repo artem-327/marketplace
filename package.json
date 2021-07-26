@@ -98,16 +98,21 @@
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
     "semantic": "cd semantic && gulp watch",
-    "docs": "jsdoc -c ./jsdoc.json"
+    "docs": "jsdoc -c ./jsdoc.json",
+    "cypress:test": "./node_modules/cypress/bin/cypress run -s cypress/integration/onboarding.spec.js --reporter junit --browser chrome",
+    "cypress:open": "cypress open"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.0",
+    "cypress": "^8.0.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
     "eslint-plugin-react-hooks": "^4.2.0",
     "gulp": "^3.0.0",
+    "mocha": "^9.0.3",
+    "mocha-junit-reporter": "^2.0.0",
     "semantic-ui": "^2.4.2"
   },
   "browserslist": [
