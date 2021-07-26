@@ -82,27 +82,54 @@ const TablesHandlers = props => {
     const { currentTab } = props
     if (currentTab === '') return
 
-    setState({
-      ...state,
-      [currentTab]: {
+    if(data.name === 'dateFrom' || data.name === 'dateTo') {
+      const dateValue = data.value
+      if(dateValue.length === 10 && dateValue[2] === '/' && dateValue[5] === '/' || dateValue.length === 0) {
+        setState({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+    
+        props.saveFilters({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+    
+        const filter = {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+        handleFiltersValue(filter)
+      }
+    } else {
+      setState({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+  
+      props.saveFilters({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+  
+      const filter = {
         ...state[currentTab],
         [data.name]: data.value
       }
-    })
-
-    props.saveFilters({
-      ...state,
-      [currentTab]: {
-        ...state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    const filter = {
-      ...state[currentTab],
-      [data.name]: data.value
+      handleFiltersValue(filter)
     }
-    handleFiltersValue(filter)
   }, 500)
 
   const renderHandler = () => {
@@ -155,7 +182,10 @@ const TablesHandlers = props => {
               </div>
               <div>
                 <div className='column' style={{ paddingTop: '10px' }}>
-                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date' />
+                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date: ' />
+                </div>
+                <div className='column' style={{ paddingTop: '10px' }}>
+                  <FormattedMessage id='global.from' defaultMessage='From' />
                 </div>
                 <div className='column'>
                   <DateInput
@@ -164,13 +194,14 @@ const TablesHandlers = props => {
                       style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
-                      placeholder: formatMessage({
-                        id: 'global.from',
-                        defaultMessage: 'From'
-                      }),
                       onChange: handleFilterChange
                     }}
+                    inputOnly
+                    addSeparator
                   />
+                </div>
+                <div className='column' style={{ paddingTop: '10px' }}>
+                  <FormattedMessage id='global.to' defaultMessage='To' />
                 </div>
                 <div className='column' style={{ marginRight: '10px' }}>
                   <DateInput
@@ -179,12 +210,10 @@ const TablesHandlers = props => {
                       style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
-                      placeholder: formatMessage({
-                        id: 'global.to',
-                        defaultMessage: 'To'
-                      }),
                       onChange: handleFilterChange
                     }}
+                    inputOnly
+                    addSeparator
                   />
                 </div>
                 <ColumnSettingButton divide={true} />

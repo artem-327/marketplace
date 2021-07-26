@@ -113,7 +113,6 @@ const PurchaseOrderShipping = props => {
                               minDate: moment(),
                               fluid: true,
                               clearable: true,
-                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                               onChange: async (event, val) => {
                                 await onDateChange(event, val)
                               }
@@ -125,8 +124,6 @@ const PurchaseOrderShipping = props => {
                               />
                             }
                             name='pickupDate'
-                            inputOnly
-                            addSeparator
                           />
                         </Grid.Column>
                       </Grid.Row>

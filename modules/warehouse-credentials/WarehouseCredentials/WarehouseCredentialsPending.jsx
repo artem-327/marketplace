@@ -220,7 +220,6 @@ class WarehouseCredentialsPending extends Component {
                           maxDate: today,
                           id: `deaIssueDate-${branch.key}`,
                           clearable: true,
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           onChange: (e, data) => this.handleChange(e, branch.id, data)
                         }}
                         name='dea.issueDate'
@@ -239,7 +238,6 @@ class WarehouseCredentialsPending extends Component {
                           minDate: tomorrow,
                           id: `deaExpDate-${branch.key}`,
                           clearable: true,
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           onChange: (e, data) => this.handleChange(e, branch.id, data)
                         }}
                         name='dea.expDate'
@@ -441,7 +439,6 @@ class WarehouseCredentialsPending extends Component {
                           maxDate: today,
                           id: `taxExemptIssueDate-${branch.key}`,
                           clearable: true,
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           onChange: (e, data) => this.handleChange(e, branch.id, data)
                         }}
                         name='taxExempt.issueDate'
@@ -460,7 +457,6 @@ class WarehouseCredentialsPending extends Component {
                           minDate: tomorrow,
                           id: `taxExemptExpireDate-${branch.key}`,
                           clearable: true,
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           onChange: (e, data) => this.handleChange(e, branch.id, data)
                         }}
                         name='taxExempt.expDate'

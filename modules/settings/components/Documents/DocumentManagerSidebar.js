@@ -332,7 +332,6 @@ class DocumentManagerSidebar extends Component {
                           </FormattedMessage>
                         }
                         inputProps={{
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           clearable: true
                         }}
                         inputOnly
@@ -373,7 +372,6 @@ class DocumentManagerSidebar extends Component {
                           </FormattedMessage>
                         }
                         inputProps={{
-                          placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                           clearable: true
                         }}
                         inputOnly

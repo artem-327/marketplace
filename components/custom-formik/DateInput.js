@@ -63,16 +63,17 @@ class FormikInput extends Component {
                         separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
                         // Checks position and adds separator or not if separator is there and user try to remove separator from input.
                         val =
-                          (separator.length === 1 && value.length === 2 && field.value.charAt(2) !== separator) ||
+                          (separator.length === 1 && value.length > 1 && value.charAt(2) !== separator) ||
                           (separator.length === 2 &&
-                            value.length === 2 &&
-                            field.value.charAt(2) !== separator.split('')[0]) ||
-                          (separator.length === 1 && value.length === 5 && field.value.charAt(5) !== separator) ||
+                            value.length > 1 &&
+                            value.charAt(2) !== separator.split('')[0]) ||
+                          (separator.length === 1 && value.length > 4 && value.charAt(5) !== separator) ||
                           (separator.length === 2 &&
-                            value.length === 6 &&
-                            field.value.charAt(6) !== separator.split('')[0])
-                            ? `${value}${separator}`
-                            : value
+                            value.length > 5 &&
+                            value.charAt(6) !== separator.split('')[0])
+                          ? `${value}${separator}`
+                          : value
+                        val = separator.length === 1 ? val.slice(0, 10) : val.slice(0, 12)
                       } else {
                         const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
 
