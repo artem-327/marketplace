@@ -82,7 +82,6 @@ class BeneficialOwnersForm extends Component {
             <DateInput
               inputProps={{
                 fluid: true,
-                placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                 clearable: true
               }}
               label={

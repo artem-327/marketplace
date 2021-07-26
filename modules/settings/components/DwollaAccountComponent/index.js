@@ -274,7 +274,6 @@ class BankAccountsPopup extends Component {
                         <DateInput
                           inputProps={{
                             fluid: true,
-                            placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                             clearable: true
                           }}
                           label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}

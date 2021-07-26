@@ -2358,7 +2358,7 @@
   "orders.detail": "Detail",
   "orders.accountingDocuments": "Accounting Documents",
   "orders.searchByOrderID": "Search By Order ID",
-  "orders.orderDate": "Order Date",
+  "orders.orderDate: ": "Order Date",
   "orders.statusOptions.all": "Show All Status",
   "orders.statusOptions.draft": "Show Draft Status",
   "orders.statusOptions.pending": "Show Pending Status",

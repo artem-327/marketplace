@@ -821,7 +821,6 @@ const ModalDetail = props => {
                                               disabled:
                                                 !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                               'data-test': 'modal_detail_expiration_date',
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
                                               }}
                                             name='edit.expirationDate'
@@ -944,7 +943,6 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_exp_date',
                                               disabled: detailValues && detailValues.grouped,
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
@@ -979,7 +977,6 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_mfg_date',
                                               disabled: detailValues && detailValues.grouped,
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               maxDate: moment(),
                                               fluid: true
                                             }}

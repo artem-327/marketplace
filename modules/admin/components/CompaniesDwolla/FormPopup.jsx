@@ -88,7 +88,6 @@ const FormPopup = props => {
                           name='dwollaController.dateOfBirth'
                           inputProps={{
                             fluid: true,
-                            placeholder: <FormattedMessage id='date.standardFormat' defaultMessage='MM/DD/YYYY' />,
                             clearable: true,
                             'data-test': 'admin_popup_company_dwolla_birth_dtin'
                           }}

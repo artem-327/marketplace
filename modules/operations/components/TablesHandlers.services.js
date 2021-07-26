@@ -116,27 +116,55 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
   const { currentTab } = props
   if (currentTab === '') return
 
-  setState({
-    ...state,
-    [currentTab]: {
+
+  if(data.name === 'dateFrom' || data.name === 'dateTo') {
+    const dateValue = data.value
+    if(dateValue.length === 10 && dateValue[2] === '/' && dateValue[5] === '/' || dateValue.length === 0) {
+      setState({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+    
+      props.saveFilters({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+    
+      const filter = {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+      handleFiltersValue(filter, props, formikProps)
+    }
+  } else {
+    setState({
+      ...state,
+      [currentTab]: {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+    })
+  
+    props.saveFilters({
+      ...state,
+      [currentTab]: {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+    })
+  
+    const filter = {
       ...state[currentTab],
       [data.name]: data.value
     }
-  })
-
-  props.saveFilters({
-    ...state,
-    [currentTab]: {
-      ...state[currentTab],
-      [data.name]: data.value
-    }
-  })
-
-  const filter = {
-    ...state[currentTab],
-    [data.name]: data.value
+    handleFiltersValue(filter, props, formikProps)
   }
-  handleFiltersValue(filter, props, formikProps)
 }
 
 /**
