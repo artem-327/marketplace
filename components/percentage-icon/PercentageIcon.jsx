@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 const images = require.context('../../assets/images/percentage-icon', true)
 import { ImageStyled } from './PercentageIcon.styles'
 
@@ -14,6 +15,14 @@ const PercentageIcon = props => {
   return (
     <ImageStyled src={images(`./${val + 1}.svg`, true)}/>
   )
+}
+
+PercentageIcon.propTypes = {
+  value: PropTypes.number
+}
+
+PercentageIcon.defaultProps = {
+  value: 0
 }
 
 export default PercentageIcon
