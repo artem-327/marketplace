@@ -42,8 +42,7 @@ import {
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   getAddressSearchPrimaryBranch,
-  getAddressSearchMailingBranch,
-  saveFilters
+  getAddressSearchMailingBranch
 } from '../../actions'
 
 const AddEditCompanySidebar = props => {
@@ -400,8 +399,7 @@ const mapDispatchToProps = {
   getAddressSearchMailingBranch,
   postCompanyLogo,
   deleteCompanyLogo,
-  getNaicsCodes,
-  saveFilters
+  getNaicsCodes
 }
 
 const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {

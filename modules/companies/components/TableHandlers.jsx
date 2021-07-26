@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState, createRef } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
-import { Header, Menu, Button, Input, Dropdown, Grid } from 'semantic-ui-react'
+import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 // Services
@@ -59,8 +59,6 @@ const TablesHandlers = props => {
   } = props
 
   const prevCurrentTab = usePrevious(currentTab)
-  const prevTableHandlersFilters = usePrevious(tableHandlersFilters)
-  const prevSearchedCompaniesFilter = usePrevious(searchedCompaniesFilter)
 
   useEffect(() => {
     if (currentTab === '') return
@@ -71,31 +69,6 @@ const TablesHandlers = props => {
       handleFiltersValue(filterValue, props)
     }
   }, [])
-
-  useEffect(() => {
-    if (typeof prevTableHandlersFilters !== 'undefined') {
-      if (currentTab === '') return
-      if (tableHandlersFilters) {
-        setState(tableHandlersFilters)
-        let filterValue = tableHandlersFilters[currentTab]
-        handleFiltersValue(filterValue, props)
-      } else {
-        setState(
-          {
-            ...state,
-            companies: {
-              searchInput: ''
-            },
-            users: {
-              searchInput: '',
-              company: ''
-            },
-            selectedCompanyOption: ''
-          }
-        )
-      }
-    }
-  }, [tableHandlersFilters])
 
   useEffect(() => {
     if (typeof prevCurrentTab !== 'undefined') {
