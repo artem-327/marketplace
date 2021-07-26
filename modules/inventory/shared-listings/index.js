@@ -1,6 +1,5 @@
 import SharedListingsContainer from './components/SharedListingsContainer'
 import { DatagridProvider } from '../../datagrid'
-import { getSafe } from '../../../utils/functions'
 
 const SharedListings = () => (
   <>
@@ -9,13 +8,8 @@ const SharedListings = () => (
         url: '/prodex/api/product-offers/shared-listings/datagrid',
         searchToFilter: v => {
           let filters = { or: [], and: [] }
-          const filterName = getSafe(() => v.SearchByNamesAndTags.filters.filterName, [])
-          const filterTags = getSafe(() => v.SearchByNamesAndTags.filters.filterTags, [])
-
-          // TODO - add location filter
-
-          if (filterName.length > 0) {
-            filterName.map(name => {
+          if (v && v.filterName && v.filterName.length > 0) {
+            v.filterName.map(name => {
               filters.or = filters.or.concat([
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
                 { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] }
@@ -44,8 +38,7 @@ const SharedListings = () => (
         }
       }}
       preserveFilters
-      skipInitLoad
-    >
+      skipInitLoad>
       <SharedListingsContainer />
     </DatagridProvider>
   </>

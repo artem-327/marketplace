@@ -11,7 +11,6 @@ import { openPopup, closePopup } from '../../../company-product-info/actions'
 import { setCompanyElligible } from '../../../auth/actions'
 // Services
 import { withDatagrid } from '../../../datagrid'
-import { getSafe } from '../../../../utils/functions'
 import { getMappedRows } from './MyListings.services'
 // Selectors
 import {
