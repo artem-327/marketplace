@@ -5,11 +5,12 @@ import { ImageStyled } from './PercentageIcon.styles'
 const PercentageIcon = props => {
   const { value } = props
 
-  const val = value < 0
+  let val = value ? parseInt(value) : 0
+  val = val < 0
     ? 0
-    : (value > 100
+    : (val > 100
         ? 100
-        : Math.round(value)
+        : val
     )
 
   return (
@@ -18,7 +19,7 @@ const PercentageIcon = props => {
 }
 
 PercentageIcon.propTypes = {
-  value: PropTypes.number
+  value: PropTypes.any
 }
 
 PercentageIcon.defaultProps = {

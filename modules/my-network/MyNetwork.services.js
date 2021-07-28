@@ -148,7 +148,7 @@ export const getRowDetail = (row, detailRow) => {
     id: row?.connectionId || row?.connectedCompany?.tradepassId,
     member: (
       <DivMember key={row?.connectionId || row?.connectedCompany?.tradepassId}>
-        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.avatarUrl} />
+        <Image verticalAlign='middle' size='mini' spaced={true} src={row?.connectedCompany?.logoUrl} />
 
         <BMember>{row?.connectedCompany?.name}</BMember>
       </DivMember>
@@ -164,10 +164,9 @@ export const getRowDetail = (row, detailRow) => {
     connectionStatus: getStatusLabel(row?.status),
     riskMatch: (
       <DivPercentageIconWrapper>
-        <PercentageIcon value={35} />
+        <PercentageIcon value={row?.connectedCompany?.connectionCriteria?.requester_tolerance} />
       </DivPercentageIconWrapper>
     ),
-      //! !getCriteriaLabel(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria)
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
     tradeCriteria: getTradeCriteriaValues(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
