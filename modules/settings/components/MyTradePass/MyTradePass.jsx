@@ -47,7 +47,7 @@ const MyTradePass = props => {
     legalData,
     marketingData,
     verifiedData,
-    avatarUrl
+    logoUrl
   } = props
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const MyTradePass = props => {
           <GridColumn>
             <SegmentGroupHeader horizontal $alignItems={'align-items: flex-start !important'}>
               <SegmentCustom textAlign='left'>
-                <Image verticalAlign='middle' spaced={false} src={`${avatarUrl}?t=${Date.now()}`} />
+                <Image verticalAlign='middle' spaced={false} src={`${logoUrl}?t=${Date.now()}`} />
                 <DivGreyText>{address}</DivGreyText>
               </SegmentCustom>
               <SegmentCustom textAlign='right'>
@@ -162,7 +162,7 @@ function mapStateToProps({ settings }) {
   return {
     loading: settings.loading,
     myTradePass,
-    avatarUrl: myTradePass?.avatarUrl,
+    logoUrl: myTradePass?.logoUrl,
     address: address
       ? `${address?.streetAddress || ''} ${address?.city || ''}${comma}${address?.province?.abbreviation || ''} ${
           address?.country?.code || ''
