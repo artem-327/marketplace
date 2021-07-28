@@ -195,8 +195,6 @@ function PersonalInformation({
                 </>
               }
               name={`verifyPersonalInformation[${i}].dateOfBirth`}
-              inputOnly
-              addSeparator
             />
           </ColumnCustom>
         </GridRow>

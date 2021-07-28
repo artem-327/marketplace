@@ -334,8 +334,6 @@ class DocumentManagerSidebar extends Component {
                         inputProps={{
                           clearable: true
                         }}
-                        inputOnly
-                        addSeparator
                       />
                       <Input
                         inputProps={{
@@ -374,8 +372,6 @@ class DocumentManagerSidebar extends Component {
                         inputProps={{
                           clearable: true
                         }}
-                        inputOnly
-                        addSeparator
                       />
                       <FormField></FormField>
                     </FormGroup>

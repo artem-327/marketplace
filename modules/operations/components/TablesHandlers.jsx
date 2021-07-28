@@ -288,8 +288,6 @@ const TablesHandlers = props => {
                           clearable: true,
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
-                        inputOnly
-                        addSeparator
                       />
                     </div>
                     <div className='column' style={{ paddingTop: '10px' }}>
@@ -304,8 +302,6 @@ const TablesHandlers = props => {
                           clearable: true,
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
-                        inputOnly
-                        addSeparator
                       />
                     </DivColumn>
                     <ColumnSettingButton divide={true} />

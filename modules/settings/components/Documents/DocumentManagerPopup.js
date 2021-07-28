@@ -176,8 +176,6 @@ class DocumentPopup extends Component {
                       inputProps={{
                         clearable: true
                       }}
-                      inputOnly
-                      addSeparator
                     />
                     <Input
                       name='issuer'
@@ -200,8 +198,6 @@ class DocumentPopup extends Component {
                       inputProps={{
                         clearable: true
                       }}
-                      inputOnly
-                      addSeparator
                     />
 
                     <Dropdown

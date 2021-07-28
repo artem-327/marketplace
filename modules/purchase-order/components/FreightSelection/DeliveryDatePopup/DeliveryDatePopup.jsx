@@ -66,8 +66,6 @@ const DeliveryDatePopup = props => {
                       minDate,
                       clearable: true,
                     }}
-                    inputOnly
-                    addSeparator
                   />
                 </DivContent>
                 <DivButtons>

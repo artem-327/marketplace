@@ -91,8 +91,6 @@ const FormPopup = props => {
                             clearable: true,
                             'data-test': 'admin_popup_company_dwolla_birth_dtin'
                           }}
-                          inputOnly
-                          addSeparator
                         />
                         <Input
                           label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />}
