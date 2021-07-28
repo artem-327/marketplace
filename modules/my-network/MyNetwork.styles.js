@@ -58,7 +58,8 @@ export const BMember = styled.b`
 `
 
 export const DivMember = styled.div`
-  height: 100%;
+  //height: 100%;
+  margin: 0 auto;
 `
 
 export const SpanDate = styled.span`
@@ -66,5 +67,9 @@ export const SpanDate = styled.span`
 `
 
 export const DivDate = styled.div`
-  height: 100%;
+  margin: 0 auto;
+`
+
+export const DivPercentageIconWrapper = styled.div`
+  height: 50px;
 `

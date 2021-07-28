@@ -2565,6 +2565,12 @@ i.file {
         }
       }
 
+      .vertically-aligned & {
+        td {
+          vertical-align: middle !important;
+        }
+      }
+
       .notifications-admin-wrapper & {
 
         td {
