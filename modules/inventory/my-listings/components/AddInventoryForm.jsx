@@ -460,8 +460,6 @@ const AddInventoryForm = props => {
                                           defaultMessage: 'Expiration Date'
                                         })}
                                         name='expirationDate'
-                                        inputOnly
-                                        addSeparator
                                       />
                                     </GridColumn>
                                   </InnerRow>
@@ -1232,8 +1230,6 @@ const AddInventoryForm = props => {
                                                     inputProps={{
                                                       'data-test': 'add_inventory_product_manufacturedDate_dtin'
                                                     }}
-                                                    inputOnly
-                                                    addSeparator
                                                   />
                                                 </TableCellBig>
                                                 <TableCellBig>
@@ -1242,8 +1238,6 @@ const AddInventoryForm = props => {
                                                     inputProps={{
                                                       'data-test': 'add_inventory_product_expirationDate_dtin'
                                                     }}
-                                                    inputOnly
-                                                    addSeparator
                                                   />
                                                 </TableCellBig>
                                                 <TableCellBig>

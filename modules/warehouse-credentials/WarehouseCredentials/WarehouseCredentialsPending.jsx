@@ -229,8 +229,6 @@ class WarehouseCredentialsPending extends Component {
                             <Required />
                           </>
                         }
-                        inputOnly
-                        addSeparator
                       />
                       <DateInput
                         inputProps={{
@@ -247,8 +245,6 @@ class WarehouseCredentialsPending extends Component {
                             <Required />
                           </>
                         }
-                        inputOnly
-                        addSeparator
                       />
                     </FormGroup>
                     <ButtonGroup>
@@ -448,8 +444,6 @@ class WarehouseCredentialsPending extends Component {
                             <Required />
                           </>
                         }
-                        inputOnly
-                        addSeparator
                       />
                       <DateInput
                         inputProps={{
@@ -466,8 +460,6 @@ class WarehouseCredentialsPending extends Component {
                             <Required />
                           </>
                         }
-                        inputOnly
-                        addSeparator
                       />
                     </FormGroup>
                     <ButtonGroup>

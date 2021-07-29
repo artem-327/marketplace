@@ -13,6 +13,7 @@ import { DateInput } from '../../../components/custom-formik'
 import { getStringISODate } from '../../../components/date-format'
 import { getSafe } from '../../../utils/functions'
 import { validationSchema } from './Orders.service'
+import { getLocaleDateFormat } from '../../../components/date-format'
 // Constants
 import { filters } from '../constants'
 // Styles
@@ -83,8 +84,17 @@ const TablesHandlers = props => {
     if (currentTab === '') return
 
     if(data.name === 'dateFrom' || data.name === 'dateTo') {
+      //Gets separator (character) from getLocaleDateFormat.
+      let separator = [...getLocaleDateFormat()].find(
+        char => char !== 'M' && char !== 'D' && char !== 'Y'
+      )
+      // Checks and adds space if is space after dot.
+      separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
+
       const dateValue = data.value
-      if(dateValue.length === 10 && dateValue[2] === '/' && dateValue[5] === '/' || dateValue.length === 0) {
+      if(dateValue.length === 0 || 
+        dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
+        dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
         setState({
           ...state,
           [currentTab]: {
@@ -196,8 +206,6 @@ const TablesHandlers = props => {
                       clearable: true,
                       onChange: handleFilterChange
                     }}
-                    inputOnly
-                    addSeparator
                   />
                 </div>
                 <div className='column' style={{ paddingTop: '10px' }}>
@@ -212,8 +220,6 @@ const TablesHandlers = props => {
                       clearable: true,
                       onChange: handleFilterChange
                     }}
-                    inputOnly
-                    addSeparator
                   />
                 </div>
                 <ColumnSettingButton divide={true} />

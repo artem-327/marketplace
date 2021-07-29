@@ -824,8 +824,6 @@ const ModalDetail = props => {
                                               fluid: true
                                               }}
                                             name='edit.expirationDate'
-                                            inputOnly
-                                            addSeparator
                                           />
                                         </GridColumn>
                                       </CustomGridRow>
@@ -946,8 +944,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
-                                            inputOnly
-                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>
@@ -981,8 +977,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotManufacturedDate'
-                                            inputOnly
-                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>

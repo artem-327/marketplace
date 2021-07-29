@@ -101,16 +101,29 @@ class FormikInput extends Component {
                   value={field.value}
                   clearable
                   onChange={(e, { name, value }) => {
-                    //automatic adjust date in input based on format date
-                    const formatedValue = value.replace(/[/.]/g, '-').replace(/ /g, '').split('-')
-
-                    const canAutomaticallyAdjustDateFormat =
-                      formatedValue.some(d => d.length >= 4) &&
-                      formatedValue.length === 3 &&
-                      moment(value, getLocaleDateFormat()).isValid()
-                    const val = canAutomaticallyAdjustDateFormat
-                      ? moment(value, getLocaleDateFormat()).format(getLocaleDateFormat())
+                    let valTemp = value.split('')
+                    let rest = valTemp.pop()
+                    //Gets separator (character) from getLocaleDateFormat.
+                    let separator = [...getLocaleDateFormat()].find(
+                      char => char !== 'M' && char !== 'D' && char !== 'Y'
+                    )
+                    // Checks and adds space if is space after dot.
+                    separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
+                    // Checks position and adds separator or not if separator is there and user try to remove separator from input.
+                    let val =
+                      (separator.length === 1 && value.length === 3 && value.charAt(2) !== separator) ||
+                      (separator.length === 2 &&
+                        value.length === 3 &&
+                        value.charAt(2) !== separator.split('')[0]) ||
+                      (separator.length === 1 && value.length === 6 && value.charAt(5) !== separator) ||
+                      (separator.length === 2 &&
+                        value.length === 7 &&
+                        value.charAt(6) !== separator.split('')[0])
+                      ? `${valTemp.join('')}${separator}${rest}`
                       : value
+
+                    val = separator.length === 1 ? val.slice(0, 10) : val.slice(0, 12)
+
                     setFieldValue(form, name, val, true)
                     Promise.resolve().then(() => {
                       onChange && onChange(e, { name, value: val })

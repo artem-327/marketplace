@@ -784,8 +784,6 @@ class DetailSidebar extends Component {
                             disabled: values.neededNow !== false,
                             minDate: moment()
                           }}
-                          inputOnly
-                          addSeparator
                         />
                       </GridColumn>
                       <GridColumn width={8}>
@@ -800,8 +798,6 @@ class DetailSidebar extends Component {
                             disabled: values.doesExpire !== true,
                             minDate: moment()
                           }}
-                          inputOnly
-                          addSeparator
                         />
                       </GridColumn>
                     </GridRow>

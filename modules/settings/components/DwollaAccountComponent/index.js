@@ -278,8 +278,6 @@ class BankAccountsPopup extends Component {
                           }}
                           label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
                           name='dwollaController.dateOfBirth'
-                          inputOnly
-                          addSeparator
                         />
                       </FormGroup>
                     </Accordion.Content>

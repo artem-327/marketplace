@@ -91,8 +91,6 @@ class BeneficialOwnersForm extends Component {
                 </>
               }
               name={`beneficialOwners[${i}].dateOfBirth`}
-              inputOnly
-              addSeparator
             />
           </FormGroup>
         </>
