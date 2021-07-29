@@ -1,5 +1,4 @@
 import * as AT from './action-types'
-import * as inventoryAT from '../inventory/action-types'
 import Link from 'next/link'
 
 import { defaultTabs } from './contants'
@@ -1283,8 +1282,8 @@ export default function reducer(state = initialState, action) {
     /* ATTACHMENTS */
 
     case AT.SETTINGS_REMOVE_ATTACHMENT_PENDING:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_PENDING:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
+    case 'INVENTORY_ADD_ATTACHMENT_PENDING':
+    case 'INVENTORY_REMOVE_ATTACHMENT_PENDING': {
       return {
         ...state,
         loading: true
@@ -1293,10 +1292,10 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_REMOVE_ATTACHMENT_FULFILLED:
     case AT.SETTINGS_REMOVE_ATTACHMENT_REJECTED:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_FULFILLED:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_REJECTED:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_FULFILLED:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_REJECTED: {
+    case 'INVENTORY_ADD_ATTACHMENT_FULFILLED':
+    case 'INVENTORY_ADD_ATTACHMENT_REJECTED':
+    case 'INVENTORY_REMOVE_ATTACHMENT_FULFILLED':
+    case 'INVENTORY_REMOVE_ATTACHMENT_REJECTED': {
       return {
         ...state,
         loading: false
