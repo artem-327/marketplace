@@ -5,7 +5,7 @@ import { generateQueryString } from '../../utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
   let defaultParams = {
-    isTemporary: true
+    isTemporary: false
   }
   let params = { ...defaultParams, ...additionalParams, type: docType }
   const formData = new FormData()
