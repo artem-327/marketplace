@@ -4,6 +4,7 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 //Components
 import confirm from '../../../../components/Confirmable/confirm'
 import BasicButton from '../../../../components/buttons/BasicButton'
+import HorizontalBarGraph from '../../../../components/horizontal-bar-graph/HorizontalBarGraph'
 //Styles
 import {
   SegmentGroupHeader,
@@ -48,26 +49,64 @@ const Header = ({
         </SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
-            <DivTransactions>
-              <DivPadding>
-                <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
-                <DivValue>{transactions}</DivValue>
-              </DivPadding>
-            </DivTransactions>
-            <DivAvarageValue>
-              <DivPadding>
-                <FormattedMessage id='myNetworks.detailRow.averageValue' defaultMessage='Average Value' />
-                <DivValue>
-                  <FormattedNumber
-                    minimumFractionDigits={0}
-                    maximumFractionDigits={0}
-                    style='currency'
-                    value={averageValue}
-                    currency={currency}
-                  />
-                </DivValue>
-              </DivPadding>
-            </DivAvarageValue>
+
+            <div style={{ width: '300px', height: '100px'}}>
+              <HorizontalBarGraph
+                values={[
+                  {
+                    value: 60,
+                    name: 'Insurance',
+                    tooltip: 'Low Risk'
+                  },
+                  {
+                    value: 80,
+                    name: 'Credit',
+                    tooltip: 'Low Risk'
+                  },
+                  {
+                    value: 40,
+                    name: 'Beyond\u00A0Terms',
+                    tooltip: 'Beyond Terms tooltip'
+                  },
+                  {
+                    value: 60,
+                    name: 'Violations',
+                    tooltip: 'Violations tooltip'
+                  },
+                  {
+                    value: 100,
+                    name: 'Social',
+                    tooltip: 'Social tooltip'
+                  }
+                ]}
+                max={100}
+              />
+            </div>
+
+            {false && (
+              <>
+                <DivTransactions>
+                  <DivPadding>
+                    <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
+                    <DivValue>{transactions}</DivValue>
+                  </DivPadding>
+                </DivTransactions>
+                <DivAvarageValue>
+                  <DivPadding>
+                    <FormattedMessage id='myNetworks.detailRow.averageValue' defaultMessage='Average Value' />
+                    <DivValue>
+                      <FormattedNumber
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={0}
+                        style='currency'
+                        value={averageValue}
+                        currency={currency}
+                      />
+                    </DivValue>
+                  </DivPadding>
+                </DivAvarageValue>
+              </>
+            )}
           </DivCollectionStat>
         </SegmentCustom>
         <SegmentCustom textAlign='right'>

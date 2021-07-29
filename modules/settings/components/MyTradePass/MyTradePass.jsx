@@ -8,7 +8,6 @@ import { Image, Loader, Dimmer, GridRow, GridColumn, Divider } from 'semantic-ui
 // Components
 import TradeCriteria from '../../../../components/detail-row/header'
 import BottomSegments from '../../../my-network/components/DetailRow/BottomSegments/BottomSegments'
-import HorizontalBarGraph from '../../../../components/horizontal-bar-graph/HorizontalBarGraph'
 
 //Constants
 import { currency } from '../../../../constants'
@@ -68,38 +67,6 @@ const MyTradePass = props => {
                 <Image verticalAlign='middle' spaced={false} src={`${logoUrl}?t=${Date.now()}`} />
                 <DivGreyText>{address}</DivGreyText>
               </SegmentCustom>
-              <div style={{ width: '400px', height: '100px', border: 'solid 1px #2599d5'}}>
-                <HorizontalBarGraph
-                  values={[
-                    {
-                      value: 6000,
-                      name: 'Insurance',
-                      hover: '$5,000,000 - 7,500,000'
-                    },
-                    {
-                      value: 8000,
-                      name: 'Credit',
-                      hover: '61-80 (Low Risk)'
-                    },
-                    {
-                      value: 4000,
-                      name: 'Beyond Terms',
-                      hover: 'Beyond Terms hover'
-                    },
-                    {
-                      value: 6000,
-                      name: 'Violations',
-                      hover: 'Violations hover'
-                    },
-                    {
-                      value: 10000,
-                      name: 'Social',
-                      hover: 'Social hover'
-                    }
-                  ]}
-                />
-              </div>
-
               <SegmentCustom textAlign='right'>
                 <DivCollectionStat>
                   <DivLeftAligned $flexWidth='60%'>
