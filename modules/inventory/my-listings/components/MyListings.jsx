@@ -89,7 +89,7 @@ const MyListings = props => {
     }
 
     if (myListingsFilters) {
-      setState({ ...state, filterValues: myListingsFilters })
+      setState(prevState => ({ ...prevState, filterValues: myListingsFilters }))
       const filter = {
         ...myListingsFilters,
         ...(!!myListingsFilters.SearchByNamesAndTags && {
@@ -144,7 +144,7 @@ const MyListings = props => {
         }
         getRows(props, state, setState)
         if (state.updatedRow && !prevUpdateRow) {
-          setState({ ...state, updatedRow: false })
+          setState(prevState => ({ ...prevState, updatedRow: false }))
         }
       }
     }
@@ -312,7 +312,7 @@ const MyListings = props => {
         />
       </div>
       {isModalDetailOpen && <ModalDetailContainer inventoryGrid={props.datagrid} />}
-      {openFilterPopup && <InventoryFilter onClose={() => setState({ ...state, openFilterPopup: false })} />}
+      {openFilterPopup && <InventoryFilter onClose={() => setState(prevState => ({ ...prevState, openFilterPopup: false }))} />}
     </>
   )
 }

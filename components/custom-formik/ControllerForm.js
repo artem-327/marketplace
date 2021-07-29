@@ -106,7 +106,6 @@ class ControllerForm extends Component {
           <DateInput
             inputProps={{
               fluid: true,
-              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
               clearable: true
             }}
             label={
@@ -116,8 +115,6 @@ class ControllerForm extends Component {
               </>
             }
             name='dwollaController.dateOfBirth'
-            inputOnly
-            addSeparator
           />
         </FormGroup>
       </>

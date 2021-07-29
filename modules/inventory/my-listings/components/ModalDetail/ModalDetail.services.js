@@ -292,11 +292,11 @@ export const loadProductOffer = async (id, shouldSwitchTab, props, state, setSta
   if (data.value.data.companyProduct) {
     searchProducts(data.value.data.companyProduct.intProductName, props)
   }
-  setState({
-    ...state,
+  setState(prevState => ({
+    ...prevState,
     detailValues: data.value.data,
     initValues: { ...INIT_VALUES, ...getEditValues(data.value.data) }
-  })
+  }))
   if(formikPropsNew) resetFormNew()
 }
 

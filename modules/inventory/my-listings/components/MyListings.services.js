@@ -761,7 +761,7 @@ export const getRows = (props, state, setState) => {
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                     }))
                     // Its necessary to render and see changes in MyListing when datagrid updated row
-                    setState({ ...state, updatedRow: true })
+                    setState(prevState => ({ ...prevState, updatedRow: true }))
                     } catch (error) {
                     console.error(error)
                     }
@@ -774,7 +774,7 @@ export const getRows = (props, state, setState) => {
         )
     }
     })
-    setState({ ...state, rows: result })
+    setState(prevState => ({ ...prevState, rows: result }))
 }
 
 const handleChangePriceTiers = (values, rIndex, pIndex, focusInput, state, setState) => {
@@ -788,7 +788,7 @@ const handleChangePriceTiers = (values, rIndex, pIndex, focusInput, state, setSt
     newRows[rIndex].rawData.pricingTiers = values
     }
 
-    setState({ ...state, rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' })
+    setState(prevState => ({ ...prevState, rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' }))
 }
 
 const showMessage = (response, request = null, row, props, state, setState) => {
@@ -815,7 +815,7 @@ const showMessage = (response, request = null, row, props, state, setState) => {
             }
         )
         } else if (status.code === 'BROADCAST_RULE_CONFLICT') {
-        setState({ ...state, open: true, clientMessage: status.clientMessage, request })
+        setState(prevState => ({ ...prevState, open: true, clientMessage: status.clientMessage, request }))
         } else if (status.code === 'DETACHED') {
         datagrid.updateRow(status.productOfferId, () => ({
             ...row,
@@ -860,7 +860,7 @@ export const groupOffer = async (request, row, props, state, setState) => {
         grouped: true,
         parentOffer: getSafe(() => response.value.productOfferStatuses[0].virtualOfferId, null)
     }))
-    setState({ ...state, updatedRow: true })
+    setState(prevState => ({ ...prevState, updatedRow: true }))
 
     showMessage(response, request, row, props, state, setState)
     } catch (error) {
@@ -918,7 +918,7 @@ export const onClickBroadcast = (
  * @category Inventory - My Listings
  * @method
  */
-export const getMappedRows = datagrid => datagrid.rows.map(po => {
+export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
   let fobPrice
 

@@ -274,7 +274,10 @@ const TablesHandlers = props => {
 
                   <div>
                     <div className='column' style={{ paddingTop: '10px' }}>
-                      <FormattedMessage id='orders.orderDate' defaultMessage='Order Date' />
+                      <FormattedMessage id='orders.orderDate' defaultMessage='Order Date: ' />
+                    </div>
+                    <div className='column' style={{ paddingTop: '10px' }}>
+                      <FormattedMessage id='global.from' defaultMessage='From' />
                     </div>
                     <div className='column'>
                       <DateInput
@@ -283,13 +286,12 @@ const TablesHandlers = props => {
                           style: { width: '220px' },
                           maxDate: moment(),
                           clearable: true,
-                          placeholder: formatMessage({
-                            id: 'global.from',
-                            defaultMessage: 'From'
-                          }),
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
+                    </div>
+                    <div className='column' style={{ paddingTop: '10px' }}>
+                      <FormattedMessage id='global.to' defaultMessage='To' />
                     </div>
                     <DivColumn className='column'>
                       <DateInput
@@ -298,10 +300,6 @@ const TablesHandlers = props => {
                           style: { width: '220px' },
                           maxDate: moment(),
                           clearable: true,
-                          placeholder: formatMessage({
-                            id: 'global.to',
-                            defaultMessage: 'To'
-                          }),
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />

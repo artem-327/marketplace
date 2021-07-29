@@ -116,27 +116,64 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
   const { currentTab } = props
   if (currentTab === '') return
 
-  setState({
-    ...state,
-    [currentTab]: {
+
+  if(data.name === 'dateFrom' || data.name === 'dateTo') {
+    //Gets separator (character) from getLocaleDateFormat.
+    let separator = [...getLocaleDateFormat()].find(
+      char => char !== 'M' && char !== 'D' && char !== 'Y'
+    )
+    // Checks and adds space if is space after dot.
+    separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
+    
+    const dateValue = data.value
+    if(dateValue.length === 0 || 
+      dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
+      dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
+      setState({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+    
+      props.saveFilters({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+    
+      const filter = {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+      handleFiltersValue(filter, props, formikProps)
+    }
+  } else {
+    setState({
+      ...state,
+      [currentTab]: {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+    })
+  
+    props.saveFilters({
+      ...state,
+      [currentTab]: {
+        ...state[currentTab],
+        [data.name]: data.value
+      }
+    })
+  
+    const filter = {
       ...state[currentTab],
       [data.name]: data.value
     }
-  })
-
-  props.saveFilters({
-    ...state,
-    [currentTab]: {
-      ...state[currentTab],
-      [data.name]: data.value
-    }
-  })
-
-  const filter = {
-    ...state[currentTab],
-    [data.name]: data.value
+    handleFiltersValue(filter, props, formikProps)
   }
-  handleFiltersValue(filter, props, formikProps)
 }
 
 /**
