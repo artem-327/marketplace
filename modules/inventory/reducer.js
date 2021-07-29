@@ -1,5 +1,4 @@
 import typeToReducer from 'type-to-reducer'
-import * as AT from './action-types'
 // Services
 import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 // Constants
