@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
-import { getSafe } from '../../../../../utils/functions'
+import PropTypes from 'prop-types'
+// Images
 import Logo from '../../../../../assets/images/blue-pallet/blue-pallet-circle.svg'
-
 // Styles
 import {
   ModalStyled,
@@ -18,6 +17,11 @@ import {
   DivButtonColumn
 } from './Popup.styles'
 
+/**
+ * ViewOnlyPopup Component
+ * @category Marketplace - Listings
+ * @components
+ */
 const ViewOnlyPopup = props => {
   const { onCancel, applicationName } = props
 
@@ -59,9 +63,7 @@ const ViewOnlyPopup = props => {
                 basic
                 onClick={() => onCancel()}
                 data-test='confirmation_popup_keep_browsing'>
-                <FormattedMessage id='marketplace.keepBrowsing' defaultMessage='Keep Browsing'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='marketplace.keepBrowsing' defaultMessage='Keep Browsing' />
               </Button>
             </DivButtonColumn>
           </DivButtons>
@@ -69,6 +71,16 @@ const ViewOnlyPopup = props => {
       </Modal.Content>
     </ModalStyled>
   )
+}
+
+ViewOnlyPopup.propTypes = {
+  onCancel: PropTypes.func,
+  applicationName: PropTypes.string
+}
+
+ViewOnlyPopup.defaultProps = {
+  onCancel: () => {},
+  applicationName: ''
 }
 
 function mapStateToProps(store) {

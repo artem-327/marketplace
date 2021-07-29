@@ -1,5 +1,6 @@
+// Components
 import BidsSentContainer from './components/BidsSentContainer'
-import { DatagridProvider } from '~/modules/datagrid'
+import { DatagridProvider } from '../../datagrid'
 
 export const BidsSent = props => {
   const urlApiConfig = {

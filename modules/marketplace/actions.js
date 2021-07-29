@@ -1,126 +1,26 @@
-import * as AT from './action-types'
+import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
+// Apis
 import * as api from './api'
 
-export function findProducts(search) {
-  return {
-    type: AT.MARKETPLACE_FIND_PRODUCTS,
-    payload: api.findProducts(search)
-  }
-}
-
-export const getAutocompleteData = ({ searchQuery }) => ({
-  type: AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE,
-  payload: api.getAutocompleteData(searchQuery)
-})
-
-export const clearAutocompleteData = () => {
-  return {
-    type: AT.CLEAR_AUTOCOMPLETE_DATA,
-    payload: {}
-  }
-}
-
-export function applyDatagridFilter(filter, reload = true) {
-  return {
-    type: AT.MARKETPLACE_APPLY_FILTER,
-    payload: { filter, reload }
-  }
-}
-
-export function handleVariableSave(variable, value) {
-  return {
-    type: AT.MARKETPLACE_HANDLE_VARIABLE_CHANGE,
-    payload: { variable, value }
-  }
-}
-
-export const createHold = params => ({
-  type: AT.CREATED_HOLD,
-  payload: api.createHold(params)
-})
-
-export const getCountHolds = () => ({
-  type: AT.GET_COUNT_HOLDS,
-  payload: api.getCountHolds()
-})
-
-export const rejectHold = id => ({
-  type: AT.REJECT_HOLD,
-  payload: api.rejectHold(id)
-})
-
-export const cancelHold = id => ({
-  type: AT.CANCEL_HOLD,
-  payload: api.cancelHold(id)
-})
-
-export const approveHold = id => ({
-  type: AT.APPROVE_HOLD,
-  payload: api.approveHold(id)
-})
-
-export const toCartHold = id => ({
-  type: AT.TO_CART_HOLD,
-  payload: api.toCartHold(id)
-})
-
-export function toggleHolds(type) {
-  return {
-    type: AT.TOGGLE_HOLDS,
-    payload: type
-  }
-}
-
-export function openPopup(row = null) {
-  return {
-    type: AT.MARKETPLACE_OPEN_POPUP,
-    payload: row
-  }
-}
-
-export function closePopup() {
-  return {
-    type: AT.MARKETPLACE_CLOSE_POPUP,
-    payload: null
-  }
-}
-
-export const makeOffer = body => ({
-  type: AT.MARKETPLACE_MAKE_OFFER,
-  payload: api.makeOffer(body)
-})
-
-export const deleteOffer = id => ({
-  type: AT.MARKETPLACE_DELETE_OFFER,
-  payload: api.deleteOffer(id)
-})
-
-export const acceptOffer = id => ({
-  type: AT.MARKETPLACE_ACCEPT_OFFER,
-  payload: api.acceptOffer(id)
-})
-
-export const rejectOffer = id => ({
-  type: AT.MARKETPLACE_REJECT_OFFER,
-  payload: api.rejectOffer(id)
-})
-
-export const counterOffer = (id, body) => ({
-  type: AT.MARKETPLACE_COUNTER_OFFER,
-  payload: api.counterOffer(id, body)
-})
-
-export const addOfferToCart = id => ({
-  type: AT.MARKETPLACE_ADD_OFFER_TO_CART,
-  payload: api.addOfferToCart(id)
-})
-
-export const searchCompanies = name => ({
-  type: AT.MARKETPLACE_SEARCH_COMPANIES,
-  payload: api.searchCompanies(name)
-})
-
-export const saveSellerOption = option => ({
-  type: AT.MARKETPLACE_SAVE_SELLER_FILTER_OPTION,
-  payload: option
-})
+export const findProducts = createAsyncAction('MARKETPLACE_FIND_PRODUCTS', (search) => api.findProducts(search))
+export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA_MARKETPLACE', ({ searchQuery }) => api.getAutocompleteData(searchQuery))
+export const clearAutocompleteData = createAction('CLEAR_AUTOCOMPLETE_DATA', () => ({}))
+export const applyDatagridFilter = createAction('MARKETPLACE_APPLY_FILTER', (filter, reload = true) => ({ filter, reload }))
+export const handleVariableSave = createAction('MARKETPLACE_HANDLE_VARIABLE_CHANGE', (variable, value) => ({ variable, value }))
+export const createHold = createAsyncAction('CREATED_HOLD', params => api.createHold(params))
+export const getCountHolds = createAsyncAction('GET_COUNT_HOLDS', () => api.getCountHolds())
+export const rejectHold = createAsyncAction('REJECT_HOLD', (id) => api.rejectHold(id))
+export const cancelHold = createAsyncAction('CANCEL_HOLD', (id) => api.cancelHold(id))
+export const approveHold = createAsyncAction('APPROVE_HOLD', (id) => api.approveHold(id))
+export const toCartHold = createAsyncAction('TO_CART_HOLD', (id) => api.toCartHold(id))
+export const toggleHolds = createAction('TOGGLE_HOLDS', type => type)
+export const openPopup = createAction('MARKETPLACE_OPEN_POPUP', (row = null) => row)
+export const closePopup = createAction('MARKETPLACE_CLOSE_POPUP', () => null)
+export const makeOffer = createAsyncAction('MARKETPLACE_MAKE_OFFER', (body) => api.makeOffer(body))
+export const deleteOffer = createAsyncAction('MARKETPLACE_DELETE_OFFER', (id) => api.deleteOffer(id))
+export const acceptOffer = createAsyncAction('MARKETPLACE_ACCEPT_OFFER', (id) => api.acceptOffer(id))
+export const rejectOffer = createAsyncAction('MARKETPLACE_REJECT_OFFER', (id) => api.rejectOffer(id))
+export const counterOffer = createAsyncAction('MARKETPLACE_COUNTER_OFFER', (id, body) => api.counterOffer(id, body))
+export const addOfferToCart = createAsyncAction('MARKETPLACE_ADD_OFFER_TO_CART', (id) => api.addOfferToCart(id))
+export const searchCompanies = createAsyncAction('MARKETPLACE_SEARCH_COMPANIES', (name) => api.searchCompanies(name))
+export const saveSellerOption = createAction('MARKETPLACE_SAVE_SELLER_FILTER_OPTION', option => option)

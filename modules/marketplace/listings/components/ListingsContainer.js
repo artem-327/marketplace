@@ -1,14 +1,16 @@
 import { connect } from 'react-redux'
-
-import { withDatagrid } from '~/modules/datagrid'
-import { applyFilter } from '~/modules/filter/actions'
+// Components
 import Listings from './Listings'
+// Actions
+import { applyFilter } from '../../../filter/actions'
 import * as Actions from '../../actions'
-import { getProductOffer, sidebarChanged } from '~/modules/purchase-order/actions'
-import { openPopup as openInfoPopup, closePopup } from '~/modules/company-product-info/actions'
-import { getSafe } from '~/utils/functions'
+import { getProductOffer, sidebarChanged } from '../../../purchase-order/actions'
+import { openPopup as openInfoPopup, closePopup } from '../../../company-product-info/actions'
+// Services
+import { getDatagridRows } from './Listings.services'
+import { withDatagrid } from '../../../datagrid'
 //Selectors
-import { makeGetDatagridRows, makeGetSearchedCompaniesDropdown, makeGetSelectedSellerOption } from '../../selectors'
+import { makeGetSearchedCompaniesDropdown, makeGetSelectedSellerOption } from '../../selectors'
 import {
   makeGetZipHomeBranch,
   makeGetCountryIdHomeBranch,
@@ -22,7 +24,6 @@ import { makeGetIsOpen } from '../../../company-product-info/selectors'
 import { makeGetAppliedFilter } from '../../../filter/selectors'
 
 const makeMapStateToProps = () => {
-  const getRows = makeGetDatagridRows()
   const getAppliedFilter = makeGetAppliedFilter()
   const getZipHomeBranch = makeGetZipHomeBranch()
   const getCountryIdHomeBranch = makeGetCountryIdHomeBranch()
@@ -35,15 +36,14 @@ const makeMapStateToProps = () => {
   const getSearchedCompaniesDropdown = makeGetSearchedCompaniesDropdown()
   const getSelectedSellerOption = makeGetSelectedSellerOption()
 
-  const mapStateToProps = (store, props) => {
+  const mapStateToProps = (store, {datagrid}) => {
     return {
       ...store.marketplace,
       advancedFilters: getAppliedFilter(store),
-      // rows: store.marketplace.broadcastedProductOffers.map(po => {
       appliedFilter: getAppliedFilter(store),
       defaultZip: getZipHomeBranch(store),
       defaultCountry: getCountryIdHomeBranch(store),
-      rows: getRows(props),
+      rows: getDatagridRows(datagrid?.rows),
       sidebar: getSidebar(store),
       isProductInfoOpen: getIsOpen(store),
       isMerchant: getIsMerchant(store),
