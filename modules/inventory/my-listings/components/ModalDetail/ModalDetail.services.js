@@ -280,22 +280,27 @@ export const fetchIfNoData = (name, fn, props) => {
 }
 
 export const loadProductOffer = async (id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew) => {
-  const data = await props.getProductOffer(id)
+  if(props.countriesDropdown.length === 0) await props.getCountries()
+  const row = props.datagrid.rows.filter(row => row.id === id)
+  const data = row[0]
+  
+  await props.getProductOffer(data)
   if (shouldSwitchTab) {
-    switchTab(props, state, setState, props.modalActiveTab, data.value.data)
+    switchTab(props, state, setState, props.modalActiveTab, data)
   }
 
   props.searchOrigins(
-    getSafe(() => data.value.data.origin.name, ''),
-    200
+    props.countriesDropdown,
+    getSafe(() => data.origin.name, ''),
+    30
   )
-  if (data.value.data.companyProduct) {
-    searchProducts(data.value.data.companyProduct.intProductName, props)
+  if (data.companyProduct) {
+    searchProducts(data.companyProduct.intProductName, props)
   }
   setState(prevState => ({
     ...prevState,
-    detailValues: data.value.data,
-    initValues: { ...INIT_VALUES, ...getEditValues(data.value.data) }
+    detailValues: data,
+    initValues: { ...INIT_VALUES, ...getEditValues(data) }
   }))
   if(formikPropsNew) resetFormNew()
 }
