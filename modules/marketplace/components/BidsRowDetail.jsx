@@ -1,25 +1,18 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Formik } from 'formik'
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-
-// Components
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { Form, Dimmer, Loader, GridRow, GridColumn, List, Radio, Image } from 'semantic-ui-react'
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
-import RowDescription from './RowDescription'
-import ErrorFocus from '~/components/error-focus'
+// Components
+import { Required } from '../../../components/constants/layout'
+import RowDescription from './RowDescriptionContainer'
+import ErrorFocus from '../../../components/error-focus'
 import DeaPopup from '../listings/components/ConfirmationPopups/DeaPopup'
 import DhsPopup from '../listings/components/ConfirmationPopups/DhsPopup'
-
 // Constants
-import { errorMessages } from '~/constants/yupValidation'
-import { currency } from '~/constants/index'
-
+import { currency } from '../../../constants/index'
 // Styles
 import {
   DivScrollContent, DivDetailRow, DivFieldRectangle, DivMessageInputHeader, DivSmallText, GridStyled
@@ -37,14 +30,15 @@ import {
   StyledRectangle,
   PriceInput,
   BottomButtons
-} from '../constants/layout'
-
+} from '../styles'
 // Services
-import * as Actions from '../actions'
-import { removeEmpty, getSafe, getPricing } from '~/utils/functions'
-
 import { formValidation, submitOffer, handleCheckout, checkBuyAttempt } from './BidsRowDetail.services'
 
+/**
+ * BidsRowDetail Component
+ * @category Marketplace - Bids received / sent
+ * @components
+ */
 const BidsRowDetail = props => {
   let formikPropsSelf = {}
   const [initialFormValues, setInitialFormValues] = useState({ id: '', message: '', pkgAmount: '', pricePerUOM: '' })
@@ -65,7 +59,6 @@ const BidsRowDetail = props => {
     intl: { formatMessage },
     popupValues,
     productOffer,
-    closePopup,
     isSending,
     loading,
     listFobPriceUnit,
@@ -76,7 +69,6 @@ const BidsRowDetail = props => {
     openPopup
   } = props
 
-  // Similar to call componentDidMount:
   useEffect(() => {
     const { popupValues, initValues } = props
 
@@ -95,9 +87,9 @@ const BidsRowDetail = props => {
       setDetailExpandedIds([])
       setTouched(false)
     }
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) 
 
-  useEffect(() => { // componentWillUnmount work-around
+  useEffect(() => {
     return () => {
       if ((touched || Object.keys(formikPropsSelf.touched).length) && props.onUnmount) {
         props.onUnmount({
@@ -127,11 +119,11 @@ const BidsRowDetail = props => {
     )
   }
 
-  const lastHistory = popupValues.histories[popupValues.histories.length - 1]
+  const lastHistory = popupValues?.histories[popupValues.histories.length - 1]
   const disabledInputPrice = radioState !== 'counter'
 
-  const lastStatus = lastHistory.status
-  const lastHistoryType = lastHistory.historyType
+  const lastStatus = lastHistory?.status
+  const lastHistoryType = lastHistory?.historyType
   const showBidSummary = lastStatus === 'NEW'
 
   const showAcceptRejectCounterSection =
@@ -142,8 +134,8 @@ const BidsRowDetail = props => {
 
   const histories =
     showAcceptRejectCounterSection || showBidSummary || lastStatus === 'ACCEPTED' || lastStatus === 'REJECTED'
-      ? popupValues.histories.slice(0, popupValues.histories.length - 1)
-      : popupValues.histories
+      ? popupValues?.histories?.slice(0, popupValues?.histories?.length - 1)
+      : popupValues?.histories
 
   return (
     <Formik
@@ -458,9 +450,8 @@ const BidsRowDetail = props => {
                                     <>
                                       <FormattedMessage
                                         id='marketplace.yourFobPriceOffer'
-                                        defaultMessage='Your FOB price offer'>
-                                        {text => text}
-                                      </FormattedMessage>
+                                        defaultMessage='Your FOB price offer'
+                                      />
                                       {!disabledInputPrice && <Required />}
                                     </>
                                   }
@@ -470,9 +461,7 @@ const BidsRowDetail = props => {
                               <GridColumn width={5}>
                                 <Form.Field>
                                   <label>
-                                    <FormattedMessage id='marketplace.YourTotalBid' defaultMessage='Your Total Bid'>
-                                      {text => text}
-                                    </FormattedMessage>
+                                    <FormattedMessage id='marketplace.YourTotalBid' defaultMessage='Your Total Bid' />
                                   </label>
                                   <DivFieldRectangle className={disabledInputPrice ? 'disabled' : ''}>
                                     <FormattedNumber
@@ -480,7 +469,7 @@ const BidsRowDetail = props => {
                                       maximumFractionDigits={2}
                                       style='currency'
                                       currency={currency}
-                                      value={values.pkgAmount * packagingSize * values.pricePerUOM}
+                                      value={parseFloat(values.pkgAmount) * packagingSize * parseFloat(values.pricePerUOM)}
                                     />
                                   </DivFieldRectangle>
                                 </Form.Field>
@@ -680,31 +669,49 @@ const BidsRowDetail = props => {
 }
 
 BidsRowDetail.propTypes = {
-  itemsCount: PropTypes.number
+  intl: PropTypes.object,
+  popupValues: PropTypes.object,
+  initValues: PropTypes.object,
+  datagrid: PropTypes.object,
+  productOffer: PropTypes.bool,
+  isSending: PropTypes.bool,
+  loading: PropTypes.bool,
+  seller: PropTypes.bool,
+  listFobPriceUnit: PropTypes.string,
+  packagingType: PropTypes.string,
+  packagingUnit: PropTypes.string,
+  productName: PropTypes.string,
+  packagingSize: PropTypes.number,
+  openPopup: PropTypes.func,
+  onUnmount: PropTypes.func,
+  onClose: PropTypes.func,
+  counterOffer: PropTypes.func,
+  acceptOffer: PropTypes.func,
+  rejectOffer: PropTypes.func,
+  addOfferToCart: PropTypes.func
 }
 
 BidsRowDetail.defaultProps = {
-  itemsCount: 0
+  intl: {},
+  popupValues: null,
+  initValues: {},
+  datagrid: {},
+  productOffer: false,
+  isSending: false,
+  loading: false,
+  seller: false,
+  listFobPriceUnit: '',
+  packagingType: '',
+  packagingUnit: '',
+  productName: 'N/A',
+  packagingSize: 1,
+  openPopup: () => {},
+  onUnmount: () => {},
+  onClose: () => {},
+  counterOffer: () => {},
+  acceptOffer: () => {},
+  rejectOffer: () => {},
+  addOfferToCart: () => {}
 }
 
-function mapStateToProps(store, params) {
-  const { popupValues } = params
-  const productOffer = getSafe(() => popupValues.productOffer, null)
-  const companyProduct = getSafe(() => productOffer.companyProduct, null)
-
-  const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
-
-  return {
-    popupValues,
-    productOffer,
-    isSending: store.marketplace.isSending,
-    loading: store.marketplace.loading,
-    productName: getSafe(() => companyProduct.intProductName, 'N/A'),
-    listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
-    packagingType: getSafe(() => companyProduct.packagingType.name, ''),
-    packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
-    packagingSize: getSafe(() => companyProduct.packagingSize, 1)
-  }
-}
-
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(BidsRowDetail)))
+export default BidsRowDetail

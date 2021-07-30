@@ -1,13 +1,21 @@
 import { Image } from 'semantic-ui-react'
-import ActionCell from '~/components/table/ActionCell'
-import { debounce } from 'lodash'
-import RowDescription from '../../components/RowDescription'
-import moment from 'moment'
-import confirm from '~/components/Confirmable/confirm'
-import { DefaultIcon, IconWrapper, StyledName } from '../../constants/layout'
 import Router from 'next/router'
-import { getSafe } from '~/utils/functions'
+import { debounce } from 'lodash'
+import moment from 'moment'
+// Components
+import ActionCell from '../../../../components/table/ActionCell'
+import RowDescription from '../../components/RowDescription'
+// Services
+import confirm from '../../../../components/Confirmable/confirm'
+import { getSafe } from '../../../../utils/functions'
+// Styles
+import { DefaultIcon, IconWrapper, StyledName } from '../../styles'
 
+/**
+ * Set initial filters
+ * @category Marketplace - Bids sent
+ * @method
+ */
 export const setInitFilters = (state, props) => {
   const { tableHandlersFiltersBidsSent, datagrid } = props
 
@@ -20,6 +28,11 @@ export const setInitFilters = (state, props) => {
   }
 }
 
+/**
+ * Handle filter change input search
+ * @category Marketplace - Bids sent
+ * @method
+ */
 export const handleFilterChangeInputSearch = (e, data, state, props) => {
   const filter = {
     ...state.filterValues,
@@ -35,7 +48,7 @@ const handleFiltersValue = debounce((filter, state, props) => {
 }, 300)
 
 
-const handleRowClick = (row, state, props)=> {
+const handleRowClick = (row, state)=> {
   const { expandedRowIds } = state
 
   if (expandedRowIds.length) {
@@ -68,6 +81,11 @@ const getHistories = histories => {
   return (newHistories)
 }
 
+/**
+ * Get rows of table
+ * @category Marketplace - Bids sent
+ * @method
+ */
 export const getRows = (state, props) => {
   const {
     rows,
@@ -107,12 +125,12 @@ export const getRows = (state, props) => {
           onContentClick={e => {
             e.stopPropagation()
             e.preventDefault()
-            handleRowClick(r, state, props)
+            handleRowClick(r, state)
           }}
         />
       ),
       description: (
-        <div onClick={() => handleRowClick(r, state, props)} style={{ paddingTop: '5px', cursor: 'pointer' }}>
+        <div onClick={() => handleRowClick(r, state)} style={{ paddingTop: '5px', cursor: 'pointer' }}>
           <RowDescription
             history={lastHistory}
             productOffer={r.productOffer}
@@ -124,7 +142,7 @@ export const getRows = (state, props) => {
       createdAt: (
         <div
           style={{ paddingTop: '5px', color: '#848893', cursor: 'pointer' }}
-          onClick={() => handleRowClick(r, state, props)}>
+          onClick={() => handleRowClick(r, state)}>
           {moment(lastHistory.createdAt).fromNow()}
         </div>
       )
@@ -134,8 +152,6 @@ export const getRows = (state, props) => {
 
 const getActions = (row, state, props) => {
   const {
-    isMerchant,
-    isCompanyAdmin,
     intl: { formatMessage },
     deleteOffer,
     acceptOffer,

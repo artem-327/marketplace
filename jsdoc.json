@@ -19,6 +19,7 @@
       "./styles",
       "./test",
       "./modules/inventory",
+      "./modules/marketplace",
       "./modules/settings/components/UserTable",
       "./modules/add-bank-accounts",
       "./modules/settings/components/Locations",

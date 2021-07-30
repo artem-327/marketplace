@@ -10,7 +10,7 @@ import { INITIAL_VALUES, OPTIONS_YES_NO } from './AddEditCarrier.constants'
 import { getInitValues, getValidationSchema, submitForm } from './AddEditCarrier.services'
 // Styles
 import { Required } from '../../../../components/constants/layout'
-import { PriceInput } from '../../../marketplace/constants/layout'
+import { PriceInput } from '../../../marketplace/styles'
 
 let formikPropsSelf = {}
 

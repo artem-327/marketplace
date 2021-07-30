@@ -1,24 +1,26 @@
 import { connect } from 'react-redux'
-import { withDatagrid } from '../../../../modules/datagrid'
-import { applyFilter } from '../../../../modules/filter/actions'
+// Components
 import BidsReceived from './BidsReceived'
+// Services
+import { withDatagrid } from '../../../../modules/datagrid'
+// Actions
+import { applyFilter } from '../../../../modules/filter/actions'
 import * as Actions from '../../actions'
 import { sidebarChanged } from '../../../../modules/purchase-order/actions'
 import { getProductOffer } from '../../../../modules/purchase-order/actions'
-import { getSafe } from '../../../../utils/functions'
 
-function mapStateToProps(store, { datagrid }) {
-  return {
-    ...store.marketplace,
-    rows: datagrid.rows,
-    isMerchant: getSafe(() => store.auth.identity.isMerchant, false),
-    isCompanyAdmin: getSafe(() => store.auth.identity.isCompanyAdmin, false),
-    tutorialCompleted: getSafe(() => store.auth.identity.tutorialCompleted, false)
+const makeMapStateToProps = () => {
+  const mapStateToProps = (store, { datagrid }) => {
+    return {
+      ...store.marketplace,
+      rows: datagrid?.rows
+    }
   }
+  return mapStateToProps
 }
 
 export default withDatagrid(
-  connect(mapStateToProps, {
+  connect(makeMapStateToProps, {
     ...Actions,
     sidebarChanged,
     getProductOffer,

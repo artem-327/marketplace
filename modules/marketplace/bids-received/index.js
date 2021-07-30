@@ -1,5 +1,6 @@
+// Components
 import BidsReceivedContainer from './components/BidsReceivedContainer'
-import { DatagridProvider } from '~/modules/datagrid'
+import { DatagridProvider } from '../../datagrid'
 
 export const BidsReceived = props => {
   const urlApiConfig = {

@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
-import { getSafe } from '../../../../../utils/functions'
+import PropTypes from 'prop-types'
+// Images
 import Logo from '../../../../../assets/images/marketplace/dea-logo.svg'
-
 // Styles
 import {
   ModalStyled,
@@ -15,6 +14,11 @@ import {
   DivButtonColumn
 } from './Popup.styles'
 
+/**
+ * DeaPopup Component
+ * @category Marketplace - Listings
+ * @components
+ */
 const DeaPopup = props => {
   const { onCancel, onAccept } = props
 
@@ -48,9 +52,7 @@ const DeaPopup = props => {
                 basic
                 onClick={() => onCancel()}
                 data-test='confirmation_popup_cancel'>
-                <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
               </Button>
             </DivButtonColumn>
             <DivButtonColumn>
@@ -58,9 +60,7 @@ const DeaPopup = props => {
                 type='button'
                 color='blue'
                 onClick={() => onAccept()}>
-                <FormattedMessage id='marketplace.iUnderstand' defaultMessage='I understand'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='marketplace.iUnderstand' defaultMessage='I understand' />
               </Button>
             </DivButtonColumn>
           </DivButtons>
@@ -68,6 +68,16 @@ const DeaPopup = props => {
       </Modal.Content>
     </ModalStyled>
   )
+}
+
+DeaPopup.propTypes = {
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func
+}
+
+DeaPopup.defaultProps = {
+  onCancel: () => {},
+  onAccept: () => {}
 }
 
 export default injectIntl(DeaPopup)

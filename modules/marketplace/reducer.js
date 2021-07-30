@@ -1,24 +1,35 @@
-import * as AT from './action-types'
-
+import typeToReducer from 'type-to-reducer'
+// Services
 import { uniqueArrayByKey, getSafe } from '../../utils/functions'
+// Actions
+import {
+  findProducts,
+  getAutocompleteData,
+  clearAutocompleteData,
+  applyDatagridFilter,
+  handleVariableSave,
+  createHold,
+  getCountHolds,
+  rejectHold,
+  cancelHold,
+  approveHold,
+  toCartHold,
+  toggleHolds,
+  openPopup,
+  closePopup,
+  makeOffer,
+  deleteOffer,
+  acceptOffer,
+  rejectOffer,
+  counterOffer,
+  addOfferToCart,
+  searchCompanies,
+  saveSellerOption
+} from './actions'
 
 export const initialState = {
-  fileIds: [],
-  listConditions: [],
-  listForms: [],
-  listGrades: [],
-  lotFiles: [],
-  poCreated: false,
-  searchedManufacturers: [],
-  searchedManufacturersLoading: false,
-  searchedOrigins: [],
-  searchedOriginsLoading: false,
-  searchedProductsLoading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
-  broadcastedProductOffers: [],
-  broadcastedProductOffersPageLoaded: -1,
-  warehousesList: [],
   loading: false,
   updating: false,
   autocompleteData: [],
@@ -38,23 +49,27 @@ export const initialState = {
   selectedSellerOption: null
 }
 
-export default function reducer(state = initialState, action) {
-  const { type, payload } = action
 
-  switch (type) {
-    case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_PENDING: {
+export default typeToReducer(
+  {
+    [getAutocompleteData.pending]: (state, action) => {
       return {
         ...state,
         autocompleteDataLoading: true
       }
-    }
-
-    case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_FULFILLED: {
-      const rVal = {
+    },
+    [getAutocompleteData.rejected]: (state, action) => {
+      return {
+        ...state,
+        autocompleteDataLoading: false
+      }
+    },
+    [getAutocompleteData.fulfilled]: (state, action) => {
+      return {
         ...state,
         autocompleteDataLoading: false,
         autocompleteData: state.autocompleteData.concat(
-          uniqueArrayByKey(payload, 'id').map(el => {
+          uniqueArrayByKey(action.payload, 'id').map(el => {
             const productName = getSafe(() => el.name, '')
             return {
               ...el,
@@ -72,272 +87,294 @@ export default function reducer(state = initialState, action) {
           })
         )
       }
-      return rVal
-    }
-
-    case AT.GET_AUTOCOMPLETE_DATA_MARKETPLACE_REJECTED: {
-      return {
-        ...state,
-        autocompleteDataLoading: false
-      }
-    }
-
-    case AT.CLEAR_AUTOCOMPLETE_DATA: {
+    },
+    [clearAutocompleteData]: (state, action) => {
       return {
         ...state,
         autocompleteData: []
       }
-    }
-
-    case AT.MARKETPLACE_APPLY_FILTER: {
+    },
+    [applyDatagridFilter]: (state, action) => {
       return {
         ...state,
-        datagridFilter: payload.filter,
-        datagridFilterReload: payload.reload,
+        datagridFilter: action.payload.filter,
+        datagridFilterReload: action.payload.reload,
         datagridFilterUpdate: !state.datagridFilterUpdate
       }
-    }
-
-    case AT.MARKETPLACE_HANDLE_VARIABLE_CHANGE: {
+    },
+    [handleVariableSave]: (state, action) => {
       return {
         ...state,
-        [payload.variable]: payload.value
+        [action.payload.variable]: action.payload.value
       }
-    }
-
-    case AT.CREATED_HOLD_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.CREATED_HOLD_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload
-      }
-    }
-
-    case AT.CREATED_HOLD_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    case AT.GET_COUNT_HOLDS_PENDING: {
+    },
+    [createHold.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.GET_COUNT_HOLDS_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        countHolds: payload.data
-      }
-    }
-
-    case AT.GET_COUNT_HOLDS_REJECTED: {
+    },
+    [createHold.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.REJECT_HOLD_PENDING: {
+    },
+    [createHold.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        holds: action.payload
+      }
+    },
+    [getCountHolds.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.REJECT_HOLD_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload.data
-      }
-    }
-
-    case AT.REJECT_HOLD_REJECTED: {
+    },
+    [getCountHolds.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.CANCEL_HOLD_PENDING: {
+    },
+    [getCountHolds.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        countHolds: action.payload.data
+      }
+    },
+    [rejectHold.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.CANCEL_HOLD_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload.data
-      }
-    }
-
-    case AT.CANCEL_HOLD_REJECTED: {
+    },
+    [rejectHold.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.APPROVE_HOLD_PENDING: {
+    },
+    [rejectHold.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        holds: action.payload.data
+      }
+    },
+    [cancelHold.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.APPROVE_HOLD_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload.data
-      }
-    }
-
-    case AT.APPROVE_HOLD_REJECTED: {
+    },
+    [cancelHold.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.TO_CART_HOLD_PENDING: {
+    },
+    [cancelHold.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        holds: action.payload.data
+      }
+    },
+    [approveHold.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.TO_CART_HOLD_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        holds: payload.data
-      }
-    }
-
-    case AT.TO_CART_HOLD_REJECTED: {
+    },
+    [approveHold.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.HOLD_APPLY_FILTER: {
+    },
+    [approveHold.fulfilled]: (state, action) => {
       return {
         ...state,
-        datagridFilter: payload,
-        datagridFilterUpdate: !state.datagridFilterUpdate
+        loading: false,
+        holds: action.payload.data
       }
-    }
-
-    case AT.TOGGLE_HOLDS: {
+    },
+    [toCartHold.pending]: (state, action) => {
       return {
         ...state,
-        typeHolds: payload
+        loading: true
       }
-    }
-
-    case AT.MARKETPLACE_OPEN_POPUP: {
+    },
+    [toCartHold.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [toCartHold.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false,
+        holds: action.payload.data
+      }
+    },
+    [toggleHolds]: (state, action) => {
+      return {
+        ...state,
+        typeHolds: action.payload
+      }
+    },
+    [openPopup]: (state, action) => {
       return {
         ...state,
         isOpenPopup: true,
         popupValues: action.payload
       }
-    }
-    case AT.MARKETPLACE_CLOSE_POPUP: {
+    },
+    [closePopup]: (state, action) => {
       return {
         ...state,
         isOpenPopup: false,
         popupValues: null
       }
-    }
-
-    case AT.MARKETPLACE_MAKE_OFFER_PENDING: {
+    },
+    [makeOffer.pending]: (state, action) => {
       return {
         ...state,
         updating: true
       }
-    }
-
-    case AT.MARKETPLACE_MAKE_OFFER_REJECTED:
-    case AT.MARKETPLACE_MAKE_OFFER_FULFILLED: {
+    },
+    [makeOffer.rejected]: (state, action) => {
       return {
         ...state,
         updating: false
       }
-    }
-
-    case AT.MARKETPLACE_ADD_OFFER_TO_CART_PENDING:
-    case AT.MARKETPLACE_DELETE_OFFER_PENDING:
-    case AT.MARKETPLACE_ACCEPT_OFFER_PENDING:
-    case AT.MARKETPLACE_REJECT_OFFER_PENDING:
-    case AT.MARKETPLACE_COUNTER_OFFER_PENDING: {
+    },
+    [makeOffer.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        updating: false
+      }
+    },
+    [deleteOffer.pending]: (state, action) => {
       return {
         ...state,
         loading: true
       }
-    }
-
-    case AT.MARKETPLACE_ADD_OFFER_TO_CART_FULFILLED:
-    case AT.MARKETPLACE_ADD_OFFER_TO_CART_REJECTED:
-    case AT.MARKETPLACE_DELETE_OFFER_FULFILLED:
-    case AT.MARKETPLACE_DELETE_OFFER_REJECTED:
-    case AT.MARKETPLACE_ACCEPT_OFFER_FULFILLED:
-    case AT.MARKETPLACE_ACCEPT_OFFER_REJECTED:
-    case AT.MARKETPLACE_REJECT_OFFER_FULFILLED:
-    case AT.MARKETPLACE_REJECT_OFFER_REJECTED:
-    case AT.MARKETPLACE_COUNTER_OFFER_FULFILLED:
-    case AT.MARKETPLACE_COUNTER_OFFER_REJECTED: {
+    },
+    [deleteOffer.rejected]: (state, action) => {
       return {
         ...state,
         loading: false
       }
-    }
-
-    case AT.MARKETPLACE_SEARCH_COMPANIES_PENDING: {
+    },
+    [deleteOffer.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [acceptOffer.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [acceptOffer.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [acceptOffer.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [rejectOffer.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [rejectOffer.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [rejectOffer.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [counterOffer.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [counterOffer.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [counterOffer.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [addOfferToCart.pending]: (state, action) => {
+      return {
+        ...state,
+        loading: true
+      }
+    },
+    [addOfferToCart.rejected]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [addOfferToCart.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loading: false
+      }
+    },
+    [searchCompanies.pending]: (state, action) => {
       return {
         ...state,
         searchedCompaniesLoading: true
       }
-    }
-    case AT.MARKETPLACE_SEARCH_COMPANIES_REJECTED: {
+    },
+    [searchCompanies.rejected]: (state, action) => {
       return {
         ...state,
         searchedCompaniesLoading: false
       }
-    }
-    case AT.MARKETPLACE_SEARCH_COMPANIES_FULFILLED: {
+    },
+    [searchCompanies.fulfilled]: (state, action) => {
       return {
         ...state,
         searchedCompaniesLoading: false,
-        searchedCompanies: payload
+        searchedCompanies: action.payload
       }
-    }
-
-    case AT.MARKETPLACE_SAVE_SELLER_FILTER_OPTION: {
+    },
+    [saveSellerOption]: (state, action) => {
       return {
         ...state,
-        selectedSellerOption: payload
+        selectedSellerOption: action.payload
       }
-    }
-
-    default: {
-      return state
-    }
-  }
-}
+    },
+  },
+  initialState
+)

@@ -1,14 +1,13 @@
 import styled from 'styled-components'
 import { Input } from 'formik-semantic-ui-fixed-validation'
-
 import {
   Grid,
   GridRow,
-  GridColumn,
   Label,
   Segment,
   List,
-  Button
+  Dropdown,
+  Modal
 } from 'semantic-ui-react'
 
 export const TableSegment = styled(Segment)`
@@ -336,6 +335,134 @@ export const BottomButtons = styled.div`
       &:active {
         background-color: #f8f9fb;
       }
+    }
+  }
+`
+
+export const defaultHiddenColumns = [
+  'origin',
+  'expiration',
+  'condition',
+  'form',
+  'manufacturer',
+  'association',
+  'notes',
+  'leadTime'
+]
+
+export const CapitalizedText = styled.span`
+  text-transform: capitalize;
+`
+
+export const CustomDiv = styled.div`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`
+
+export const CustomSearchNameTags = styled.div`
+  .column {
+    width: 370px;
+    padding-top: 0 !important;
+  }
+`
+
+export const FiltersRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: -5px;
+`
+
+export const FlexContainerSmall = styled.div`
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 10px 0;
+`
+
+export const DropdownStyled = styled(Dropdown)`
+  width: 370px;
+  z-index: 600 !important;
+`
+
+export const HoldDropdown = styled(Dropdown)`
+  z-index: 601 !important;
+`
+
+export const CustomRowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: -5px -5px;
+  flex-wrap: wrap;
+
+  > div {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .column {
+    margin: 5px 5px;
+  }
+
+  input,
+  .ui.dropdown {
+    height: 40px;
+  }
+`
+
+export const ModalStyled = styled(Modal)`
+  > i.close.icon {
+    font-size: 18px;
+  }
+
+  &.ui.large.modal > .header {
+    font-size: 18px;
+  }
+
+  &.ui.large.modal > .scrolling.content {
+    padding: 30px;
+  }
+`
+export const DivFieldRectangle = styled.div`
+  padding: 10px 15px;
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  background-color: #f8f9fb;
+  font-size: 14px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.29;
+  letter-spacing: normal;
+  color: #20273a;
+`
+export const DivSmallText = styled.div`
+  font-size: 12px;
+  color: #848893;
+  display: flex;
+
+  > svg.title-icon {
+    font-size: 14px;
+    margin-right: 8px;
+  }
+`
+export const GridStyled = styled(Grid)`
+  &.ui.grid {
+    margin: -7.5px -10px;
+
+    .row {
+      padding: 7.5px 0;
+
+      .column {
+        padding: 0 10px;
+      }
+    }
+
+    .ui.input {
+      height: 40px;
     }
   }
 `
