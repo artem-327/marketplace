@@ -28,6 +28,7 @@ import {
   getProductForms,
   getProductConditions,
   getDocumentTypes,
+  getCountries
 } from '../../../../global-data/actions'
 import { openBroadcast } from '../../../../broadcast/actions'
 // Selectors
@@ -42,7 +43,6 @@ import {
   makeGetSearchedManufacturers,
   makeGetSearchedManufacturersLoading,
   makeGetSearchedOrigins,
-  makeGetSearchedOriginsLoading,
   makeGetSearchedProducts,
   makeGetSearchedProductsLoading,
   makeGetWarehousesList,
@@ -57,7 +57,8 @@ import {
 import {
   makeGetProductFormsDropdown,
   makeGetProductGradesDropdown,
-  makeGetDocumentTypesDropdown
+  makeGetDocumentTypesDropdown,
+  makeGetCountriesDropdown
 } from '../../../../global-data/selectors'
 
 const mapDispatchToProps = {
@@ -69,6 +70,7 @@ const mapDispatchToProps = {
   getProductForms,
   getProductGrades,
   getWarehouses,
+  getCountries,
   searchManufacturers,
   searchOrigins,
   openBroadcast,
@@ -100,7 +102,6 @@ const makeMapStateToProps = () => {
   const getSearchedManufacturers = makeGetSearchedManufacturers()
   const getSearchedManufacturersLoading = makeGetSearchedManufacturersLoading()
   const getSearchedOrigins = makeGetSearchedOrigins()
-  const getSearchedOriginsLoading = makeGetSearchedOriginsLoading()
   const getSearchedProducts = makeGetSearchedProducts()
   const getSearchedProductsLoading = makeGetSearchedProductsLoading()
   const getWarehousesList = makeGetWarehousesList()
@@ -111,6 +112,7 @@ const makeMapStateToProps = () => {
   const getTdsTemplates = makeGetTdsTemplates()
   const getBroadcastOption = makeGetBroadcastOption()
   const getDocumentTypesDropdown = makeGetDocumentTypesDropdown()
+  const getCountriesDropdown = makeGetCountriesDropdown()
 
   const mapStateToProps = ( store, { inventoryGrid }) => ({
     applicationName: getApplicationName(store),
@@ -125,7 +127,6 @@ const makeMapStateToProps = () => {
     searchedManufacturers: getSearchedManufacturers(store),
     searchedManufacturersLoading: getSearchedManufacturersLoading(store),
     searchedOrigins: getSearchedOrigins(store),
-    searchedOriginsLoading: getSearchedOriginsLoading(store),
     searchedProducts: getSearchedProducts(store),
     searchedProductsLoading: getSearchedProductsLoading(store),
     warehousesList: getWarehousesList(store),
@@ -137,7 +138,8 @@ const makeMapStateToProps = () => {
     tdsTemplatesLoading: getTdsTemplatesLoading(store),
     tdsTemplates: getTdsTemplates(store),
     broadcastOption: getBroadcastOption(store),
-    documentTypesDropdown: getDocumentTypesDropdown(store)
+    documentTypesDropdown: getDocumentTypesDropdown(store),
+    countriesDropdown: getCountriesDropdown(store)
   })
   return mapStateToProps
 }

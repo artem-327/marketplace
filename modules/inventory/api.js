@@ -43,10 +43,6 @@ export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
 }
 
-export async function getProductOffer(poId) {
-  return api.get(`/prodex/api/product-offers/${poId}`)
-}
-
 export async function getSharedProductOffer(poId) {
   return api
     .post('/prodex/api/product-offers/shared-listings/datagrid', {
@@ -95,15 +91,6 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 export async function searchManufacturers(text, limit) {
   const response = await api.get(
     `/prodex/api/manufacturers/search?search=${text}${
-      Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
-    }`
-  )
-  return response
-}
-
-export async function searchOrigins(text, limit) {
-  const response = await api.get(
-    `/prodex/api/countries/search?pattern=${text}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
     }`
   )

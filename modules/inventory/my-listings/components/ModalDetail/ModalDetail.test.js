@@ -17,7 +17,6 @@ const defaultProps = {
   loading: false,
   isLoadingBroadcast: false,
   autocompleteDataLoading: false,
-  searchedOriginsLoading: false,
   tdsTemplatesLoading: false,
   productFormsDropdown: [],
   productGradesDropdown: [],
