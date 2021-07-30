@@ -1,7 +1,14 @@
 import * as Yup from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
-import { removeEmpty } from '~/utils/functions'
+// Constants
+import { errorMessages } from '../../../../constants/yupValidation'
+// Services
+import { removeEmpty } from '../../../../utils/functions'
 
+/**
+ * Form validation
+ * @category Marketplace - Listings
+ * @method
+ */
 export const formValidation = () =>
   Yup.object().shape({
     pricePerUOM: Yup.number()
@@ -19,6 +26,11 @@ export const formValidation = () =>
       })
   })
 
+/**
+ * Initial form values
+ * @category Marketplace - Listings
+ * @method
+ */
 export const getInitialFormValues = props => {
   const { popupValues } = props
   return {
@@ -29,6 +41,11 @@ export const getInitialFormValues = props => {
   }
 }
 
+/**
+ * Submit offer
+ * @category Marketplace - Listings
+ * @method
+ */
 export const submitOffer = async ({ values, setSubmitting }, props) => {
   const { closePopup, makeOffer, datagrid } = props
   const body = {

@@ -117,13 +117,10 @@ const ModalDetail = props => {
       getProductForms,
       getProductGrades,
       getWarehouses,
-      searchOrigins,
       modalActiveTab
     } = props
     if (detailValues) {
       loadProductOffer(detailValues.id, null, props, state, setState, formikPropsNew, resetFormNew) // Start editing, reload product offer
-    } else {
-      searchOrigins('', 200)
     }
     fetchIfNoData('productFormsDropdown', getProductForms, props)
     fetchIfNoData('productGradesDropdown', getProductGrades, props)
@@ -164,7 +161,6 @@ const ModalDetail = props => {
         validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
           setState({ ...state, detailValues: null, initValues: INIT_VALUES })
           resetFormNew()
-          props.searchOrigins('', 200)
           if (shouldSwitchTab) {
             switchTab(props, state, setState, props.modalActiveTab)
           }
@@ -179,7 +175,6 @@ const ModalDetail = props => {
     loading,
     detailValues,
     searchedOrigins,
-    searchedOriginsLoading,
     searchOrigins,
     warehousesList,
     documentTypesDropdown,
@@ -198,7 +193,8 @@ const ModalDetail = props => {
     tdsTemplates,
     broadcastChange,
     autocompleteData,
-    applicationName
+    applicationName,
+    countriesDropdown
   } = props
   const { openedTdsList, openedTdsSaveAs } = state
 
@@ -298,8 +294,8 @@ const ModalDetail = props => {
                   props.closeModalDetail()
                 }}>
                 <FlexModalContent>
-                  <Dimmer inverted active={loading || autocompleteDataLoading || searchedOriginsLoading}>
-                    <Loader active={loading || autocompleteDataLoading || searchedOriginsLoading} />
+                  <Dimmer inverted active={loading || autocompleteDataLoading}>
+                    <Loader active={loading || autocompleteDataLoading} />
                   </Dimmer>
                   <HighSegment basic>
                     <DivTitle>
@@ -824,6 +820,8 @@ const ModalDetail = props => {
                                               fluid: true
                                               }}
                                             name='edit.expirationDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                       </CustomGridRow>
@@ -912,10 +910,9 @@ const ModalDetail = props => {
                                                 search: true,
                                                 selection: true,
                                                 clearable: true,
-                                                loading: searchedOriginsLoading,
                                                 disabled: detailValues && detailValues.grouped,
                                                 onSearchChange: debounce(
-                                                  (e, { searchQuery }) => searchOrigins(searchQuery),
+                                                  (e, { searchQuery }) => searchOrigins(countriesDropdown, searchQuery),
                                                   250
                                                 ),
                                                 placeholder: (
@@ -944,6 +941,8 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>
@@ -977,6 +976,8 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotManufacturedDate'
+                                            inputOnly
+                                            addSeparator
                                           />
                                         </GridColumn>
                                         <GridColumn width={8}>
@@ -1343,8 +1344,7 @@ const ModalDetail = props => {
                                 loading={
                                   isLoadingBroadcast &&
                                   !loading &&
-                                  !autocompleteDataLoading &&
-                                  !searchedOriginsLoading
+                                  !autocompleteDataLoading
                                 }
                                 key='priceBook'
                                 style={{ padding: '18px' }}>
@@ -1569,7 +1569,6 @@ ModalDetail.propTypes = {
   loading: PropTypes.bool,
   isLoadingBroadcast: PropTypes.bool,
   autocompleteDataLoading: PropTypes.bool,
-  searchedOriginsLoading: PropTypes.bool,
   tdsTemplatesLoading: PropTypes.bool,
   productFormsDropdown: PropTypes.array,
   productGradesDropdown: PropTypes.array,
@@ -1609,7 +1608,6 @@ ModalDetail.defaultProps = {
   loading: false,
   isLoadingBroadcast: false,
   autocompleteDataLoading: false,
-  searchedOriginsLoading: false,
   tdsTemplatesLoading: false,
   productFormsDropdown: [],
   productGradesDropdown: [],

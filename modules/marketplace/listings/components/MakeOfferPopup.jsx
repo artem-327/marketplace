@@ -1,30 +1,25 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-
-//Components
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { Form, Modal, Dimmer, Loader, GridRow, GridColumn, List } from 'semantic-ui-react'
 import { Formik } from 'formik'
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import ErrorFocus from '~/components/error-focus'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Schedule } from '@material-ui/icons'
-
+// Components
+import ErrorFocus from '../../../../components/error-focus'
 // Constants
-import { errorMessages } from '~/constants/yupValidation'
-import { currencyId, currency } from '~/constants/index'
-import { Required } from '~/components/constants/layout'
-import { withDatagrid } from '~/modules/datagrid'
-
+import { currency } from '../../../../constants/index'
+import { Required } from '../../../../components/constants/layout'
 // Styles
-import { ModalStyled, DivFieldRectangle, DivSmallText, GridStyled } from './MakeOfferPopup.styles'
-import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons } from '../../constants/layout'
-
+import { TableSegment, StyledList, StyledRectangle, PriceInput, BottomButtons, ModalStyled, DivFieldRectangle, DivSmallText, GridStyled } from '../../styles'
 // Services
 import { formValidation, getInitialFormValues, submitOffer } from './MakeOfferPopup.services'
-import * as Actions from '../../actions'
-import { getSafe, getPricing } from '~/utils/functions'
+import { getPricing } from '../../../../utils/functions'
 
+/**
+ * MakeOfferPopup Component
+ * @category Marketplace - Listings
+ * @components
+ */
 const MakeOfferPopup = props => {
   const {
     intl: { formatMessage },
@@ -180,9 +175,7 @@ const MakeOfferPopup = props => {
                       <GridColumn width={3}>
                         <Form.Field>
                           <label>
-                            <FormattedMessage id='marketplace.YourTotalBid' defaultMessage='Your Total Bid'>
-                              {text => text}
-                            </FormattedMessage>
+                            <FormattedMessage id='marketplace.YourTotalBid' defaultMessage='Your Total Bid' />
                           </label>
                           <DivFieldRectangle>
                             <FormattedNumber
@@ -190,7 +183,7 @@ const MakeOfferPopup = props => {
                               maximumFractionDigits={2}
                               style='currency'
                               currency={currency}
-                              value={values.pkgAmount * packagingSize * values.pricePerUOM}
+                              value={parseFloat(values.pkgAmount) * packagingSize * parseFloat(values.pricePerUOM)}
                             />
                           </DivFieldRectangle>
                         </Form.Field>
@@ -225,9 +218,8 @@ const MakeOfferPopup = props => {
                           <div>
                             <FormattedMessage
                               id='marketplace.sellerHas24HoursToReply.'
-                              defaultMessage='Seller has 24 hours to reply.'>
-                              {text => text}
-                            </FormattedMessage>
+                              defaultMessage='Seller has 24 hours to reply.'
+                            />
                           </div>
                         </DivSmallText>
                       </GridColumn>
@@ -272,26 +264,31 @@ const MakeOfferPopup = props => {
 }
 
 MakeOfferPopup.propTypes = {
-
+  closePopup: PropTypes.func,
+  makeOffer: PropTypes.func,
+  updating: PropTypes.bool,
+  listFobPriceUnit: PropTypes.string,
+  packagingType: PropTypes.string,
+  packagingUnit: PropTypes.string,
+  productName: PropTypes.string,
+  packagingSize: PropTypes.number,
+  intl: PropTypes.object,
+  popupValues: PropTypes.object,
+  datagrid: PropTypes.object
 }
 
 MakeOfferPopup.defaultProps = {
-
+  closePopup: () => {},
+  makeOffer: () => {},
+  updating: false,
+  listFobPriceUnit: '',
+  packagingType: '',
+  packagingUnit: '',
+  productName: '',
+  packagingSize: 1,
+  intl: {},
+  popupValues: {},
+  datagrid: {}
 }
 
-function mapStateToProps(store) {
-  const { popupValues } = store.marketplace
-  const priceUnit = getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation, '')
-
-  return {
-    popupValues,
-    updating: store.marketplace.updating,
-    productName: getSafe(() => popupValues.companyProduct.intProductName, ''),
-    listFobPriceUnit: priceUnit ? `/ ${priceUnit}` : '',
-    packagingType: getSafe(() => popupValues.companyProduct.packagingType.name, ''),
-    packagingUnit: getSafe(() => popupValues.companyProduct.packagingUnit.nameAbbreviation, ''),
-    packagingSize: getSafe(() => popupValues.companyProduct.packagingSize, 1)
-  }
-}
-
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MakeOfferPopup)))
+export default MakeOfferPopup

@@ -1,7 +1,5 @@
 import * as AT from './action-types'
-import * as inventoryAT from '../inventory/action-types'
 import Link from 'next/link'
-
 import { defaultTabs } from './contants'
 import { getSafe } from '../../utils/functions'
 import { currency } from '../../constants'
@@ -1183,50 +1181,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    // case AT.GET_SETTINGS_PENDING: {
-    //   return {
-    //     ...state,
-    //     systemSettingsLoading: true
-    //   }
-    // }
-
-    // case AT.GET_SETTINGS_FULFILLED: {
-    //   return {
-    //     ...state,
-    //     systemSettings: payload,
-    //     systemSettingsLoading: false
-    //   }
-    // }
-
-    // case AT.GET_SETTINGS_REJECTED: {
-    //   return {
-    //     ...state,
-    //     systemSettingsLoading: false
-    //   }
-    // }
-
-    // case AT.UPDATE_SETTINGS_PENDING: {
-    //   return {
-    //     ...state,
-    //     sysSettingsUpdating: true
-    //   }
-    // }
-
-    // case AT.UPDATE_SETTINGS_FULFILLED: {
-    //   return {
-    //     ...state,
-    //     systemSettings: payload,
-    //     sysSettingsUpdating: false
-    //   }
-    // }
-
-    // case AT.UPDATE_SETTINGS_REJECTED: {
-    //   return {
-    //     ...state,
-    //     sysSettingsUpdating: false
-    //   }
-    // }
-
     /* TRIGGER_SYSTEM_SETTINGS_MODAL */
 
     case AT.TRIGGER_SYSTEM_SETTINGS_MODAL: {
@@ -1283,8 +1237,8 @@ export default function reducer(state = initialState, action) {
     /* ATTACHMENTS */
 
     case AT.SETTINGS_REMOVE_ATTACHMENT_PENDING:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_PENDING:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_PENDING: {
+    case 'INVENTORY_ADD_ATTACHMENT_PENDING':
+    case 'INVENTORY_REMOVE_ATTACHMENT_PENDING': {
       return {
         ...state,
         loading: true
@@ -1293,10 +1247,10 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_REMOVE_ATTACHMENT_FULFILLED:
     case AT.SETTINGS_REMOVE_ATTACHMENT_REJECTED:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_FULFILLED:
-    case inventoryAT.INVENTORY_ADD_ATTACHMENT_REJECTED:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_FULFILLED:
-    case inventoryAT.INVENTORY_REMOVE_ATTACHMENT_REJECTED: {
+    case 'INVENTORY_ADD_ATTACHMENT_FULFILLED':
+    case 'INVENTORY_ADD_ATTACHMENT_REJECTED':
+    case 'INVENTORY_REMOVE_ATTACHMENT_FULFILLED':
+    case 'INVENTORY_REMOVE_ATTACHMENT_REJECTED': {       
       return {
         ...state,
         loading: false

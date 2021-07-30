@@ -2,32 +2,10 @@ import moment from 'moment'
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 // Api
 import * as api from './api'
-// Actions
-import {
-  getDocumentTypes,
-  getProductConditions,
-  getProductForms,
-  getProductGrades
-} from '../global-data/actions.js'
 // Services
 import { Datagrid } from '../datagrid'
 import { getSafe } from '../../utils/functions'
 
-export const initProductOfferEdit = (id) => {
-  return async dispatch => {
-    dispatch(getDocumentTypes())
-    dispatch(getProductConditions())
-    dispatch(getProductForms())
-    dispatch(getProductGrades())
-    dispatch(getWarehouses())
-    await dispatch(searchManufacturers('', 200))
-    await dispatch(searchOrigins('', 200))
-
-    if (id) {
-      dispatch(getProductOffer(id))
-    }
-  }
-}
 export const addAttachment = createAsyncAction('INVENTORY_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
   const data = await api.addAttachment(attachment, type, additionalParams)
   Datagrid && Datagrid.loadData()
@@ -167,7 +145,6 @@ export const addProductOffer = createAsyncAction('INVENTORY_ADD_PRODUCT_OFFER', 
 export const downloadAttachment = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT', id => api.downloadAttachment(id))
 export const downloadAttachmentPdf = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT_PDF', id => api.downloadAttachmentPdf(id))
 export const findProducts = createAsyncAction('INVENTORY_FIND_PRODUCTS', search => api.findProducts(search))
-export const getProductOffer = createAsyncAction('INVENTORY_GET_PRODUCT_OFFER', productOfferId => api.getProductOffer(productOfferId))
 export const getSharedProductOffer = createAsyncAction('INVENTORY_GET_SHARED_PRODUCT_OFFER', productOfferId => api.getSharedProductOffer(productOfferId))
 export const deleteProductOffer = createAsyncAction('INVENTORY_DELETE_PRODUCT_OFFER', async productOfferId => {
   await api.deleteProductOffer(productOfferId)
@@ -190,18 +167,6 @@ export const removeAttachment = createAsyncAction('INVENTORY_REMOVE_ATTACHMENT',
 })
 export const searchManufacturers = createAsyncAction('INVENTORY_SEARCH_MANUFACTURERS', async (text, limit = false) => {
   const response = await api.searchManufacturers(text, limit)
-  return {
-    data: response.data
-      ? response.data.map(p => ({
-          text: p.name,
-          value: p.id,
-          key: p.id
-        }))
-      : []
-  }
-})
-export const searchOrigins = createAsyncAction('INVENTORY_SEARCH_ORIGINS', async (text, limit = false) => {
-  const response = await api.searchOrigins(text, limit)
   return {
     data: response.data
       ? response.data.map(p => ({
@@ -237,3 +202,10 @@ export const resetForm = createAction('INVENTORY_RESET_FORM', initValues => ({da
 export const changeBroadcast = createAction('CHANGE_BROADCAST', broadcastOption => broadcastOption)
 export const setActiveTab = createAction('SET_ACTIVE_TAB', tab => tab)
 export const triggerPriceBookModal = createAction('TRIGGER_PRICE_BOOK_MODAL', (isOpen, rowPriceBook) => ({ isOpen, rowPriceBook }))
+export const getProductOffer = createAction('INVENTORY_GET_PRODUCT_OFFER', data => data)
+export const searchOrigins = createAction('INVENTORY_SEARCH_ORIGINS', (countries, text, limit = false) => {
+  const data = countries.filter(c => c?.text?.includes(text))
+  return {
+    data: limit ? data.slice(0, limit) : data.slice(0, 30)
+  }
+})

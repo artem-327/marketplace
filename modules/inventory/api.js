@@ -5,7 +5,7 @@ import { generateQueryString } from '../../utils/functions'
 
 export function addAttachment(attachment, docType, additionalParams = {}) {
   let defaultParams = {
-    isTemporary: true
+    isTemporary: false
   }
   let params = { ...defaultParams, ...additionalParams, type: docType }
   const formData = new FormData()
@@ -41,10 +41,6 @@ export const updateAttachment = (id, params) => api.put(`/prodex/api/attachments
 
 export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
-}
-
-export async function getProductOffer(poId) {
-  return api.get(`/prodex/api/product-offers/${poId}`)
 }
 
 export async function getSharedProductOffer(poId) {
@@ -95,15 +91,6 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 export async function searchManufacturers(text, limit) {
   const response = await api.get(
     `/prodex/api/manufacturers/search?search=${text}${
-      Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
-    }`
-  )
-  return response
-}
-
-export async function searchOrigins(text, limit) {
-  const response = await api.get(
-    `/prodex/api/countries/search?pattern=${text}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
     }`
   )

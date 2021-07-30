@@ -1,7 +1,10 @@
-import HoldsContainer from './components/HoldsContainer'
-import { DatagridProvider } from '~/modules/datagrid'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+// Components
+import HoldsContainer from './components/HoldsContainer'
+import { DatagridProvider } from '../../datagrid'
+// Selectors
+import { makeGetTypeHolds } from '../selectors'
 
 const Holds = ({ typeHolds }) => (
   <>
@@ -43,8 +46,13 @@ Holds.defaultProps = {
   typeHolds: 'my'
 }
 
-const mapStateToProps = state => ({
-  typeHolds: state.marketplace.typeHolds
-})
+const makeMapStateToProps = () => {
+  const getYypeHolds = makeGetTypeHolds()
 
-export default connect(mapStateToProps)(Holds)
+  const mapStateToProps = store => ({
+    typeHolds: getYypeHolds(store)
+  })
+  return mapStateToProps
+}
+
+export default connect(makeMapStateToProps)(Holds)

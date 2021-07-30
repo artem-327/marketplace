@@ -1,12 +1,10 @@
 import typeToReducer from 'type-to-reducer'
-import * as AT from './action-types'
 // Services
 import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 // Constants
 import { GLOBAL_RULES } from './my-listings/components/ModalDetail/ModalDetail.constants'
 // Actions
 import {
-  initProductOfferEdit,
   addAttachment,
   updateAttachment,
   addProductOffer,
@@ -54,7 +52,6 @@ export const initialState = {
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
   searchedOrigins: [],
-  searchedOriginsLoading: false,
   myProductOffers: [],
   myProductOffersPageLoaded: -1,
   searchedProducts: [],
@@ -114,26 +111,6 @@ export default typeToReducer(
         ...state,
         poCreated: true,
         loading: false
-      }
-    },
-    [getProductOffer.pending]: (state, action) => {
-      return {
-        ...state,
-        loading: true
-      }
-    },
-    [getProductOffer.rejected]: (state, action) => {
-      return {
-        ...state,
-        loading: false
-      }
-    },
-    [getProductOffer.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        loading: false,
-        detailValues: action.payload.data,
-        editedId: action.payload.data.id
       }
     },
     [getSharedProductOffer.pending]: (state, action) => {
@@ -248,25 +225,6 @@ export default typeToReducer(
         ...state,
         searchedManufacturers: action.payload.data,
         searchedManufacturersLoading: false
-      }
-    },
-    [searchOrigins.pending]: (state, action) => {
-      return {
-        ...state,
-        searchedOriginsLoading: true
-      }
-    },
-    [searchOrigins.rejected]: (state, action) => {
-      return {
-        ...state,
-        searchedOriginsLoading: false
-      }
-    },
-    [searchOrigins.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        searchedOrigins: action.payload.data,
-        searchedOriginsLoading: false
       }
     },
     [getAutocompleteData.pending]: (state, action) => {
@@ -512,6 +470,19 @@ export default typeToReducer(
         ...state,
         isOpenPriceBookModal: action?.payload?.isOpen,
         rowPriceBook: action?.payload?.rowPriceBook
+      }
+    },
+    [getProductOffer]: (state, action) => {
+      return {
+        ...state,
+        detailValues: action?.payload?.data,
+        editedId: action?.payload?.data?.id
+      }
+    },
+    [searchOrigins]: (state, action) => {
+      return {
+        ...state,
+        searchedOrigins: action.payload.data
       }
     },
   },
