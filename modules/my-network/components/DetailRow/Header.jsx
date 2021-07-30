@@ -5,6 +5,7 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import confirm from '../../../../components/Confirmable/confirm'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import HorizontalBarGraph from '../../../../components/horizontal-bar-graph/HorizontalBarGraph'
+import PercentageIcon from '../../../../components/percentage-icon/PercentageIcon'
 //Styles
 import {
   SegmentGroupHeader,
@@ -16,7 +17,10 @@ import {
   DivPadding,
   GridColumnDetail,
   DivCircle,
-  DivModal
+  DivModal,
+  DivRiskTolerance,
+  DivPercentageIconWrapper,
+  DivBarGraph
 } from './DetailRow.style'
 import { InfoIcon } from '../../../../styles/global.style-components'
 //Constants
@@ -38,7 +42,8 @@ const Header = ({
   id,
   address,
   openGlobalAddForm,
-  intl
+  intl,
+  connectionCriteria
 }) => (
   <Grid.Row>
     <GridColumnDetail>
@@ -49,39 +54,46 @@ const Header = ({
         </SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
-
-            <div style={{ width: '300px', height: '100px'}}>
+            <div>
+              <DivRiskTolerance>
+                <FormattedMessage id='myNetwork.riskTolerance' defaultMessage='Risk Tolerance' />
+              </DivRiskTolerance>
+              <DivPercentageIconWrapper>
+                <PercentageIcon value={connectionCriteria?.requester_tolerance} />
+              </DivPercentageIconWrapper>
+            </div>
+            <DivBarGraph>
               <HorizontalBarGraph
                 values={[
                   {
                     value: 60,
                     name: 'Insurance',
-                    tooltip: 'Low Risk'
+                    tooltip: 'Low Risk' // ! ! Should be returned from BE?
                   },
                   {
                     value: 80,
                     name: 'Credit',
-                    tooltip: 'Low Risk'
+                    tooltip: 'Low Risk' // ! ! Should be returned from BE?
                   },
                   {
                     value: 40,
                     name: 'Beyond\u00A0Terms',
-                    tooltip: 'Beyond Terms tooltip'
+                    tooltip: 'Beyond Terms tooltip' // ! ! Should be returned from BE?
                   },
                   {
                     value: 60,
                     name: 'Violations',
-                    tooltip: 'Violations tooltip'
+                    tooltip: 'Violations tooltip' // ! ! Should be returned from BE?
                   },
                   {
                     value: 100,
                     name: 'Social',
-                    tooltip: 'Social tooltip'
+                    tooltip: 'Social tooltip' // ! ! Should be returned from BE?
                   }
                 ]}
                 max={100}
               />
-            </div>
+            </DivBarGraph>
 
             {false && (
               <>
@@ -180,7 +192,8 @@ Header.propTypes = {
   ),
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
-  address: PropTypes.string
+  address: PropTypes.string,
+  connectionCriteria: PropTypes.object
 }
 Header.defaultProps = {
   logo: null,
@@ -197,7 +210,8 @@ Header.defaultProps = {
   ],
   buttonActionsDetailRow: () => {},
   openGlobalAddForm: null,
-  address: ''
+  address: '',
+  connectionCriteria: null
 }
 
 export default injectIntl(Header)

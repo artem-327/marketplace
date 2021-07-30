@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { FormattedNumber } from 'react-intl'
+import { FormattedNumber, FormattedDate } from 'react-intl'
 import { Image } from 'semantic-ui-react'
 //Styles
 import {
@@ -16,6 +16,7 @@ import {
 } from './MyNetwork.styles'
 //Constants
 import { COLORS, CONNECTIONS_STATUSES } from './constants'
+import { currency } from '../../constants'
 //Services
 import { getLocaleDateFormat } from '../../components/date-format'
 
@@ -59,21 +60,25 @@ export const getCriteriaLabel = criteria => {
  * @method
  * @param {object} criteria
  */
-export const getTradeCriteriaValues = criteria => {
-  if (!criteria) return null
-  const criteriaKeys = Object.keys(criteria)
-  const arrValCriterias = criteriaKeys.map(key => {
-    return {
-      [key]: (
-        <DivValueTradeCriteria>
-          <DivTextValueTradeCriteria>{criteria[key]?.criteria_match_description}</DivTextValueTradeCriteria>
-          <DivCircle background={COLORS[criteria[key]?.criteria_match] ?? '#f8f9fb'} />
-        </DivValueTradeCriteria>
-      )
-    }
-  })
-  //convert array to object
-  return Object.assign({}, ...arrValCriterias.map(object => object))
+export const getMetricsValues = values => {
+  if (!values) return null
+  return {
+    'transactions': values[0],
+    'averageValue': values[1]
+      ? (
+          <FormattedNumber
+            minimumFractionDigits={0}
+            maximumFractionDigits={0}
+            style='currency'
+            value={values[1]}
+            currency={currency}
+          />
+        )
+      : 'N/A'
+    ,
+    'dateOfLastTransaction': values[2] ? (<FormattedDate value={values[2].split('T')[0]} />) : 'N/A',
+    'connections': values[3]
+  }
 }
 
 /**
@@ -169,7 +174,13 @@ export const getRowDetail = (row, detailRow) => {
     ),
     date: getDate(row?.updatedAt || row?.connectedCompany?.updatedAt),
     buttonActionsDetailRow: buttonActionsDetailRow,
-    tradeCriteria: getTradeCriteriaValues(row?.connectionCriteria || row?.connectedCompany?.connectionCriteria),
+    connectionCriteria: row?.connectedCompany?.connectionCriteria,
+    metrics: getMetricsValues([
+      row?.connectedCompany?.transactionsCount || 0,
+      row?.connectedCompany?.averageTransactionValue || 0,
+      row?.connectedCompany?.lastTransactionDate || '',
+      row?.connectedCompany?.connectionsCount || 0
+    ]),
     legalData: {
       legalBusinessName: r?.connectedCompany?.name,
       ein: r?.connectedCompany?.tin,

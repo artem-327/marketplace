@@ -14,9 +14,25 @@ export const SegmentCustom = styled(Segment)`
 `
 
 export const DivCollectionStat = styled.div`
-  border: solid 1px #dee2e6;
-  border-radius: 4px;
   display: flex;
+`
+
+export const DivBarGraph = styled.div`
+  margin-left: 40px;
+  width: 300px;
+  height: 100px;
+`
+
+export const DivPercentageIconWrapper = styled.div`
+  height: 80px;
+  margin: 0 27px;
+`
+
+export const DivRiskTolerance = styled.div`
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: bold;
+  color: #9b9b9b;
 `
 
 export const DivTransactions = styled.div`

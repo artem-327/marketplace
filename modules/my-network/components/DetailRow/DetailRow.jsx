@@ -48,15 +48,16 @@ const DetailRow = ({
       buttonActionsDetailRow={buttonActionsDetailRow}
       address={row?.address}
       openGlobalAddForm={openGlobalAddForm}
+      connectionCriteria={row?.connectionCriteria}
     />
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleTradeCriteria>
-          <FormattedMessage id='title.settings.tradeCriteria' defaultMessage='Trade Criteria' />
+          <FormattedMessage id='title.settings.metrics' defaultMessage='Metrics' />
         </DivTitleTradeCriteria>
       </GridColumnDetail>
     </Grid.Row>
-    <TradeCriteria as='div' row={row?.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
+    <TradeCriteria as='div' row={row?.metrics} attributes={ATTRIBUTES_TRADE_CRITERIA} />
     {loadingDetailRow ? (
       <GridRowLoadingBottomSegment>
         <Dimmer active inverted>

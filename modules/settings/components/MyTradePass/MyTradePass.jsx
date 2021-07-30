@@ -2,12 +2,13 @@
 import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { number, string, bool, array, object, func } from 'prop-types'
-import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
+import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl'
 import { Image, Loader, Dimmer, GridRow, GridColumn, Divider } from 'semantic-ui-react'
 
 // Components
 import TradeCriteria from '../../../../components/detail-row/header'
 import BottomSegments from '../../../my-network/components/DetailRow/BottomSegments/BottomSegments'
+import HorizontalBarGraph from '../../../../components/horizontal-bar-graph/HorizontalBarGraph'
 
 //Constants
 import { currency } from '../../../../constants'
@@ -24,11 +25,11 @@ import {
   DivGreyText,
   DivLeftAligned,
   DivValue,
-  DivTitleTradeCriteria
+  DivTitleTradeCriteria,
+  DivBarGraph
 } from './MyTradePass.styles'
 
 // Services
-import { getTradeCriteriaValues } from './MyTradePass.services'
 import { getMyTradePass } from '../../actions'
 
 /**
@@ -43,7 +44,7 @@ const MyTradePass = props => {
     loading,
     address,
     slogan,
-    criteria,
+    metrics,
     legalData,
     marketingData,
     verifiedData,
@@ -67,6 +68,38 @@ const MyTradePass = props => {
                 <Image verticalAlign='middle' spaced={false} src={`${logoUrl}?t=${Date.now()}`} />
                 <DivGreyText>{address}</DivGreyText>
               </SegmentCustom>
+              <DivBarGraph>
+                <HorizontalBarGraph
+                  values={[
+                    {
+                      value: 60,
+                      name: 'Insurance',
+                      tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                    },
+                    {
+                      value: 80,
+                      name: 'Credit',
+                      tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                    },
+                    {
+                      value: 40,
+                      name: 'Beyond\u00A0Terms',
+                      tooltip: 'Beyond Terms tooltip' // ! ! Should be returned from BE?
+                    },
+                    {
+                      value: 60,
+                      name: 'Violations',
+                      tooltip: 'Violations tooltip' // ! ! Should be returned from BE?
+                    },
+                    {
+                      value: 100,
+                      name: 'Social',
+                      tooltip: 'Social tooltip' // ! ! Should be returned from BE?
+                    }
+                  ]}
+                  max={100}
+                />
+              </DivBarGraph>
               <SegmentCustom textAlign='right'>
                 <DivCollectionStat>
                   <DivLeftAligned $flexWidth='60%'>
@@ -102,13 +135,13 @@ const MyTradePass = props => {
         <GridRow>
           <GridColumn>
             <DivTitleTradeCriteria>
-              <FormattedMessage id='title.settings.tradeCriteria' defaultMessage='Trade Criteria' />
+              <FormattedMessage id='title.settings.metrics' defaultMessage='Metrics' />
             </DivTitleTradeCriteria>
           </GridColumn>
         </GridRow>
         <GridRow>
           <GridColumn>
-            <TradeCriteria as='div' row={criteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
+            <TradeCriteria as='div' row={metrics} attributes={ATTRIBUTES_TRADE_CRITERIA} />
           </GridColumn>
         </GridRow>
         <BottomSegments legalData={legalData} marketingData={marketingData} verifiedData={verifiedData} />
@@ -123,7 +156,7 @@ MyTradePass.propTypes = {
   myTradePass: object,
   loading: bool,
   address: object,
-  criteria: object,
+  metrics: object,
   legalData: object,
   marketingData: object,
   verifiedData: object
@@ -135,7 +168,7 @@ MyTradePass.defaultProps = {
   myTradePass: null,
   loading: false,
   address: null,
-  criteria: null,
+  metrics: null,
   legalData: null,
   marketingData: null,
   verifiedData: null
@@ -169,7 +202,25 @@ function mapStateToProps({ settings }) {
         }`
       : '',
     slogan: myTradePass?.tagline,
-    criteria: getTradeCriteriaValues(myTradePass?.companyCriteria ? myTradePass.companyCriteria : {}),
+    metrics: {
+      'transactions': myTradePass?.transactionsCount || 0,
+      'averageValue': myTradePass?.averageTransactionValue
+        ? (
+          <FormattedNumber
+            minimumFractionDigits={0}
+            maximumFractionDigits={0}
+            style='currency'
+            value={myTradePass.averageTransactionValue}
+            currency={currency}
+          />
+        ) : (
+          'N/A'
+        ),
+      'dateOfLastTransaction': myTradePass?.lastTransactionDate
+        ? (<FormattedDate value={myTradePass.lastTransactionDate.split('T')[0]} />)
+        : 'N/A',
+      'connections': myTradePass?.connectionsCount || 0,
+    },
     legalData: {
       legalBusinessName: myTradePass?.name,
       ein: myTradePass?.tin,

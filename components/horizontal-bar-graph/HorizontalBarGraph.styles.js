@@ -10,10 +10,3 @@ export const DivLabel = styled.div`
   color: #9b9b9b;
   font-size: 12px;
 `
-
-export const ResponsiveContainerStyled = styled(ResponsiveContainer)`
-  .recharts-cartesian-axis-ticks {
-   // ! !
-
-  }
-`
