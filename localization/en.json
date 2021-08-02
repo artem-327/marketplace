@@ -2373,7 +2373,7 @@
   "orders.statusOptions.cancelled": "Show Cancelled Status",
   "orders.statusOptions.toReturn": "Show To Return Status",
   "orders.statusOptions.confirmed": "Show Confirmed Status",
-  "orders.dateMustBeSameOrBefore": "Date must be same or before {date}",
+  "orders.fromDateMustBeSameOrBeforeToDate": "From date must be same or before To date",
   "settings.addUser": "Add User",
   "settings.product.offerExists": "Product cannot be edited, as it already has ProductOffers linked to it.",
   "settings.product.unmapped": "This product is not mapped and will not show on the Marketplace.",

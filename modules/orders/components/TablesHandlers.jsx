@@ -6,12 +6,13 @@ import moment from 'moment'
 import { Formik } from 'formik'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
+import { withToastManager } from 'react-toast-notifications'
 // Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { DateInput } from '../../../components/custom-formik'
 // Services
 import { getStringISODate } from '../../../components/date-format'
-import { getSafe } from '../../../utils/functions'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 import { validationSchema } from './Orders.service'
 import { getLocaleDateFormat } from '../../../components/date-format'
 // Constants
@@ -95,6 +96,32 @@ const TablesHandlers = props => {
       if(dateValue.length === 0 || 
         dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
         dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
+        
+        const dateFromArray = data.name === 'dateFrom' ? dateValue.split(separator) : formikPropsNew?.values?.dateFrom?.split(separator)
+        const dateToArray = data.name === 'dateTo' ? dateValue.split(separator) : formikPropsNew?.values?.dateTo?.split(separator)
+        let dateFrom = new Date(dateFromArray[2], dateFromArray[0] - 1, dateFromArray[1])
+        let dateTo = new Date(dateToArray[2], dateToArray[0] - 1, dateToArray[1])
+        const { toastManager } = props
+        
+        if(dateFrom > dateTo) {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='global.warning'
+                defaultMessage='Warning!'
+              />,
+              <FormattedMessage
+                id='orders.fromDateMustBeSameOrBeforeToDate'
+                defaultMessage={`From date must be same or before To date`}
+              />
+            ),
+            {
+              appearance: 'warning',
+              pauseOnHover: true
+            }
+          )
+        }
+
         setState({
           ...state,
           [currentTab]: {
@@ -252,4 +279,4 @@ TablesHandlers.defaultValues = {
   intl: {}
 }
 
-export default injectIntl(TablesHandlers)
+export default injectIntl(withToastManager(TablesHandlers))

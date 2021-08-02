@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { Modal, Container, Button } from 'semantic-ui-react'
-import { withToastManager } from 'react-toast-notifications'
 import PropTypes from 'prop-types'
 // Components
 import Spinner from '../../../components/Spinner/Spinner'
@@ -220,4 +219,4 @@ Orders.defaultValues = {
   loadingRelatedDocuments: false
 }
 
-export default injectIntl(withToastManager(Orders))
+export default injectIntl(Orders)
