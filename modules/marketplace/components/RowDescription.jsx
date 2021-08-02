@@ -3,15 +3,10 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 // Constants
 import { currency } from '../../../constants/index'
 // Styles
-import { DivRowDescriptionWrapper, DivBlueText } from './RowDescription.styles'
+import { DivRowDescriptionWrapper, DivBlueText } from '../styles'
 // Services
 import { getSafe } from '../../../utils/functions'
 
-/**
- * RowDescription Component
- * @category Marketplace - Bids received / sent
- * @components
- */
 const RowDescription = props => {
   const {
     currentUserId,

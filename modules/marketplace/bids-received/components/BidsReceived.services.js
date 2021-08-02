@@ -4,7 +4,7 @@ import moment from 'moment'
 import Router from 'next/router'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
-import RowDescription from '../../components/RowDescription'
+import RowDescription from '../../components/RowDescriptionContainer'
 // Styles
 import { DefaultIcon, IconWrapper, StyledName } from '../../styles'
 // Services
