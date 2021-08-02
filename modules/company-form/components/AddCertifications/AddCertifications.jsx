@@ -173,11 +173,11 @@ AddCertifications.defaultProps = {
 function mapStateToProps(state) {
   return {
     documentTypesFederalOwnershipCertifications:
-      getSafe(() => state.simpleAdd.documentTypesFederalOwnershipCertifications, []),
-    documentTypesManagementCertifications: getSafe(() => state.simpleAdd.documentTypesManagementCertifications, [])
+      getSafe(() => state.globalData.documentTypesFederalOwnershipCertifications, []),
+    documentTypesManagementCertifications: getSafe(() => state.globalData.documentTypesManagementCertifications, [])
   }
 }
 
-export default injectIntl(connect(mapStateToProps, {
+export default connect(mapStateToProps, {
   addAttachment, downloadAttachment, removeAttachment
-})(AddCertifications))
+})(injectIntl(AddCertifications))
