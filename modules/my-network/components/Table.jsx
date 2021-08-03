@@ -67,7 +67,7 @@ const Table = props => {
   }
 
   return (
-    <div className='flex stretched table-detail-rows-wrapper'>
+    <div className='flex stretched table-detail-rows-wrapper vertically-aligned'>
       <ProdexTable
         tableName='my_network'
         columns={COLUMNS}

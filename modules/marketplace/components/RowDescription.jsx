@@ -1,16 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-
 // Constants
-import { currencyId, currency } from '~/constants/index'
-
+import { currency } from '../../../constants/index'
 // Styles
-import { DivRowDescriptionWrapper, DivBlueText } from './RowDescription.styles'
-
+import { DivRowDescriptionWrapper, DivBlueText } from '../styles'
 // Services
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../utils/functions'
 
 const RowDescription = props => {
   const {
@@ -89,25 +84,27 @@ const RowDescription = props => {
 }
 
 RowDescription.propTypes = {
-  itemsCount: PropTypes.number
+  currentUserId: PropTypes.number,
+  history: PropTypes.object,
+  index: PropTypes.number,
+  lastHistory: PropTypes.bool,
+  productName: PropTypes.string,
+  listFobPriceUnit: PropTypes.string,
+  packagingType: PropTypes.string,
+  packagingUnit: PropTypes.string,
+  packagingSize: PropTypes.number
 }
 
 RowDescription.defaultProps = {
-  itemsCount: 0
+  currentUserId: 0,
+  history: {},
+  index: 0,
+  lastHistory: false,
+  productName: 'N/A',
+  listFobPriceUnit: '',
+  packagingType: '',
+  packagingUnit: '',
+  packagingSize: 1
 }
 
-function mapStateToProps(store, { productOffer }) {
-  const companyProduct = getSafe(() => productOffer.companyProduct, null)
-  const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
-
-  return {
-    currentUserId: getSafe(() => store.auth.identity.id, ''),
-    productName: getSafe(() => companyProduct.intProductName, 'N/A'),
-    listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
-    packagingType: getSafe(() => companyProduct.packagingType.name, ''),
-    packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
-    packagingSize: getSafe(() => companyProduct.packagingSize, 1)
-  }
-}
-
-export default injectIntl(connect(mapStateToProps, {  })(RowDescription))
+export default injectIntl(RowDescription)

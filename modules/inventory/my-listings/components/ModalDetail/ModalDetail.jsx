@@ -107,9 +107,9 @@ const ModalDetail = props => {
     attachmentFiles: [],
     isOpenOptionalInformation: false,
     openedTdsList: false,
-    openedTdsSaveAs: false,
-    isOverMinPkgs: false
+    openedTdsSaveAs: false
   })
+  const [isOverMinPkgs, setIsOverMinPkgs] = useState(false)
 
   useEffect(() => {
     const {
@@ -117,13 +117,10 @@ const ModalDetail = props => {
       getProductForms,
       getProductGrades,
       getWarehouses,
-      searchOrigins,
       modalActiveTab
     } = props
     if (detailValues) {
       loadProductOffer(detailValues.id, null, props, state, setState, formikPropsNew, resetFormNew) // Start editing, reload product offer
-    } else {
-      searchOrigins('', 200)
     }
     fetchIfNoData('productFormsDropdown', getProductForms, props)
     fetchIfNoData('productGradesDropdown', getProductGrades, props)
@@ -132,8 +129,8 @@ const ModalDetail = props => {
     switchTab(props, state, setState, modalActiveTab, detailValues)
     if (detailValues?.minPkg) {
       detailValues?.minPkg > detailValues?.pkgAvailable
-        ? setState({ ...state, isOverMinPkgs: true })
-        : setState({ ...state, isOverMinPkgs: false })
+        ? setIsOverMinPkgs(true)
+        : setIsOverMinPkgs(false)
     }
   }, [])
 
@@ -141,7 +138,7 @@ const ModalDetail = props => {
   const prevModalActiveTab = usePrevious(props.modalActiveTab)
 
   useEffect(() => {
-    if (typeof prevEditProductOfferInitTrig !== 'undefined') {
+    if (typeof prevEditProductOfferInitTrig !== 'undefined' && typeof prevModalActiveTab !== 'undefined') {
       const shouldSwitchTab =
         (props.modalActiveTab > -1 && prevModalActiveTab !== props.modalActiveTab) ||
         state.activeTab === 3 /* To Reload Broadcast rules */
@@ -164,7 +161,6 @@ const ModalDetail = props => {
         validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
           setState({ ...state, detailValues: null, initValues: INIT_VALUES })
           resetFormNew()
-          props.searchOrigins('', 200)
           if (shouldSwitchTab) {
             switchTab(props, state, setState, props.modalActiveTab)
           }
@@ -179,7 +175,6 @@ const ModalDetail = props => {
     loading,
     detailValues,
     searchedOrigins,
-    searchedOriginsLoading,
     searchOrigins,
     warehousesList,
     documentTypesDropdown,
@@ -198,9 +193,10 @@ const ModalDetail = props => {
     tdsTemplates,
     broadcastChange,
     autocompleteData,
-    applicationName
+    applicationName,
+    countriesDropdown
   } = props
-  const { openedTdsList, openedTdsSaveAs, isOverMinPkgs } = state
+  const { openedTdsList, openedTdsSaveAs } = state
 
   const optionsProduct = autocompleteData.map((el, i) => {
     const code = getSafe(() => el.intProductCode, '')
@@ -298,8 +294,8 @@ const ModalDetail = props => {
                   props.closeModalDetail()
                 }}>
                 <FlexModalContent>
-                  <Dimmer inverted active={loading || autocompleteDataLoading || searchedOriginsLoading}>
-                    <Loader active={loading || autocompleteDataLoading || searchedOriginsLoading} />
+                  <Dimmer inverted active={loading || autocompleteDataLoading}>
+                    <Loader active={loading || autocompleteDataLoading} />
                   </Dimmer>
                   <HighSegment basic>
                     <DivTitle>
@@ -514,8 +510,8 @@ const ModalDetail = props => {
                                                         setFieldValue('edit.pkgAvailable', value)
                                                         if (values?.edit?.minimum) {
                                                           values.edit.minimum > value
-                                                            ? setState({ ...state, isOverMinPkgs: true })
-                                                            : setState({ ...state, isOverMinPkgs: false })
+                                                            ? setIsOverMinPkgs(true)
+                                                            : setIsOverMinPkgs(false)
                                                         }
                                                       }
                                                     }
@@ -561,8 +557,8 @@ const ModalDetail = props => {
                                                       }
                                                       if (values?.edit?.pkgAvailable && !isNaN(value)) {
                                                         values.edit.pkgAvailable < value
-                                                          ? setState({ ...state, isOverMinPkgs: true })
-                                                          : setState({ ...state, isOverMinPkgs: false })
+                                                          ? setIsOverMinPkgs(true)
+                                                          : setIsOverMinPkgs(false)
                                                       }
                                                     }
                                                   }}
@@ -821,7 +817,6 @@ const ModalDetail = props => {
                                               disabled:
                                                 !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                               'data-test': 'modal_detail_expiration_date',
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
                                               }}
                                             name='edit.expirationDate'
@@ -915,10 +910,9 @@ const ModalDetail = props => {
                                                 search: true,
                                                 selection: true,
                                                 clearable: true,
-                                                loading: searchedOriginsLoading,
                                                 disabled: detailValues && detailValues.grouped,
                                                 onSearchChange: debounce(
-                                                  (e, { searchQuery }) => searchOrigins(searchQuery),
+                                                  (e, { searchQuery }) => searchOrigins(countriesDropdown, searchQuery),
                                                   250
                                                 ),
                                                 placeholder: (
@@ -944,7 +938,6 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_exp_date',
                                               disabled: detailValues && detailValues.grouped,
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
@@ -979,7 +972,6 @@ const ModalDetail = props => {
                                             inputProps={{
                                               'data-test': 'modal_detail_lot_mfg_date',
                                               disabled: detailValues && detailValues.grouped,
-                                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                                               maxDate: moment(),
                                               fluid: true
                                             }}
@@ -1352,8 +1344,7 @@ const ModalDetail = props => {
                                 loading={
                                   isLoadingBroadcast &&
                                   !loading &&
-                                  !autocompleteDataLoading &&
-                                  !searchedOriginsLoading
+                                  !autocompleteDataLoading
                                 }
                                 key='priceBook'
                                 style={{ padding: '18px' }}>
@@ -1578,7 +1569,6 @@ ModalDetail.propTypes = {
   loading: PropTypes.bool,
   isLoadingBroadcast: PropTypes.bool,
   autocompleteDataLoading: PropTypes.bool,
-  searchedOriginsLoading: PropTypes.bool,
   tdsTemplatesLoading: PropTypes.bool,
   productFormsDropdown: PropTypes.array,
   productGradesDropdown: PropTypes.array,
@@ -1618,7 +1608,6 @@ ModalDetail.defaultProps = {
   loading: false,
   isLoadingBroadcast: false,
   autocompleteDataLoading: false,
-  searchedOriginsLoading: false,
   tdsTemplatesLoading: false,
   productFormsDropdown: [],
   productGradesDropdown: [],

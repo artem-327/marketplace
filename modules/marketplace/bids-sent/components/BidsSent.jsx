@@ -1,26 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { FormattedMessage, injectIntl } from 'react-intl'
-import { debounce } from 'lodash'
+import { injectIntl } from 'react-intl'
 import Router from 'next/router'
-
-// Constants
-import { COLUMNS } from './BidsSent.constants'
-
 // Components
-import BidsRowDetail from '../../components/BidsRowDetail'
+import BidsRowDetail from '../../components/BidsRowDetailContainer'
 import { Container, Input } from 'semantic-ui-react'
-import ProdexGrid from '~/components/table'
-import ColumnSettingButton from '~/components/table/ColumnSettingButton'
-import Tutorial from '~/modules/tutorial/Tutorial'
-import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
+import ProdexGrid from '../../../../components/table'
+import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
+import Tutorial from '../../../tutorial/Tutorial'
+import MakeOfferPopup from '../../listings/components/MakeOfferPopupContainer'
 import DeaPopup from '../../listings/components/ConfirmationPopups/DeaPopup'
 import DhsPopup from '../../listings/components/ConfirmationPopups/DhsPopup'
-
+// Constants
+import { COLUMNS } from './BidsSent.constants'
 // Styles
-import { CustomRowDiv } from '~/modules/inventory/styles'
-
+import { CustomRowDiv } from '../../../inventory/styles'
 // Services
 import {
   setInitFilters,
@@ -29,8 +23,13 @@ import {
   handleUpdateFinished,
   handleAddToCart
 } from './BidsSent.services'
-import { getSafe } from '~/utils/functions'
+import { getSafe } from '../../../../utils/functions'
 
+/**
+ * BidsSent Component
+ * @category Marketplace - Bids sent
+ * @components
+ */
 const BidsSent = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
   const [filterValues, setFilterValues] = useState({ searchInput: '' })
@@ -51,7 +50,6 @@ const BidsSent = props => {
     setBuyAttemptHasDhs
   }
 
-  // Similar to call componentDidMount:
   useEffect(() => {
     const { datagrid } = props
     const initId = parseInt(getSafe(() => Router.router.query.id, 0))
@@ -62,7 +60,6 @@ const BidsSent = props => {
       setInitFilters(state, props)
     }
 
-    // returned function will be called on component unmount
     return () => {
       const { isOpenPopup, closePopup } = props
       if (!getSafe(() => Router.router.query.id, 0)) {
@@ -70,9 +67,9 @@ const BidsSent = props => {
       }
       if (isOpenPopup) closePopup()
     }
-  }, [])  // If [] is empty then is similar as componentDidMount.
+  }, []) 
 
-  const { datagrid, intl, loading, isOpenPopup, addOfferToCart } = props
+  const { datagrid, intl, loading, isOpenPopup } = props
   let { formatMessage } = intl
   const rows = getRows(state, props)
 
@@ -162,9 +159,33 @@ const BidsSent = props => {
 }
 
 BidsSent.propTypes = {
+  datagrid: PropTypes.object,
+  intl: PropTypes.object,
+  tableHandlersFiltersBidsReceived: PropTypes.object,
+  isOpenPopup: PropTypes.bool,
+  loading: PropTypes.bool,
+  rows: PropTypes.array,
+  closePopup: PropTypes.func,
+  handleVariableSave: PropTypes.func,
+  acceptOffer: PropTypes.func,
+  rejectOffer: PropTypes.func,
+  addOfferToCart: PropTypes.func,
+  deleteOffer: PropTypes.func
 }
 
 BidsSent.defaultProps = {
+  datagrid: {},
+  intl: {},
+  tableHandlersFiltersBidsReceived: {},
+  isOpenPopup: false,
+  loading: false,
+  rows: [],
+  closePopup: () => {},
+  handleVariableSave: () => {},
+  acceptOffer: () => {},
+  rejectOffer: () => {},
+  addOfferToCart: () => {},
+  deleteOffer: () => {}
 }
 
 export default injectIntl(BidsSent)

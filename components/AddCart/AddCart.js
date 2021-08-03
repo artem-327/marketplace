@@ -27,8 +27,6 @@ import { errorMessages } from '../../constants/yupValidation'
 import { currency } from '../../constants'
 import { getSafe, formatAssay } from '../../utils/functions'
 import { getLocaleDateFormat } from '../../components/date-format'
-import './AddCart.scss'
-// import file from '../../../../images/file.svg'
 import { tabsMarketPlace, companyGenericProductGrouping, dropdownOptions, regulatoryFilter } from './constants'
 import _ from 'lodash'
 import { yesNoOptions } from '../../modules/company-product-info/constants'
@@ -213,6 +211,42 @@ const CustomGrid = styled(Grid)`
       white-space: normal;
       font-weight: 400 !important;
     }
+  }
+`
+
+const CustomSidebar = styled(Sidebar)`
+  display: flex;
+  flex-direction: column;
+  top: 80px !important;
+  padding-bottom: 80px;
+  height: 100%;
+  white-space: nowrap;
+  max-height: 100%;
+  bottom: 0;
+  overflow-y: auto;
+  -webkit-box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075) !important;
+  box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075) !important;
+
+  .segment {
+    font-size: medium !important;
+  }
+
+  .row {
+    &:not(.action) {
+      padding-top: 0px !important;
+    }
+    font-size: 1rem !important;
+  }
+
+  .action {
+    background-color: #ededed;
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
+  }
+
+  .header {
+    font-size: 18px;
   }
 `
 
@@ -1858,7 +1892,7 @@ class AddCart extends Component {
     const { activeTab } = this.state
     let { isOpen } = sidebar
     return (
-      <Sidebar
+      <CustomSidebar
         onHide={e => {
           try {
             let path = (e && e.path) || (e && e.composedPath && e.composedPath())
@@ -1901,7 +1935,7 @@ class AddCart extends Component {
             {isOpen ? this.getContent() : null}
           </>
         )}
-      </Sidebar>
+      </CustomSidebar>
     )
   }
 }

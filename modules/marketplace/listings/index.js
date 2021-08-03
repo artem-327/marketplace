@@ -1,7 +1,10 @@
-import ListingsContainer from './components/ListingsContainer'
 import { connect } from 'react-redux'
+// Components
+import ListingsContainer from './components/ListingsContainer'
 import { DatagridProvider } from '../../datagrid'
 import { CompanyProductInfo } from '../../company-product-info'
+// Selectors
+import { makeGetSelectedSellerOption } from '../selectors'
 
 const Listings = props => {
   const { selectedSellerOption } = props
@@ -61,10 +64,15 @@ const Listings = props => {
   )
 }
 
-function mapStateToProps(store) {
-  return {
-    selectedSellerOption: store.marketplace.selectedSellerOption
+const makeMapStateToProps = () => {
+  const getSelectedSellerOption = makeGetSelectedSellerOption()
+
+  const mapStateToProps = (store) => {
+    return {
+      selectedSellerOption: getSelectedSellerOption(store)
+    }
   }
+  return mapStateToProps
 }
 
-export default connect(mapStateToProps, null)(Listings)
+export default connect(makeMapStateToProps, null)(Listings)

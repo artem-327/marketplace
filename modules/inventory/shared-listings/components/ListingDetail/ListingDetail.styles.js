@@ -47,11 +47,15 @@ export const DivName = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: #20273a;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 
 export const DivAddress = styled.div`
   font-size: 14px;
   color: #848893;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 
 export const DivButtons = styled.div`
@@ -102,10 +106,17 @@ export const GridColumnTitleSection = styled(Grid.Column)`
 export const GridRowTabField = styled(Grid.Row)`
   border-bottom: solid 1px #dee2e6 !important;
   padding: 8px 0px !important;
+  
+  > .column {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
 `
 
 export const GridColumnTabFieldValue = styled(Grid.Column)`
   color: #20273a !important;
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 
 export const ChevronLeftStyled = styled(ChevronLeft)`
@@ -174,11 +185,13 @@ export const DivTdsTableHeader = styled.div`
   font-weight: bold;
   color: #848893;
   text-transform: uppercase;
+  ${props => (props.value ? props.value : '')}  
 `
 
 export const DivTdsPropertyText = styled.div`
   font-weight: 500;
   color: #20273a;
+  ${props => (props.value ? props.value : '')}  
 `
 
 export const DivNormalText = styled.div`
@@ -280,6 +293,16 @@ export const IconDownload = styled(Download)`
 export const DivFlexRow = styled.div`
   display: flex;
   flex-flow: row;
+`
+
+export const DivFlexRowSpace = styled.div`
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+`
+
+export const DivSimpleColumn = styled.div`
+  padding: 0 10px;
 `
 
 export const DivGreyHeader = styled.div`

@@ -1,7 +1,7 @@
 import Router from 'next/router'
 import * as Yup from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
-import { removeEmpty, getSafe } from '~/utils/functions'
+import { errorMessages } from '../../../constants/yupValidation'
+import { removeEmpty, getSafe } from '../../../utils/functions'
 
 export const formValidation = requiredInputs =>
   Yup.object().shape({

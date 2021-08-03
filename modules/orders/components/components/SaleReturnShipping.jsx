@@ -100,7 +100,6 @@ const SaleReturnShipping = props => {
                             inputProps={{
                               minDate: moment(),
                               fluid: true,
-                              placeholder: formatMessage({ id: 'date.standardFormat', defaultMessage: 'MM/DD/YYYY' }),
                               onChange: async (event, val) => await onDateChange(event, val, errors, props, state, setState),
                               'data-test': 'return_shipping_pickup_date'
                             }}
@@ -111,8 +110,6 @@ const SaleReturnShipping = props => {
                               />
                             }
                             name='pickupDate'
-                            inputOnly
-                            addSeparator
                           />
                         </Grid.Column>
                       </Grid.Row>

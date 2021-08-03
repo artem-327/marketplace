@@ -433,8 +433,6 @@ class DetailSidebar extends Component {
                             minDate: moment(),
                             clearable: true
                           }}
-                          inputOnly
-                          addSeparator
                         />
                       </GridColumn>
                     </GridRow>

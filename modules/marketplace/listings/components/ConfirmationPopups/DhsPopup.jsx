@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
-import { getSafe } from '../../../../../utils/functions'
+import PropTypes from 'prop-types'
+// Images
 import Logo from '../../../../../assets/images/marketplace/dhs-logo.svg'
-
 // Styles
 import {
   ModalStyled,
@@ -15,6 +14,11 @@ import {
   DivButtonColumn
 } from './Popup.styles'
 
+/**
+ * DhsPopup Component
+ * @category Marketplace - Listings
+ * @components
+ */
 const DhsPopup = props => {
   const { onCancel, onAccept } = props
 
@@ -57,9 +61,7 @@ const DhsPopup = props => {
                 basic
                 onClick={() => onCancel()}
                 data-test='confirmation_popup_cancel'>
-                <FormattedMessage id='global.cancel' defaultMessage='Cancel'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
               </Button>
             </DivButtonColumn>
             <DivButtonColumn>
@@ -67,9 +69,7 @@ const DhsPopup = props => {
                 type='button'
                 color='blue'
                 onClick={() => onAccept()}>
-                <FormattedMessage id='marketplace.iAgree' defaultMessage='I agree'>
-                  {text => text}
-                </FormattedMessage>
+                <FormattedMessage id='marketplace.iAgree' defaultMessage='I agree' />
               </Button>
             </DivButtonColumn>
           </DivButtons>
@@ -77,6 +77,16 @@ const DhsPopup = props => {
       </Modal.Content>
     </ModalStyled>
   )
+}
+
+DhsPopup.propTypes = {
+  onCancel: PropTypes.func,
+  onAccept: PropTypes.func
+}
+
+DhsPopup.defaultProps = {
+  onCancel: () => {},
+  onAccept: () => {}
 }
 
 export default injectIntl(DhsPopup)

@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { Grid, Input, Dropdown, Dimmer, Loader } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 //components
-import { Datagrid } from '../../datagrid'
 import { withDatagrid } from '../../datagrid'
 import { uniqueArrayByKey, getSafe } from '../../../utils/functions'
 //actions
@@ -94,7 +93,7 @@ class SearchByNamesAndTags extends Component {
     if (searchQuery.trim() === '') {
       this.refDropdownMenu.current.close()
     }
-  }, 150)
+  }, 500)
 
   handleClick = (e, data, type) => {
     // when selected new filter - scroll top to 0 to prepare table for safe redraw

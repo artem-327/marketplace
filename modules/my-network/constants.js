@@ -358,9 +358,9 @@ export const COLUMNS = [
     width: 220
   },
   {
-    name: 'eligibilityCriteria',
+    name: 'riskMatch',
     title: (
-      <FormattedMessage id='myNetwork.eligibilityCriteria' defaultMessage='ELIGIBILITY CRITERIA'>
+      <FormattedMessage id='myNetwork.riskMatch' defaultMessage='Risk Match'>
         {text => text}
       </FormattedMessage>
     ),

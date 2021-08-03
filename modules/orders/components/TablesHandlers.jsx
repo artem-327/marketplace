@@ -6,13 +6,15 @@ import moment from 'moment'
 import { Formik } from 'formik'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
+import { withToastManager } from 'react-toast-notifications'
 // Components
 import ColumnSettingButton from '../../../components/table/ColumnSettingButton'
 import { DateInput } from '../../../components/custom-formik'
 // Services
 import { getStringISODate } from '../../../components/date-format'
-import { getSafe } from '../../../utils/functions'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 import { validationSchema } from './Orders.service'
+import { getLocaleDateFormat } from '../../../components/date-format'
 // Constants
 import { filters } from '../constants'
 // Styles
@@ -82,27 +84,89 @@ const TablesHandlers = props => {
     const { currentTab } = props
     if (currentTab === '') return
 
-    setState({
-      ...state,
-      [currentTab]: {
+    if(data.name === 'dateFrom' || data.name === 'dateTo') {
+      //Gets separator (character) from getLocaleDateFormat.
+      let separator = [...getLocaleDateFormat()].find(
+        char => char !== 'M' && char !== 'D' && char !== 'Y'
+      )
+      // Checks and adds space if is space after dot.
+      separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
+
+      const dateValue = data.value
+      if(dateValue.length === 0 || 
+        dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
+        dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
+        
+        const dateFromArray = data.name === 'dateFrom' ? dateValue.split(separator) : formikPropsNew?.values?.dateFrom?.split(separator)
+        const dateToArray = data.name === 'dateTo' ? dateValue.split(separator) : formikPropsNew?.values?.dateTo?.split(separator)
+        let dateFrom = new Date(dateFromArray[2], dateFromArray[0] - 1, dateFromArray[1])
+        let dateTo = new Date(dateToArray[2], dateToArray[0] - 1, dateToArray[1])
+        const { toastManager } = props
+        
+        if(dateFrom > dateTo) {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='global.warning'
+                defaultMessage='Warning!'
+              />,
+              <FormattedMessage
+                id='orders.fromDateMustBeSameOrBeforeToDate'
+                defaultMessage={`From date must be same or before To date`}
+              />
+            ),
+            {
+              appearance: 'warning',
+              pauseOnHover: true
+            }
+          )
+        }
+
+        setState({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+    
+        props.saveFilters({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+    
+        const filter = {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+        handleFiltersValue(filter)
+      }
+    } else {
+      setState({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+  
+      props.saveFilters({
+        ...state,
+        [currentTab]: {
+          ...state[currentTab],
+          [data.name]: data.value
+        }
+      })
+  
+      const filter = {
         ...state[currentTab],
         [data.name]: data.value
       }
-    })
-
-    props.saveFilters({
-      ...state,
-      [currentTab]: {
-        ...state[currentTab],
-        [data.name]: data.value
-      }
-    })
-
-    const filter = {
-      ...state[currentTab],
-      [data.name]: data.value
+      handleFiltersValue(filter)
     }
-    handleFiltersValue(filter)
   }, 500)
 
   const renderHandler = () => {
@@ -155,7 +219,10 @@ const TablesHandlers = props => {
               </div>
               <div>
                 <div className='column' style={{ paddingTop: '10px' }}>
-                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date' />
+                  <FormattedMessage id='orders.orderDate' defaultMessage='Order Date: ' />
+                </div>
+                <div className='column' style={{ paddingTop: '10px' }}>
+                  <FormattedMessage id='global.from' defaultMessage='From' />
                 </div>
                 <div className='column'>
                   <DateInput
@@ -164,13 +231,12 @@ const TablesHandlers = props => {
                       style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
-                      placeholder: formatMessage({
-                        id: 'global.from',
-                        defaultMessage: 'From'
-                      }),
                       onChange: handleFilterChange
                     }}
                   />
+                </div>
+                <div className='column' style={{ paddingTop: '10px' }}>
+                  <FormattedMessage id='global.to' defaultMessage='To' />
                 </div>
                 <div className='column' style={{ marginRight: '10px' }}>
                   <DateInput
@@ -179,10 +245,6 @@ const TablesHandlers = props => {
                       style: { width: '150px' },
                       maxDate: moment(),
                       clearable: true,
-                      placeholder: formatMessage({
-                        id: 'global.to',
-                        defaultMessage: 'To'
-                      }),
                       onChange: handleFilterChange
                     }}
                   />
@@ -217,4 +279,4 @@ TablesHandlers.defaultValues = {
   intl: {}
 }
 
-export default injectIntl(TablesHandlers)
+export default injectIntl(withToastManager(TablesHandlers))

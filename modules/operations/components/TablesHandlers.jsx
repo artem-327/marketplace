@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { PlusCircle } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
+import { withToastManager } from 'react-toast-notifications'
 import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../components/custom-formik'
@@ -84,7 +85,7 @@ const TablesHandlers = props => {
       if (currentTab === '') return
 
       let filterValue = state[currentTab]
-      handleFiltersValue(filterValue, props, formikProps)
+      handleFiltersValue(filterValue, props, formikPropsNew)
     }
   }, [props.currentTab])
 
@@ -274,7 +275,10 @@ const TablesHandlers = props => {
 
                   <div>
                     <div className='column' style={{ paddingTop: '10px' }}>
-                      <FormattedMessage id='orders.orderDate' defaultMessage='Order Date' />
+                      <FormattedMessage id='orders.orderDate' defaultMessage='Order Date: ' />
+                    </div>
+                    <div className='column' style={{ paddingTop: '10px' }}>
+                      <FormattedMessage id='global.from' defaultMessage='From' />
                     </div>
                     <div className='column'>
                       <DateInput
@@ -283,13 +287,12 @@ const TablesHandlers = props => {
                           style: { width: '220px' },
                           maxDate: moment(),
                           clearable: true,
-                          placeholder: formatMessage({
-                            id: 'global.from',
-                            defaultMessage: 'From'
-                          }),
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
+                    </div>
+                    <div className='column' style={{ paddingTop: '10px' }}>
+                      <FormattedMessage id='global.to' defaultMessage='To' />
                     </div>
                     <DivColumn className='column'>
                       <DateInput
@@ -298,10 +301,6 @@ const TablesHandlers = props => {
                           style: { width: '220px' },
                           maxDate: moment(),
                           clearable: true,
-                          placeholder: formatMessage({
-                            id: 'global.to',
-                            defaultMessage: 'To'
-                          }),
                           onChange: (e, data) => { handleFilterChangeInputSearch(data, props, formikProps, state, setState) }
                         }}
                       />
@@ -389,4 +388,4 @@ TablesHandlers.defaultValues = {
   searchCompany: () => {}
 }
 
-export default withDatagrid(injectIntl(TablesHandlers))
+export default withDatagrid(injectIntl(withToastManager(TablesHandlers)))
