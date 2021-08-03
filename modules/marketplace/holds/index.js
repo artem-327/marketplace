@@ -47,10 +47,10 @@ Holds.defaultProps = {
 }
 
 const makeMapStateToProps = () => {
-  const getYypeHolds = makeGetTypeHolds()
+  const getTypeHolds = makeGetTypeHolds()
 
   const mapStateToProps = store => ({
-    typeHolds: getYypeHolds(store)
+    typeHolds: getTypeHolds(store)
   })
   return mapStateToProps
 }

@@ -1,5 +1,4 @@
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
 // Components
 import MakeOfferPopup from './MakeOfferPopup'
 // Actions
@@ -40,4 +39,4 @@ const makeMapStateToProps = () => {
     return mapStateToProps
 }
 
-export default withDatagrid(injectIntl(connect(makeMapStateToProps, Actions)(MakeOfferPopup)))
+export default withDatagrid(connect(makeMapStateToProps, Actions)(MakeOfferPopup))

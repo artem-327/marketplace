@@ -1,11 +1,12 @@
 import * as Yup from 'yup'
 import moment from 'moment'
 import { debounce } from 'lodash'
+import { FormattedMessage } from 'react-intl'
 // Services
 import { getLocaleDateFormat, getStringISODate } from '../../../components/date-format'
-import { getSafe } from '../../../utils/functions'
+import { getSafe, generateToastMarkup } from '../../../utils/functions'
 // Constants
-import { errorMessages, dateValidation } from '../../../constants/yupValidation'
+import { errorMessages } from '../../../constants/yupValidation'
 import { OrdersFilters } from '../constants'
 
 /**
@@ -15,24 +16,6 @@ import { OrdersFilters } from '../constants'
  */
 export const validationSchema = Yup.lazy(values => {
     let validationObject = {
-      dateFrom:
-        values.dateFrom &&
-        values.dateTo &&
-        dateValidation(false).concat(
-          Yup.string().test(
-            'is-before',
-            <FormattedMessage
-              id='orders.dateMustBeSameOrBefore'
-              defaultMessage={`Date must be same or before ${values.dateTo}`}
-              values={{ date: values.dateTo }}
-            />,
-            function () {
-              let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-              let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-              return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
-            }
-          )
-        ),
       orderId:
         values.orderId &&
         Yup.number()
@@ -129,6 +112,32 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
     if(dateValue.length === 0 || 
       dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
       dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
+              
+      const dateFromArray = data.name === 'dateFrom' ? dateValue.split(separator) : formikProps?.values?.dateFrom?.split(separator)
+      const dateToArray = data.name === 'dateTo' ? dateValue.split(separator) : formikProps?.values?.dateTo?.split(separator)
+      let dateFrom = new Date(dateFromArray[2], dateFromArray[0] - 1, dateFromArray[1])
+      let dateTo = new Date(dateToArray[2], dateToArray[0] - 1, dateToArray[1])
+      const { toastManager } = props
+      
+      if(dateFrom > dateTo) {
+        toastManager.add(
+          generateToastMarkup(
+            <FormattedMessage
+              id='global.warning'
+              defaultMessage='Warning!'
+            />,
+            <FormattedMessage
+              id='orders.fromDateMustBeSameOrBeforeToDate'
+              defaultMessage={`From date must be same or before To date`}
+            />
+          ),
+          {
+            appearance: 'warning',
+            pauseOnHover: true
+          }
+        )
+      }
+
       setState({
         ...state,
         [currentTab]: {

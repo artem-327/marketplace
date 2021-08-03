@@ -1,11 +1,10 @@
 import { connect } from 'react-redux'
-import { injectIntl } from 'react-intl'
-// Components
+import { withDatagrid } from '../../datagrid'
 import BidsRowDetail from './BidsRowDetail'
 // Services
 import * as Actions from '../actions'
+// Actions
 import { getSafe } from '../../../utils/functions'
-import { withDatagrid } from '../../datagrid'
 // Selectors
 import { makeGetIsSending, makeGetLoading } from '../selectors'
 
@@ -13,12 +12,13 @@ const makeMapStateToProps = () => {
     const getIsSending = makeGetIsSending()
     const getLoading = makeGetLoading()
 
-    const mapStateToProps = (store, props) => {
-        const { popupValues } = props
+    const mapStateToProps = (store, params) => {
+        const { popupValues } = params
         const productOffer = getSafe(() => popupValues.productOffer, null)
         const companyProduct = getSafe(() => productOffer.companyProduct, null)
+    
         const priceUnit = getSafe(() => companyProduct.packagingUnit.nameAbbreviation, '')
-
+    
         return {
             popupValues,
             productOffer,
@@ -34,4 +34,4 @@ const makeMapStateToProps = () => {
     return mapStateToProps
 }
 
-export default withDatagrid(injectIntl(connect(makeMapStateToProps, Actions)(BidsRowDetail)))
+export default withDatagrid(connect(makeMapStateToProps, Actions)(BidsRowDetail))

@@ -8,7 +8,7 @@ import { Container, Input } from 'semantic-ui-react'
 import ProdexGrid from '../../../../components/table'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import Tutorial from '../../../tutorial/Tutorial'
-import MakeOfferPopup from '../../listings/components/MakeOfferPopup'
+import MakeOfferPopup from '../../listings/components/MakeOfferPopupContainer'
 import DeaPopup from '../../listings/components/ConfirmationPopups/DeaPopup'
 import DhsPopup from '../../listings/components/ConfirmationPopups/DhsPopup'
 // Constants

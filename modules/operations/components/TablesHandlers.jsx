@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { PlusCircle } from 'react-feather'
 import moment from 'moment'
 import { Formik } from 'formik'
+import { withToastManager } from 'react-toast-notifications'
 import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../components/custom-formik'
@@ -84,7 +85,7 @@ const TablesHandlers = props => {
       if (currentTab === '') return
 
       let filterValue = state[currentTab]
-      handleFiltersValue(filterValue, props, formikProps)
+      handleFiltersValue(filterValue, props, formikPropsNew)
     }
   }, [props.currentTab])
 
@@ -387,4 +388,4 @@ TablesHandlers.defaultValues = {
   searchCompany: () => {}
 }
 
-export default withDatagrid(injectIntl(TablesHandlers))
+export default withDatagrid(injectIntl(withToastManager(TablesHandlers)))

@@ -4,6 +4,7 @@ import { Form, Modal, Dimmer, Loader, GridRow, GridColumn, List } from 'semantic
 import { Formik } from 'formik'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Schedule } from '@material-ui/icons'
+import { injectIntl } from 'react-intl'
 // Components
 import ErrorFocus from '../../../../components/error-focus'
 // Constants
@@ -183,7 +184,7 @@ const MakeOfferPopup = props => {
                               maximumFractionDigits={2}
                               style='currency'
                               currency={currency}
-                              value={parseFloat(values.pkgAmount) * packagingSize * parseFloat(values.pricePerUOM)}
+                              value={values.pkgAmount * packagingSize * values.pricePerUOM}
                             />
                           </DivFieldRectangle>
                         </Form.Field>
@@ -291,4 +292,4 @@ MakeOfferPopup.defaultProps = {
   datagrid: {}
 }
 
-export default MakeOfferPopup
+export default injectIntl(MakeOfferPopup)
