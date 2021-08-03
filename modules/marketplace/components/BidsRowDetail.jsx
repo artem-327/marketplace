@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Formik } from 'formik'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { Input, Button, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { Form, Dimmer, Loader, GridRow, GridColumn, List, Radio, Image } from 'semantic-ui-react'
 // Components
@@ -34,11 +34,6 @@ import {
 // Services
 import { formValidation, submitOffer, handleCheckout, checkBuyAttempt } from './BidsRowDetail.services'
 
-/**
- * BidsRowDetail Component
- * @category Marketplace - Bids received / sent
- * @components
- */
 const BidsRowDetail = props => {
   let formikPropsSelf = {}
   const [initialFormValues, setInitialFormValues] = useState({ id: '', message: '', pkgAmount: '', pricePerUOM: '' })
@@ -59,6 +54,7 @@ const BidsRowDetail = props => {
     intl: { formatMessage },
     popupValues,
     productOffer,
+    closePopup,
     isSending,
     loading,
     listFobPriceUnit,
@@ -69,6 +65,7 @@ const BidsRowDetail = props => {
     openPopup
   } = props
 
+  // Similar to call componentDidMount:
   useEffect(() => {
     const { popupValues, initValues } = props
 
@@ -87,9 +84,9 @@ const BidsRowDetail = props => {
       setDetailExpandedIds([])
       setTouched(false)
     }
-  }, []) 
+  }, [])  // If [] is empty then is similar as componentDidMount.
 
-  useEffect(() => {
+  useEffect(() => { // componentWillUnmount work-around
     return () => {
       if ((touched || Object.keys(formikPropsSelf.touched).length) && props.onUnmount) {
         props.onUnmount({
@@ -119,11 +116,11 @@ const BidsRowDetail = props => {
     )
   }
 
-  const lastHistory = popupValues?.histories[popupValues.histories.length - 1]
+  const lastHistory = popupValues.histories[popupValues.histories.length - 1]
   const disabledInputPrice = radioState !== 'counter'
 
-  const lastStatus = lastHistory?.status
-  const lastHistoryType = lastHistory?.historyType
+  const lastStatus = lastHistory.status
+  const lastHistoryType = lastHistory.historyType
   const showBidSummary = lastStatus === 'NEW'
 
   const showAcceptRejectCounterSection =
@@ -134,8 +131,8 @@ const BidsRowDetail = props => {
 
   const histories =
     showAcceptRejectCounterSection || showBidSummary || lastStatus === 'ACCEPTED' || lastStatus === 'REJECTED'
-      ? popupValues?.histories?.slice(0, popupValues?.histories?.length - 1)
-      : popupValues?.histories
+      ? popupValues.histories.slice(0, popupValues.histories.length - 1)
+      : popupValues.histories
 
   return (
     <Formik
@@ -448,10 +445,7 @@ const BidsRowDetail = props => {
                                   }}
                                   label={
                                     <>
-                                      <FormattedMessage
-                                        id='marketplace.yourFobPriceOffer'
-                                        defaultMessage='Your FOB price offer'
-                                      />
+                                      <FormattedMessage id='marketplace.yourFobPriceOffer' defaultMessage='Your FOB price offer' />
                                       {!disabledInputPrice && <Required />}
                                     </>
                                   }
@@ -469,7 +463,7 @@ const BidsRowDetail = props => {
                                       maximumFractionDigits={2}
                                       style='currency'
                                       currency={currency}
-                                      value={parseFloat(values.pkgAmount) * packagingSize * parseFloat(values.pricePerUOM)}
+                                      value={values.pkgAmount * packagingSize * values.pricePerUOM}
                                     />
                                   </DivFieldRectangle>
                                 </Form.Field>
@@ -714,4 +708,4 @@ BidsRowDetail.defaultProps = {
   addOfferToCart: () => {}
 }
 
-export default BidsRowDetail
+export default injectIntl(BidsRowDetail)

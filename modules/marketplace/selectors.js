@@ -17,7 +17,7 @@ const getIsProductOfferManager = store => getSafe(() => store.auth.identity.isPr
 const getIsSending = store => getSafe(() => store.marketplace.isSending, false)
 const getLoading = store => getSafe(() => store.marketplace.loading, false)
 const getCurrentUserId = store => getSafe(() => store.auth.identity.id, '')
-const getYypeHolds = store => getSafe(() => store.marketplace.typeHolds, 'my')
+const getTypeHolds = store => getSafe(() => store.marketplace.typeHolds, 'my')
 
 export const makeGetSearchedCompaniesDropdown = () => {
   return createSelector([getSearchedCompaniesDropdown], searchedCompanies => getCompaniesDropdown(searchedCompanies))
@@ -62,5 +62,5 @@ export const makeGetCurrentUserId = () => {
   return createSelector([getCurrentUserId], currentUserId => currentUserId)
 }
 export const makeGetTypeHolds = () => {
-  return createSelector([getYypeHolds], typeHolds => typeHolds)
+  return createSelector([getTypeHolds], typeHolds => typeHolds)
 }

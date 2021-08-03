@@ -94,10 +94,10 @@ export const getDatagridRows = rows => {
         <div key={po?.id}>
           <Image
             verticalAlign='middle'
-            style={{ width: '20px' }}
+            style={{ width: '20px', maxHeight: '20px' }}
             size='mini'
             spaced={true}
-            src={po?.owner?.avatarUrl}
+            src={po?.owner?.logoUrl}
           />
 
           <span>{po?.owner?.name}</span>

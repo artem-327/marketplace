@@ -4,7 +4,7 @@ import { debounce } from 'lodash'
 import moment from 'moment'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
-import RowDescription from '../../components/RowDescription'
+import RowDescription from '../../components/RowDescriptionContainer'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 import { getSafe } from '../../../../utils/functions'

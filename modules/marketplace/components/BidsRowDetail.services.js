@@ -1,14 +1,8 @@
 import Router from 'next/router'
 import * as Yup from 'yup'
-// Services
 import { errorMessages } from '../../../constants/yupValidation'
 import { removeEmpty, getSafe } from '../../../utils/functions'
 
-/**
- * Form Validation
- * @category Marketplace - Bids received / sent
- * @method
- */
 export const formValidation = requiredInputs =>
   Yup.object().shape({
     ...(requiredInputs && {
@@ -28,11 +22,6 @@ export const formValidation = requiredInputs =>
     })
   })
 
-/**
- * Submit offer
- * @category Marketplace - Bids received / sent
- * @method
- */
 export const submitOffer = async ({ values, setSubmitting }, props, state) => {
   const { popupValues, onClose, counterOffer, acceptOffer, rejectOffer, datagrid } = props
   const { radioState } = state
@@ -79,11 +68,6 @@ export const submitOffer = async ({ values, setSubmitting }, props, state) => {
   setSubmitting(false)
 }
 
-/**
- * Handle checkout
- * @category Marketplace - Bids received / sent
- * @method
- */
 export const handleCheckout = async (id, props) => {
   const { addOfferToCart } = props
 
@@ -95,11 +79,6 @@ export const handleCheckout = async (id, props) => {
   }
 }
 
-/**
- * Check buy attempt
- * @category Marketplace - Bids received / sent
- * @method
- */
 export const checkBuyAttempt = (row, state, props) => {
   let skipBuy = false
   const elements = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.elements, [])
