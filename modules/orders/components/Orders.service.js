@@ -877,24 +877,6 @@ export const getRowDetail = ({ row }) => {
 
 export const validationSchema = Yup.lazy(values => {
   let validationObject = {
-    dateFrom:
-      values.dateFrom &&
-      values.dateTo &&
-      dateValidation(false).concat(
-        Yup.string().test(
-          'is-before',
-          <FormattedMessage
-            id='orders.dateMustBeSameOrBefore'
-            defaultMessage={`Date must be same or before ${values.dateTo}`}
-            values={{ date: values.dateTo }}
-          />,
-          function () {
-            let parsedDate = moment(this.parent['dateFrom'], getLocaleDateFormat())
-            let parsedBeforeDate = moment(this.parent['dateTo'], getLocaleDateFormat())
-            return !parsedBeforeDate.isValid() || parsedDate.isSameOrBefore(parsedBeforeDate)
-          }
-        )
-      ),
     orderId:
       values.orderId &&
       Yup.number()
