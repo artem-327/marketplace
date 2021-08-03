@@ -115,7 +115,7 @@ export const getDatagridRows = rows => {
  */
 export const getCompaniesDropdown = companies => {
   const options = companies?.map(c => {
-    const logo = c.avatarUrl || c.logoUrl
+    const logo = c.logoUrl
 
     const seller = (
       <div key={c.id} style={{ display: 'flex' }}>
