@@ -16,8 +16,8 @@ const Listings = props => {
         v.filterName.map(name => {
           filters.or = filters.or.concat(
             [
-              // { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
-              // { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] },
+              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
+              { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] },
               {
                 operator: 'LIKE',
                 path: 'ProductOffer.companyProduct.companyGenericProduct.name',
@@ -25,7 +25,7 @@ const Listings = props => {
               },
               {
                 operator: 'LIKE',
-                path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.name',
+                path: 'ProductOffer.companyProduct.companyGenericProduct.code',
                 values: [`%${name}%`]
               }
             ]
