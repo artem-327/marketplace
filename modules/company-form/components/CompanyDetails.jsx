@@ -546,4 +546,4 @@ const mapDispatchToProps = {
   getNaicsCodes
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CompanyDetails))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompanyDetails))
