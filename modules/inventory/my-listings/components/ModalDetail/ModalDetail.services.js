@@ -283,7 +283,6 @@ export const loadProductOffer = async (id, shouldSwitchTab, props, state, setSta
   if(props.countriesDropdown.length === 0) await props.getCountries()
   const row = props.datagrid.rows.filter(row => row.id === id)
   const data = row[0]
-  
   await props.getProductOffer(data)
   if (shouldSwitchTab) {
     switchTab(props, state, setState, props.modalActiveTab, data)
@@ -486,10 +485,6 @@ export const renderPricingTiers = (props, state, setState, formikPropsNew, prici
   )
 }
 
-const saveBroadcastRules = async (state, setState) => {
-  setState({ ...state, saveBroadcast: state.saveBroadcast + 1 })
-}
-
 export const searchProducts = debounce((text, props) => {
   props.getAutocompleteData({
     searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
@@ -547,9 +542,8 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
       }
       break
     case 3:
-      saveBroadcastRules(state, setState)
+      setState({ ...state, saveBroadcast: state.saveBroadcast + 1, changedForm: false, edited: false })
       setTouched({})
-      setState({ ...state, changedForm: false, edited: false })
       break
   }
 
