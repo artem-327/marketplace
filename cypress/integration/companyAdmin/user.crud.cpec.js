@@ -34,7 +34,8 @@ context("Prodex User CRUD", () => {
             })
         })
 
-        cy.settingsAdd()
+        //cy.settingsAdd()
+        cy.contains("Add User").click()
 
         cy.enterText("#field_input_name", "John Automator")
         cy.enterText("#field_input_jobTitle", "Automatior")
@@ -119,7 +120,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Checks error messages", () => {
-        cy.settingsAdd()
+        cy.contains("Add User").click()
 
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
 

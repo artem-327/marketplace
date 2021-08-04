@@ -6,8 +6,9 @@ context("Shopping cart CRUD", () => {
 
     beforeEach(function () {
         cy.viewport(2500, 3500)
+        cy.intercept("GET", '/prodex/api/product-groups/search**').as('groupsLoading')
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid/').as('marketplaceLoading')
+        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid').as('marketplaceLoading')
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -104,7 +105,18 @@ context("Shopping cart CRUD", () => {
                 marketPlaceId = marketPlaceIdNum1
                 marketPlaceName = sameWarehouseOffer[ 0 ].companyProduct.companyGenericProduct.productGroup.name
 
+                cy.get("[data-test='my_inventory_advanced_filters_btn']").click()
+                cy.get("[class*='StyledModalContent']").within(() => {
+                    cy.get("[name='searchProductGroup']").type(marketPlaceName)
+                    cy.wait("@groupsLoading", { timeout: 30000 })
+                    cy.contains("div", marketPlaceName).click()
+
+                })
+                cy.get("[data-test='filter_apply']").click()
+                cy.wait("@marketplaceLoading", { timeout: 30000 })
+
                 cy.openOffer(sameWarehouseOffer[ 0 ].id, 1)
+                cy.contains("button", "I agree").click()
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("5")
@@ -121,13 +133,8 @@ context("Shopping cart CRUD", () => {
 
                 cy.waitForUI()
 
-                cy.get('div.selection')
-                    .children("input")
-                    .type(sameWarehouseOffer[ 2 ].companyProduct.intProductName, { force: true })
-                    .should("have.value", sameWarehouseOffer[ 2 ].companyProduct.intProductName)
-                marketPlaceName = sameWarehouseOffer[ 2 ].companyProduct.companyGenericProduct.productGroup.name
-
                 cy.openOffer(marketPlaceIdNum2, 1)
+                cy.contains("button", "I agree").click()
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("5")

@@ -43,7 +43,7 @@ context("Units of packaging CRUD", () => {
         cy.enterText("#field_input_val0", "Test package")
 
         cy.get("[data-test='admin_add_unit_packaging_type_drpdn']").click()
-        cy.get("#2").click()
+        cy.get("[data-test='admin_add_unit_packaging_type_drpdn']").contains("piece").click()
 
         cy.enterText("#field_input_val2", "10")
         cy.enterText("#field_input_val3", "10")

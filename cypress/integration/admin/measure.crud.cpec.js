@@ -39,7 +39,7 @@ context("Units of measure CRUD", () => {
         cy.enterText("#field_input_val1", "tmr")
 
         cy.get("#field_dropdown_val2").click()
-        cy.get("#2").click()
+        cy.get("#field_dropdown_val2").contains("piece").click()
 
         cy.enterText("#field_input_val3", "0.5")
 

@@ -29,7 +29,7 @@ context("Inventory Broadcasting", () => {
 
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.intercept("PATCH", '/prodex/api/product-offers/*/broadcast-option?option=***').as('broadcast')
-        cy.intercept("GET", "/prodex/api/product-offers/*").as("offerLoading")
+        cy.intercept("GET", "/prodex/api/company-products/own/search*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
 
