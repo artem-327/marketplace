@@ -123,42 +123,42 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage
-              id='global.warning'
-              defaultMessage='Warning!'
+              id='global.error'
+              defaultMessage='Error!'
             />,
             <FormattedMessage
               id='orders.fromDateMustBeSameOrBeforeToDate'
-              defaultMessage={`From date must be same or before To date`}
+              defaultMessage={`From date must be same or before To date, please fix this issue first!`}
             />
           ),
           {
-            appearance: 'warning',
+            appearance: 'error',
             pauseOnHover: true
           }
         )
-      }
-
-      setState({
-        ...state,
-        [currentTab]: {
+      } else {
+        setState({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+      
+        props.saveFilters({
+          ...state,
+          [currentTab]: {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+        })
+      
+        const filter = {
           ...state[currentTab],
           [data.name]: data.value
         }
-      })
-    
-      props.saveFilters({
-        ...state,
-        [currentTab]: {
-          ...state[currentTab],
-          [data.name]: data.value
-        }
-      })
-    
-      const filter = {
-        ...state[currentTab],
-        [data.name]: data.value
+        handleFiltersValue(filter, props, formikProps)
       }
-      handleFiltersValue(filter, props, formikProps)
     }
   } else {
     setState({
