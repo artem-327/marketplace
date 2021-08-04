@@ -43,7 +43,8 @@ const Header = ({
   address,
   openGlobalAddForm,
   intl,
-  connectionCriteria
+  connectionCriteria,
+  enableButtons
 }) => (
   <Grid.Row>
     <GridColumnDetail>
@@ -66,29 +67,29 @@ const Header = ({
               <HorizontalBarGraph
                 values={[
                   {
-                    value: 60,
-                    name: 'Insurance',
-                    tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                    value: connectionCriteria?.aggregate_insurance?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.Insurance', defaultMessage: 'Insurance' }),
+                    tooltip: connectionCriteria?.aggregate_insurance?.criteria_match_description
                   },
                   {
-                    value: 80,
-                    name: 'Credit',
-                    tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                    value: connectionCriteria?.credit_risk?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.credit', defaultMessage: 'Credit' }),
+                    tooltip: connectionCriteria?.credit_risk?.criteria_match_description
                   },
                   {
-                    value: 40,
-                    name: 'Beyond\u00A0Terms',
-                    tooltip: 'Beyond Terms tooltip' // ! ! Should be returned from BE?
+                    value: connectionCriteria?.days_beyond?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.beyondTerms', defaultMessage: 'Beyond\u00A0Terms' }),
+                    tooltip: connectionCriteria?.days_beyond?.criteria_match_description
                   },
                   {
-                    value: 60,
-                    name: 'Violations',
-                    tooltip: 'Violations tooltip' // ! ! Should be returned from BE?
+                    value: connectionCriteria?.violations?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.violations', defaultMessage: 'Violations' }),
+                    tooltip: connectionCriteria?.violations?.criteria_match_description
                   },
                   {
-                    value: 100,
-                    name: 'Social',
-                    tooltip: 'Social tooltip' // ! ! Should be returned from BE?
+                    value: connectionCriteria?.social_presence?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.social', defaultMessage: 'Social' }),
+                    tooltip: connectionCriteria?.social_presence?.criteria_match_description
                   }
                 ]}
                 max={100}
@@ -122,7 +123,7 @@ const Header = ({
           </DivCollectionStat>
         </SegmentCustom>
         <SegmentCustom textAlign='right'>
-          {getSafe(() => buttonsProps.length, false)
+          {enableButtons && getSafe(() => buttonsProps.length, false)
             ? buttonsProps.map((button, i) => (
                 <BasicButton
                   key={i}
@@ -193,7 +194,8 @@ Header.propTypes = {
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
   address: PropTypes.string,
-  connectionCriteria: PropTypes.object
+  connectionCriteria: PropTypes.object,
+  enableButtons: PropTypes.bool
 }
 Header.defaultProps = {
   logo: null,
@@ -211,7 +213,8 @@ Header.defaultProps = {
   buttonActionsDetailRow: () => {},
   openGlobalAddForm: null,
   address: '',
-  connectionCriteria: null
+  connectionCriteria: null,
+  enableButtons: true
 }
 
 export default injectIntl(Header)

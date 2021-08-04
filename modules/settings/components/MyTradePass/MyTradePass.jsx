@@ -48,7 +48,9 @@ const MyTradePass = props => {
     legalData,
     marketingData,
     verifiedData,
-    logoUrl
+    logoUrl,
+    companyCriteria,
+    intl: { formatMessage }
   } = props
 
   useEffect(() => {
@@ -72,29 +74,29 @@ const MyTradePass = props => {
                 <HorizontalBarGraph
                   values={[
                     {
-                      value: 60,
-                      name: 'Insurance',
-                      tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                      value: companyCriteria?.aggregate_insurance?.criteria_risk_tolerance,
+                      name: formatMessage({ id: 'myNetwork.Insurance', defaultMessage: 'Insurance' }),
+                      tooltip: companyCriteria?.aggregate_insurance?.criteria_match_description
                     },
                     {
-                      value: 80,
-                      name: 'Credit',
-                      tooltip: 'Low Risk' // ! ! Should be returned from BE?
+                      value: companyCriteria?.credit_risk?.criteria_risk_tolerance,
+                      name: formatMessage({ id: 'myNetwork.credit', defaultMessage: 'Credit' }),
+                      tooltip: companyCriteria?.credit_risk?.criteria_match_description
                     },
                     {
-                      value: 40,
-                      name: 'Beyond\u00A0Terms',
-                      tooltip: 'Beyond Terms tooltip' // ! ! Should be returned from BE?
+                      value: companyCriteria?.days_beyond?.criteria_risk_tolerance,
+                      name: formatMessage({ id: 'myNetwork.beyondTerms', defaultMessage: 'Beyond\u00A0Terms' }),
+                      tooltip: companyCriteria?.days_beyond?.criteria_match_description
                     },
                     {
-                      value: 60,
-                      name: 'Violations',
-                      tooltip: 'Violations tooltip' // ! ! Should be returned from BE?
+                      value: companyCriteria?.violations?.criteria_risk_tolerance,
+                      name: formatMessage({ id: 'myNetwork.violations', defaultMessage: 'Violations' }),
+                      tooltip: companyCriteria?.violations?.criteria_match_description
                     },
                     {
-                      value: 100,
-                      name: 'Social',
-                      tooltip: 'Social tooltip' // ! ! Should be returned from BE?
+                      value: companyCriteria?.social_presence?.criteria_risk_tolerance,
+                      name: formatMessage({ id: 'myNetwork.social', defaultMessage: 'Social' }),
+                      tooltip: companyCriteria?.social_presence?.criteria_match_description
                     }
                   ]}
                   max={100}
@@ -159,7 +161,8 @@ MyTradePass.propTypes = {
   metrics: object,
   legalData: object,
   marketingData: object,
-  verifiedData: object
+  verifiedData: object,
+  companyCriteria: object
 }
 
 MyTradePass.defaultProps = {
@@ -171,7 +174,8 @@ MyTradePass.defaultProps = {
   metrics: null,
   legalData: null,
   marketingData: null,
-  verifiedData: null
+  verifiedData: null,
+  companyCriteria: null
 }
 
 function mapStateToProps({ settings }) {
@@ -242,7 +246,26 @@ function mapStateToProps({ settings }) {
       twitterHandle: myTradePass?.socialTwitter,
       tradePassConnection: myTradePass?.connectionsCount || 0
     },
-    verifiedData: getVerifiedData(myTradePass?.businessDocuments)
+    verifiedData: getVerifiedData(myTradePass?.businessDocuments),
+    companyCriteria: myTradePass?.companyCriteria?.aggregate_insurance?.criteria_risk_tolerance
+      ? myTradePass?.companyCriteria
+      : { // ! ! TODO Temporary ("myTradePass?.companyCriteria" only should be used after the BE update)
+        aggregate_insurance: {
+          criteria_risk_tolerance: myTradePass?.companyCriteria?.aggregate_insurance
+        },
+        credit_risk: {
+          criteria_risk_tolerance: myTradePass?.companyCriteria?.credit_risk
+        },
+        days_beyond: {
+          criteria_risk_tolerance: myTradePass?.companyCriteria?.days_beyond
+        },
+        social_presence: {
+          criteria_risk_tolerance: myTradePass?.companyCriteria?.social_presence
+        },
+        violations: {
+          criteria_risk_tolerance: myTradePass?.companyCriteria?.violations
+        }
+      }
   }
 }
 

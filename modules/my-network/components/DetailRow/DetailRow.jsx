@@ -33,7 +33,8 @@ const DetailRow = ({
   buttonActionsDetailRow = null,
   openGlobalAddForm,
   loadingDetailRow = false,
-  updating = false
+  updating = false,
+  enableButtons
 }) => (
   <StyledGrid>
     <Dimmer active={updating} inverted>
@@ -49,6 +50,7 @@ const DetailRow = ({
       address={row?.address}
       openGlobalAddForm={openGlobalAddForm}
       connectionCriteria={row?.connectionCriteria}
+      enableButtons={enableButtons}
     />
     <Grid.Row>
       <GridColumnDetail>
@@ -92,7 +94,8 @@ DetailRow.propTypes = {
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
   loadingDetailRow: PropTypes.bool,
-  updating: PropTypes.bool
+  updating: PropTypes.bool,
+  enableButtons: PropTypes.bool
 }
 
 DetailRow.defaultProps = {
@@ -101,7 +104,8 @@ DetailRow.defaultProps = {
   buttonActionsDetailRow: null,
   openGlobalAddForm: null,
   loadingDetailRow: false,
-  updating: false
+  updating: false,
+  enableButtons: true
 }
 
 export default DetailRow

@@ -24,7 +24,8 @@ const Table = props => {
     getConnection,
     loadingDetailRow,
     showBluePallet,
-    query
+    query,
+    isCompanyAdmin
   } = props
   const prevLoadingDatagrid = usePrevious(loadingDatagrid)
 
@@ -62,6 +63,7 @@ const Table = props => {
         expandRow={() => expandRow(row)}
         buttonActionsDetailRow={buttonActionsDetailRow}
         loadingDetailRow={loadingDetailRow}
+        enableButtons={isCompanyAdmin}
       />
     )
   }
