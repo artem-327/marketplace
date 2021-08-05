@@ -1,4 +1,6 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
+import { displayErrorForbidden } from '../../modules/errors/actions'
 import securePage from '~/hocs/securePage'
 import { OrdersModule } from '~/modules/orders'
 import Layout from 'components/Layout'
@@ -9,6 +11,14 @@ import { injectIntl } from 'react-intl'
 const OrdersWithRouter = withRouter(OrdersModule)
 
 class Orders extends Component {
+  componentDidMount() {
+    if (!(
+      this.props.auth?.identity?.isCompanyAdmin || this.props.auth?.identity?.isMerchant ||
+      this.props.auth?.identity?.isOrderProcessing || this.props.auth?.identity?.isOrderView
+    ))
+      this.props.displayErrorForbidden()
+  }
+
   render() {
     const {
       intl: { formatMessage }
@@ -16,10 +26,16 @@ class Orders extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'global.purchaseOrders', defaultMessage: 'Purchase Orders' })}>
-        <OrdersWithRouter currentTab={'purchase'} />
+        {!(
+          auth?.identity?.isCompanyAdmin || auth?.identity?.isMerchant ||
+          auth?.identity?.isOrderProcessing || auth?.identity?.isOrderView
+        )
+          ? (null)
+          : (<OrdersWithRouter currentTab={'purchase'} />)
+        }
       </Layout>
     )
   }
 }
 
-export default securePage(injectIntl(Orders))
+export default securePage(connect(store => ({ auth: store.auth }), { displayErrorForbidden })(injectIntl(Orders)))
