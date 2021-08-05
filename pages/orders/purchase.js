@@ -21,7 +21,8 @@ class Orders extends Component {
 
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      auth
     } = this.props
 
     return (
