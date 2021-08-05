@@ -95,6 +95,7 @@ const TablesHandlers = props => {
       const dateValue = data.value
       if(dateValue.length === 0 || 
         dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
+        dateValue.length === 10 && dateValue[1] === separator.split('')[0] && dateValue[5] === separator.split('')[0] || 
         dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
         
         const dateFromArray = data.name === 'dateFrom' ? dateValue.split(separator) : formikPropsNew?.values?.dateFrom?.split(separator)
