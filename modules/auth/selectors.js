@@ -1,8 +1,6 @@
 import { createSelector } from 'reselect'
 //Services
 import { getCompanyRequestObject } from '../../services'
-//Constants
-import { SETTINGS } from './constants'
 
 const getNaicsCode = state => state?.auth?.identity?.company?.naicsCategory?.naicsId
 const getPhoneNumber = state => state?.auth?.identity?.company?.phone
@@ -29,7 +27,6 @@ const getIsMerchant = state => state?.auth?.identity?.isMerchant
 const getIsCompanyAdmin = state => state?.auth?.identity?.isCompanyAdmin
 const getTutorialCompleted = state => state?.auth?.identity?.tutorialCompleted
 const getBuyEligible = state => state?.auth?.identity?.company?.buyEligible
-const getIdentitySettings = state => state?.auth?.identity?.settings
 
 export const makeGetNaicsCode = () => createSelector([getNaicsCode], naicsId => naicsId)
 export const makeGetPhoneNumber = () => createSelector([getPhoneNumber], phoneNumber => phoneNumber)
@@ -57,7 +54,3 @@ export const makeGetIsCompanyAdmin = () =>
 export const makeGetTutorialCompleted = () =>
   createSelector([getTutorialCompleted], tutorialCompleted => tutorialCompleted ?? false)
 export const makeGetBuyEligible = () => createSelector([getBuyEligible], buyEligible => buyEligible ?? false)
-export const makeGetCompanySharedListingDefaultMarkup = () =>
-  createSelector([getIdentitySettings], settings =>
-    settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
-  )
