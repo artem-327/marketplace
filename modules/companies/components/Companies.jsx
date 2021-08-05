@@ -10,6 +10,10 @@ import UsersTable from './UsersTable/Table'
 import * as Actions from '../actions'
 import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
+// Services
+import { getSafe } from '../../../utils/functions'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
 
 const tables = {
   companies: <CompaniesTable />,
