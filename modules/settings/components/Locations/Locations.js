@@ -23,6 +23,8 @@ import BranchesSidebar from './Branches/BranchesSidebar/BranchesSidebar'
 import MyCustomers from './MyCustomers/MyCustomers'
 import MyCustomersSidebar from './MyCustomers/MyCustomersSidebar/MyCustomersSidebar'
 import WarehouseSidebar from './MyCustomers/WarehouseSidebar/WarehouseSidebar'
+// Constants
+import { GA_TRACK_QUERY } from '../../../../constants'
 
 const SettingsGrid = styled(Grid)`
   flex-direction: column !important;
@@ -63,6 +65,10 @@ const CustomGridColumn = styled(Grid.Column)`
 `
 
 class Locations extends Component {
+  state = {
+    gaSearch: ''
+  }
+
   componentWillUnmount() {
     const { isOpenSidebar, closeSidebar } = this.props
     if (isOpenSidebar) closeSidebar()
@@ -96,9 +102,10 @@ class Locations extends Component {
 
     const datagridApiMap = {
       'my-customers': {
-        url: '/prodex/api/customers/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/customers/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        searchToFilter: v => {
+          this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+          return v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
@@ -107,11 +114,13 @@ class Locations extends Component {
                 }
               ]
             : []
+        }
       },
       'pick-up-locations': {
-        url: `/prodex/api/branches/warehouses/datagrid`,
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/branches/warehouses/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        searchToFilter: v => {
+          this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+          return v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
@@ -130,11 +139,13 @@ class Locations extends Component {
                 }
               ]
             : []
+        }
       },
       branches: {
-        url: `/prodex/api/branches/datagrid`,
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/branches/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        searchToFilter: v => {
+          this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+          return v && v.searchInput
             ? [
                 {
                   operator: 'LIKE',
@@ -153,6 +164,7 @@ class Locations extends Component {
                 }
               ]
             : []
+        }
       }
     }
     return datagridApiMap[activeTab]

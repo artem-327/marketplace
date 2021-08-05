@@ -59,6 +59,8 @@ import { getIdentity } from '~/modules/auth/actions'
 import ErrorFocus from '~/components/error-focus'
 //Components
 import Insurance from './Insurance/InsuranceContainer'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -115,7 +117,8 @@ const CustomGridColumn = styled(Grid.Column)`
 
 class Settings extends Component {
   state = {
-    wrongUrl: true
+    wrongUrl: true,
+    gaSearch: ''
   }
 
   // marked tab based on role of user or if tab changed.
@@ -293,9 +296,10 @@ class Settings extends Component {
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
-        url: `/prodex/api/users/datagrid`,
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/users/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        searchToFilter: v => {
+          this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+          return v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'User.name', values: [`%${v.searchInput}%`] },
                 {
@@ -306,12 +310,14 @@ class Settings extends Component {
                 // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
               ]
             : []
+        }
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
       documents: {
-        url: '/prodex/api/attachments/datagrid/',
+        url: `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
         searchToFilter: v => {
+          this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           let filter = { or: [], and: [] }
 
           if (v && v.searchInput)

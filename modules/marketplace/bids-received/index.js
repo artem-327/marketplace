@@ -1,11 +1,18 @@
+import { useState } from 'react'
 // Components
 import BidsReceivedContainer from './components/BidsReceivedContainer'
 import { DatagridProvider } from '../../datagrid'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
+import { getSafe } from '../../../utils/functions'
 
 export const BidsReceived = props => {
+  const [gaSearch, setGaSearch] = useState('')
+
   const urlApiConfig = {
-    url: '/prodex/api/product-offer-bids/other/datagrid',
+    url: `/prodex/api/product-offer-bids/other/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
     searchToFilter: v => {
+      setGaSearch(getSafe(() => v.searchInput, ''))
       let filters = { or: [], and: [], url: '' }
       if (v && v.searchInput) {
         filters.url = `/prodex/api/product-offer-bids/other/search?pattern=${v.searchInput}`
