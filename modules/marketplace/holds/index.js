@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 // Components
@@ -5,38 +6,46 @@ import HoldsContainer from './components/HoldsContainer'
 import { DatagridProvider } from '../../datagrid'
 // Selectors
 import { makeGetTypeHolds } from '../selectors'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
+import { getSafe } from '../../../utils/functions'
 
-const Holds = ({ typeHolds }) => (
-  <>
-    <DatagridProvider
-      apiConfig={{
-        url: `/prodex/api/holds/${typeHolds}/datagrid/`,
-        searchToFilter: v => {
-          let filters = { or: [], and: [] }
-          if (v && v.searchInput) {
-            filters.or = [
-              {
-                operator: 'LIKE',
-                path: 'InventoryHold.productOffer.companyProduct.intProductName',
-                values: [`%${v.searchInput}%`]
-              },
-              {
-                operator: 'LIKE',
-                path: 'InventoryHold.productOffer.companyProduct.companyGenericProduct.name',
-                values: [`%${v.searchInput}%`]
-              }
-            ]
+const Holds = ({ typeHolds }) => {
+  const [gaSearch, setGaSearch] = useState('')
+
+  return (
+    <>
+      <DatagridProvider
+        apiConfig={{
+          url: `/prodex/api/holds/${typeHolds}/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+          searchToFilter: v => {
+            setGaSearch(getSafe(() => v.searchInput, ''))
+            let filters = { or: [], and: [] }
+            if (v && v.searchInput) {
+              filters.or = [
+                {
+                  operator: 'LIKE',
+                  path: 'InventoryHold.productOffer.companyProduct.intProductName',
+                  values: [`%${v.searchInput}%`]
+                },
+                {
+                  operator: 'LIKE',
+                  path: 'InventoryHold.productOffer.companyProduct.companyGenericProduct.name',
+                  values: [`%${v.searchInput}%`]
+                }
+              ]
+            }
+            return filters
           }
-          return filters
-        }
-      }}
-      preserveFilters
-      skipInitLoad
-    >
-      <HoldsContainer />
-    </DatagridProvider>
-  </>
-)
+        }}
+        preserveFilters
+        skipInitLoad
+      >
+        <HoldsContainer />
+      </DatagridProvider>
+    </>
+  )
+}
 
 Holds.propTypes = {
   typeHolds: PropTypes.string.isRequired

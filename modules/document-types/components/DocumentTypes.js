@@ -9,17 +9,25 @@ import Table from './Table'
 import EditPopup1Parameter from './EditPopup1Parameter'
 import AddNewPopup1Parameter from './AddNewPopup1Parameter'
 import * as Actions from '../actions'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
 
 class DocumentTypes extends Component {
+  state = {
+    gaSearch: ''
+  }
+
   componentWillUnmount() {
     const { currentEditForm, currentAddForm, closeAddPopup } = this.props
     if (currentEditForm || currentAddForm) closeAddPopup()
   }
 
   getApiConfig = () => ({
-    url: 'prodex/api/document-types/datagrid',
-    searchToFilter: v =>
-      v && v.searchInput ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }] : []
+    url: `prodex/api/document-types/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+    searchToFilter: v => {
+      this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+      return v && v.searchInput ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }] : []
+    }
   })
 
   render() {

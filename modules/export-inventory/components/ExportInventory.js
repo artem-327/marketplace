@@ -5,7 +5,7 @@ import { func } from 'prop-types'
 
 class ExportInventory extends Component {
   getApiConfig = () => ({
-    url: '/prodex/api/companies/client/datagrid/',
+    url: `/prodex/api/companies/client/datagrid`,
     searchToFilter: v => {
       let filters = { or: [], and: [] }
       if (v && v.company) {

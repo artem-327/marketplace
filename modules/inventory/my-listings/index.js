@@ -8,7 +8,7 @@ const MyListings = () => (
     <CompanyProductInfo />
     <DatagridProvider
       apiConfig={{
-        url: '/prodex/api/product-offers/own/datagrid/',
+        url: '/prodex/api/product-offers/own/datagrid',
         searchToFilter: v => {
           let filters = { or: [], and: [] }
           if (v && v.filterName && v.filterName.length > 0) {

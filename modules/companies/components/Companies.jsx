@@ -1,5 +1,5 @@
 import { Container } from 'semantic-ui-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TableHandlers from './TableHandlers'
 import { withAuth } from '../../../hocs'
@@ -22,6 +22,8 @@ const sidebars = {
 }
 
 const Companies = props => {
+  const [gaSearch, setGaSearch] = useState('')
+
   useEffect(() => {
     const { isOpenSidebar, closePopup } = props
     if (isOpenSidebar) return closePopup()
@@ -31,8 +33,9 @@ const Companies = props => {
     const { currentTab } = props
     const datagridApiMap = {
       companies: {
-        url: '/prodex/api/companies/datagrid',
+        url: `/prodex/api/companies/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
         searchToFilter: v => {
+          setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`] },
@@ -43,8 +46,9 @@ const Companies = props => {
         }
       },
       users: {
-        url: `/prodex/api/users/datagrid/all`,
+        url: `/prodex/api/users/datagrid/all?${GA_TRACK_QUERY}=${gaSearch}`,
         searchToFilter: v => {
+          setGaSearch(getSafe(() => v.searchInput, ''))
           let filters = { or: [], and: [] }
           if (v && v.searchInput) {
             filters.or = [
