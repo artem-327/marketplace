@@ -1,4 +1,6 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
+import { displayErrorForbidden } from '../../modules/errors/actions'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import SettingsPage from '~/modules/settings'
@@ -7,9 +9,14 @@ import { injectIntl } from 'react-intl'
 import { getSafe } from '~/utils/functions'
 
 class Index extends Component {
+  componentDidMount() {
+    if (!this.props.auth?.identity?.isCompanyAdmin) this.props.displayErrorForbidden()
+  }
+
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      auth
     } = this.props
     const titleName = formatMessage(
       {
@@ -26,10 +33,13 @@ class Index extends Component {
 
     return (
       <Layout title={titleName}>
-        <SettingsPage currentTab={'documents'} />
+        {!auth?.identity?.isCompanyAdmin
+          ? (null)
+          : (<SettingsPage currentTab={'documents'} />)
+        }
       </Layout>
     )
   }
 }
 
-export default withRouter(securePage(injectIntl(Index)))
+export default withRouter(connect(store => ({ auth: store.auth }), { displayErrorForbidden })(securePage(injectIntl(Index))))

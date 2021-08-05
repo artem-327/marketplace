@@ -1,4 +1,6 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
+import { displayErrorForbidden } from '../../modules/errors/actions'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import DocumentTypes from '~/modules/document-types'
@@ -6,9 +8,14 @@ import DocumentTypes from '~/modules/document-types'
 import { injectIntl } from 'react-intl'
 
 class Index extends Component {
+  componentDidMount() {
+    if (!this.props.auth?.identity?.isAdmin) this.props.displayErrorForbidden()
+  }
+
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      auth
     } = this.props
     return (
       <Layout
@@ -16,10 +23,13 @@ class Index extends Component {
           id: 'documentTypes.title',
           defaultMessage: 'Document Types'
         })}>
-        <DocumentTypes />
+        {!auth?.identity?.isAdmin
+          ? (null)
+          : (<DocumentTypes />)
+        }
       </Layout>
     )
   }
 }
 
-export default securePage(injectIntl(Index))
+export default securePage(connect(store => ({ auth: store.auth }), { displayErrorForbidden })(injectIntl(Index)))
