@@ -542,8 +542,8 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
       }
       break
     case 3:
-      setState({ ...state, saveBroadcast: state.saveBroadcast + 1, changedForm: false, edited: false })
       setTouched({})
+      setState(prevState => ({ ...prevState, saveBroadcast: state.saveBroadcast + 1, changedForm: false, edited: false }))
       break
   }
 
@@ -605,14 +605,14 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
 }
 
 export const switchTab = async (props, state, setState, newTab, data = null) => {
-  setState({
-    ...state,
+  setState(prevState => ({
+    ...prevState,
     activeTab: newTab
-  })
+  }))
   try {
     if (newTab === INDEX_TAB_PRICE_BOOK) {
       await props.openBroadcast(data ? data : state.detailValues).then(async () => {
-        setState({ ...state, broadcastLoading: false, activeTab: newTab })
+        setState(prevState => ({ ...prevState, broadcastLoading: false, activeTab: newTab }))
       })
     }
   } catch (err) {
