@@ -14,6 +14,8 @@ import ProdexTable from '~/components/table'
 import DocumentManagerPopup from '~/modules/settings/components/Documents/DocumentManagerPopup'
 import { getDocumentTypes } from '../../global-data/actions'
 import { getSafe } from '~/utils/functions'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
 
 const CustomHeader = styled.div`
   padding: 1.25rem 1.5rem;
@@ -94,7 +96,7 @@ class AttachmentClass extends Component {
   handleSearch = debounce(value => {
     let { datagrid } = this.props
     datagrid.setSearch(value)
-  }, 150)
+  }, 500)
 
   returnCloseAttachmentManager = () => {
     if (this.props.returnCloseAttachmentManager) {
@@ -330,9 +332,14 @@ AttachmentModal.defaultProps = {
 }
 
 class AttachmentManager extends Component {
+  state = {
+    gaSearch: ''
+  }
+
   getApiConfig = () => ({
-    url: '/prodex/api/attachments/datagrid/',
+    url: `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
     searchToFilter: v => {
+      this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
       let filters = { or: [], and: [] }
       if (v && v.name) {
         filters.or = [

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Container } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
@@ -9,12 +9,15 @@ import { getSafe } from '../../../utils/functions'
 import { DatagridProvider } from '../../datagrid'
 // Constants
 import { tables, addForms, editForms, importForm, edit2Forms, sidebars } from '../constants'
+import { GA_TRACK_QUERY } from '../../../constants'
 
 /**
  * @Component
  * @category Products - Components / Products
  */
 const Products = props => {
+  const [gaSearch, setGaSearch] = useState('')
+
   const { currentTab, currentEdit2Form, currentAddForm, currentEditForm, isOpenImportPopup } = props
 
   useEffect(() => {
@@ -42,19 +45,22 @@ const Products = props => {
   const getApiConfig = () => {
     const datagridApiMap = {
       'cas-products': {
-        url: '/prodex/api/cas-products/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/cas-products/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+        searchToFilter: v => {
+          setGaSearch(getSafe(() => v.searchInput, ''))
+          return v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'CasProduct.casIndexName', values: [`%${v.searchInput}%`] },
                 { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v.searchInput}%`] }
               ]
             : []
+        }
       },
       'product-catalog': {
-        url: '/prodex/api/company-generic-products/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/company-generic-products/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+        searchToFilter: v => {
+          setGaSearch(getSafe(() => v.searchInput, ''))
+          return v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'CompanyGenericProduct.name', values: [`%${v.searchInput}%`] },
                 { operator: 'LIKE', path: 'CompanyGenericProduct.code', values: [`%${v.searchInput}%`] },
@@ -70,16 +76,19 @@ const Products = props => {
                 }
               ]
             : []
+        }
       },
       'product-groups': {
-        url: '/prodex/api/product-groups/datagrid',
-        searchToFilter: v =>
-          v && v.searchInput
+        url: `/prodex/api/product-groups/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+        searchToFilter: v => {
+          setGaSearch(getSafe(() => v.searchInput, ''))
+          return v && v.searchInput
             ? [
                 { operator: 'LIKE', path: 'ProductGroup.name', values: [`%${v.searchInput}%`] },
                 { operator: 'LIKE', path: 'ProductGroup.tags.name', values: [`%${v.searchInput}%`] }
               ]
             : []
+        }
       }
     }
 

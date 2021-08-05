@@ -10,6 +10,9 @@ import Table from './Table'
 import Tutorial from '../../tutorial/Tutorial'
 import ShippingQuotesPopup from '../../operations/components/shipping-quotes/ShippingQuotesPopupContainer'
 
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
+
 // Services
 import { getSafe } from '../../../utils/functions'
 
@@ -19,6 +22,7 @@ import { getCategories, loadData } from '../actions'
 const Alerts = props => {
   const { isOpenPopupOperations} = props
   const [selectedRows, setSelectedRows] = useState([])
+  const [gaSearch, setGaSearch] = useState('')
 
   // Similar to call componentDidMount:
   useEffect(() => {
@@ -26,8 +30,9 @@ const Alerts = props => {
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const getApiConfig = () => ({
-    url: '/prodex/api/messaging-center/datagrid',
+    url: `/prodex/api/messaging-center/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
     searchToFilter: v => {
+      setGaSearch(getSafe(() => v.searchInput, ''))
       let filters = { or: [], and: [] }
       if (v && v.searchInput) {
         filters.or.push({

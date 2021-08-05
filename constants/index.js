@@ -136,18 +136,19 @@ export const ORDER_RESOLUTION_PHONE_NUMBER = '833-321-3246'
  * @constant {string}
  */
 export const currencyUSSymbol = 'US$'
-
 /**
  * @constant {string}
  */
  export const URL_TERMS = 'https://www.bluepallet.io/terms'
-
 /**
  * @constant {string}
  */
- export const URL_PRIVACY = 'https://www.bluepallet.io/privacy'
-
- /**
-  * @constant {string}
-  */
-  export const URL_ECA = 'https://www.bluepallet.io/eca'
+export const URL_PRIVACY = 'https://www.bluepallet.io/privacy'
+/**
+ * @constant {string}
+ */
+export const URL_ECA = 'https://www.bluepallet.io/eca'
+/**
+ * @constant {string}
+ */
+export const GA_TRACK_QUERY = 'q'
