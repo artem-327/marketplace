@@ -107,3 +107,9 @@ export const DivTextValueTradeCriteria = styled.div`
   font-weight: bold;
   margin-right: 6px;
 `
+
+export const DivBarGraph = styled.div`
+  margin: 10px 10px;
+  width: 300px;
+  height: 100px;
+`

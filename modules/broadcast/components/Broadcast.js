@@ -74,10 +74,6 @@ import { errorMessages } from '~/constants/yupValidation'
 import confirm from '~/components/Confirmable/confirm'
 import { normalizeTree, getBroadcast, getNodeStatus } from '../utils'
 import CompanyInfo from './CompanyInfo'
-//Selectors
-import { makeGetCompanySharedListingDefaultMarkup } from '../../auth/selectors'
-//Constants
-import { SETTINGS } from '../../auth/constants'
 
 class Broadcast extends Component {
   state = {
@@ -119,14 +115,16 @@ class Broadcast extends Component {
   }
 
   async componentWillUnmount() {
+    const { intl: { formatMessage } } = this.props
     const isLogout = getSafe(() => Router.router.pathname, '').includes('auth')
     if (this.state.change && !this.state.saved && !isLogout) {
       await confirm(
-        <FormattedMessage id='confirm.broadcast.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-        <FormattedMessage
-          id='confirm.broadcast.unsavedChanges.content'
-          defaultMessage={`You have unsaved broadcast rules changes. Do you wish to save them?`}
-        />
+        formatMessage({ id: 'confirm.broadcast.unsavedChanges.header', defaultMessage: 'Unsaved changes' }),
+        formatMessage(
+          {
+            id: 'confirm.broadcast.unsavedChanges.content',
+            defaultMessage: 'You have unsaved broadcast rules changes. Do you wish to save them?'
+          })
       ).then(async () => this.saveBroadcastRules())
     }
   }
@@ -1253,6 +1251,7 @@ class Broadcast extends Component {
       id,
       initGlobalBroadcast,
       asModal,
+      settings,
       toastManager,
       templates,
       changedForm,
@@ -1287,7 +1286,7 @@ class Broadcast extends Component {
       //if (this.setFieldValue) this.setFieldValue('templates', dataId)
 
       if (!asModal) {
-        await initGlobalBroadcast()
+        await initGlobalBroadcast(settings)
       }
       this.setState({
         saved: true,
@@ -1479,32 +1478,15 @@ Broadcast.defaultProps = {
   dataType: ''
 }
 
-const checkTreeDataPrices = treeData =>
-  !treeData.first(node => node?.model?.priceAddition || node?.model?.priceMultiplier)
-
 const makeMapStateToProps = () => {
-  const getCompanySharedListingDefaultMarkup = makeGetCompanySharedListingDefaultMarkup()
   const mapStateToProps = state => {
     const broadcast = state?.broadcast
     const treeData = state?.broadcast?.data
       ? new TreeModel({ childrenPropertyName: 'elements' }).parse(state?.broadcast?.data)
       : new TreeModel().parse({ model: { rule: {} } })
 
-    const companySharedListingDefaultMarkup = getCompanySharedListingDefaultMarkup(state)
-
-    //setup Markup default value in a root if there doesn't exist any value in treeData
-    if (
-      treeData?.model?.type === 'root' &&
-      checkTreeDataPrices(treeData) &&
-      companySharedListingDefaultMarkup?.value &&
-      companySharedListingDefaultMarkup?.value !== SETTINGS.EMPTY_SETTING
-    ) {
-      treeData.model.broadcast = 1
-      treeData.model.priceMultiplier = +companySharedListingDefaultMarkup?.value
-      treeData.model.priceAddition = 0
-    }
-
     return {
+      settings: state?.auth?.identity?.settings,
       treeData,
       ...broadcast
     }

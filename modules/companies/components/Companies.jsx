@@ -10,10 +10,6 @@ import UsersTable from './UsersTable/Table'
 import * as Actions from '../actions'
 import AddEditCompanySidebar from './CompaniesTable/AddEditCompanySidebar'
 import UsersSidebar from './UsersTable/UsersSidebar'
-// Services
-import { getSafe } from '../../../utils/functions'
-// Constants
-import { GA_TRACK_QUERY } from '../../../constants'
 
 const tables = {
   companies: <CompaniesTable />,
@@ -84,9 +80,6 @@ const Companies = props => {
 
   const { currentTab, isOpenSidebar } = props
 
-  if (!getSafe(() => props.auth.identity.isAdmin, false))
-    return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
-  
   return (
     <DatagridProvider apiConfig={getApiConfig()} preserveFilters={true} skipInitLoad>
       <Container fluid className='flex stretched'>
@@ -104,8 +97,7 @@ const Companies = props => {
 
 const mapStateToProps = state => {
   return {
-    ...state.companiesAdmin,
-    auth: state.auth
+    ...state.companiesAdmin
   }
 }
 

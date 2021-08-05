@@ -4,6 +4,8 @@ import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 //Components
 import confirm from '../../../../components/Confirmable/confirm'
 import BasicButton from '../../../../components/buttons/BasicButton'
+import HorizontalBarGraph from '../../../../components/horizontal-bar-graph/HorizontalBarGraph'
+import PercentageIcon from '../../../../components/percentage-icon/PercentageIcon'
 //Styles
 import {
   SegmentGroupHeader,
@@ -15,7 +17,10 @@ import {
   DivPadding,
   GridColumnDetail,
   DivCircle,
-  DivModal
+  DivModal,
+  DivRiskTolerance,
+  DivPercentageIconWrapper,
+  DivBarGraph
 } from './DetailRow.style'
 import { InfoIcon } from '../../../../styles/global.style-components'
 //Constants
@@ -37,7 +42,9 @@ const Header = ({
   id,
   address,
   openGlobalAddForm,
-  intl
+  intl,
+  connectionCriteria,
+  enableButtons
 }) => (
   <Grid.Row>
     <GridColumnDetail>
@@ -48,30 +55,75 @@ const Header = ({
         </SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
-            <DivTransactions>
-              <DivPadding>
-                <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
-                <DivValue>{transactions}</DivValue>
-              </DivPadding>
-            </DivTransactions>
-            <DivAvarageValue>
-              <DivPadding>
-                <FormattedMessage id='myNetworks.detailRow.averageValue' defaultMessage='Average Value' />
-                <DivValue>
-                  <FormattedNumber
-                    minimumFractionDigits={0}
-                    maximumFractionDigits={0}
-                    style='currency'
-                    value={averageValue}
-                    currency={currency}
-                  />
-                </DivValue>
-              </DivPadding>
-            </DivAvarageValue>
+            <div>
+              <DivRiskTolerance>
+                <FormattedMessage id='myNetwork.riskTolerance' defaultMessage='Risk Tolerance' />
+              </DivRiskTolerance>
+              <DivPercentageIconWrapper>
+                <PercentageIcon value={connectionCriteria?.requester_tolerance} />
+              </DivPercentageIconWrapper>
+            </div>
+            <DivBarGraph>
+              <HorizontalBarGraph
+                values={[
+                  {
+                    value: connectionCriteria?.aggregate_insurance?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.Insurance', defaultMessage: 'Insurance' }),
+                    tooltip: connectionCriteria?.aggregate_insurance?.criteria_match_description
+                  },
+                  {
+                    value: connectionCriteria?.credit_risk?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.credit', defaultMessage: 'Credit' }),
+                    tooltip: connectionCriteria?.credit_risk?.criteria_match_description
+                  },
+                  {
+                    value: connectionCriteria?.days_beyond?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.beyondTerms', defaultMessage: 'Beyond\u00A0Terms' }),
+                    tooltip: connectionCriteria?.days_beyond?.criteria_match_description
+                  },
+                  {
+                    value: connectionCriteria?.violations?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.violations', defaultMessage: 'Violations' }),
+                    tooltip: connectionCriteria?.violations?.criteria_match_description
+                  },
+                  {
+                    value: connectionCriteria?.social_presence?.criteria_risk_tolerance,
+                    name: intl.formatMessage({ id: 'myNetwork.social', defaultMessage: 'Social' }),
+                    tooltip: connectionCriteria?.social_presence?.criteria_match_description
+                  }
+                ]}
+                max={100}
+              />
+            </DivBarGraph>
+
+            {false && (
+              <>
+                <DivTransactions>
+                  <DivPadding>
+                    <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />
+                    <DivValue>{transactions}</DivValue>
+                  </DivPadding>
+                </DivTransactions>
+                <DivAvarageValue>
+                  <DivPadding>
+                    <FormattedMessage id='myNetworks.detailRow.averageValue' defaultMessage='Average Value' />
+                    <DivValue>
+                      <FormattedNumber
+                        minimumFractionDigits={0}
+                        maximumFractionDigits={0}
+                        style='currency'
+                        value={averageValue}
+                        currency={currency}
+                      />
+                    </DivValue>
+                  </DivPadding>
+                </DivAvarageValue>
+              </>
+            )}
           </DivCollectionStat>
         </SegmentCustom>
         <SegmentCustom textAlign='right'>
-          {getSafe(() => buttonsProps.length, false)
+          {enableButtons && getSafe(() => buttonsProps.length, false)
             ? buttonsProps.map((button, i) => (
                 <BasicButton
                   key={i}
@@ -141,7 +193,9 @@ Header.propTypes = {
   ),
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
-  address: PropTypes.string
+  address: PropTypes.string,
+  connectionCriteria: PropTypes.object,
+  enableButtons: PropTypes.bool
 }
 Header.defaultProps = {
   logo: null,
@@ -158,7 +212,9 @@ Header.defaultProps = {
   ],
   buttonActionsDetailRow: () => {},
   openGlobalAddForm: null,
-  address: ''
+  address: '',
+  connectionCriteria: null,
+  enableButtons: true
 }
 
 export default injectIntl(Header)

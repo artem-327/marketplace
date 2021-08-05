@@ -67,7 +67,7 @@
     "react-redux-form": "^1.16.14",
     "react-textarea-autosize": "^7.1.2",
     "react-toast-notifications": "^2.4.0",
-    "recharts": "^1.8.5",
+    "recharts": "^2.0.10",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
     "redux-promise-middleware": "^5.0.0",

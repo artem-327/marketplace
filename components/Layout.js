@@ -292,7 +292,7 @@ class Layout extends Component {
       applicationName
     } = this.props
 
-    const { isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
+    const { isAdmin, isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
 
     let icon = Icon && (
       <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'>
@@ -385,7 +385,7 @@ class Layout extends Component {
                       defaultMessage: 'My Profile'
                     })}
                   </Dropdown.Item>
-                  {getSafe(() => auth.identity.isAdmin, false) && takeover && (
+                  {isAdmin && takeover && (
                     <Dropdown.Item
                       as={Menu.Item}
                       onClick={() => takeOverCompanyFinish()}
@@ -396,15 +396,11 @@ class Layout extends Component {
                       })}
                     </Dropdown.Item>
                   )}
-                  {(!getSafe(() => auth.identity.isAdmin, false) ||
-                    takeover ||
-                    !getSafe(() => auth.identity.isCompanyAdmin, false)) && (
-                    <Menu.Item
-                      onClick={() => triggerSystemSettingsModal(true)}
-                      data-test='navigation_menu_settings_lnk'>
-                      {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
-                    </Menu.Item>
-                  )}
+                  <Menu.Item
+                    onClick={() => triggerSystemSettingsModal(true)}
+                    data-test='navigation_menu_settings_lnk'>
+                    {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                  </Menu.Item>
                   <Dropdown.Item
                     as={Menu.Item}
                     onClick={() => window.open(URL_TERMS)}
@@ -427,7 +423,7 @@ class Layout extends Component {
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-              {auth && auth.identity && !auth.identity.isAdmin && !isOperator && !isOrderOperator && (
+              {!isAdmin && !isOperator && !isOrderOperator && (
                 <>
                   <Menu.Item
                     onClick={() => Router.push('/cart')}
@@ -458,7 +454,7 @@ class Layout extends Component {
                   )}
                 </>
               )}
-              {auth && auth.identity && auth.identity.isAdmin && (
+              {(isAdmin || isOperator || isOrderOperator) && (
                 <Menu.Item
                   onClick={() => Router.push('/alerts')}
                   data-test='navigation_notifications'

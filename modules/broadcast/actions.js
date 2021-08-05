@@ -2,6 +2,7 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import * as api from './api'
 import { currency } from '../../constants/index'
 import { getSafe } from '../../utils/functions'
+import { SETTINGS } from '../auth/constants'
 
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => {
   const data = await api.loadRules(offer.id)
@@ -18,8 +19,22 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => 
   }
 })
 
-export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async () => {
+export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async settings => {
   let data = await api.loadGeneralRules()
+
+  const companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+
+  //setup Markup default value in a root if there doesn't exist any value in treeData
+  if (
+    data?.type === 'root' &&
+    !(data?.priceAddition || data?.priceMultiplier) &&
+    companySharedListingDefaultMarkup?.value &&
+    companySharedListingDefaultMarkup?.value !== SETTINGS.EMPTY_SETTING
+  ) {
+    data.broadcast = 1
+    data.priceMultiplier = +companySharedListingDefaultMarkup?.value
+    data.priceAddition = 0
+  }
 
   return {
     data,

@@ -34,7 +34,8 @@ const makeMapStateToProps = () => {
       query: getQueryDatagrid(props),
       loadingDatagrid: getLoadingDatagrid(props) || getLoadingMyNetwork(state),
       inviteDetailCompany: getInviteDetailCompanyMyNetwork(state),
-      loadingDetailRow: getLoadingDetailRowMyNetwork(state)
+      loadingDetailRow: getLoadingDetailRowMyNetwork(state),
+      isCompanyAdmin: state.auth.identity ? state.auth.identity.isCompanyAdmin : false
     }
   }
   return mapStateToProps

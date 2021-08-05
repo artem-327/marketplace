@@ -264,6 +264,15 @@ class Navigation extends Component {
       isAdmin,
       isOperator,
       isOrderOperator,
+      isClientCompanyAdmin,
+      isClientCompanyManager,
+      isCompanyAdmin,
+      isMerchant,
+      isOrderProcessing,
+      isOrderView,
+      isProductCatalogAdmin,
+      isProductOfferManager,
+      isUserAdmin,
       auth,
       takeover,
       intl: { formatMessage },
@@ -331,12 +340,7 @@ class Navigation extends Component {
       )
     }
 
-    const { isCompanyAdmin, isUserAdmin, isProductCatalogAdmin, company } = getSafe(() => auth.identity, {
-      isCompanyAdmin: null,
-      isUserAdmin: null,
-      isProductCatalogAdmin: null,
-      company: null
-    })
+    const { company } = getSafe(() => auth.identity, { company: null })
 
     const operationsTabs = !isAdmin && !isOperator && isOrderOperator ? orderOperatorTabs : operationsDefaultTabs
 
@@ -351,192 +355,198 @@ class Navigation extends Component {
               </>
             </MenuLink>
 
-            <DropdownItem
-              icon={<Layers size={22} />}
-              text={
-                <>
-                  <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
-                  {inventory ? <ChevronUp /> : <ChevronDown />}
-                </>
-              }
-              className={inventory ? 'opened' : null}
-              opened={inventory}
-              onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'inventory'}
-              data-test='navigation_menu_inventory_drpdn'>
-              <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
-                <PerfectScrollbar>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/inventory/my-listings'
-                    dataTest='navigation_menu_inventory_my_listings_drpdn'>
-                    {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/inventory/my-products'
-                    dataTest='navigation_menu_inventory_my_products_drpdn'>
-                    {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/inventory/shared-listings'
-                    dataTest='navigation_menu_inventory_shared_listings_drpdn'>
-                    {formatMessage({ id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings' })}
-                  </Dropdown.Item>
-                  {isCompanyAdmin && (
+            {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
+              <DropdownItem
+                icon={<Layers size={22} />}
+                text={
+                  <>
+                    <FormattedMessage id='navigation.inventory' defaultMessage='Inventory' />
+                    {inventory ? <ChevronUp /> : <ChevronDown />}
+                  </>
+                }
+                className={inventory ? 'opened' : null}
+                opened={inventory}
+                onClick={() => this.toggleOpened('inventory', '/inventory/my-listings')}
+                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                refId={'inventory'}
+                data-test='navigation_menu_inventory_drpdn'>
+                <Dropdown.Menu data-test='navigation_menu_inventory_menu'>
+                  <PerfectScrollbar>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/inventory/global-price-book'
-                      dataTest='navigation_menu_inventory_global_price_book_drpdn'>
-                      {formatMessage({
-                        id: 'navigation.inventoryGlobalPriceBook',
-                        defaultMessage: 'Global Price Book'
-                      })}
+                      to='/inventory/my-listings'
+                      dataTest='navigation_menu_inventory_my_listings_drpdn'>
+                      {formatMessage({ id: 'navigation.inventoryMyListings', defaultMessage: 'My Listings' })}
                     </Dropdown.Item>
-                  )}
-                </PerfectScrollbar>
-              </Dropdown.Menu>
-            </DropdownItem>
-
-            <DropdownItem
-              icon={<ShoppingBag size={22} />}
-              text={
-                <>
-                  <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace' />
-                  {marketplace ? <ChevronUp /> : <ChevronDown />}
-                </>
-              }
-              className={marketplace ? 'opened' : null}
-              opened={marketplace}
-              onClick={() => this.toggleOpened('marketplace', '/marketplace/listings')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'marketplace'}
-              data-test='navigation_menu_marketplace_drpdn'>
-              <Dropdown.Menu data-test='navigation_menu_marketplace_menu'>
-                <PerfectScrollbar>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/marketplace/listings'
-                    dataTest='navigation_menu_marketplace_listings_drpdn'>
-                    {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/marketplace/bids-sent'
-                    dataTest='navigation_menu_marketplace_bids_sent_drpdn'>
-                    {formatMessage({ id: 'navigation.marketplaceBidsSent', defaultMessage: 'Bids Sent' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={MenuLink}
-                    to='/marketplace/bids-received'
-                    dataTest='navigation_menu_marketplace_bids_received_drpdn'>
-                    {formatMessage({ id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received' })}
-                  </Dropdown.Item>
-                  {
-                    /* DT-293 temporary disabled */ false && (
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/inventory/my-products'
+                      dataTest='navigation_menu_inventory_my_products_drpdn'>
+                      {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/inventory/shared-listings'
+                      dataTest='navigation_menu_inventory_shared_listings_drpdn'>
+                      {formatMessage({ id: 'navigation.inventorySharedListings', defaultMessage: 'Shared Listings' })}
+                    </Dropdown.Item>
+                    {isCompanyAdmin && (
                       <Dropdown.Item
                         as={MenuLink}
-                        to='/marketplace/holds'
-                        dataTest='navigation_menu_marketplace_holds_drpdn'>
-                        {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
+                        to='/inventory/global-price-book'
+                        dataTest='navigation_menu_inventory_global_price_book_drpdn'>
+                        {formatMessage({
+                          id: 'navigation.inventoryGlobalPriceBook',
+                          defaultMessage: 'Global Price Book'
+                        })}
                       </Dropdown.Item>
-                    )
-                  }
-                </PerfectScrollbar>
-              </Dropdown.Menu>
-            </DropdownItem>
+                    )}
+                  </PerfectScrollbar>
+                </Dropdown.Menu>
+              </DropdownItem>
+            )}
 
-            <DropdownItem
-              icon={<Globe size={22} />}
-              text={
-                <>
-                  <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
-                  {myNetwork ? <ChevronUp /> : <ChevronDown />}
-                </>
-              }
-              className={myNetwork ? 'opened' : null}
-              opened={myNetwork}
-              onClick={() => this.toggleOpened('myNetwork', '/my-network')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'myNetwork'}
-              data-test='navigation_menu_my_network_drpdn'>
-              <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
-                <PerfectScrollbar>
-                  <Dropdown.Item
-                    as={DivItem}
-                    pointer={true}
-                    dataTest='navigation_menu_my_Network_all_drpdn'
-                    status={NETWORK_STATUS.ALL}
-                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
-                    {formatMessage(
-                      {
-                        id: 'navigation.myNetworkAll',
-                        defaultMessage: 'All ({value})'
-                      },
-                      { value: allNetworks }
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={DivItem}
-                    pointer={true}
-                    status={NETWORK_STATUS.ACTIVE}
-                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
-                    dataTest='navigation_menu_my_network_active_drpdn'>
-                    {formatMessage(
-                      {
-                        id: 'navigation.myNetworkActive',
-                        defaultMessage: 'Active ({value})'
-                      },
-                      { value: connectedNetworks }
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={DivItem}
-                    pointer={true}
-                    status={NETWORK_STATUS.PENDING}
-                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
-                    dataTest='navigation_menu_my_network_pending_drpdn'>
-                    {formatMessage(
-                      {
-                        id: 'navigation.myNetworkPending',
-                        defaultMessage: 'Pending ({value})'
-                      },
-                      { value: pendingNetworks }
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={DivItem}
-                    pointer={true}
-                    status={NETWORK_STATUS.DECLINED}
-                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
-                    dataTest='navigation_menu_my_network_declined_drpdn'>
-                    {formatMessage(
-                      {
-                        id: 'navigation.myNetworkDeclined',
-                        defaultMessage: 'Declined ({value})'
-                      },
-                      { value: declinedNetworks }
-                    )}
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as={DivItem}
-                    pointer={true}
-                    status={NETWORK_STATUS.DISCONNECTED}
-                    networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
-                    dataTest='navigation_menu_my_network_disconnected_drpdn'>
-                    {formatMessage(
-                      {
-                        id: 'navigation.myNetworkDisconnected',
-                        defaultMessage: 'Disconnected ({value})'
-                      },
-                      { value: disconnectedNetworks }
-                    )}
-                  </Dropdown.Item>
-                </PerfectScrollbar>
-              </Dropdown.Menu>
-            </DropdownItem>
+            {(isCompanyAdmin || isMerchant) && (
+              <DropdownItem
+                icon={<ShoppingBag size={22} />}
+                text={
+                  <>
+                    <FormattedMessage id='navigation.marketplace' defaultMessage='Marketplace' />
+                    {marketplace ? <ChevronUp /> : <ChevronDown />}
+                  </>
+                }
+                className={marketplace ? 'opened' : null}
+                opened={marketplace}
+                onClick={() => this.toggleOpened('marketplace', '/marketplace/listings')}
+                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                refId={'marketplace'}
+                data-test='navigation_menu_marketplace_drpdn'>
+                <Dropdown.Menu data-test='navigation_menu_marketplace_menu'>
+                  <PerfectScrollbar>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/marketplace/listings'
+                      dataTest='navigation_menu_marketplace_listings_drpdn'>
+                      {formatMessage({ id: 'navigation.marketplaceListings', defaultMessage: 'Listings' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/marketplace/bids-sent'
+                      dataTest='navigation_menu_marketplace_bids_sent_drpdn'>
+                      {formatMessage({ id: 'navigation.marketplaceBidsSent', defaultMessage: 'Bids Sent' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/marketplace/bids-received'
+                      dataTest='navigation_menu_marketplace_bids_received_drpdn'>
+                      {formatMessage({ id: 'navigation.marketplaceBidsReceived', defaultMessage: 'Bids Received' })}
+                    </Dropdown.Item>
+                    {
+                      /* DT-293 temporary disabled */ false && (
+                        <Dropdown.Item
+                          as={MenuLink}
+                          to='/marketplace/holds'
+                          dataTest='navigation_menu_marketplace_holds_drpdn'>
+                          {formatMessage({ id: 'navigation.marketplaceHolds', defaultMessage: 'Holds' })}
+                        </Dropdown.Item>
+                      )
+                    }
+                  </PerfectScrollbar>
+                </Dropdown.Menu>
+              </DropdownItem>
+            )}
+
+            {(isCompanyAdmin || isOrderProcessing) && (
+              <DropdownItem
+                icon={<Globe size={22} />}
+                text={
+                  <>
+                    <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+                    {myNetwork ? <ChevronUp /> : <ChevronDown />}
+                  </>
+                }
+                className={myNetwork ? 'opened' : null}
+                opened={myNetwork}
+                onClick={() => this.toggleOpened('myNetwork', '/my-network')}
+                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                refId={'myNetwork'}
+                data-test='navigation_menu_my_network_drpdn'>
+                <Dropdown.Menu data-test='navigation_menu_my_Network_menu'>
+                  <PerfectScrollbar>
+                    <Dropdown.Item
+                      as={DivItem}
+                      pointer={true}
+                      dataTest='navigation_menu_my_Network_all_drpdn'
+                      status={NETWORK_STATUS.ALL}
+                      networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ALL })}>
+                      {formatMessage(
+                        {
+                          id: 'navigation.myNetworkAll',
+                          defaultMessage: 'All ({value})'
+                        },
+                        { value: allNetworks }
+                      )}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={DivItem}
+                      pointer={true}
+                      status={NETWORK_STATUS.ACTIVE}
+                      networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.ACTIVE })}
+                      dataTest='navigation_menu_my_network_active_drpdn'>
+                      {formatMessage(
+                        {
+                          id: 'navigation.myNetworkActive',
+                          defaultMessage: 'Active ({value})'
+                        },
+                        { value: connectedNetworks }
+                      )}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={DivItem}
+                      pointer={true}
+                      status={NETWORK_STATUS.PENDING}
+                      networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.PENDING })}
+                      dataTest='navigation_menu_my_network_pending_drpdn'>
+                      {formatMessage(
+                        {
+                          id: 'navigation.myNetworkPending',
+                          defaultMessage: 'Pending ({value})'
+                        },
+                        { value: pendingNetworks }
+                      )}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={DivItem}
+                      pointer={true}
+                      status={NETWORK_STATUS.DECLINED}
+                      networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DECLINED })}
+                      dataTest='navigation_menu_my_network_declined_drpdn'>
+                      {formatMessage(
+                        {
+                          id: 'navigation.myNetworkDeclined',
+                          defaultMessage: 'Declined ({value})'
+                        },
+                        { value: declinedNetworks }
+                      )}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={DivItem}
+                      pointer={true}
+                      status={NETWORK_STATUS.DISCONNECTED}
+                      networkStatus={() => Datagrid?.setQuery({ status: NETWORK_STATUS.DISCONNECTED })}
+                      dataTest='navigation_menu_my_network_disconnected_drpdn'>
+                      {formatMessage(
+                        {
+                          id: 'navigation.myNetworkDisconnected',
+                          defaultMessage: 'Disconnected ({value})'
+                        },
+                        { value: disconnectedNetworks }
+                      )}
+                    </Dropdown.Item>
+                  </PerfectScrollbar>
+                </Dropdown.Menu>
+              </DropdownItem>
+            )}
 
             {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
             {false && (
@@ -580,31 +590,34 @@ class Navigation extends Component {
                 </Dropdown.Menu>
               </DropdownItem>
             )}
-            <DropdownItem
-              icon={<FileText size={22} />}
-              text={
-                <>
-                  <FormattedMessage id='navigation.orders' defaultMessage='Orders' />
-                  {orders ? <ChevronUp /> : <ChevronDown />}
-                </>
-              }
-              className={orders ? 'opened' : null}
-              opened={orders.toString()}
-              onClick={() => this.toggleOpened('orders', '/orders/sales')}
-              refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-              refId={'orders'}
-              data-test='navigation_orders_drpdn'>
-              <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
-                <PerfectScrollbar>
-                  <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
-                    {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
-                  </Dropdown.Item>
-                  <Dropdown.Item as={MenuLink} to='/orders/purchase' dataTest='navigation_orders_purchase_orders_drpdn'>
-                    {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
-                  </Dropdown.Item>
-                </PerfectScrollbar>
-              </Dropdown.Menu>
-            </DropdownItem>
+
+            {(isCompanyAdmin || isMerchant || isOrderProcessing || isOrderView) && (
+              <DropdownItem
+                icon={<FileText size={22} />}
+                text={
+                  <>
+                    <FormattedMessage id='navigation.orders' defaultMessage='Orders' />
+                    {orders ? <ChevronUp /> : <ChevronDown />}
+                  </>
+                }
+                className={orders ? 'opened' : null}
+                opened={orders.toString()}
+                onClick={() => this.toggleOpened('orders', '/orders/sales')}
+                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                refId={'orders'}
+                data-test='navigation_orders_drpdn'>
+                <Dropdown.Menu data-test='navigation_menu_orders_drpdn_menu'>
+                  <PerfectScrollbar>
+                    <Dropdown.Item as={MenuLink} to='/orders/sales' dataTest='navigation_orders_sales_orders_drpdn'>
+                      {formatMessage({ id: 'navigation.salesOrders', defaultMessage: 'Sales Orders' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item as={MenuLink} to='/orders/purchase' dataTest='navigation_orders_purchase_orders_drpdn'>
+                      {formatMessage({ id: 'navigation.purchaseOrders', defaultMessage: 'Purchase Orders' })}
+                    </Dropdown.Item>
+                  </PerfectScrollbar>
+                </Dropdown.Menu>
+              </DropdownItem>
+            )}
 
             {(isCompanyAdmin || isUserAdmin) && (
               <DropdownItem
@@ -989,8 +1002,17 @@ export default withAuth(
         tabsNames: store?.settings?.tabsNames,
         isAdmin: getSafe(() => store.auth.identity.isAdmin, false),
         isOrderOperator: getSafe(() => store.auth.identity.isOrderOperator, false),
-        collapsedMenu: store?.layout?.collapsedMenu,
         isOperator: getSafe(() => store.auth.identity.roles, []).some(role => role.role === 'OPERATOR'),
+        isClientCompanyAdmin: store?.auth?.identity?.isClientCompanyAdmin,
+        isClientCompanyManager: store?.auth?.identity?.isClientCompanyManager,
+        isCompanyAdmin: store?.auth?.identity?.isCompanyAdmin,
+        isMerchant: store?.auth?.identity?.isMerchant,
+        isOrderProcessing: store?.auth?.identity?.isOrderProcessing,
+        isOrderView: store?.auth?.identity?.isOrderView,
+        isProductCatalogAdmin: store?.auth?.identity?.isProductCatalogAdmin,
+        isProductOfferManager: store?.auth?.identity?.isProductOfferManager,
+        isUserAdmin: store?.auth?.identity?.isUserAdmin,
+        collapsedMenu: store?.layout?.collapsedMenu,
         companiesTabsNames: store?.companiesAdmin?.tabsNames,
         productsTabsNames: store?.productsAdmin?.tabsNames,
         alertTab: store?.alerts?.topMenuTab,

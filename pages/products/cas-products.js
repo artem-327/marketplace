@@ -1,20 +1,30 @@
 import { Component } from 'react'
+import { connect } from 'react-redux'
+import { displayErrorForbidden } from '../../modules/errors/actions'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import ProductsPage from '~/modules/products'
 import { injectIntl } from 'react-intl'
 
 class Index extends Component {
+  componentDidMount() {
+    if (!this.props.auth?.identity?.isAdmin) this.props.displayErrorForbidden()
+  }
+
   render() {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      auth
     } = this.props
     return (
       <Layout title={formatMessage({ id: 'title.products.casProducts', defaultMessage: 'CAS Products' })}>
-        <ProductsPage currentTab={'cas-products'} />
+        {!auth?.identity?.isAdmin
+          ? (null)
+          : (<ProductsPage currentTab={'cas-products'} />)
+        }
       </Layout>
     )
   }
 }
 
-export default securePage(injectIntl(Index))
+export default securePage(connect(store => ({ auth: store.auth }), { displayErrorForbidden })(injectIntl(Index)))

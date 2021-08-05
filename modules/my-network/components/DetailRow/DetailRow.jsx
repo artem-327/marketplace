@@ -33,7 +33,8 @@ const DetailRow = ({
   buttonActionsDetailRow = null,
   openGlobalAddForm,
   loadingDetailRow = false,
-  updating = false
+  updating = false,
+  enableButtons
 }) => (
   <StyledGrid>
     <Dimmer active={updating} inverted>
@@ -48,15 +49,17 @@ const DetailRow = ({
       buttonActionsDetailRow={buttonActionsDetailRow}
       address={row?.address}
       openGlobalAddForm={openGlobalAddForm}
+      connectionCriteria={row?.connectionCriteria}
+      enableButtons={enableButtons}
     />
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleTradeCriteria>
-          <FormattedMessage id='title.settings.tradeCriteria' defaultMessage='Trade Criteria' />
+          <FormattedMessage id='title.settings.metrics' defaultMessage='Metrics' />
         </DivTitleTradeCriteria>
       </GridColumnDetail>
     </Grid.Row>
-    <TradeCriteria as='div' row={row?.tradeCriteria} attributes={ATTRIBUTES_TRADE_CRITERIA} />
+    <TradeCriteria as='div' row={row?.metrics} attributes={ATTRIBUTES_TRADE_CRITERIA} />
     {loadingDetailRow ? (
       <GridRowLoadingBottomSegment>
         <Dimmer active inverted>
@@ -91,7 +94,8 @@ DetailRow.propTypes = {
   buttonActionsDetailRow: PropTypes.func,
   openGlobalAddForm: PropTypes.func,
   loadingDetailRow: PropTypes.bool,
-  updating: PropTypes.bool
+  updating: PropTypes.bool,
+  enableButtons: PropTypes.bool
 }
 
 DetailRow.defaultProps = {
@@ -100,7 +104,8 @@ DetailRow.defaultProps = {
   buttonActionsDetailRow: null,
   openGlobalAddForm: null,
   loadingDetailRow: false,
-  updating: false
+  updating: false,
+  enableButtons: true
 }
 
 export default DetailRow
