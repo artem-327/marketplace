@@ -6,7 +6,7 @@ context("Company Product Catalog CRUD", () => {
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.intercept("POST", "/prodex/api/company-products/datagrid?type=ALL").as("productLoading")
+        cy.intercept("POST", "/prodex/api/company-products/datagrid?type=ALL*").as("productLoading")
         cy.intercept("POST", "/prodex/api/company-products").as("productCreate")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
@@ -16,9 +16,7 @@ context("Company Product Catalog CRUD", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@inventoryLoading", { timeout: 100000 })
-        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
-
-        cy.get('[data-test=navigation_menu_inventory_my_products_drpdn]').click()
+        cy.visit("inventory/my-products")
 
         cy.wait("@productLoading")
         cy.waitForUI()

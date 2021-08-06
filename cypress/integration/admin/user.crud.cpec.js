@@ -11,9 +11,7 @@ context("Prodex Admin User CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
-        cy.intercept("POST", "/prodex/api/users/datagrid/all").as("usersLogin")
+        cy.intercept("POST", "/prodex/api/users/datagrid/all*").as("usersLogin")
         cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/users").as("usersSave")
         cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")

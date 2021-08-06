@@ -14,7 +14,7 @@ context("Trade Criteria", () => {
         cy.wait("@tradePassLoading", { timeout: 100000 })
     })
 
-    it("Criteria shown and matching", () => {
+    xit("Criteria shown and matching", () => {
         cy.get("[class*='TextValueTradeCriteria']").each((criteria, index, list) => {
             cy.wrap(criteria).invoke('text').as("myCriteria" + index)
         })

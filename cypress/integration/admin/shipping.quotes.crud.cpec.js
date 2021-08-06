@@ -12,7 +12,7 @@ context("Shipping quotes CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/shipment/manual-quotes/datagrid").as("quotesLoad")
+        cy.intercept("POST", "/prodex/api/shipment/manual-quotes/datagrid*").as("quotesLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

@@ -12,7 +12,7 @@ context("Tags CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/tags/datagrid").as("tagsLoad")
+        cy.intercept("POST", "/prodex/api/tags/datagrid*").as("tagsLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

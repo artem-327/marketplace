@@ -13,7 +13,7 @@ context("Market Segments CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/market-segments/datagrid").as("segments")
+        cy.intercept("POST", "/prodex/api/market-segments/datagrid*").as("segments")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

@@ -12,7 +12,7 @@ context("Companies CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")
-        cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
+        cy.intercept("POST", "/prodex/api/companies/datagrid*").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
         cy.intercept("GET", "/_next/static/webpack/").as("datagridLoad")
 

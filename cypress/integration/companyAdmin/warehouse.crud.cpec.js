@@ -8,9 +8,9 @@ context("Prodex Warehouse CRUD", () => {
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
-        cy.intercept("POST", "/prodex/api/branches/warehouses/datagrid").as("warehouseLoading")
+        cy.intercept("POST", "/prodex/api/branches/warehouses/datagrid*").as("warehouseLoading")
         cy.intercept("POST", "/prodex/api/branches?createWarehouse=true").as("warehouseCreate")
-        cy.intercept("POST", "/prodex/api/customers/datagrid").as("customersPOST")
+        cy.intercept("POST", "/prodex/api/customers/datagrid*").as("customersPOST")
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.deleteWholeCart(token)

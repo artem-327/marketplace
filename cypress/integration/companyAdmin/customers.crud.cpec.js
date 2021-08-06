@@ -5,7 +5,7 @@ context("Prodex Customers CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
-        cy.intercept("POST", "/prodex/api/customers/datagrid").as("customersLoading")
+        cy.intercept("POST", "/prodex/api/customers/datagrid*").as("customersLoading")
 
         cy.viewport(2250, 2250)
 

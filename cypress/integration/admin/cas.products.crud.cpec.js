@@ -13,7 +13,7 @@ context("CAS products CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/cas-products/datagrid").as("CASloading")
+        cy.intercept("POST", "/prodex/api/cas-products/datagrid*").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -123,6 +123,8 @@ context("CAS products CRUD", () => {
 
         cy.get("input[id='field_input_productAltNames[0].tradeName']")
             .should("not.exist")
+
+        cy.wait("@nameGetting")
 
         cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
 

@@ -8,7 +8,7 @@ context("Shopping cart CRUD", () => {
         cy.viewport(2500, 3500)
         cy.intercept("GET", '/prodex/api/product-groups/search**').as('groupsLoading')
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid').as('marketplaceLoading')
+        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid*').as('marketplaceLoading')
 
         cy.FElogin(userJSON.email, userJSON.password)
 

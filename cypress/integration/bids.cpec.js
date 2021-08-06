@@ -9,11 +9,11 @@ context("Bids Tests", () => {
     beforeEach(function () {
         cy.viewport(2500, 3500)
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid').as('marketplaceLoading')
+        cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid*').as('marketplaceLoading')
         cy.intercept("POST", "/prodex/api/product-offer-bids").as("createdBid")
         cy.intercept("PATCH", "/prodex/api/product-offer-bids/id/**").as("bidAction")
-        cy.intercept("POST", "/prodex/api/product-offer-bids/own/datagrid").as("myBids")
-        cy.intercept("POST", "/prodex/api/product-offer-bids/other/datagrid").as("otherBids")
+        cy.intercept("POST", "/prodex/api/product-offer-bids/own/datagrid*").as("myBids")
+        cy.intercept("POST", "/prodex/api/product-offer-bids/other/datagrid*").as("otherBids")
         cy.intercept("DELETE", "/prodex/api/product-offer-bids/id/**").as("deleteBid")
 
         cy.FElogin(userJSON.email, userJSON.password)

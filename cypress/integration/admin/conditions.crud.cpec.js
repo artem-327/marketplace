@@ -13,7 +13,7 @@ context("Conditions CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/product-conditions/datagrid").as("formsLoad")
+        cy.intercept("POST", "/prodex/api/product-conditions/datagrid*").as("formsLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 

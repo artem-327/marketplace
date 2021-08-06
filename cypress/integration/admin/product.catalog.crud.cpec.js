@@ -16,7 +16,7 @@ context("Generic Company Product CRUD", () => {
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
-        cy.intercept("POST", "/prodex/api/company-generic-products/datagrid").as("genericLoading")
+        cy.intercept("POST", "/prodex/api/company-generic-products/datagrid*").as("genericLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
@@ -90,6 +90,7 @@ context("Generic Company Product CRUD", () => {
         cy.searchInList("Test")
         cy.waitForUI()
         cy.openElement(productId, 4)
+        cy.wait("@nameGetting")
 
         cy.get("[data-test=settings_product_alt_name_add_btn]")
             .click()
@@ -119,6 +120,7 @@ context("Generic Company Product CRUD", () => {
         cy.searchInList("Test")
         cy.waitForUI()
         cy.openElement(productId, 4)
+        cy.wait("@nameGetting")
 
         cy.get("input[id='field_input_productAltNames[0].alternativeName']")
             .should("have.value", "QAonium")
@@ -129,6 +131,8 @@ context("Generic Company Product CRUD", () => {
 
         cy.get("input[id='field_input_productAltNames[0].tradeName']")
             .should("not.exist")
+
+        cy.wait("@nameGetting")
 
         cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
