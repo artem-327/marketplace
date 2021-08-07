@@ -4,8 +4,10 @@ import ShippingQuotesTable from './ShippingQuotesTable'
 // Actions
 import {
   deleteShippingQuote,
-  openPopup
+  openPopup,
+  generateBOL
 } from '../../actions'
+import { downloadAttachment } from '../../../inventory/actions'
 // Selectors
 import { makeGetFilterValue, makeGetLoading } from '../../selectors'
 // Services
@@ -14,18 +16,20 @@ import { getRows } from './ShippingQuotes.services'
 
 const mapDispatchToProps = {
     deleteShippingQuote,
-    openPopup
+    openPopup,
+    downloadAttachment,
+    generateBOL
 }
 
 const makeMapStateToProps = () => {
     const getFilterValue = makeGetFilterValue()
     const getLoading = makeGetLoading()
 
-    const mapStateToProps = (state, { datagrid }) => {
+    const mapStateToProps = (state, props) => {
         return {
             filterValue: getFilterValue(state),
             loading: getLoading(state),
-            rows: getRows(datagrid)
+            rows: getRows(props)
         }
     }
     return mapStateToProps

@@ -81,3 +81,4 @@ export const searchManualQuoteRequest = createAsyncAction('OPERATIONS_SEARCH_MAN
 export const resolveDisputeAccept = createAsyncAction('RESOLVE_DISPUTE_ACCEPT', (orderId) => api.resolveDisputeAccept(orderId))
 export const resolveDisputeCredit = createAsyncAction('RESOLVE_DISPUTE_CREDIT', (orderId, amount) => api.resolveDisputeCredit(orderId, amount))
 export const resolveDisputeReject = createAsyncAction('RESOLVE_DISPUTE_REJECT', (orderId) => api.resolveDisputeReject(orderId))
+export const generateBOL = createAsyncAction('SHIPPING_QUOTE_GENERATE_BOL', (id, carrierName, pickupDate) => api.generateBOL(id, carrierName, pickupDate))

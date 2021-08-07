@@ -32,5 +32,8 @@ export default {
     api
       .patch(`/prodex/api/purchase-orders/${orderId}/resolve-dispute-reject`)
       .then(response => response.data)
-      .catch(e => console.log(e))
+      .catch(e => console.log(e)),
+  generateBOL: (id, carrierName, pickupDate) => 
+    api
+      .post(`/prodex/api/shipment/manual-quotes/id/${id}/generate-bol`, {carrierName, pickupDate}).then(response => response.data)
 }

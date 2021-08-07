@@ -22,7 +22,8 @@ import {
   searchManualQuoteRequest,
   resolveDisputeAccept,
   resolveDisputeCredit,
-  resolveDisputeReject
+  resolveDisputeReject,
+  generateBOL
 } from './actions'
 
 
