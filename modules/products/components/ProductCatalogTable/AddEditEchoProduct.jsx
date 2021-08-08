@@ -1230,7 +1230,7 @@ const AddEditEchoProduct = props => {
                   defaultMessage: 'Start typing to begin search'
                 }),
                 onSearchChange: handleCompanySearchChange,
-                onChange: (_, { value }) => handleCompanyChange(value, allProductGroupsOptions)
+                onChange: (_, { value }) => handleCompanyChange(value, allCompanyOptions)
               }}
             />
           </GridColumnForm>

@@ -18,7 +18,7 @@ import {
   getUnNumbersByString,
   searchProductGroups,
   searchCompany
-} from '../../../products/actions'
+} from '../../actions'
 import { getDocumentTypes, getHazardClasses, getPackagingGroups } from '../../../global-data/actions'
 import {
   makeGetCurrentAddForm,
