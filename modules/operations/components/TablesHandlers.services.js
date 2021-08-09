@@ -109,18 +109,57 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
     separator = getLocaleDateFormat().search(' ') > 0 ? `${separator} ` : separator
     
     const dateValue = data.value
-    if(dateValue.length === 0 || 
-      dateValue.length === 10 && dateValue[2] === separator && dateValue[5] === separator || 
-      dateValue.length === 10 && dateValue[1] === separator.split('')[0] && dateValue[5] === separator.split('')[0] || 
-      dateValue.length === 12 && dateValue[2] === separator.split('')[0] && dateValue[6] === separator.split('')[0]) {
-              
+    if(dateValue.length === 0 || dateValue.length > 9) {
       const dateFromArray = data.name === 'dateFrom' ? dateValue.split(separator) : formikProps?.values?.dateFrom?.split(separator)
       const dateToArray = data.name === 'dateTo' ? dateValue.split(separator) : formikProps?.values?.dateTo?.split(separator)
-      let dateFrom = new Date(dateFromArray[2], dateFromArray[0] - 1, dateFromArray[1])
-      let dateTo = new Date(dateToArray[2], dateToArray[0] - 1, dateToArray[1])
+      let dateFrom = !!dateFromArray[0] ? new Date(dateFromArray[2], dateFromArray[0] - 1, dateFromArray[1]) : ''
+      let dateTo = !!dateToArray[0] ? new Date(dateToArray[2], dateToArray[0] - 1, dateToArray[1]) : ''
       const { toastManager } = props
+
+      if ( (dateFrom === '' || !!dateFrom && Object.prototype.toString.call(dateFrom) === "[object Date]" && !isNaN(dateFrom.getTime())) &&
+          (dateTo === '' || !!dateTo && Object.prototype.toString.call(dateTo) === "[object Date]" && !isNaN(dateTo.getTime()))
+        ) {
+        if(dateFrom !== '' && dateTo !=='' && dateFrom > dateTo) {
+          toastManager.add(
+            generateToastMarkup(
+              <FormattedMessage
+                id='global.error'
+                defaultMessage='Error!'
+              />,
+              <FormattedMessage
+                id='orders.fromDateMustBeSameOrBeforeToDate'
+                defaultMessage={`From date must be same or before To date, please fix this issue first!`}
+              />
+            ),
+            {
+              appearance: 'error',
+              pauseOnHover: true
+            }
+          )
+        } else {
+          setState({
+            ...state,
+            [currentTab]: {
+              ...state[currentTab],
+              [data.name]: data.value
+            }
+          })
       
-      if(dateFrom > dateTo) {
+          props.saveFilters({
+            ...state,
+            [currentTab]: {
+              ...state[currentTab],
+              [data.name]: data.value
+            }
+          })
+      
+          const filter = {
+            ...state[currentTab],
+            [data.name]: data.value
+          }
+          handleFiltersValue(filter)
+        }
+      } else {
         toastManager.add(
           generateToastMarkup(
             <FormattedMessage
@@ -128,8 +167,8 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
               defaultMessage='Error!'
             />,
             <FormattedMessage
-              id='orders.fromDateMustBeSameOrBeforeToDate'
-              defaultMessage={`From date must be same or before To date, please fix this issue first!`}
+              id='orders.pleaseEnterTheValidDate'
+              defaultMessage={`Please enter the valid date!`}
             />
           ),
           {
@@ -137,28 +176,6 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
             pauseOnHover: true
           }
         )
-      } else {
-        setState({
-          ...state,
-          [currentTab]: {
-            ...state[currentTab],
-            [data.name]: data.value
-          }
-        })
-      
-        props.saveFilters({
-          ...state,
-          [currentTab]: {
-            ...state[currentTab],
-            [data.name]: data.value
-          }
-        })
-      
-        const filter = {
-          ...state[currentTab],
-          [data.name]: data.value
-        }
-        handleFiltersValue(filter, props, formikProps)
       }
     }
   } else {
