@@ -5,7 +5,7 @@ import ShippingQuotesTable from './ShippingQuotesTable'
 import {
   deleteShippingQuote,
   openPopup,
-  generateBOL
+  openGenBOLPopup
 } from '../../actions'
 import { downloadAttachment } from '../../../inventory/actions'
 // Selectors
@@ -18,18 +18,18 @@ const mapDispatchToProps = {
     deleteShippingQuote,
     openPopup,
     downloadAttachment,
-    generateBOL
+    openGenBOLPopup
 }
 
 const makeMapStateToProps = () => {
     const getFilterValue = makeGetFilterValue()
     const getLoading = makeGetLoading()
 
-    const mapStateToProps = (state, props) => {
+    const mapStateToProps = (state, {datagrid}) => {
         return {
             filterValue: getFilterValue(state),
             loading: getLoading(state),
-            rows: getRows(props)
+            rows: getRows(datagrid)
         }
     }
     return mapStateToProps

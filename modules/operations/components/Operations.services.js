@@ -9,6 +9,7 @@ import CompanyInventoryTable from './company-inventory/CompanyInventoryTableCont
 import Orders from './orders/OrdersContainer'
 import OrderDetail from './orders/DetailContainer'
 import CompanyGenericProductsTable from './company-generic-products/CompanyGenericProductsTableContainer'
+import GenerateBOLPopup from './shipping-quotes/GenerateBOLPopupContainer'
 
 /**
  * Operations Render Content
@@ -16,7 +17,7 @@ import CompanyGenericProductsTable from './company-generic-products/CompanyGener
  * @services
  */
 export const renderContent = (props) => {
-    const { currentTab, isOpenPopup, orderDetailData } = props
+    const { currentTab, isOpenPopup, isOpenGenBOLPopup, orderDetailData } = props
 
     const tables = {
       'shipping-quotes': <ShippingQuotesTable />,
@@ -37,6 +38,7 @@ export const renderContent = (props) => {
       <>
         {isOpenPopup && popupForm[currentTab]}
         {tables[currentTab] || <p>This page is still under construction</p>}
+        {isOpenGenBOLPopup && <GenerateBOLPopup/>}
       </>
     )
 }

@@ -4,6 +4,8 @@ import { getSafe } from '../../utils/functions'
 
 const getAuth = state => getSafe(() => state.auth, null)
 const getIsOpenPopup = state => getSafe(() => state.operations.isOpenPopup, false)
+const getIsOpenGenBOLPopup = state => getSafe(() => state.operations.isOpenGenBOLPopup, false)
+const getRowBOL = state => getSafe(() => state.operations.rowBOL, null)
 const getOrderDetailData = state => getSafe(() => state.operations.orderDetailData, null)
 const getCompanyProductUnmappedOnly = state => getSafe(() => state.operations.companyProductUnmappedOnly, 'ALL')
 const getTableHandlersFilters = state => getSafe(() => state.operations.tableHandlersFilters, null)
@@ -44,6 +46,12 @@ export const makeGetAuth = () => {
 }
 export const makeGetIsOpenPopup = () => {
     return createSelector([getIsOpenPopup], isOpenPopup => isOpenPopup)
+}
+export const makeGetIsOpenGenBOLPopup = () => {
+    return createSelector([getIsOpenGenBOLPopup], isOpenGenBOLPopup => isOpenGenBOLPopup)
+}
+export const makeGetRowBOL = () => {
+    return createSelector([getRowBOL], rowBOL => rowBOL)
 }
 export const makeGetOrderDetailData = () => {
     return createSelector([getOrderDetailData], orderDetailData => orderDetailData)

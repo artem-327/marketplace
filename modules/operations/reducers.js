@@ -23,13 +23,17 @@ import {
   resolveDisputeAccept,
   resolveDisputeCredit,
   resolveDisputeReject,
-  generateBOL
+  generateBOL,
+  openGenBOLPopup,
+  closeGenBOLPopup
 } from './actions'
 
 
 const initialState = {
   popupValues: null,
   isOpenPopup: false,
+  isOpenGenBOLPopup: false,
+  rowBOL: null,
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -367,7 +371,21 @@ export default typeToReducer(
         orderDetailData: action.payload,
         loading: false
       }
-    }
+    },
+    [openGenBOLPopup]: (state, action) => {
+      return {
+        ...state,
+        isOpenGenBOLPopup: true,
+        rowBOL: action.payload
+      }
+    },
+    [closeGenBOLPopup]: (state, action) => {
+      return {
+        ...state,
+        isOpenGenBOLPopup: false,
+        rowBOL: null
+      }
+    },
   },
   initialState
 )

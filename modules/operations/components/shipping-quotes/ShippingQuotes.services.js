@@ -1,19 +1,15 @@
 import { FormattedNumber } from 'react-intl'
 import moment from 'moment'
 import * as Yup from 'yup'
-import { FormattedMessage, IntlProvider } from 'react-intl'
+import { FormattedMessage } from 'react-intl'
 import { debounce } from 'lodash'
-import { Dropdown } from 'semantic-ui-react'
-import { MoreVertical } from 'react-feather'
-import { Formik } from 'formik'
+import { Dropdown, Icon } from 'semantic-ui-react'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
-import { DateInput } from '../../../../components/custom-formik'
 // Services
 import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
 import confirm from '../../../../components/Confirmable/confirm'
-import { getLocaleDateFormat } from '../../../../components/date-format'
-import { getStringISODate } from '../../../../components/date-format'
+import { getLocaleDateFormat, getStringISODate } from '../../../../components/date-format'
 import { getMimeType } from '../../../../utils/functions'
 // Constants
 import { currency } from '../../../../constants/index'
@@ -25,7 +21,7 @@ import { RowDropdown, RowDropdownIcon } from '../../styles'
  * @category Operations
  * @services
  */
-export const getRows = props => props?.datagrid?.rows?.map(d => {
+export const getRows = datagrid => datagrid?.rows?.map(d => {
     return {
         data: d, // all row data, used for edit popup
         id: d.id,
@@ -44,26 +40,12 @@ export const getRows = props => props?.datagrid?.rows?.map(d => {
         quoteId: d.quoteId || '',
         validityDate: d.validityDate ? moment(d.validityDate).format(getLocaleDateFormat()) : 'N/A',
         relatedOrder: d.relatedOrderId ? d.relatedOrderId : '',
-        bol: !!d.relatedOrderAttachments.length ? (
-          <RowDropdown
-            onOpen={(e, data) => {
-            }}
-            onClose={(e, data) => {
-            }}
-            trigger={<RowDropdownIcon><MoreVertical /></RowDropdownIcon>}>
-              <Dropdown.Menu>
-                {d.relatedOrderAttachments.map(att => (
-                  <Dropdown.Item key={att.id} onClick={() => downloadAttachment(att.name, att.id, props)}>{att.name}</Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-          </RowDropdown>
-        ) : null
+        relatedOrderAttachments: d.relatedOrderAttachments
     }
 })
 
-const downloadAttachment = async (documentName, documentId, props) => {
+const downloadAttachmentBOL = async (documentName, documentId, props) => {
   const element = await prepareLinkToAttachment(documentId, props)
-
   element.download = documentName
   document.body.appendChild(element) // Required for this to work in FireFox
   element.click()
@@ -71,10 +53,10 @@ const downloadAttachment = async (documentName, documentId, props) => {
 
 const prepareLinkToAttachment = async (documentId, props) => {
   let downloadedFile = await props.downloadAttachment(documentId)
-  const fileName = extractFileName(downloadedFile.value.headers['content-disposition'])
+  const fileName = extractFileName(downloadedFile?.value?.headers['content-disposition'])
   const mimeType = fileName && getMimeType(fileName)
   const element = document.createElement('a')
-  const file = new Blob([downloadedFile.value.data], { type: mimeType })
+  const file = new Blob([downloadedFile?.value?.data], { type: mimeType })
   let fileURL = URL.createObjectURL(file)
   element.href = fileURL
 
@@ -93,7 +75,7 @@ const extractFileName = contentDispositionValue => {
   return filename
 }
 
-const generateBOLValidation = () =>
+export const generateBOLValidation = () =>
   Yup.lazy(values =>
     Yup.object().shape({
       pickupDate: dateValidation(false).concat(
@@ -101,8 +83,9 @@ const generateBOLValidation = () =>
               'min-date',
               errorMessages.mustBeInFuture,
               val => !val || moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
-          )
-        )
+          ).required(errorMessages.requiredMessage)
+        ),
+      carrierName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage)
     })
   )
 
@@ -158,44 +141,13 @@ export const columns = [
 ]
 
 const getActions = (row, props) => {
-    const { intl, deleteShippingQuote, datagrid, generateBOL } = props
+    const { intl, deleteShippingQuote, datagrid, openGenBOLPopup } = props
     const { formatMessage } = intl
-    let formikPropsNew = null
 
     const action = row.relatedOrder ? 
       {
         text: formatMessage({ id: 'operations.generateBOL', defaultMessage: 'Generate BOL' }),
-        callback: row =>
-        confirm(
-            formatMessage({ id: 'operations.generateBOL', defaultMessage: 'Generate BOL' }),
-            (
-              <IntlProvider locale='en'>
-                <Formik
-                  initialValues={{ pickupDate: '' }}
-                  validationSchema={generateBOLValidation()}
-                  onSubmit={() => {}}
-                  render={formikProps => {
-                    formikPropsNew = formikProps
-                    return (
-                      <DateInput
-                        label={formatMessage({ id: 'operations.pickupDate', defaultMessage: 'Pick Up Date' })}
-                        name='pickupDate'
-                        inputProps={{
-                          clearable: true,
-                          style: { width: '100%' }
-                        }}
-                      />
-                    )
-                  }}
-                />
-              </IntlProvider>
-            )
-        ).then(async () => {
-          try {
-            formikPropsNew ? await generateBOL(row.id, row.carrierName, getStringISODate(formikPropsNew.values.pickupDate)) : null
-          } catch (e) {
-          }
-        })
+        callback: row => openGenBOLPopup(row)
       }
     :
       {
@@ -229,6 +181,16 @@ export const getRowss = (rows, props) => {
     return rows.map(row => {
         return {
             ...row,
+            bol: !!row.relatedOrderAttachments.length ? (
+              <RowDropdown
+                trigger={<RowDropdownIcon><Icon name='file' className='positive' /></RowDropdownIcon>}>
+                  <Dropdown.Menu>
+                    {row.relatedOrderAttachments.map(att => (
+                      <Dropdown.Item key={att.id} onClick={() => downloadAttachmentBOL(att.name, att.id, props)}>{att.name}</Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
+              </RowDropdown>
+            ) : null,
             quoteId: <ActionCell row={row} getActions={() => getActions(row, props)} content={row.quoteId} />
         }
     })
