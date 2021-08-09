@@ -3,7 +3,8 @@ import moment from 'moment'
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import { debounce } from 'lodash'
-import { Dropdown, Icon } from 'semantic-ui-react'
+import { Dropdown } from 'semantic-ui-react'
+import { File } from 'react-feather'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
 // Services
@@ -144,7 +145,7 @@ const getActions = (row, props) => {
     const { intl, deleteShippingQuote, datagrid, openGenBOLPopup } = props
     const { formatMessage } = intl
 
-    const action = row.relatedOrder ? 
+    const action = row.relatedOrder && !row.relatedOrderAttachments.length ? 
       {
         text: formatMessage({ id: 'operations.generateBOL', defaultMessage: 'Generate BOL' }),
         callback: row => openGenBOLPopup(row)
@@ -183,7 +184,7 @@ export const getRowss = (rows, props) => {
             ...row,
             bol: !!row.relatedOrderAttachments.length ? (
               <RowDropdown
-                trigger={<RowDropdownIcon><Icon name='file' className='positive' /></RowDropdownIcon>}>
+                trigger={<RowDropdownIcon><File name='file' color='green' /></RowDropdownIcon>}>
                   <Dropdown.Menu>
                     {row.relatedOrderAttachments.map(att => (
                       <Dropdown.Item key={att.id} onClick={() => downloadAttachmentBOL(att.name, att.id, props)}>{att.name}</Dropdown.Item>

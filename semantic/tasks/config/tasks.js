@@ -98,7 +98,7 @@ module.exports = {
               console.error(theme + ' is not an available theme for ' + element)
             }
           } else {
-            console.log(error)
+            console.error(error)
           }
           this.emit('end')
         }
