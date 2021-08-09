@@ -250,21 +250,11 @@ function mapStateToProps({ settings }) {
     companyCriteria: myTradePass?.companyCriteria?.aggregate_insurance?.criteria_risk_tolerance
       ? myTradePass?.companyCriteria
       : { // ! ! TODO Temporary ("myTradePass?.companyCriteria" only should be used after the BE update)
-        aggregate_insurance: {
-          criteria_risk_tolerance: myTradePass?.companyCriteria?.aggregate_insurance
-        },
-        credit_risk: {
-          criteria_risk_tolerance: myTradePass?.companyCriteria?.credit_risk
-        },
-        days_beyond: {
-          criteria_risk_tolerance: myTradePass?.companyCriteria?.days_beyond
-        },
-        social_presence: {
-          criteria_risk_tolerance: myTradePass?.companyCriteria?.social_presence
-        },
-        violations: {
-          criteria_risk_tolerance: myTradePass?.companyCriteria?.violations
-        }
+        aggregate_insurance: myTradePass?.companyCriteria?.aggregate_insurance,
+        credit_risk: myTradePass?.companyCriteria?.credit_risk,
+        days_beyond: myTradePass?.companyCriteria?.days_beyond,
+        social_presence: myTradePass?.companyCriteria?.social_presence,
+        violations: myTradePass?.companyCriteria?.violations
       }
   }
 }
