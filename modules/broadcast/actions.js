@@ -49,15 +49,16 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
 export const broadcastChange = createAsyncAction(
   'BROADCAST_CHANGE',
   async (row, option, template, datagrid, isUpdateWarehouse = true, dataType = '') => {
+    const rr = datagrid.rows.filter(ra => ra.id === row.id)
+    const r = rr[0]
+    
     let warehouse = isUpdateWarehouse
       ? {
-          warehouse: {
-            deliveryAddress: {
-              cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
-            }
-          }
+          warehouse: r.warehouse
         }
-      : null
+      : {
+          warehouse: row.warehouse
+        }
 
     let editedRow = {
       ...row,
