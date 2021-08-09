@@ -86,8 +86,8 @@ export const getRows = (props, expandedRowIds, setExpandedRowIds) => {
         ...r,
         user: (
         <>
-            {getSafe(() => r.relatedCompany.avatarUrl, false) && (
-            <UserImage src={r.relatedCompany.avatarUrl} bordered />
+            {getSafe(() => r.relatedCompany.logoUrl, false) && (
+            <UserImage src={r.relatedCompany.logoUrl} bordered />
             )}
             <UserName as='h3'>{r.nameOfUser}</UserName>
             <UserCompany as='h4'>

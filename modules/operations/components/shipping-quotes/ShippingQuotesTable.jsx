@@ -29,7 +29,9 @@ ShippingQuotesTable.propTypes = {
   loading: PropTypes.bool,
   filterValue: PropTypes.string, 
   rows: PropTypes.array, 
-  deleteShippingQuote: PropTypes.func
+  deleteShippingQuote: PropTypes.func,
+  downloadAttachment: PropTypes.func,
+  generateBOL: PropTypes.func
 }
 
 ShippingQuotesTable.defaultValues = {
@@ -38,7 +40,9 @@ ShippingQuotesTable.defaultValues = {
   loading: false,
   filterValue: '', 
   rows: [],
-  deleteShippingQuote: () => {}
+  deleteShippingQuote: () => {},
+  downloadAttachment: () => {},
+  generateBOL: () => {}
 }
 
 export default injectIntl(ShippingQuotesTable)

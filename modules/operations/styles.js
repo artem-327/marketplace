@@ -727,3 +727,47 @@ export const GridRowMargin = styled(GridRow)`
     ${props => (props.margin ? `margin: ${props.margin} !important;` : '')};
   }
 `
+
+export const RowDropdown = styled(Dropdown)`
+  display: block !important;
+  height: 100% !important;
+  margin: 0;
+
+  &:hover {
+    font-weight: bold;
+    color: #2599d5;
+  }
+
+  .dropdown.icon {
+    display: none;
+  }
+  
+  &[aria-expanded="true"].active.visible .menu.transition.visible {
+    position: fixed !important;
+    top: auto !important;
+    left: auto !important;
+  }
+  
+  &[aria-expanded="true"].active.visible.upward .menu.transition.visible {
+    bottom: auto !important;
+    transform: translateY(-100%) !important;
+    margin-top: 0 !important;
+  }
+`
+
+export const RowDropdownIcon = styled.div`
+  width: 16px;
+  height: 16px;
+  margin: 2px 8px 2px -2px;
+
+  svg {
+    width: 16px !important;
+    height: 16px !important;
+    color: #848893 !important;
+  }
+
+  .settings_bankaccounts & {
+    margin-left: -6px;
+    margin-right: 0;
+  }
+`

@@ -185,7 +185,7 @@ const ActionsRequired = props => {
               ])
             : null}
 
-          {orderStatus === 2 && shippingStatus === 0 // Confirmed && N/A
+          {orderStatus === 2 && shippingStatus === 0 && !detail.shippingQuoteIsManual // Confirmed && N/A && Not manual
             ? renderSegment(null, 11, null, 'order.shipFailed.description', [
                 {
                   buttonType: 'primary',
