@@ -98,7 +98,7 @@ function parser(file, callback) {
       // console.log(meta);
     }
   } catch (error) {
-    console.log(error, filename)
+    console.error(error, filename)
   }
 
   callback(null, file)
