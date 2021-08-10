@@ -17,7 +17,7 @@ const Holds = ({ typeHolds }) => {
     <>
       <DatagridProvider
         apiConfig={{
-          url: `/prodex/api/holds/${typeHolds}/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+          url: gaSearch ? `/prodex/api/holds/${typeHolds}/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/holds/${typeHolds}/datagrid`,
           searchToFilter: v => {
             setGaSearch(getSafe(() => v.searchInput, ''))
             let filters = { or: [], and: [] }

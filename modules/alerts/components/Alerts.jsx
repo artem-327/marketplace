@@ -30,7 +30,7 @@ const Alerts = props => {
   }, [])  // If [] is empty then is similar as componentDidMount.
 
   const getApiConfig = () => ({
-    url: `/prodex/api/messaging-center/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+    url: gaSearch ? `/prodex/api/messaging-center/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/messaging-center/datagrid`,
     searchToFilter: v => {
       setGaSearch(getSafe(() => v.searchInput, ''))
       let filters = { or: [], and: [] }

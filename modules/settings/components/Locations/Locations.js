@@ -102,7 +102,7 @@ class Locations extends Component {
 
     const datagridApiMap = {
       'my-customers': {
-        url: `/prodex/api/customers/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        url: this.state.gaSearch ? `/prodex/api/customers/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/customers/datagrid`,
         searchToFilter: v => {
           this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           return v && v.searchInput
@@ -117,7 +117,7 @@ class Locations extends Component {
         }
       },
       'pick-up-locations': {
-        url: `/prodex/api/branches/warehouses/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        url: this.state.gaSearch ? `/prodex/api/branches/warehouses/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/branches/warehouses/datagrid`,
         searchToFilter: v => {
           this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           return v && v.searchInput
@@ -142,7 +142,7 @@ class Locations extends Component {
         }
       },
       branches: {
-        url: `/prodex/api/branches/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+        url: this.state.gaSearch ? `/prodex/api/branches/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/branches/datagrid`,
         searchToFilter: v => {
           this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           return v && v.searchInput
