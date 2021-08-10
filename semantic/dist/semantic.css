@@ -35690,7 +35690,7 @@ ol.ui.horizontal.list li:before,
   flex: 1 1 auto;
   -ms-flex: 1 1 0px;
   /* Solves #2550 MS Flex */
-  margin: 0em;
+  margin: auto;
   min-width: 0px;
   background-color: transparent;
   border-radius: 0px;

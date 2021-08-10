@@ -18,7 +18,7 @@ export const DivCollectionStat = styled.div`
 `
 
 export const DivBarGraph = styled.div`
-  margin-left: 40px;
+  margin-left: 30px;
   width: 300px;
   height: 100px;
 `
@@ -26,6 +26,10 @@ export const DivBarGraph = styled.div`
 export const DivPercentageIconWrapper = styled.div`
   height: 80px;
   margin: 0 27px;
+`
+
+export const DivRiskToleranceWrapper = styled.div`
+  margin-right: 30px;
 `
 
 export const DivRiskTolerance = styled.div`
