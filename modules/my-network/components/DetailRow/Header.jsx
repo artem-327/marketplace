@@ -19,6 +19,7 @@ import {
   DivCircle,
   DivModal,
   DivRiskTolerance,
+  DivRiskToleranceWrapper,
   DivPercentageIconWrapper,
   DivBarGraph
 } from './DetailRow.style'
@@ -55,14 +56,14 @@ const Header = ({
         </SegmentCustom>
         <SegmentCustom textAlign='center'>
           <DivCollectionStat>
-            <div>
+            <DivRiskToleranceWrapper>
               <DivRiskTolerance>
                 <FormattedMessage id='myNetwork.riskTolerance' defaultMessage='Risk Tolerance' />
               </DivRiskTolerance>
               <DivPercentageIconWrapper>
                 <PercentageIcon value={connectionCriteria?.requester_tolerance} />
               </DivPercentageIconWrapper>
-            </div>
+            </DivRiskToleranceWrapper>
             <DivBarGraph>
               <HorizontalBarGraph
                 values={[

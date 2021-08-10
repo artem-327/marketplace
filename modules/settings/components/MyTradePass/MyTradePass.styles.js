@@ -58,6 +58,7 @@ export const SegmentCustom = styled(Segment)`
 `
 
 export const SegmentSlogan = styled(Segment)`
+  margin: auth !important;
   width: 100% !important;
   height: auto;
   margin: 25px 10px 0 0;
@@ -109,7 +110,7 @@ export const DivTextValueTradeCriteria = styled.div`
 `
 
 export const DivBarGraph = styled.div`
-  margin: 10px 10px;
+  margin: auto 50px;
   width: 300px;
   height: 100px;
 `
