@@ -56,14 +56,14 @@ const Admin = props => {
    */
   const datagridConfig = {
     conditions: {
-      url: `/prodex/api/product-conditions/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/product-conditions/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-conditions/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     'nmfc-numbers': {
-      url: `/prodex/api/nmfc-numbers/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/nmfc-numbers/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/nmfc-numbers/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         let filters = []
@@ -76,56 +76,56 @@ const Admin = props => {
       }
     },
     associations: {
-      url: `/prodex/api/associations/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/associations/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/associations/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'Association.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     forms: {
-      url: `/prodex/api/product-forms/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/product-forms/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-forms/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductForm.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     grades: {
-      url: `/prodex/api/product-grades/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/product-grades/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-grades/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     manufacturers: {
-      url: `/prodex/api/manufacturers/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/manufacturers/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/manufacturers/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     'packaging-types': {
-      url: `/prodex/api/packaging-types/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/packaging-types/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/packaging-types/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'PackagingType.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     'units-of-measure': {
-      url: `/prodex/api/units/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/units/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/units/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'Unit.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     logistics: {
-      url: `/prodex/api/logistics-providers/stored/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/logistics-providers/stored/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/logistics-providers/stored/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsProvider.name', values: [`%${v.searchInput}%`] }] : []
       }
     },
     carriers: {
-      url: `/prodex/api/logistics-carriers/stored/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+      url: gaSearch ? `/prodex/api/logistics-carriers/stored/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/logistics-carriers/stored/datagrid`,
       searchToFilter: v => {
         setGaSearch(getSafe(() => v.searchInput, ''))
         return v && v.searchInput ? [{ operator: 'LIKE', path: 'LogisticsCarrier.code', values: [`%${v.searchInput}%`] }] : []

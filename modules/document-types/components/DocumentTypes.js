@@ -23,7 +23,7 @@ class DocumentTypes extends Component {
   }
 
   getApiConfig = () => ({
-    url: `prodex/api/document-types/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+    url: this.state.gaSearch ? `prodex/api/document-types/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `prodex/api/document-types/datagrid`,
     searchToFilter: v => {
       this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
       return v && v.searchInput ? [{ operator: 'LIKE', path: 'DocumentType.name', values: [`%${v.searchInput}%`] }] : []

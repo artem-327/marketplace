@@ -337,9 +337,9 @@ class AttachmentManager extends Component {
   }
 
   getApiConfig = () => ({
-    url: `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}`,
+    url: this.state.gaSearch ? `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/attachments/datagrid`,
     searchToFilter: v => {
-      this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
+      this.setState({ gaSearch: getSafe(() => v.name, '') })
       let filters = { or: [], and: [] }
       if (v && v.name) {
         filters.or = [

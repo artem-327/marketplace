@@ -13,7 +13,7 @@ const WarehouseCredentialsPending = () => {
   <>
     <DatagridProvider
       apiConfig={{
-        url: `/prodex/api/branches/warehouses/pending/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+        url: gaSearch ? `/prodex/api/branches/warehouses/pending/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/branches/warehouses/pending/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput ? [

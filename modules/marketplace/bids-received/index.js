@@ -10,7 +10,7 @@ export const BidsReceived = props => {
   const [gaSearch, setGaSearch] = useState('')
 
   const urlApiConfig = {
-    url: `/prodex/api/product-offer-bids/other/datagrid?${GA_TRACK_QUERY}=${gaSearch}`,
+    url: gaSearch ? `/prodex/api/product-offer-bids/other/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-offer-bids/other/datagrid`,
     searchToFilter: v => {
       setGaSearch(getSafe(() => v.searchInput, ''))
       let filters = { or: [], and: [], url: '' }

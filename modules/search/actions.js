@@ -13,7 +13,8 @@ export const searchTags = tag => ({
     ],
     pageNumber: 0,
     pageSize: 50
-  })
+  },
+  tag.toString())
 })
 
 export const searchProductOffersInventory = (filter, filterType = 'inventory') => ({
@@ -29,7 +30,8 @@ export const searchProductOffersInventory = (filter, filterType = 'inventory') =
       pageNumber: 0,
       pageSize: 50
     },
-    filterType
+    filterType,
+    filter.toString()
   )
 })
 
@@ -43,7 +45,8 @@ export const searchCasElements = filter => ({
     ],
     pageNumber: 0,
     pageSize: 10
-  })
+  },
+  filter.toString())
 })
 
 export const clearProductOffers = () => ({ type: AT.SEARCH_CLEAR_PRODUCT_OFFERS })
