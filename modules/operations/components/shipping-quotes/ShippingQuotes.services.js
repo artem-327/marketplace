@@ -150,7 +150,7 @@ const getActions = (row, props) => {
         text: formatMessage({ id: 'operations.generateBOL', defaultMessage: 'Generate BOL' }),
         callback: row => openGenBOLPopup(row)
       }
-    :
+    : !row.relatedOrder ?
       {
         text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
         callback: row =>
@@ -168,6 +168,10 @@ const getActions = (row, props) => {
               console.error(e)
             }
         })
+      }
+    : {
+        text: '',
+        callback: () => {}
       }
 
     return [ action ]
