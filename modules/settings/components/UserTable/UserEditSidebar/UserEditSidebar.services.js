@@ -266,9 +266,6 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
   } = props
 
   let sendSuccess = false
-  let signedDate = new Date()
-  let regulatoryDeaListSignedDate = signedDate.toISOString()
-  let regulatoryDhsCoiSignedDate = signedDate.toISOString()
 
   const data = {
     additionalBranches: values?.additionalBranches,
@@ -280,13 +277,8 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
     preferredCurrency: currencyId,
     roles: values?.roles,
     regulatoryDeaListAuthorized: values?.regulatoryDeaListAuthorized,
-    regulatoryDeaListSignedDate,
     regulatoryDhsCoiAuthorized: values?.regulatoryDhsCoiAuthorized,
-    regulatoryDhsCoiSignedDate,
     regulatoryHazmatAuthorized: values?.regulatoryHazmatAuthorized
-    /*Commented by https://pm.artio.net/issues/34033#note-14 */
-    //sellMarketSegments: values.sellMarketSegments,
-    //buyMarketSegments: values.buyMarketSegments
   }
 
   const settingsData = {
