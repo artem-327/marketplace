@@ -7,7 +7,6 @@ import { openImportPopup } from '../../settings/actions'
 import {
   makeGetTableHandlersFilters,
   makeGetSearchedCompanies,
-  makeGetSearchedCompaniesByName,
   makeGetSearchedCompaniesLoading,
   makeGetCompanyProductUnmappedOnly
 } from '../selectors'
@@ -15,7 +14,6 @@ import {
 const makeMapStateToProps = () => {
   const getTableHandlersFilters = makeGetTableHandlersFilters()
   const getSearchedCompanies = makeGetSearchedCompanies()
-  const getSearchedCompaniesByName = makeGetSearchedCompaniesByName()
   const getSearchedCompaniesLoading = makeGetSearchedCompaniesLoading()
   const getCompanyProductUnmappedOnly = makeGetCompanyProductUnmappedOnly()
 
@@ -23,7 +21,6 @@ const makeMapStateToProps = () => {
     return {
       tableHandlersFilters: getTableHandlersFilters(state),
       searchedCompanies: getSearchedCompanies(state),
-      searchedCompaniesByName: getSearchedCompaniesByName(state),
       searchedCompaniesLoading: getSearchedCompaniesLoading(state),
       companyProductUnmappedOnly: getCompanyProductUnmappedOnly(state)
     }
