@@ -169,12 +169,9 @@ const getActions = (row, props) => {
             }
         })
       }
-    : {
-        text: '',
-        callback: () => {}
-      }
+    : null
 
-    return [ action ]
+    return action ? [ action ] : []
 }
 
 /**
