@@ -14,12 +14,7 @@ const getTableHandlersFilters = state => state?.productsAdmin?.tableHandlersFilt
 const getSearchedCompanies = state => state?.productsAdmin?.searchedCompanies?.map(d => ({
     key: d.id,
     value: d.id,
-    text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
-  }))
-const getSearchedCompaniesByName = state => state?.productsAdmin?.searchedCompanies?.map(d => ({
-    key: d.id,
-    value: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, ''),
-    text: getSafe(() => d.cfDisplayName, '') ? d.cfDisplayName : getSafe(() => d.name, '')
+    text: d.dba ? `${d.dba} ( ${d.name} )` : d.name
   }))
 const getSearchedCompaniesLoading = state => state?.productsAdmin?.searchedCompaniesLoading
 const getCompanyProductUnmappedOnly = state => state?.productsAdmin?.companyProductUnmappedOnly
@@ -145,9 +140,6 @@ export const makeGetTableHandlersFilters = () => {
 }
 export const makeGetSearchedCompanies = () => {
   return createSelector([getSearchedCompanies], searchedCompanies => searchedCompanies)
-}
-export const makeGetSearchedCompaniesByName = () => {
-  return createSelector([getSearchedCompaniesByName], searchedCompaniesByName => searchedCompaniesByName)
 }
 export const makeGetSearchedCompaniesLoading = () => {
   return createSelector([getSearchedCompaniesLoading], searchedCompaniesLoading => searchedCompaniesLoading)
