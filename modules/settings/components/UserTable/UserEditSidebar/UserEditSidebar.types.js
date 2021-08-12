@@ -14,7 +14,9 @@
  * @property {array} buyMarketSegments
  * @property {array} sellMarketSegments
  * @property {boolean} regulatoryHazmatAuthorized
+ * @property {boolean} regulatoryDeaListSignAskedDate
  * @property {boolean} regulatoryDhsCoiAuthorized
+ * @property {boolean} regulatoryDhsCoiSignAskedDate
  * @property {boolean} regulatoryDeaListAuthorized
  * @property {number} monthlyPurchaseLimit
  * @property {number} orderPurchaseLimit

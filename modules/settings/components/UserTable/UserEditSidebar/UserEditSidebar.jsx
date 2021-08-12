@@ -462,17 +462,23 @@ const UserEditSidebar = props => {
                           { key: 1, text: 'Yes', value: true }
                         ]}
                         inputProps={{
-                          'data-test': 'settings_users_popup_regulatory_dea_list_authorized_drpdn'
+                          'data-test': 'settings_users_popup_regulatory_dea_list_authorized_drpdn',
+                          disabled: !values?.regulatoryDeaListAuthorized && !!values?.regulatoryDeaListSignAskedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {values?.regulatoryDeaListAuthorized && (
+                      {values?.regulatoryDeaListAuthorized ? (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
-                      )}
+                      ) : values?.regulatoryDeaListSignAskedDate ? (
+                        <FormattedMessage
+                          id='settings.user.purchaseAuthorized.pending'
+                          defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
+                        />
+                      ) : null}
                     </DivNotify>
 
                     <DivLabel>
@@ -490,17 +496,23 @@ const UserEditSidebar = props => {
                           { key: 1, text: 'Yes', value: true }
                         ]}
                         inputProps={{
-                          'data-test': 'settings_users_popup_regulatory_dhs_chemicals_drpdn'
+                          'data-test': 'settings_users_popup_regulatory_dhs_chemicals_drpdn',
+                          disabled: !values?.regulatoryDhsCoiAuthorized && !!values?.regulatoryDhsCoiSignAskedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {values?.regulatoryDhsCoiAuthorized && (
+                      {values?.regulatoryDhsCoiAuthorized ? (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
-                      )}
+                      ) : values?.regulatoryDhsCoiSignAskedDate ? (
+                        <FormattedMessage
+                          id='settings.user.purchaseAuthorized.pending'
+                          defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
+                        />
+                      ) : null}
                     </DivNotify>
 
                     <DivLabel>

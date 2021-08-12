@@ -80,7 +80,9 @@ export const getInitialFormValues = sidebarValues => {
         sellMarketSegments: getSafe(() => sidebarValues?.sellMarketSegments, [])?.map(d => d?.id),
         buyMarketSegments: getSafe(() => sidebarValues?.buyMarketSegments, [])?.map(d => d?.id),
         regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
+        regulatoryDeaListSignAskedDate: sidebarValues?.regulatoryDeaListSignAskedDate,
         regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
+        regulatoryDhsCoiSignAskedDate: sidebarValues?.regulatoryDhsCoiSignAskedDate,
         regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
         dailyPurchaseLimit: !isNaN(parseInt(sidebarValues?.dailyPurchaseLimit?.value))
           ? parseInt(sidebarValues?.dailyPurchaseLimit?.value)
@@ -105,7 +107,9 @@ export const getInitialFormValues = sidebarValues => {
         buyMarketSegments: [],
         sellMarketSegments: [],
         regulatoryDeaListAuthorized: false,
+        regulatoryDeaListSignAskedDate: null,
         regulatoryDhsCoiAuthorized: false,
+        regulatoryDhsCoiSignAskedDate: null,
         regulatoryHazmatAuthorized: false,
         dailyPurchaseLimit: null,
         orderPurchaseLimit: null,
