@@ -1,6 +1,6 @@
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Form, Input, Button } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
 // Components
 import { DateInput } from '../../../../components/custom-formik'
@@ -22,18 +22,19 @@ const GenerateBOLPopup = props => {
   return (
     <Modal closeIcon onClose={closeGenBOLPopup} open centered={false} size='small'>
       <Modal.Header>
-        <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' />
+        <FormattedMessage id='operations.generateBOL' defaultMessage='Generate BOL' />
       </Modal.Header>
       <Modal.Content>
         <Form
           enableReinitialize
-          initialValues={{ carrierName: row?.carrierName, pickupDate: '' }}
+          initialValues={{ carrierName: row?.carrierName, pickupDate: '', pickupTimeZone: '' }}
           validationSchema={generateBOLValidation()}
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
+            const pickupDate = getStringISODate(values.pickupDate).slice(0, 19) + values.pickupTimeZone
             closeGenBOLPopup()
             try {
-              await generateBOL(row?.id, values.carrierName, getStringISODate(values.pickupDate))
+              await generateBOL(row?.id, values.carrierName, pickupDate)
               datagrid.loadData()
             } catch (e) {
             }
@@ -41,7 +42,7 @@ const GenerateBOLPopup = props => {
           {(formikProps) => {
             return (
               <>
-                <FormGroup widths='equal' data-test='shipping_quotes_generate_BOL_inputs'>
+                <FormGroup>
                   <Input
                     label={
                       <>
@@ -50,11 +51,8 @@ const GenerateBOLPopup = props => {
                       </>
                     }
                     name='carrierName'
-                    inputProps={{ 
-                      fluid: true
-                    }}
+                    fieldProps={{ width: 8 }}
                   />
-                  <br/>
                   <DateInput
                     label={
                       <>
@@ -64,9 +62,28 @@ const GenerateBOLPopup = props => {
                     }
                     name='pickupDate'
                     inputProps={{
-                      clearable: true,
-                      fluid: true
+                      clearable: true
                     }}
+                    fieldProps={{ width: 8 }}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Dropdown
+                    label={
+                      <>
+                        {formatMessage({ id: 'operations.pickupTimeZone', defaultMessage: 'Pick Up Time Zone' })}
+                        <Required />
+                      </>
+                    }
+                    name='pickupTimeZone'
+                    options={[
+                      {
+                        text: 'US/Central',
+                        value: '-05:00',
+                        key: 1
+                      }
+                    ]}
+                    fieldProps={{ width: 8 }}
                   />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>

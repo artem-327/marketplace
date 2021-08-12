@@ -86,7 +86,8 @@ export const generateBOLValidation = () =>
               val => !val || moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
           ).required(errorMessages.requiredMessage)
         ),
-      carrierName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage)
+      carrierName: Yup.string().trim().min(1, errorMessages.minLength(1)).required(errorMessages.requiredMessage),
+      pickupTimeZone: Yup.string().required(errorMessages.requiredMessage)
     })
   )
 

@@ -2335,6 +2335,7 @@
   "operations.bol": "BOL",
   "operations.generateBOL": "Generate BOL",
   "operations.pickupDate": "Pick Up Date",
+  "operations.pickupTimeZone": "Pick Up Time Zone",
   "operations.createdAt": "Created At",
   "operations.price": "Price",
   "operations.quoteId": "Quote Id",
