@@ -32,11 +32,10 @@ const GenerateBOLPopup = props => {
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
             const pickupDate = getStringISODate(values.pickupDate).slice(0, 11) + values.pickupTime + ':00' + values.pickupTimeZone
-            console.log(pickupDate)
-            // closeGenBOLPopup()
+            closeGenBOLPopup()
             try {
-              // await generateBOL(row?.id, values.carrierName, pickupDate)
-              // datagrid.loadData()
+              await generateBOL(row?.id, values.carrierName, pickupDate)
+              datagrid.loadData()
             } catch (e) {
             }
           }}>
