@@ -463,22 +463,23 @@ const UserEditSidebar = props => {
                         ]}
                         inputProps={{
                           'data-test': 'settings_users_popup_regulatory_dea_list_authorized_drpdn',
-                          disabled: !values?.regulatoryDeaListAuthorized && !!values?.regulatoryDeaListSignAskedDate
+                          disabled: !sidebarValues?.regulatoryDeaListAuthorized && !!sidebarValues?.regulatoryDeaListSignAskedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {values?.regulatoryDeaListAuthorized ? (
+                      {sidebarValues?.regulatoryDeaListAuthorized && !sidebarValues.regulatoryDeaListSignedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
-                      ) : values?.regulatoryDeaListSignAskedDate ? (
+                      )}
+                      {!sidebarValues?.regulatoryDeaListAuthorized && !!sidebarValues?.regulatoryDeaListSignAskedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.pending'
                           defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
                         />
-                      ) : null}
+                      )}
                     </DivNotify>
 
                     <DivLabel>
@@ -497,22 +498,23 @@ const UserEditSidebar = props => {
                         ]}
                         inputProps={{
                           'data-test': 'settings_users_popup_regulatory_dhs_chemicals_drpdn',
-                          disabled: !values?.regulatoryDhsCoiAuthorized && !!values?.regulatoryDhsCoiSignAskedDate
+                          disabled: !sidebarValues?.regulatoryDhsCoiAuthorized && !!sidebarValues?.regulatoryDhsCoiSignAskedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {values?.regulatoryDhsCoiAuthorized ? (
+                      {sidebarValues?.regulatoryDhsCoiAuthorized && !sidebarValues.regulatoryDhsCoiSignedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
-                      ) : values?.regulatoryDhsCoiSignAskedDate ? (
+                      )}
+                      {!sidebarValues?.regulatoryDhsCoiAuthorized && !!sidebarValues?.regulatoryDhsCoiSignAskedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.pending'
                           defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
                         />
-                      ) : null}
+                      )}
                     </DivNotify>
 
                     <DivLabel>
