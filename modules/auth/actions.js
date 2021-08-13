@@ -79,6 +79,8 @@ export function login(username, password) {
 
         const isAdmin = identity.roles.map(r => r.role).indexOf('SUPER_ADMIN') > -1
         const isOrderOperator = identity.roles.map(r => r.role).indexOf('ORDER_OPERATOR') > -1
+        const isOrderProcessing = identity.roles.map(r => r.role).indexOf('ORDER_PROCESSING') > -1
+        const isOrderView = identity.roles.map(r => r.role).indexOf('ORDER_VIEW') > -1
 
         let accessRights = {}
 
@@ -118,6 +120,10 @@ export function login(username, password) {
 
         if (isOrderOperator) {
           urlPage = '/operations/orders'
+        }
+
+        if (isOrderProcessing || isOrderView) {
+          urlPage = '/orders/sales'
         }
 
         if (isAdmin) Router.push('/dashboard')
