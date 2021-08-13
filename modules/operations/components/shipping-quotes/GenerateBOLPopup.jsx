@@ -27,11 +27,11 @@ const GenerateBOLPopup = props => {
       <Modal.Content>
         <Form
           enableReinitialize
-          initialValues={{ carrierName: row?.carrierName, pickupDate: '', pickupTimeZone: '' }}
+          initialValues={{ carrierName: row?.carrierName, pickupTimeZone: '', pickupDate: '', pickupTime:'' }}
           validationSchema={generateBOLValidation()}
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
-            const pickupDate = getStringISODate(values.pickupDate).slice(0, 19) + values.pickupTimeZone
+            const pickupDate = getStringISODate(values.pickupDate).slice(0, 11) + values.pickupTime + ':00' + values.pickupTimeZone
             closeGenBOLPopup()
             try {
               await generateBOL(row?.id, values.carrierName, pickupDate)
@@ -53,6 +53,28 @@ const GenerateBOLPopup = props => {
                     name='carrierName'
                     fieldProps={{ width: 8 }}
                   />
+                  <Dropdown
+                    label={
+                      <>
+                        {formatMessage({ id: 'operations.pickupTimeZone', defaultMessage: 'Pick Up Time Zone' })}
+                        <Required />
+                      </>
+                    }
+                    name='pickupTimeZone'
+                    inputProps={{
+                      placeholder: formatMessage({ id: 'operations.selectTimeZone', defaultMessage: 'Please select time zone' })
+                    }}
+                    options={[
+                      {
+                        text: 'US/Central',
+                        value: '-05:00',
+                        key: 1
+                      }
+                    ]}
+                    fieldProps={{ width: 8 }}
+                  />
+                </FormGroup>
+                <FormGroup>
                   <DateInput
                     label={
                       <>
@@ -66,23 +88,17 @@ const GenerateBOLPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
-                </FormGroup>
-                <FormGroup>
-                  <Dropdown
+                  <Input
                     label={
                       <>
-                        {formatMessage({ id: 'operations.pickupTimeZone', defaultMessage: 'Pick Up Time Zone' })}
+                        {formatMessage({ id: 'operations.pickupTime', defaultMessage: 'Pick Up Time' })}
                         <Required />
                       </>
                     }
-                    name='pickupTimeZone'
-                    options={[
-                      {
-                        text: 'US/Central',
-                        value: '-05:00',
-                        key: 1
-                      }
-                    ]}
+                    name='pickupTime'
+                    inputProps={{
+                      placeholder: formatMessage({ id: 'operations.standardTime', defaultMessage: '00:00' }) 
+                    }}
                     fieldProps={{ width: 8 }}
                   />
                 </FormGroup>
