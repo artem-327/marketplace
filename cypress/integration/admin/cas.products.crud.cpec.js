@@ -59,6 +59,8 @@ context("CAS products CRUD", () => {
         cy.get('.column > .ui > input')
             .type("Testinonium")
 
+        cy.wait("@CASloading")
+
         cy.openElement(productId, 0)
 
         cy.get("#field_input_casIndexName")
@@ -80,6 +82,8 @@ context("CAS products CRUD", () => {
 
         cy.get('.column > .ui > input')
             .type("100-95-521")
+
+        cy.wait("@CASloading")
 
         cy.openElement(productId, 1)
 
@@ -111,6 +115,8 @@ context("CAS products CRUD", () => {
 
         cy.get('.column > .ui > input')
             .type("100-95-521")
+
+        cy.wait("@CASloading")
 
         cy.openElement(productId, 1)
 
@@ -151,6 +157,8 @@ context("CAS products CRUD", () => {
     it("Deletes a product", () => {
         cy.get('.column > .ui > input')
             .type("100-95-521")
+
+        cy.wait("@CASloading")
 
         cy.openElement(productId, 2)
 

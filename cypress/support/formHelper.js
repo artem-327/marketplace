@@ -44,6 +44,11 @@ Cypress.Commands.add("selectFromDropdown", (selector,value) => {
     })
 })
 
+Cypress.Commands.add("selectFromList", (selector,value) => {
+    cy.get(selector).click({force: true})
+    cy.get(selector).contains('span', value).click()
+})
+
 Cypress.Commands.add("setNumberInput", (selector,number) => {
     cy.get(selector)
         .scrollIntoView()

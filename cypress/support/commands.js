@@ -32,7 +32,7 @@ Cypress.Commands.add("FElogin", (email, password) => {
         .type(email)
     cy.get("input[name=password]")
         .type(password)
-    cy.get("[data-test=login_submit_btn]").click({force: true})
+    cy.get("[data-test=login_submit_btn]").click({ force: true })
 
     //Assert on XHR
     cy.wait('@login').then(({ request, response }) => {
@@ -53,7 +53,7 @@ Cypress.Commands.add("waitForUI", () => {
     cy.wait(1500)
 })
 
-Cypress.Commands.add('login', (username, password) =>{
+Cypress.Commands.add('login', (username, password) => {
     cy.request({
         method: 'POST',
         url: '/prodex/oauth/token', // baseUrl is prepended to url
@@ -70,7 +70,7 @@ Cypress.Commands.add('login', (username, password) =>{
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        cy.setCookie('auth',JSON.stringify(response.body))
+        cy.setCookie('auth', JSON.stringify(response.body))
     })
 
     cy.visit('/inventory/my')
@@ -80,7 +80,7 @@ Cypress.Commands.add("openElement", (elementId, dropdownOption) => {
     cy.waitForUI()
 
     cy.get("[data-test=action_" + elementId + "_0]").scrollIntoView()
-    cy.get("[data-test=action_" + elementId + "_0]").parent().parent().click({force: true})
+    cy.get("[data-test=action_" + elementId + "_0]").parent().parent().click({ force: true })
     cy.get("[data-test=action_" + elementId + "_" + dropdownOption + "]").click()
 })
 
@@ -88,16 +88,31 @@ Cypress.Commands.add("openOffer", (elementId, dropdownOption) => {
     cy.waitForUI()
 
     cy.get("[data-test*=action_" + elementId + "]").eq(0).scrollIntoView()
-    cy.get("[data-test*=action_" + elementId + "]").eq(0).parent().parent().click({force: true})
+    cy.get("[data-test*=action_" + elementId + "]").eq(0).parent().parent().click({ force: true })
     cy.get("[data-test*=action_" + elementId + "]").eq(dropdownOption).click()
 })
 
 Cypress.Commands.add("searchInMarketplace", (productName) => {
-    cy.get("input[type=text]").eq(0).type(productName, {force: true})
+    cy.get("input[type=text]").eq(0).type(productName, { force: true })
     cy.get('div[class*=SearchByNamesAndTags]').find('div[role="option"]').eq(0).click()
 })
 
-Cypress.Commands.add('getRefreshToken', (username, password) =>{
+
+Cypress.Commands.add("approveAllConsents", () => {
+    cy.get('body').then(($body) => {
+        if ($body.text().includes('I agree')) {
+            cy.contains("button", "I agree").click()
+        }
+    })
+    cy.waitForUI()
+    cy.get('body').then(($body) => {
+        if ($body.text().includes('I agree')) {
+            cy.contains("button", "I agree").click()
+        }
+    })
+})
+
+Cypress.Commands.add('getRefreshToken', (username, password) => {
     cy.request({
         method: 'POST',
         url: '/prodex/oauth/token', // baseUrl is prepended to url
@@ -118,4 +133,8 @@ Cypress.Commands.add('getRefreshToken', (username, password) =>{
     })
 })
 
-function filterById(jsonObject, id) {return jsonObject.filter(function(jsonObject) {return (jsonObject['id'] == id)})[0]}
+function filterById(jsonObject, id) {
+    return jsonObject.filter(function (jsonObject) {
+        return (jsonObject[ 'id' ] == id)
+    })[ 0 ]
+}

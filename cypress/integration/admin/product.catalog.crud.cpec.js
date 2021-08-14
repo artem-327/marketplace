@@ -52,6 +52,7 @@ context("Generic Company Product CRUD", () => {
 
         cy.waitForUI()
         cy.searchInList("Test")
+        cy.wait("@genericLoading")
 
         cy.getToken().then(token => {
             cy.getFirstGenericProductIdWithFilter(token, filter).then(itemId => {
@@ -70,6 +71,7 @@ context("Generic Company Product CRUD", () => {
 
     it("Edits a Generic product", () => {
         cy.searchInList("Test")
+        cy.wait("@genericLoading")
 
         cy.openElement(productId, 0)
 
@@ -88,7 +90,7 @@ context("Generic Company Product CRUD", () => {
         cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
-        cy.waitForUI()
+        cy.wait("@genericLoading")
         cy.openElement(productId, 4)
         cy.wait("@nameGetting")
 
@@ -118,7 +120,7 @@ context("Generic Company Product CRUD", () => {
         cy.intercept("GET", "/prodex/api/company-generic-products/alternative-names/company-generic-product/**").as("nameGetting")
 
         cy.searchInList("Test")
-        cy.waitForUI()
+        cy.wait("@genericLoading")
         cy.openElement(productId, 4)
         cy.wait("@nameGetting")
 
@@ -144,27 +146,27 @@ context("Generic Company Product CRUD", () => {
             .should("not.exist")
     })
 
-    // Causes Cypress to freeze
-        it("Checks error messages", () => {
-            cy.get("[data-test=products_open_popup_btn]").click()
+    it("Checks error messages", () => {
+        cy.get("[data-test=products_open_popup_btn]").click()
 
-            cy.get("#name").click()
-            cy.waitForUI()
-            cy.get("#code").click()
-            cy.waitForUI()
+        cy.get("#name").click()
+        cy.waitForUI()
+        cy.get("#code").click()
+        cy.waitForUI()
 
-            cy.get("[data-test='sidebar_inventory_save_new']").click()
-            cy.waitForUI()
+        cy.get("[data-test='sidebar_inventory_save_new']").click()
+        cy.waitForUI()
 
-            cy.get(".error")
-                .should("have.length", 5)
-                .find(".sui-error-message").each((element) => {
-                expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
-            })
+        cy.get(".error")
+            .should("have.length", 5)
+            .find(".sui-error-message").each((element) => {
+            expect(element.text()).to.match(/(Required)|(Field should have at least 2 characters)|(At least one group should be selected)|(At least one company should be selected)/i)
         })
+    })
 
     it("Deletes a product", () => {
         cy.searchInList("EchoProd")
+        cy.wait("@genericLoading")
 
         cy.openElement(productId, 5)
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()

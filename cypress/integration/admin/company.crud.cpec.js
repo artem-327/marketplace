@@ -1,7 +1,7 @@
 context("Companies CRUD", () => {
 
     let companyId = null
-    let filter = [{"operator": "LIKE", "path": "Company.name", "values": ["%Donald%"]}]
+    let filter = [{ "operator": "LIKE", "path": "Company.name", "values": ["%Test Company%"] }]
     const adminJSON = require('../../fixtures/admin.json')
 
     before(function () {
@@ -37,32 +37,32 @@ context("Companies CRUD", () => {
         cy.get('[data-test=companies_table_add_btn]').click()
         cy.waitForUI()
 
-        cy.enterText("#field_input_name", "Donald The Ducks")
-        cy.enterText("#field_input_website", "https://www.donald.com/")
-        cy.get("[data-test='form_tin_type_drpdn'").click({force: true})
-        cy.get("[data-test='form_tin_type_drpdn'").contains('span', 'EIN').click()
+        cy.selectFromList("div[id='field_dropdown_type']", "Regular")
+        cy.enterText("#field_input_name", "Test Company 222")
+        cy.selectFromList("div[data-test='company_form_businessType_drpdn']", "Corporation")
+        cy.enterText("#field_input_website", "https://blue.io/")
+        cy.enterText("#field_input_dba", "Test Co")
+        cy.selectFromDropdown("div[name='naicsCode']", "Chemical and Allied Products Merchant Wholesalers")
+        cy.selectFromList("[data-test='form_tin_type_drpdn']", "EIN")
 
+        cy.enterText('input[id="field_input_tin"]', "123456789")
         cy.enterText('input[id="field_input_primaryUser.name"]', "Donal Duck")
-        cy.enterText('input[id="field_input_primaryUser.email"]', "duck@duck.com")
+        cy.enterText('input[id="field_input_primaryUser.email"]', "test@example.com")
 
-        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.addressName"]', "Main")
-        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactName"]', "James Duckling")
-        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactEmail"]', "james@duck.com")
-        cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').find('input[placeholder = "Phone Number"]').type("2025550156")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.addressName"]', "New York")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactName"]', "Blue Contact")
+        cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.contactEmail"]', "test@example.com")
+        cy.get('div[data-test="admin_popup_company_primaryBranchNameEmailPhone_inp"]').find('input[placeholder = "Phone Number"]').type("9876543210")
 
-        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.streetAddress']", "125 N G St")
-        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.city']", "Harlingen")
-        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.deliveryAddress.address.country']", "Bahamas")
-
-        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']")
-            .children("input")
-            .type("75000")
-            .should("have.value", "75000")
-
-        cy.wait(1000)
-        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']").find("div[role='option']").eq(0).click({force: true})
+        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.streetAddress']", "101 Mott St")
+        cy.enterText("input[id='field_input_primaryBranch.deliveryAddress.address.city']", "New York")
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.deliveryAddress.address.country']", "USA")
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.deliveryAddress.address.zip']", "10013")
+        cy.get("div[id='field_dropdown_primaryBranch.deliveryAddress.address.province']").click()
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.deliveryAddress.address.province']", "New York")
 
         cy.waitForUI()
+        cy.get("input[id='field_checkbox_primaryBranch.warehouse']").click({ force: true })
 
         cy.clickSave()
 
@@ -72,7 +72,7 @@ context("Companies CRUD", () => {
     })
 
     it("Edits a company", () => {
-        cy.searchInList("Donald The Ducks")
+        cy.searchInList("Test Company 222")
         cy.waitForUI()
 
         cy.getToken().then(token => {
@@ -85,8 +85,8 @@ context("Companies CRUD", () => {
 
         cy.get("#field_input_name")
             .clear()
-            .type("Donald and Co.")
-            .should("have.value", "Donald and Co.")
+            .type("Test Company 333")
+            .should("have.value", "Test Company 333")
 
         cy.clickSave()
 
@@ -96,7 +96,7 @@ context("Companies CRUD", () => {
             })
         })
 
-        cy.get("#field_input_name").should("have.value", "Donald and Co.")
+        cy.get("#field_input_name").should("have.value", "Test Company 333")
     })
 
     it("Checks error message", () => {
@@ -109,7 +109,7 @@ context("Companies CRUD", () => {
     })
 
     it("Deletes a company", () => {
-        cy.searchInList("Donald and Co.")
+        cy.searchInList("Test Company 333")
         cy.waitForUI()
         cy.waitForUI()
 

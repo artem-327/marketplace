@@ -116,7 +116,7 @@ context("Shopping cart CRUD", () => {
                 cy.wait("@marketplaceLoading", { timeout: 30000 })
 
                 cy.openOffer(sameWarehouseOffer[ 0 ].id, 1)
-                cy.contains("button", "I agree").click()
+                cy.approveAllConsents()
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("5")
@@ -134,7 +134,7 @@ context("Shopping cart CRUD", () => {
                 cy.waitForUI()
 
                 cy.openOffer(marketPlaceIdNum2, 1)
-                cy.contains("button", "I agree").click()
+                cy.approveAllConsents()
 
                 cy.get('[data-test="add_cart_quantity_inp"]').within(() => {
                     cy.get('input[type="number"]').type("5")
