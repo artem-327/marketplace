@@ -74,6 +74,8 @@ const Listings = props => {
       applyDatagridFilter(datagridFilter, true)
     }
 
+    handleSearchSellerChange('', props)
+
     return () => {
       const { sidebarChanged } = props
       let { isOpen, isHoldRequest } = props.sidebar
