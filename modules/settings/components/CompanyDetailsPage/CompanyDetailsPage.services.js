@@ -50,9 +50,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
       phone: values.phone,
       preferredCurrency: getSafe(() => userData.preferredCurrency.id, null),
       regulatoryDeaListAuthorized: getSafe(() => userData.regulatoryDeaListAuthorized, false),
-      regulatoryDeaListSignedDate: getSafe(() => userData.regulatoryDeaListSignedDate, null),
       regulatoryDhsCoiAuthorized: getSafe(() => userData.regulatoryDhsCoiAuthorized, false),
-      regulatoryDhsCoiSignedDate: getSafe(() => userData.regulatoryDhsCoiSignedDate, null),
       regulatoryHazmatAuthorized: getSafe(() => userData.regulatoryHazmatAuthorized, false),
       roles: getSafe(() => userData.roles, []).map(el => el.id),
       sellMarketSegments: getSafe(() => userData.sellMarketSegments, []).map(el => el.id)
