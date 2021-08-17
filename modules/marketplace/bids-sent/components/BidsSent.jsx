@@ -69,13 +69,15 @@ const BidsSent = props => {
     }
   }, []) 
 
-  const { datagrid, intl, loading, isOpenPopup } = props
+  const { datagrid, intl, loading, isOpenPopup, regulatoryDeaListAuthorized, regulatoryDhsCoiAuthorized } = props
   let { formatMessage } = intl
   const rows = getRows(state, props)
 
   const getRowDetail = ({ row }, state, props) => {
     return (
       <BidsRowDetail
+        regulatoryDeaListAuthorized={props.regulatoryDeaListAuthorized}
+        regulatoryDhsCoiAuthorized={props.regulatoryDhsCoiAuthorized}
         initValues={state.rowDetailState}
         popupValues={row}
         onUnmount={values => state.setRowDetailState(values)}
@@ -131,6 +133,7 @@ const BidsSent = props => {
       {isOpenPopup && <MakeOfferPopup />}
       {buyAttemptHasDea && !buyAttemptHasDhs && (
         <DeaPopup
+          permissionsToBuy={regulatoryDeaListAuthorized}
           onCancel={() => setBuyAttemptHasDea(null)}
           onAccept={() => {
             handleAddToCart(buyAttemptHasDea, props)
@@ -140,6 +143,7 @@ const BidsSent = props => {
       )}
       {buyAttemptHasDhs && (
         <DhsPopup
+          permissionsToBuy={regulatoryDhsCoiAuthorized}
           onCancel={() => {
             setBuyAttemptHasDea(null)
             setBuyAttemptHasDhs(null)
@@ -170,7 +174,9 @@ BidsSent.propTypes = {
   acceptOffer: PropTypes.func,
   rejectOffer: PropTypes.func,
   addOfferToCart: PropTypes.func,
-  deleteOffer: PropTypes.func
+  deleteOffer: PropTypes.func,
+  regulatoryDeaListAuthorized: PropTypes.bool,
+  regulatoryDhsCoiAuthorized: PropTypes.bool
 }
 
 BidsSent.defaultProps = {
@@ -185,7 +191,9 @@ BidsSent.defaultProps = {
   acceptOffer: () => {},
   rejectOffer: () => {},
   addOfferToCart: () => {},
-  deleteOffer: () => {}
+  deleteOffer: () => {},
+  regulatoryDeaListAuthorized: false,
+  regulatoryDhsCoiAuthorized: false
 }
 
 export default injectIntl(BidsSent)

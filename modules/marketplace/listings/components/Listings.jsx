@@ -101,7 +101,9 @@ const Listings = props => {
     buyEligible,
     selectedSellerOption,
     searchedCompaniesDropdown,
-    searchedCompaniesLoading
+    searchedCompaniesLoading,
+    regulatoryDeaListAuthorized,
+    regulatoryDhsCoiAuthorized
   } = props
   const {
     openFilterPopup,
@@ -204,6 +206,7 @@ const Listings = props => {
       {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => setState({ ...state, viewOnlyPopupOpen: false })} />}
       {buyAttemptHasDea && !buyAttemptHasDhs &&
         <DeaPopup
+          permissionsToBuy={regulatoryDeaListAuthorized}
           onCancel={() => setState({ ...state, buyAttemptHasDea: null })}
           onAccept={() => {
             tableRowClicked(props, buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)
@@ -213,6 +216,7 @@ const Listings = props => {
       }
       {buyAttemptHasDhs &&
         <DhsPopup
+          permissionsToBuy={regulatoryDhsCoiAuthorized}
           onCancel={() => setState({ ...state, buyAttemptHasDhs: null, buyAttemptHasDea: null })}
           onAccept={() => {
             if (buyAttemptHasDea) {
@@ -251,7 +255,9 @@ Listings.propTypes = {
   searchCompanies: PropTypes.func,
   getProductOffer: PropTypes.func,
   closePopup: PropTypes.func,
-  openPopup: PropTypes.func
+  openPopup: PropTypes.func,
+  regulatoryDeaListAuthorized: PropTypes.bool,
+  regulatoryDhsCoiAuthorized: PropTypes.bool
 }
 
 Listings.defaultProps = {
@@ -277,7 +283,9 @@ Listings.defaultProps = {
   searchCompanies: () => {},
   getProductOffer: () => {},
   closePopup: () => {},
-  openPopup: () => {}
+  openPopup: () => {},
+  regulatoryDeaListAuthorized: false,
+  regulatoryDhsCoiAuthorized: false
 }
 
 export default injectIntl(Listings)

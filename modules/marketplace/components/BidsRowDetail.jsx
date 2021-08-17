@@ -62,7 +62,9 @@ const BidsRowDetail = props => {
     packagingUnit,
     packagingSize,
     seller,
-    openPopup
+    openPopup,
+    regulatoryDeaListAuthorized,
+    regulatoryDhsCoiAuthorized
   } = props
 
   // Similar to call componentDidMount:
@@ -632,6 +634,7 @@ const BidsRowDetail = props => {
             </DivScrollContent>
             {buyAttemptHasDea && !buyAttemptHasDhs && (
               <DeaPopup
+                permissionsToBuy={regulatoryDeaListAuthorized}
                 onCancel={() => setBuyAttemptHasDea(null)}
                 onAccept={() => {
                   handleCheckout(buyAttemptHasDea.id, props)
@@ -641,6 +644,7 @@ const BidsRowDetail = props => {
             )}
             {buyAttemptHasDhs && (
               <DhsPopup
+                permissionsToBuy={regulatoryDhsCoiAuthorized}
                 onCancel={() => {
                   setBuyAttemptHasDea(null)
                   setBuyAttemptHasDhs(null)
@@ -682,7 +686,9 @@ BidsRowDetail.propTypes = {
   counterOffer: PropTypes.func,
   acceptOffer: PropTypes.func,
   rejectOffer: PropTypes.func,
-  addOfferToCart: PropTypes.func
+  addOfferToCart: PropTypes.func,
+  regulatoryDeaListAuthorized: PropTypes.bool,
+  regulatoryDhsCoiAuthorized: PropTypes.bool
 }
 
 BidsRowDetail.defaultProps = {
@@ -705,7 +711,9 @@ BidsRowDetail.defaultProps = {
   counterOffer: () => {},
   acceptOffer: () => {},
   rejectOffer: () => {},
-  addOfferToCart: () => {}
+  addOfferToCart: () => {},
+  regulatoryDeaListAuthorized: false,
+  regulatoryDhsCoiAuthorized: false
 }
 
 export default injectIntl(BidsRowDetail)

@@ -449,19 +449,13 @@ const checkBuyAttempt = (row, props, state, setState) => {
   const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
   const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
-  if (hasDea) {
-    setState({ ...state, buyAttemptHasDea: row })
-    skipBuy = true
-  }
-  if (hasDhs) {
-    setState({ ...state, buyAttemptHasDhs: row })
-    skipBuy = true
-  }
-
-  if (!props.buyEligible) {
-    setState({ ...state, viewOnlyPopupOpen: true })
-    skipBuy = true
-  }
+  setState({
+    ...state,
+    buyAttemptHasDea: hasDea ? row : null,
+    buyAttemptHasDhs: hasDhs ? row : null,
+    viewOnlyPopupOpen: !props.buyEligible
+  })
+  skipBuy = hasDea || hasDhs || !props.buyEligible
 
   if (skipBuy) return
   tableRowClicked(props, row.id, row?.sellerId)
