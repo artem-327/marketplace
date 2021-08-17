@@ -138,7 +138,6 @@ const Listings = props => {
             </div>
             <div className='column'>
               <DropdownStyled
-                style={{ width: '210px' }}
                 name='seller'
                 selection
                 clearable={seller !== 0}
