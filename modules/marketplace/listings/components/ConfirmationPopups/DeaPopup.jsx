@@ -20,7 +20,7 @@ import {
  * @components
  */
 const DeaPopup = props => {
-  const { onCancel, onAccept } = props
+  const { permissionsToBuy, onCancel, onAccept } = props
 
   const requirements =
     <LinkLabel href='https://www.deadiversion.usdoj.gov/21cfr/cfr/1301/1301_72.htm' target='_blank'>
@@ -45,6 +45,14 @@ const DeaPopup = props => {
               values={{ requirements }}
             />
           </DivDescription>
+          {!permissionsToBuy && (
+            <DivDescription>
+              <FormattedMessage
+                id='marketplace.notUserPermissionsToBuy'
+                defaultMessage='You have not signed documents proving you are authorized to purchase regulated products yet, or the authorization has expired. Please, check the authorization under you user settings.'
+              />
+            </DivDescription>
+          )}
           <DivButtons>
             <DivButtonColumn>
               <Button
@@ -57,6 +65,7 @@ const DeaPopup = props => {
             </DivButtonColumn>
             <DivButtonColumn>
               <Button
+                disabled={!permissionsToBuy}
                 type='button'
                 color='blue'
                 onClick={() => onAccept()}>
@@ -71,11 +80,13 @@ const DeaPopup = props => {
 }
 
 DeaPopup.propTypes = {
+  permissionsToBuy: PropTypes.bool,
   onCancel: PropTypes.func,
   onAccept: PropTypes.func
 }
 
 DeaPopup.defaultProps = {
+  permissionsToBuy: false,
   onCancel: () => {},
   onAccept: () => {}
 }
