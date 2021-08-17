@@ -965,7 +965,7 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     productNumber: getSafe(() => po.companyProduct.intProductCode, 'N/A'),
     echoName: getSafe(() => po.companyProduct.companyGenericProduct.name, ''),
     echoCode: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
-    chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.companyProduct.intProductName),
+    chemicalName: getSafe(() => po.product.casProduct.chemicalName, po?.companyProduct?.intProductName),
     warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
     productId: getSafe(() => po.product.casProduct.id, 0),
     available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
