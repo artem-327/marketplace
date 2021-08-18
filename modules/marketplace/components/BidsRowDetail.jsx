@@ -40,13 +40,15 @@ const BidsRowDetail = props => {
   const [detailExpandedIds, setDetailExpandedIds] = useState([])
   const [touched, setTouched] = useState(false)
   const [radioState, setRadioState] = useState('')
-  const [buyAttemptHasDea, setBuyAttemptHasDea] = useState(null)
+  const [buyAttemptHasDeaI, setBuyAttemptHasDeaI] = useState(null)
+  const [buyAttemptHasDeaII, setBuyAttemptHasDeaII] = useState(null)
   const [buyAttemptHasDhs, setBuyAttemptHasDhs] = useState(null)
 
   const state = {
     initialFormValues, setInitialFormValues, detailExpandedIds, setDetailExpandedIds,
     touched, setTouched, radioState, setRadioState,
-    buyAttemptHasDea, setBuyAttemptHasDea,
+    buyAttemptHasDeaI, setBuyAttemptHasDeaI,
+    buyAttemptHasDeaII, setBuyAttemptHasDeaII,
     buyAttemptHasDhs, setBuyAttemptHasDhs
   }
 
@@ -632,13 +634,17 @@ const BidsRowDetail = props => {
                 </Form>
               </DivDetailRow>
             </DivScrollContent>
-            {buyAttemptHasDea && !buyAttemptHasDhs && (
+            {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs && (
               <DeaPopup
+                deaListIIType={!buyAttemptHasDeaI}
                 permissionsToBuy={regulatoryDeaListAuthorized}
-                onCancel={() => setBuyAttemptHasDea(null)}
+                onCancel={() => {
+                  setBuyAttemptHasDeaI(null)
+                  setBuyAttemptHasDeaII(null)
+                }}
                 onAccept={() => {
-                  handleCheckout(buyAttemptHasDea.id, props)
-                  setBuyAttemptHasDea(null)
+                  handleCheckout(buyAttemptHasDeaI ? buyAttemptHasDeaI.id : buyAttemptHasDeaII.id, props)
+                  buyAttemptHasDeaI ? setBuyAttemptHasDeaI(null) : setBuyAttemptHasDeaII(null)
                 }}
               />
             )}
@@ -646,11 +652,12 @@ const BidsRowDetail = props => {
               <DhsPopup
                 permissionsToBuy={regulatoryDhsCoiAuthorized}
                 onCancel={() => {
-                  setBuyAttemptHasDea(null)
+                  setBuyAttemptHasDeaI(null)
+                  setBuyAttemptHasDeaII(null)
                   setBuyAttemptHasDhs(null)
                 }}
                 onAccept={() => {
-                  if (buyAttemptHasDea) {
+                  if (buyAttemptHasDeaI || buyAttemptHasDeaII) {
                     setBuyAttemptHasDhs(null)
                   } else {
                     handleCheckout(buyAttemptHasDhs.id, props)

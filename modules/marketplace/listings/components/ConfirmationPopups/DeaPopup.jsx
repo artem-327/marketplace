@@ -20,8 +20,9 @@ import {
  * @components
  */
 const DeaPopup = props => {
-  const { permissionsToBuy, onCancel, onAccept } = props
+  const { permissionsToBuy, deaListIIType, onCancel, onAccept } = props
 
+  const deaType = deaListIIType ? 'II' : 'I'
   const requirements =
     <LinkLabel href='https://www.deadiversion.usdoj.gov/21cfr/cfr/1301/1301_72.htm' target='_blank'>
       <FormattedMessage id='marketplace.requirements' defaultMessage='requirements' />
@@ -41,8 +42,8 @@ const DeaPopup = props => {
           <DivDescription>
             <FormattedMessage
               id='marketplace.deaDescription'
-              defaultMessage={`This product contains a chemical that is designated by the DEA as a List II Chemical. Before checking out, please ensure that the facility you are using understands the ${requirements} to store List II substances.`}
-              values={{ requirements }}
+              defaultMessage={`This product contains a chemical that is designated by the DEA as a List ${deaType} Chemical. Before checking out, please ensure that the facility you are using understands the ${requirements} to store List ${deaType} substances.`}
+              values={{ requirements, deaType }}
             />
           </DivDescription>
           {!permissionsToBuy && (
@@ -67,7 +68,7 @@ const DeaPopup = props => {
               <Button
                 disabled={!permissionsToBuy}
                 type='button'
-                color='blue'
+                color={permissionsToBuy ? 'blue' : 'white'}
                 onClick={() => onAccept()}>
                 <FormattedMessage id='marketplace.iUnderstand' defaultMessage='I understand' />
               </Button>
@@ -81,12 +82,14 @@ const DeaPopup = props => {
 
 DeaPopup.propTypes = {
   permissionsToBuy: PropTypes.bool,
+  deaListIIType: PropTypes.bool,
   onCancel: PropTypes.func,
   onAccept: PropTypes.func
 }
 
 DeaPopup.defaultProps = {
   permissionsToBuy: false,
+  deaListIIType: false,
   onCancel: () => {},
   onAccept: () => {}
 }

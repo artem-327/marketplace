@@ -446,16 +446,18 @@ export const tableRowClicked = (props, clickedId, sellerId = null, isHoldRequest
 const checkBuyAttempt = (row, props, state, setState) => {
   let skipBuy = false
   const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
-  const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+  const hasDeaI = elements.some(el => getSafe(() => el.casProduct.deaListI, false))
+  const hasDeaII = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
   const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
   setState({
     ...state,
-    buyAttemptHasDea: hasDea ? row : null,
+    buyAttemptHasDeaI: hasDeaI ? row : null,
+    buyAttemptHasDeaII: hasDeaII ? row : null,
     buyAttemptHasDhs: hasDhs ? row : null,
     viewOnlyPopupOpen: !props.buyEligible
   })
-  skipBuy = hasDea || hasDhs || !props.buyEligible
+  skipBuy = hasDeaI || hasDeaII || hasDhs || !props.buyEligible
 
   if (skipBuy) return
   tableRowClicked(props, row.id, row?.sellerId)
