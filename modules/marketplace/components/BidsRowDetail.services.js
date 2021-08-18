@@ -82,11 +82,16 @@ export const handleCheckout = async (id, props) => {
 export const checkBuyAttempt = (row, state, props) => {
   let skipBuy = false
   const elements = getSafe(() => row.productOffer.companyProduct.companyGenericProduct.elements, [])
-  const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+  const hasDeaI = elements.some(el => getSafe(() => el.casProduct.deaListI, false))
+  const hasDeaII = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
   const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
-  if (hasDea) {
-    state.setBuyAttemptHasDea(row)
+  if (hasDeaI) {
+    state.setBuyAttemptHasDeaI(row)
+    skipBuy = true
+  }
+  if (hasDeaII) {
+    state.setBuyAttemptHasDeaII(row)
     skipBuy = true
   }
   if (hasDhs) {

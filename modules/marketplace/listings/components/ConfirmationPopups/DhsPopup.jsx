@@ -76,7 +76,7 @@ const DhsPopup = props => {
               <Button
                 disabled={!permissionsToBuy}
                 type='button'
-                color='blue'
+                color={permissionsToBuy ? 'blue' : 'white'}
                 onClick={() => onAccept()}>
                 <FormattedMessage id='marketplace.iAgree' defaultMessage='I agree' />
               </Button>
