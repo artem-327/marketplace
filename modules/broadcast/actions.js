@@ -4,8 +4,22 @@ import { currency } from '../../constants/index'
 import { getSafe } from '../../utils/functions'
 import { SETTINGS } from '../auth/constants'
 
-export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async offer => {
+export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer, settings = null) => {
   const data = await api.loadRules(offer.id)
+
+  const companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+
+  //setup Markup default value in a root if there doesn't exist any value in treeData
+  if (
+    data?.broadcastTree?.type === 'root' &&
+    !(data?.broadcastTree?.priceAddition || data?.broadcastTree?.priceMultiplier) &&
+    companySharedListingDefaultMarkup?.value &&
+    companySharedListingDefaultMarkup?.value !== SETTINGS.EMPTY_SETTING
+  ) {
+    //data.broadcastTree.broadcast = 1 ??
+    data.broadcastTree.priceMultiplier = +companySharedListingDefaultMarkup?.value
+    data.broadcastTree.priceAddition = 0
+  }
 
   return {
     data: data.broadcastTree,
