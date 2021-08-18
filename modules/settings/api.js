@@ -73,7 +73,7 @@ export default {
       .then(response => response.data)
   },
   getProductsWithRequiredParamPar: char =>
-    api.get(`/prodex/api/product-templates?search=${char}`).then(response => response.data),
+    api.get(`/prodex/api/product-templates?search=${encodeURIComponent(char)}`).then(response => response.data),
   getCurrencies: () => api.get('/prodex/api/currencies').then(response => response.data),
   getStoredCSV: body => {
     return api
@@ -245,7 +245,7 @@ export default {
     api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
   searchCompanyGenericProduct: (searchQuery, limit) =>
     api
-      .get(`/prodex/api/company-generic-products/search?pattern=${searchQuery}&limit=${limit}`)
+      .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`)
       .then(response => response.data),
   getNmfcNumbersByString: pattern =>
     api
@@ -296,7 +296,7 @@ export default {
     const id = companyId ? `companyId=${companyId}&` : ''
     return api
       .post(
-        `/prodex/api/payments/bank-accounts/velloci/invite-to-add-bank-accounts?${id}emailAddress=${emailAddress}&name=${name}`
+        `/prodex/api/payments/bank-accounts/velloci/invite-to-add-bank-accounts?${id}emailAddress=${encodeURIComponent(emailAddress)}&name=${encodeURIComponent(name)}`
       )
       .then(response => response.data)
   },

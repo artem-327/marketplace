@@ -7,7 +7,7 @@ export default {
   postNewCasProduct: value => api.post('/prodex/api/cas-products', value),
   updateCasProduct: (id, value) => api.put(`/prodex/api/cas-products/id/${id}`, value)
     .then(response => response.data),
-  getAlternativeProductNames: value => api.get(`/prodex/api/cas-products/alternative-names/cas-product/${encodeURIComponent(value)}`),
+  getAlternativeProductNames: value => api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`),
   postNewProductName: (productId, value) =>
     api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value),
   updateProductName: (id, value) => api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value),

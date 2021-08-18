@@ -13,7 +13,9 @@ const WarehouseCredentials = () => {
     <>
       <DatagridProvider
         apiConfig={{
-          url: gaSearch ? `/prodex/api/branches/warehouses/certified/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/branches/warehouses/certified/datagrid`,
+          url: gaSearch
+            ? `/prodex/api/branches/warehouses/certified/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+            : `/prodex/api/branches/warehouses/certified/datagrid`,
           searchToFilter: v => {
             setGaSearch(getSafe(() => v.searchInput, ''))
             return v && v.searchInput ? [

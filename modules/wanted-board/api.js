@@ -29,7 +29,7 @@ export function getWarehouses() {
 export function searchManufacturers(text, limit) {
   return api
     .get(
-      `/prodex/api/manufacturers/search?search=${text}${
+      `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
         Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
       }`
     )
@@ -39,7 +39,7 @@ export function searchManufacturers(text, limit) {
 export function searchCasNumber(text, limit) {
   return api
     .get(
-      `/prodex/api/cas-products/search?pattern=${text}${
+      `/prodex/api/cas-products/search?pattern=${encodeURIComponent(text)}${
         Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
       }`
     )

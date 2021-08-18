@@ -296,7 +296,9 @@ class Settings extends Component {
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       users: {
-        url: this.state.gaSearch ? `/prodex/api/users/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/users/datagrid`,
+        url: this.state.gaSearch
+          ? `/prodex/api/users/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(this.state.gaSearch)}`
+          : `/prodex/api/users/datagrid`,
         searchToFilter: v => {
           this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           return v && v.searchInput
@@ -315,7 +317,9 @@ class Settings extends Component {
       // 'bank-accounts': null,
       // 'credit-cards': null,
       documents: {
-        url: this.state.gaSearch ? `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${this.state.gaSearch}` : `/prodex/api/attachments/datagrid`,
+        url: this.state.gaSearch
+          ? `/prodex/api/attachments/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(this.state.gaSearch)}`
+          : `/prodex/api/attachments/datagrid`,
         searchToFilter: v => {
           this.setState({ gaSearch: getSafe(() => v.searchInput, '') })
           let filter = { or: [], and: [] }

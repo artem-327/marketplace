@@ -139,7 +139,7 @@ export const searchCasNumber = (text, limit = 10) => ({
 
 export const componentSearchProduct = (text) => ({
   type: AT.WB_COMPONENT_SEARCH_PRODUCT,
-  payload: api.getAutocompleteData(`/prodex/api/product-groups/search?pattern=${text}`)
+  payload: api.getAutocompleteData(`/prodex/api/product-groups/search?pattern=${encodeURIComponent(text)}`)
 })
 
 export const componentSearchCas = (text, limit = 5) => ({
