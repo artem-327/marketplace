@@ -153,7 +153,7 @@ export const removeAttachmentLink = (echoId, attachmentId) =>
 
 export const searchManufacturers = (text, limit) =>
   api.get(
-    `/prodex/api/manufacturers/search?search=${text}${
+    `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
     }`
   )

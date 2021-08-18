@@ -7,7 +7,7 @@ export default {
   postNewCasProduct: value => api.post('/prodex/api/cas-products', value),
   updateCasProduct: (id, value) => api.put(`/prodex/api/cas-products/id/${id}`, value)
     .then(response => response.data),
-  getAlternativeProductNames: value => api.get(`/prodex/api/cas-products/alternative-names/cas-product/${value}`),
+  getAlternativeProductNames: value => api.get(`/prodex/api/cas-products/alternative-names/cas-product/${encodeURIComponent(value)}`),
   postNewProductName: (productId, value) =>
     api.post(`/prodex/api/cas-products/alternative-names/cas-product/${productId}`, value),
   updateProductName: (id, value) => api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value),
@@ -23,7 +23,7 @@ export default {
     api.post(`/prodex/api/company-generic-products`, values).then(response => response.data),
   searchManufacturers: (text, limit) =>
     api.get(
-      `/prodex/api/manufacturers/search?search=${text}${
+      `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
         Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
       }`
     ),

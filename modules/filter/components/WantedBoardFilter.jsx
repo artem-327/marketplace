@@ -334,7 +334,7 @@ class WantedBoardFilter extends Component {
   handleSearch = debounce(({ searchQuery }) => {
     if (searchQuery.length > 1) {
       let params = {
-        searchUrl: `/prodex/api/product-groups/search?pattern=${searchQuery}`
+        searchUrl: `/prodex/api/product-groups/search?pattern=${encodeURIComponent(searchQuery)}`
       }
       this.props.getAutocompleteData(params)
     }
@@ -356,7 +356,7 @@ class WantedBoardFilter extends Component {
         )
         if (searchQuery && searchQuery.name) {
           let params = {
-            searchUrl: `/prodex/api/product-groups/search?pattern=${searchQuery.name}`
+            searchUrl: `/prodex/api/product-groups/search?pattern=${encodeURIComponent(searchQuery.name)}`
           }
           try {
             await this.props.getAutocompleteData(params)
@@ -1040,7 +1040,7 @@ WantedBoardFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   savedUrl: '/prodex/api/purchase-requests/other/datagrid/saved-filters',
-  searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
+  searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}`,
   onApply: filter => {},
   onClear: () => {},
   onClose: () => {}

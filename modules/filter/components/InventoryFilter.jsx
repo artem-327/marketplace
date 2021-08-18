@@ -1225,9 +1225,9 @@ InventoryFilter.defaultProps = {
   autocompleteManufacturer: [],
   autocompleteOrigin: [],
   savedUrl: '/prodex/api/product-offers/own/datagrid/saved-filters',
-  searchUrl: text => `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`,
-  searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,
-  searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${text}`,
+  searchUrl: text => `/prodex/api/company-products/own/search?pattern=${encodeURIComponent(text)}&onlyMapped=false`,
+  searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${encodeURIComponent(text)}`,
+  searchManufacturerUrl: text => `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}`,
   onApply: filter => {},
   onClear: () => {},
   onClose: () => {}

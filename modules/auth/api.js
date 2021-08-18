@@ -12,9 +12,9 @@ export const getIdentity = async () => {
   }
 }
 export const getVersion = () => api.get('/prodex/api/version')
-export const resetPasswordRequest = email => api.post(`/prodex/api/users/reset-password-request?email=${email}`)
+export const resetPasswordRequest = email => api.post(`/prodex/api/users/reset-password-request?email=${encodeURIComponent(email)}`)
 export const reviewCompany = values => api.patch(`/prodex/api/companies/review`, values)
-export const searchCountries = searchQuery => api.get(`/prodex/api/countries/search?pattern=${searchQuery}`)
+export const searchCountries = searchQuery => api.get(`/prodex/api/countries/search?pattern=${encodeURIComponent(searchQuery)}`)
 export const searchProvinces = countryId => api.get(`/prodex/api/provinces/country/${countryId}`)
 export const updateCompany = (id, payload) => api.patch(`/prodex/api/companies/id/${id}`, payload)
 export const getCompanyDetails = id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)

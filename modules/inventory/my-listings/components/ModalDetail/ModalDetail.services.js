@@ -487,7 +487,7 @@ export const renderPricingTiers = (props, state, setState, formikPropsNew, prici
 
 export const searchProducts = debounce((text, props) => {
   props.getAutocompleteData({
-    searchUrl: `/prodex/api/company-products/own/search?pattern=${text}&onlyMapped=false`
+    searchUrl: `/prodex/api/company-products/own/search?pattern=${encodeURIComponent(text)}&onlyMapped=false`
   })
 }, 250)
 

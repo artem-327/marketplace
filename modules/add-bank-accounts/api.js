@@ -4,7 +4,7 @@ export default {
   onEventVelloci: (eventName, metadata, magicToken) =>
     axios
       .post(
-        `/prodex/api/payments/bank-accounts/velloci/add/log/magic-token?eventName=${eventName}&token=${magicToken}`,
+        `/prodex/api/payments/bank-accounts/velloci/add/log/magic-token?eventName=${encodeURIComponent(eventName)}&token=${magicToken}`,
         metadata
       )
       .then(response => response.data)

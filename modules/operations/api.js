@@ -4,8 +4,8 @@ export default {
   deleteShippingQuote: id => api.delete(`/prodex/api/shipment/manual-quotes/id/${id}`),
   createShippingQuote: data => api.put('/prodex/api/shipment/manual-quotes', data).then(response => response.data),
   deleteTag: id => api.delete(`/prodex/api/tags/id/${id}`),
-  createTag: name => api.post(`/prodex/api/tags?name=${name}`),
-  updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${name}`),
+  createTag: name => api.post(`/prodex/api/tags?name=${encodeURIComponent(name)}`),
+  updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${encodeURIComponent(name)}`),
   searchCompany: (companyText, limit = 30) =>
     api
       .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
