@@ -53,6 +53,7 @@ import {
   makeGetTdsTemplates,
   makeGetBroadcastOption
 } from '../../../selectors'
+import { makeGetSettings } from '../../../../auth/selectors'
 
 import {
   makeGetProductFormsDropdown,
@@ -113,6 +114,7 @@ const makeMapStateToProps = () => {
   const getBroadcastOption = makeGetBroadcastOption()
   const getDocumentTypesDropdown = makeGetDocumentTypesDropdown()
   const getCountriesDropdown = makeGetCountriesDropdown()
+  const getSettings = makeGetSettings()
 
   const mapStateToProps = ( store, { inventoryGrid }) => ({
     applicationName: getApplicationName(store),
@@ -139,7 +141,8 @@ const makeMapStateToProps = () => {
     tdsTemplates: getTdsTemplates(store),
     broadcastOption: getBroadcastOption(store),
     documentTypesDropdown: getDocumentTypesDropdown(store),
-    countriesDropdown: getCountriesDropdown(store)
+    countriesDropdown: getCountriesDropdown(store),
+    settings: getSettings(store)
   })
   return mapStateToProps
 }
