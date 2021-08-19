@@ -114,41 +114,34 @@ const MyListings = props => {
     }
   }, [])
 
-  const prevDatagridFilterUpdate = usePrevious(props.datagridFilterUpdate)
-  const prevRows = usePrevious(props.rows)
-  const prevPricingEditOpenId = usePrevious(props.pricingEditOpenId)
-  const prevUpdateRow = usePrevious(props.updateRow)
-  const prevFocusInput = usePrevious(props.focusInput)
+  const prevProps = usePrevious(props)
+  const prevState = usePrevious(state)
 
   useEffect(() => {
-    const { datagridFilterReload, datagridFilter, datagrid } = props
-    if (prevDatagridFilterUpdate  !== 'undefined') {
-      datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
-    }
-  }, [props.datagridFilterUpdate])
-
-  useEffect(() => {
-    const { datagrid } = props
-    if (typeof prevRows  !== 'undefined' && typeof prevPricingEditOpenId  !== 'undefined' && typeof prevUpdateRow  !== 'undefined' && typeof prevFocusInput  !== 'undefined') {
+    if(typeof prevProps !== 'undefined' && typeof prevState !== 'undefined') {
+      const { datagridFilterUpdate, datagridFilterReload, datagridFilter, datagrid } = props
+      if (prevProps.datagridFilterUpdate !== datagridFilterUpdate) {
+        datagrid.setFilter(datagridFilter, datagridFilterReload, 'inventory')
+      }
       if (
-        (getSafe(() => prevRows.length, '') === getSafe(() => state.rows.length, '') &&
-          getSafe(() => prevRows.length, '') !== getSafe(() => props.rows.length, '')) ||
-        getSafe(() => prevRows[0].id, '') !== getSafe(() => props.rows[0].id, '') ||
-        getSafe(() => prevPricingEditOpenId, '') !== getSafe(() => props.pricingEditOpenId, '') ||
-        (getSafe(() => state.updatedRow, '') && !getSafe(() => prevUpdateRow, '')) ||
-        getSafe(() => state.focusInput, '') !== getSafe(() => prevFocusInput, '') ||
+        (getSafe(() => prevProps.rows.length, '') === getSafe(() => state.rows.length, '') &&
+          getSafe(() => prevProps.rows.length, '') !== getSafe(() => props.rows.length, '')) ||
+        getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => props.rows[0].id, '') ||
+        getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => props.pricingEditOpenId, '') ||
+        (getSafe(() => state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
+        getSafe(() => state.focusInput, '') !== getSafe(() => prevState.focusInput, '') ||
         getSafe(() => datagrid.isUpdatedRow, '')
       ) {
         if (getSafe(() => datagrid.isUpdatedRow, '')) {
           datagrid.setUpdatedRow(false)
         }
         getRows(props, state, setState)
-        if (state.updatedRow && !prevUpdateRow) {
-          setState(prevState => ({ ...prevState, updatedRow: false }))
+        if (state.updatedRow && !prevState.updateRow) {
+          setState(preState => ({ ...preState, updatedRow: false }))
         }
       }
     }
-  }, [props.rows, props.pricingEditOpenId, props.updateRow, props.focusInput])
+  }, [props, state])
 
   const {
     isModalDetailOpen,

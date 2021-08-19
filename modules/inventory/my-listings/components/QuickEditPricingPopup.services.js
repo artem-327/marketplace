@@ -79,7 +79,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
-                  placeholder: '0'
+                  placeholder: '0',
+                  onChange: (e, { name, value }) => {
+                    e.persist()
+                    props.handlechange(
+                      { quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM },
+                      i,
+                      `pricingTiers[${i}].quantityFrom`
+                    )
+                  }
                 }}
               />
               <div className='label'>{formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}</div>
@@ -91,7 +99,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
-                  placeholder: '0.000'
+                  placeholder: '0.000',
+                  onChange: (e, { name, value }) => {
+                    e.persist()
+                    props.handlechange(
+                      { quantityFrom: values.pricingTiers[i].quantityFrom, pricePerUOM: value },
+                      i,
+                      `pricingTiers[${i}].pricePerUOM`
+                    )
+                  }
                 }}
               />
               <div className='label'>{currencySymbol}</div>
@@ -106,6 +122,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   let pricingTiers = values.pricingTiers.slice()
                   pricingTiers.splice(i, 1)
                   setFieldValue('pricingTiers', pricingTiers)
+                  props.handlechange(pricingTiers)
                 }}>
                 <Icon name='trash alternate outline' />
               </Button>
@@ -126,6 +143,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               let pricingTiers = values.pricingTiers.slice()
               pricingTiers.push({ quantityFrom: '', pricePerUOM: '' })
               setFieldValue('pricingTiers', pricingTiers)
+              props.handlechange(pricingTiers)
             }}>
             {formatMessage({ id: 'global.add', defaultMessage: 'Add' })}
           </Button>
@@ -203,7 +221,7 @@ export const submitForm = async (props, formikProps) => {
 
     try {
       data = await addProductOffer(payload, rawData.id, false, isGrouped)
-      if(data) datagrid.updateRow(data.id, () => data)
+      datagrid.updateRow(data.id, () => data)
       sendSuccess = true
     } catch (e) {
       console.error(e)

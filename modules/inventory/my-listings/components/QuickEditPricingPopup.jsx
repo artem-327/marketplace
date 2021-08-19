@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { Grid } from 'semantic-ui-react'
