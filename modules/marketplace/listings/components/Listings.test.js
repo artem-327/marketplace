@@ -20,6 +20,7 @@ const defaultProps = {
   datagridFilterReload: false,
   isOpenPopup: false,
   buyEligible: false,
+  sellEligible: false,
   searchedCompaniesLoading: false,
   isProductInfoOpen: false,
   searchedCompaniesDropdown: [],
