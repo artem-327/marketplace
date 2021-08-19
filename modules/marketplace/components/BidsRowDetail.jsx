@@ -40,13 +40,15 @@ const BidsRowDetail = props => {
   const [detailExpandedIds, setDetailExpandedIds] = useState([])
   const [touched, setTouched] = useState(false)
   const [radioState, setRadioState] = useState('')
-  const [buyAttemptHasDea, setBuyAttemptHasDea] = useState(null)
+  const [buyAttemptHasDeaI, setBuyAttemptHasDeaI] = useState(null)
+  const [buyAttemptHasDeaII, setBuyAttemptHasDeaII] = useState(null)
   const [buyAttemptHasDhs, setBuyAttemptHasDhs] = useState(null)
 
   const state = {
     initialFormValues, setInitialFormValues, detailExpandedIds, setDetailExpandedIds,
     touched, setTouched, radioState, setRadioState,
-    buyAttemptHasDea, setBuyAttemptHasDea,
+    buyAttemptHasDeaI, setBuyAttemptHasDeaI,
+    buyAttemptHasDeaII, setBuyAttemptHasDeaII,
     buyAttemptHasDhs, setBuyAttemptHasDhs
   }
 
@@ -62,7 +64,9 @@ const BidsRowDetail = props => {
     packagingUnit,
     packagingSize,
     seller,
-    openPopup
+    openPopup,
+    regulatoryDeaListAuthorized,
+    regulatoryDhsCoiAuthorized
   } = props
 
   // Similar to call componentDidMount:
@@ -630,23 +634,30 @@ const BidsRowDetail = props => {
                 </Form>
               </DivDetailRow>
             </DivScrollContent>
-            {buyAttemptHasDea && !buyAttemptHasDhs && (
+            {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs && (
               <DeaPopup
-                onCancel={() => setBuyAttemptHasDea(null)}
+                deaListIIType={!buyAttemptHasDeaI}
+                permissionsToBuy={regulatoryDeaListAuthorized}
+                onCancel={() => {
+                  setBuyAttemptHasDeaI(null)
+                  setBuyAttemptHasDeaII(null)
+                }}
                 onAccept={() => {
-                  handleCheckout(buyAttemptHasDea.id, props)
-                  setBuyAttemptHasDea(null)
+                  handleCheckout(buyAttemptHasDeaI ? buyAttemptHasDeaI.id : buyAttemptHasDeaII.id, props)
+                  buyAttemptHasDeaI ? setBuyAttemptHasDeaI(null) : setBuyAttemptHasDeaII(null)
                 }}
               />
             )}
             {buyAttemptHasDhs && (
               <DhsPopup
+                permissionsToBuy={regulatoryDhsCoiAuthorized}
                 onCancel={() => {
-                  setBuyAttemptHasDea(null)
+                  setBuyAttemptHasDeaI(null)
+                  setBuyAttemptHasDeaII(null)
                   setBuyAttemptHasDhs(null)
                 }}
                 onAccept={() => {
-                  if (buyAttemptHasDea) {
+                  if (buyAttemptHasDeaI || buyAttemptHasDeaII) {
                     setBuyAttemptHasDhs(null)
                   } else {
                     handleCheckout(buyAttemptHasDhs.id, props)
@@ -682,7 +693,9 @@ BidsRowDetail.propTypes = {
   counterOffer: PropTypes.func,
   acceptOffer: PropTypes.func,
   rejectOffer: PropTypes.func,
-  addOfferToCart: PropTypes.func
+  addOfferToCart: PropTypes.func,
+  regulatoryDeaListAuthorized: PropTypes.bool,
+  regulatoryDhsCoiAuthorized: PropTypes.bool
 }
 
 BidsRowDetail.defaultProps = {
@@ -705,7 +718,9 @@ BidsRowDetail.defaultProps = {
   counterOffer: () => {},
   acceptOffer: () => {},
   rejectOffer: () => {},
-  addOfferToCart: () => {}
+  addOfferToCart: () => {},
+  regulatoryDeaListAuthorized: false,
+  regulatoryDhsCoiAuthorized: false
 }
 
 export default injectIntl(BidsRowDetail)

@@ -11,6 +11,8 @@ const makeMapStateToProps = () => {
     return {
       ...store.marketplace,
       rows: datagrid?.rows,
+      regulatoryDeaListAuthorized: store.auth?.identity?.regulatoryDeaListAuthorized,
+      regulatoryDhsCoiAuthorized: store.auth?.identity?.regulatoryDhsCoiAuthorized
     }
   }
   return mapStateToProps

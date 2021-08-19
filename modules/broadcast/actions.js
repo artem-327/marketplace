@@ -100,7 +100,7 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (row, rules, 
         ...(dataType === 'shared-listings' ? { ...row.rawData } : { ...row }),
         warehouse: {
           deliveryAddress: {
-            cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse.deliveryAddress.cfName
+            cfName: typeof row.warehouse === 'string' ? row.warehouse : row.warehouse?.deliveryAddress?.cfName
           }
         },
         isBroadcastLoading: true
