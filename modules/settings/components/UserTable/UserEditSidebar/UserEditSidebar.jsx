@@ -463,12 +463,15 @@ const UserEditSidebar = props => {
                         ]}
                         inputProps={{
                           'data-test': 'settings_users_popup_regulatory_dea_list_authorized_drpdn',
-                          disabled: !sidebarValues?.regulatoryDeaListAuthorized && !!sidebarValues?.regulatoryDeaListSignAskedDate
+                          disabled:
+                            !sidebarValues?.regulatoryDeaListAuthorized &&
+                            !!sidebarValues?.regulatoryDeaListSignAskedDate &&
+                            !sidebarValues?.regulatoryDeaListSignedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {sidebarValues?.regulatoryDeaListAuthorized && !sidebarValues.regulatoryDeaListSignedDate && (
+                      {!sidebarValues?.regulatoryDeaListAuthorized && values.regulatoryDeaListAuthorized && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
@@ -498,12 +501,15 @@ const UserEditSidebar = props => {
                         ]}
                         inputProps={{
                           'data-test': 'settings_users_popup_regulatory_dhs_chemicals_drpdn',
-                          disabled: !sidebarValues?.regulatoryDhsCoiAuthorized && !!sidebarValues?.regulatoryDhsCoiSignAskedDate
+                          disabled:
+                            !sidebarValues?.regulatoryDhsCoiAuthorized &&
+                            !!sidebarValues?.regulatoryDhsCoiSignAskedDate &&
+                            !sidebarValues?.regulatoryDhsListSignedDate
                         }}
                       />
                     </FormGroup>
                     <DivNotify>
-                      {sidebarValues?.regulatoryDhsCoiAuthorized && !sidebarValues.regulatoryDhsCoiSignedDate && (
+                      {!sidebarValues?.regulatoryDhsCoiAuthorized && values.regulatoryDhsCoiAuthorized && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.notify'
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
