@@ -98,6 +98,7 @@ const Listings = props => {
     tableHandlersFiltersListings,
     isOpenPopup,
     buyEligible,
+    sellEligible,
     selectedSellerOption,
     searchedCompaniesDropdown,
     searchedCompaniesLoading,
@@ -203,7 +204,7 @@ const Listings = props => {
       <AddCart openInfo={openInfo} buyEnabled={buyEligible} />
       {openFilterPopup && <Filter onClose={() => setState({ ...state, openFilterPopup: false })} />}
       {isOpenPopup && <MakeOfferPopup />}
-      {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => setState({ ...state, viewOnlyPopupOpen: false })} />}
+      {viewOnlyPopupOpen && !(sellEligible && buyEligible) && <ViewOnlyPopup onCancel={() => setState({ ...state, viewOnlyPopupOpen: false })} />}
       {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs &&
         <DeaPopup
           deaListIIType={!buyAttemptHasDeaI}
@@ -256,6 +257,7 @@ Listings.propTypes = {
   datagridFilterReload: PropTypes.bool,
   isOpenPopup: PropTypes.bool,
   buyEligible: PropTypes.bool,
+  sellEligible: PropTypes.bool,
   searchedCompaniesLoading: PropTypes.bool,
   isProductInfoOpen: PropTypes.bool,
   searchedCompaniesDropdown: PropTypes.array,
@@ -284,6 +286,7 @@ Listings.defaultProps = {
   datagridFilterReload: false,
   isOpenPopup: false,
   buyEligible: false,
+  sellEligible: false,
   searchedCompaniesLoading: false,
   isProductInfoOpen: false,
   searchedCompaniesDropdown: [],
