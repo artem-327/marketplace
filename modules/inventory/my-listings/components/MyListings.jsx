@@ -276,7 +276,7 @@ const MyListings = props => {
               .groupBy('echoName')
               .map(v => {
                 return {
-                  key: `${v[0].echoName}_${v[0].echoCode}_${v[0].companyProduct.id}_${
+                  key: `${v[0].echoName}_${v[0].echoCode}_${v[0].companyProduct?.id}_${
                     v[0].productGroup !== null
                       ? v[0].productGroup + ':'
                       : formatMessage({ id: 'global.unmapped.cptlz', defaultMessage: 'Unmapped' })
