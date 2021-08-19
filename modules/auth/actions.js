@@ -81,6 +81,11 @@ export function login(username, password) {
         const isOrderOperator = identity.roles.map(r => r.role).indexOf('ORDER_OPERATOR') > -1
         const isOrderProcessing = identity.roles.map(r => r.role).indexOf('ORDER_PROCESSING') > -1
         const isOrderView = identity.roles.map(r => r.role).indexOf('ORDER_VIEW') > -1
+        const isCompanyAdmin = identity.roles.map(r => r.role).indexOf('COMPANY_ADMIN') > -1
+        const isMerchant = identity.roles.map(r => r.role).indexOf('MERCHANT') > -1
+        const isProductCatalogAdmin = identity.roles.map(r => r.role).indexOf('PRODUCT_CATALOG_ADMIN') > -1
+        const isProductOfferManager = identity.roles.map(r => r.role).indexOf('PRODUCT_OFFER_MANAGER') > -1
+        const isUserAdmin = identity.roles.map(r => r.role).indexOf('USER_ADMIN') > -1
 
         let accessRights = {}
 
@@ -107,28 +112,34 @@ export function login(username, password) {
 
         if (
           identity &&
-          identity.isCompanyAdmin &&
+          isCompanyAdmin &&
           identity.company &&
           !identity.company.reviewRequested &&
           !identity.lastLoginAt
         ) {
           urlPage = '/settings/company-details'
         }
-        if (identity.roles.find(role => role.role === 'OPERATOR')) {
+        if (isAdmin) urlPage = '/dashboard'
+        if (identity && identity.roles.find(role => role.role === 'OPERATOR')) {
           urlPage = '/operations/shipping-quotes'
         }
-
         if (isOrderOperator) {
           urlPage = '/operations/orders'
         }
 
-        if (isOrderProcessing || isOrderView) {
+        if (
+          identity &&
+          !isCompanyAdmin &&
+          !isMerchant &&
+          !isProductCatalogAdmin &&
+          !isProductOfferManager &&
+          !isUserAdmin &&
+          (isOrderProcessing || isOrderView)
+        ) {
           urlPage = '/orders/sales'
         }
 
-        if (isAdmin) Router.push('/dashboard')
-        else Router.push(urlPage)
-
+        Router.push(urlPage)
         return authPayload
       }
     })
