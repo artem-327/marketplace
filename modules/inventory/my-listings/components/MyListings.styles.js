@@ -238,16 +238,13 @@ export const StyledForm = styled(Form)`
       }
 
       .column:nth-child(1) {
-        width: 210px;
-      }
-      .column:nth-child(2) {
-        width: 130px;
+        width: 240px;
         padding-right: 15px;
       }
-      .column:nth-child(3) {
-        width: 130px;
+      .column:nth-child(2) {
+        width: 230px;
       }
-      .column:nth-child(4) {
+      .column:nth-child(3) {
         width: 50px;
       }
 

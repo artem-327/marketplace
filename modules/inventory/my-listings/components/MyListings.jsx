@@ -129,7 +129,7 @@ const MyListings = props => {
 
   useEffect(() => {
     const { datagrid } = props
-    if (prevRows  !== 'undefined' && prevPricingEditOpenId  !== 'undefined' && prevUpdateRow  !== 'undefined' && prevFocusInput  !== 'undefined') {
+    if (typeof prevRows  !== 'undefined' && typeof prevPricingEditOpenId  !== 'undefined' && typeof prevUpdateRow  !== 'undefined' && typeof prevFocusInput  !== 'undefined') {
       if (
         (getSafe(() => prevRows.length, '') === getSafe(() => state.rows.length, '') &&
           getSafe(() => prevRows.length, '') !== getSafe(() => props.rows.length, '')) ||

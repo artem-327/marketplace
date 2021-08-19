@@ -64,18 +64,11 @@ export const validationSchema = min =>
  * @category Inventory - My Listings
  * @method
  */
-export const renderPricingTiers = (values, setFieldValue, props, obj) => {
+export const renderPricingTiers = (values, setFieldValue, props) => {
     const {
       intl: { formatMessage }
     } = props
 
-    const options = [
-      {
-        key: values.companyProduct.packagingUnit.id,
-        text: values.companyProduct.packagingUnit.name,
-        value: values.companyProduct.packagingUnit.name
-      }
-    ]
     let tiers = []
 
     for (let i = 0; i < values.pricingTiers.length; i++) {
@@ -86,18 +79,7 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
-                  ref: input => {
-                    obj[`pricingTiers[${i}].quantityFrom`] = input
-                  },
-                  placeholder: '0',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    props.handlechange(
-                      { quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM },
-                      i,
-                      `pricingTiers[${i}].quantityFrom`
-                    )
-                  }
+                  placeholder: '0'
                 }}
               />
               <div className='label'>{formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}</div>
@@ -105,31 +87,11 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
           </GridColumn>
 
           <GridColumn>
-            <Dropdown
-              name={'companyProduct.packagingUnit.name'}
-              inputProps={{ disabled: true, className: 'unit' }}
-              options={options}
-              readOnly={true}
-            />
-          </GridColumn>
-
-          <GridColumn>
             <div className='price labeled'>
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
-                  ref: input => {
-                    obj[`pricingTiers[${i}].pricePerUOM`] = input
-                  },
-                  placeholder: '0.000',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    props.handlechange(
-                      { quantityFrom: values.pricingTiers[i].quantityFrom, pricePerUOM: value },
-                      i,
-                      `pricingTiers[${i}].pricePerUOM`
-                    )
-                  }
+                  placeholder: '0.000'
                 }}
               />
               <div className='label'>{currencySymbol}</div>
@@ -144,7 +106,6 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
                   let pricingTiers = values.pricingTiers.slice()
                   pricingTiers.splice(i, 1)
                   setFieldValue('pricingTiers', pricingTiers)
-                  props.handlechange(pricingTiers)
                 }}>
                 <Icon name='trash alternate outline' />
               </Button>
@@ -165,7 +126,6 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
               let pricingTiers = values.pricingTiers.slice()
               pricingTiers.push({ quantityFrom: '', pricePerUOM: '' })
               setFieldValue('pricingTiers', pricingTiers)
-              props.handlechange(pricingTiers)
             }}>
             {formatMessage({ id: 'global.add', defaultMessage: 'Add' })}
           </Button>
@@ -178,7 +138,6 @@ export const renderPricingTiers = (values, setFieldValue, props, obj) => {
       <>
         <GridRow className='header'>
           <GridColumn>{formatMessage({ id: 'global.quantity', defaultMessage: 'Quantity' })}</GridColumn>
-          <GridColumn></GridColumn>
           <GridColumn>{formatMessage({ id: 'global.price', defaultMessage: 'Price' })}</GridColumn>
           <GridColumn></GridColumn>
         </GridRow>
@@ -244,7 +203,7 @@ export const submitForm = async (props, formikProps) => {
 
     try {
       data = await addProductOffer(payload, rawData.id, false, isGrouped)
-      datagrid.updateRow(data.id, () => data)
+      if(data) datagrid.updateRow(data.id, () => data)
       sendSuccess = true
     } catch (e) {
       console.error(e)

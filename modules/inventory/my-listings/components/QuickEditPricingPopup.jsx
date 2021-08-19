@@ -18,12 +18,7 @@ import { validationSchema, renderPricingTiers, submitForm } from './QuickEditPri
  * @components
  */
 const QuickEditPricingPopup = props => {
-  let formikProps
-  let obj
-
-  useEffect(() => {
-    if (props.focusInput && typeof obj[props.focusInput] !== 'undefined') obj[props.focusInput].focus()
-  }, [])
+  let formikPropsNew
   
   const {
     closePricingEditPopup,
@@ -36,10 +31,10 @@ const QuickEditPricingPopup = props => {
       initialValues={props.rawData}
       validationSchema={validationSchema(rawData.minPkg)}
       onSubmit={async () => {
-        await submitForm(props, formikProps)
+        await submitForm(props, formikPropsNew)
       }}>
       {formikProps => {
-        formikProps = formikProps
+        formikPropsNew = formikProps
         const { values, setFieldValue } = formikProps
 
         return (
@@ -49,7 +44,7 @@ const QuickEditPricingPopup = props => {
             </div>
 
             <div className='content'>
-              <Grid>{renderPricingTiers(values, setFieldValue, props, obj)}</Grid>
+              <Grid>{renderPricingTiers(values, setFieldValue, props)}</Grid>
             </div>
 
             <div className='bottom-buttons'>

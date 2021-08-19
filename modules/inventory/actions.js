@@ -192,7 +192,7 @@ export const modalDetailTrigger = createAction('MODAL_DETAIL_TRIGGER', (row = nu
 export const closeModalDetail = createAction('INVENTORY_CLOSE_MODAL')
 export const applyDatagridFilter = createAction('INVENTORY_APPLY_FILTER', (filter, reload = true) => ({ filter, reload }))
 export const setPricingEditOpenId = createAction('INVENTORY_SET_PRICING_EDIT_OPEN_ID', id => id)
-export const closePricingEditPopup = createAction('INVENTORY_SET_PRICING_EDIT_OPEN_ID', () => null)
+export const closePricingEditPopup = createAction('INVENTORY_SET_PRICING_EDIT_CLOSE', () => null)
 export const handleVariableSave = createAction('INVENTORY_HANDLE_VARIABLE_CHANGE', (variable, value) => ({ variable, value }))
 export const toggleColumnSettingModal = createAction('TOGGLE_COLUMN_SETTING_MODAL', isOpen => isOpen)
 export const handleProductCatalogUnmappedValue = createAction('HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE', value => value)
