@@ -27,6 +27,7 @@ import { CustomerName, SubrowButtons, ChevronDownStyled, ChevronUpStyled } from 
 import {
 } from './MyCustomers.services'
 import * as Actions from '../../../actions'
+import { getCountries } from '../../../../global-data/actions'
 
 import confirm from '~/components/Confirmable/confirm'
 
@@ -209,6 +210,7 @@ const MyCustomers = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
+    if (!countryCodes.length) props.getCountries()
   }, [])  // If [] is empty then is similar as componentDidMount.
 
 
@@ -269,4 +271,4 @@ function mapStateToProps(store) {
 }
 
 //export default injectIntl(MyCustomers)
-export default withDatagrid(injectIntl(connect(mapStateToProps, Actions)(MyCustomers)))
+export default withDatagrid(injectIntl(connect(mapStateToProps, { ...Actions, getCountries })(MyCustomers)))

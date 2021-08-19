@@ -3,7 +3,8 @@ import api from '../../api'
 // Services
 import { generateQueryString } from '../../utils/functions'
 
-export const findProducts = search => api.get(`/prodex/api/company-products/search?search=${search}`)
+export const findProducts = search =>
+  api.get(`/prodex/api/company-products/search?search=${encodeURIComponent(search)}`)
 export const getAutocompleteData = (pattern, limit = 15) =>
   api
     .get(`/prodex/api/product-groups/search?limit=${limit}&pattern=${encodeURIComponent(pattern)}`)
@@ -36,5 +37,5 @@ export const addOfferToCart = id => {
   return api.patch(`/prodex/api/product-offer-bids/id/${id}/to-cart`).then(response => response.data)
 }
 export const searchCompanies = name => {
-  return api.get(`/prodex/api/companies/search?onlyWithInventory=true&pattern=${name}`).then(response => response.data)
+  return api.get(`/prodex/api/companies/search?onlyWithInventory=true&pattern=${encodeURIComponent(name)}`).then(response => response.data)
 }

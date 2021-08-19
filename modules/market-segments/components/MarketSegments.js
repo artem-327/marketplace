@@ -22,7 +22,7 @@ const MarketSegments = props => {
   }, [])
 
   const getApiConfig = () => ({
-    url: gaSearch ? `/prodex/api/market-segments/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/market-segments/datagrid`,
+    url: gaSearch ? `/prodex/api/market-segments/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/market-segments/datagrid`,
     searchToFilter: v => {
       setGaSearch(getSafe(() => v.searchInput, ''))
       return v && v.searchInput ? [{ operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v.searchInput}%`] }] : []

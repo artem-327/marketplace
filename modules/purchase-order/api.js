@@ -65,6 +65,6 @@ export const updateWarehouse = (payload, id) =>
 
 
 export const searchDeliveryAddresses = val =>
-  api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${val}`).then(response => response.data)
+  api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}`).then(response => response.data)
 export const searchWarehouses = val =>
-  api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart?pattern=${val}`).then(response => response.data)
+  api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}`).then(response => response.data)

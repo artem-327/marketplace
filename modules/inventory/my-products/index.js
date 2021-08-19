@@ -15,7 +15,9 @@ const MyProducts = props => {
     <>
       <DatagridProvider
         apiConfig={{
-          url: gaSearch ? `/prodex/api/company-products/datagrid?type=${myProductsUnmappedValue}&${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/company-products/datagrid?type=${myProductsUnmappedValue}`,
+          url: gaSearch
+            ? `/prodex/api/company-products/datagrid?type=${myProductsUnmappedValue}&${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+            : `/prodex/api/company-products/datagrid?type=${myProductsUnmappedValue}`,
           searchToFilter: v => {
             setGaSearch(getSafe(() => v.searchInput, ''))
             return v && v.searchInput

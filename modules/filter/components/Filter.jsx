@@ -1211,8 +1211,8 @@ Filter.defaultProps = {
   layout: '',
   filterType: filterTypes.MARKETPLACE,
   savedUrl: '/prodex/api/product-offers/broadcasted/datagrid/saved-filters',
-  searchUrl: text => `/prodex/api/company-products/broadcasted/search?pattern=${text}&onlyMapped=true`,
-  searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${text}`,
+  searchUrl: text => `/prodex/api/company-products/broadcasted/search?pattern=${encodeURIComponent(text)}&onlyMapped=true`,
+  searchWarehouseUrl: text => `/prodex/api/branches/warehouses/search?pattern=${encodeURIComponent(text)}`,
   onApply: filter => {},
   onClear: () => {},
   onClose: () => {}

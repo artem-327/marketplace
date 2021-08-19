@@ -88,6 +88,8 @@ export const deepSearch = (obj, searchFn) => {
 export const getDeeply = (p, o) => p.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o)
 
 export const generateQueryString = params => {
+  // ! !
+  // TODO use encodeURIComponent() in values + deep test
   if (typeof params !== 'object') return ''
   let keys = Object.keys(params)
   if (keys.length === 0) return ''

@@ -48,7 +48,9 @@ const Operations = props => {
     const { currentTab, companyProductUnmappedOnly } = props
     const datagridApiMap = {
       'shipping-quotes': {
-        url: gaSearch ? `/prodex/api/shipment/manual-quotes/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/shipment/manual-quotes/datagrid`,
+        url: gaSearch
+          ? `/prodex/api/shipment/manual-quotes/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/shipment/manual-quotes/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           let filter = { or: [], and: [] }
@@ -64,7 +66,9 @@ const Operations = props => {
         }
       },
       'shipping-quote-requests': {
-        url: gaSearch ? `/prodex/api/messaging-center/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/messaging-center/datagrid`,
+        url: gaSearch
+          ? `/prodex/api/messaging-center/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/messaging-center/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           let filters = {
@@ -88,14 +92,18 @@ const Operations = props => {
         }
       },
       tags: {
-        url: gaSearch ? `/prodex/api/tags/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/tags/datagrid`,
+        url: gaSearch
+          ? `/prodex/api/tags/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/tags/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput ? [{ operator: 'LIKE', path: 'Tag.name', values: [`%${v.searchInput}%`] }] : []
         }
       },
       'company-product-catalog': {
-        url: gaSearch ? `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}&${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}`,
+        url: gaSearch
+          ? `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}&${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/company-products/admin/datagrid?type=${companyProductUnmappedOnly}`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           let filter = { or: [], and: [] }
@@ -139,7 +147,9 @@ const Operations = props => {
         }
       },
       'company-inventory': {
-        url: gaSearch ? `/prodex/api/product-offers/admin/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-offers/admin/datagrid`,
+        url: gaSearch
+          ? `/prodex/api/product-offers/admin/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/product-offers/admin/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
@@ -209,7 +219,9 @@ const Operations = props => {
         }
       },
       'company-generic-products': {
-        url: gaSearch ? `/prodex/api/company-generic-product-requests/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/company-generic-product-requests/datagrid`,
+        url: gaSearch
+          ? `/prodex/api/company-generic-product-requests/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}`
+          : `/prodex/api/company-generic-product-requests/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput

@@ -45,7 +45,7 @@ const Products = props => {
   const getApiConfig = () => {
     const datagridApiMap = {
       'cas-products': {
-        url: gaSearch ? `/prodex/api/cas-products/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/cas-products/datagrid`,
+        url: gaSearch ? `/prodex/api/cas-products/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/cas-products/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
@@ -57,7 +57,7 @@ const Products = props => {
         }
       },
       'product-catalog': {
-        url: gaSearch ? `/prodex/api/company-generic-products/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/company-generic-products/datagrid`,
+        url: gaSearch ? `/prodex/api/company-generic-products/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/company-generic-products/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
@@ -79,7 +79,7 @@ const Products = props => {
         }
       },
       'product-groups': {
-        url: gaSearch ? `/prodex/api/product-groups/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/product-groups/datagrid`,
+        url: gaSearch ? `/prodex/api/product-groups/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/product-groups/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput

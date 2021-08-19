@@ -259,7 +259,7 @@ class DetailSidebar extends Component {
 
   searchProducts = debounce(text => {
     this.props.getAutocompleteData({
-      searchUrl: `/prodex/api/product-groups/search?pattern=${text}`
+      searchUrl: `/prodex/api/product-groups/search?pattern=${encodeURIComponent(text)}`
     })
   }, 250)
 

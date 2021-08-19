@@ -23,7 +23,7 @@ export default {
     api.get(`/prodex/api/${endpointType}-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
     }),
-  searchCompany: companyText => api.get(`/prodex/api/companies/search?pattern=${companyText}`),
+  searchCompany: companyText => api.get(`/prodex/api/companies/search?pattern=${encodeURIComponent(companyText)}`),
   searchProducts: productText =>
     api.get(`/prodex/api/products/search?limit=30&search=${encodeURIComponent(productText)}`),
   getLots: poId => api.get(`/prodex/api/product-offers/${poId}`),

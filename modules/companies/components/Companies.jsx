@@ -37,7 +37,7 @@ const Companies = props => {
     const { currentTab } = props
     const datagridApiMap = {
       companies: {
-        url: gaSearch ? `/prodex/api/companies/datagrid?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/companies/datagrid`,
+        url: gaSearch ? `/prodex/api/companies/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/companies/datagrid`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
@@ -50,7 +50,7 @@ const Companies = props => {
         }
       },
       users: {
-        url: gaSearch ? `/prodex/api/users/datagrid/all?${GA_TRACK_QUERY}=${gaSearch}` : `/prodex/api/users/datagrid/all`,
+        url: gaSearch ? `/prodex/api/users/datagrid/all?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : `/prodex/api/users/datagrid/all`,
         searchToFilter: v => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           let filters = { or: [], and: [] }
