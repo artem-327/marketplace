@@ -18,6 +18,8 @@ const getIsSending = store => getSafe(() => store.marketplace.isSending, false)
 const getLoading = store => getSafe(() => store.marketplace.loading, false)
 const getCurrentUserId = store => getSafe(() => store.auth.identity.id, '')
 const getTypeHolds = store => getSafe(() => store.marketplace.typeHolds, 'my')
+const getCurrentUserDeaAuthorized = store => getSafe(() => store.auth.identity.regulatoryDeaListAuthorized, false)
+const getCurrentUserDhsAuthorized = store => getSafe(() => store.auth.identity.regulatoryDhsCoiAuthorized, false)
 
 export const makeGetSearchedCompaniesDropdown = () => {
   return createSelector([getSearchedCompaniesDropdown], searchedCompanies => getCompaniesDropdown(searchedCompanies))
@@ -63,4 +65,10 @@ export const makeGetCurrentUserId = () => {
 }
 export const makeGetTypeHolds = () => {
   return createSelector([getTypeHolds], typeHolds => typeHolds)
+}
+export const makeGetCurrentUserDeaAuthorized = () => {
+  return createSelector([getCurrentUserDeaAuthorized], value => value)
+}
+export const makeGetCurrentUserDhsAuthorized = () => {
+  return createSelector([getCurrentUserDhsAuthorized], value => value)
 }

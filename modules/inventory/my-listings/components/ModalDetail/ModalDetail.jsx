@@ -1538,6 +1538,7 @@ const ModalDetail = props => {
                                       ...state,
                                       detailValues: { ...state.detailValues, id: data.id }
                                     })) // cancel (Edit)
+                                    props.getProductOffer({ ...state.detailValues, id: data.id })
                                   }
                                 )
                               }

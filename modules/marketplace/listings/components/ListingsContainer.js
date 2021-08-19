@@ -10,7 +10,12 @@ import { openPopup as openInfoPopup, closePopup } from '../../../company-product
 import { getDatagridRows } from './Listings.services'
 import { withDatagrid } from '../../../datagrid'
 //Selectors
-import { makeGetSearchedCompaniesDropdown, makeGetSelectedSellerOption } from '../../selectors'
+import {
+  makeGetSearchedCompaniesDropdown,
+  makeGetSelectedSellerOption,
+  makeGetCurrentUserDeaAuthorized,
+  makeGetCurrentUserDhsAuthorized
+} from '../../selectors'
 import {
   makeGetZipHomeBranch,
   makeGetCountryIdHomeBranch,
@@ -35,6 +40,8 @@ const makeMapStateToProps = () => {
   const getBuyEligible = makeGetBuyEligible()
   const getSearchedCompaniesDropdown = makeGetSearchedCompaniesDropdown()
   const getSelectedSellerOption = makeGetSelectedSellerOption()
+  const getCurrentUserDeaAuthorized = makeGetCurrentUserDeaAuthorized()
+  const getCurrentUserDhsAuthorized = makeGetCurrentUserDhsAuthorized()
 
   const mapStateToProps = (store, {datagrid}) => {
     return {
@@ -52,6 +59,8 @@ const makeMapStateToProps = () => {
       buyEligible: getBuyEligible(store),
       searchedCompaniesDropdown: getSearchedCompaniesDropdown(store),
       selectedSellerOption: getSelectedSellerOption(store),
+      regulatoryDeaListAuthorized: getCurrentUserDeaAuthorized(store),
+      regulatoryDhsCoiAuthorized: getCurrentUserDhsAuthorized(store)
     }
   }
   return mapStateToProps

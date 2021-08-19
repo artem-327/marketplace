@@ -20,7 +20,7 @@ import {
  * @components
  */
 const DhsPopup = props => {
-  const { onCancel, onAccept } = props
+  const { permissionsToBuy, onCancel, onAccept } = props
 
   const DhsChemicalOfInterest =
     <LinkLabel
@@ -54,6 +54,14 @@ const DhsPopup = props => {
               values={{ DhsChemicalOfInterest, cfats }}
             />
           </DivDescription>
+          {!permissionsToBuy && (
+            <DivDescription>
+              <FormattedMessage
+                id='marketplace.notUserPermissionsToBuy'
+                defaultMessage='You have not signed documents proving you are authorized to purchase regulated products yet, or the authorization has expired. Please, check the authorization under you user settings.'
+              />
+            </DivDescription>
+          )}
           <DivButtons>
             <DivButtonColumn>
               <Button
@@ -66,8 +74,9 @@ const DhsPopup = props => {
             </DivButtonColumn>
             <DivButtonColumn>
               <Button
+                disabled={!permissionsToBuy}
                 type='button'
-                color='blue'
+                color={permissionsToBuy ? 'blue' : 'white'}
                 onClick={() => onAccept()}>
                 <FormattedMessage id='marketplace.iAgree' defaultMessage='I agree' />
               </Button>
@@ -80,11 +89,13 @@ const DhsPopup = props => {
 }
 
 DhsPopup.propTypes = {
+  permissionsToBuy: PropTypes.bool,
   onCancel: PropTypes.func,
   onAccept: PropTypes.func
 }
 
 DhsPopup.defaultProps = {
+  permissionsToBuy: false,
   onCancel: () => {},
   onAccept: () => {}
 }

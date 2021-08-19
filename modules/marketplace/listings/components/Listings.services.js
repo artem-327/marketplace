@@ -129,7 +129,7 @@ export const getCompaniesDropdown = companies => {
           />
         ) : null
         }
-        <div style={{ margin: 'auto 0' }}>{c.cfDisplayName}</div>
+        <div style={{ margin: 'auto 0' }}>{c.dba ? `${c.dba} ( ${c.name} )` : c.name}</div>
       </div>
     )
 
@@ -446,22 +446,18 @@ export const tableRowClicked = (props, clickedId, sellerId = null, isHoldRequest
 const checkBuyAttempt = (row, props, state, setState) => {
   let skipBuy = false
   const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
-  const hasDea = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
+  const hasDeaI = elements.some(el => getSafe(() => el.casProduct.deaListI, false))
+  const hasDeaII = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
   const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
-  if (hasDea) {
-    setState({ ...state, buyAttemptHasDea: row })
-    skipBuy = true
-  }
-  if (hasDhs) {
-    setState({ ...state, buyAttemptHasDhs: row })
-    skipBuy = true
-  }
-
-  if (!props.buyEligible) {
-    setState({ ...state, viewOnlyPopupOpen: true })
-    skipBuy = true
-  }
+  setState({
+    ...state,
+    buyAttemptHasDeaI: hasDeaI ? row : null,
+    buyAttemptHasDeaII: hasDeaII ? row : null,
+    buyAttemptHasDhs: hasDhs ? row : null,
+    viewOnlyPopupOpen: !props.buyEligible
+  })
+  skipBuy = hasDeaI || hasDeaII || hasDhs || !props.buyEligible
 
   if (skipBuy) return
   tableRowClicked(props, row.id, row?.sellerId)

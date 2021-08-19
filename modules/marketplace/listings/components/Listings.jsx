@@ -48,7 +48,8 @@ const Listings = props => {
       SearchByNamesAndTags: null
     },
     viewOnlyPopupOpen: false,
-    buyAttemptHasDea: null,
+    buyAttemptHasDeaI: null,
+    buyAttemptHasDeaII: null,
     buyAttemptHasDhs: null,
     openFilterPopup: false
   })
@@ -99,12 +100,15 @@ const Listings = props => {
     buyEligible,
     selectedSellerOption,
     searchedCompaniesDropdown,
-    searchedCompaniesLoading
+    searchedCompaniesLoading,
+    regulatoryDeaListAuthorized,
+    regulatoryDhsCoiAuthorized
   } = props
   const {
     openFilterPopup,
     viewOnlyPopupOpen,
-    buyAttemptHasDea,
+    buyAttemptHasDeaI,
+    buyAttemptHasDeaII,
     buyAttemptHasDhs
   } = state
   let { formatMessage } = intl
@@ -136,7 +140,6 @@ const Listings = props => {
             </div>
             <div className='column'>
               <DropdownStyled
-                style={{ width: '210px' }}
                 name='seller'
                 selection
                 clearable={seller !== 0}
@@ -145,6 +148,7 @@ const Listings = props => {
                 options={searchedCompaniesOptions}
                 loading={searchedCompaniesLoading}
                 onChange={(e, { value }) => handleSellerChange(value, props, state)}
+                onClick={() => {handleSearchSellerChange('', props)}}
                 onSearchChange={(e, { searchQuery }) => handleSearchSellerChange(searchQuery, props)}
               />
             </div>
@@ -200,20 +204,34 @@ const Listings = props => {
       {openFilterPopup && <Filter onClose={() => setState({ ...state, openFilterPopup: false })} />}
       {isOpenPopup && <MakeOfferPopup />}
       {viewOnlyPopupOpen && <ViewOnlyPopup onCancel={() => setState({ ...state, viewOnlyPopupOpen: false })} />}
-      {buyAttemptHasDea && !buyAttemptHasDhs &&
+      {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs &&
         <DeaPopup
-          onCancel={() => setState({ ...state, buyAttemptHasDea: null })}
+          deaListIIType={!buyAttemptHasDeaI}
+          permissionsToBuy={regulatoryDeaListAuthorized}
+          onCancel={() => setState({ ...state, buyAttemptHasDeaI: null, buyAttemptHasDeaII: null })}
           onAccept={() => {
-            tableRowClicked(props, buyAttemptHasDea.id, buyAttemptHasDea?.sellerId)
-            setState({ ...state, buyAttemptHasDea: null })
+            tableRowClicked(
+              props,
+              buyAttemptHasDeaI ? buyAttemptHasDeaI.id : buyAttemptHasDeaII.id,
+              buyAttemptHasDeaI ? buyAttemptHasDeaI?.sellerId : buyAttemptHasDeaII?.sellerId
+            )
+            buyAttemptHasDeaI
+              ? setState({ ...state, buyAttemptHasDeaI: null })
+              : setState({ ...state, buyAttemptHasDeaII: null })
           }}
         />
       }
       {buyAttemptHasDhs &&
         <DhsPopup
-          onCancel={() => setState({ ...state, buyAttemptHasDhs: null, buyAttemptHasDea: null })}
+          permissionsToBuy={regulatoryDhsCoiAuthorized}
+          onCancel={() => setState({
+            ...state,
+            buyAttemptHasDhs: null,
+            buyAttemptHasDeaI: null,
+            buyAttemptHasDeaII: null
+          })}
           onAccept={() => {
-            if (buyAttemptHasDea) {
+            if (buyAttemptHasDeaI || buyAttemptHasDeaII) {
               setState({ ...state, buyAttemptHasDhs: null })
             } else {
               tableRowClicked(props, buyAttemptHasDhs.id, buyAttemptHasDhs?.sellerId)
@@ -249,7 +267,9 @@ Listings.propTypes = {
   searchCompanies: PropTypes.func,
   getProductOffer: PropTypes.func,
   closePopup: PropTypes.func,
-  openPopup: PropTypes.func
+  openPopup: PropTypes.func,
+  regulatoryDeaListAuthorized: PropTypes.bool,
+  regulatoryDhsCoiAuthorized: PropTypes.bool
 }
 
 Listings.defaultProps = {
@@ -275,7 +295,9 @@ Listings.defaultProps = {
   searchCompanies: () => {},
   getProductOffer: () => {},
   closePopup: () => {},
-  openPopup: () => {}
+  openPopup: () => {},
+  regulatoryDeaListAuthorized: false,
+  regulatoryDhsCoiAuthorized: false
 }
 
 export default injectIntl(Listings)
