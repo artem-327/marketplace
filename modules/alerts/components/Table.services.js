@@ -96,6 +96,7 @@ export const getRows = (state, props) => {
       moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
 
     const isUserData = getSafe(() => r.relatedCompany.avatarUrl, false)
+      || (getSafe(() => r.relatedCompany.hasLogo, false) && getSafe(() => r.relatedCompany.logoUrl, false))
       || r.nameOfUser || getSafe(() => r.info.requestedBy.company.cfDisplayName, false)
       || getSafe(() => r.info.buyerCompanyName, false)
 
@@ -108,8 +109,14 @@ export const getRows = (state, props) => {
         <DivNotificationRow>
           {!!isUserData && (
             <DivUser>
-              {getSafe(() => r.relatedCompany.avatarUrl, false) && (
-                <UserImage src={r.relatedCompany.avatarUrl} bordered />
+              {getSafe(() => r.relatedCompany.avatarUrl || r.relatedCompany.logoUrl, false) && (
+                <UserImage
+                  src={r.relatedCompany.hasLogo && r.relatedCompany.logoUrl
+                    ? r.relatedCompany.logoUrl
+                    : r.relatedCompany.avatarUrl
+                  }
+                  bordered
+                />
               )}
               <DivVerticalyAligned>
                 <UserName as='h3'>{r.nameOfUser}</UserName>
