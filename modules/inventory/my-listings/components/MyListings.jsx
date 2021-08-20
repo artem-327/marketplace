@@ -49,7 +49,8 @@ const MyListings = props => {
     rows: [],
     updatedRow: false,
     focusInput: '',
-    openFilterPopup: false
+    openFilterPopup: false,
+    isSubmitting: false
   })
 
   useEffect(() => {
@@ -262,7 +263,7 @@ const MyListings = props => {
           rows={rows}
           selectByRowClick
           hideCheckboxes
-          loading={datagrid.loading || updatingDatagrid}
+          loading={datagrid.loading || updatingDatagrid || state.isSubmitting}
           groupBy={['echoCode']}
           getChildGroups={rows =>
             _(rows)

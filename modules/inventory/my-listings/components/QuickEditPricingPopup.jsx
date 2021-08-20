@@ -17,23 +17,21 @@ import { validationSchema, renderPricingTiers, submitForm } from './QuickEditPri
  * @components
  */
 const QuickEditPricingPopup = props => {
-  let formikPropsNew
-  
   const {
     closePricingEditPopup,
     intl: { formatMessage },
-    rawData
+    rawData,
+    setState
   } = props
 
   return (
     <StyledForm
       initialValues={props.rawData}
       validationSchema={validationSchema(rawData.minPkg)}
-      onSubmit={async () => {
-        await submitForm(props, formikPropsNew)
-      }}>
-      {formikProps => {
-        formikPropsNew = formikProps
+      onSubmit={async values => {
+        await submitForm(props, values, setState)
+      }}
+      render = {formikProps => {
         const { values, setFieldValue } = formikProps
 
         return (
@@ -43,7 +41,9 @@ const QuickEditPricingPopup = props => {
             </div>
 
             <div className='content'>
-              <Grid>{renderPricingTiers(values, setFieldValue, props)}</Grid>
+              <Grid>
+                {renderPricingTiers(values, setFieldValue, props)}
+              </Grid>
             </div>
 
             <div className='bottom-buttons'>
@@ -65,7 +65,7 @@ const QuickEditPricingPopup = props => {
           </>
         )
       }}
-    </StyledForm>
+    />
   )
 }
 
@@ -75,7 +75,6 @@ QuickEditPricingPopup.propTypes = {
   rawData: PropTypes.object,
   datagrid: PropTypes.object,
   closePricingEditPopup: PropTypes.func,
-  handlechange: PropTypes.func,
   addProductOffer: PropTypes.func
 }
 
@@ -85,7 +84,6 @@ QuickEditPricingPopup.defaultProps = {
   rawData: {},
   datagrid: {},
   closePricingEditPopup: () => {},
-  handlechange: () => {},
   addProductOffer: () => {}
 }
 

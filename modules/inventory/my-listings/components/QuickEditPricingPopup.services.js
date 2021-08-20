@@ -82,11 +82,6 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   placeholder: '0',
                   onChange: (e, { name, value }) => {
                     e.persist()
-                    props.handlechange(
-                      { quantityFrom: value, pricePerUOM: values.pricingTiers[i].pricePerUOM },
-                      i,
-                      `pricingTiers[${i}].quantityFrom`
-                    )
                   }
                 }}
               />
@@ -102,11 +97,6 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   placeholder: '0.000',
                   onChange: (e, { name, value }) => {
                     e.persist()
-                    props.handlechange(
-                      { quantityFrom: values.pricingTiers[i].quantityFrom, pricePerUOM: value },
-                      i,
-                      `pricingTiers[${i}].pricePerUOM`
-                    )
                   }
                 }}
               />
@@ -122,7 +112,6 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   let pricingTiers = values.pricingTiers.slice()
                   pricingTiers.splice(i, 1)
                   setFieldValue('pricingTiers', pricingTiers)
-                  props.handlechange(pricingTiers)
                 }}>
                 <Icon name='trash alternate outline' />
               </Button>
@@ -143,7 +132,6 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               let pricingTiers = values.pricingTiers.slice()
               pricingTiers.push({ quantityFrom: '', pricePerUOM: '' })
               setFieldValue('pricingTiers', pricingTiers)
-              props.handlechange(pricingTiers)
             }}>
             {formatMessage({ id: 'global.add', defaultMessage: 'Add' })}
           </Button>
@@ -169,14 +157,11 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
  * @category Inventory - My Listings
  * @method
  */
-export const submitForm = async (props, formikProps) => {
+export const submitForm = async (props, values, setState) => {
     const { closePricingEditPopup, rawData, datagrid, addProductOffer } = props
-
-    let { values, setSubmitting } = formikProps
-
-    let sendSuccess = false
     let isGrouped = getSafe(() => rawData.grouped, false)
-    let data = null
+    setState(prevState => ({ ...prevState, isSubmitting: true }))
+    closePricingEditPopup()
 
     let payload = {
       anonymous: rawData.anonymous,
@@ -220,14 +205,11 @@ export const submitForm = async (props, formikProps) => {
     removeEmpty(payload)
 
     try {
-      data = await addProductOffer(payload, rawData.id, false, isGrouped)
-      datagrid.updateRow(data.id, () => data)
-      sendSuccess = true
+      const {value} = await addProductOffer(payload, rawData.id, false, isGrouped)
+      datagrid.updateRow(value.id, () => value)
+      setState(prevState => ({ ...prevState, isSubmitting: false }))
     } catch (e) {
       console.error(e)
-    }
-    setSubmitting(false)
-    if (sendSuccess) {
-      closePricingEditPopup()
+      setState(prevState => ({ ...prevState, isSubmitting: false }))
     }
 }
