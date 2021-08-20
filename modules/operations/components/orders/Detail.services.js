@@ -122,18 +122,15 @@ export const prepareDetail = (data, type = 'sales') => {
         province: data.returnAddressProvince,
         country: data.returnAddressCountry
       }),
-      productCode: orderItems.map(d => (d.echoProductCode ? d.echoProductCode : 'N/A')),
-      productName: orderItems.map(d => (d.echoProductName ? d.echoProductName : 'N/A')),
+      productCode: orderItems.map(d => (d.companyGenericProductCode ? d.companyGenericProductCode : 'N/A')),
+      productName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
       productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
       proNumber: 'N/A', // ! ! TBD
-      quantityOrdered: orderItems.map(d => {
-        if (!d?.productOffers?.length) return 'N/A'
-        let pkgAmount = 0
-        d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
-        return d.packagingSize && d.packagingUnit
-          ? `${pkgAmount * d.packagingSize} ${d.packagingUnit.nameAbbreviation}`
+      quantityOrdered: orderItems.map(d =>
+        d.packagingSize && d.packagingUnit
+          ? `${(parseFloat(d.pkgAmount) * parseFloat(d.packagingSize)).toFixed(2)} ${d.packagingUnit.nameAbbreviation}`
           : 'N/A'
-      }),
+      ),
       refundDate: typeof data.refundDate !== 'undefined' ? moment(data.refundDate).toDate().toLocaleString() : null,
       returnDeliveryDate:
         typeof data.returnDeliveryDate !== 'undefined' ? moment(data.returnDeliveryDate).toDate().toLocaleString() : null,
@@ -184,12 +181,7 @@ export const prepareDetail = (data, type = 'sales') => {
           value={totalPriceWithShipping}
         />
       ), //"$" + totalPriceWithShipping.formatMoney(2),
-      totalPkg: orderItems.map(d => {
-        if (!d?.productOffers?.length) return 'N/A'
-        let pkgAmount = 0
-        d.productOffers.forEach(pr => (pkgAmount += pr.pkgAmount))
-        return pkgAmount
-      }),
+      totalPkg: orderItems.map(d => d.pkgAmount),
       unit: orderItems.map(d => (d.packagingUnit ? d.packagingUnit.nameAbbreviation : 'N/A')),
       unitCost: orderItems.map(d => {
         let sum = 0
