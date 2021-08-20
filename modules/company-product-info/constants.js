@@ -184,7 +184,7 @@ export const companyGenericProductGrouping = [
 ]
 
 export const groupActionsMarketplace = (rows, companyProductId, callback) => {
-  let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
+  let companyProduct = rows.find(el => el.companyProduct?.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
@@ -195,7 +195,7 @@ export const groupActionsMarketplace = (rows, companyProductId, callback) => {
 }
 
 export const groupActions = (rows, companyProductId, sidebarDetailOpen, sidebarDetailTrigger, callback) => {
-  let companyProduct = rows.find(el => el.companyProduct.id == companyProductId)
+  let companyProduct = rows.find(el => el.companyProduct?.id == companyProductId)
 
   if (!companyProduct || companyProduct.cfStatus === 'Unmapped') return []
 
