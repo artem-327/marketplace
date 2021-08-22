@@ -347,22 +347,23 @@ export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
  * @method
  */
 export const getRows = (props, state, setState) => {
-    const {
-      datagrid,
-      pricingEditOpenId,
-      setPricingEditOpenId,
-      modalDetailTrigger,
-      intl: { formatMessage },
-      broadcastTemplates,
-      isProductInfoOpen,
-      closePopup,
-      broadcastChange,
-      applicationName,
-      rows
-    } = props
-    let title
+  const {
+    datagrid,
+    pricingEditOpenId,
+    setPricingEditOpenId,
+    closePricingEditPopup,
+    modalDetailTrigger,
+    intl: { formatMessage },
+    broadcastTemplates,
+    isProductInfoOpen,
+    closePopup,
+    broadcastChange,
+    applicationName,
+    rows
+  } = props
+  let title
 
-    const options = [
+  const options = [
     {
         icon: (
         <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
@@ -498,9 +499,9 @@ export const getRows = (props, state, setState) => {
         subtitle: formatMessage({ id: 'myInventory.customSubtitle', defaultMessage: 'Create Custom Rule' }),
         value: 'CUSTOM_RULES'
     }
-    ]
+  ]
 
-    let result = rows.map((r, rIndex) => {
+  let result = rows.map((r, rIndex) => {
     const isOfferValid = r.validityDate ? moment().isBefore(r.validityDate) : true
 
     if (r.groupId) {
@@ -714,18 +715,16 @@ export const getRows = (props, state, setState) => {
         <StyledPopup
             content={
             <QuickEditPricingPopup
-                handlechange={(values, index, focusInput) =>
-                handleChangePriceTiers(values, rIndex, index, focusInput, state, setState)
-                }
                 rawData={getSafe(() => state.rows[rIndex].rawData, '') || r.rawData}
                 focusInput={state.focusInput}
+                setState={setState}
             />
             }
             on='click'
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={() => setPricingEditOpenId(null)}
+            onClose={closePricingEditPopup}
         />
         ),
         broadcast: (
@@ -773,22 +772,8 @@ export const getRows = (props, state, setState) => {
         </div>
         )
     }
-    })
-    setState(prevState => ({ ...prevState, rows: result }))
-}
-
-const handleChangePriceTiers = (values, rIndex, pIndex, focusInput, state, setState) => {
-    let newRows = state.rows
-
-    if (pIndex || pIndex === 0) {
-    //pIndex means pricingTiers index and that row was changed. values are {}
-    newRows[rIndex].rawData.pricingTiers[pIndex] = values
-    } else {
-    // it was added or removed row pricingTiers. values are []
-    newRows[rIndex].rawData.pricingTiers = values
-    }
-
-    setState(prevState => ({ ...prevState, rows: newRows, focusInput: (pIndex || pIndex === 0) && focusInput ? focusInput : '' }))
+  })
+  setState(prevState => ({ ...prevState, rows: result }))
 }
 
 const showMessage = (response, request = null, row, props, state, setState) => {

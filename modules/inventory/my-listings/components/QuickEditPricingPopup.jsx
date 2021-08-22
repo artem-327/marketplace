@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 import { Grid } from 'semantic-ui-react'
@@ -18,28 +17,21 @@ import { validationSchema, renderPricingTiers, submitForm } from './QuickEditPri
  * @components
  */
 const QuickEditPricingPopup = props => {
-  let formikProps
-  let obj
-
-  useEffect(() => {
-    if (props.focusInput && typeof obj[props.focusInput] !== 'undefined') obj[props.focusInput].focus()
-  }, [])
-  
   const {
     closePricingEditPopup,
     intl: { formatMessage },
-    rawData
+    rawData,
+    setState
   } = props
 
   return (
     <StyledForm
       initialValues={props.rawData}
       validationSchema={validationSchema(rawData.minPkg)}
-      onSubmit={async () => {
-        await submitForm(props, formikProps)
-      }}>
-      {formikProps => {
-        formikProps = formikProps
+      onSubmit={async values => {
+        await submitForm(props, values, setState)
+      }}
+      render = {formikProps => {
         const { values, setFieldValue } = formikProps
 
         return (
@@ -49,7 +41,9 @@ const QuickEditPricingPopup = props => {
             </div>
 
             <div className='content'>
-              <Grid>{renderPricingTiers(values, setFieldValue, props, obj)}</Grid>
+              <Grid>
+                {renderPricingTiers(values, setFieldValue, props)}
+              </Grid>
             </div>
 
             <div className='bottom-buttons'>
@@ -71,7 +65,7 @@ const QuickEditPricingPopup = props => {
           </>
         )
       }}
-    </StyledForm>
+    />
   )
 }
 
@@ -81,7 +75,6 @@ QuickEditPricingPopup.propTypes = {
   rawData: PropTypes.object,
   datagrid: PropTypes.object,
   closePricingEditPopup: PropTypes.func,
-  handlechange: PropTypes.func,
   addProductOffer: PropTypes.func
 }
 
@@ -91,7 +84,6 @@ QuickEditPricingPopup.defaultProps = {
   rawData: {},
   datagrid: {},
   closePricingEditPopup: () => {},
-  handlechange: () => {},
   addProductOffer: () => {}
 }
 
