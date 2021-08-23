@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 // Components
 import EditUnitOfPackagingPopup from './EditUnitOfPackagingPopup'
 // Actions
-import {closeEditPopup, putEditedDataRequest} from '../../actions'
+import {closeEditPopup, postNewRequest, putEditedDataRequest} from '../../actions'
 import {
   getProductForms,
   getProductConditions,
@@ -15,6 +15,7 @@ import { makeGetMeasureTypesDropdown } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
     closeEditPopup,
+    postNewRequest,
     putEditedDataRequest,
     getProductForms,
     getProductConditions,

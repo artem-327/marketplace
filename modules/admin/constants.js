@@ -6,7 +6,6 @@ import UnitOfPackagingTable from './components/UnitOfPackagingTable/UnitOfPackag
 import NmfcTable from './components/NmfcTable/TableContainer'
 
 import AddNewUnitOfMeasurePopup from './components/UnitOfMeasureTable/AddNewUnitOfMeasurePopupContainer'
-import AddNewUnitOfPackagingPopup from './components/UnitOfPackagingTable/AddNewUnitOfPackagingPopupContainer'
 import AddNewPopup1Parameter from './components/DataTable/AddNewPopup1ParameterContainer'
 import NmfcPopup from './components/NmfcTable/PopupContainer'
 
@@ -676,7 +675,7 @@ export const editForms = {
  */
 export const addForms = {
   'units-of-measure': <AddNewUnitOfMeasurePopup />,
-  'packaging-types': <AddNewUnitOfPackagingPopup />,
+  'packaging-types': <EditUnitOfPackagingPopup />,
   manufacturers: <AddNewPopup1Parameter currentTab={'manufacturers'} />,
   grades: <AddNewPopup1Parameter currentTab={'grades'} />,
   forms: <AddNewPopup1Parameter currentTab={'forms'} />,
