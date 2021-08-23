@@ -1511,6 +1511,7 @@ const ModalDetail = props => {
                               submitForm() // to show errors
                             } else {
                               let { data } = await submitFormFunc(values, setSubmitting, setTouched, props, state, setState)
+
                               if (data && !getSafe(() => state.detailValues.id, false)) {
                                 confirm(
                                   formatMessage({
@@ -1538,7 +1539,7 @@ const ModalDetail = props => {
                                       ...state,
                                       detailValues: { ...state.detailValues, id: data.id }
                                     })) // cancel (Edit)
-                                    props.getProductOffer({ ...state.detailValues, id: data.id })
+                                    props.getProductOffer({ ...state.detailValues, ...data })
                                   }
                                 )
                               }
