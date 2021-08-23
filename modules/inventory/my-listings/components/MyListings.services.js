@@ -289,7 +289,6 @@ const getActions = (props) => {
         id: 'global.delete',
         defaultMessage: 'Delete'
         }),
-        disabled: row => props.editedId === row.id,
         callback: row => {
         confirm(
             formatMessage({
