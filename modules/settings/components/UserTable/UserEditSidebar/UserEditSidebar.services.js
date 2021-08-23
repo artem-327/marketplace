@@ -302,16 +302,23 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
     ]
   }
 
+  const isSettingsPatch = userSettings?.dailyPurchaseLimit?.original || 
+    userSettings?.monthlyPurchaseLimit?.original || 
+    userSettings?.orderPurchaseLimit?.original || 
+    (userSettings?.dailyPurchaseLimit?.value != (typeof values?.dailyPurchaseLimit?.toString() === 'undefined' ? '' : values?.dailyPurchaseLimit?.toString())) || 
+    (userSettings?.monthlyPurchaseLimit?.value != (typeof values?.monthlyPurchaseLimit?.toString() === 'undefined' ? '' : values?.monthlyPurchaseLimit?.toString())) || 
+    (userSettings?.orderPurchaseLimit?.value != (typeof values?.orderPurchaseLimit?.toString() === 'undefined' ? '' : values?.orderPurchaseLimit?.toString()))
+
   removeEmpty(data)
 
   try {
     if (sidebarValues) {
-      const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData)
+      const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, isSettingsPatch)
       !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
       sendSuccess = true
       if (currentUserId === sidebarValues.id) getIdentity()
     } else {
-      await postNewUserRequest(data, settingsData)
+      await postNewUserRequest(data, settingsData, isSettingsPatch)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
     }

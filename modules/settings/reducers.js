@@ -1653,13 +1653,13 @@ export default function reducer(state = initialState, action) {
           if (p?.code === 'OTHER_SETTINGS') {
             p?.settings?.forEach(s => {
               if (s.code === 'USER_ORDER_PURCHASE_LIMIT') {
-                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
               if (s.code === 'USER_MONTHLY_PURCHASE_LIMIT') {
-                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
               if (s.code === 'USER_DAILY_PURCHASE_LIMIT') {
-                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
             })
           }
@@ -1695,13 +1695,13 @@ export default function reducer(state = initialState, action) {
           if (p?.code === 'OTHER_SETTINGS') {
             p?.settings?.forEach(s => {
               if (s.code === 'USER_ORDER_PURCHASE_LIMIT') {
-                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
               if (s.code === 'USER_MONTHLY_PURCHASE_LIMIT') {
-                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.monthlyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
               if (s.code === 'USER_DAILY_PURCHASE_LIMIT') {
-                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value }
+                userSettings.dailyPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
               }
             })
           }
