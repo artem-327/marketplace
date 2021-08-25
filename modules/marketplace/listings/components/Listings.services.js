@@ -129,7 +129,7 @@ export const getCompaniesDropdown = companies => {
           />
         ) : null
         }
-        <div style={{ margin: 'auto 0' }}>{c.cfDisplayName}</div>
+        <div style={{ margin: 'auto 0' }}>{c.name ? c.name: c.dba}</div>
       </div>
     )
 
