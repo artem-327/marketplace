@@ -3,7 +3,7 @@ import { injectIntl } from 'react-intl'
 // Components
 import TablesHandlers from './TablesHandlers'
 // Actions
-import { openPopup, handleFiltersValue, handleVariableSave } from '../actions'
+import { openPopup, handleVariableSave } from '../actions'
 // Services
 import { withDatagrid } from '../../datagrid'
 // Selectors
@@ -24,7 +24,6 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = {
   openPopup,
-  handleFiltersValue,
   handleVariableSave
 }
 
