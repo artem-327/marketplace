@@ -715,9 +715,9 @@ export const getRows = (props, state, setState) => {
             content={
             <QuickEditPricingPopup
                 rawData={getSafe(() => state.rows[rIndex].rawData, '') || r.rawData}
-                focusInput={state.focusInput}
                 setState={setState}
                 rIndex={rIndex}
+                r={r}
             />
             }
             on='click'
@@ -727,8 +727,8 @@ export const getRows = (props, state, setState) => {
             onClose={() => {
               setState(prevState => {
                 let newRows = prevState.rows
-                newRows[rIndex].pricingTiers = props.rows[rIndex].pricingTiers
-                newRows[rIndex].rawData.pricingTiers = props.rows[rIndex].pricingTiers
+                newRows[rIndex].pricingTiers = r.pricingTiers
+                newRows[rIndex].rawData.pricingTiers = r.pricingTiers
                 return {
                   ...prevState,
                   rows: newRows

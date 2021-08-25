@@ -17,7 +17,6 @@ const defaultProps = {
   rows: [],
   pricingEditOpenId: null,
   editedId: null,
-  focusInput: '',
   applicationName: '',
   datagridFilterUpdate: false,
   isModalDetailOpen: false,
