@@ -152,13 +152,13 @@ export function updateSettingsCompanyUser(id, request) {
   }
 }
 
-export function handlerSubmitUserEditPopup(id, payload, userSettings) {
+export function handlerSubmitUserEditPopup(id, payload, userSettings, isSettingsPatch) {
   return async dispatch => {
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, payload)
     })
-    userSettings && (await dispatch(updateSettingsCompanyUser(id, userSettings)))
+    isSettingsPatch && (await dispatch(updateSettingsCompanyUser(id, userSettings)))
   }
 }
 
@@ -600,13 +600,13 @@ export function getStoredCSV(data) {
   }
 }
 
-export function postNewUserRequest(payload, userSettings) {
+export function postNewUserRequest(payload, userSettings, isSettingsPatch) {
   return async dispatch => {
     const { value } = await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(payload)
     })
-    await dispatch(updateSettingsCompanyUser(value.id, userSettings))
+    isSettingsPatch && (await dispatch(updateSettingsCompanyUser(value.id, userSettings)))
   }
 }
 

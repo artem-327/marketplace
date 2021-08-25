@@ -289,7 +289,6 @@ const getActions = (props) => {
         id: 'global.delete',
         defaultMessage: 'Delete'
         }),
-        disabled: row => props.editedId === row.id,
         callback: row => {
         confirm(
             formatMessage({
@@ -718,13 +717,25 @@ export const getRows = (props, state, setState) => {
                 rawData={getSafe(() => state.rows[rIndex].rawData, '') || r.rawData}
                 focusInput={state.focusInput}
                 setState={setState}
+                rIndex={rIndex}
             />
             }
             on='click'
             trigger={<FobPrice>{r.fobPrice}</FobPrice>}
             open={pricingEditOpenId === r.rawData.id}
             onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={closePricingEditPopup}
+            onClose={() => {
+              setState(prevState => {
+                let newRows = prevState.rows
+                newRows[rIndex].pricingTiers = props.rows[rIndex].pricingTiers
+                newRows[rIndex].rawData.pricingTiers = props.rows[rIndex].pricingTiers
+                return {
+                  ...prevState,
+                  rows: newRows
+                }
+              })
+              closePricingEditPopup()
+            }}
         />
         ),
         broadcast: (

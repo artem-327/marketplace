@@ -96,7 +96,7 @@ export const getRows = (state, props) => {
       moment(r.createdAt).isSame(moment(), 'day') || moment(r.createdAt).isSame(moment().subtract(1, 'days'), 'day')
 
     const isUserData = getSafe(() => r.relatedCompany.avatarUrl, false)
-      || (getSafe(() => r.relatedCompany.hasLogo, false) && getSafe(() => r.relatedCompany.logoUrl, false))
+      || (/* getSafe(() => r.relatedCompany.hasLogo, false) && [DT-1005 temporary]*/ getSafe(() => r.relatedCompany.logoUrl, false))
       || r.nameOfUser || getSafe(() => r.info.requestedBy.company.cfDisplayName, false)
       || getSafe(() => r.info.buyerCompanyName, false)
 
@@ -111,7 +111,7 @@ export const getRows = (state, props) => {
             <DivUser>
               {getSafe(() => r.relatedCompany.avatarUrl || r.relatedCompany.logoUrl, false) && (
                 <UserImage
-                  src={r.relatedCompany.hasLogo && r.relatedCompany.logoUrl
+                  src={/* r.relatedCompany.hasLogo && [DT-1005 temporary] */ r.relatedCompany.logoUrl
                     ? r.relatedCompany.logoUrl
                     : r.relatedCompany.avatarUrl
                   }

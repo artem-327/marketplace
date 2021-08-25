@@ -66,7 +66,9 @@ export const validationSchema = min =>
  */
 export const renderPricingTiers = (values, setFieldValue, props) => {
     const {
-      intl: { formatMessage }
+      intl: { formatMessage },
+      rIndex,
+      setState
     } = props
 
     let tiers = []
@@ -82,6 +84,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   placeholder: '0',
                   onChange: (e, { name, value }) => {
                     e.persist()
+                    setState(prevState => {
+                      let newRows = prevState.rows
+                      newRows[rIndex].pricingTiers[i].quantityFrom = value
+                      newRows[rIndex].rawData.pricingTiers[i].quantityFrom = value
+                      return {
+                        ...prevState,
+                        rows: newRows
+                      }
+                    })
                   }
                 }}
               />
@@ -97,6 +108,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   placeholder: '0.000',
                   onChange: (e, { name, value }) => {
                     e.persist()
+                    setState(prevState => {
+                      let newRows = prevState.rows
+                      newRows[rIndex].pricingTiers[i].pricePerUOM = value
+                      newRows[rIndex].rawData.pricingTiers[i].pricePerUOM = value
+                      return {
+                        ...prevState,
+                        rows: newRows
+                      }
+                    })
                   }
                 }}
               />
@@ -112,6 +132,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
                   let pricingTiers = values.pricingTiers.slice()
                   pricingTiers.splice(i, 1)
                   setFieldValue('pricingTiers', pricingTiers)
+                  setState(prevState => {
+                    let newRows = prevState.rows
+                    newRows[rIndex].pricingTiers = pricingTiers
+                    newRows[rIndex].rawData.pricingTiers = pricingTiers
+                    return {
+                      ...prevState,
+                      rows: newRows
+                    }
+                  })
                 }}>
                 <Icon name='trash alternate outline' />
               </Button>
@@ -132,6 +161,15 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               let pricingTiers = values.pricingTiers.slice()
               pricingTiers.push({ quantityFrom: '', pricePerUOM: '' })
               setFieldValue('pricingTiers', pricingTiers)
+              setState(prevState => {
+                let newRows = prevState.rows
+                newRows[rIndex].pricingTiers = pricingTiers
+                newRows[rIndex].rawData.pricingTiers = pricingTiers
+                return {
+                  ...prevState,
+                  rows: newRows
+                }
+              })
             }}>
             {formatMessage({ id: 'global.add', defaultMessage: 'Add' })}
           </Button>
