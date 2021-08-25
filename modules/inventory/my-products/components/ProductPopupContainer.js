@@ -46,9 +46,9 @@ import {
   makeGetDocumentTypesDropdown,
   makeGetMeasureTypesDropdown,
   makeGetPackagingTypes,
-  makeGetUnitsDropdown,
   makeGetWeightUnits,
   makeGetUnits,
+  makeGetUnitsFilteredDropdown,
   makeGetFreightClassesDropdown,
   makeGetHazardClassesDropdown,
   makeGetPackagingGroupsDropdown
@@ -80,7 +80,7 @@ const makeMapStateToProps = () => {
   const getCompanyGenericProductFetching = makeGetCompanyGenericProductFetching()
   const getPackagingType = makeGetMeasureTypesDropdown()
   const getPackagingTypesAll = makeGetPackagingTypes()
-  const getProductsUnitsType = makeGetUnitsDropdown()
+  const getProductsUnitsType = makeGetUnitsFilteredDropdown()
   const getPackageWeightUnits = makeGetWeightUnits()
   const getUnitsAll = makeGetUnits()
   const getFreightClasses = makeGetFreightClassesDropdown()
