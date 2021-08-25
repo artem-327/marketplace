@@ -68,6 +68,8 @@ export const initialState = {
   unitsDropdown: [],
   unitsLoading: false,
   weightUnits: [],
+  unitsFiltered: [],
+  unitsFilteredDropdown: [],
 
   measureTypes: [],
   measureTypesDropdown: [],
@@ -306,10 +308,11 @@ export default typeToReducer(
     [getUnits.fulfilled]: (state, { payload }) => ({
       ...state,
       units: payload,
-      unitsDropdown: payload.map((unit, id) => {
+      unitsDropdown: payload
+        .map((unit, id) => {
         return {
           key: id,
-          text: unit.name,  // ! ! or 'nameAbbreviation' ?
+          text: unit.name,
           value: unit.id
         }
       }),
@@ -320,6 +323,17 @@ export default typeToReducer(
             key: id,
             text: type.name,
             value: type.id
+          }
+        }),
+      unitsFiltered: payload.filter(unit => unit.measureType.id !== 67)
+      ,
+      unitsFilteredDropdown: payload
+        .filter(unit => unit.measureType.id !== 67)
+        .map((unit, id) => {
+          return {
+            key: id,
+            text: unit.name,
+            value: unit.id
           }
         }),
       unitsLoading: false

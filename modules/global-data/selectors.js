@@ -1,8 +1,6 @@
 import { createSelector } from 'reselect'
 
 // Services
-import { getSafe } from '../../utils/functions'
-
 const getCountries = state => state.globalData.countries
 const getCountriesDropdown = state => state.globalData.countriesDropdown
 const getCountriesLoading = state => state.globalData.countriesLoading
@@ -52,6 +50,8 @@ const getUnits = state => state.globalData.units
 const getUnitsDropdown = state => state.globalData.unitsDropdown
 const getUnitsLoading = state => state.globalData.unitsLoading
 const getWeightUnits = state => state.globalData.weightUnits
+const getUnitsFiltered = state => state.globalData.unitsFiltered
+const getUnitsFilteredDropdown = state => state.globalData.unitsFilteredDropdown
 
 const getMeasureTypes = state => state.globalData.measureTypes
 const getMeasureTypesDropdown = state => state.globalData.measureTypesDropdown
@@ -112,6 +112,8 @@ export const makeGetUnits = () => createSelector([getUnits], data => data)
 export const makeGetUnitsDropdown = () => createSelector([getUnitsDropdown], data => data)
 export const makeGetUnitsLoading = () => createSelector([getUnitsLoading], data => data)
 export const makeGetWeightUnits = () => createSelector([getWeightUnits], data => data)
+export const makeGetUnitsFiltered = () => createSelector([getUnitsFiltered], data => data)
+export const makeGetUnitsFilteredDropdown = () => createSelector([getUnitsFilteredDropdown], data => data)
 
 export const makeGetMeasureTypes = () => createSelector([getMeasureTypes], data => data)
 export const makeGetMeasureTypesDropdown = () => createSelector([getMeasureTypesDropdown], data => data)
