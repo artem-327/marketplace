@@ -18,7 +18,7 @@ context("Shipping quotes CRUD", () => {
 
         cy.wait("@loading")
 
-        cy.get('.flex-wrapper > :nth-child(7)').click()
+        cy.get('[data-test=navigation_operations_shipping-quotes_drpdn]').click()
 
         cy.wait("@quotesLoad")
     })

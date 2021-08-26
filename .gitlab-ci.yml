@@ -1,8 +1,8 @@
 before_script:
-  #- docker -D info
-  #- docker system prune -f
-  #- docker system prune --volumes -f
-  #- docker rmi --force $(docker images -q --no-trunc) || true
+  - docker -D info
+  - docker system prune -f
+  - docker system prune --volumes -f
+  - docker rmi --force $(docker images -q --no-trunc) || true
   - cd cypress/
   - set e+x
   - docker build -t cypress/artio .
@@ -10,7 +10,7 @@ before_script:
 test:
   script:
     - cd ..
-    - docker run -v $PWD:/test -w /test -u appuser cypress/artio --headless --browser chrome
+    - docker run -v $PWD:/test -w /test -u appuser cypress/artio --browser chrome
   artifacts:
     when: always
     paths:

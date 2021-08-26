@@ -16,8 +16,6 @@ context("Tags CRUD", () => {
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
-        cy.url().should("include", "dashboard")
-
         cy.wait("@loading")
 
         cy.get('.flex-wrapper > :nth-child(7)').click()

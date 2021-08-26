@@ -18,7 +18,6 @@ context("Product Group CRUD", () => {
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "dashboard")
 
         cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.waitForUI()

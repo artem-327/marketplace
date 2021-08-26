@@ -8,7 +8,6 @@ context("Marketplace tests",() => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait('@inventoryLoading', {timeout: 30000})
-        cy.url().should("include", "inventory")
         cy.contains("Marketplace").click()
 
         cy.wait("@marketplaceLoading", {timeout: 30000})
