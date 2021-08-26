@@ -1,7 +1,7 @@
 
 FROM cypress/included:7.4.0
 
-COPY /../package.json /package.json
+COPY /package.json /package.json
 RUN npm ci
 # "root"
 RUN whoami

@@ -5,6 +5,7 @@ before_script:
   #- docker rmi --force $(docker images -q --no-trunc) || true
   - cd cypress/
   - set e+x
+  - cd ..
   - docker build -t cypress/artio .
 
 test:
