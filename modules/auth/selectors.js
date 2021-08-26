@@ -26,7 +26,8 @@ const getCompany = state => state?.auth?.identity?.company
 const getIsMerchant = state => state?.auth?.identity?.isMerchant
 const getIsCompanyAdmin = state => state?.auth?.identity?.isCompanyAdmin
 const getTutorialCompleted = state => state?.auth?.identity?.tutorialCompleted
-const getBuyEligible = state => state?.auth?.identity?.company?.buyEligibl
+const getBuyEligible = state => state?.auth?.identity?.company?.buyEligible
+const getSellEligible = state => state?.auth?.identity?.company?.sellEligible
 const getSettings = state => state?.auth?.identity?.settings
 
 export const makeGetNaicsCode = () => createSelector([getNaicsCode], naicsId => naicsId)
@@ -55,4 +56,5 @@ export const makeGetIsCompanyAdmin = () =>
 export const makeGetTutorialCompleted = () =>
   createSelector([getTutorialCompleted], tutorialCompleted => tutorialCompleted ?? false)
 export const makeGetBuyEligible = () => createSelector([getBuyEligible], buyEligible => buyEligible ?? false)
+export const makeGetSellEligible = () => createSelector([getSellEligible], sellEligible => sellEligible ?? false)
 export const makeGetSettings = () => createSelector([getSettings], settings => settings)

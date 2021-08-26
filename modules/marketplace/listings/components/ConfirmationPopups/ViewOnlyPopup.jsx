@@ -43,14 +43,14 @@ const ViewOnlyPopup = props => {
           </DivHeader>
           <DivGreyText margin='1px 10px 11px'>
             <FormattedMessage
-              id='marketplace.noLinkedBankAccount'
-              defaultMessage="No linked bank account"
+              id='marketplace.WeAreVerifyingYourIdentity'
+              defaultMessage="We're verifying your identity"
             />
           </DivGreyText>
           <DivDescription>
             <FormattedMessage
               id='marketplace.viewOnlyPopupText'
-              defaultMessage="Before you can make purchases from the Marketplace you or your company's controller must link a bank account. This can be done in My TradePass > Bank Accounts through a secure Plaid link."
+              defaultMessage='For your security, we need some additional time to verify your identity and your financial information before you buy or sell on BlueTrade. You will only be able to view BlueTrade listings during this time. Most verifications are done within 24 hours but in rare cases can take up to 72 hours.'
               values={{
                 companyName: applicationName
               }}

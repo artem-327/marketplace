@@ -919,7 +919,7 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
   let fobPrice
 
   try {
-    if (po.pricingTiers.length > 1)
+    if (po?.pricingTiers?.length > 1)
       fobPrice = (
         <>
           {' '}
