@@ -172,7 +172,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
  * @method
  */
 export const submitForm = async (props, values, setState) => {
-    const { closePricingEditPopup, rawData, datagrid, addProductOffer } = props
+    const { closePricingEditPopup, rawData, datagrid, addProductOffer, rIndex, r } = props
     let isGrouped = getSafe(() => rawData.grouped, false)
     setState(prevState => ({ ...prevState, isSubmitting: true }))
     closePricingEditPopup()
@@ -224,6 +224,16 @@ export const submitForm = async (props, values, setState) => {
       setState(prevState => ({ ...prevState, isSubmitting: false }))
     } catch (e) {
       console.error(e)
-      setState(prevState => ({ ...prevState, isSubmitting: false }))
+      setState(prevState => {
+        let newRows = prevState.rows
+        newRows[rIndex].pricingTiers = r.pricingTiers
+        newRows[rIndex].rawData.pricingTiers = r.pricingTiers
+        datagrid.updateRow(r.id, () => r)
+        return {
+          ...prevState,
+          rows: newRows,
+          isSubmitting: false
+        }
+      })
     }
 }
