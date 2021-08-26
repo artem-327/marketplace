@@ -48,7 +48,6 @@ const MyListings = props => {
     },
     rows: [],
     updatedRow: false,
-    focusInput: '',
     openFilterPopup: false,
     isSubmitting: false
   })
@@ -130,7 +129,6 @@ const MyListings = props => {
         getSafe(() => prevProps.rows[0].id, '') !== getSafe(() => props.rows[0].id, '') ||
         getSafe(() => prevProps.pricingEditOpenId, '') !== getSafe(() => props.pricingEditOpenId, '') ||
         (getSafe(() => state.updatedRow, '') && !getSafe(() => prevState.updateRow, '')) ||
-        getSafe(() => state.focusInput, '') !== getSafe(() => prevState.focusInput, '') ||
         getSafe(() => datagrid.isUpdatedRow, '')
       ) {
         if (getSafe(() => datagrid.isUpdatedRow, '')) {
@@ -320,7 +318,6 @@ MyListings.propTypes = {
   rows: PropTypes.array,
   pricingEditOpenId: PropTypes.number,
   editedId: PropTypes.number,
-  focusInput: PropTypes.string,
   applicationName: PropTypes.string,
   datagridFilterUpdate: PropTypes.bool,
   isModalDetailOpen: PropTypes.bool,
@@ -354,7 +351,6 @@ MyListings.defaultProps = {
   rows: [],
   pricingEditOpenId: null,
   editedId: null,
-  focusInput: '',
   applicationName: '',
   datagridFilterUpdate: false,
   isModalDetailOpen: false,

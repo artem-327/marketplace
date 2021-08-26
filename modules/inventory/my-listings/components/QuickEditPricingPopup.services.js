@@ -81,19 +81,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
-                  placeholder: '0',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    setState(prevState => {
-                      let newRows = prevState.rows
-                      newRows[rIndex].pricingTiers[i].quantityFrom = value
-                      newRows[rIndex].rawData.pricingTiers[i].quantityFrom = value
-                      return {
-                        ...prevState,
-                        rows: newRows
-                      }
-                    })
-                  }
+                  placeholder: '0'
                 }}
               />
               <div className='label'>{formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}</div>
@@ -105,19 +93,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
-                  placeholder: '0.000',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    setState(prevState => {
-                      let newRows = prevState.rows
-                      newRows[rIndex].pricingTiers[i].pricePerUOM = value
-                      newRows[rIndex].rawData.pricingTiers[i].pricePerUOM = value
-                      return {
-                        ...prevState,
-                        rows: newRows
-                      }
-                    })
-                  }
+                  placeholder: '0.000'
                 }}
               />
               <div className='label'>{currencySymbol}</div>
