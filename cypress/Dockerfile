@@ -1,6 +1,7 @@
 
 FROM cypress/included:7.4.0
 
+RUN npm ci
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
