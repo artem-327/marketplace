@@ -2,7 +2,7 @@
 FROM cypress/included:7.4.0
 
 COPY /package.json /package.json
-RUN npm ci
+RUN npm install
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
