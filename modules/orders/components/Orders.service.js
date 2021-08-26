@@ -80,9 +80,9 @@ export const getRowsContainer = (datagrid, currentTab) => datagrid.rows.map(r =>
     accountingDocumentsCount: r.accountingDocumentsCount,
     attachments: r.attachments,
     orderItems: r.orderItems.map(item => {
-      let cofA = filterAttachments(r.attachments, 1) // C of A
-      let sds = filterAttachments(r.attachments, 3) // SDS
-      let bl = filterAttachments(r.attachments, 10) // B/L
+      let cofA = filterAttachments(item.attachments, 1) // C of A
+      let sds = filterAttachments(item.attachments, 3) // SDS
+      let bl = filterAttachments(item.attachments, 10) // B/L
       return {
         ...item,
         rawData: item,
