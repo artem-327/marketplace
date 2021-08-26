@@ -6,7 +6,7 @@ before_script:
   - cd cypress/
   - set e+x
   - cd ..
-  - docker build -t cypress/artio .
+  - docker build -t cypress/artio . -f ./cypress/Dockerfile
 
 test:
   script:
