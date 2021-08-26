@@ -3,7 +3,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
 // Components
-import { DateInput } from '../../../../components/custom-formik'
+import { DateInput, TimeWithZoneInput } from '../../../../components/custom-formik'
 import ErrorFocus from '../../../../components/error-focus'
 import { Required } from '../../../../components/constants/layout'
 // Services
@@ -101,6 +101,11 @@ const GenerateBOLPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
+
+                  <TimeWithZoneInput
+
+                  />
+
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_shipping_quote_reset_btn'>
