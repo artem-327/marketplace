@@ -10,5 +10,8 @@
   "video": false,
   "requestTimeout": 30000,
   "defaultCommandTimeout": 10000,
-  "screenshotOnRunFailure": false
+  "screenshotOnRunFailure": false,
+  "env": {
+    "MAILOSAUR_API_KEY": "xxjjSbwbdXlx9wYB"
+  }
 }

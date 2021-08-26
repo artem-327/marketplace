@@ -333,6 +333,66 @@ Cypress.Commands.add("createProductOffer", (token, companyProduct, warehouse) =>
     })
 })
 
+Cypress.Commands.add("createUser", (token, name, email) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/users',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {"email":email,"name":name,"preferredCurrency":1,"roles":[34]}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body.id
+    })
+})
+
+Cypress.Commands.add("createCompany", (token, companyName, contactEmail) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/companies/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {
+            "businessType": 1,
+            "enabled": true,
+            "industryType": "accounting_and_tax_preparation",
+            "naicsCode": 4246,
+            "name": companyName,
+            "phone": "+123456789",
+            "primaryBranch": {
+                "deliveryAddress": {
+                    "address": {
+                        "city": "New York",
+                        "country": 1,
+                        "province": 32,
+                        "streetAddress": "101 Mott St",
+                        "zip": "10013"
+                    },
+                    "addressName": "New York",
+                    "contactEmail": contactEmail,
+                    "contactName": "Test User",
+                    "contactPhone": "+123456789"
+                },
+                "warehouse": true
+            },
+            "primaryUser": {
+                "email": contactEmail,
+                "name": "Test User",
+                "phone": "+123456789"
+            },
+            "purchaseHazmatEligible": true,
+            "tin": "123456789",
+            "tinType": "ein",
+            "type": "REGULAR"
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body.id
+    })
+})
+
 Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
     cy.request({
         method: 'POST',
