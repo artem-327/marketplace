@@ -27,6 +27,7 @@ context("Inventory Broadcasting", () => {
     beforeEach(function () {
         cy.viewport(3000, 2000)
 
+        cy.intercept("GET", '/prodex/api/dashboard*').as('dashboardLoading')
         cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
         cy.intercept("PATCH", '/prodex/api/product-offers/*/broadcast-option?option=***').as('broadcast')
         cy.intercept("GET", "/prodex/api/company-products/own/search*").as("offerLoading")
@@ -34,6 +35,10 @@ context("Inventory Broadcasting", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
+        cy.wait("@dashboardLoading", { timeout: 100000 })
+        cy.url().should("include", "dashboard")
+
+        cy.get("[data-test=navigation_menu_inventory_drpdn]", { timeout: 100000 }).click()
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })

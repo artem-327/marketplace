@@ -14,12 +14,10 @@ context("Prodex Admin User CRUD", () => {
         cy.intercept("POST", "/prodex/api/users/datagrid/all*").as("usersLogin")
         cy.intercept("POST", "/prodex/api/companies/datagrid").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/users").as("usersSave")
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("dashboardload")
         cy.viewport(2000, 1000)
 
         cy.FElogin(adminJSON.email, adminJSON.password)
-
-        cy.url().should("include", "dashboard")
 
         cy.wait("@dashboardload")
         cy.get('.flex-wrapper > :nth-child(2)').click()

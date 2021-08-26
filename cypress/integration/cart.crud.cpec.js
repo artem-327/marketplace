@@ -7,7 +7,7 @@ context("Shopping cart CRUD", () => {
     beforeEach(function () {
         cy.viewport(2500, 3500)
         cy.intercept("GET", '/prodex/api/product-groups/search**').as('groupsLoading')
-        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("GET", '/prodex/api/dashboard*').as('inventoryLoading')
         cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid*').as('marketplaceLoading')
 
         cy.FElogin(userJSON.email, userJSON.password)
@@ -15,7 +15,7 @@ context("Shopping cart CRUD", () => {
         cy.waitForUI()
 
         cy.wait('@inventoryLoading', { timeout: 30000 })
-        cy.url().should("include", "inventory")
+        cy.url().should("include", "dashboard")
         cy.contains("Marketplace").click()
 
         cy.wait("@marketplaceLoading", { timeout: 30000 })

@@ -32,7 +32,7 @@ context("Shared Listing", () => {
 
     beforeEach(function () {
         cy.viewport(3000, 2000)
-        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("POST", "/prodex/api/product-offers/shared-listings/datagrid*").as("sharedListingLoading")
         cy.intercept("PATCH", "/prodex/api/product-offers/**/mark-up").as("markupSave")
         cy.intercept("PATCH", "/prodex/api/product-offers/**/broadcast-option?**").as("optionSave")
@@ -40,7 +40,7 @@ context("Shared Listing", () => {
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
-        cy.get("[data-test='navigation_menu_inventory_my_listings_drpdn']", { timeout: 100000 }).click()
+        cy.get("[data-test=navigation_menu_inventory_drpdn]", { timeout: 100000 }).click()
         cy.wait("@inventoryLoading", { timeout: 100000 })
 
         cy.get("[data-test='navigation_menu_inventory_shared_listings_drpdn']", { timeout: 100000 }).click()

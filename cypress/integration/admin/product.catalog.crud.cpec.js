@@ -15,13 +15,12 @@ context("Generic Company Product CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
         cy.intercept("POST", "/prodex/api/company-generic-products/datagrid*").as("genericLoading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "dashboard")
 
         cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.waitForUI()

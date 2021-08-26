@@ -12,12 +12,10 @@ context("Units of packaging CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
         cy.intercept("POST", "/prodex/api/packaging-types/datagrid*").as("packaging")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
-
-        cy.url().should("include", "dashboard")
 
         cy.wait("@loading")
         cy.get('.flex-wrapper > :nth-child(6)').click()

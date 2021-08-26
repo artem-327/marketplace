@@ -2,7 +2,7 @@ context("Prodex Global Price", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("GET", '/prodex/api/dashboard*').as('inventoryLoading')
         cy.intercept("GET", '/prodex/api/broadcast-rules/general').as('rulesLoading')
         cy.intercept("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)

@@ -2,7 +2,7 @@ context("Marketplace tests",() => {
     const userJSON = require('../fixtures/user.json')
 
     beforeEach(function () {
-        cy.intercept("POST","/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET","/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("POST", "/prodex/api/product-offers/broadcasted/datagrid*").as("marketplaceLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)

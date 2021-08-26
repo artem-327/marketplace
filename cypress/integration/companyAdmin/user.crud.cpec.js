@@ -5,7 +5,7 @@ context("Prodex User CRUD", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/companies/id/**").as("companyLoading")
         cy.intercept("GET", "/prodex/api/payments/bank-accounts").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/users/datagrid*").as("usersLogin")

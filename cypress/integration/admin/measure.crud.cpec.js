@@ -9,12 +9,10 @@ context("Units of measure CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
         cy.intercept("POST", "/prodex/api/units/datagrid*").as("unitLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
-
-        cy.url().should("include", "dashboard")
 
         cy.wait("@loading")
         cy.waitForUI()

@@ -2,7 +2,7 @@ context("Company Details", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/companies/id/**/logo").as("logoLoading")
         cy.intercept("GET", "/prodex/api/tradepass/my-tradepass").as("tradePassLoading")
         cy.intercept("PATCH", "/prodex/api/companies/id/**/details").as("detailsSaving")

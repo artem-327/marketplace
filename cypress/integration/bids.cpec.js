@@ -8,7 +8,7 @@ context("Bids Tests", () => {
 
     beforeEach(function () {
         cy.viewport(2500, 3500)
-        cy.intercept("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.intercept("GET", '/prodex/api/dashboard*').as('inventoryLoading')
         cy.intercept("POST", '/prodex/api/product-offers/broadcasted/datagrid*').as('marketplaceLoading')
         cy.intercept("POST", "/prodex/api/product-offer-bids").as("createdBid")
         cy.intercept("PATCH", "/prodex/api/product-offer-bids/id/**").as("bidAction")
@@ -21,7 +21,7 @@ context("Bids Tests", () => {
         cy.waitForUI()
 
         cy.wait('@inventoryLoading', { timeout: 30000 })
-        cy.url().should("include", "inventory")
+        cy.url().should("include", "dashboard")
         cy.contains("Marketplace").click()
 
         cy.wait("@marketplaceLoading", { timeout: 30000 })

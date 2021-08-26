@@ -11,14 +11,12 @@ context("Companies CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("dashboardload")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("dashboardload")
         cy.intercept("POST", "/prodex/api/companies/datagrid*").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
         cy.intercept("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
-
-        cy.url().should("include", "dashboard")
 
         cy.wait("@dashboardload")
         cy.get('.flex-wrapper > :nth-child(2)').click()

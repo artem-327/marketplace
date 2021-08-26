@@ -12,13 +12,12 @@ context("CAS products CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("GET", "/prodex/api/dashboard?*").as("loading")
+        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
         cy.intercept("POST", "/prodex/api/cas-products/datagrid*").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.url().should("include", "dashboard")
         cy.get('.flex-wrapper > :nth-child(3)').click()
         cy.wait("@CASloading")
     })
@@ -134,6 +133,7 @@ context("CAS products CRUD", () => {
 
         cy.get("[data-test=admin_popup_alt_cas_name_close_btn]").click()
 
+        cy.waitForUI()
         cy.openElement(productId, 1)
 
         cy.wait("@nameGetting")

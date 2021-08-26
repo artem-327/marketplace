@@ -26,15 +26,19 @@ context("Inventory CRUD", () => {
 
     beforeEach(function () {
         cy.viewport(3000, 2000)
+        cy.intercept("GET", '/prodex/api/dashboard*').as('dashboardLoading')
         cy.intercept("POST", "/prodex/api/product-offers/").as("newOffer")
         cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/countries/search*").as("addingLoading")
         cy.intercept("GET", "/prodex/api/company-products/own/search*").as("offerLoading")
 
         cy.FElogin(userJSON.email, userJSON.password)
+        cy.waitForUI()
+        cy.wait("@dashboardLoading", { timeout: 100000 })
+        cy.url().should("include", "dashboard")
 
         cy.waitForUI()
-        cy.get("[data-test='navigation_menu_inventory_my_listings_drpdn']", { timeout: 100000 }).click()
+        cy.get("[data-test=navigation_menu_inventory_drpdn]", { timeout: 100000 }).click()
         cy.wait("@inventoryLoading", { timeout: 100000 })
         cy.url().should("include", "inventory")
     })
