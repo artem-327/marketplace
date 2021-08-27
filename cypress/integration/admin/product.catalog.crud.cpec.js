@@ -137,6 +137,7 @@ context("Generic Company Product CRUD", () => {
 
         cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
+        cy.waitForUI()
         cy.openElement(productId, 4)
 
         cy.wait("@nameGetting")

@@ -3,6 +3,9 @@ context("Prodex Admin User CRUD", () => {
     let filter = [{"operator":"LIKE","path":"User.name","values":["%TesterFE%"]},
         {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%TesterFE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
+    const serverId = '3drjjanh'
+    const testEmail = `superadmincreate@${serverId}.mailosaur.net`
+    const sendingTime = new Date()
 
     before(function () {
         cy.getToken().then(token => {
@@ -38,7 +41,7 @@ context("Prodex Admin User CRUD", () => {
 
         cy.enterText("#field_input_name", "John TesterFE")
         cy.enterText("#field_input_jobTitle", "Automatior")
-        cy.enterText("#field_input_email", "automation@example.com")
+        cy.enterText("#field_input_email", testEmail)
 
         cy.selectFromDropdown("div[id='field_dropdown_company']","TomasovaS")
 
@@ -73,7 +76,17 @@ context("Prodex Admin User CRUD", () => {
             .should("have.value", "Automatior")
 
         cy.get("#field_input_email")
-            .should("have.value", "automation@example.com")
+            .should("have.value", testEmail)
+
+        cy.mailosaurGetMessage(serverId, {
+            sentTo: testEmail,
+            options: {
+                timeout: 60,
+                receivedAfter: sendingTime
+            }
+        }).then((email) => {
+            expect(email.subject).to.equal('Welcome to BluePallet')
+        })
     })
 
     it("Edits a user", () => {

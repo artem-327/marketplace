@@ -3,6 +3,9 @@ context("Prodex User CRUD", () => {
     let filter = [{ "operator": "LIKE", "path": "User.name", "values": ["%Automator%"] },
         { "operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%Automator%"] }]
     const userJSON = require('../../fixtures/user.json')
+    const serverId = '3drjjanh'
+    const testEmail = `companyusercreate@${serverId}.mailosaur.net`
+    const sendingTime = new Date()
 
     beforeEach(function () {
         cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
@@ -39,7 +42,7 @@ context("Prodex User CRUD", () => {
 
         cy.enterText("#field_input_name", "John Automator")
         cy.enterText("#field_input_jobTitle", "Automatior")
-        cy.enterText("#field_input_email", "automation@example.com")
+        cy.enterText("#field_input_email", testEmail)
 
         cy.get("#field_dropdown_homeBranch").click()
         cy.waitForUI()
@@ -70,9 +73,19 @@ context("Prodex User CRUD", () => {
             .should("have.value", "Automatior")
 
         cy.get("#field_input_email")
-            .should("have.value", "automation@example.com")
+            .should("have.value", testEmail)
 
         cy.waitForUI()
+
+        cy.mailosaurGetMessage(serverId, {
+            sentTo: testEmail,
+            options: {
+                timeout: 60,
+                receivedAfter: sendingTime
+            }
+        }).then((email) => {
+            expect(email.subject).to.equal('Welcome to BluePallet')
+        })
     })
 
     it("Edits a user", () => {
