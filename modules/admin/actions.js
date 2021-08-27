@@ -149,22 +149,6 @@ export const deleteLogisticsProvider = createAsyncAction('ADMIN_DELETE_LOGISTICS
 export const postNewCarrier = createAsyncAction('ADMIN_POST_NEW_CARRIER', data => api.postNewCarrier(data))
 export const updateCarrier = createAsyncAction('ADMIN_EDIT_CARRIER', (id, data) => api.updateCarrier(id, data))
 export const deleteCarrier = createAsyncAction('ADMIN_DELETE_CARRIER', id => api.deleteCarrier(id))
-export const handleFiltersValue = createAsyncAction('ADMIN_HANDLE_FILTERS_VALUE', async (props, value) => {
-  let filterValue = value
-  let casProductsRows = []
-  let manufacturersRows = []
-
-  switch (props.currentTab) {
-    case 'CAS Products':
-      casProductsRows = await api.getCasProductByString(value)
-      break
-    case 'manufacturers':
-      manufacturersRows = await api.getManufacturersByString(value)
-      break
-  }
-
-  return { filterValue, casProductsRows, manufacturersRows }
-})
 export const getDataRequest = createAsyncAction('ADMIN_GET_DATA_REQUEST', (config, values = null) => api.getDataRequest(config, values))
 export const deleteConfirmation = createAsyncAction('ADMIN_DELETE_CONFIRM_POPUP', async (id, config = null) => {
   if (config != null) {

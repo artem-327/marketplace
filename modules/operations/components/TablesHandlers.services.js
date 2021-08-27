@@ -99,7 +99,6 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
   const { currentTab } = props
   if (currentTab === '') return
 
-
   if(data.name === 'dateFrom' || data.name === 'dateTo') {
     //Gets separator (character) from getLocaleDateFormat.
     let separator = [...getLocaleDateFormat()].find(
@@ -157,7 +156,7 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
             ...state[currentTab],
             [data.name]: data.value
           }
-          handleFiltersValue(filter)
+          handleFiltersValue(filter, props, formikProps)
         }
       } else {
         toastManager.add(

@@ -81,19 +81,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].quantityFrom`}
                 inputProps={{
-                  placeholder: '0',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    setState(prevState => {
-                      let newRows = prevState.rows
-                      newRows[rIndex].pricingTiers[i].quantityFrom = value
-                      newRows[rIndex].rawData.pricingTiers[i].quantityFrom = value
-                      return {
-                        ...prevState,
-                        rows: newRows
-                      }
-                    })
-                  }
+                  placeholder: '0'
                 }}
               />
               <div className='label'>{formatMessage({ id: 'myInventory.andAbove', defaultMessage: 'and above' })}</div>
@@ -105,19 +93,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
               <Input
                 name={`pricingTiers[${i}].pricePerUOM`}
                 inputProps={{
-                  placeholder: '0.000',
-                  onChange: (e, { name, value }) => {
-                    e.persist()
-                    setState(prevState => {
-                      let newRows = prevState.rows
-                      newRows[rIndex].pricingTiers[i].pricePerUOM = value
-                      newRows[rIndex].rawData.pricingTiers[i].pricePerUOM = value
-                      return {
-                        ...prevState,
-                        rows: newRows
-                      }
-                    })
-                  }
+                  placeholder: '0.000'
                 }}
               />
               <div className='label'>{currencySymbol}</div>
@@ -196,7 +172,7 @@ export const renderPricingTiers = (values, setFieldValue, props) => {
  * @method
  */
 export const submitForm = async (props, values, setState) => {
-    const { closePricingEditPopup, rawData, datagrid, addProductOffer } = props
+    const { closePricingEditPopup, rawData, datagrid, addProductOffer, rIndex, r } = props
     let isGrouped = getSafe(() => rawData.grouped, false)
     setState(prevState => ({ ...prevState, isSubmitting: true }))
     closePricingEditPopup()
@@ -248,6 +224,16 @@ export const submitForm = async (props, values, setState) => {
       setState(prevState => ({ ...prevState, isSubmitting: false }))
     } catch (e) {
       console.error(e)
-      setState(prevState => ({ ...prevState, isSubmitting: false }))
+      setState(prevState => {
+        let newRows = prevState.rows
+        newRows[rIndex].pricingTiers = r.pricingTiers
+        newRows[rIndex].rawData.pricingTiers = r.pricingTiers
+        datagrid.updateRow(r.id, () => r)
+        return {
+          ...prevState,
+          rows: newRows,
+          isSubmitting: false
+        }
+      })
     }
 }

@@ -22,7 +22,8 @@ import {
   makeGetIsMerchant,
   makeGetIsCompanyAdmin,
   makeGetTutorialCompleted,
-  makeGetBuyEligible
+  makeGetBuyEligible,
+  makeGetSellEligible
 } from '../../../auth/selectors'
 import { makeGetSidebar } from '../../../purchase-order/selectors'
 import { makeGetIsOpen } from '../../../company-product-info/selectors'
@@ -38,6 +39,7 @@ const makeMapStateToProps = () => {
   const getIsCompanyAdmin = makeGetIsCompanyAdmin()
   const getTutorialCompleted = makeGetTutorialCompleted()
   const getBuyEligible = makeGetBuyEligible()
+  const getSellEligible = makeGetSellEligible()
   const getSearchedCompaniesDropdown = makeGetSearchedCompaniesDropdown()
   const getSelectedSellerOption = makeGetSelectedSellerOption()
   const getCurrentUserDeaAuthorized = makeGetCurrentUserDeaAuthorized()
@@ -57,6 +59,7 @@ const makeMapStateToProps = () => {
       isCompanyAdmin: getIsCompanyAdmin(store),
       tutorialCompleted: getTutorialCompleted(store),
       buyEligible: getBuyEligible(store),
+      sellEligible: getSellEligible(store),
       searchedCompaniesDropdown: getSearchedCompaniesDropdown(store),
       selectedSellerOption: getSelectedSellerOption(store),
       regulatoryDeaListAuthorized: getCurrentUserDeaAuthorized(store),

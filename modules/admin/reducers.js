@@ -55,7 +55,6 @@ import {
   postNewCarrier,
   updateCarrier,
   deleteCarrier,
-  handleFiltersValue,
   getDataRequest,
   deleteConfirmation
 } from './actions'
@@ -72,7 +71,6 @@ export const initialState = {
   gradesRows: [],
   formsRows: [],
   conditionsRows: [],
-  casProductsRows: [],
   altCasNamesRows: [],
   unNumbersFiltered: [],
   companiesRows: [],
@@ -977,30 +975,6 @@ export default typeToReducer(
       return {
         ...state,
         loading: false
-      }
-    },
-    [handleFiltersValue.pending]: (state, action) => {
-      return {
-        ...state,
-        filterValue: '',
-        casProductsRows: [],
-        companiesRows: []
-      }
-    },
-    [handleFiltersValue.rejected]: (state, action) => {
-      return {
-        ...state,
-        filterValue: '',
-        casProductsRows: [],
-        companiesRows: []
-      }
-    },
-    [handleFiltersValue.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        filterValue: action.payload.filterValue,
-        casProductsRows: action.payload.casProductsRows,
-        companiesRows: action.payload.companiesRows
       }
     },
     [getDataRequest.pending]: (state, action) => {
