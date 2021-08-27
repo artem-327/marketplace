@@ -59,10 +59,10 @@ context("Permissions tests",() => {
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
 
-        cy.searchInList("89")
+        cy.searchInList("85")
         cy.waitForUI()
-        cy.openElement(89, 0)
-        cy.get("[data-test='orders_detail_orderShipping_btn']").should('be.visible')
+        cy.openElement(85, 0)
+        cy.get('[data-test=orders_detail_markAsShipped_btn]').should('be.visible')
     })
 
     it("Product Offer Manager permissions", () =>{

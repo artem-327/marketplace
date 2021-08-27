@@ -116,7 +116,7 @@ context("Bids Tests", () => {
                 cy.openElement(bidId, 2)
 
                 cy.contains("label", "Counter").click()
-                cy.get('#field_input_pkgAmount').type("1")
+                cy.get('#field_input_pkgAmount').clear().type("2")
                 cy.get('#field_input_pricePerUOM').type("1")
 
                 cy.get("[data-test=marketplace_bids_row_detail_submit_btn]").click()

@@ -644,10 +644,10 @@ Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
     })
 })
 
-Cypress.Commands.add("getDeliveryAddresses", (token) => {
+Cypress.Commands.add("getDeliveryWarehouses", (token) => {
     cy.request({
         method: 'GET',
-        url: '/prodex/api/delivery-addresses/',
+        url: '/prodex/api/branches/warehouses/search-broadcasted-by-cart',
         headers: {
             authorization: "Bearer " + token
         }

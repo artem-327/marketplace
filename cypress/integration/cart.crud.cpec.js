@@ -2,7 +2,7 @@ context("Shopping cart CRUD", () => {
 
     let marketPlaceId = null
     let marketPlaceName = null
-    const userJSON = require('../fixtures/user.json')
+    const userJSON = require('../fixtures/user2.json')
 
     beforeEach(function () {
         cy.viewport(2500, 3500)
@@ -27,7 +27,7 @@ context("Shopping cart CRUD", () => {
         })
     })
 
-    it("Adds item to shopping card", () => {
+    xit("Adds item to shopping card", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
@@ -65,7 +65,7 @@ context("Shopping cart CRUD", () => {
         })
     })
 
-    it("Edit item in shopping card", () => {
+    xit("Edit item in shopping card", () => {
         cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.get('svg[class*="IconEdit"]').click()
@@ -95,8 +95,8 @@ context("Shopping cart CRUD", () => {
             //TODO Automatic searching inside marketplace body
             let warehouseFilter = [{
                 "operator": "LIKE",
-                "path": "ProductOffer.companyProduct.companyGenericProduct.company.name",
-                "values": ["%Automation%"]
+                "path": "ProductOffer.companyProduct.companyGenericProduct.code",
+                "values": ["%Chemopren-EX%"]
             }]
 
             cy.getMarketPlaceFilteredDatagridBody(token, warehouseFilter).then(sameWarehouseOffer => {
@@ -193,11 +193,10 @@ context("Shopping cart CRUD", () => {
         })
 
         cy.contains("button", "Confirm Items").click()
-        cy.contains("div", "Delivery Addresses").click()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.getDeliveryAddresses(token).then(addresses => {
-                cy.contains(addresses[ 0 ].addressName).click()
+            cy.getDeliveryWarehouses(token).then(addresses => {
+                cy.contains(addresses[ 0 ].deliveryAddress.addressName).click()
             })
         })
 

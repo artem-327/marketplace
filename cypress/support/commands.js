@@ -106,8 +106,14 @@ Cypress.Commands.add("approveAllConsents", () => {
     })
     cy.waitForUI()
     cy.get('body').then(($body) => {
-        if ($body.text().includes('I agree')) {
-            cy.contains("button", "I agree").click()
+        if ($body.text().includes('I understand')) {
+            cy.contains("button", "I understand").click()
+        }
+    })
+    cy.waitForUI()
+    cy.get('body').then(($body) => {
+        if ($body.text().includes('I understand')) {
+            cy.contains("button", "I understand").click()
         }
     })
 })
