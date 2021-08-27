@@ -9,14 +9,17 @@ context("Permissions tests",() => {
 
     beforeEach(function () {
         cy.intercept("POST","**/datagrid**").as("loading")
+        cy.intercept("GET","/prodex/api/dashboard*").as("dashboardLoading")
     })
 
     it("Merchant permissions", () =>{
         cy.FElogin(merchantUser.email, merchantUser.password)
 
-        cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
+        cy.wait('@dashboardLoading', {timeout: 30000})
+        cy.url().should("include", "dashboard")
 
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
+        cy.wait('@loading')
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
@@ -32,20 +35,14 @@ context("Permissions tests",() => {
         cy.FElogin(orderViewUser.email, orderViewUser.password)
 
         cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
+        cy.url().should("include", "orders")
 
-        cy.contains("No records found.")
-
-        cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
-        cy.wait('@loading')
-        cy.contains("No records found.")
-
+        cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
 
-        cy.get("[data-test='navigation_orders_drpdn']").click()
-        cy.wait('@loading')
+        cy.get("[data-test='navigation_orders_drpdn']").should('exist')
 
+        cy.searchInList("77")
         //Volatile
         cy.waitForUI()
         cy.openElement(77, 0)
@@ -57,21 +54,10 @@ context("Permissions tests",() => {
         cy.FElogin(orderProcessingUser.email, orderProcessingUser.password)
 
         cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
+        cy.url().should("include", "orders")
 
-        cy.contains("No records found.")
-
-        cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
-        cy.waitForUI()
-        cy.wait('@loading')
-        cy.contains("No records found.")
-
+        cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
-
-        cy.get("[data-test='navigation_orders_drpdn']").click()
-        cy.get("[data-test='navigation_orders_purchase_orders_drpdn']").click()
-        cy.wait('@loading')
 
         cy.searchInList("89")
         cy.waitForUI()
@@ -82,13 +68,14 @@ context("Permissions tests",() => {
     it("Product Offer Manager permissions", () =>{
         cy.FElogin(productOfferManager.email, productOfferManager.password)
 
-        cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
+        cy.wait('@dashboardLoading', {timeout: 30000})
+        cy.url().should("include", "/dashboard")
+
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
+        cy.wait('@loading')
         cy.get('.group-row').should('be.visible')
 
-        cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
-        cy.contains("No records found.")
+        cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
 
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
     })
@@ -96,19 +83,18 @@ context("Permissions tests",() => {
     it("Product Catalog Admin permissions", () =>{
         cy.FElogin(productCatalogUser.email, productCatalogUser.password)
 
-        cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
+        cy.wait('@dashboardLoading', {timeout: 30000})
+        cy.url().should("include", "dashboard")
+
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
+        cy.wait('@loading')
         cy.contains("No records found.")
 
         cy.get("[data-test='navigation_menu_inventory_my_products_drpdn']").click()
         cy.wait('@loading')
         cy.get("table:nth-child(2) > tbody > tr:nth-child(1)").should('be.visible')
 
-        cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.wait('@loading')
-        cy.contains("No records found.")
-
-        cy.waitForUI()
+        cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
         cy.get("[data-test='navigation_menu_settings_drpdn']").should('not.exist')
     })
 
@@ -116,7 +102,7 @@ context("Permissions tests",() => {
         cy.FElogin(operator.email, operator.password)
 
         cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "operations")
+        cy.url().should("include", "quotes")
         cy.get('[data-test="table_row_action"]').should('be.visible')
 
         cy.get('[data-test="navigation_menu_operations_drpdn"]').should("be.visible")
@@ -127,15 +113,11 @@ context("Permissions tests",() => {
     it("User Admin permissions", () =>{
         cy.FElogin(userAdmin.email, userAdmin.password)
 
-        cy.wait('@loading', {timeout: 30000})
-        cy.url().should("include", "inventory")
-        cy.contains("No records found.")
+        cy.wait('@dashboardLoading', {timeout: 30000})
+        cy.url().should("include", "dashboard")
 
-        cy.get("[data-test='navigation_menu_marketplace_drpdn']").click()
-        cy.get('[data-test=navigation_menu_marketplace_listings_drpdn]').click()
-        cy.waitForUI()
-        cy.wait('@loading')
-        cy.contains("No records found.")
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').should('not.exist')
+        cy.get("[data-test='navigation_menu_marketplace_drpdn']").should('not.exist')
 
         cy.get("[data-test='navigation_menu_settings_drpdn']").click()
         cy.get("[data-test='navigation_settings_warehouses_drpdn']").should('not.exist')

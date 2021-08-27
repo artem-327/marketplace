@@ -52,7 +52,7 @@ context("Login and logout", () => {
             expect(response.statusCode).to.eq(200)
         })
 
-        cy.url().should("include", "/dashboard")
+        cy.url().should("include", "/operations")
         cy.wait(200)
         cy.get(".user-menu-wrapper").click()
         cy.get("[data-test='navigation_menu_user_drpdn']").contains("Logout").click()

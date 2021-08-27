@@ -2,7 +2,8 @@ context("Prodex Global Price", () => {
     const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
-        cy.intercept("GET", '/prodex/api/dashboard*').as('inventoryLoading')
+        cy.intercept("GET", '/prodex/api/dashboard*').as('dashboardLoading')
+        cy.intercept("POST", "/prodex/api/product-offers/own/datagrid*").as("inventoryLoading")
         cy.intercept("GET", '/prodex/api/broadcast-rules/general').as('rulesLoading')
         cy.intercept("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
@@ -13,6 +14,8 @@ context("Prodex Global Price", () => {
 
         cy.FElogin(userJSON.email, userJSON.password)
 
+        cy.wait("@dashboardLoading", { timeout: 100000 })
+        cy.get('[data-test=navigation_menu_inventory_drpdn]').click()
         cy.wait("@inventoryLoading", { timeout: 100000 })
     })
 
