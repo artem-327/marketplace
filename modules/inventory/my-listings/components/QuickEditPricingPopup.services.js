@@ -228,7 +228,8 @@ export const submitForm = async (props, values, setState) => {
         let newRows = prevState.rows
         newRows[rIndex].pricingTiers = r.pricingTiers
         newRows[rIndex].rawData.pricingTiers = r.pricingTiers
-        datagrid.updateRow(r.id, () => r)
+        let tr = datagrid.rows.filter(fr => fr.id === r.id)
+        datagrid.updateRow(r.id, () => tr[0])
         return {
           ...prevState,
           rows: newRows,
