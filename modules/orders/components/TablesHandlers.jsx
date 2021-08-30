@@ -101,7 +101,8 @@ const TablesHandlers = props => {
         const { toastManager } = props
 
         if ( (dateFrom === '' || !!dateFrom && Object.prototype.toString.call(dateFrom) === "[object Date]" && !isNaN(dateFrom.getTime())) &&
-            (dateTo === '' || !!dateTo && Object.prototype.toString.call(dateTo) === "[object Date]" && !isNaN(dateTo.getTime()))
+            (dateTo === '' || !!dateTo && Object.prototype.toString.call(dateTo) === "[object Date]" && !isNaN(dateTo.getTime())) &&
+            (getStringISODate(dateValue) !== 'Invalid date')
           ) {
           if(dateFrom !== '' && dateTo !=='' && dateFrom > dateTo) {
             toastManager.add(
