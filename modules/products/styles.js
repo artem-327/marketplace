@@ -13,7 +13,7 @@ import {
     Dimmer
 } from 'semantic-ui-react'
 import TextareaAutosize from 'react-autosize-textarea'
-import { Form } from 'formik-semantic-ui-fixed-validation'
+import { Formik } from 'formik'
 
 
 export const PositionHeaderSettings = styled.div`
@@ -216,7 +216,7 @@ export const DivReadOnlyValues = styled.div`
   line-height: 1.29;
   color: #848893;
 `
-export const CustomForm = styled(Form)`
+export const CustomForm = styled(Formik)`
   flex-grow: 0 !important;
 `
 export const StyledModalContent = styled(Modal.Content)`
