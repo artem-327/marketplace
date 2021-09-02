@@ -46,10 +46,29 @@ const customConfig = bundleAnalyzer(
         })
 
         return config
+      },
+      headers: async () => {
+        return [
+          {
+            // Apply these headers to all routes in your application.
+            source: '/(.*)',
+            headers: [
+              { // DT-891
+                key: 'Content-Security-Policy',
+                value: 'frame-ancestors'
+              },
+              { // DT-889
+                key: 'Strict-Transport-Security',
+                value: 'max-age=63072000; includeSubDomains; preload'
+              }
+            ],
+          },
+        ]
       }
     })
   )
 )
+
 module.exports = Object.assign(
   {
     // future: {

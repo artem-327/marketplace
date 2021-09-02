@@ -11,3 +11,14 @@ export const StyledReRegisterButton = styled(Button)`
   margin: -6px -6px -7px 3px !important;
   min-width: unset !important;
 `
+
+export const StyledReRegisterBlackButton = styled(Button)`
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 3px !important;
+  border: solid 1px #333 !important;
+  background-color: #ddd !important;
+  padding: 6px !important;
+  margin: -6px -6px -7px 3px !important;
+  min-width: unset !important;
+`

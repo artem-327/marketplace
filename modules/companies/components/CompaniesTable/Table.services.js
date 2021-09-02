@@ -9,7 +9,7 @@ import ActionCell from '../../../../components/table/ActionCell'
 import confirm from '../../../../components/Confirmable/confirm'
 
 // Styles
-import { StyledReRegisterButton } from './Table.styles'
+import { StyledReRegisterButton, StyledReRegisterBlackButton } from './Table.styles'
 
 /**
  * Adjust rows, add actions to the rows
@@ -72,7 +72,18 @@ export const getRows = (rows, state, props) => {
           </StyledReRegisterButton>
         </div>
       ) : (
-        row.p44CompanyId
+        <div style={{ display: 'flex' }}>
+          <div style={{ width: '100%' }}></div>
+          <StyledReRegisterBlackButton
+            onClick={() => {
+              state.setReRegisterCompanyId(row.id)
+              reRegisterP44(row.id, state, props)
+            }}
+            loading={props.reRegisterP44Pending && state.reRegisterCompanyId === row.id}
+            disabled={state.reRegisterCompanyId === row.id}>
+            <RefreshCw size={18} style={{ color: '#333' }} />
+          </StyledReRegisterBlackButton>
+        </div>
       )
     }
   })
