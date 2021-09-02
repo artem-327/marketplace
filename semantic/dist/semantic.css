@@ -31501,6 +31501,7 @@ img.ui.bordered.image {
 
 .ui.input {
   font-size: 1em;
+  width: 100%;
 }
 
 .ui.large.input {

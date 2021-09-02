@@ -140,6 +140,7 @@ export const FlexSidebar = styled(Sidebar)`
       line-height: 1.29;
       border: solid 1px #dee2e6;
       background-color: #fdfdfd;
+      width: 100%;
       &.disabled {
         opacity: 1;
         color: #cecfd4;
