@@ -494,8 +494,8 @@ class Navigation extends Component {
                       dataTest='navigation_menu_my_network_active_drpdn'>
                       {formatMessage(
                         {
-                          id: 'navigation.myNetworkActive',
-                          defaultMessage: 'Active ({value})'
+                          id: 'navigation.myNetworkConnected',
+                          defaultMessage: 'Connected ({value})'
                         },
                         { value: connectedNetworks }
                       )}
@@ -514,7 +514,7 @@ class Navigation extends Component {
                         { value: pendingNetworks }
                       )}
                     </Dropdown.Item>
-                    <Dropdown.Item
+                    {/* <Dropdown.Item
                       as={DivItem}
                       pointer={true}
                       status={NETWORK_STATUS.DECLINED}
@@ -541,7 +541,7 @@ class Navigation extends Component {
                         },
                         { value: disconnectedNetworks }
                       )}
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                   </PerfectScrollbar>
                 </Dropdown.Menu>
               </DropdownItem>
