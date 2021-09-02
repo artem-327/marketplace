@@ -2,7 +2,14 @@ import { connect } from 'react-redux'
 // Components
 import EditUnitOfPackagingPopup from './EditUnitOfPackagingPopup'
 // Actions
-import {closeEditPopup, postNewRequest, putEditedDataRequest} from '../../actions'
+import {
+  closeEditPopup,
+  postNewRequest,
+  putEditedDataRequest,
+  getPackagingTypeImage,
+  uploadPackagingTypeImage,
+  deletePackagingTypeImage
+} from '../../actions'
 import {
   getProductForms,
   getProductConditions,
@@ -20,7 +27,10 @@ const mapDispatchToProps = {
     getProductForms,
     getProductConditions,
     getProductGrades,
-    getPackagingTypes
+    getPackagingTypes,
+    getPackagingTypeImage,
+    uploadPackagingTypeImage,
+    deletePackagingTypeImage
 }
 
 const makeMapStateToProps = () => {

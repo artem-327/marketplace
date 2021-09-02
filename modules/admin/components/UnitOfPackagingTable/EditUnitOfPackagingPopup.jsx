@@ -49,7 +49,10 @@ const EditUnitOfPackagingPopup = props => {
     putEditedDataRequest,
     measureOptions,
     dimensionUnits,
-    weightUnits
+    weightUnits,
+    getPackagingTypeImage,
+    uploadPackagingTypeImage,
+    deletePackagingTypeImage
   } = props
 
   /**
