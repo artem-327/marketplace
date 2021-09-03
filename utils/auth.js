@@ -8,7 +8,7 @@ export const setAuth = async auth => {
 
   await window.localStorage.setItem('ttl', now.getTime())
 
-  await Cookie.set('auth', { ...auth, expires_in: now.getTime() })
+  await Cookie.set('auth', { ...auth, expires_in: now.getTime() }, { secure: true, sameSite: 'Strict' })
 }
 
 export const unsetAuth = () => {
