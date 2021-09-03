@@ -27,7 +27,7 @@ context("Shopping cart CRUD", () => {
         })
     })
 
-    xit("Adds item to shopping card", () => {
+    it("Adds item to shopping card", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {
                 cy.deleteWholeCart(token)
@@ -65,7 +65,7 @@ context("Shopping cart CRUD", () => {
         })
     })
 
-    xit("Edit item in shopping card", () => {
+    it("Edit item in shopping card", () => {
         cy.get("[data-test='navigation_menu_cart']").click()
 
         cy.get('svg[class*="IconEdit"]').click()

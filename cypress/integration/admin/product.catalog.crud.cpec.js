@@ -78,6 +78,7 @@ context("Generic Company Product CRUD", () => {
         cy.get("#code").clear().type("TEST-06")
         cy.get("[data-test='sidebar_inventory_save_new']").click()
 
+        cy.waitForUI()
         cy.openElement(productId, 0)
 
         cy.get("#name").should("have.value", "Echoprod")
@@ -106,6 +107,7 @@ context("Generic Company Product CRUD", () => {
 
         cy.get("[data-test=settings_product_alt_name_reset_btn]").click()
 
+        cy.waitForUI()
         cy.openElement(productId, 4)
 
         cy.wait("@nameGetting")

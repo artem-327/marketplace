@@ -135,6 +135,7 @@ context("Bids Tests", () => {
                 cy.visit("/marketplace/bids-sent")
                 cy.wait("@myBids", { timeout: 30000 })
 
+                cy.waitForUI()
                 cy.openElement(bidId, 1)
 
                 cy.get("[data-test='confirm_dialog_proceed_btn']").click()
