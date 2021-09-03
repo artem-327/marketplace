@@ -46,6 +46,9 @@ export function login(username, password) {
       type: AT.LOGIN,
       async payload() {
         const auth = await authorize(username, password)
+
+        console.log('!!!!!!!!!! login auth', auth)
+
         setAuth(auth)
         const identity = await api.getIdentity()
 

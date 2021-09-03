@@ -5,6 +5,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 //Components
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
+import AuthenticationSelectPopup from './AuthenticationSelectPopup'
+import AuthenticationEnterPopup from './AuthenticationEnterPopup'
 //Images
 import Logo from '../../../assets/images/login/logo-bluepallet.svg'
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
@@ -139,6 +141,9 @@ const LoginForm = props => {
           <VersionWrapper>{version && `v${version}`}</VersionWrapper>
         </LoginSegment>
       </LoginContainer>
+
+      {false && (<AuthenticationSelectPopup />)}
+      {true && (<AuthenticationEnterPopup />)}
     </>
   )
 }
