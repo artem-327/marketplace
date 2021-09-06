@@ -15,6 +15,8 @@ context("Bids Tests", () => {
         cy.intercept("POST", "/prodex/api/product-offer-bids/own/datagrid*").as("myBids")
         cy.intercept("POST", "/prodex/api/product-offer-bids/other/datagrid*").as("otherBids")
         cy.intercept("DELETE", "/prodex/api/product-offer-bids/id/**").as("deleteBid")
+        cy.intercept("POST", "/prodex/api/product-offer-bids/own/search*").as("searchBids")
+
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -90,6 +92,10 @@ context("Bids Tests", () => {
         cy.visit("/marketplace/bids-sent")
         cy.wait("@myBids", { timeout: 30000 })
 
+        cy.waitForUI()
+        cy.searchInList("Test Automation")
+        cy.wait("@searchBids", { timeout: 30000 })
+
         cy.openElement(bidId, 0)
         cy.wait("@bidAction").then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
@@ -134,6 +140,10 @@ context("Bids Tests", () => {
 
                 cy.visit("/marketplace/bids-sent")
                 cy.wait("@myBids", { timeout: 30000 })
+
+                cy.waitForUI()
+                cy.searchInList("Test Automation")
+                cy.wait("@searchBids", { timeout: 30000 })
 
                 cy.waitForUI()
                 cy.openElement(bidId, 1)
