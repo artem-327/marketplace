@@ -37,22 +37,28 @@ const AuthenticationEnterPopup = props => {
 
   const [value, setValue] = useState('      ')
 
-  const handleValueChanged = ( value, index) => {
-    if (!value) {
+  const handleValueChanged = ( enteredValue, index) => {
+    let newValue = ''
+    if (!enteredValue) {
       // deleted value
-      const newValue = value.slice(0, index + 1) + ' ' + value.slice(index + 1)
+      newValue = value.slice(0, index) + ' ' + value.slice(index + 1)
       console.log('!!!!!!!!!! null, newValue', newValue)
-
       setValue(newValue)
-
     } else {
-      const newValue = value.slice(0, index + 1) + value[1] + value.slice(index + 1)
+      if (enteredValue.length === 1) {
+        newValue = value.slice(0, index) + enteredValue
+      } else if (enteredValue.length === 2) {
+        newValue = value.slice(0, index) + enteredValue[1] + value.slice(index + 1)
+      } else if (index === 0) { // clipboard paste case
+        newValue = (enteredValue + "0000").slice(0, 6)
+      }
+
       console.log('!!!!!!!!!! not null, newValue', newValue)
 
       setValue(newValue)
     }
 
-    console.log('!!!!!!!!!! aaaaa value', value)
+    console.log('!!!!!!!!!! aaaaa enteredValue', enteredValue)
     console.log('!!!!!!!!!! aaaaa index', index)
 
   }
