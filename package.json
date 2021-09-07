@@ -94,7 +94,7 @@
   "scripts": {
     "dev": "node --max-old-space-size=8192 server.js",
     "build": "next build",
-    "build:review": "BABEL_ENV=review next build",
+    "build:review": "BABEL_ENV=review APP_ENV=local next build",
     "next:start": "next start",
     "start": "NODE_ENV=production node --max-old-space-size=8192 server.js",
     "semantic:build": "cd semantic && gulp build",
