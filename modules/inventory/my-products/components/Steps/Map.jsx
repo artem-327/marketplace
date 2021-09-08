@@ -60,6 +60,7 @@ const Map = props => {
   }
 
   useEffect(() => {
+    let newState
     let { mapping } = state
     let constant = ''
     if (props.productOffer) {
@@ -83,7 +84,8 @@ const Map = props => {
       mapping = mappingCompanyProduct
     }
 
-    setState({ ...state, newHeaders: props.CSV.headerCSV, mapping: mapping, constant: constant })
+    newState = { ...state, newHeaders: props.CSV.headerCSV, mapping: mapping, constant: constant }
+    setState(newState)
 
     let a = mapping.sort(function (a, b) {
       let x = a.text.toLowerCase()
@@ -135,7 +137,8 @@ const Map = props => {
       })
     }
 
-    setState({ ...state, options: ar, values: values })
+    newState = { ...newState, options: ar, values: values }
+    setState(newState)
   }, [])
 
   const modifyOptionLists = (options, value, notIndex, indexAdd) => {
