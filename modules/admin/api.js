@@ -96,11 +96,17 @@ export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() =>
 
 export const deleteUnitOfPackaging = id => api.delete(`/prodex/api/packaging-types/${id}`).then(() => id)
 
-export const getPackagingTypeImage = id => api.get(`/prodex/api/packaging-types/${id}/image`).then(response => response.data)
+export const getPackagingTypeImage = id => api.get(`/prodex/api/packaging-types/${id}/image`, {
+  responseType: 'blob',
+  headers: {
+    Pragma: 'no-handle-error, no-cache'
+  }
+})
+  .then(response => response.data)
 export const uploadPackagingTypeImage = (id, attachment) => {
   const formData = new FormData()
   formData.append('image', attachment)
-  return api.post(`/prodex/api/packaging-types/${id}/image`, formData, {
+  return api.post(`/prodex/api/packaging-types/${id}/image-edit`, formData, {
     headers: {
       accept: 'application/json',
       'Accept-Language': 'en-US,en;q=0.8',
@@ -109,7 +115,7 @@ export const uploadPackagingTypeImage = (id, attachment) => {
     }
   })
 }
-export const deletePackagingTypeImage = id => api.delete(`/prodex/api/packaging-types/${id}/image`).then(() => id)
+export const deletePackagingTypeImage = id => api.delete(`/prodex/api/packaging-types/${id}/image-edit`).then(() => id)
 
 export async function getAddressSearch(body) {
   const { data } = await api.post('/prodex/api/addresses/search', body)

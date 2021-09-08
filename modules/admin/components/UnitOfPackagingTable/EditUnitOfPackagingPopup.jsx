@@ -1,9 +1,11 @@
+import React, { useState, useEffect } from 'react'
 import {
   Modal,
   FormGroup,
   Grid,
   GridRow,
-  GridColumn
+  GridColumn,
+  Image
 } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
@@ -15,7 +17,14 @@ import UploadAttachment from '../../../inventory/components/upload/UploadAttachm
 // Services
 import { errorMessages } from '../../../../constants/yupValidation'
 // Styles
-import { Required } from '../../../../components/constants/layout'
+import {
+  Required,
+  GridStyled,
+  DivImageWrapper,
+  DivCustomLabel,
+  DivLeftLabel,
+  DivEmptyImage
+} from '../../../../components/constants/layout'
 
 /**
  * Validation of form.
@@ -41,6 +50,8 @@ const formValidation = Yup.object().shape({
  * @components
  */
 const EditUnitOfPackagingPopup = props => {
+  const [picture, setPicture] = useState(null)
+
   const {
     closeEditPopup,
     config,
@@ -54,6 +65,20 @@ const EditUnitOfPackagingPopup = props => {
     uploadPackagingTypeImage,
     deletePackagingTypeImage
   } = props
+
+  useEffect(async () => {
+    if (popupValues) {
+      try {
+        const { value } = await getPackagingTypeImage(popupValues.id)
+
+        const file = new Blob([value])
+        let fileURL = URL.createObjectURL(file)
+        setPicture(fileURL)
+      } catch (error) {
+        console.error(error)
+      }
+    }
+  }, [])
 
   /**
    * Get initial values for form.
@@ -126,208 +151,201 @@ const EditUnitOfPackagingPopup = props => {
             }
           }}>
 
-
-          <Grid>
+          <GridStyled>
             <GridRow>
-              <GridColumn width={10}>
-                <FormGroup widths='equal' data-test='admin_edit_unit_packaging_name_inp'>
-                  <Input
-                    inputProps={{ type: config.edit[0].type }}
-                    label={
-                      <>
-                        {config.edit[0].title}
-                        <Required />
-                      </>
-                    }
-                    name='val0'
-                  />
-                </FormGroup>
-                <FormGroup widths='equal'>
-                  <Dropdown
-                    label={
-                      <>
-                        {config.edit[1].title}
-                        <Required />
-                      </>
-                    }
-                    options={measureOptions}
-                    name='val1'
-                    inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
-                  />
-                </FormGroup>
+              <GridColumn width={10} data-test='admin_edit_unit_packaging_name_inp'>
+                <Input
+                  inputProps={{ type: config.edit[0].type }}
+                  label={
+                    <>
+                      {config.edit[0].title}
+                      <Required />
+                    </>
+                  }
+                  name='val0'
+                />
+                <Dropdown
+                  label={
+                    <>
+                      {config.edit[1].title}
+                      <Required />
+                    </>
+                  }
+                  options={measureOptions}
+                  name='val1'
+                  inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
+                />
               </GridColumn>
               <GridColumn width={6}>
-                <UploadAttachment
-                  acceptFiles='image/jpeg, image/png, image/gif, image/svg'
-                  name='packagingTypeImage'
-                  filesLimit={1}
-                  fileMaxSize={2}
-                  onChange={async files => {
-                    if (files.length) {
+                <DivCustomLabel>
+                  <FormattedMessage id='global.image' defaultMessage='Image' />
+                </DivCustomLabel>
+                <DivImageWrapper>
+                  <UploadAttachment
+                    acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+                    name='packagingTypeImage'
+                    filesLimit={1}
+                    fileMaxSize={2}
+                    onChange={async files => {
+                      if (files.length) {
+                        try {
+                          if (popupValues.id) {
+                            const { value } = await uploadPackagingTypeImage(popupValues.id, files[0])
+                            const file = new Blob([files[0]], { type: files[0].type})
+                            let fileURL = URL.createObjectURL(file)
+
+
+                            setPicture(fileURL)
+                          }
+                        } catch (error) {
+                          console.error(error)
+                        }
+                      }
+                    }}
+                    attachments={picture ? [picture] : []}
+                    removeAttachment={async () => {
                       try {
-                        //await ...
+                        if (popupValues.id) {
+                          await deletePackagingTypeImage(popupValues.id)
+                          setPicture(null)
+                        }
                       } catch (error) {
                         console.error(error)
                       }
-                    }
-                  }}
-                  attachments={popupValues && popupValues.packagingTypeImage ? [popupValues.packagingTypeImage] : []}
-                  removeAttachment={async () => {
-                    try {
-                      //await ...
-                    } catch (error) {
-                      console.error(error)
-                    }
-                  }}
-                  emptyContent={
-                    <div>nic tam neni zatim</div>
+                    }}
+                    emptyContent={<DivEmptyImage></DivEmptyImage>}
+                    uploadedContent={<div>{!!picture && (<Image src={picture} />)}</div>}
+                  />
+                </DivImageWrapper>
+              </GridColumn>
+            </GridRow>
+            <GridRow>
+              <GridColumn width={9}>
+                <DivCustomLabel>
+                  <FormattedMessage id='global.dimensions' defaultMessage='Dimensions' />
+                </DivCustomLabel>
+                <Grid>
+                  <GridRow>
+                    <GridColumn width={1}>
+                      <DivLeftLabel>
+                        {config.edit[4].title}
+                        <Required />
+                      </DivLeftLabel>
+                    </GridColumn>
+                    <GridColumn width={4} data-test='admin_edit_unit_packaging_width_inp'>
+                      <Input
+                        inputProps={{ type: config.edit[4].type, step: config.edit[4].step }}
+                        name='val4'
+                        step={config.edit[4].step}
+                      />
+                    </GridColumn>
+                    <GridColumn width={1}>
+                      <DivLeftLabel>
+                        {config.edit[3].title}
+                        <Required />
+                      </DivLeftLabel>
+                    </GridColumn>
+                    <GridColumn width={4} data-test='admin_edit_unit_packaging_length_inp'>
+                      <Input
+                        inputProps={{ type: config.edit[3].type, step: config.edit[3].step }}
+                        name='val3'
+                        step={config.edit[3].step}
+                      />
+                    </GridColumn>
+                    <GridColumn width={1}>
+                      <DivLeftLabel>
+                        {config.edit[2].title}
+                        <Required />
+                      </DivLeftLabel>
+                    </GridColumn>
+                    <GridColumn width={4} data-test='admin_edit_unit_packaging_height_inp'>
+                      <Input
+                        inputProps={{ type: config.edit[2].type, step: config.edit[2].step }}
+                        name='val2'
+                        step={config.edit[2].step}
+                      />
+                    </GridColumn>
+                  </GridRow>
+                </Grid>
+              </GridColumn>
+
+              <GridColumn width={5}>
+                <Dropdown
+                  label={
+                    <>
+                      {config.edit[5].title}
+                      <Required />
+                    </>
                   }
-                  uploadedContent={
-                    <div>
-                      cosi tu je nahrane uz
-                    </div>
-                  }
+                  options={dimensionUnits}
+                  name='val5'
+                  inputProps={{ 'data-test': 'admin_add_pallet_pkg_dimension_unit' }}
                 />
               </GridColumn>
             </GridRow>
-            <GridRow>
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_edit_unit_packaging_width_inp'>
-                  W
-                  <Input
-                    inputProps={{ type: config.edit[4].type, step: config.edit[4].step }}
-                    label={
-                      <>
-                        {config.edit[4].title}
-                        <Required />
-                      </>
-                    }
-                    name='val4'
-                    step={config.edit[4].step}
-                  />
-                </FormGroup>
-              </GridColumn>
-
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_edit_unit_packaging_length_inp'>
-                  L
-                  <Input
-                    inputProps={{ type: config.edit[3].type, step: config.edit[3].step }}
-                    label={
-                      <>
-                        {config.edit[3].title}
-                        <Required />
-                      </>
-                    }
-                    name='val3'
-                    step={config.edit[3].step}
-                  />
-                </FormGroup>
-              </GridColumn>
-
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_edit_unit_packaging_height_inp'>
-                  H
-                  <Input
-                    inputProps={{ type: config.edit[2].type, step: config.edit[2].step }}
-                    label={
-                      <>
-                        {config.edit[2].title}
-                        <Required />
-                      </>
-                    }
-                    name='val2'
-                    step={config.edit[2].step}
-                  />
-                </FormGroup>
-              </GridColumn>
-              <GridColumn width={5}>
-                <FormGroup widths='equal'>
-                  <Dropdown
-                    label={
-                      <>
-                        {config.edit[5].title}
-                        <Required />
-                      </>
-                    }
-                    options={dimensionUnits}
-                    name='val5'
-                    inputProps={{ 'data-test': 'admin_add_pallet_pkg_dimension_unit' }}
-                  />
-                </FormGroup>
-              </GridColumn>
-            </GridRow>
 
             <GridRow>
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_add_pallet_pkg_weight'>
-                  <Input
-                    inputProps={{ type: config.edit[8].type, step: config.edit[8].step }}
-                    label={
-                      <>
-                        {config.edit[8].title}
-                        <Required />
-                      </>
-                    }
-                    name='val8'
-                    step={config.edit[8].step}
-                  />
-                </FormGroup>
+              <GridColumn width={4} data-test='admin_add_pallet_pkg_weight'>
+                <Input
+                  inputProps={{ type: config.edit[8].type, step: config.edit[8].step }}
+                  label={
+                    <>
+                      {config.edit[8].title}
+                      <Required />
+                    </>
+                  }
+                  name='val8'
+                  step={config.edit[8].step}
+                />
               </GridColumn>
-              <GridColumn width={6}></GridColumn>
+              <GridColumn width={5}></GridColumn>
               <GridColumn width={5}>
-                <FormGroup widths='equal'>
-                  <Dropdown
-                    label={
-                      <>
-                        {config.edit[9].title}
-                        <Required />
-                      </>
-                    }
-                    options={weightUnits}
-                    name='val9'
-                    inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
-                  />
-                </FormGroup>
+                <Dropdown
+                  label={
+                    <>
+                      {config.edit[9].title}
+                      <Required />
+                    </>
+                  }
+                  options={weightUnits}
+                  name='val9'
+                  inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
+                />
               </GridColumn>
               <GridColumn width={2}></GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_add_pallet_pkg_min_inp'>
-                  <Input
-                    inputProps={{ type: config.edit[7].type, step: config.edit[7].step }}
-                    label={
-                      <>
-                        {config.edit[7].title}
-                        <Required />
-                      </>
-                    }
-                    name='val7'
-                    step={config.edit[7].step}
-                  />
-                </FormGroup>
+              <GridColumn width={4} data-test='admin_add_pallet_pkg_min_inp'>
+                <Input
+                  inputProps={{ type: config.edit[7].type, step: config.edit[7].step }}
+                  label={
+                    <>
+                      {config.edit[7].title}
+                      <Required />
+                    </>
+                  }
+                  name='val7'
+                  step={config.edit[7].step}
+                />
               </GridColumn>
-              <GridColumn width={6}></GridColumn>
-              <GridColumn width={3}>
-                <FormGroup widths='equal' data-test='admin_add_pallet_pkg_max_inp'>
-                  <Input
-                    inputProps={{ type: config.edit[6].type, step: config.edit[6].step }}
-                    label={
-                      <>
-                        {config.edit[6].title}
-                        <Required />
-                      </>
-                    }
-                    name='val6'
-                    step={config.edit[6].step}
-                  />
-                </FormGroup>
+              <GridColumn width={5}></GridColumn>
+              <GridColumn width={4} data-test='admin_add_pallet_pkg_max_inp'>
+                <Input
+                  inputProps={{ type: config.edit[6].type, step: config.edit[6].step }}
+                  label={
+                    <>
+                      {config.edit[6].title}
+                      <Required />
+                    </>
+                  }
+                  name='val6'
+                  step={config.edit[6].step}
+                />
               </GridColumn>
-              <GridColumn width={4}></GridColumn>
+              <GridColumn width={3}></GridColumn>
             </GridRow>
-          </Grid>
+          </GridStyled>
           <div style={{ textAlign: 'right' }}>
             <Button.Reset data-test='admin_edit_unit_packaging_cancel_btn'>
               <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
