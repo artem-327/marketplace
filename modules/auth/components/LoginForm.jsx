@@ -143,7 +143,7 @@ const LoginForm = props => {
       </LoginContainer>
 
       {false && (<AuthenticationSelectPopup />)}
-      {true && (<AuthenticationEnterPopup />)}
+      {false && (<AuthenticationEnterPopup />)}
     </>
   )
 }

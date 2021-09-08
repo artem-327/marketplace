@@ -49,6 +49,12 @@ export function login(username, password) {
 
         console.log('!!!!!!!!!! login auth', auth)
 
+        if (auth?.session) {
+
+        } else {
+
+        }
+
         setAuth(auth)
         const identity = await api.getIdentity()
 
@@ -148,6 +154,9 @@ export function login(username, password) {
     })
   }
 }
+
+
+
 
 export function getVersion() {
   return dispatch => {
