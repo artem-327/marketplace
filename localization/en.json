@@ -995,6 +995,7 @@
   "global.lengthAbbreviation": "L",
   "global.widthAbbreviation": "W",
   "global.image": "Image",
+  "global.clickToUpload": "Click to upload",
   "global.expiredDate": "Expired Date",
   "global.published": "Published",
   "global.enterName": "Enter Name",

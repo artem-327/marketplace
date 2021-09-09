@@ -168,7 +168,7 @@ export const postNewRequest = (config, values) => {
     await dispatch({
       type: config?.api?.post?.pendingRequest
     })
-    await api
+    return await api
       .postNewRequest(config, values)
       .then(async response => {
         await dispatch({
@@ -177,6 +177,7 @@ export const postNewRequest = (config, values) => {
         })
         Datagrid.loadData()
         await dispatch(closePopup())
+        return response?.data
       })
       .catch(
         async err =>

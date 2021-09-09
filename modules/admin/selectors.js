@@ -19,6 +19,7 @@ const getConfirmMessage = state => getSafe(() => state.admin.confirmMessage, nul
 const getDeleteRowById = state => getSafe(() => state.admin.deleteRowById, null)
 const getlogisticsProvidersFetching = state => getSafe(() => state.admin.logisticsProvidersFetching, false)
 const getLogisticsProviders = state => getSafe(() => state.admin.logisticsProviders, [])
+const getPackagingTypeImageLoading = state => getSafe(() => state.admin.packagingTypeImageLoading, false)
 
 export const makeGetDimensionUnits = () => createSelector([getUnits], units => units?.filter(d=>{return d.measureType.name === "length"}).map(d => {
     return {
@@ -52,3 +53,4 @@ export const makeGetConfirmMessage = () => createSelector([getConfirmMessage], c
 export const makeGetDeleteRowById = () => createSelector([getDeleteRowById], deleteRowById => deleteRowById)
 export const makeGetlogisticsProvidersFetching = () => createSelector([getlogisticsProvidersFetching], logisticsProvidersFetching => logisticsProvidersFetching)
 export const makeGetLogisticsProviders = () => createSelector([getLogisticsProviders], logisticsProviders => logisticsProviders)
+export const makeGetPackagingTypeImageLoading = () => createSelector([getPackagingTypeImageLoading], data => data)

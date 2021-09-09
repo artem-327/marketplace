@@ -17,7 +17,13 @@ import {
   getPackagingTypes
 } from '../../../global-data/actions'
 // Selectors
-import { makeGetConfig, makeGetPopupValues, makeGetDimensionUnits, makeGetWeightUnits } from '../../selectors'
+import {
+  makeGetConfig,
+  makeGetPopupValues,
+  makeGetDimensionUnits,
+  makeGetWeightUnits,
+  makeGetPackagingTypeImageLoading
+} from '../../selectors'
 import { makeGetMeasureTypesDropdown } from '../../../global-data/selectors'
 
 const mapDispatchToProps = {
@@ -39,6 +45,7 @@ const makeMapStateToProps = () => {
     const getMeasureOptions = makeGetMeasureTypesDropdown()
     const getDimensionUnits = makeGetDimensionUnits()
     const getWeightUnits = makeGetWeightUnits()
+    const getPackagingTypeImageLoading = makeGetPackagingTypeImageLoading()
 
     const mapStateToProps = state => {
         let cfg = getConfig(state)
@@ -47,7 +54,8 @@ const makeMapStateToProps = () => {
             popupValues: getPopupValues(state),
             measureOptions: getMeasureOptions(state),
             dimensionUnits: getDimensionUnits(state),
-            weightUnits: getWeightUnits(state)
+            weightUnits: getWeightUnits(state),
+            packagingTypeImageLoading: getPackagingTypeImageLoading(state)
         }
     }
     return mapStateToProps

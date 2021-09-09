@@ -50,7 +50,10 @@ const formValidation = Yup.object().shape({
  * @components
  */
 const EditUnitOfPackagingPopup = props => {
+  const [pictureUrl, setPictureUrl] = useState(null)
   const [picture, setPicture] = useState(null)
+  const [hasPicture, setHasPicture] = useState(false)
+  const [modifiedPicture, setModifiedPicture] = useState(false)
 
   const {
     closeEditPopup,
@@ -63,17 +66,19 @@ const EditUnitOfPackagingPopup = props => {
     weightUnits,
     getPackagingTypeImage,
     uploadPackagingTypeImage,
-    deletePackagingTypeImage
+    deletePackagingTypeImage,
+    packagingTypeImageLoading
   } = props
 
   useEffect(async () => {
     if (popupValues) {
       try {
         const { value } = await getPackagingTypeImage(popupValues.id)
-
         const file = new Blob([value])
         let fileURL = URL.createObjectURL(file)
-        setPicture(fileURL)
+        setPicture(value)
+        setPictureUrl(fileURL)
+        setHasPicture(true)
       } catch (error) {
         console.error(error)
       }
@@ -139,9 +144,19 @@ const EditUnitOfPackagingPopup = props => {
             }
             try {
               if (popupValues) {
+
                 await putEditedDataRequest(config, popupValues.id, data)
+                if (modifiedPicture) {
+                  if (hasPicture) {
+                    if (picture) await uploadPackagingTypeImage(popupValues.id, picture)
+                    else deletePackagingTypeImage(popupValues.id)
+                  } else {
+                    if (picture) await uploadPackagingTypeImage(popupValues.id, picture)
+                  }
+                }
               } else {
-                await postNewRequest(config, data)
+                const response = await postNewRequest(config, data)
+                if (picture) await uploadPackagingTypeImage(response.id, picture)
               }
               if (config.globalReload) props[config.globalReload]()
             } catch (error) {
@@ -156,21 +171,11 @@ const EditUnitOfPackagingPopup = props => {
               <GridColumn width={10} data-test='admin_edit_unit_packaging_name_inp'>
                 <Input
                   inputProps={{ type: config.edit[0].type }}
-                  label={
-                    <>
-                      {config.edit[0].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[0].title}<Required /></>}
                   name='val0'
                 />
                 <Dropdown
-                  label={
-                    <>
-                      {config.edit[1].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[1].title}<Required /></>}
                   options={measureOptions}
                   name='val1'
                   inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }}
@@ -186,35 +191,32 @@ const EditUnitOfPackagingPopup = props => {
                     name='packagingTypeImage'
                     filesLimit={1}
                     fileMaxSize={2}
+                    loading={packagingTypeImageLoading}
                     onChange={async files => {
                       if (files.length) {
                         try {
-                          if (popupValues.id) {
-                            const { value } = await uploadPackagingTypeImage(popupValues.id, files[0])
-                            const file = new Blob([files[0]], { type: files[0].type})
-                            let fileURL = URL.createObjectURL(file)
-
-
-                            setPicture(fileURL)
-                          }
+                          const file = new Blob([files[0]], { type: files[0].type})
+                          let fileURL = URL.createObjectURL(file)
+                          setPicture(files[0])
+                          setPictureUrl(fileURL)
+                          setModifiedPicture(true)
                         } catch (error) {
                           console.error(error)
                         }
                       }
                     }}
-                    attachments={picture ? [picture] : []}
+                    attachments={pictureUrl ? [pictureUrl] : []}
                     removeAttachment={async () => {
-                      try {
-                        if (popupValues.id) {
-                          await deletePackagingTypeImage(popupValues.id)
-                          setPicture(null)
-                        }
-                      } catch (error) {
-                        console.error(error)
-                      }
+                      setPicture(null)
+                      setPictureUrl(null)
+                      setModifiedPicture(true)
                     }}
-                    emptyContent={<DivEmptyImage></DivEmptyImage>}
-                    uploadedContent={<div>{!!picture && (<Image src={picture} />)}</div>}
+                    emptyContent={
+                      <DivEmptyImage>
+                        <FormattedMessage id='global.clickToUpload' defaultMessage='Click to upload' />
+                      </DivEmptyImage>
+                    }
+                    uploadedContent={<div>{!!pictureUrl && (<Image src={pictureUrl} />)}</div>}
                   />
                 </DivImageWrapper>
               </GridColumn>
@@ -227,10 +229,7 @@ const EditUnitOfPackagingPopup = props => {
                 <Grid>
                   <GridRow>
                     <GridColumn width={1}>
-                      <DivLeftLabel>
-                        {config.edit[4].title}
-                        <Required />
-                      </DivLeftLabel>
+                      <DivLeftLabel>{config.edit[4].title}<Required /></DivLeftLabel>
                     </GridColumn>
                     <GridColumn width={4} data-test='admin_edit_unit_packaging_width_inp'>
                       <Input
@@ -240,9 +239,7 @@ const EditUnitOfPackagingPopup = props => {
                       />
                     </GridColumn>
                     <GridColumn width={1}>
-                      <DivLeftLabel>
-                        {config.edit[3].title}
-                        <Required />
+                      <DivLeftLabel>{config.edit[3].title}<Required />
                       </DivLeftLabel>
                     </GridColumn>
                     <GridColumn width={4} data-test='admin_edit_unit_packaging_length_inp'>
@@ -271,12 +268,7 @@ const EditUnitOfPackagingPopup = props => {
 
               <GridColumn width={5}>
                 <Dropdown
-                  label={
-                    <>
-                      {config.edit[5].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[5].title}<Required /></>}
                   options={dimensionUnits}
                   name='val5'
                   inputProps={{ 'data-test': 'admin_add_pallet_pkg_dimension_unit' }}
@@ -288,12 +280,7 @@ const EditUnitOfPackagingPopup = props => {
               <GridColumn width={4} data-test='admin_add_pallet_pkg_weight'>
                 <Input
                   inputProps={{ type: config.edit[8].type, step: config.edit[8].step }}
-                  label={
-                    <>
-                      {config.edit[8].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[8].title}<Required /></>}
                   name='val8'
                   step={config.edit[8].step}
                 />
@@ -301,12 +288,7 @@ const EditUnitOfPackagingPopup = props => {
               <GridColumn width={5}></GridColumn>
               <GridColumn width={5}>
                 <Dropdown
-                  label={
-                    <>
-                      {config.edit[9].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[9].title}<Required /></>}
                   options={weightUnits}
                   name='val9'
                   inputProps={{ 'data-test': 'admin_add_pallet_pkg_weight_unit' }}
@@ -319,12 +301,7 @@ const EditUnitOfPackagingPopup = props => {
               <GridColumn width={4} data-test='admin_add_pallet_pkg_min_inp'>
                 <Input
                   inputProps={{ type: config.edit[7].type, step: config.edit[7].step }}
-                  label={
-                    <>
-                      {config.edit[7].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[7].title}<Required /></>}
                   name='val7'
                   step={config.edit[7].step}
                 />
@@ -333,12 +310,7 @@ const EditUnitOfPackagingPopup = props => {
               <GridColumn width={4} data-test='admin_add_pallet_pkg_max_inp'>
                 <Input
                   inputProps={{ type: config.edit[6].type, step: config.edit[6].step }}
-                  label={
-                    <>
-                      {config.edit[6].title}
-                      <Required />
-                    </>
-                  }
+                  label={<>{config.edit[6].title}<Required /></>}
                   name='val6'
                   step={config.edit[6].step}
                 />
@@ -368,7 +340,8 @@ EditUnitOfPackagingPopup.propTypes = {
   closeEditPopup: PropTypes.func,
   putEditedDataRequest: PropTypes.func,
   popupValues: PropTypes.object,
-  config: PropTypes.object
+  config: PropTypes.object,
+  packagingTypeImageLoading: PropTypes.bool
 }
 
 EditUnitOfPackagingPopup.defaultValues = {
@@ -378,7 +351,8 @@ EditUnitOfPackagingPopup.defaultValues = {
   closeEditPopup: () => {},
   putEditedDataRequest: () => {},
   popupValues: null,
-  config: {}
+  config: {},
+  packagingTypeImageLoading: false
 }
 
 export default EditUnitOfPackagingPopup
