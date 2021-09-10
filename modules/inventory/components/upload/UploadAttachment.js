@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl'
 import ReactDropzone from 'react-dropzone'
 import { withToastManager } from 'react-toast-notifications'
 import { FieldArray } from 'formik'
+import { Dimmer, Loader } from 'semantic-ui-react'
 //Components
 import File from '../../../../components/File/File'
 // Services
@@ -95,6 +96,7 @@ const UploadAttachment = props => {
                 ref={reactDropzoneRef}
                 className={hasFile ? 'dropzoneLotHasFile' : 'dropzoneLot'}
                 activeClassName='active'
+                disabled={props.loading}
                 onDrop={acceptedFiles => {
                   if (acceptedFiles.length) {
                     if (!filesLimit || acceptedFiles.length <= filesLimit) {
@@ -107,7 +109,12 @@ const UploadAttachment = props => {
                   }
                 }}
                 onDropRejected={blobs => onDropRejected(blobs, props)}>
-                {hasFile ? props.uploadedContent : <div>{props.emptyContent}</div>}
+                <>
+                  <Dimmer active={props.loading} inverted>
+                    <Loader />
+                  </Dimmer>
+                  {hasFile ? props.uploadedContent : <div>{props.emptyContent}</div>}
+                </>
               </ReactDropzone>
             ) : (
               ''
@@ -153,7 +160,8 @@ UploadAttachment.propTypes = {
   uploadedClass: PropTypes.string,
   acceptFiles: PropTypes.string,
   listDocumentTypes: PropTypes.array,
-  noWrapperStyles: PropTypes.bool
+  noWrapperStyles: PropTypes.bool,
+  loading: PropTypes.bool
 }
 
 UploadAttachment.defaultProps = {
@@ -165,7 +173,8 @@ UploadAttachment.defaultProps = {
   uploadedClass: '',
   acceptFiles: '',
   listDocumentTypes: [],
-  noWrapperStyles: false
+  noWrapperStyles: false,
+  loading: false
 }
 
 const mapStateToProps = state => ({
