@@ -65,6 +65,8 @@ const AuthenticationEnterPopup = props => {
 
 
 
+  console.log('!!!!!!!!!! aaaaa value', value)
+
   console.log('!!!!!!!!!! aaaaa value[0]', value[0])
   console.log('!!!!!!!!!! aaaaa value[1]', value[1])
   console.log('!!!!!!!!!! aaaaa value[2]', value[2])
@@ -134,7 +136,7 @@ const AuthenticationEnterPopup = props => {
 
                 onClick={() => {
                   console.log('!!!!!!!!!! onClick')
-                  onAccept()
+                  onAccept(value)
                 }}
 
               >

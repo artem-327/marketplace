@@ -42,10 +42,16 @@ export const unsetAuth = () => {
 //   return Cookie.getJSON('auth')
 // }
 
-export async function authorize(username, password) {
+export async function authorize(username, password, session = null, option = null, code = null) {
   const { data } = await api.post(
     '/prodex/oauth/token',
-    `grant_type=password&username=${username}&password=${password}`,
+    session
+      ? (
+        option
+          ? `grant_type=password&username=${username}&mfa_session=${session}&mfa_option=${option}`
+          : `grant_type=password&username=${username}&mfa_session=${session}&mfa_code=${code}`
+      )
+      : `grant_type=password&username=${username}&password=${password}`,
     {
       headers: {
         Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'

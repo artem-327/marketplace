@@ -117,3 +117,23 @@ export const setIsOpenAddAddress = isOpen => ({
   type: AT.SET_IS_OPEN_MODAL,
   payload: isOpen
 })
+
+export const validatePurchaseOrder = () => ({
+  type: AT.PURCHASE_ORDER_VALIDATE,
+  payload: api.validatePurchaseOrder()
+})
+
+export const mfaGetOptions = () => ({
+  type: AT.PURCHASE_ORDER_MFA_GET_OPTIONS,
+  payload: api.mfaGetOptions()
+})
+
+export const mfaRequestCode = option => ({
+  type: AT.PURCHASE_ORDER_MFA_REQUEST_CODE,
+  payload: api.mfaRequestCode(option)
+})
+
+export const mfaGetPass = code => ({
+  type: AT.PURCHASE_ORDER_MFA_GET_PASS,
+  payload: api.mfaGetPass(code)
+})

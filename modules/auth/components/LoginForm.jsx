@@ -20,7 +20,7 @@ const LoginForm = props => {
   const [passwordError, setPasswordError] = useState(false)
   const [resetPassword, setResetPassword] = useState(false)
 
-  const { isLoading, message, version, intl, router, identity } = props
+  const { isLoading, message, version, intl, router, identity, twoFactorAuthSession } = props
   const { formatMessage } = intl
 
   useEffect(() => {
@@ -133,17 +133,64 @@ const LoginForm = props => {
                       </FormattedMessage>
                     )}
                   </LoginButton>
+
+
+
+                  {twoFactorAuthSession?.options && (
+                    <AuthenticationSelectPopup
+                      onAccept={async value => {
+
+
+                        console.log('!!!!!!!!!! AuthenticationSelectPopup onAccept value', value)
+                        console.log('!!!!!!!!!! AuthenticationSelectPopup onAccept session', twoFactorAuthSession.session)
+
+                        await props.login(
+                          values.username.trim(),
+                          values.password,
+                          twoFactorAuthSession.session,
+                          'EMAIL'
+                        )
+
+                      }}
+
+                    />
+                  )}
+                  {twoFactorAuthSession && !twoFactorAuthSession.options && (
+                    <AuthenticationEnterPopup
+
+                      onAccept={async value => {
+
+
+                        console.log('!!!!!!!!!! AuthenticationEnterPopup onAccept value', value)
+                        console.log('!!!!!!!!!! AuthenticationEnterPopup onAccept session', twoFactorAuthSession.session)
+
+                        await props.login(
+                          values.username.trim(),
+                          values.password,
+                          twoFactorAuthSession.session,
+                          null,
+                          value
+                        )
+
+                      }}
+
+
+                    />
+                    )}
+
+
+
+
+
+
+
                 </>
               )
             }}
           </StyledForm>
-
           <VersionWrapper>{version && `v${version}`}</VersionWrapper>
         </LoginSegment>
       </LoginContainer>
-
-      {false && (<AuthenticationSelectPopup />)}
-      {false && (<AuthenticationEnterPopup />)}
     </>
   )
 }

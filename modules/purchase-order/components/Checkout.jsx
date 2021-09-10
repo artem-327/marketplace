@@ -105,6 +105,10 @@ const Checkout = props => {
         setShipmentQuoteId(shippingQuoteId)
         await props.getManualQuoteById(shippingQuoteId)
       }
+
+
+      console.log('!!!!!!!!!! useEffect props', props)
+      await props.validatePurchaseOrder()
     }
 
     init()

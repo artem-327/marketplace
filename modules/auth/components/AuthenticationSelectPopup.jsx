@@ -38,6 +38,8 @@ const AuthenticationSelectPopup = props => {
   const email = 'emajl'
   const phone = '+420158'
 
+  console.log('!!!!!!!!!! AuthenticationSelectPopup props', props)
+
   return (
     <Modal
       open
