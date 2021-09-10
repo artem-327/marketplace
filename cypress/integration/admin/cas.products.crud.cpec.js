@@ -82,6 +82,7 @@ context("CAS products CRUD", () => {
         cy.get('.column > .ui > input')
             .type("100-95-521")
 
+        cy.waitForUI()
         cy.wait("@CASloading")
 
         cy.openElement(productId, 1)
@@ -115,6 +116,7 @@ context("CAS products CRUD", () => {
         cy.get('.column > .ui > input')
             .type("100-95-521")
 
+        cy.waitForUI()
         cy.wait("@CASloading")
 
         cy.openElement(productId, 1)
