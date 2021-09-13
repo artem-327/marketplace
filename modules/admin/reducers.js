@@ -23,6 +23,7 @@ import {
   closePopup,
   deleteUnit,
   deleteUnitOfPackaging,
+  getPackagingTypeImage,
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   reviewRequest,
@@ -55,7 +56,6 @@ import {
   postNewCarrier,
   updateCarrier,
   deleteCarrier,
-  handleFiltersValue,
   getDataRequest,
   deleteConfirmation
 } from './actions'
@@ -68,11 +68,11 @@ export const initialState = {
   popupValues: null,
   unitsOfMeasureRows: [],
   unitsOfPackagingRows: [],
+  packagingTypeImageLoading: false,
   manufacturersRows: [],
   gradesRows: [],
   formsRows: [],
   conditionsRows: [],
-  casProductsRows: [],
   altCasNamesRows: [],
   unNumbersFiltered: [],
   companiesRows: [],
@@ -979,30 +979,6 @@ export default typeToReducer(
         loading: false
       }
     },
-    [handleFiltersValue.pending]: (state, action) => {
-      return {
-        ...state,
-        filterValue: '',
-        casProductsRows: [],
-        companiesRows: []
-      }
-    },
-    [handleFiltersValue.rejected]: (state, action) => {
-      return {
-        ...state,
-        filterValue: '',
-        casProductsRows: [],
-        companiesRows: []
-      }
-    },
-    [handleFiltersValue.fulfilled]: (state, action) => {
-      return {
-        ...state,
-        filterValue: action.payload.filterValue,
-        casProductsRows: action.payload.casProductsRows,
-        companiesRows: action.payload.companiesRows
-      }
-    },
     [getDataRequest.pending]: (state, action) => {
       return {
         ...state
@@ -1016,6 +992,24 @@ export default typeToReducer(
     [getDataRequest.fulfilled]: (state, action) => {
       return {
         ...state
+      }
+    },
+    [getPackagingTypeImage.pending]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: true
+      }
+    },
+    [getPackagingTypeImage.rejected]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: false
+      }
+    },
+    [getPackagingTypeImage.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: false
       }
     },
     [deleteConfirmation.pending]: (state, action) => {

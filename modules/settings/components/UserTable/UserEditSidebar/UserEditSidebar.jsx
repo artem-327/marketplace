@@ -477,7 +477,10 @@ const UserEditSidebar = props => {
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
                       )}
-                      {!sidebarValues?.regulatoryDeaListAuthorized && !!sidebarValues?.regulatoryDeaListSignAskedDate && (
+                      {
+                        !sidebarValues?.regulatoryDeaListAuthorized &&
+                        !!sidebarValues?.regulatoryDeaListSignAskedDate &&
+                        !sidebarValues?.regulatoryDeaListSignedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.pending'
                           defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
@@ -504,7 +507,7 @@ const UserEditSidebar = props => {
                           disabled:
                             !sidebarValues?.regulatoryDhsCoiAuthorized &&
                             !!sidebarValues?.regulatoryDhsCoiSignAskedDate &&
-                            !sidebarValues?.regulatoryDhsListSignedDate
+                            !sidebarValues?.regulatoryDhsCoiSignedDate
                         }}
                       />
                     </FormGroup>
@@ -515,7 +518,10 @@ const UserEditSidebar = props => {
                           defaultMessage='User will be emailed link to submit their signature. Signature will be valid for 12 months from date of signing. Status pending until a signature has been submitted'
                         />
                       )}
-                      {!sidebarValues?.regulatoryDhsCoiAuthorized && !!sidebarValues?.regulatoryDhsCoiSignAskedDate && (
+                      {
+                        !sidebarValues?.regulatoryDhsCoiAuthorized &&
+                        !!sidebarValues?.regulatoryDhsCoiSignAskedDate &&
+                        !sidebarValues?.regulatoryDhsCoiSignedDate && (
                         <FormattedMessage
                           id='settings.user.purchaseAuthorized.pending'
                           defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'

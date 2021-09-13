@@ -21,7 +21,9 @@ const QuickEditPricingPopup = props => {
     closePricingEditPopup,
     intl: { formatMessage },
     rawData,
-    setState
+    setState,
+    rIndex,
+    r
   } = props
 
   return (
@@ -50,7 +52,18 @@ const QuickEditPricingPopup = props => {
               <Button
                 size='large'
                 inputProps={{ type: 'button' }}
-                onClick={closePricingEditPopup}
+                onClick={() => {
+                  setState(prevState => {
+                    let newRows = prevState.rows
+                    newRows[rIndex].pricingTiers = r.pricingTiers
+                    newRows[rIndex].rawData.pricingTiers = r.pricingTiers
+                    return {
+                      ...prevState,
+                      rows: newRows
+                    }
+                  })
+                  closePricingEditPopup()
+                }}
                 data-test='inventory_quick_edit_pricing_popup_cancel_btn'>
                 {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>

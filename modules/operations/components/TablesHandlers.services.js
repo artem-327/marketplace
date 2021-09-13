@@ -99,7 +99,6 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
   const { currentTab } = props
   if (currentTab === '') return
 
-
   if(data.name === 'dateFrom' || data.name === 'dateTo') {
     //Gets separator (character) from getLocaleDateFormat.
     let separator = [...getLocaleDateFormat()].find(
@@ -117,7 +116,8 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
       const { toastManager } = props
 
       if ( (dateFrom === '' || !!dateFrom && Object.prototype.toString.call(dateFrom) === "[object Date]" && !isNaN(dateFrom.getTime())) &&
-          (dateTo === '' || !!dateTo && Object.prototype.toString.call(dateTo) === "[object Date]" && !isNaN(dateTo.getTime()))
+          (dateTo === '' || !!dateTo && Object.prototype.toString.call(dateTo) === "[object Date]" && !isNaN(dateTo.getTime())) &&
+          (getStringISODate(dateValue) !== 'Invalid date')
         ) {
         if(dateFrom !== '' && dateTo !=='' && dateFrom > dateTo) {
           toastManager.add(
@@ -157,7 +157,7 @@ export const handleFilterChangeInputSearch = (data, props, formikProps, state, s
             ...state[currentTab],
             [data.name]: data.value
           }
-          handleFiltersValue(filter)
+          handleFiltersValue(filter, props, formikProps)
         }
       } else {
         toastManager.add(

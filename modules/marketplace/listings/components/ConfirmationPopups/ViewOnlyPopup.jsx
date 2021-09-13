@@ -43,7 +43,7 @@ const ViewOnlyPopup = props => {
           </DivHeader>
           <DivGreyText margin='1px 10px 11px'>
             <FormattedMessage
-              id='marketplace.noLinkedBankAccount'
+              id='marketplace.WeAreVerifyingYourIdentity'
               defaultMessage="No linked bank account"
             />
           </DivGreyText>
@@ -51,9 +51,6 @@ const ViewOnlyPopup = props => {
             <FormattedMessage
               id='marketplace.viewOnlyPopupText'
               defaultMessage="Before you can make purchases from the Marketplace you or your company's controller must link a bank account. This can be done in My TradePass > Bank Accounts through a secure Plaid link."
-              values={{
-                companyName: applicationName
-              }}
             />
           </DivDescription>
           <DivButtons>

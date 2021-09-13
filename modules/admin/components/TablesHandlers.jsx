@@ -21,7 +21,6 @@ import { PositionHeaderSettings, DivCustomRow } from '../styles'
 const handleFiltersValue = debounce((filter, props) => {
   const { datagrid } = props
   datagrid.setSearch(filter, true, 'pageFilters')
-  props.handleFiltersValue(props, filter)
   props.handleVariableSave('tableHandlersFilters', { [props.currentTab]: filter })
 }, 300)
 

@@ -100,7 +100,7 @@ export const getDatagridRows = rows => {
             src={po?.owner?.logoUrl}
           />
 
-          <span>{po?.owner?.name}</span>
+          <span>{po?.owner?.cfDisplayName}</span>
         </div>
       )
     }
