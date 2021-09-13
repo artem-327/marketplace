@@ -1,8 +1,12 @@
-import { Button, Popup, Icon } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
+import { connect } from 'react-redux'
+import { applicationSubmitted, loadSubmitButton, postRegisterVelloci } from '../actions'
+import { getIdentity, updateCompany } from '../../auth/actions'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
+import classNames from 'classnames';
 //Services
 import { getSafe } from '../../../utils/functions'
+import { isFileEmpty } from './steps/CertificateOfInsurance'
 //Styles
 import {
   RightAlignedDiv,
@@ -15,126 +19,171 @@ import {
   DivTitleRectangleForm,
   DivRectangleForm
 } from './styles'
+//Actions
+import {
+  closePopup,
+  getInsuranceDocumentsTypes,
+  getInsuranceDocuments,
+  uploadInsuranceDocument
+} from '~/modules/settings/actions'
 
-const FormRectangle = ({
-  children,
-  formikProps,
-  title,
-  subtitle,
-  prevStep,
-  activeStep,
-  submitForm,
-  countBeneficialOwners,
-  numberBeneficialOwners,
-  isLoadingSubmitButton,
-  openEmailPopup,
-  nextStep,
-  registerBeneficialOwner,
-  mainContainer
-}) => {
+const FormRectangle = props => {
+  const {
+    applicationSubmitted,
+    beneficialOwnersNotified,
+    children,
+    coiDocumentUploaded,
+    formikProps,
+    title,
+    subtitle,
+    prevStep,
+    activeStep,
+    finalStep,
+    submitForm,
+    countBeneficialOwners,
+    numberBeneficialOwners,
+    isLoadingSubmitButton,
+    openEmailPopup,
+    nextStep,
+    registerBeneficialOwner,
+    mainContainer,
+    selfFormikProps
+  } = props
+
+  /**
+   * if on step 3 (OwnerInformation) and there are no other BOs,
+   * skip to the next major section (Marketing Material)
+   */
+  const determineNextStep = () => {
+    if (activeStep === 3 && !formikProps?.values?.ownerInformation?.isOtherBeneficialOwner) {
+      return activeStep + 1
+    }
+
+    return activeStep
+  }
+
+  const valididateOwners = () => {
+    const owners = formikProps?.values?.verifyPersonalInformation.map(owner => {
+      delete owner['businessRole']
+      delete owner['middleName']
+      return owner
+    })
+
+    for (let i = 0; i < owners.length; i++) {
+      const objectValues = Object.values(owners[i])
+
+      for (let j = 0; j < objectValues.length; j++) {
+        if (!objectValues[j] || objectValues[j] === '') {
+          return false
+        }
+      }
+    }
+
+    return true
+  }
+  
+  const submitEarly = (activeStep === 3 && formikProps?.values?.ownerInformation?.isNotOtherBeneficialOwner) ||
+                      (activeStep === 4 && valididateOwners())
+
+  const override = {
+    extraProps: {
+      getIdentity: props?.getIdentity,
+      loadSubmitButton: props?.loadSubmitButton,
+      postRegisterVelloci: props?.postRegisterVelloci,
+      updateCompany: props?.updateCompany,
+      nextStep,
+      activeStep
+    },
+    selfFormikProps,
+    beneficialOwnersNotified
+  }
+
+  const handleClick = () => {
+    switch (activeStep) {
+      case 6: {
+        const file = formikProps?.values?.certificateOfInsurance?.file
+        const documentId = formikProps?.values?.certificateOfInsurance?.documentId
+
+        if (coiDocumentUploaded) {
+          if (isFileEmpty(file) || !documentId) {
+            nextStep(activeStep + 1)
+            return
+          }
+        }
+
+        if (isFileEmpty(file) || !documentId) {
+          formikProps?.handleSubmit()
+        } else {
+          submitForm(
+            formikProps,
+            determineNextStep(),
+            nextStep,
+            mainContainer,
+            null,
+            {
+              closePopup: props?.closePopup,
+              getInsuranceDocuments: props?.getInsuranceDocuments,
+              intl: props?.intl,
+              setSubmitting: formikProps?.setSubmitting,
+              values: formikProps?.values?.certificateOfInsurance,
+              uploadInsuranceDocument: props?.uploadInsuranceDocument
+            }
+          )
+        }
+
+        return
+      }
+      case finalStep: {
+        applicationSubmitted(true)
+        return
+      }
+      default: {
+        submitForm(
+          formikProps,
+          determineNextStep(),
+          nextStep,
+          mainContainer,
+          submitEarly ? override : null
+        )
+      }
+    }
+  }
+
   const { values } = formikProps
+
+  const showEmailButton = activeStep === 3 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false)
+  const emailButtonActiveClass = classNames({ 'btn-email-active': showEmailButton })
+
   return (
-    <DivRectangleForm activeStep={activeStep}>
-      <DivTitleRectangleForm>
-        <DivTitleText>
-          <FormattedMessage id={title} defaultMessage='Title'>
-            {text => text}
-          </FormattedMessage>
-        </DivTitleText>
-        {subtitle ? (
-          <DivSubtitleText>
-            <FormattedMessage
-              id={subtitle}
-              defaultMessage={`Subtitle`}
-              values={{
-                percentage: (
-                  <SpanSubtitleValue>
-                    <FormattedMessage id='global.25percentage' defaultMessage={'25%'} />
-                  </SpanSubtitleValue>
-                )
-              }}
-            />
-          </DivSubtitleText>
-        ) : null}
-      </DivTitleRectangleForm>
+    <>
       {children}
-      {activeStep === 5 && (
-        <RightAlignedDiv>
-          {numberBeneficialOwners > 0 && (
-            <Popup
-              trigger={
-                <a href={`#form${numberBeneficialOwners}`}>
-                  <Button
-                    style={{ float: 'right !important', marginLeft: '10px !important', marginRight: '0px !important' }}
-                    type='button'
-                    negative
-                    onClick={() => {
-                      countBeneficialOwners(numberBeneficialOwners - 1)
-                    }}
-                    icon>
-                    <Icon name='minus' />
-                  </Button>
-                </a>
-              }
-              content={
-                <FormattedMessage id='settings.removeBeneficialOwner' defaultMessage='Remove beneficial owner' />
-              }
-            />
-          )}
-
-          {values.ownerInformation && values.ownerInformation.isOtherBeneficialOwner && (
-            <Popup
-              trigger={
-                <a href={`#form${numberBeneficialOwners}`}>
-                  <Button
-                    type='button'
-                    style={{ marginLeft: '10px !important', marginRight: '0px !important' }}
-                    positive
-                    onClick={() => {
-                      countBeneficialOwners(numberBeneficialOwners + 1)
-                    }}
-                    icon>
-                    <Icon name='plus' />
-                  </Button>
-                </a>
-              }
-              content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />}
-            />
-          )}
-        </RightAlignedDiv>
-      )}
-
-      <DivButtonsBottom>
+      <DivButtonsBottom className={`oboarding-nav-buttons ${emailButtonActiveClass}`}>
         <ButtonSubmit
+          className="btn-next"
           disabled={isLoadingSubmitButton}
           loading={isLoadingSubmitButton}
           type='button'
-          onClick={() => submitForm(formikProps, activeStep, nextStep, mainContainer)}
+          onClick={handleClick}
           primary>
           <FormattedMessage
             id={
-              registerBeneficialOwner ? 'global.send' : activeStep === 6 ? 'velloci.submitApplication' : 'global.next'
+              registerBeneficialOwner ? 'global.send' : activeStep === finalStep ? 'marketplace.submit' : 'global.next'
             }
-            defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === 6 ? 'Submit Application' : 'Next'}>
-            {text => text}
-          </FormattedMessage>
+            defaultMessage={registerBeneficialOwner ? 'Send' : activeStep === finalStep ? 'Submit' : 'Next'}
+          />
         </ButtonSubmit>
-        {!registerBeneficialOwner && activeStep > 0 ? (
-          <ButtonBack type='button' onClick={() => prevStep(activeStep - 1)} basic>
-            <FormattedMessage id='global.back' defaultMessage='Back'>
-              {text => text}
-            </FormattedMessage>
+        {!registerBeneficialOwner && activeStep > 0 && activeStep !== 5 && (
+          <ButtonBack className="btn-back" type='button' onClick={() => prevStep(activeStep - 1)} basic>
+            <FormattedMessage id='global.back' defaultMessage='Back' />
           </ButtonBack>
-        ) : null}
-        {activeStep === 4 && getSafe(() => values.ownerInformation.isOtherBeneficialOwner, false) ? (
-          <ButtonBack type='button' onClick={openEmailPopup} basic>
-            <FormattedMessage id='global.email' defaultMessage='Email'>
-              {text => text}
-            </FormattedMessage>
+        )}
+        {showEmailButton && (
+          <ButtonBack className="btn-email" type='button' onClick={openEmailPopup} basic>
+            <FormattedMessage id='global.email' defaultMessage='Email' />
           </ButtonBack>
-        ) : null}
+        )}
       </DivButtonsBottom>
-    </DivRectangleForm>
+    </>
   )
 }
 
@@ -145,10 +194,12 @@ FormRectangle.propTypes = {
   subtitle: PropTypes.string,
   submitForm: PropTypes.func,
   activeStep: PropTypes.number,
+  finalStep: PropTypes.number,
   countBeneficialOwners: PropTypes.func,
   numberBeneficialOwners: PropTypes.number,
   openEmailPopup: PropTypes.func,
-  mainContainer: PropTypes.object
+  mainContainer: PropTypes.object,
+  selfFormikProps: PropTypes.object
 }
 
 FormRectangle.defaultProps = {
@@ -157,11 +208,31 @@ FormRectangle.defaultProps = {
   subtitle: '',
   submitForm: () => {},
   activeStep: 0,
+  finalStep: 8,
   countBeneficialOwners: () => {},
   numberBeneficialOwners: 0,
   openEmailPopup: () => {},
   registerBeneficialOwner: false,
-  mainContainer: {}
+  mainContainer: {},
+  selfFormikProps: {}
 }
 
-export default FormRectangle
+function mapStateToProps(state) {
+  return {
+    coiDocumentUploaded: state?.vellociRegister?.coiDocumentUploaded
+  }
+}
+
+const mapDispatchToProps = {
+  applicationSubmitted,
+  loadSubmitButton,
+  postRegisterVelloci,
+  getIdentity,
+  updateCompany,
+  closePopup,
+  getInsuranceDocumentsTypes,
+  getInsuranceDocuments,
+  uploadInsuranceDocument
+}
+
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(FormRectangle))

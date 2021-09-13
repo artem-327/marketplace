@@ -10,8 +10,9 @@ const GridTermsAndConditions = styled(Grid)`
   margin: 14px 16px !important;
 `
 
-const SpanBold = styled.span`
-  font-weight: bold;
+const StyledSpan = styled.span`
+  color: #989898;
+  font-style: italic;
 `
 
 const GridColumnCheckbox = styled(GridColumn)`
@@ -27,8 +28,8 @@ const LabelCheckbox = styled.label`
 `
 
 const LinkLabelCheckbox = styled.a`
-  padding-left: 8px;
-  color: #2599d5;
+  color: #3bbef6;
+  font-weight: bold;
 `
 
 const GridRowCheckbox = styled(GridRow)`
@@ -41,12 +42,9 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
     <GridTermsAndConditions>
       <GridRowCheckbox>
         <GridColumn>
-          <SpanBold>
-            <FormattedMessage
-              id='velloci.termsAndConditions.title'
-              defaultMessage="Please review and accept the following terms and conditions to finish registration"
-            />
-          </SpanBold>
+          <StyledSpan>
+            <FormattedMessage id='velloci.termsAndConditions.electronicComunications' />
+          </StyledSpan>
         </GridColumn>
       </GridRowCheckbox>
       <GridRowCheckbox>
@@ -58,21 +56,12 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
             name='termsAndConditions.electronicComunications'
           />
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.electronicComunications'
-              defaultMessage='I agree that I have read, understood, and consent to the '>
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href={URL_ECA} target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.electronicComunications.link'
-                      defaultMessage='Electronic Communications Agreement'
-                    />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox href={URL_ECA} target='_blank'>
+              <FormattedMessage
+                id='velloci.termsAndConditions.electronicComunications.link'
+                defaultMessage='Electronic Communications Agreement'
+              />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
@@ -85,25 +74,16 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
             name='termsAndConditions.privacyPolicy'
           />
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.privacyPolicy'
-              defaultMessage="I agree that I have read, understood, and consent to the ">
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href={URL_PRIVACY} target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.privacyPolicy.link'
-                      defaultMessage='Privacy Policy '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href={URL_TERMS} target='_blank'>
-                    <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox href={URL_PRIVACY} target='_blank'>
+              <FormattedMessage
+                id='velloci.termsAndConditions.privacyPolicy.link'
+                defaultMessage='Privacy Policy '
+              />
+            </LinkLabelCheckbox>
+            <FormattedMessage id='global.and' defaultMessage='and ' />{' '}
+            <LinkLabelCheckbox href={URL_TERMS} target='_blank'>
+              <FormattedMessage id='velloci.termsAndConditions.termsOfUse.link' defaultMessage='Terms of Use' />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
@@ -116,35 +96,16 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
             name='termsAndConditions.depositAccountAgreement'
           />
           <LabelCheckbox>
-            <FormattedMessage
-              id='velloci.termsAndConditions.depositAccountAgreement'
-              defaultMessage="I agree that I have read, understood, and consent to the bank's ">
-              {text => (
-                <>
-                  {text}
-                  <LinkLabelCheckbox href='https://silamoney.com/evolve-bank-deposit-agreement/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.depositAccountAgreement.link'
-                      defaultMessage='Deposit Account Agreement '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://silamoney.com/terms-of-service/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.serviceTerms.link'
-                      defaultMessage='Service terms '
-                    />
-                  </LinkLabelCheckbox>
-                  <FormattedMessage id='global.and' defaultMessage='and ' />
-                  <LinkLabelCheckbox href='https://silamoney.com/privacy-policy/' target='_blank'>
-                    <FormattedMessage
-                      id='velloci.termsAndConditions.privacyPolicy.link'
-                      defaultMessage='Privacy Policy'
-                    />
-                  </LinkLabelCheckbox>
-                </>
-              )}
-            </FormattedMessage>
+            <LinkLabelCheckbox href='https://silamoney.com/evolve-bank-deposit-agreement/' target='_blank'>
+              <FormattedMessage id='velloci.termsAndConditions.depositAccountAgreement.link' />
+            </LinkLabelCheckbox>{', '}
+            <LinkLabelCheckbox href='https://silamoney.com/terms-of-service/' target='_blank'>
+              <FormattedMessage id='velloci.termsAndConditions.serviceTerms.link' />
+            </LinkLabelCheckbox>{', '}
+            <FormattedMessage id='global.and' defaultMessage='and ' />{' '}
+            <LinkLabelCheckbox href='https://silamoney.com/privacy-policy/' target='_blank'>
+              <FormattedMessage id='velloci.termsAndConditions.privacyPolicy.link' />
+            </LinkLabelCheckbox>
           </LabelCheckbox>
         </GridColumnCheckbox>
       </GridRowCheckbox>
