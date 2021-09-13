@@ -6,7 +6,6 @@ import UnitOfPackagingTable from './components/UnitOfPackagingTable/UnitOfPackag
 import NmfcTable from './components/NmfcTable/TableContainer'
 
 import AddNewUnitOfMeasurePopup from './components/UnitOfMeasureTable/AddNewUnitOfMeasurePopupContainer'
-import AddNewUnitOfPackagingPopup from './components/UnitOfPackagingTable/AddNewUnitOfPackagingPopupContainer'
 import AddNewPopup1Parameter from './components/DataTable/AddNewPopup1ParameterContainer'
 import NmfcPopup from './components/NmfcTable/PopupContainer'
 
@@ -187,7 +186,7 @@ export const config = {
       {
         name: 'height',
         title: (
-          <FormattedMessage id='global.height' defaultMessage='Height' />
+          <FormattedMessage id='global.heightAbbreviation' defaultMessage='H' />
         ),
         type: 'number',
         step: 0.01,
@@ -196,7 +195,7 @@ export const config = {
       {
         name: 'length',
         title: (
-          <FormattedMessage id='global.length' defaultMessage='Length' />
+          <FormattedMessage id='global.lengthAbbreviation' defaultMessage='L' />
         ),
         type: 'number',
         step: 0.01,
@@ -205,7 +204,7 @@ export const config = {
       {
         name: 'width',
         title: (
-          <FormattedMessage id='global.width' defaultMessage='Width' />
+          <FormattedMessage id='global.widthAbbreviation' defaultMessage='W' />
         ),
         type: 'number',
         step: 0.01,
@@ -222,7 +221,7 @@ export const config = {
       {
         name: 'palletPkgMax',
         title: (
-          <FormattedMessage id='global.palletPkgMax' defaultMessage='Pallet Pkg Max' />
+          <FormattedMessage id='global.palletPkgMax' defaultMessage='Max. Packages per Pallet' />
         ),
         type: 'number',
         step: 1,
@@ -231,7 +230,7 @@ export const config = {
       {
         name: 'palletPkgMin',
         title: (
-          <FormattedMessage id='global.palletPkgMin' defaultMessage='Pallet Pkg Min' />
+          <FormattedMessage id='global.palletPkgMin' defaultMessage='Min. Packages per Pallet' />
         ),
         type: 'number',
         step: 1,
@@ -240,7 +239,7 @@ export const config = {
       {
         name: 'weight',
         title: (
-          <FormattedMessage id='global.weight' defaultMessage='Weight' />
+          <FormattedMessage id='global.weightPackagingOnly' defaultMessage='Weight (Packaging Only)' />
         ),
         type: 'number',
         step: 0.01,
@@ -676,7 +675,7 @@ export const editForms = {
  */
 export const addForms = {
   'units-of-measure': <AddNewUnitOfMeasurePopup />,
-  'packaging-types': <AddNewUnitOfPackagingPopup />,
+  'packaging-types': <EditUnitOfPackagingPopup />,
   manufacturers: <AddNewPopup1Parameter currentTab={'manufacturers'} />,
   grades: <AddNewPopup1Parameter currentTab={'grades'} />,
   forms: <AddNewPopup1Parameter currentTab={'forms'} />,

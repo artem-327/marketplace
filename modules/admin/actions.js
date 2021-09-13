@@ -66,6 +66,9 @@ export const linkAttachment = createAsyncAction('ADMIN_LINK_ATTACHMENT', async (
 
   return true
 })
+export const getPackagingTypeImage = createAsyncAction('ADMIN_GET_PACKAGING_TYPE_IMAGE', id => api.getPackagingTypeImage(id))
+export const uploadPackagingTypeImage = createAsyncAction('ADMIN_UPLOAD_PACKAGING_TYPE_IMAGE', (id, attachment) => api.uploadPackagingTypeImage(id, attachment))
+export const deletePackagingTypeImage = createAsyncAction('ADMIN_DELETE_PACKAGING_TYPE_IMAGE', id => api.deletePackagingTypeImage(id))
 export const removeAttachment = createAsyncAction('ADMIN_REMOVE_ATTACHMENT', aId => api.removeAttachment(aId))
 export const removeAttachmentLink = createAsyncAction('ADMIN_REMOVE_ATTACHMENT_LINK', (isLot, echoId, aId) => api.removeAttachmentLink(echoId, aId))
 export const addUnNumber = createAction('ADMIN_ADD_UN_NUMBER', payload => payload)
@@ -165,7 +168,7 @@ export const postNewRequest = (config, values) => {
     await dispatch({
       type: config?.api?.post?.pendingRequest
     })
-    await api
+    return await api
       .postNewRequest(config, values)
       .then(async response => {
         await dispatch({
@@ -174,6 +177,7 @@ export const postNewRequest = (config, values) => {
         })
         Datagrid.loadData()
         await dispatch(closePopup())
+        return response?.data
       })
       .catch(
         async err =>

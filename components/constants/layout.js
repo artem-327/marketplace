@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Container, Image, Label, Menu, Header } from 'semantic-ui-react'
+import { Container, Image, Label, Menu, Header, Grid } from 'semantic-ui-react'
 
 export const TopMenu = styled(Menu)`
   background-color: #fff !important;
@@ -1193,4 +1193,28 @@ export const GlobalSidebars = styled.div`
       color: #cecfd4 !important;
     }
   }
+`
+
+export const GridStyled = styled(Grid)`
+  &.ui.grid {
+    padding: 0 10px 40px; 
+  }
+`
+
+export const DivImageWrapper = styled.div`
+  padding: 0 10px;
+  width: 100%;
+  height: 100%;
+`
+
+export const DivCustomLabel = styled.div`
+  margin-bottom: 4px;
+`
+
+export const DivLeftLabel = styled.div`
+  padding-top: 10px;
+`
+
+export const DivEmptyImage = styled.div`
+  padding: 35px 10px;
 `
