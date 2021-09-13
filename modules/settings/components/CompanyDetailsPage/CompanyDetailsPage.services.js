@@ -30,7 +30,6 @@ export const getInitialFormValues = values => {
 }
 
 export const handleSubmit = async (values, { setSubmitting }, props, state) => {
-  console.log('@@@MarketingMaterials - handleSubmit values', values)
   const { postCompanyLogo, deleteCompanyLogo, getIdentity, company, updateCompanyDetails } = props
   const { companyLogo, shouldUpdateLogo } = state
 
