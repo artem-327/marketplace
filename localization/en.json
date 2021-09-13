@@ -2395,6 +2395,7 @@
   "orders.statusOptions.cancelled": "Show Cancelled Status",
   "orders.statusOptions.toReturn": "Show To Return Status",
   "orders.statusOptions.confirmed": "Show Confirmed Status",
+  "orders.statusOptions.disputed": "Show Disputed Status",
   "orders.fromDateMustBeSameOrBeforeToDate": "From date must be same or before To date, please fix this issue first!",
   "settings.addUser": "Add User",
   "settings.product.offerExists": "Product cannot be edited, as it already has ProductOffers linked to it.",
