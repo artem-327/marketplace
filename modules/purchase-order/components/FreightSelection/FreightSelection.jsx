@@ -159,7 +159,11 @@ const FreightSelection = props => {
                               <FormattedMessage id='checkout.freight.estDelivery' defaultMessage='Est. Delivery' />
                             </DivSectionSmallHeader>
                             <DivSectionName disabled={isOwn}>
-                              {moment(item.estimatedDeliveryDate).fromNow()}
+                              {
+                                moment().isSame(item.estimatedDeliveryDate, 'day')
+                                  ? <FormattedMessage id='checkout.freight.estDeliveryToday' defaultMessage='Today' />
+                                  : moment(item.estimatedDeliveryDate).fromNow()
+                              }
                             </DivSectionName>
                           </GridColumn>
                           {false && (

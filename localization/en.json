@@ -1911,6 +1911,7 @@
   "checkout.shipping.editAddress": "Edit Address",
   "checkout.shipping.disabledPopupDescription": "A product in this order is not able to be shipped to this location due to regional restrictions set by the vendor. Please select a different address.",
   "checkout.freight.estDelivery": "Est. Delivery",
+  "checkout.freight.estDeliveryToday": "Today",
   "checkout.freight.etd": "ETD",
   "checkout.freight.service": "Service",
   "checkout.freight.preferredDeliveryDate": "Preferred Delivery Date",
