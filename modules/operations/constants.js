@@ -138,6 +138,15 @@ export const OrdersFilters = {
         values: [`Confirmed`]
       }
     ]
+  },
+  disputed: {
+    filters: [
+      {
+        operator: 'EQUALS',
+        path: 'Order.cfGlobalStatus',
+        values: [`Disputed`]
+      }
+    ]
   }
 }
 

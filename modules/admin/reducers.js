@@ -23,6 +23,7 @@ import {
   closePopup,
   deleteUnit,
   deleteUnitOfPackaging,
+  getPackagingTypeImage,
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   reviewRequest,
@@ -67,6 +68,7 @@ export const initialState = {
   popupValues: null,
   unitsOfMeasureRows: [],
   unitsOfPackagingRows: [],
+  packagingTypeImageLoading: false,
   manufacturersRows: [],
   gradesRows: [],
   formsRows: [],
@@ -990,6 +992,24 @@ export default typeToReducer(
     [getDataRequest.fulfilled]: (state, action) => {
       return {
         ...state
+      }
+    },
+    [getPackagingTypeImage.pending]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: true
+      }
+    },
+    [getPackagingTypeImage.rejected]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: false
+      }
+    },
+    [getPackagingTypeImage.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        packagingTypeImageLoading: false
       }
     },
     [deleteConfirmation.pending]: (state, action) => {
