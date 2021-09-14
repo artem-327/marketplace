@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Button, Modal, Image, Checkbox, Input } from 'semantic-ui-react'
+import { Button, Modal, Input } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 // Images
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
@@ -10,18 +10,13 @@ import Icon from '../../../assets/images/login/icon-bluepallet.svg'
 import * as Actions from '../actions'
 
 // Components
-import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
-
-// Services
-
+import { LoginHeader, LogoIcon } from '../../password/constants/layout'
 
 // Styles
 import {
-
-
   DivDescription,
-
-
+  DivRow,
+  InputCode,
   DivCenteredWrapper,
   DivButtons,
   DivButtonColumn,
@@ -32,53 +27,39 @@ const AuthenticationEnterPopup = props => {
   const {
     onCancel,
     onAccept,
+    description,
     intl: { formatMessage }
   } = props
 
   const [value, setValue] = useState('      ')
 
-  const handleValueChanged = ( enteredValue, index) => {
-    let newValue = ''
+  const handleValueChanged = ( e, data, index) => {
+    let newValue = value
+    const enteredValue = data.trim()
+
     if (!enteredValue) {
       // deleted value
       newValue = value.slice(0, index) + ' ' + value.slice(index + 1)
-      console.log('!!!!!!!!!! null, newValue', newValue)
       setValue(newValue)
     } else {
       if (enteredValue.length === 1) {
-        newValue = value.slice(0, index) + enteredValue
+        newValue = value.slice(0, index) + enteredValue + value.slice(index + 1)
       } else if (enteredValue.length === 2) {
-        newValue = value.slice(0, index) + enteredValue[1] + value.slice(index + 1)
+        if (value[index] !== enteredValue[0]) newValue = value.slice(0, index) + enteredValue[0] + value.slice(index + 1)
+        else newValue = value.slice(0, index) + enteredValue[1] + value.slice(index + 1)
       } else if (index === 0) { // clipboard paste case
-        newValue = (enteredValue + "0000").slice(0, 6)
+        if (enteredValue.length === 6) newValue = enteredValue
+      } else {
+        newValue = value.slice(0, index) + enteredValue[0] + value.slice(index + 1)
       }
-
-      console.log('!!!!!!!!!! not null, newValue', newValue)
-
       setValue(newValue)
     }
-
-    console.log('!!!!!!!!!! aaaaa enteredValue', enteredValue)
-    console.log('!!!!!!!!!! aaaaa index', index)
-
   }
-
-
-
-  console.log('!!!!!!!!!! aaaaa value', value)
-
-  console.log('!!!!!!!!!! aaaaa value[0]', value[0])
-  console.log('!!!!!!!!!! aaaaa value[1]', value[1])
-  console.log('!!!!!!!!!! aaaaa value[2]', value[2])
-  console.log('!!!!!!!!!! aaaaa value[3]', value[3])
-  console.log('!!!!!!!!!! aaaaa value[4]', value[4])
-  console.log('!!!!!!!!!! aaaaa value[5]', value[5])
 
   return (
     <Modal
       open
       size='tiny'
-      onClose={() => onCancel()}
     >
       <Modal.Content>
         <DivCenteredWrapper>
@@ -86,44 +67,34 @@ const AuthenticationEnterPopup = props => {
             <LogoIcon src={Icon} />
             <FormattedMessage id='auth.twoFactorAuthentication' defaultMessage='Two-Factor Authentication' />
           </LoginHeader>
+          <DivDescription>{description}</DivDescription>
 
-          <DivDescription>
-            <FormattedMessage
-              id='auth.pleaseEnterSixDigits'
-              defaultMessage='Please Enter the six-digit code sent to your email.'
+          <DivRow>
+            <InputCode
+              value={value[0]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 0)}
             />
-          </DivDescription>
-
-
-
-
-
-          <Input
-            value={value[0]}
-            onChange={( _, { value }) => handleValueChanged(value, 0)}
-          />
-          <Input
-            value={value[1]}
-            onChange={( _, { value }) => handleValueChanged(value, 1)}
-          />
-          <Input
-            value={value[2]}
-            onChange={( _, { value }) => handleValueChanged(value, 2)}
-          />
-          <Input
-            value={value[3]}
-            onChange={( _, { value }) => handleValueChanged(value, 3)}
-          />
-          <Input
-            value={value[4]}
-            onChange={( _, { value }) => handleValueChanged(value, 4)}
-          />
-          <Input
-            value={value[5]}
-            onChange={( _, { value }) => handleValueChanged(value, 5)}
-          />
-
-
+            <InputCode
+              value={value[1]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 1)}
+            />
+            <InputCode
+              value={value[2]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 2)}
+            />
+            <InputCode
+              value={value[3]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 3)}
+            />
+            <InputCode
+              value={value[4]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 4)}
+            />
+            <InputCode
+              value={value[5]}
+              onChange={( e, { value }) => handleValueChanged(e, value, 5)}
+            />
+          </DivRow>
 
           <DivButtons>
             <DivButtonColumn>
@@ -132,15 +103,10 @@ const AuthenticationEnterPopup = props => {
                 primary
                 fluid
                 size='large'
-                data-test='login_submit_btn'
-
-                onClick={() => {
-                  console.log('!!!!!!!!!! onClick')
-                  onAccept(value)
-                }}
-
+                data-test='two_factor_auth_verify_btn'
+                onClick={() => onAccept(value)}
               >
-                <FormattedMessage id='global.send' defaultMessage='Send' />
+                <FormattedMessage id='global.verify' defaultMessage='Verify' />
               </LoginButton>
             </DivButtonColumn>
           </DivButtons>
@@ -150,23 +116,16 @@ const AuthenticationEnterPopup = props => {
   )
 }
 
-const mapStateToProps = store => {
-
-
-  return {
-
-  }
-}
-
 AuthenticationEnterPopup.propTypes = {
-  //asModal: PropTypes.bool,
+  description: PropTypes.object,
   onCancel: PropTypes.func,
   onAccept: PropTypes.func
 }
 
 AuthenticationEnterPopup.defaultProps = {
+  description: (<>Description</>),
   onCancel: () => {},
   onAccept: () => {}
 }
 
-export default injectIntl(connect(mapStateToProps, Actions)(AuthenticationEnterPopup))
+export default injectIntl(connect(null, Actions)(AuthenticationEnterPopup))

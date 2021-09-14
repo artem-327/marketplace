@@ -107,9 +107,6 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_IDENTITY_FULFILLED:
     case AT.LOGIN_FULFILLED: {
-
-      console.log('!!!!!!!!!! LOGIN_FULFILLED payload', payload)
-
       if (payload.twoFactorAuthSession) {
         return {
           ...state,

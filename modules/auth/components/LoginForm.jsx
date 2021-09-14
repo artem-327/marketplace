@@ -133,57 +133,52 @@ const LoginForm = props => {
                       </FormattedMessage>
                     )}
                   </LoginButton>
-
-
-
                   {twoFactorAuthSession?.options && (
                     <AuthenticationSelectPopup
+                      options={twoFactorAuthSession.options}
+                      description={(
+                        <FormattedMessage
+                          id='auth.weDontRecognizeDevice'
+                          defaultMessage='We don’t recognize this device. For your safety, select which device you would like a verification code to be sent.'
+                        />
+                      )}
                       onAccept={async value => {
-
-
-                        console.log('!!!!!!!!!! AuthenticationSelectPopup onAccept value', value)
-                        console.log('!!!!!!!!!! AuthenticationSelectPopup onAccept session', twoFactorAuthSession.session)
-
-                        await props.login(
-                          values.username.trim(),
-                          values.password,
-                          twoFactorAuthSession.session,
-                          'EMAIL'
-                        )
-
+                        try {
+                          await props.login(
+                            values.username.trim(),
+                            values.password,
+                            twoFactorAuthSession.session,
+                            value
+                          )
+                        } catch (e) {
+                          console.error(e)
+                        }
                       }}
-
                     />
                   )}
                   {twoFactorAuthSession && !twoFactorAuthSession.options && (
                     <AuthenticationEnterPopup
-
+                      description={(
+                        <FormattedMessage
+                          id='auth.pleaseEnterSixDigits'
+                          defaultMessage='Please Enter the six-digit code sent to your email.'
+                        />
+                      )}
                       onAccept={async value => {
-
-
-                        console.log('!!!!!!!!!! AuthenticationEnterPopup onAccept value', value)
-                        console.log('!!!!!!!!!! AuthenticationEnterPopup onAccept session', twoFactorAuthSession.session)
-
-                        await props.login(
-                          values.username.trim(),
-                          values.password,
-                          twoFactorAuthSession.session,
-                          null,
-                          value
-                        )
-
+                        try {
+                          await props.login(
+                            values.username.trim(),
+                            values.password,
+                            twoFactorAuthSession.session,
+                            null,
+                            value
+                          )
+                        } catch (e) {
+                          console.error(e)
+                        }
                       }}
-
-
                     />
                     )}
-
-
-
-
-
-
-
                 </>
               )
             }}

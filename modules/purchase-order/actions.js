@@ -118,9 +118,9 @@ export const setIsOpenAddAddress = isOpen => ({
   payload: isOpen
 })
 
-export const validatePurchaseOrder = () => ({
+export const validatePurchaseOrder = values => ({
   type: AT.PURCHASE_ORDER_VALIDATE,
-  payload: api.validatePurchaseOrder()
+  payload: api.validatePurchaseOrder(values)
 })
 
 export const mfaGetOptions = () => ({

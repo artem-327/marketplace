@@ -51,7 +51,8 @@ export const updateHazmatInfo = (cartItemId, payload) =>
   api.patch(`/prodex/api/cart/items/${cartItemId}/hazard-info`, payload).then(response => response.data)
 export const postPurchaseOrder = data => api.post('/prodex/api/purchase-orders', data).then(response => response.data)
 
-export const validatePurchaseOrder = () => api.post('/prodex/api/purchase-orders/validate').then(response => response.data)
+export const validatePurchaseOrder = data => api.post('/prodex/api/purchase-orders/validate', data)
+  .then(response => response.data)
 export const mfaGetOptions = () => api.get('/prodex/api/mfa/options').then(response => response.data)
 export const mfaRequestCode = option => api
   .post(`/prodex/api/mfa?option=${option}&type=NEW_PURCHASE_ORDER`).then(response => response.data)

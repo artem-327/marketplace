@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import { Form, Input } from 'formik-semantic-ui-fixed-validation'
-import { Segment, Image, Button, Grid, GridRow, GridColumn, Header } from 'semantic-ui-react'
+import { Form } from 'formik-semantic-ui-fixed-validation'
+import { Segment, Image, Button, Input, GridRow, GridColumn, Header } from 'semantic-ui-react'
 
 export const ConfirmSegment = styled(Segment.Group)`
 position: relative;
@@ -83,6 +83,7 @@ export const AutoColumn = styled(GridColumn)`
 
 export const DivCenteredWrapper = styled.div`
   align-items: center;
+  padding: 30px;
 `
 
 export const DivButtons = styled.div`
@@ -93,15 +94,34 @@ export const DivButtons = styled.div`
 `
 
 export const DivButtonColumn = styled.div`
-  margin: 0 5px;
+  padding: 0 20px;
+  width: 100%;
 `
 
 export const DivDescription = styled.div`
-  color: #404040;
+  text-align: center;
+  color: #848893;
   line-height: 1.71;
-  margin: 7px 10px 30px;
+  margin: -10px 10px 40px;
 `
 
+export const DivOptions = styled.div`
+  padding: 0 50px;
+  margin-bottom: 40px; 
+`
 
+export const DivRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+export const InputCode = styled(Input)`
+  &.ui.input {
+    min-width: 50px;
+    width: 50px;
+    margin: 0 7px;
+  }
+`
 
 
