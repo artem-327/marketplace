@@ -102,11 +102,35 @@ const GenerateBOLPopup = props => {
                     fieldProps={{ width: 8 }}
                   />
 
+
+                </FormGroup>
+
+                <FormGroup>
+                  <DateInput
+                    label={
+                      <>
+                        {formatMessage({ id: 'operations.pickupDate', defaultMessage: 'Pick Up Date' })}
+                        <Required />
+                      </>
+                    }
+                    name='pickupDate'
+                    inputProps={{
+                      clearable: true
+                    }}
+                    fieldProps={{ width: 8 }}
+                  />
+
+
+
                   <TimeWithZoneInput
 
                   />
 
+
+
                 </FormGroup>
+
+
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_shipping_quote_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
