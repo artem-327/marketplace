@@ -192,7 +192,6 @@ export const getRows = (data, props, state, setState) => {
         productName: (
         <ActionCell
             row={r}
-            getActions={() => getActions(props)}
             content={r.productName}
             rightAlignedContent={
             <>
@@ -400,78 +399,6 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
         : []
   }
 })
-
-const getActions = (props) => {
-  const {
-  intl: { formatMessage },
-  modalDetailTrigger,
-  datagrid
-  } = props
-  return [
-  {
-      text: formatMessage({
-      id: 'global.edit',
-      defaultMessage: 'Edit'
-      }),
-  },
-  {
-      text: formatMessage({
-      id: 'global.tds',
-      defaultMessage: 'TDS'
-      }),
-      disabled: row => !!row.groupId,
-  },
-  {
-      text: formatMessage({
-      id: 'global.documents',
-      defaultMessage: 'Documents'
-      }),
-      disabled: row => !!row.groupId,
-  },
-  {
-      text: formatMessage({
-      id: 'inventory.broadcast',
-      defaultMessage: 'Price Book'
-      }),
-      disabled: row => !!row.groupId,
-  },
-  {
-      text: formatMessage({
-      id: 'inventory.priceTiers',
-      defaultMessage: 'Price Tiers'
-      }),
-      disabled: row => !!row.groupId,
-  },
-  {
-      text: formatMessage({
-      id: 'global.delete',
-      defaultMessage: 'Delete'
-      }),
-      callback: row => {
-      confirm(
-          formatMessage({
-          id: 'confirm.deleteOfferHeader',
-          defaultMessage: 'Delete Product Offer'
-          }),
-          formatMessage(
-          {
-              id: 'confirm.deleteItem',
-              defaultMessage: `Do you really want to remove ${row.chemicalName}?`
-          },
-          { item: row.chemicalName }
-          )
-      ).then(async () => {
-          try {
-          await props.deleteProductOffer(row.id)
-          datagrid.removeRow(row.id)
-          } catch (e) {
-          console.error(e)
-          }
-      })
-      }
-  }
-  ]
-}
 
 export const tableRowClickedProductOffer = (row, modalProps, bool = true, indexTab = 3) => {
   const {

@@ -110,7 +110,7 @@ const RespondModal = props => {
                   <Loader />
                 </Dimmer>
                 <Modal.Header>
-                  <FormattedMessage id='wantedBoard.productInfoHeader' defaultMessage='PRODUCT INFO' />
+                  <FormattedMessage id='wantedBoard.productRespondHeader' defaultMessage='Respond' />
                 </Modal.Header>
 
                 <ModalContent scrolling={datagrid.rows?.length !== 0}>

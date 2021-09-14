@@ -14,10 +14,8 @@ export const formValidation = () =>
     productName: Yup.string().required(errorMessages.requiredMessage),
     quantityNeeded: Yup.number().required(errorMessages.requiredMessage),
     weightUnitFilter: Yup.number().required(errorMessages.requiredMessage),
-    deliveryContry: Yup.object().required(errorMessages.requiredMessage),
-    statesFilter: Yup.number().required(errorMessages.requiredMessage),
-    expiryDate: dateValidation(false),
-    conformingFilter: Yup.string().required(errorMessages.requiredMessage),
+    statesFilter: Yup.number(),
+    conformingFilter: Yup.string(),
   })
 
 /**
@@ -31,11 +29,16 @@ export const getInitialFormValues = popupValue => {
       productName: popupValue?.productName,
       quantityNeeded: popupValue?.quantity,
       weightUnitFilter: popupValue?.rawData?.unit?.id,
-      deliveryContry: popupValue?.rawData?.deliveryCountry?.id,
+      deliveryCountry: JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}),
       statesFilter: popupValue?.rawData?.deliveryProvince?.id,
       expiryDate: popupValue?.postExpiry,
       conformingFilter: popupValue?.conforming,
-      specialNotes: popupValue?.rawData.notes
+      specialNotes: popupValue?.rawData?.notes,
+      gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades[0].id : null,
+      packaingFilter: popupValue?.rawData?.packagingTypes?.length ? popupValue?.rawData?.packagingTypes[0].id : null,
+      conditionFilter: popupValue?.rawData?.conditions?.length ? popupValue?.rawData?.conditions[0].id : null,
+      originCountryFilter: popupValue?.rawData?.origins?.length ? popupValue?.rawData?.origins[0].id : null,
+      formFilter: popupValue?.rawData?.forms?.length ? popupValue?.rawData?.forms[0].id : null,
     }
   }
   
@@ -52,16 +55,20 @@ export const getInitialFormValues = popupValue => {
 export const submitHandler = async (values, { setSubmitting }, props) => {
   const sendData = {
     "conditionConforming": values.conformingFilter == 'Yes' ? true : false,
-    "deliveryCountry": JSON.parse(values.deliveryContry).countryId,
+    "deliveryCountry": JSON.parse(values.deliveryCountry).countryId ? JSON.parse(values.deliveryCountry).countryId : '',
     "deliveryProvince": values.statesFilter,
     "expiresAt": getStringISODate(values.expiryDate),
-    "maximumPricePerUOM": 5,
     "notes": values.specialNotes,
-    "origins": values.originCountryFilter ? [JSON.parse(values.originCountryFilter).countryId] : [],
+    "origins": values.originCountryFilter ? [values.originCountryFilter] : [],
     "packagingTypes": values.packaingFilter ? [values.packaingFilter] : [],
     "productSearchPattern": values.productName,
     "quantity": values.quantityNeeded,
-    "unit": values.weightUnitFilter
+    "unit": values.weightUnitFilter,
+    "forms": values.formFilter ? [values.formFilter] : [],
+    "grades": values.gradeFilter ? [values.gradeFilter] : [],
+    // "manufacturers": [0],
+    // "maximumPricePerUOM": 0,
+    // "neededAt": "2021-09-14T12:56:38.558Z"
   }
 
   const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid } = props

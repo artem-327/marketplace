@@ -35,8 +35,8 @@ const ModalDetail = props => {
       validationSchema={formValidation()}
       enableReinitialize
       onReset={() => props.closeAddEditPopup()}
-      onSubmit={submitHandler}
-      loading={false}>
+      onSubmit={()=>{}}
+    >
       {formikProps => {
         return (
           <FormCustom autoComplete='off'>
@@ -61,9 +61,9 @@ const ModalDetail = props => {
                   <DivTitle>
                     <DivHeader>
                       {popupValues ? (
-                        <FormattedMessage id='casProduct.editCasProduct' defaultMessage='Edit CAS Product' />
+                        <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted Board' />
                       ) : (
-                        <FormattedMessage id='casProduct.addCasProduct' defaultMessage='Add CAS Product' />
+                        <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted Board' />
                       )}
                     </DivHeader>
                     <div>
