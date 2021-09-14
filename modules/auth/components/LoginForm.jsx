@@ -5,6 +5,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 //Components
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
+import AuthenticationSelectPopup from './AuthenticationSelectPopup'
+import AuthenticationEnterPopup from './AuthenticationEnterPopup'
 //Images
 import Logo from '../../../assets/images/login/logo-bluepallet.svg'
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
@@ -18,7 +20,7 @@ const LoginForm = props => {
   const [passwordError, setPasswordError] = useState(false)
   const [resetPassword, setResetPassword] = useState(false)
 
-  const { isLoading, message, version, intl, router, identity } = props
+  const { isLoading, message, version, intl, router, identity, twoFactorAuthSession } = props
   const { formatMessage } = intl
 
   useEffect(() => {
@@ -131,11 +133,56 @@ const LoginForm = props => {
                       </FormattedMessage>
                     )}
                   </LoginButton>
+                  {twoFactorAuthSession?.options && (
+                    <AuthenticationSelectPopup
+                      options={twoFactorAuthSession.options}
+                      description={(
+                        <FormattedMessage
+                          id='auth.weDontRecognizeDevice'
+                          defaultMessage='We don’t recognize this device. For your safety, select which device you would like a verification code to be sent.'
+                        />
+                      )}
+                      onAccept={async value => {
+                        try {
+                          await props.login(
+                            values.username.trim(),
+                            values.password,
+                            twoFactorAuthSession.session,
+                            value
+                          )
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }}
+                    />
+                  )}
+                  {twoFactorAuthSession && !twoFactorAuthSession.options && (
+                    <AuthenticationEnterPopup
+                      description={(
+                        <FormattedMessage
+                          id='auth.pleaseEnterSixDigits'
+                          defaultMessage='Please Enter the six-digit code sent to your email.'
+                        />
+                      )}
+                      onAccept={async value => {
+                        try {
+                          await props.login(
+                            values.username.trim(),
+                            values.password,
+                            twoFactorAuthSession.session,
+                            null,
+                            value
+                          )
+                        } catch (e) {
+                          console.error(e)
+                        }
+                      }}
+                    />
+                    )}
                 </>
               )
             }}
           </StyledForm>
-
           <VersionWrapper>{version && `v${version}`}</VersionWrapper>
         </LoginSegment>
       </LoginContainer>
