@@ -13,7 +13,7 @@ export const formValidation = Yup.object().shape({
 export const getInitialFormValues = popupValue => {
   return {
     productName: popupValue?.productName,
-    quantityNeeded: popupValue?.quantity,
+    quantityNeeded: popupValue?.rawData?.quantity,
     weightUnitFilter: popupValue?.rawData?.unit?.id,
     deliveryCountry: JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}),
     statesFilter: popupValue?.rawData?.deliveryProvince?.id,
@@ -29,7 +29,7 @@ export const getInitialFormValues = popupValue => {
 }
 
 export const submitHandler = async (values, {setSubmitting}, props) => {
-  const sendData = {
+  let payload = {
     "conditionConforming": values.conformingFilter == 'Yes' ? true : false,
     "deliveryCountry": values.deliveryCountry ? JSON.parse(values.deliveryCountry).countryId : '',
     "deliveryProvince": values.statesFilter,
@@ -49,8 +49,6 @@ export const submitHandler = async (values, {setSubmitting}, props) => {
 
   const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid } = props
   try {
-    let payload = { ...sendData }
-
     removeEmpty(payload)
 
     if (popupValues) {

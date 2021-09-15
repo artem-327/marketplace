@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import Router from 'next/router'
 import * as Actions from '../../../actions'
+import { openGlobalAddForm } from '../../../../layout/actions'
 import {
   Modal,
   Button,
@@ -14,7 +14,6 @@ import {
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-
 import { withDatagrid } from '../../../../datagrid'
 import ProdexTable from '../../../../../components/table'
 import { withToastManager } from 'react-toast-notifications'
@@ -77,7 +76,8 @@ const RespondModal = props => {
     datagrid,
     purchaseRequestPending,
     updatingDatagrid,
-    closeRespondModal
+    closeRespondModal,
+    openGlobalAddForm
   } = props
 
   useEffect(() => {
@@ -160,7 +160,8 @@ const RespondModal = props => {
                             primary
                             type='submit'
                             onClick={() => {
-                              Router.push('/inventory/my-listings')
+                              closeRespondModal()
+                              openGlobalAddForm('inventory-my-listings')
                             }}
                           >
                             <FormattedMessage id='wantedBoard.respondModalCreateNewListing' defaultMessage='Create New Listing' tagName='span' />
@@ -185,4 +186,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(RespondModal))))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openGlobalAddForm })(withToastManager(injectIntl(RespondModal))))

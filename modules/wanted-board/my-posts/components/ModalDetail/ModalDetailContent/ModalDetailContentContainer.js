@@ -12,7 +12,7 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state) => {
     return {
       countries: state.globalData.countries,
-      weightUnits: state.globalData.weightUnits,
+      units: state.globalData.unitsDropdown,
       packagingTypes: state.globalData.packagingTypesDropdown,
       productConditions: state.globalData.productConditionsDropdown,
       productForms: state.globalData.productFormsDropdown,

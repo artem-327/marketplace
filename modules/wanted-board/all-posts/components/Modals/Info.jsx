@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 import {
@@ -92,12 +91,6 @@ const SubmitButton = styled(Button)`
 `
 
 const InfoModal = props => {
-  const [state, setState] = useState({
-    select: '',
-    nextSubmit: false,
-    inputRows: 0,
-    selectedRow: { id: '' }
-  })
 
   const keyColumn = 5
   const valColumn = 16 - keyColumn

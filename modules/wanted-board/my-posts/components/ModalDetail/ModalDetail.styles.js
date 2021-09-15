@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import { Segment, Form, Sidebar, Dimmer, Grid, GridColumn } from 'semantic-ui-react'
-import TextareaAutosize from 'react-autosize-textarea'
+import { Segment, Form, Sidebar, Dimmer, Grid } from 'semantic-ui-react'
 
 export const FormCustom = styled(Form)`
   flex-grow: 0 !important;
@@ -105,15 +104,4 @@ export const CasGridStyled = styled(Grid)`
       }
     }
   }
-`
-
-export const GridColumnLabelTextArea = styled(GridColumn)`
-  padding: 3px 0px !important;
-  color: #000000de !important;
-  font-size: 14px;
-`
-
-export const CustomTextarea = styled(TextareaAutosize)`
-  resize: vertical !important;
-  background-color: #fdfdfd !important;
 `

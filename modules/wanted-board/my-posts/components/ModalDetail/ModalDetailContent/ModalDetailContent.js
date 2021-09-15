@@ -6,7 +6,7 @@ import moment from 'moment'
 
 // Components
 import { GridRow, GridColumn } from 'semantic-ui-react'
-import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Input, Dropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { Required } from '../../../../../../components/constants/layout'
 import { DateInput } from '../../../../../../components/custom-formik'
 // Constants
@@ -19,9 +19,7 @@ import { getProvinces } from '../../../../../address-form/api'
 import {
     DivHeaderRow,
     DivHeaderCaption,
-    CasGridStyled,
-    GridColumnLabelTextArea,
-    CustomTextarea
+    CasGridStyled
   } from '../ModalDetail.styles'
 
 const ModalDetailContent = props => {
@@ -37,7 +35,7 @@ const ModalDetailContent = props => {
         intl: { formatMessage },
         formikProps,
         countries,
-        weightUnits,
+        units,
         packagingTypes,
         productConditions,
         productForms,
@@ -52,10 +50,10 @@ const ModalDetailContent = props => {
     useEffect( () => {
         const init = async () => {
             if (!props.hazardClasses.length) props.getHazardClasses()
-            let { countries, countriesLoading, weightUnits, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades, deliveryCountry } = props
+            let { countries, countriesLoading, units, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades, deliveryCountry } = props
             try {
                 if (countries.length === 0 && !countriesLoading) await props.getCountries()
-                if (weightUnits.length === 0) getUnits()
+                if (units.length === 0) getUnits()
                 if (packagingTypes.length === 0) getPackagingTypes()
                 if (productConditions.length === 0) getProductConditions()
                 if (productForms.length === 0) getProductForms()
@@ -147,7 +145,7 @@ const ModalDetailContent = props => {
                                 </>
                             }
                             name="weightUnitFilter"
-                            options={weightUnits}
+                            options={units}
                             inputProps={{
                                 onFocus: e => (e.target.autocomplete = null),
                                 'data-test': 'wanted_board_sidebar_unit_drpdn',
@@ -327,15 +325,15 @@ const ModalDetailContent = props => {
                 </GridRow>
                 <GridRow>
                     <GridColumn width={16}>
-                        <GridRow>
-                            <GridColumnLabelTextArea>
-                                <FormattedMessage id='wantedBoard.myPostIndexSpecialNotesFilter' defaultMessage='Special Notes'  />
-                            </GridColumnLabelTextArea>
-                        </GridRow>
-                        <CustomTextarea
-                            rows={3}
-                            name="specialNotes"
-                            id="specialNotes"
+                        <TextArea
+                            name='specialNotes'
+                            label={<FormattedMessage id='wantedBoard.myPostIndexSpecialNotesFilter' defaultMessage='Special Notes'  />}
+                            inputProps={{
+                                placeholder: formatMessage({
+                                id: 'wantedBoard.writeNotesHere',
+                                defaultMessage: 'Write Notes Here'
+                                })
+                            }}
                         />
                     </GridColumn>
                 </GridRow>
