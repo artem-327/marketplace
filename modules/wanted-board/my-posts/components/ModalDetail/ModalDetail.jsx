@@ -22,10 +22,6 @@ import {
 // Services
 import { formValidation, getInitialFormValues, submitHandler } from './ModalDetail.services'
 
-/**
- * @Component
- * @category Products - Components / CasProductsTable / ModalDetail
- */
 const ModalDetail = props => {
   const { popupValues, updating } = props
 

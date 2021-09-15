@@ -55,11 +55,11 @@ const ModalDetailContent = props => {
             let { countries, countriesLoading, weightUnits, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades, deliveryCountry } = props
             try {
                 if (countries.length === 0 && !countriesLoading) await props.getCountries()
-                if (weightUnits.length === 0) await getUnits()
-                if (packagingTypes.length === 0) await getPackagingTypes()
-                if (productConditions.length === 0) await getProductConditions()
-                if (productForms.length === 0) await getProductForms()
-                if (productGrades.length === 0) await getProductGrades()
+                if (weightUnits.length === 0) getUnits()
+                if (packagingTypes.length === 0) getPackagingTypes()
+                if (productConditions.length === 0) getProductConditions()
+                if (productForms.length === 0) getProductForms()
+                if (productGrades.length === 0) getProductGrades()
 
                 await fetchProvinces(deliveryCountry?.id, deliveryCountry?.hasProvinces)
             } catch (e) {

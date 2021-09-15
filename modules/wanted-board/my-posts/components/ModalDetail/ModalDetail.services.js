@@ -4,54 +4,30 @@ import { errorMessages, dateValidation } from '../../../../../constants/yupValid
 import { removeEmpty } from '../../../../../utils/functions'
 import { getStringISODate } from '../../../../../components/date-format'
 
-/**
- * Validation of form.
- * @category Products - Add/Edit CAS Product
- * @method
- */
-export const formValidation = () =>
-  Yup.object().shape({
-    productName: Yup.string().required(errorMessages.requiredMessage),
-    quantityNeeded: Yup.number().required(errorMessages.requiredMessage),
-    weightUnitFilter: Yup.number().required(errorMessages.requiredMessage),
-    statesFilter: Yup.number(),
-    conformingFilter: Yup.string(),
-  })
+export const formValidation = Yup.object().shape({
+  productName: Yup.string().required(errorMessages.requiredMessage),
+  quantityNeeded: Yup.number().required(errorMessages.requiredMessage),
+  weightUnitFilter: Yup.number().required(errorMessages.requiredMessage)
+})
 
-/**
- * @category Products - Add/Edit CAS Product
- * @param {Object<string, any>} sidebarValues All values for form.
- * @return {Object<string, any>} Initial object for form.
- */
 export const getInitialFormValues = popupValue => {
-  if(popupValue) {
-    return {
-      productName: popupValue?.productName,
-      quantityNeeded: popupValue?.quantity,
-      weightUnitFilter: popupValue?.rawData?.unit?.id,
-      deliveryCountry: JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}),
-      statesFilter: popupValue?.rawData?.deliveryProvince?.id,
-      expiryDate: popupValue?.postExpiry,
-      conformingFilter: popupValue?.conforming,
-      specialNotes: popupValue?.rawData?.notes,
-      gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades[0].id : null,
-      packaingFilter: popupValue?.rawData?.packagingTypes?.length ? popupValue?.rawData?.packagingTypes[0].id : null,
-      conditionFilter: popupValue?.rawData?.conditions?.length ? popupValue?.rawData?.conditions[0].id : null,
-      originCountryFilter: popupValue?.rawData?.origins?.length ? popupValue?.rawData?.origins[0].id : null,
-      formFilter: popupValue?.rawData?.forms?.length ? popupValue?.rawData?.forms[0].id : null,
-    }
+  return {
+    productName: popupValue?.productName,
+    quantityNeeded: popupValue?.quantity,
+    weightUnitFilter: popupValue?.rawData?.unit?.id,
+    deliveryCountry: JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}),
+    statesFilter: popupValue?.rawData?.deliveryProvince?.id,
+    expiryDate: popupValue?.postExpiry,
+    conformingFilter: popupValue?.conforming,
+    specialNotes: popupValue?.rawData?.notes,
+    gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades[0].id : null,
+    packaingFilter: popupValue?.rawData?.packagingTypes?.length ? popupValue?.rawData?.packagingTypes[0].id : null,
+    conditionFilter: popupValue?.rawData?.conditions?.length ? popupValue?.rawData?.conditions[0].id : null,
+    originCountryFilter: popupValue?.rawData?.origins?.length ? popupValue?.rawData?.origins[0].id : null,
+    formFilter: popupValue?.rawData?.forms?.length ? popupValue?.rawData?.forms[0].id : null,
   }
-  
 }
 
-/**
- * Submit form and add or edit warehouse.
- * @category Products - Add/Edit CAS Product
- * @method
- * @param {Object<string, any>} values Values of form.
- * @param {Object<any>} props Input props (popupValues, updateCasProductRequest, postNewCasProductRequest, datagrid).
- * @param {number} id
- */
 export const submitHandler = async (values, {setSubmitting}, props) => {
   const sendData = {
     "conditionConforming": values.conformingFilter == 'Yes' ? true : false,

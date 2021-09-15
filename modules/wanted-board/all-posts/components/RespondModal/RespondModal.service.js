@@ -1,16 +1,11 @@
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
 import cn from 'classnames'
-
 import {
-  Header,
   Checkbox,
-  Popup,
-  Image
+  Popup
 } from 'semantic-ui-react'
-
 import { Warning } from '@material-ui/icons'
-
 import { getSafe } from '../../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../../components/date-format'
 import { ArrayToFirstItem, FormattedAssay } from '../../../../../components/formatted-messages'
@@ -23,11 +18,6 @@ import {
 } from './RespondModal.styles'
 import { FormattedUnit } from '../../../../../components/formatted-messages'
 
-/**
- * columns in my listings
- * @category Inventory - My Listings
- * @method
- */
 export const columns = [
     {
       name: 'productName',
@@ -314,7 +304,6 @@ export const getRows = (data, props, state, setState) => {
                         ...r.rawData,
                         cfStatus: data.checked ? 'Broadcasting' : 'Not broadcasting'
                     }))
-                    // Its necessary to render and see changes in MyListing when datagrid updated row
                     setState(prevState => ({ ...prevState, updatedRow: true }))
                     } catch (error) {
                     console.error(error)
@@ -400,13 +389,3 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
   }
 })
 
-export const tableRowClickedProductOffer = (row, modalProps, bool = true, indexTab = 3) => {
-  const {
-    isProductInfoOpen,
-    closePopup,
-    modalDetailTrigger
-  } = modalProps
-
-  if (isProductInfoOpen) closePopup()
-  modalDetailTrigger(row, bool, indexTab)
-}
