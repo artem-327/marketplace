@@ -40,111 +40,120 @@ export function loginInit() {
   }
 }
 
-export function login(username, password) {
+export function login(username, password, session = null, option = null, code = null) {
   return async dispatch => {
     await dispatch({
       type: AT.LOGIN,
       async payload() {
-        const auth = await authorize(username, password)
-        setAuth(auth)
-        const identity = await api.getIdentity()
+        const auth = await authorize(username, password, session, option, code)
+        if (auth?.session) {
+          return {
+            twoFactorAuthSession: auth
+          }
+        } else {
+          setAuth(auth)
+          const identity = await api.getIdentity()
 
-        let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
-        const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
+          let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+          const preferredCurrency = getSafe(() => identity.preferredCurrency, currency)
 
-        const authPayload = {
-          ...auth,
-          identity: {
-            ...identity,
-            company:
-              identity.company || company
-                ? {
+          const authPayload = {
+            ...auth,
+            identity: {
+              ...identity,
+              company:
+                identity.company || company
+                  ? {
                     ...identity.company,
                     ...company
                   }
-                : null
-          },
-          preferredCurrency
-        }
-
-        if (typeof window !== 'undefined' && window.FS) {
-          try {
-            window.FS.identify(identity.id)
-          } catch (e) {
-            console.error(e)
+                  : null
+            },
+            preferredCurrency
           }
-        } else {
-          console.error('Google Tag Manager or FullStory not installed')
-        }
 
-        const isAdmin = identity.roles.map(r => r.role).indexOf('SUPER_ADMIN') > -1
-        const isOrderOperator = identity.roles.map(r => r.role).indexOf('ORDER_OPERATOR') > -1
-        const isOrderProcessing = identity.roles.map(r => r.role).indexOf('ORDER_PROCESSING') > -1
-        const isOrderView = identity.roles.map(r => r.role).indexOf('ORDER_VIEW') > -1
-        const isCompanyAdmin = identity.roles.map(r => r.role).indexOf('COMPANY_ADMIN') > -1
-        const isMerchant = identity.roles.map(r => r.role).indexOf('MERCHANT') > -1
-        const isProductCatalogAdmin = identity.roles.map(r => r.role).indexOf('PRODUCT_CATALOG_ADMIN') > -1
-        const isProductOfferManager = identity.roles.map(r => r.role).indexOf('PRODUCT_OFFER_MANAGER') > -1
-        const isUserAdmin = identity.roles.map(r => r.role).indexOf('USER_ADMIN') > -1
+          if (typeof window !== 'undefined' && window.FS) {
+            try {
+              window.FS.identify(identity.id)
+            } catch (e) {
+              console.error(e)
+            }
+          } else {
+            console.error('Google Tag Manager or FullStory not installed')
+          }
 
-        let accessRights = {}
+          const isAdmin = identity.roles.map(r => r.role).indexOf('SUPER_ADMIN') > -1
+          const isOrderOperator = identity.roles.map(r => r.role).indexOf('ORDER_OPERATOR') > -1
+          const isOrderProcessing = identity.roles.map(r => r.role).indexOf('ORDER_PROCESSING') > -1
+          const isOrderView = identity.roles.map(r => r.role).indexOf('ORDER_VIEW') > -1
+          const isCompanyAdmin = identity.roles.map(r => r.role).indexOf('COMPANY_ADMIN') > -1
+          const isMerchant = identity.roles.map(r => r.role).indexOf('MERCHANT') > -1
+          const isProductCatalogAdmin = identity.roles.map(r => r.role).indexOf('PRODUCT_CATALOG_ADMIN') > -1
+          const isProductOfferManager = identity.roles.map(r => r.role).indexOf('PRODUCT_OFFER_MANAGER') > -1
+          const isUserAdmin = identity.roles.map(r => r.role).indexOf('USER_ADMIN') > -1
 
-        if (identity.roles) {
-          ROLES_ENUM.forEach(role => {
-            accessRights[role.propertyName] = !!identity.roles.find(el => el.role === role.role)
-          })
-        }
+          let accessRights = {}
 
-        setAuth(authPayload)
-        let urlPage = '/dashboard'
-        if (typeof window !== 'undefined') {
-          const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
-          if (searchParams.has('redirectUrl')) {
-            urlPage = decodeURI(getSafe(() => window.location.search.split('redirectUrl=')[1], urlPage))
-            //Remove password from URL if exist password or username. We do not know why is password and username in URL.
-            //In ctx.req.url has credentials in securePage, but we do not know when got and why has this credentials.
-            //This is hot fix.
-            if (urlPage.includes('password') || urlPage.includes('username')) {
-              urlPage = '/'
+          if (identity.roles) {
+            ROLES_ENUM.forEach(role => {
+              accessRights[role.propertyName] = !!identity.roles.find(el => el.role === role.role)
+            })
+          }
+
+          setAuth(authPayload)
+          let urlPage = '/dashboard'
+          if (typeof window !== 'undefined') {
+            const searchParams = new URLSearchParams(getSafe(() => window.location.search, ''))
+            if (searchParams.has('redirectUrl')) {
+              urlPage = decodeURI(getSafe(() => window.location.search.split('redirectUrl=')[1], urlPage))
+              //Remove password from URL if exist password or username. We do not know why is password and username in URL.
+              //In ctx.req.url has credentials in securePage, but we do not know when got and why has this credentials.
+              //This is hot fix.
+              if (urlPage.includes('password') || urlPage.includes('username')) {
+                urlPage = '/'
+              }
             }
           }
-        }
 
-        if (
-          identity &&
-          isCompanyAdmin &&
-          identity.company &&
-          !identity.company.reviewRequested &&
-          !identity.lastLoginAt
-        ) {
-          urlPage = '/settings/company-details'
-        }
-        if (isAdmin) urlPage = '/dashboard'
-        if (identity && identity.roles.find(role => role.role === 'OPERATOR')) {
-          urlPage = '/operations/shipping-quotes'
-        }
-        if (isOrderOperator) {
-          urlPage = '/operations/orders'
-        }
+          if (
+            identity &&
+            isCompanyAdmin &&
+            identity.company &&
+            !identity.company.reviewRequested &&
+            !identity.lastLoginAt
+          ) {
+            urlPage = '/settings/company-details'
+          }
+          if (isAdmin) urlPage = '/dashboard'
+          if (identity && identity.roles.find(role => role.role === 'OPERATOR')) {
+            urlPage = '/operations/shipping-quotes'
+          }
+          if (isOrderOperator) {
+            urlPage = '/operations/orders'
+          }
 
-        if (
-          identity &&
-          !isCompanyAdmin &&
-          !isMerchant &&
-          !isProductCatalogAdmin &&
-          !isProductOfferManager &&
-          !isUserAdmin &&
-          (isOrderProcessing || isOrderView)
-        ) {
-          urlPage = '/orders/sales'
-        }
+          if (
+            identity &&
+            !isCompanyAdmin &&
+            !isMerchant &&
+            !isProductCatalogAdmin &&
+            !isProductOfferManager &&
+            !isUserAdmin &&
+            (isOrderProcessing || isOrderView)
+          ) {
+            urlPage = '/orders/sales'
+          }
 
-        Router.push(urlPage)
-        return authPayload
+          Router.push(urlPage)
+          return authPayload
+        }
       }
     })
   }
 }
+
+
+
 
 export function getVersion() {
   return dispatch => {

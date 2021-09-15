@@ -60,7 +60,11 @@ export const initialState = {
   },
   loading: false,
   identity: null,
-  error: null
+  error: null,
+  twoFactorAuthPopup: null,
+  twoFactorAuthSession: null,
+
+
 }
 
 export default function reducer(state = initialState, action) {
@@ -103,58 +107,73 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_IDENTITY_FULFILLED:
     case AT.LOGIN_FULFILLED: {
-      let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
-      let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
-      let primaryUser = getSafe(() => payload.identity.company.primaryUser, null)
+      if (payload.twoFactorAuthSession) {
+        return {
+          ...state,
+          loading: false,
+          twoFactorAuthSession: payload.twoFactorAuthSession,
+          loginForm: {
+            ...loginForm,
+            isLoading: false,
+            message: null
+          }
+        }
+      } else {
+        let deliveryAddress = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress, null)
+        let address = getSafe(() => payload.identity.company.primaryBranch.deliveryAddress.address, null)
+        let primaryUser = getSafe(() => payload.identity.company.primaryUser, null)
 
-      return {
-        ...state,
-        loading: false,
-        confirmationForm:
-          getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser
-            ? {
-                address: {
+        return {
+          ...state,
+          loading: false,
+          twoFactorAuthPopup: null,
+          twoFactorAuthSession: null,
+          confirmationForm:
+            getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser
+              ? {
                   address: {
-                    city: address.city,
-                    country: JSON.stringify({
-                      countryId: address.country.id,
-                      hasProvinces: address.country.hasProvinces
-                    }),
-                    province: address.province ? address.province.id : null,
-                    streetAddress: address.streetAddress,
-                    zip: address.zip.zip
+                    address: {
+                      city: address.city,
+                      country: JSON.stringify({
+                        countryId: address.country.id,
+                        hasProvinces: address.country.hasProvinces
+                      }),
+                      province: address.province ? address.province.id : null,
+                      streetAddress: address.streetAddress,
+                      zip: address.zip.zip
+                    },
+                    addressName: deliveryAddress.cfName || '',
+                    callAhead: !!deliveryAddress.callAhead,
+                    closeTime: deliveryAddress.closeTime || null,
+                    contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
+                    contactName: deliveryAddress.contactName || primaryUser.name || '',
+                    contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
+                    deliveryNotes: deliveryAddress.deliveryNotes || '',
+                    forkLift: !!deliveryAddress.forkLift,
+                    liftGate: !!deliveryAddress.liftGate,
+                    readyTime: deliveryAddress.readyTime || null
                   },
-                  addressName: deliveryAddress.cfName || '',
-                  callAhead: !!deliveryAddress.callAhead,
-                  closeTime: deliveryAddress.closeTime || null,
-                  contactEmail: deliveryAddress.contactEmail || primaryUser.email || '',
-                  contactName: deliveryAddress.contactName || primaryUser.name || '',
-                  contactPhone: deliveryAddress.contactPhone || primaryUser.phone || '',
-                  deliveryNotes: deliveryAddress.deliveryNotes || '',
-                  forkLift: !!deliveryAddress.forkLift,
-                  liftGate: !!deliveryAddress.liftGate,
-                  readyTime: deliveryAddress.readyTime || null
-                },
-                companyAdminUser: {
-                  name: payload.identity.company.primaryUser.name,
-                  jobTitle: payload.identity.company.primaryUser.jobTitle,
-                  phone: payload.identity.company.primaryUser.phone,
-                  email: payload.identity.company.primaryUser.email
-                },
-                dba: payload.identity.company.dba,
-                dunsNumber: payload.identity.company.dunsNumber,
-                name: payload.identity.company.name,
-                tin: payload.identity.company.tin
-              }
-            : state.confirmationForm,
-        identity: {
-          ...payload.identity,
-          ...getAccessRights(payload.identity.roles)
-        },
-        loginForm: {
-          ...loginForm,
-          //isLoading: false,
-          isLogged: true
+                  companyAdminUser: {
+                    name: payload.identity.company.primaryUser.name,
+                    jobTitle: payload.identity.company.primaryUser.jobTitle,
+                    phone: payload.identity.company.primaryUser.phone,
+                    email: payload.identity.company.primaryUser.email
+                  },
+                  dba: payload.identity.company.dba,
+                  dunsNumber: payload.identity.company.dunsNumber,
+                  name: payload.identity.company.name,
+                  tin: payload.identity.company.tin
+                }
+              : state.confirmationForm,
+          identity: {
+            ...payload.identity,
+            ...getAccessRights(payload.identity.roles)
+          },
+          loginForm: {
+            ...loginForm,
+            //isLoading: false,
+            isLogged: true
+          }
         }
       }
     }
