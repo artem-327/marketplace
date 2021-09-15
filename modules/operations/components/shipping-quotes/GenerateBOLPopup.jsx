@@ -27,19 +27,26 @@ const GenerateBOLPopup = props => {
       <Modal.Content>
         <Form
           enableReinitialize
-          initialValues={{ carrierName: row?.carrierName, pickupTimeZone: '', pickupDate: '', pickupTime:'' }}
+          initialValues={{
+            carrierName: row?.carrierName, pickupTimeZone: '', pickupDate: '', pickupTime:'', timeWithZone: ''
+          }}
           validationSchema={generateBOLValidation()}
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
             const pickupDate = getStringISODate(values.pickupDate).slice(0, 11) + values.pickupTime + ':00' + values.pickupTimeZone
-            closeGenBOLPopup()
+
+            console.log('!!!!!!!!!! onSubmit pickupDate', pickupDate)
+            //closeGenBOLPopup()
             try {
-              await generateBOL(row?.id, values.carrierName, pickupDate)
-              datagrid.loadData()
+              //! ! await generateBOL(row?.id, values.carrierName, pickupDate)
+              //! ! datagrid.loadData()
             } catch (e) {
             }
           }}>
           {(formikProps) => {
+
+            console.log('!!!!!!!!!! GenerateBOLPopup values', formikProps.values)
+
             return (
               <>
                 <FormGroup>
@@ -106,6 +113,10 @@ const GenerateBOLPopup = props => {
                 </FormGroup>
 
                 <FormGroup>
+                  Debug
+                </FormGroup>
+
+                <FormGroup>
                   <DateInput
                     label={
                       <>
@@ -119,15 +130,16 @@ const GenerateBOLPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
-
-
-
                   <TimeWithZoneInput
-
+                    name='timeWithZone'
+                    required
+                    label={
+                      <>
+                        {formatMessage({ id: 'operations.pickupTime', defaultMessage: 'Pick Up Time' })}
+                        <Required />
+                      </>
+                    }
                   />
-
-
-
                 </FormGroup>
 
 
