@@ -32,7 +32,7 @@ const ModalDetail = props => {
   return (
     <Formik
       initialValues={getInitialFormValues(popupValues)}
-      validationSchema={formValidation()}
+      validationSchema={formValidation}
       enableReinitialize
       onReset={() => props.closeAddEditPopup()}
       onSubmit={()=>{}}
@@ -83,7 +83,7 @@ const ModalDetail = props => {
                 <BasicButton
                   noborder
                   onClick={() => props.closeAddEditPopup()}
-                  data-test='cas_product_sidebar_reset_btn'>
+                  data-test='wanted_board_sidebar_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                 </BasicButton>
                 <BasicButton
@@ -99,7 +99,7 @@ const ModalDetail = props => {
                       }
                     })
                   }}
-                  data-test='cas_product_sidebar_submit_btn'>
+                  data-test='wanted_board_sidebar_submit_btn'>
                   <FormattedMessage id='global.save' defaultMessage='Save' />
                 </BasicButton>
               </DivBottomSidebar>

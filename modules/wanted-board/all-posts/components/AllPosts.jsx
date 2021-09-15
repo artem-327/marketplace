@@ -21,7 +21,7 @@ const AllPosts = props => {
     {
       name: 'productName',
       title: (
-        <FormattedMessage id='wantedBoard.productName' defaultMessage='PRODUCT NAME' />
+        <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name' />
       ),
       width: 500,
       allowReordering: false
@@ -29,28 +29,28 @@ const AllPosts = props => {
     {
       name: 'quantity',
       title: (
-        <FormattedMessage id='wantedBoard.quantity' defaultMessage='QTY.NEEDED' />
+        <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Qty.Needed' />
       ),
       width: 200
     },
     {
       name: 'shippingLocation',
       title: (
-        <FormattedMessage id='wantedBoard.shippingLocation' defaultMessage='SHIPPING LOCATION' />
+        <FormattedMessage id='wantedBoard.shippingLocation' defaultMessage='Shipping Location' />
       ),
       width: 200
     },
     {
       name: 'conforming',
       title: (
-        <FormattedMessage id='wantedBoard.conforming' defaultMessage='CONFORMING' />
+        <FormattedMessage id='wantedBoard.conforming' defaultMessage='Confirming' />
       ),
       width: 200
     },
     {
       name: 'postExpiry',
       title: (
-        <FormattedMessage id='wantedBoard.postExpiry' defaultMessage='POST EXPIRY' />
+        <FormattedMessage id='wantedBoard.postExpiry' defaultMessage='Post Expiry' />
       ),
       width: 200
     }

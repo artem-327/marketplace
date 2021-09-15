@@ -41,7 +41,11 @@ const ModalDetailContent = props => {
         packagingTypes,
         productConditions,
         productForms,
-        productGrades
+        productGrades,
+        countriesLoading,
+        productConditionsLoading,
+        productFormsLoading,
+        productGradesLoading
     } = props
     const { values } = formikProps
 
@@ -170,6 +174,7 @@ const ModalDetailContent = props => {
                                 value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
                             }))}
                             inputProps={{
+                                loading: countriesLoading,
                                 onFocus: e => (e.target.autocomplete = null),
                                 'data-test': 'wanted_board_sidebar_delivery_coundtry_drpdn',
                                 search: true,
@@ -200,7 +205,6 @@ const ModalDetailContent = props => {
                             search: true,
                             disabled: !state.hasProvinces,
                             loading: state.provincesAreFetching,
-                            // onChange: this.handleChange,
                             placeholder: formatMessage({
                                 id: 'global.address.selectStateProvince',
                                 defaultMessage: 'Select State/Province'
@@ -238,7 +242,8 @@ const ModalDetailContent = props => {
                         label={<FormattedMessage id='wantedBoard.myPostIndexConditionFilter' defaultMessage='Condition' />}
                         options={productConditions}
                         name='conditionFilter'
-                        inputProps={{ 
+                        inputProps={{
+                            loading: productConditionsLoading,
                             'data-test': 'wanted_board_sidebar_condition_drpdn',
                             placeholder: formatMessage({ id: 'global.address.selectCondition', defaultMessage: 'Select Condition' })
                         }}
@@ -258,7 +263,7 @@ const ModalDetailContent = props => {
                                 value: country.id
                             }))}
                             inputProps={{
-                                // loading: countriesLoading,
+                                loading: countriesLoading,
                                 onFocus: e => (e.target.autocomplete = null),
                                 'data-test': 'wanted_board_sidebar_origin_country_drpdn',
                                 search: true,
@@ -275,7 +280,8 @@ const ModalDetailContent = props => {
                         label={<FormattedMessage id='wantedBoard.myPostIndexGradeFilter' defaultMessage='Grade' />}
                         options={productGrades}
                         name='gradeFilter'
-                        inputProps={{ 
+                        inputProps={{
+                            loading: productGradesLoading,
                             'data-test': 'wanted_board_sidebar_grade_drpdn',
                             placeholder: formatMessage({ id: 'global.address.selectGrade', defaultMessage: 'Select Grade' })
                         }}
@@ -286,7 +292,8 @@ const ModalDetailContent = props => {
                         label={<FormattedMessage id='wantedBoard.myPostIndexFormFilter' defaultMessage='Form' />}
                         options={productForms}
                         name='formFilter'
-                        inputProps={{ 
+                        inputProps={{
+                            loading: productFormsLoading,
                             'data-test': 'wanted_board_sidebar_form_drpdn',
                             placeholder: formatMessage({ id: 'global.address.selectForm', defaultMessage: 'Select Form' })
                         }}

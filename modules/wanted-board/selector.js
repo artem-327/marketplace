@@ -5,7 +5,7 @@ import { Header } from 'semantic-ui-react'
 import { getSafe } from '../../utils/functions'
 
 const getPopupValues = state => getSafe(() => state?.wantedBoard?.popupValues, null)
-const getUpdating = state => state?.wantedBoard?.updating
+const getUpdating = state => state?.wantedBoard?.sending
 const getHazardClasses = state => state.globalData.hazardClasses.map((d, id) => {
     return {
       key: id,
@@ -24,5 +24,5 @@ export const makeGetUpdating = () => {
 }
 
 export const makeGetHazardClasses = () => {
-    return createSelector([getHazardClasses], hazardClasses => hazardClasses)
-  }
+  return createSelector([getHazardClasses], hazardClasses => hazardClasses)
+}

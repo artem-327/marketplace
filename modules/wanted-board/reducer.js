@@ -10,7 +10,6 @@ export const initialState = {
   infoModalData: {},
   editID: 2,
   popupValues: null,
-  updating: false,
   sending: false,
   allPostsFilters: null,
   myPostsFilters: null

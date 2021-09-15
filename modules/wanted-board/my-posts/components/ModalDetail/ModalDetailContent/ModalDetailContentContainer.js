@@ -18,6 +18,9 @@ const makeMapStateToProps = () => {
       productForms: state.globalData.productFormsDropdown,
       productGrades: state.globalData.productGradesDropdown,
       countriesLoading: state.globalData.countriesLoading,
+      productConditionsLoading: state.globalData.productConditionsLoading,
+      productFormsLoading: state.globalData.productFormsLoading,
+      productGradesLoading: state.globalData.productGradesLoading,
       hazardClasses: getHazardClasses(state),
       hazardClassesLoading: getHazardClassesLoading(state),
       deliveryCountry: state.wantedBoard?.popupValues?.rawData?.deliveryCountry

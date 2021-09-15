@@ -52,12 +52,12 @@ export const getInitialFormValues = popupValue => {
  * @param {Object<any>} props Input props (popupValues, updateCasProductRequest, postNewCasProductRequest, datagrid).
  * @param {number} id
  */
-export const submitHandler = async (values, { setSubmitting }, props) => {
+export const submitHandler = async (values, {setSubmitting}, props) => {
   const sendData = {
     "conditionConforming": values.conformingFilter == 'Yes' ? true : false,
-    "deliveryCountry": JSON.parse(values.deliveryCountry).countryId ? JSON.parse(values.deliveryCountry).countryId : '',
+    "deliveryCountry": values.deliveryCountry ? JSON.parse(values.deliveryCountry).countryId : '',
     "deliveryProvince": values.statesFilter,
-    "expiresAt": getStringISODate(values.expiryDate),
+    "expiresAt": values.expiryDate ? getStringISODate(values.expiryDate) : '',
     "notes": values.specialNotes,
     "origins": values.originCountryFilter ? [values.originCountryFilter] : [],
     "packagingTypes": values.packaingFilter ? [values.packaingFilter] : [],
