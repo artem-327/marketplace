@@ -1,30 +1,41 @@
+import { useState } from 'react'
 import MyPostsContainer from './components/MyPostsContainer'
+import { getSafe } from '../../../utils/functions'
 import { DatagridProvider } from '../../datagrid'
+// Constants
+import { GA_TRACK_QUERY } from '../../../constants'
 
 export const MyPosts = props => {
+  const [gaSearch, setGaSearch] = useState('')
 
   const urlApiConfig = {
-    url: '/prodex/api/wanted-board/own/datagrid',
+    url: gaSearch ? `/prodex/api/wanted-board/own/datagrid?${GA_TRACK_QUERY}=${encodeURIComponent(gaSearch)}` : '/prodex/api/wanted-board/own/datagrid',
     searchToFilter: v => {
-      let filters = { or: [], and: [], url: '' }
-      if (v && v.filterName && v.filterName.length > 0) {
-        v.filterName.map(name => {
-          filters.or = filters.or.concat([
-            { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductName', values: [`%${name}%`] },
-            { operator: 'LIKE', path: 'ProductOffer.companyProduct.intProductCode', values: [`%${name}%`] }
-          ])
-        })
-      }
-      if (v && v.filterTags && v.filterTags.length > 0) {
-        v.filterTags.map(idTag => {
-          filters.or =  filters.or.concat([{
-            operator: 'EQUALS',
-            path: 'ProductOffer.companyProduct.companyGenericProduct.productGroup.tags.id',
-            values: [idTag]
-          }])
-        })
-      }
-      return filters
+      setGaSearch(getSafe(() => v.searchInput, ''))
+      return v && v.searchInput
+        ? [
+            {
+              operator: 'LIKE',
+              path: 'WantedBoardRequest.elements.casProduct.casIndexName',
+              values: [`%${v.searchInput}%`]
+            },
+            {
+              operator: 'LIKE',
+              path: 'WantedBoardRequest.offers.productOffer.companyProduct.intProductName',
+              values: [`%${v.searchInput}%`]
+            },
+            {
+              operator: 'LIKE',
+              path: 'WantedBoardRequest.elements.productGroup.name',
+              values: [`%${v.searchInput}%`]
+            },
+            {
+              operator: 'LIKE',
+              path: 'WantedBoardRequest.elements.productGroup.tags.name',
+              values: [`%${v.searchInput}%`]
+            }
+          ]
+        : []
     }
   }
   return (

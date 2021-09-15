@@ -115,21 +115,11 @@ const InfoModal = props => {
     return (
       <>
         <ToggleForm
-          onSubmit={(values, { setSubmitting, validateForm }) => {
-            setSubmitting(false)
-          }}
           validationSchema={()=>{}}
           validateOnChange
           enableReinitialize
           initialValues=''
-          render={({ setFieldValue, values, submitForm, errors, setErrors, validateForm, setValues }) => {
-            setFieldValue = setFieldValue
-            submitForm = submitForm
-            values = values
-            errors = errors
-            setErrors = setErrors
-            validateForm = validateForm
-            setValues = setValues
+          render={(formikProps) => {
 
             return (
               <>
@@ -226,19 +216,18 @@ const InfoModal = props => {
                       <GridRow columns={3}>
                           <RightColumn width={5} floated='right'>
                             <Button basic type='button' onClick={closeInfoModal}>
-                              <FormattedMessage id='global.cancel' defaultMessage='Close' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              <FormattedMessage id='global.cancel' defaultMessage='Close' tagName='span' />
                             </Button>
                             <SubmitButton
                               loading={purchaseRequestPending || updatingDatagrid}
                               primary
                               type='submit'
-                              onClick={submitForm}
-                              disabled={state.select === '' || purchaseRequestPending}>
-                              <FormattedMessage id='wantedBoard.respond' defaultMessage='Respond' tagName='span'>
-                                {text => text}
-                              </FormattedMessage>
+                              onClick={() => {
+                                closeInfoModal()
+                                props.openRespondModal(props.row)
+                              }}
+                            >
+                              <FormattedMessage id='wantedBoard.respond' defaultMessage='Respond' tagName='span' />
                             </SubmitButton>
                           </RightColumn>
                       </GridRow>
@@ -257,8 +246,7 @@ const InfoModal = props => {
 function mapStateToProps(store, props) {
   return {
     ...store.wantedBoard,
-    popupValues: props.rawData,
-    currencySymbol: '$',
+    row: store?.wantedBoard?.infoModalData
   }
 }
 

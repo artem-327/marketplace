@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Container, Button } from 'semantic-ui-react'
+import { Container, Button, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
 import ProdexGrid from '../../../../components/table'
-import Tutorial from '../../../tutorial/Tutorial'
 import { CustomRowDiv } from '../../styles'
 import ActionCell from '../../../../components/table/ActionCell'
-import { getSafe } from '../../../../utils/functions'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
-import SearchInput from '../../../search'
 import confirm from '../../../../components/Confirmable/confirm'
 
 import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
@@ -16,14 +13,9 @@ import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
 const MyPosts = props => {
 
   const [state, setState] = useState({
-    selectedRows: [],
-    pageNumber: 0,
-    open: false,
-    popupValues: null,
-    filterValues: {
-      searchByNamesAndCas: null
-    },
-    openFilterPopup: false
+    filterValue: {
+      searchInput: ''
+    }
   })
 
   const columns = [
@@ -66,45 +58,38 @@ const MyPosts = props => {
   ]
 
   useEffect(() => {
-    const { tableHandlersFiltersListings, datagrid } = props
+    const { myPostsFilters } = props
 
-    if (tableHandlersFiltersListings) {
-      setState({ ...state, filterValues: tableHandlersFiltersListings })
-      const filter = {
-        ...tableHandlersFiltersListings,
-        ...(!!tableHandlersFiltersListings.searchByNamesAndCas && {
-          ...tableHandlersFiltersListings.searchByNamesAndCas.filters
-        })
+    if (myPostsFilters) {
+      setState(myPostsFilters)
+      const filter = myPostsFilters.filterValue
+      if (filter) {
+        props.datagrid.clear()
+        handleFiltersValue(filter, props)
       }
-      datagrid.setSearch(filter, true, 'pageFilters')
     } else {
-      datagrid.setSearch(state.filterValues, true, 'pageFilters')
+      const filter = state.filterValue
+      if (filter) {
+        props.datagrid.clear()
+        handleFiltersValue(filter, props)
+      }
     }
   }, [])
 
-  const handleFiltersValue = debounce(filter => {
-    const { datagrid } = props
-    datagrid && datagrid.setSearch(filter, true, 'pageFilters')
-  }, 300)
-
-  const SearchByNamesAndCasChanged = data => {
-    setState({
-      ...state,
-      filterValues: {
-        ...state.filterValues,
-        searchByNamesAndCas: data
-      }
-    })
-
+  const handleFilterChangeInputSearch = (data, props, state, setState) => {
     const filter = {
-      ...state.filterValues,
-      searchByNamesAndCas: data,
-      ...(!!data && {
-        ...data.filters
-      })
+      ...state.filterValue,
+      [data.name]: data.value
     }
-    handleFiltersValue(filter)
+    setState({ ...state, filterValue: filter })
+    props.handleVariableSave('myPostsFilters', { ...state, filterValue: filter })
+    handleFiltersValue(filter, props)
   }
+
+  const handleFiltersValue = debounce((filter, props) => {
+    const { datagrid } = props
+    datagrid.setSearch(filter, true, 'pageFilters')
+  }, 300)
 
   const getActions = () => {
     const { intl,datagrid } = props
@@ -188,16 +173,21 @@ const MyPosts = props => {
 
     return (
       <>
-        {<Tutorial marginWantedBoard isTutorial={false} isBusinessVerification={true} />}
         {openedAddEditModal && <ModalDetailContainer inventoryGrid={datagrid} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>
               <div className='column' style={{ width: '340px' }}>
-                <SearchInput
-                  onChange={SearchByNamesAndCasChanged}
-                  initFilterState={getSafe(() => tableHandlersFiltersListings.searchByNamesAndCas, null)}
-                  filterApply={false}
+                <Input
+                  style={{ width: '370px' }}
+                  icon='search'
+                  name='searchInput'
+                  value={state.filterValue.searchInput}
+                  placeholder={formatMessage({
+                    id: 'settings.tables.products.search',
+                    defaultMessage: 'Search product by name, code'
+                  })}
+                  onChange={(e, data) => handleFilterChangeInputSearch(data, props, state, setState)}
                 />
               </div>
             </div>

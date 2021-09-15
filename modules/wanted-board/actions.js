@@ -93,3 +93,10 @@ export const deleteWantedBoard = (id) => {
     payload: api.deleteWantedBoardApi(id)
   }
 }
+
+export const handleVariableSave = (variable, value) => {
+  return {
+    type: AT.WB_HANDLE_VARIABLE_CHANGE,
+    payload: { variable, value }
+  }
+}

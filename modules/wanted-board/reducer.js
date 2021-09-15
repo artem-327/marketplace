@@ -11,7 +11,9 @@ export const initialState = {
   editID: 2,
   popupValues: null,
   updating: false,
-  sending: false
+  sending: false,
+  allPostsFilters: null,
+  myPostsFilters: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -166,6 +168,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         sending: false,
+      }
+    }
+
+    case AT.WB_HANDLE_VARIABLE_CHANGE: {
+      return {
+        ...state,
+        [action.payload.variable]: action.payload.value
       }
     }
 
