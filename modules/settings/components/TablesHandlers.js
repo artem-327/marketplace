@@ -379,6 +379,7 @@ class TablesHandlers extends Component {
       vellociAccBalance,
       paymentProcessor,
       vellociBusinessId,
+      vellociAccountStatus,
       vellociToken,
       intl: { formatMessage },
       isThirdPartyConnectionException,
@@ -597,7 +598,10 @@ class TablesHandlers extends Component {
                 {bankAccTab && bankAccounts.addButton && paymentProcessor === 'VELLOCI' && (
                   <Popup
                     size='small'
-                    disabled={vellociToken && vellociBusinessId && !isThirdPartyConnectionException}
+                    disabled={
+                      vellociToken &&
+                      (vellociBusinessId && vellociAccountStatus !== 'inactive') &&
+                      !isThirdPartyConnectionException}
                     header={
                       <FormattedMessage
                         id='settings.velloci.difficulties'
@@ -607,7 +611,10 @@ class TablesHandlers extends Component {
                     trigger={
                       <div data-test='settings_open_popup_btn_velloci'>
                         <PlaidButton
-                          disabled={!vellociToken || !vellociBusinessId || isThirdPartyConnectionException}
+                          disabled={
+                            !vellociToken ||
+                            !(vellociBusinessId && vellociAccountStatus !== 'inactive') ||
+                            isThirdPartyConnectionException}
                           token={vellociToken}
                           publicKey={vellociBusinessId}
                           onExit={this.onExit}
@@ -651,7 +658,7 @@ class TablesHandlers extends Component {
                 accountStatus === VELLOCI_ACCOUNT_STATUSES.MEMBER_PENDING) ? (
                 <Popup
                   size='small'
-                  disabled={vellociToken && vellociBusinessId && !isThirdPartyConnectionException}
+                  disabled={vellociToken && (vellociBusinessId && vellociAccountStatus !== 'inactive') && !isThirdPartyConnectionException}
                   header={
                     <FormattedMessage
                       id='settings.velloci.difficulties'
@@ -738,6 +745,7 @@ const mapStateToProps = state => {
     filter,
     ...rest,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, ''),
+    vellociAccountStatus: getSafe(() => company.vellociAccountStatus, ''),
     vellociToken: getSafe(() => state.settings.vellociToken, ''),
     isThirdPartyConnectionException: getSafe(() => state.settings.isThirdPartyConnectionException, false)
   }
