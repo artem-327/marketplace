@@ -147,6 +147,9 @@ export const FlexSidebar = styled(Sidebar)`
       font-size: 1em !important;
       color: #404040;
     }
+    > .ui.input {
+      width: 100%;
+    }
     > .ui.input input,
     > .phone-number input,
     > .ui.dropdown {
