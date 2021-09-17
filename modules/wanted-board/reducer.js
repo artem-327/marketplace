@@ -8,7 +8,7 @@ export const initialState = {
   openedDeleteModal: false,
   openedSeeListingModal: false,
   infoModalData: {},
-  editID: 2,
+  editID: null,
   popupValues: null,
   sending: false,
   allPostsFilters: null,

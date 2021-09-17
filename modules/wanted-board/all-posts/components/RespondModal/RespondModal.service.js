@@ -358,9 +358,13 @@ export const getMappedRows = props => props.datagrid?.rows?.map(po => {
     use: (
       <Radio 
         toggle 
-        checked={true} 
+        checked={false} 
         onClick={()=>{
-          postNewWantedBoardBids({});
+          const values = {
+            "productOffer": po.id,
+            "wantedBoardRequest": props.editID
+          }
+          postNewWantedBoardBids(values)
         }}
       />
     ),
