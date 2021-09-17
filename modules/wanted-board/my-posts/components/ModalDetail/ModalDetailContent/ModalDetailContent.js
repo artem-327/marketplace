@@ -75,20 +75,6 @@ const ModalDetailContent = props => {
         }
     }
 
-    const filter = values.propertiesFilter
-
-    const RowDate = ({ name, readOnly = false, id, defaultMessage, clearable = true }) => (
-        <DateInput
-        inputProps={{ minDate: moment(), id: name, clearable: clearable }}
-        name={name}
-        label={
-            <>
-            <FormattedMessage id={id} defaultMessage={defaultMessage} />
-            </>
-        }
-        />
-    )
-
     return (
         <div>
             <DivHeaderRow>
@@ -163,6 +149,7 @@ const ModalDetailContent = props => {
                             label={
                                 <>
                                     <FormattedMessage id='global.myPostIndexCountryFilter' defaultMessage='Delivery Country' />
+                                    <Required />
                                 </>
                             }
                             name="deliveryCountry"
@@ -213,14 +200,28 @@ const ModalDetailContent = props => {
                 </GridRow>
                 <GridRow>
                     <GridColumn width={5}>
-                        {RowDate({ name: 'expiryDate', id: 'wantedBoard.myPostExpiryDate', defaultMessage: 'Expiry Date' })}
+                        <DateInput
+                            inputProps={{ minDate: moment(), id: 'expiryDate', clearable: true }}
+                            name='expiryDate'
+                            label={
+                                <>
+                                    <FormattedMessage id='wantedBoard.myPostExpiryDate' defaultMessage='Expiry Date' />
+                                    <Required />
+                                </>
+                            }
+                        />
                     </GridColumn>
                     <GridColumn width={3}>
                         <Dropdown
-                        label={<FormattedMessage id='wantedBoard.myPostConforming' defaultMessage='Conforming' />}
-                        options={CONFORMING_FILTER}
-                        name='conformingFilter'
-                        inputProps={{ 'data-test': 'wanted_board_sidebar_confirming_drpdn' }}
+                            label={
+                                <>
+                                    <FormattedMessage id='wantedBoard.myPostConforming' defaultMessage='Conforming' />
+                                    <Required />
+                                </>
+                            }
+                            options={CONFORMING_FILTER}
+                            name='conformingFilter'
+                            inputProps={{ 'data-test': 'wanted_board_sidebar_confirming_drpdn' }}
                         />
                     </GridColumn>
                     <GridColumn width={8}>
@@ -304,7 +305,6 @@ const ModalDetailContent = props => {
                             label={
                                 <>
                                     <FormattedMessage id='wantedBoard.myPostPackaing' defaultMessage='Packaging' />
-                                    <Required />
                                 </>
                             }
                             name="packaingFilter"

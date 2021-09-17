@@ -81,7 +81,7 @@ const RespondModal = props => {
   } = props
 
   useEffect(() => {
-    getRows(getMappedRows(datagrid), props, state, setState)
+    getRows(getMappedRows(props), props, state, setState)
   }, [datagrid])
     
   return (

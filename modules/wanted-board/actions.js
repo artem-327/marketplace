@@ -100,3 +100,17 @@ export const handleVariableSave = (variable, value) => {
     payload: { variable, value }
   }
 }
+
+export const postNewWantedBoardBids = (values) => {
+  return {
+    type: AT.WB_POST_NEW,
+    payload: api.postNewWantedBoardBidsApi(values)
+  }
+}
+
+export const deleteWantedBoardBids = (id) => {
+  return {
+    type: AT.WB_DELETE,
+    payload: api.deleteWantedBoardBidsApi(id)
+  }
+}

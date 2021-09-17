@@ -3,7 +3,8 @@ import moment from 'moment/moment'
 import cn from 'classnames'
 import {
   Checkbox,
-  Popup
+  Popup,
+  Radio
 } from 'semantic-ui-react'
 import { Warning } from '@material-ui/icons'
 import { getSafe } from '../../../../../utils/functions'
@@ -63,14 +64,13 @@ export const columns = [
       title: (
         <FormattedMessage id='wantedBoard.respondModalPrice' defaultMessage='FOR PRICE' />
       ),
+    },
+    {
+      name: 'use',
+      title: (
+        <FormattedMessage id='wantedBoard.respondModalUse' defaultMessage='USE' />
+      )
     }
-    // {
-    //   name: 'use',
-    //   title: (
-    //     <FormattedMessage id='wantedBoard.respondModalUse' defaultMessage='USE' />
-    //   ),
-    //   sortPath: 'ProductOffer.quantity'
-    // },
 ]
 
 
@@ -79,7 +79,6 @@ export const getRows = (data, props, state, setState) => {
     pricingEditOpenId,
     setPricingEditOpenId,
     closePricingEditPopup,
-    intl: { formatMessage },
   } = props
   let title
 
@@ -320,7 +319,11 @@ export const getRows = (data, props, state, setState) => {
   setState(prevState => ({ ...prevState, rows: result }))
 }
 
-export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
+export const getMappedRows = props => props.datagrid?.rows?.map(po => {
+  const {
+    postNewWantedBoardBids,
+    deleteWantedBoardBids
+  } = props
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
   return {
     ...po,
@@ -338,7 +341,6 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
     packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
     packagingSize: getSafe(() => po.companyProduct.packagingSize, ''),
-    //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
     packagingUnit: getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation, ''),
     qtyPart: qtyPart,
     quantity: getSafe(() => po.quantity, ''),
@@ -353,11 +355,18 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     ) : (
       'N/A'
     ),
+    use: (
+      <Radio 
+        toggle 
+        checked={true} 
+        onClick={()=>{
+          postNewWantedBoardBids({});
+        }}
+      />
+    ),
     pricingTiers: po.pricingTiers,
-    //pricing: po.pricing,
     manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
     broadcasted: po.broadcasted,
-    // lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
     cfStatus: getSafe(() => po.cfStatus, 'N/A'),
     minOrderQuantity: getSafe(() => po.minPkg, ''),
     splits: getSafe(() => po.splitPkg, ''),
@@ -369,7 +378,6 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     mfgDate: po.lotManufacturedDate ? moment(po.lotManufacturedDate).format(getLocaleDateFormat()) : 'N/A',
     expDate: po.lotExpirationDate ? moment(po.lotExpirationDate).format(getLocaleDateFormat()) : 'N/A',
     allocatedPkg: po.pkgAllocated,
-    // processingTimeDays: po.processingTimeDays,
     offerExpiration: po.validityDate ? moment(po.validityDate).format(getLocaleDateFormat()) : 'N/A',
     groupId: getSafe(() => po.parentOffer, ''),
     lotNumber: getSafe(() => po.lotNumber, ''),

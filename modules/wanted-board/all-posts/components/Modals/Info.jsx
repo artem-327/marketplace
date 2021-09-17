@@ -150,7 +150,7 @@ const InfoModal = props => {
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalCondition' defaultMessage='Condition' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.conditions?.length ? infoModalData?.rawData?.conditions[0].name : '' } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.condition?.name } </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalConforming' defaultMessage='Conforming' />

@@ -17,7 +17,7 @@ function mapStateToProps(store, { datagrid }) {
         productName: row?.productSearchPattern || row?.element?.productGroup?.name || row?.element?.casProduct?.name || row?.element?.casProduct?.casIndexName,
         quantity: `${row?.quantity} ${row?.unit?.nameAbbreviation}`,
         shippingLocation: province ? province + ", " + country : country ? country : "",
-        conforming: row?.conditionConforming ? 'Yes' : 'No',
+        conforming: row?.conforming ? 'Yes' : 'No',
         postExpiry: moment(row.expiresAt).format(getLocaleDateFormat())
       }
     })
