@@ -37,7 +37,7 @@ export const getRows = (rows, state, props) => {
           ? row.hasDwollaAccount
           ? 'Dwolla'
           : 'No'
-          : row.vellociBusinessId
+          : (row.vellociBusinessId && row.vellociAccountStatus !== 'inactive')
           ? 'Yes'
           : 'No',
       reviewRequested: (
@@ -160,9 +160,9 @@ const getActions = props => {
       callback: async row => {
         row.paymentProcessor === 'DWOLLA'
           ? !row.hasDwollaAccount && Router.push(`/admin/dwolla-register?companyId=${row.id}`)
-          : !row.vellociBusinessId && Router.push(`/admin/onboarding?companyId=${row.id}`)
+          : !(row.vellociBusinessId && row.vellociAccountStatus !== 'inactive') && Router.push(`/admin/onboarding?companyId=${row.id}`)
       },
-      hidden: row => row.hasDwollaAccount || row.vellociBusinessId
+      hidden: row => row.hasDwollaAccount || (row.vellociBusinessId && row.vellociAccountStatus !== 'inactive')
     },
     {
       text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,

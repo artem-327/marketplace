@@ -44,6 +44,7 @@ export const makeGetCompaniesDatagridRows = () => {
         hasLogisticsAccounts: getSafe(() => c.logisticsAccount, false) ? 'Yes' : 'No',
         hasDwollaAccount: getSafe(() => c.dwollaAccountStatus, false) === 'verified',
         vellociBusinessId: getSafe(() => c.vellociBusinessId, ''),
+        vellociAccountStatus: getSafe(() => c.vellociAccountStatus, ''),
         primaryBranchAddress: getSafe(() => c.primaryBranch.deliveryAddress.address, false)
           ? c.primaryBranch.deliveryAddress.address.streetAddress +
           ', ' +
