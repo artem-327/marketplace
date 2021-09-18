@@ -1,40 +1,40 @@
 import * as AT from './action-types'
 import api from './api'
 
-export const openSubmitOffer = (row, isSecondPage = false) => {
+export const openSubmitOffer = (row) => {
   return {
     type: AT.WB_OPEN_SUBMIT_OFFER,
-    payload: { row, isSecondPage }
+    payload: { row }
   }
 }
 
-export const openInfoModal = (row, isSecondPage = false) => {
+export const openInfoModal = (row) => {
   return {
     type: AT.WB_OPEN_INFO_MODAL,
-    payload: { row, isSecondPage }
+    payload: { row }
   }
 }
 
-export const closeInfoModal = (row, isSecondPage = false) => {
+export const closeInfoModal = () => {
   return {
     type: AT.WB_CLOSE_INFO_MODAL,
   }
 }
 
-export const openRespondModal = (row, isSecondPage = false) => {
+export const openRespondModal = (row) => {
   return {
     type: AT.WB_OPEN_RESPOND_MODAL,
-    payload: { row, isSecondPage }
+    payload: { row }
   }
 }
 
-export const closeRespondModal = (row, isSecondPage = false) => {
+export const closeRespondModal = () => {
   return {
     type: AT.WB_CLOSE_RESPOND_MODAL
   }
 }
 
-export const openAddEditModal = (row, isSecondPage = false) => {
+export const openAddEditModal = (row) => {
   return {
     type: AT.WB_ADD_EDIT_MODAL,
     payload: { row }
@@ -47,7 +47,7 @@ export const closeAddEditPopup = () => {
   }
 }
 
-export const openDeleteModal = (row, isSecondPage = false) => {
+export const openDeleteModal = (row) => {
   return {
     type: AT.WB_DELETE_MODAL,
     payload: { row }
@@ -60,7 +60,7 @@ export const closeDeleteModal = () => {
   }
 }
 
-export const openSeeListingModal = (row, isSecondPage = false) => {
+export const openSeeListingModal = (row) => {
   return {
     type: AT.WB_SEE_LISTING_MODAL,
     payload: { row }
