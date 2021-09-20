@@ -9,7 +9,7 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
     rows: datagrid.rows.map(row => {
-      let province = row?.deliveryProvince?.name
+      let province = row?.deliveryCountry?.hasProvinces ? row?.deliveryProvince?.name : null
       let country = row?.deliveryCountry?.name
       return {
         id: row.id,

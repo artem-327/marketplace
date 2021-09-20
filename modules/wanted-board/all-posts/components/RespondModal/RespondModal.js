@@ -160,7 +160,6 @@ const RespondModal = props => {
                             primary
                             type='submit'
                             onClick={() => {
-                              closeRespondModal()
                               openGlobalAddForm('inventory-my-listings')
                             }}
                           >

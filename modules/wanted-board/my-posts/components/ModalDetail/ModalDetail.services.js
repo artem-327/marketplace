@@ -18,8 +18,8 @@ export const getInitialFormValues = popupValue => {
     productName: popupValue?.productName,
     quantityNeeded: popupValue?.rawData?.quantity,
     weightUnitFilter: popupValue?.rawData?.unit?.id,
-    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : null,
-    statesFilter: popupValue?.rawData?.deliveryProvince?.id,
+    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : '',
+    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : null,
     expiryDate: popupValue?.postExpiry,
     conformingFilter: popupValue?.conforming,
     specialNotes: popupValue?.rawData?.notes,
@@ -35,7 +35,7 @@ export const submitHandler = async (values, {setSubmitting}, props) => {
   let payload = {
     "conforming": values.conformingFilter == 'Yes' ? true : false,
     "deliveryCountry": values.deliveryCountry ? JSON.parse(values.deliveryCountry).countryId : '',
-    "deliveryProvince": values.statesFilter,
+    "deliveryProvince": values.deliveryCountry && JSON.parse(values.deliveryCountry).hasProvinces ? values.statesFilter : null,
     "expiresAt": values.expiryDate ? getStringISODate(values.expiryDate) : '',
     "notes": values.specialNotes,
     "origins": values.originCountryFilter ? [values.originCountryFilter] : [],
@@ -56,8 +56,8 @@ export const submitHandler = async (values, {setSubmitting}, props) => {
     removeEmpty(payload)
 
     if (popupValues) {
-      const data = await updateWantedBoard(popupValues.id, payload)
-      datagrid.updateRow(popupValues.id, () => data.value)
+      await updateWantedBoard(popupValues.id, payload)
+      datagrid.loadData()
     } else {
       await postNewWantedBoard(payload)
       datagrid.loadData()

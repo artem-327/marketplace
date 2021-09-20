@@ -21,11 +21,6 @@ export const MyPosts = props => {
             },
             {
               operator: 'LIKE',
-              path: 'WantedBoardRequest.offers.productOffer.companyProduct.intProductName',
-              values: [`%${v.searchInput}%`]
-            },
-            {
-              operator: 'LIKE',
               path: 'WantedBoardRequest.elements.productGroup.name',
               values: [`%${v.searchInput}%`]
             },
