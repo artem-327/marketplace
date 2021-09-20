@@ -78,14 +78,14 @@ const ProductPopup = props => {
 
   useEffect(() => {
     const init = async () => {
-      await Promise.all([
-        !props.packagingTypesAll.length ? props.getPackagingTypes() : props.packagingType,
-        !props.unitsAll.length ? props.getUnits() : props.unitsAll,
-        !props.hazardClasses.length ? props.getHazardClasses() : props.hazardClasses,
-        !props.packagingGroups.length ? props.getPackagingGroups() : props.packagingGroups,
-        !props.documentTypes.length ? props.getDocumentTypes() : props.documentTypes
+      const [packagingTypesAll, unitsAll, hazardClasses, packagingGroups, documentTypes] = await Promise.all([
+        !props.packagingTypesAll.length ? props.getPackagingTypes().then(response => response.value) : props.packagingTypesAll,
+        !props.unitsAll.length ? props.getUnits().then(response => response.value) : props.unitsAll,
+        !props.hazardClasses.length ? props.getHazardClasses().then(response => response.value) : props.hazardClasses,
+        !props.packagingGroups.length ? props.getPackagingGroups().then(response => response.value) : props.packagingGroups,
+        !props.documentTypes.length ? props.getDocumentTypes().then(response => response.value) : props.documentTypes
       ])
-  
+
       if (props.popupValues && props.popupValues.nmfcNumber) await props.addNmfcNumber(props.popupValues.nmfcNumber)
       if (props.attachments?.length !== props?.popupValues?.attachments?.length) {
         if (props?.popupValues?.attachments?.length) {
@@ -102,8 +102,8 @@ const ProductPopup = props => {
       if (props.popupValues?.packagingUnit) {
         filterPackagingTypes(
           popupValues.packagingUnit.id,
-          props.unitsAll,
-          props.packagingTypesAll,
+          unitsAll,
+          packagingTypesAll,
           setpackagingTypesReduced
         )
       } else {
