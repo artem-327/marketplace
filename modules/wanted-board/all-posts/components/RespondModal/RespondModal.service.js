@@ -319,17 +319,23 @@ export const getRows = (data, props, state, setState) => {
   setState(prevState => ({ ...prevState, rows: result }))
 }
 
-export const getMappedRows = props => props.datagrid?.rows?.map(po => {
+export const getMappedRows = props => props.datagrid?.rows?.map(r => {
+  const po = r.productOffer
+  const submittedBids = r.submittedBids
+
   const {
     postNewWantedBoardBids,
     deleteWantedBoardBids,
     editID,
-    popupValues,
     datagrid
   } = props
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-  const useToggleState = popupValues?.rawData?.submittedBids?.wantedBoardDirectBidId === editID && 
-    popupValues?.rawData?.submittedBids?.productOfferId === po.id ? true : false
+  let useToggleStatus = false
+  submittedBids.map(sb => {
+    if (sb?.wantedBoardDirectBidId === editID && sb?.productOfferId === po.id) {
+      useToggleStatus = true
+    }
+  })
 
   return {
     ...po,
@@ -364,9 +370,9 @@ export const getMappedRows = props => props.datagrid?.rows?.map(po => {
     use: (
       <Radio 
         toggle 
-        checked={useToggleState} 
+        checked={useToggleStatus} 
         onClick={async () => {
-          if(useToggleState) {
+          if(useToggleStatus) {
             await deleteWantedBoardBids(editID)
             datagrid.loadData()
           } else {
