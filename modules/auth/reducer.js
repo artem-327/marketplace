@@ -62,9 +62,7 @@ export const initialState = {
   identity: null,
   error: null,
   twoFactorAuthPopup: null,
-  twoFactorAuthSession: null,
-
-
+  twoFactorAuthSession: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -78,10 +76,11 @@ export default function reducer(state = initialState, action) {
 
     case AT.LOGIN_PENDING: {
       return {
-        ...initialState,
+        // ! ! ??? ...initialState, delete if DT-1034 passed test
+        ...state,
         loginForm: {
           ...loginForm,
-          isLoading: false,
+          isLoading: true,
           message: null
         }
       }
