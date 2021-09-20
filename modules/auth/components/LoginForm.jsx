@@ -59,6 +59,7 @@ const LoginForm = props => {
             onSubmit={async (values, actions) => {
               const { username, password } = values
               const { login, resetPasswordRequest } = props
+              actions.setSubmitting(false)
 
               let inputsState = {
                 passwordError: resetPassword ? false : password.length < 3,
@@ -67,21 +68,24 @@ const LoginForm = props => {
 
               try {
                 if (!inputsState.passwordError && !inputsState.usernameError) {
-                  if (resetPassword) await resetPasswordRequest(username)
-                  else await login(username.trim(), password)
+                  if (resetPassword) {
+                    await resetPasswordRequest(username)
+                  }
+                  else {
+                    await login(username.trim(), password)
+
+                  }
                 } else {
                   setUsernameError(inputsState.usernameError)
                   setPasswordError(inputsState.passwordError)
-                  actions.setSubmitting(false)
                 }
               } catch {
                 // design for Bad Credentials
                 actions.setFieldError('username', ' ')
                 actions.setFieldError('password', ' ')
-                actions.setSubmitting(false)
               }
             }}>
-            {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+            {({ values, errors, setFieldValue, validateForm, validate, submitForm, setSubmitting }) => {
               return (
                 <>
                   <InstructionsDiv>
@@ -135,7 +139,9 @@ const LoginForm = props => {
                   </LoginButton>
                   {twoFactorAuthSession?.options && (
                     <AuthenticationSelectPopup
+                      loading={isLoading}
                       options={twoFactorAuthSession.options}
+                      message={message}
                       description={(
                         <FormattedMessage
                           id='auth.weDontRecognizeDevice'
@@ -158,6 +164,8 @@ const LoginForm = props => {
                   )}
                   {twoFactorAuthSession && !twoFactorAuthSession.options && (
                     <AuthenticationEnterPopup
+                      loading={isLoading}
+                      message={message}
                       description={(
                         <FormattedMessage
                           id='auth.pleaseEnterSixDigits'

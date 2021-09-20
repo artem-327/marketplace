@@ -115,7 +115,7 @@ export const getShippingQuotes = async (props, value) => {
 }
 
 export const handleSubmitOrder = async (props, state) => {
-  const { sectionState } = state
+  const { sectionState, twoFactorAuthState, setTwoFactorAuthOptions, setTwoFactorAuthState, twoFactorAuthPass } = state
 
   const warehouse = sectionState.shipping.value.warehouse
   const freightType = sectionState.freight.value.freightType
@@ -129,8 +129,52 @@ export const handleSubmitOrder = async (props, state) => {
   freightType === FREIGHT_TYPES.ECHO ? (data.shipmentQuoteId = sectionState.freight.value.quoteId) : null
 
   try {
-    await props.postPurchaseOrder(data)
-    Router.push('/orders/purchase')
+    if (
+      props.companyTwoFactorAuth &&
+      props.cart.cfPriceSubtotal > props.companyTransactionThreshold &&
+      twoFactorAuthState !== 'checked'
+    ) {
+      await props.validatePurchaseOrder(data)
+      const { value } = await props.mfaGetOptions()
+      setTwoFactorAuthOptions(value)
+      setTwoFactorAuthState('select')
+    } else {
+      if (twoFactorAuthState !== 'checked') {
+        await props.validatePurchaseOrder(data)
+      } else {
+        data.pass = twoFactorAuthPass
+      }
+      await props.postPurchaseOrder(data)
+      Router.push('/orders/purchase')
+    }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export const handleSubmit2FAOption = async (option, props, state) => {
+  try {
+    await props.mfaRequestCode(option)
+    state.setTwoFactorAuthState('enter')
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+export const handleSubmit2FACode = async (code, props, state) => {
+  try {
+    const { value } = await props.mfaGetPass(code)
+    state.setTwoFactorAuthPass(value?.pass)
+    state.setTwoFactorAuthState('checked')
+
+    await handleSubmitOrder(
+      props,
+      {
+        ...state,
+        twoFactorAuthPass: value?.pass,
+        twoFactorAuthState: 'checked'
+      })
+
   } catch (e) {
     console.error(e)
   }

@@ -16,6 +16,8 @@ import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
 import Spinner from '../../../components/Spinner/Spinner'
 import BasicButton from '../../../components/buttons/BasicButton'
+import AuthenticationSelectPopup from '../../auth/components/AuthenticationSelectPopup'
+import AuthenticationEnterPopup from '../../auth/components/AuthenticationEnterPopup'
 
 //Services
 import { getSafe, generateToastMarkup } from '../../../utils/functions'
@@ -25,7 +27,9 @@ import {
   submitUpdateCartItem,
   getShippingQuotes,
   checkAllAccepted,
-  findSectionToOpen
+  findSectionToOpen,
+  handleSubmit2FAOption,
+  handleSubmit2FACode
 } from './Checkout.services'
 import { takeOverCompanyFinish } from '../../admin/actions'
 
@@ -60,6 +64,10 @@ const Checkout = props => {
   const [fixedFreightId, setfixedFreightId] = useState(false)
   const [shipmentQuoteId, setShipmentQuoteId] = useState('')
   const [clickedFriehgt, setClickedFriehgt] = useState(true)
+  const [twoFactorAuthState, setTwoFactorAuthState] = useState('')
+  const [twoFactorAuthOptions, setTwoFactorAuthOptions] = useState([])
+  const [twoFactorAuthPass, setTwoFactorAuthPass] = useState('')
+
 
   const {
     cart,
@@ -77,7 +85,9 @@ const Checkout = props => {
     isReady,
     takeover,
     companyName,
-    takeOverCompanyFinish
+    takeOverCompanyFinish,
+    twoPhaseAuthLoading,
+    twoPhaseErrorMessage
   } = props
 
   // Similar to call componentDidMount:
@@ -180,7 +190,13 @@ const Checkout = props => {
     shipmentQuoteId,
     setShipmentQuoteId,
     clickedFriehgt,
-    setClickedFriehgt
+    setClickedFriehgt,
+    twoFactorAuthState,
+    setTwoFactorAuthState,
+    twoFactorAuthOptions,
+    setTwoFactorAuthOptions,
+    twoFactorAuthPass,
+    setTwoFactorAuthPass
   }
 
   if (cartIsFetching) return <Spinner />
@@ -351,6 +367,33 @@ const Checkout = props => {
             </DivScrollableContent>
           </>
         ) : null}
+        {twoFactorAuthState === 'select' && (
+          <AuthenticationSelectPopup
+            loading={twoPhaseAuthLoading}
+            options={twoFactorAuthOptions}
+            message={twoPhaseErrorMessage}
+            description={(
+              <FormattedMessage
+                id='checkout.authenticationRequest'
+                defaultMessage='This purchase requires your authentication. For your safety, select which device you would like a verification code to be sent.'
+              />
+            )}
+            onAccept={value => handleSubmit2FAOption(value, props, state)}
+          />
+        )}
+        {twoFactorAuthState === 'enter' && (
+          <AuthenticationEnterPopup
+            loading={twoPhaseAuthLoading}
+            message={twoPhaseErrorMessage}
+            description={(
+              <FormattedMessage
+                id='auth.pleaseEnterSixDigits'
+                defaultMessage='Please Enter the six-digit code sent to your email.'
+              />
+            )}
+            onAccept={value => handleSubmit2FACode(value, props, state)}
+          />
+        )}
       </ContainerMain>
     </>
   )
