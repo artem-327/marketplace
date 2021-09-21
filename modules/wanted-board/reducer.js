@@ -100,6 +100,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         openedSeeListingModal: true,
+        editID: payload.row.id,
+        popupValues: payload.row
       }
     }
 
@@ -107,6 +109,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         openedSeeListingModal: false,
+        editID: null,
+        popupValues: null
       }
     }
 

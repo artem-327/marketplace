@@ -9,6 +9,7 @@ import ColumnSettingButton from '../../../../components/table/ColumnSettingButto
 import confirm from '../../../../components/Confirmable/confirm'
 
 import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
+import SeeListings from './SeeListings/index'
 
 const MyPosts = props => {
 
@@ -166,14 +167,16 @@ const MyPosts = props => {
       datagrid,
       rows,
       openedAddEditModal,
-      tableHandlersFiltersListings,
       intl: { formatMessage },
-      openAddEditModal
+      openAddEditModal,
+      openedSeeListingModal,
+      editID
     } = props
 
     return (
       <>
         {openedAddEditModal && <ModalDetailContainer inventoryGrid={datagrid} />}
+        {openedSeeListingModal && <SeeListings id={editID} />}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

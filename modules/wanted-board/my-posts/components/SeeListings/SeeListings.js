@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+import Router from 'next/router'
 import * as Actions from '../../../actions'
-import { openGlobalAddForm } from '../../../../layout/actions'
 import {
   Modal,
   Button,
@@ -21,7 +21,7 @@ import {
   columns,
   getRows,
   getMappedRows
-} from './RespondModal.service'
+} from './SeeListings.service'
 
 const ModalContent = styled(Modal.Content)`
   padding: 1.5rem !important;
@@ -47,7 +47,7 @@ const SubmitButton = styled(Button)`
   color: #ffffff !important;
 `
 
-const RespondModal = props => {
+const SeeListings = props => {
   const [state, setState] = useState({
     select: '',
     nextSubmit: false,
@@ -73,14 +73,11 @@ const RespondModal = props => {
     intl: { formatMessage },
     isSending,
     datagrid,
-    purchaseRequestPending,
-    updatingDatagrid,
-    closeRespondModal,
-    openGlobalAddForm
+    closeSeeListingModal
   } = props
 
   useEffect(() => {
-    getRows(getMappedRows(props), props, state, setState)
+    getRows(getMappedRows(datagrid), setState)
   }, [datagrid])
     
   return (
@@ -94,19 +91,19 @@ const RespondModal = props => {
 
           return (
             <>
-              <Modal closeIcon onClose={closeRespondModal} open={true} size='large'>
+              <Modal closeIcon onClose={closeSeeListingModal} open={true} size='large'>
                 <Dimmer active={isSending} inverted>
                   <Loader />
                 </Dimmer>
                 <Modal.Header>
-                  <FormattedMessage id='wantedBoard.productRespondHeader' defaultMessage='Respond' />
+                  <FormattedMessage id='wantedBoard.listings' defaultMessage='Listings' />
                 </Modal.Header>
 
                 <ModalContent scrolling={datagrid.rows?.length !== 0}>
                   <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
                     <ProdexTable
                       {...datagrid.tableProps}
-                      tableName='wanted_board_respond_modal'
+                      tableName='wanted_board_see_listings_modal'
                       columns={columns}
                       rows={state.rows}
                       selectByRowClick
@@ -151,18 +148,17 @@ const RespondModal = props => {
                           </LeftColumn>
                         </>
                         <RightColumn width={6} floated='right'>
-                          <Button basic type='button' onClick={closeRespondModal}>
+                          <Button basic type='button' onClick={closeSeeListingModal}>
                             <FormattedMessage id='global.cancel' defaultMessage='Close' tagName='span' />
                           </Button>
                           <SubmitButton
-                            loading={purchaseRequestPending || updatingDatagrid}
                             primary
                             type='submit'
                             onClick={() => {
-                              openGlobalAddForm('inventory-my-listings')
+                              Router.push('/marketplace/listings')
                             }}
                           >
-                            <FormattedMessage id='wantedBoard.respondModalCreateNewListing' defaultMessage='Create New Listing' tagName='span' />
+                            <FormattedMessage id='wantedBoard.buyOffer' defaultMessage='Buy Offer' tagName='span' />
                           </SubmitButton>
                         </RightColumn>
                     </GridRow>
@@ -184,4 +180,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openGlobalAddForm })(injectIntl(RespondModal)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(SeeListings)))

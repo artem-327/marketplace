@@ -1,12 +1,12 @@
-import RespondModalView from './RespondModal'
+import SeeListingsView from './SeeListings'
 import { DatagridProvider } from '../../../../datagrid'
 
-const RespondModal = props => {
+const SeeListings = props => {
     return (
       <>
         <DatagridProvider
           apiConfig={{
-            url: `/prodex/api/wanted-board/id/${props.id}/matching-product-offers-datagrid`,
+            url: `/prodex/api/wanted-board-direct-bids/other/datagrid?wantedBoardRequestId=${props.id}`,
             searchToFilter: v => {
               let filters = { or: [], and: [] }
               return filters
@@ -14,10 +14,10 @@ const RespondModal = props => {
           }}
           preserveFilters
           skipInitLoad>
-          <RespondModalView />
+          <SeeListingsView />
         </DatagridProvider>
       </>
     )
 }
 
-export default RespondModal
+export default SeeListings

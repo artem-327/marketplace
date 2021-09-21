@@ -28,6 +28,11 @@ export const AllPosts = props => {
               operator: 'LIKE',
               path: 'WantedBoardRequest.elements.productGroup.tags.name',
               values: [`%${v.searchInput}%`]
+            },
+            {
+              operator: 'LIKE',
+              path: 'WantedBoardRequest.productSearchPattern',
+              values: [`%${v.searchInput}%`]
             }
           ]
         : []

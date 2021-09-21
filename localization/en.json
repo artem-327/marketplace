@@ -3127,7 +3127,7 @@
   "wantedBoard.respondModalAvailPackaging": "AVAIL.PKGS",
   "wantedBoard.respondModalQuantity": "QUANTITY",
   "wantedBoard.respondModalWarehouse": "WAREHOUSE",
-  "wantedBoard.respondModalPrice": "FOR PRICE",
+  "wantedBoard.respondModalPrice": "FOB PRICE",
   "wantedBoard.respondModalUse": "USE",
   "wantedBoard.myPostEdit": "Edit",
   "wantedBoard.myPostDelete": "Delete",

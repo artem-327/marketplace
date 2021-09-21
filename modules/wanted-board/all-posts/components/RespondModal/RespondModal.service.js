@@ -62,7 +62,7 @@ export const columns = [
     {
       name: 'cost',
       title: (
-        <FormattedMessage id='wantedBoard.respondModalPrice' defaultMessage='FOR PRICE' />
+        <FormattedMessage id='wantedBoard.respondModalPrice' defaultMessage='FOB PRICE' />
       ),
     },
     {
