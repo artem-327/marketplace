@@ -48,7 +48,16 @@ export function login(username, password, session = null, option = null, code = 
         const auth = await authorize(username, password, session, option, code)
         if (auth?.session) {
           return {
-            twoFactorAuthSession: auth
+            twoFactorAuthSession: {
+              ...auth,
+              ...(!!auth.options && {
+                options: Object.keys(auth.options).map(key => ({
+                  option: key,
+                  label: auth.options[key].label,
+                  value: auth.options[key].value
+                }))
+              })
+            }
           }
         } else {
           setAuth(auth)

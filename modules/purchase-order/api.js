@@ -70,8 +70,6 @@ export const postNewWarehouse = (createWarehouse, payload) =>
 export const updateWarehouse = (payload, id) =>
   api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)
 
-
-
 export const searchDeliveryAddresses = val =>
   api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}`).then(response => response.data)
 export const searchWarehouses = val =>

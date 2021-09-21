@@ -121,6 +121,10 @@ export const InputCode = styled(Input)`
     min-width: 50px;
     width: 50px;
     margin: 0 7px;
+
+    > input  {
+      text-align: center;
+    }
   }
 `
 
