@@ -396,3 +396,29 @@ export const tagValidate = () =>
     .test('time', errorMessages.invalidHashtag, t => {
       return !t || t.charAt(0) === '@'
     })
+
+export const stringValidation = () => (
+  Yup.lazy(() => Yup.string().required(errorMessages.requiredMessage))
+)
+
+export const nameValidation = minimum => (
+  Yup.lazy(() => Yup.string()
+    .matches(/^\D*$/, 'Name must contain only letters')
+    .min(minimum, `Please enter a miniumum of ${minimum} characters`)
+    .required(errorMessages.requiredMessage)
+  )
+)
+
+export const coiValidation = () => (
+  Yup.lazy(() => (
+    Yup.object().shape({
+      file: Yup
+        .mixed()
+        .required('File is required!')
+        .test('File test', 'File is required!', value => {
+          return Boolean(value?.name)
+        }),
+      documentId: Yup.string().required(errorMessages.requiredMessage)
+    })
+  ))
+)
