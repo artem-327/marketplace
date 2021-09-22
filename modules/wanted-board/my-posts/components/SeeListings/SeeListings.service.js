@@ -169,23 +169,24 @@ export const getRows = (data, props, state, setState) => {
     return {
         ...r,
         packaging: (
-        <>
-            {`${r.packagingSize} ${r.packagingUnit} `}
-            <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
-        </>
-      )
+          <>
+              {`${r.packagingSize} ${r.packagingUnit} `}
+              <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
+          </>
+       )
     }
   })
   setState(prevState => ({ ...prevState, rows: result }))
 }
 
-export const getMappedRows = datagrid => datagrid?.rows?.map(r => {
+export const getMappedRows = datagrid => datagrid?.rows?.map((r, _i) => {
   const po = r.productOffer
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
 
   return {
+    ...po,
     rawData: po,
-    id: po.id,
+    id: `${po.id}_${_i}`,
     product: po.product,
     expired: po.lotExpirationDate ? moment().isAfter(po.lotExpirationDate) : false,
     productName: getSafe(() => po.companyProduct.intProductName),
