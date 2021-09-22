@@ -1,50 +1,75 @@
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment/moment'
+import cn from 'classnames'
+import {
+  Checkbox,
+  Popup
+} from 'semantic-ui-react'
+import { Warning } from '@material-ui/icons'
 import { getSafe } from '../../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../../components/date-format'
 import { ArrayToFirstItem, FormattedAssay } from '../../../../../components/formatted-messages'
 import { FormattedNumber } from 'react-intl'
+import ActionCell from '../../../../../components/table/ActionCell'
 import { currency } from '../../../../../constants/index'
 import {
   CapitalizedText,
+  StyledPopup
 } from './SeeListings.styles'
+import { FormattedUnit } from '../../../../../components/formatted-messages'
 
 export const columns = [
-    {
-      name: 'productName',
-      title: (
-        <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name' />
-      ),
-      width: 250,
-      sortPath: 'ProductOffer.companyProduct.intProductName',
-      allowReordering: false
-    },
-    {
-      name: 'packaging',
-      title: (
-        <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging' />
-      ),
-      sortPath: 'ProductOffer.packaging'
-    },
-    {
-      name: 'seller',
-      title: (
-        <FormattedMessage id='wantedBoard.seller' defaultMessage='Seller' />
-      ),
-      sortPath: 'ProductOffer.companyProduct.intProductCode'
-    },
-    { name: 'echoName', disabled: true },
-    { name: 'echoCode', disabled: true },
-    {
-      name: 'fobPrice',
-      title: (
-        <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='Fob Price' />
-      ),
-    }
+  {
+    name: 'productName',
+    title: (
+      <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name' />
+    ),
+    width: 250,
+    sortPath: 'ProductOffer.companyProduct.intProductName',
+    allowReordering: false
+  },
+  { name: 'echoName', disabled: true },
+  { name: 'echoCode', disabled: true },
+  {
+    name: 'packaging',
+    title: (
+      <FormattedMessage id='wantedBoard.packaging' defaultMessage='Packaging' />
+    ),
+    width: 250,
+    sortPath: 'ProductOffer.packaging'
+  },
+  {
+    name: 'available',
+    title: (
+      <FormattedMessage id='marketplace.available' defaultMessage='Avail PKGs' />
+    ),
+    width: 250,
+    sortPath: 'ProductOffer.pkgAvailable'
+  },
+  {
+    name: 'seller',
+    title: (
+      <FormattedMessage id='wantedBoard.seller' defaultMessage='Seller' />
+    ),
+    width: 250,
+    sortPath: 'ProductOffer.companyProduct.intProductCode'
+  },
+  {
+    name: 'fobPrice',
+    title: (
+      <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='Fob Price' />
+    ),
+    width: 250,
+  }
 ]
 
 
-export const getRows = (data, setState) => {
+export const getRows = (data, props, state, setState) => {
+  const {
+    pricingEditOpenId,
+    setPricingEditOpenId,
+    closePricingEditPopup,
+  } = props
   let title
 
   let result = data.map((r, rIndex) => {
@@ -112,6 +137,34 @@ export const getRows = (data, setState) => {
         />
         )
     }
+    if (r.cfStatusReason && !(r.cfStatus.toLowerCase() === 'broadcasting' && isOfferValid))
+        title = (
+        <>
+            {title} <span>{' ' + r.cfStatusReason}</span>
+        </>
+        )
+
+    let productStatusText = null
+    switch (r.cfStatus) {
+        case 'Unpublished': {
+        productStatusText = (
+            <FormattedMessage
+            id='global.notPublished'
+            defaultMessage='This echo product is not published and will not show on the Marketplace.'
+            />
+        )
+        break
+        }
+        case 'Unmapped': {
+        productStatusText = (
+            <FormattedMessage
+            id='myInventory.productStatus.unmapped'
+            defaultMessage="This Offer's Company Product is not mapped to Company Generic Product, so it will not be visible to other users at Marketplace."
+            />
+        )
+        break
+        }
+    }
 
     return {
         ...r,
@@ -120,7 +173,7 @@ export const getRows = (data, setState) => {
             {`${r.packagingSize} ${r.packagingUnit} `}
             <CapitalizedText>{r.packagingType}</CapitalizedText>{' '}
         </>
-        )
+      )
     }
   })
   setState(prevState => ({ ...prevState, rows: result }))

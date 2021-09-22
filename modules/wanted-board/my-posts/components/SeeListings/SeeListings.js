@@ -79,7 +79,7 @@ const SeeListings = props => {
   } = props
 
   useEffect(() => {
-    getRows(getMappedRows(datagrid), setState)
+    getRows(getMappedRows(datagrid), props, state, setState)
   }, [datagrid])
     
   return (
@@ -197,7 +197,7 @@ const SeeListings = props => {
                               Router.push('/marketplace/listings')
                             }}
                           >
-                            <FormattedMessage id='wantedBoard.buyOffer' defaultMessage='Buy Offer' tagName='span' />
+                            <FormattedMessage id='wantedBoard.openInMarketPlace' defaultMessage='Open In Marketplace' tagName='span' />
                           </SubmitButton>
                         </RightColumn>
                     </GridRow>
