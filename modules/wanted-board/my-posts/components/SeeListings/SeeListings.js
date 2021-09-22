@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import Router from 'next/router'
 import * as Actions from '../../../actions'
+import { handleVariableSave } from '../../../../marketplace/actions'
 import {
   Modal,
   Button,
@@ -73,7 +74,8 @@ const SeeListings = props => {
     intl: { formatMessage },
     isSending,
     datagrid,
-    closeSeeListingModal
+    closeSeeListingModal,
+    handleVariableSave
   } = props
 
   useEffect(() => {
@@ -154,7 +156,36 @@ const SeeListings = props => {
                           <SubmitButton
                             primary
                             type='submit'
-                            onClick={() => {
+                            onClick={async () => {
+                              closeSeeListingModal()
+                              
+                              const po_id = state.rows[0].rawData?.companyProduct?.id
+                              const po_name = state.rows[0].rawData?.companyProduct?.intProductName
+                              
+                              if (po_name) {
+                                await handleVariableSave('tableHandlersFiltersListings', {
+                                  SearchByNamesAndTags: {
+                                      filters: {
+                                          "filterName": [
+                                            po_name
+                                          ],
+                                          "filterTags": [],
+                                          "filterCAS": []
+                                      },
+                                      active: [
+                                          "p_" + po_name
+                                      ],
+                                      usedOptions: [
+                                          {
+                                              "key": "p_" + po_id,
+                                              "text": po_name,
+                                              "value": "p_" + po_name
+                                          }
+                                      ]
+                                  }
+                                })
+                              }
+                              
                               Router.push('/marketplace/listings')
                             }}
                           >
@@ -180,4 +211,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(injectIntl(SeeListings)))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, handleVariableSave })(injectIntl(SeeListings)))

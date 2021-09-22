@@ -159,7 +159,7 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(r => {
     ) : (
       'N/A'
     ),
-    seller: po.sellerId,
+    seller: po.owner.cfDisplayName,
     pricingTiers: po.pricingTiers,
     manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
     broadcasted: po.broadcasted,
