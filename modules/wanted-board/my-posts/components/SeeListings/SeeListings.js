@@ -158,30 +158,38 @@ const SeeListings = props => {
                             type='submit'
                             onClick={async () => {
                               closeSeeListingModal()
+
+                              let filterName = []
+                              let active = []
+                              let usedOptions = []
+
+                              state.rows.map(r => {
+                                const po_id = r.rawData?.companyProduct?.id
+                                const po_name = r.rawData?.companyProduct?.intProductName
+
+                                if(!filterName.includes(po_name)){
+                                  filterName.push(po_name)
+                                  active.push("p_" + po_name)
+                                  usedOptions.push(
+                                    {
+                                      "key": "p_" + po_id,
+                                      "text": po_name,
+                                      "value": "p_" + po_name
+                                    }
+                                  )
+                                }
+                              })
                               
-                              const po_id = state.rows[0].rawData?.companyProduct?.id
-                              const po_name = state.rows[0].rawData?.companyProduct?.intProductName
-                              
-                              if (po_name) {
+                              if (filterName.length > 0) {
                                 await handleVariableSave('tableHandlersFiltersListings', {
                                   SearchByNamesAndTags: {
                                       filters: {
-                                          "filterName": [
-                                            po_name
-                                          ],
+                                          "filterName": filterName,
                                           "filterTags": [],
                                           "filterCAS": []
                                       },
-                                      active: [
-                                          "p_" + po_name
-                                      ],
-                                      usedOptions: [
-                                          {
-                                              "key": "p_" + po_id,
-                                              "text": po_name,
-                                              "value": "p_" + po_name
-                                          }
-                                      ]
+                                      active: active,
+                                      usedOptions: usedOptions
                                   }
                                 })
                               }

@@ -36,7 +36,7 @@ export const columns = [
     { name: 'echoName', disabled: true },
     { name: 'echoCode', disabled: true },
     {
-      name: 'cost',
+      name: 'fobPrice',
       title: (
         <FormattedMessage id='wantedBoard.fobPrice' defaultMessage='Fob Price' />
       ),
@@ -161,6 +161,40 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(r => {
     ),
     seller: po.owner.cfDisplayName,
     pricingTiers: po.pricingTiers,
+    fobPrice:
+        po.pricingTiers.length > 1 ? (
+          <>
+            {' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
+            />{' '}
+            -{' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={po.pricingTiers[0].pricePerUOM}
+            />{' '}
+            {qtyPart && `/ ${qtyPart}`}{' '}
+          </>
+        ) : (
+          <>
+            {' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={getSafe(() => po.pricingTiers[0].pricePerUOM, 0)}
+            />{' '}
+            {qtyPart && `/ ${qtyPart}`}{' '}
+          </>
+        ),
     manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
     broadcasted: po.broadcasted,
     cfStatus: getSafe(() => po.cfStatus, 'N/A'),
