@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Head from 'next/head'
 import { Grid, GridColumn, GridRow, Popup } from 'semantic-ui-react'
 import { ArrowLeft } from 'react-feather'
+import moment from 'moment/moment'
 
 //Components
 import HeaderRow from './HeaderRow/HeaderRow'
@@ -67,7 +68,16 @@ const Checkout = props => {
   const [twoFactorAuthState, setTwoFactorAuthState] = useState('')
   const [twoFactorAuthOptions, setTwoFactorAuthOptions] = useState([])
   const [twoFactorAuthPass, setTwoFactorAuthPass] = useState('')
+  const [twoFactorAuthLastSent, setTwoFactorAuthLastSent] = useState(null)
+  const [twoFactorAuthtime, setTwoFactorAuthTime] = useState(Date.now())
+  let twoFactorAuthTimeoutSecs
 
+  useEffect(() => {   // To rerender every 1 second (to update timeout in seconds in Send button)
+    twoFactorAuthTimeoutSecs = setInterval(() => setTwoFactorAuthTime(Date.now()), 1000)
+    return () => {
+      clearInterval(twoFactorAuthTimeoutSecs)
+    }
+  }, [])
 
   const {
     cart,
@@ -116,7 +126,6 @@ const Checkout = props => {
         await props.getManualQuoteById(shippingQuoteId)
       }
     }
-
     init()
   }, [])
 
@@ -378,7 +387,11 @@ const Checkout = props => {
                 defaultMessage='This purchase requires your authentication. For your safety, select which device you would like a verification code to be sent.'
               />
             )}
-            onAccept={value => handleSubmit2FAOption(value, props, state)}
+            onAccept={value => {
+              setTwoFactorAuthLastSent(Date.now())
+              handleSubmit2FAOption(value, props, state)
+            }}
+            timeoutSeconds={twoFactorAuthLastSent ? 30 - moment().diff(twoFactorAuthLastSent, 'seconds') : 0}
           />
         )}
         {twoFactorAuthState === 'enter' && (

@@ -61,8 +61,8 @@ export const initialState = {
   loading: false,
   identity: null,
   error: null,
-  twoFactorAuthPopup: null,
-  twoFactorAuthSession: null
+  twoFactorAuthSession: null,
+  twoFactorAuthSessionLast: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -76,7 +76,6 @@ export default function reducer(state = initialState, action) {
 
     case AT.LOGIN_PENDING: {
       return {
-        // ! ! ??? ...initialState, delete if DT-1034 passed test
         ...state,
         loginForm: {
           ...loginForm,
@@ -88,6 +87,12 @@ export default function reducer(state = initialState, action) {
     case AT.LOGIN_REJECTED: {
       return {
         ...state,
+        ...(state.twoFactorAuthSessionLast && {
+          twoFactorAuthSession: {
+            ...state.twoFactorAuthSessionLast,
+            session: state.twoFactorAuthSession.session
+          }
+        }),
         loginForm: {
           ...loginForm,
           isLoading: false,
@@ -111,6 +116,9 @@ export default function reducer(state = initialState, action) {
           ...state,
           loading: false,
           twoFactorAuthSession: payload.twoFactorAuthSession,
+          ...(!!payload.twoFactorAuthSession?.options && {
+            twoFactorAuthSessionLast: payload.twoFactorAuthSession
+          }),
           loginForm: {
             ...loginForm,
             isLoading: false,
@@ -125,7 +133,6 @@ export default function reducer(state = initialState, action) {
         return {
           ...state,
           loading: false,
-          twoFactorAuthPopup: null,
           twoFactorAuthSession: null,
           confirmationForm:
             getSafe(() => payload.identity.company.reviewRequested, false) && primaryUser
