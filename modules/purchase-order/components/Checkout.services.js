@@ -167,15 +167,19 @@ export const handleSubmit2FACode = async (code, props, state) => {
     state.setTwoFactorAuthPass(value?.pass)
     state.setTwoFactorAuthState('checked')
 
-    await handleSubmitOrder(
-      props,
-      {
-        ...state,
-        twoFactorAuthPass: value?.pass,
-        twoFactorAuthState: 'checked'
-      })
-
+    try {
+      await handleSubmitOrder(
+        props,
+        {
+          ...state,
+          twoFactorAuthPass: value?.pass,
+          twoFactorAuthState: 'checked'
+        })
+    } catch (e) {
+      console.error(e)
+    }
   } catch (e) {
+    state.setTwoFactorAuthState('select')
     console.error(e)
   }
 }

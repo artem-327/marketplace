@@ -29,12 +29,13 @@ const AuthenticationSelectPopup = props => {
     loading,
     description,
     message,
+    timeoutSeconds,
     intl: { formatMessage }
   } = props
 
   const [selectedOption, setSelectedOption] = useState(0)
 
-  return (
+    return (
     <Modal
       open
       size='tiny'
@@ -74,8 +75,18 @@ const AuthenticationSelectPopup = props => {
                 size='large'
                 data-test='two_factor_auth_send_btn'
                 onClick={() => onAccept(options[selectedOption].option)}
+                disabled={timeoutSeconds > 0}
               >
-                <FormattedMessage id='global.send' defaultMessage='Send' />
+                {timeoutSeconds > 0
+                  ? (
+                      <FormattedMessage
+                        id='checkout.sendTimeout'
+                        defaultMessage={`Send (${timeoutSeconds})`}
+                        values={{ value: timeoutSeconds }}
+                      />
+                    )
+                  : (<FormattedMessage id='global.send' defaultMessage='Send' />)
+                }
               </LoginButton>
             </DivButtonColumn>
           </DivButtons>
@@ -90,7 +101,8 @@ AuthenticationSelectPopup.propTypes = {
   loading: PropTypes.bool,
   options: PropTypes.array,
   onAccept: PropTypes.func,
-  message: PropTypes.any
+  message: PropTypes.any,
+  timeoutSeconds: PropTypes.number
 }
 
 AuthenticationSelectPopup.defaultProps = {
@@ -98,7 +110,8 @@ AuthenticationSelectPopup.defaultProps = {
   loading: false,
   options: [],
   onAccept: () => {},
-  message: ''
+  message: '',
+  timeoutSeconds: 0
 }
 
 export default injectIntl(connect(null, Actions)(AuthenticationSelectPopup))
