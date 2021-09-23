@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import moment from 'moment'
 // Services
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { removeEmpty } from '../../../../../utils/functions'
@@ -9,7 +10,13 @@ export const formValidation = Yup.object().shape({
   quantityNeeded: Yup.number().required(errorMessages.requiredMessage),
   weightUnitFilter: Yup.number().required(errorMessages.requiredMessage),
   deliveryCountry: Yup.string().required(errorMessages.requiredMessage),
-  expiryDate: Yup.string().required(errorMessages.requiredMessage),
+  expiryDate: dateValidation(true).concat(
+    Yup.string().test(
+      'min-date',
+      errorMessages.mustBeInFuture,
+      val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
+    )
+  ),
   conformingFilter: Yup.string().required(errorMessages.requiredMessage)
 })
 
