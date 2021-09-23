@@ -101,9 +101,8 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/companies/companies', false) ||
       getSafe(() => Router.router.pathname === '/companies/users', false),
     wantedBoard:
-      getSafe(() => Router.router.pathname === '/wanted-board/listings', false) ||
-      getSafe(() => Router.router.pathname === '/wanted-board/bids-sent', false) ||
-      getSafe(() => Router.router.pathname === '/wanted-board/bids-received', false),
+      getSafe(() => Router.router.pathname === '/wanted-board/all-posts', false) ||
+      getSafe(() => Router.router.pathname === '/wanted-board/my-posts', false),
     inventory:
       getSafe(() => Router.router.pathname === '/inventory/my-listings', false) ||
       getSafe(() => Router.router.pathname === '/inventory/my-products', false) ||
@@ -548,8 +547,7 @@ class Navigation extends Component {
               </DropdownItem>
             )}
 
-            {/* Temporary hide based on https://bluepallet.atlassian.net/browse/DT-88*/}
-            {false && (
+            {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
               <DropdownItem
                 icon={<Grid size={22} />}
                 text={
@@ -560,31 +558,23 @@ class Navigation extends Component {
                 }
                 className={wantedBoard ? 'opened' : null}
                 opened={wantedBoard}
-                onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/listings')}
+                onClick={() => this.toggleOpened('wantedBoard', '/wanted-board/all-posts')}
                 refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
                 refId={'wantedBoard'}
                 data-test='navigation_menu_wanted_board_drpdn'>
                 <Dropdown.Menu data-test='navigation_menu_manage_wanted_board_menu'>
                   <PerfectScrollbar>
-                    <>
-                      <Dropdown.Item
-                        as={MenuLink}
-                        to='/wanted-board/listings'
-                        dataTest='navigation_wanted_board_listings_drpdn'>
-                        {formatMessage({ id: 'navigation.wantedBoardListings', defaultMessage: 'Listings' })}
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        as={MenuLink}
-                        to='/wanted-board/bids-sent'
-                        dataTest='navigation_wanted_board_bids_sent_drpdn'>
-                        {formatMessage({ id: 'navigation.wantedBoardBidsSent', defaultMessage: 'Bids Sent' })}
-                      </Dropdown.Item>
-                    </>
                     <Dropdown.Item
                       as={MenuLink}
-                      to='/wanted-board/bids-received'
-                      dataTest='navigation_wanted_board_bids_received_drpdn'>
-                      {formatMessage({ id: 'navigation.wantedBoardBidsReceived', defaultMessage: 'My Requests' })}
+                      to='/wanted-board/all-posts'
+                      dataTest='navigation_wanted_board_all_posts_drpdn'>
+                      {formatMessage({ id: 'navigation.wantedBoardAllPosts', defaultMessage: 'All posts' })}
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      as={MenuLink}
+                      to='/wanted-board/my-posts'
+                      dataTest='navigation_wanted_board_my_posts_drpdn'>
+                      {formatMessage({ id: 'navigation.wantedBoardMyPosts', defaultMessage: 'My posts' })}
                     </Dropdown.Item>
                   </PerfectScrollbar>
                 </Dropdown.Menu>

@@ -1,9 +1,8 @@
-import { Component } from 'react'
-import { Button, Input, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import { Label } from 'semantic-ui-react'
 import _ from 'lodash'
 
-import { InputWrapper, QuantityWrapper, InputLabeledWrapper } from './constants/layout'
+import { InputWrapper, QuantityWrapper, InputLabeledWrapper } from './styles'
 
 export const inputWrapper = (name, inputProps, label, labelText) => {
   return (

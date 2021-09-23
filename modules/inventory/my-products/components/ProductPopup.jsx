@@ -127,7 +127,8 @@ const ProductPopup = props => {
     documentTypes,
     toastManager,
     loading,
-    datagrid
+    datagrid,
+    openGlobalAddForm
   } = props
 
   let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
@@ -143,7 +144,10 @@ const ProductPopup = props => {
       initialValues={getInitialFormValues(props)}
       validationSchema={formValidation()}
       enableReinitialize
-      onReset={() => closePopup()}
+      onReset={() => {
+        closePopup()
+        !!openGlobalAddForm && openGlobalAddForm('')
+      }}
       onSubmit={(values, actions) => handlerSubmit(values, actions, props, attachments, setLoadSidebar)}
       loading={loading}>
       {formikProps => {
@@ -152,7 +156,7 @@ const ProductPopup = props => {
         const palletParamsRequired = checkPalletParamsRequired(values)
 
         return (
-          <Modal open={true}>
+          <Modal open={true} onClose={() => {!!openGlobalAddForm && openGlobalAddForm(''); closePopup();}}>
             <FormStyled>
               <Dimmer inverted active={loading || loadSidebar}>
                 <Loader />
@@ -171,7 +175,10 @@ const ProductPopup = props => {
                   </div>
                   <div style={{ position: 'absolute', right: '20px' }}>
                     <XIcon
-                      onClick={() => closePopup()}
+                      onClick={() => {
+                        closePopup()
+                        !!openGlobalAddForm && openGlobalAddForm('')
+                      }}
                       className='close-icon'
                     />
                   </div>
@@ -779,7 +786,7 @@ const ProductPopup = props => {
               </FlexContent>
 
               <DivBottomButtons className='bottom-buttons'>
-                <BasicButton noBorder onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                <BasicButton noBorder onClick={() => {closePopup(); !!openGlobalAddForm && openGlobalAddForm('');}} data-test='settings_product_popup_reset_btn'>
                   <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                 </BasicButton>
                 <Popup
