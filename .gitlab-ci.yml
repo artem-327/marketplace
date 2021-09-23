@@ -11,6 +11,14 @@ test:
   script:
     - cd ..
     - docker run -v $PWD:/test -w /test -u appuser cypress/artio --browser chrome
+    - |
+      export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$XRAY_CLIENT_ID\",\"client_secret\": \"$XRAY_CLIENT_SECRET\" }" https://xray.cloud.xpand-it.com/api/v1/authenticate| tr -d '"')
+      echo $token
+      for FILE in ./cypress/results/results*.xml
+      do
+        curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?testExecKey=TH-747"
+      done
+      echo "done"
   artifacts:
     when: always
     paths:
