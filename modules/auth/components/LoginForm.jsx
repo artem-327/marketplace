@@ -4,6 +4,7 @@ import { Form, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 import moment from 'moment/moment'
+import Cookies from 'universal-cookie'
 //Components
 import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader, StyledMessage, LogoImage, LogoIcon, LoginField, ToggleLabel, VersionWrapper } from '../../password/constants/layout'
 import AuthenticationSelectPopup from './AuthenticationSelectPopup'
@@ -15,6 +16,8 @@ import Icon from '../../../assets/images/login/icon-bluepallet.svg'
 import { StyledForm, LoginButton, AutoColumn } from '../styles'
 //Constants
 import { validationLoginFormScheme, resetLoginFormScheme, initLoginFormValues } from '../constants'
+
+const cookies = new Cookies()
 
 const LoginForm = props => {
   const [usernameError, setUsernameError] = useState(false)
@@ -35,8 +38,14 @@ const LoginForm = props => {
     // To rerender every 1 second (to update timeout in seconds in Send button)
     twoFactorAuthTimeoutSecs = setInterval(() => setTwoFactorAuthTime(Date.now()), 1000)
 
+    let cookiesValue = cookies.get('twoFactorAuthLastSent')
+    if (cookiesValue) {
+      setTwoFactorAuthLastSent(Number(cookiesValue))
+    }
+
     return () => {
       clearInterval(twoFactorAuthTimeoutSecs)
+      cookies.remove('twoFactorAuthLastSent', { path: '/' })
     }
   }, [])
 
@@ -160,13 +169,14 @@ const LoginForm = props => {
                       )}
                       onAccept={async value => {
                         try {
-                          setTwoFactorAuthLastSent(Date.now())
                           await props.login(
                             values.username.trim(),
                             values.password,
                             twoFactorAuthSession.session,
                             value
                           )
+                          setTwoFactorAuthLastSent(Date.now())
+                          cookies.set('twoFactorAuthLastSent', Date.now(),{ path: '/' })
                         } catch (e) {
                           console.error(e)
                         }
@@ -200,7 +210,7 @@ const LoginForm = props => {
                         }
                       }}
                     />
-                    )}
+                  )}
                 </>
               )
             }}
