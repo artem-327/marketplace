@@ -60,7 +60,7 @@ export const columns = [
       sortPath: 'ProductOffer.quantity'
     },
     {
-      name: 'cost',
+      name: 'fobPrice',
       title: (
         <FormattedMessage id='wantedBoard.respondModalPrice' defaultMessage='FOB PRICE' />
       ),
@@ -251,26 +251,6 @@ export const getRows = (data, props, state, setState) => {
         ) : (
         <FormattedMessage id='global.nonConforming' defaultMessage='Non Conforming' />
         ),
-        fobPrice: r.grouped ? (
-        r.fobPrice
-        ) : (
-        <StyledPopup
-            open={pricingEditOpenId === r.rawData.id}
-            onOpen={() => setPricingEditOpenId(r.rawData.id)}
-            onClose={() => {
-              setState(prevState => {
-                let newRows = prevState.rows
-                newRows[rIndex].pricingTiers = r.pricingTiers
-                newRows[rIndex].rawData.pricingTiers = r.pricingTiers
-                return {
-                  ...prevState,
-                  rows: newRows
-                }
-              })
-              closePricingEditPopup()
-            }}
-        />
-        ),
         broadcast: (
         <div style={{ float: 'left' }}>
             <Popup
@@ -362,6 +342,40 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
     ) : (
       'N/A'
     ),
+    fobPrice:
+        po.pricingTiers.length > 1 ? (
+          <>
+            {' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={po.pricingTiers[po.pricingTiers.length - 1].pricePerUOM}
+            />{' '}
+            -{' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={po.pricingTiers[0].pricePerUOM}
+            />{' '}
+            {qtyPart && `/ ${qtyPart}`}{' '}
+          </>
+        ) : (
+          <>
+            {' '}
+            <FormattedNumber
+              minimumFractionDigits={3}
+              maximumFractionDigits={3}
+              style='currency'
+              currency={currency}
+              value={getSafe(() => po.pricingTiers[0].pricePerUOM, 0)}
+            />{' '}
+            {qtyPart && `/ ${qtyPart}`}{' '}
+          </>
+        ),
     use: (
       <Radio 
         toggle 

@@ -52,5 +52,7 @@ export const LINK_TRANSLATE_TABLE = {
   '/own-product-offer-bids': '/marketplace/bids-sent',
   '/other-product-offer-bids': '/marketplace/bids-received',
   '/pending-branch-certificates': '/warehouse-credentials/pending',
-  '/credentials-branch-certificates': '/warehouse-credentials/certified'
+  '/credentials-branch-certificates': '/warehouse-credentials/certified',
+  '/own-wanted-board-requests': '/wanted-board/my-posts',
+  '/public-wanted-board-requests': '/wanted-board/all-posts'
 }
