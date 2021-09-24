@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import { useState } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Modal, Checkbox, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Modal, Checkbox, Grid, GridRow, GridColumn, Dimmer, Loader } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 // Images
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
@@ -10,7 +10,7 @@ import Icon from '../../../assets/images/login/icon-bluepallet.svg'
 import * as Actions from '../actions'
 
 // Components
-import { LoginHeader, LogoIcon } from '../../password/constants/layout'
+import { LoginHeader, LogoIcon, StyledMessage } from '../../password/constants/layout'
 
 // Styles
 import {
@@ -26,33 +26,40 @@ const AuthenticationSelectPopup = props => {
   const {
     onAccept,
     options,
+    loading,
     description,
+    message,
+    timeoutSeconds,
     intl: { formatMessage }
   } = props
 
   const [selectedOption, setSelectedOption] = useState(0)
 
-  return (
+    return (
     <Modal
       open
       size='tiny'
     >
+      <Dimmer inverted active={loading}>
+        <Loader />
+      </Dimmer>
       <Modal.Content>
         <DivCenteredWrapper>
           <LoginHeader as='h1'>
             <LogoIcon src={Icon} />
             <FormattedMessage id='auth.twoFactorAuthentication' defaultMessage='Two-Factor Authentication' />
           </LoginHeader>
+          {message && (<StyledMessage error content={message} />)}
           <DivDescription>{description}</DivDescription>
           <DivOptions>
             <Grid>
-              {Object.keys(options).map((key, index) => (
+              {options.map((option, index) => (
                 <GridRow key={index}>
                   <GridColumn width={16}>
                     <Checkbox
                       checked={selectedOption === index}
                       onClick={() => setSelectedOption(index)}
-                      label={`${options[key].label} - ${options[key].value}`}
+                      label={`${option.label} - ${option.value}`}
                     />
                   </GridColumn>
                 </GridRow>
@@ -67,9 +74,19 @@ const AuthenticationSelectPopup = props => {
                 fluid
                 size='large'
                 data-test='two_factor_auth_send_btn'
-                onClick={() => onAccept(Object.keys(options)[selectedOption])}
+                onClick={() => onAccept(options[selectedOption].option)}
+                disabled={timeoutSeconds > 0}
               >
-                <FormattedMessage id='global.send' defaultMessage='Send' />
+                {timeoutSeconds > 0
+                  ? (
+                      <FormattedMessage
+                        id='checkout.sendTimeout'
+                        defaultMessage={`Send (${timeoutSeconds})`}
+                        values={{ value: timeoutSeconds }}
+                      />
+                    )
+                  : (<FormattedMessage id='global.send' defaultMessage='Send' />)
+                }
               </LoginButton>
             </DivButtonColumn>
           </DivButtons>
@@ -81,14 +98,20 @@ const AuthenticationSelectPopup = props => {
 
 AuthenticationSelectPopup.propTypes = {
   description: PropTypes.object,
-  options: PropTypes.object,
-  onAccept: PropTypes.func
+  loading: PropTypes.bool,
+  options: PropTypes.array,
+  onAccept: PropTypes.func,
+  message: PropTypes.any,
+  timeoutSeconds: PropTypes.number
 }
 
 AuthenticationSelectPopup.defaultProps = {
   description: (<>Description</>),
-  options: {},
-  onAccept: () => {}
+  loading: false,
+  options: [],
+  onAccept: () => {},
+  message: '',
+  timeoutSeconds: 0
 }
 
 export default injectIntl(connect(null, Actions)(AuthenticationSelectPopup))

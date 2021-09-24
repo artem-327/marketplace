@@ -56,7 +56,6 @@ import moment from 'moment'
 
 import ModalDetailContainer from '../modules/inventory/my-listings/components/ModalDetail/ModalDetailContainer'
 import ProductPopup from '../modules/inventory/my-products/components/ProductPopupContainer'
-import WantedSidebar from '../modules/wanted-board/listings/components/DetailSidebar'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
 
@@ -487,7 +486,6 @@ class Layout extends Component {
           {openGlobalAddFormName === 'inventory-my-listings' && (
             <ModalDetailContainer openGlobalAddForm={openGlobalAddForm} />
           )}
-          {openGlobalAddFormName === 'wanted-board-listings' && <WantedSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-users' && <UserEditSidebar openGlobalAddForm={openGlobalAddForm} />}
           {openGlobalAddFormName === 'my-account-locations' && (
             <WarehouseSidebar openGlobalAddForm={openGlobalAddForm} />

@@ -49,7 +49,9 @@ export const initialState = {
   shippingQuotesAreFetching: false,
   loading: false,
   isOpenModal: false,
-  isThirdPartyConnectionException: false
+  isThirdPartyConnectionException: false,
+  twoPhaseAuthLoading: false,
+  twoPhaseErrorMessage: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -671,6 +673,8 @@ export default function reducer(state = initialState, action) {
 
     /* POST_PURCHASE_ORDER */
 
+    case AT.PURCHASE_ORDER_MFA_GET_OPTIONS_PENDING:
+    case AT.PURCHASE_ORDER_VALIDATE_PENDING:
     case AT.POST_PURCHASE_ORDER_PENDING: {
       return {
         ...state,
@@ -678,6 +682,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PURCHASE_ORDER_MFA_GET_OPTIONS_FULFILLED:
+    case AT.PURCHASE_ORDER_VALIDATE_FULFILLED:
     case AT.POST_PURCHASE_ORDER_FULFILLED: {
       return {
         ...state,
@@ -685,10 +691,38 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PURCHASE_ORDER_MFA_GET_OPTIONS_REJECTED:
+    case AT.PURCHASE_ORDER_VALIDATE_REJECTED:
     case AT.POST_PURCHASE_ORDER_REJECTED: {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.PURCHASE_ORDER_MFA_REQUEST_CODE_PENDING:
+    case AT.PURCHASE_ORDER_MFA_GET_PASS_PENDING: {
+      return {
+        ...state,
+        twoPhaseAuthLoading: true,
+        twoPhaseErrorMessage: null
+      }
+    }
+
+    case AT.PURCHASE_ORDER_MFA_REQUEST_CODE_FULFILLED:
+    case AT.PURCHASE_ORDER_MFA_GET_PASS_FULFILLED: {
+      return {
+        ...state,
+        twoPhaseAuthLoading: false
+      }
+    }
+
+    case AT.PURCHASE_ORDER_MFA_REQUEST_CODE_REJECTED:
+    case AT.PURCHASE_ORDER_MFA_GET_PASS_REJECTED: {
+      return {
+        ...state,
+        twoPhaseAuthLoading: false,
+        twoPhaseErrorMessage: action.payload.response.data.clientMessage
       }
     }
 

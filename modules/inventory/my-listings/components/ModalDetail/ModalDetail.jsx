@@ -194,7 +194,8 @@ const ModalDetail = props => {
     broadcastChange,
     autocompleteData,
     applicationName,
-    countriesDropdown
+    countriesDropdown,
+    openGlobalAddForm
   } = props
   const { openedTdsList, openedTdsSaveAs } = state
 
@@ -292,6 +293,7 @@ const ModalDetail = props => {
                   e.stopPropagation()
                   setState({ ...state, edited: false })
                   props.closeModalDetail()
+                  !!openGlobalAddForm && openGlobalAddForm('')
                 }}>
                 <FlexModalContent>
                   <Dimmer inverted active={loading || autocompleteDataLoading}>
@@ -1469,6 +1471,7 @@ const ModalDetail = props => {
                         onClick={() => {
                           setState({ ...state, edited: false })
                           props.closeModalDetail()
+                          !!openGlobalAddForm && openGlobalAddForm('')
                         }}
                         data-test='modal_inventory_cancel'>
                         {Object.keys(touched).length || state.changedForm
