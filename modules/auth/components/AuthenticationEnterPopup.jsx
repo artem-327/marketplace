@@ -34,30 +34,57 @@ const AuthenticationEnterPopup = props => {
   } = props
 
   const [value, setValue] = useState('      ')
+  const [viewErrors, setViewErrors] = useState(false)
+
+  const switchToInput = index => {
+    const newIndex = index < 0
+      ? 0
+      : (index > 5 ? 5 : index)
+    const inputElement = document.querySelector(`[name="input2FACode${newIndex}"]`)
+    if (inputElement) inputElement.focus()
+  }
 
   const handleValueChanged = ( e, data, index) => {
-    let newValue = value
     const enteredValue = data.trim()
+    if (!!enteredValue && index === 0 && enteredValue.length === 6) { // clipboard paste case
+      setValue(enteredValue)
+    }
+  }
 
-    if (!enteredValue) {
-      // deleted value
-      newValue = value.slice(0, index) + ' ' + value.slice(index + 1)
-      setValue(newValue)
-    } else {
-      if (enteredValue.length === 1) {
-        newValue = value.slice(0, index) + enteredValue + value.slice(index + 1)
-      } else if (enteredValue.length === 2) {
-        if (value[index] !== enteredValue[0]) newValue = value.slice(0, index) + enteredValue[0] + value.slice(index + 1)
-        else newValue = value.slice(0, index) + enteredValue[1] + value.slice(index + 1)
-      } else if (index === 0) { // clipboard paste case
-        if (enteredValue.length === 6) newValue = enteredValue
-      } else {
-        newValue = value.slice(0, index) + enteredValue[0] + value.slice(index + 1)
+  const handleKeyDown = (e, index) => {
+    if (!e.ctrlKey && !e.altKey) {
+      switch (e.keyCode) {
+        case 8: // Backspace
+          if (index > 0) {
+            const newValue = value.slice(0, index - 1) + value.slice(index) + " "
+            setValue(newValue)
+            switchToInput(index - 1)
+          }
+          break
+        case 46: // Delete
+          const newValue = value.slice(0, index) + value.slice(index + 1) + " "
+          setValue(newValue)
+          break
+        case 35: // End
+          switchToInput(5)
+          break
+        case 36: // Home
+          switchToInput(0)
+          break
+        case 37: // Arrow Left
+          switchToInput(index - 1)
+          break
+        case 39: // Arrow Right
+          switchToInput(index + 1)
+          break
       }
-      setValue(newValue)
-      if (index < 5) {
-        const inputElement = document.querySelector(`[name="input2FACode${index + 1}"]`)
-        if (inputElement) inputElement.focus()
+      if (
+        (e.keyCode >= 96 && e.keyCode <= 105) ||  // 0 - 9 numerical keyboard
+        (e.keyCode >= 65 && e.keyCode <= 90) ||   // a - z / A - Z
+        (e.keyCode >= 48 && e.keyCode <= 57 && !e.shiftKey)) {   // 0 - 9 standard keyboard
+        const newValue = value.slice(0, index) + e.key + value.slice(index + 1)
+        setValue(newValue)
+        switchToInput(index + 1)
       }
     }
   }
@@ -83,31 +110,43 @@ const AuthenticationEnterPopup = props => {
               name='input2FACode0'
               value={value[0]}
               onChange={( e, { value }) => handleValueChanged(e, value, 0)}
+              onKeyDown={e => handleKeyDown(e, 0)}
+              error={viewErrors && value[0] === ' '}
             />
             <InputCode
               name='input2FACode1'
               value={value[1]}
               onChange={( e, { value }) => handleValueChanged(e, value, 1)}
+              onKeyDown={e => handleKeyDown(e, 1)}
+              error={viewErrors && value[1] === ' '}
             />
             <InputCode
               name='input2FACode2'
               value={value[2]}
               onChange={( e, { value }) => handleValueChanged(e, value, 2)}
+              onKeyDown={e => handleKeyDown(e, 2)}
+              error={viewErrors && value[2] === ' '}
             />
             <InputCode
               name='input2FACode3'
               value={value[3]}
               onChange={( e, { value }) => handleValueChanged(e, value, 3)}
+              onKeyDown={e => handleKeyDown(e, 3)}
+              error={viewErrors && value[3] === ' '}
             />
             <InputCode
               name='input2FACode4'
               value={value[4]}
               onChange={( e, { value }) => handleValueChanged(e, value, 4)}
+              onKeyDown={e => handleKeyDown(e, 4)}
+              error={viewErrors && value[4] === ' '}
             />
             <InputCode
               name='input2FACode5'
               value={value[5]}
               onChange={( e, { value }) => handleValueChanged(e, value, 5)}
+              onKeyDown={e => handleKeyDown(e, 5)}
+              error={viewErrors && value[5] === ' '}
             />
           </DivRow>
           <DivButtons>
@@ -118,7 +157,12 @@ const AuthenticationEnterPopup = props => {
                 fluid
                 size='large'
                 data-test='two_factor_auth_verify_btn'
-                onClick={() => onAccept(value)}
+                onClick={() => {
+                  setViewErrors(true)
+                  if (!(value.indexOf(' ') >= 0)) {
+                    onAccept(value)
+                  }
+                }}
               >
                 <FormattedMessage id='global.verify' defaultMessage='Verify' />
               </LoginButton>
