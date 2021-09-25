@@ -37,6 +37,8 @@ Cypress.Commands.add("FElogin", (email, password) => {
     //Assert on XHR
     cy.wait('@login').then(({ request, response }) => {
         expect(response.statusCode).to.eq(200)
+        //If access token not returned user has probably 2FA enabled!
+        expect(response.body.access_token).to.not.be.null
     })
 })
 
