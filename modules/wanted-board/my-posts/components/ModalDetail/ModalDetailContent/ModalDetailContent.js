@@ -43,9 +43,11 @@ const ModalDetailContent = props => {
         countriesLoading,
         productConditionsLoading,
         productFormsLoading,
-        productGradesLoading
+        productGradesLoading,
+        provinceRequired,
+        setProvinceRequired
     } = props
-    const { values } = formikProps
+    const { values, setFieldValue } = formikProps
 
     useEffect( () => {
         const init = async () => {
@@ -69,9 +71,12 @@ const ModalDetailContent = props => {
 
     const fetchProvinces = async (countryId, hasProvinces) => {
         if (countryId && hasProvinces) {
-        setState(prevState => ({ ...prevState, provincesAreFetching: true }))
-        let provinces = await getProvinces(countryId)
-        setState(prevState => ({ ...prevState, provinces, hasProvinces, countryId, provincesAreFetching: false }))
+            setState(prevState => ({ ...prevState, provincesAreFetching: true }))
+            let provinces = await getProvinces(countryId)
+            setState(prevState => ({ ...prevState, provinces, hasProvinces, countryId, provincesAreFetching: false }))
+            setProvinceRequired(true)
+        } else {
+            setProvinceRequired(false)
         }
     }
 
@@ -166,6 +171,7 @@ const ModalDetailContent = props => {
                                 onChange: async (e, data) => {
                                     fetchProvinces(JSON.parse(data.value).countryId, JSON.parse(data.value).hasProvinces)
                                     setState(prevState => ({ ...prevState, hasProvinces: JSON.parse(data.value).hasProvinces }))
+                                    setFieldValue('statesFilter', '')
                                 },
                                 placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
                             }}
@@ -176,6 +182,7 @@ const ModalDetailContent = props => {
                         label={
                             <>
                                 <FormattedMessage id='global.myPostIndexStateFilter' defaultMessage='Delivery State' />
+                                {provinceRequired && (<Required />)}
                             </>
                         }
                         name="statesFilter"
@@ -344,12 +351,16 @@ const ModalDetailContent = props => {
 
 ModalDetailContent.propTypes = {
     getHazardClasses: PropTypes.func,
+    setProvinceRequired: PropTypes.func,
+    provinceRequired: PropTypes.bool,
     intl: PropTypes.object,
     formikProps: PropTypes.object
 }
 
 ModalDetailContent.defaultProps = {
     getHazardClasses: () => {},
+    setProvinceRequired: () => {},
+    provinceRequired: false,
     intl: {},
     formikProps: {}
 }
