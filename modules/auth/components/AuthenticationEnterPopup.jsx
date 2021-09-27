@@ -45,6 +45,10 @@ const AuthenticationEnterPopup = props => {
   }
 
   const handleValueChanged = ( e, data, index) => {
+    console.log('!!!!!!!!!! onChange e', e)
+    console.log('!!!!!!!!!! onChange data', data)
+
+    return
     const enteredValue = data.trim()
     if (!!enteredValue && index === 0 && enteredValue.length === 6) { // clipboard paste case
       setValue(enteredValue)
@@ -52,6 +56,10 @@ const AuthenticationEnterPopup = props => {
   }
 
   const handleKeyDown = (e, index) => {
+
+    console.log('!!!!!!!!!! onKeyDown e', e)
+
+    return
     if (!e.ctrlKey && !e.altKey) {
       switch (e.keyCode) {
         case 8: // Backspace
