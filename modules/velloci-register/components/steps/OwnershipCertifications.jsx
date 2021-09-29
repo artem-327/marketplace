@@ -158,8 +158,8 @@ OwnershipCertifications.defaultProps = {
 function mapStateToProps(state) {
   return {
     documentTypesFederalOwnershipCertifications:
-      getSafe(() => state.simpleAdd.documentTypesFederalOwnershipCertifications, []),
-    documentTypesManagementCertifications: getSafe(() => state.simpleAdd.documentTypesManagementCertifications, []),
+      getSafe(() => state.globalData.documentTypesFederalOwnershipCertifications, []),
+    documentTypesManagementCertifications: getSafe(() => state.globalData.documentTypesManagementCertifications, []),
     applicationSubmitted: state?.vellociRegister?.applicationSubmitted
   }
 }
