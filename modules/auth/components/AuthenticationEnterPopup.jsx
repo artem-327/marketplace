@@ -56,19 +56,17 @@ const AuthenticationEnterPopup = props => {
   }
 
   const handleKeyDown = (e, index) => {
-    console.log('!!!!!!!!!! onKeyDown e', e)
+    let newValue
 
     if (!e.ctrlKey && !e.altKey && !e.metaKey) {
       switch (e.keyCode) {
         case 8: // Backspace
-          if (index > 0) {
-            const newValue = value.slice(0, index - 1) + value.slice(index) + " "
-            setValue(newValue)
-            switchToInput(index - 1)
-          }
+          newValue = value.slice(0, index) + value.slice(index + 1) + " "
+          setValue(newValue)
+          switchToInput(index - 1)
           break
         case 46: // Delete
-          const newValue = value.slice(0, index) + value.slice(index + 1) + " "
+          newValue = value.slice(0, index) + value.slice(index + 1) + " "
           setValue(newValue)
           break
         case 35: // End
