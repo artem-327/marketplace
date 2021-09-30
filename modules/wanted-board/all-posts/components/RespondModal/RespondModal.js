@@ -10,6 +10,7 @@ import {
   GridColumn,
   Dimmer,
   Loader,
+  Input
 } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -20,8 +21,11 @@ import ErrorFocus from '../../../../../components/error-focus'
 import {
   columns,
   getRows,
-  getMappedRows
+  getMappedRows,
+  handleFilterChangeInputSearch
 } from './RespondModal.service'
+
+import { DivPopupTableHandler } from '../../../styles'
 
 const ModalContent = styled(Modal.Content)`
   padding: 1.5rem !important;
@@ -48,25 +52,25 @@ const SubmitButton = styled(Button)`
 `
 
 const RespondModal = props => {
+  const [searchInput, setSearchInput] = useState('')
   const [state, setState] = useState({
     select: '',
     nextSubmit: false,
     inputRows: 0,
     selectedRow: { id: '' },
-    filterValues: null,
     rows: []
   })
 
   useEffect(() => {
-    const { tableHandlersFiltersListings, datagrid } = props
-    setState({ ...state, filterValues: tableHandlersFiltersListings })
+    const { popupValues, datagrid } = props
+    setState({
+      ...state,
+      searchInput: popupValues.rawData.productSearchPattern
+    })
     const filter = {
-      ...tableHandlersFiltersListings,
-      ...(!!tableHandlersFiltersListings?.searchByNamesAndCas && {
-        ...tableHandlersFiltersListings?.searchByNamesAndCas?.filters
-      })
+      searchInput: popupValues.rawData.productSearchPattern
     }
-    datagrid.setSearch(filter, true, 'pageFilters')
+    datagrid.setSearch(filter, true, 'modalFilters')
   }, [])
 
   const {
@@ -82,7 +86,7 @@ const RespondModal = props => {
   useEffect(() => {
     getRows(getMappedRows(props), props, state, setState)
   }, [datagrid])
-    
+
   return (
     <>
       <ToggleForm
@@ -101,9 +105,22 @@ const RespondModal = props => {
                 <Modal.Header>
                   <FormattedMessage id='wantedBoard.productRespondHeader' defaultMessage='Respond' />
                 </Modal.Header>
-
+                <DivPopupTableHandler>
+                  <Input
+                    style={{ width: 340 }}
+                    name='searchInput'
+                    icon='search'
+                    value={searchInput}
+                    clearable
+                    placeholder={formatMessage({
+                      id: 'wantedBoard.searchByProductName',
+                      defaultMessage: 'Search by product name...'
+                    })}
+                    onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
+                  />
+                </DivPopupTableHandler>
                 <ModalContent scrolling={datagrid.rows?.length !== 0}>
-                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '10px 30px' }}>
+                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '0 30px 10px' }}>
                     <ProdexTable
                       {...datagrid.tableProps}
                       tableName='wanted_board_respond_modal'
