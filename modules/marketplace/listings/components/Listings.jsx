@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Container, Button } from 'semantic-ui-react'
 import { Sliders } from 'react-feather'
-import { injectIntl } from 'react-intl'
+import Router from 'next/router'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
@@ -12,6 +13,7 @@ import Tutorial from '../../../tutorial/Tutorial'
 import SearchByNamesAndTags from '../../../search'
 import MakeOfferPopup from './MakeOfferPopupContainer'
 import ViewOnlyPopup from './ConfirmationPopups/ViewOnlyPopup'
+import ViewOnlyRegisterPopup from './ConfirmationPopups/ViewOnlyRegisterPopup'
 import { Filter } from '../../../filter'
 import { CustomRowDiv } from '../../../inventory/styles'
 import DeaPopup from './ConfirmationPopups/DeaPopup'
@@ -47,6 +49,7 @@ const Listings = props => {
     filterValues: {
       SearchByNamesAndTags: null
     },
+    viewOnlyRegisterPopupOpen: false,
     viewOnlyPopupOpen: false,
     buyAttemptHasDeaI: null,
     buyAttemptHasDeaII: null,
@@ -103,10 +106,12 @@ const Listings = props => {
     searchedCompaniesDropdown,
     searchedCompaniesLoading,
     regulatoryDeaListAuthorized,
-    regulatoryDhsCoiAuthorized
+    regulatoryDhsCoiAuthorized,
+    isCompanyAdmin
   } = props
   const {
     openFilterPopup,
+    viewOnlyRegisterPopupOpen,
     viewOnlyPopupOpen,
     buyAttemptHasDeaI,
     buyAttemptHasDeaII,
@@ -204,8 +209,47 @@ const Listings = props => {
       <AddCart openInfo={openInfo} buyEnabled={buyEligible} />
       {openFilterPopup && <Filter onClose={() => setState({ ...state, openFilterPopup: false })} />}
       {isOpenPopup && <MakeOfferPopup />}
-      {viewOnlyPopupOpen && !(sellEligible && buyEligible) && <ViewOnlyPopup onCancel={() => setState({ ...state, viewOnlyPopupOpen: false })} />}
-      {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs &&
+      {viewOnlyPopupOpen && !viewOnlyRegisterPopupOpen && !(sellEligible && buyEligible) && (
+        <ViewOnlyPopup
+          onCancel={() => setState({
+            ...state,
+            viewOnlyPopupOpen: false,
+            buyAttemptHasDhs: null,
+            buyAttemptHasDeaI: null,
+            buyAttemptHasDeaII: null
+          })}
+        />
+      )}
+      {viewOnlyRegisterPopupOpen && (
+        <ViewOnlyRegisterPopup
+          header={<FormattedMessage id='marketplace.viewOnly' defaultMessage='View Only' />}
+          subHeader={<FormattedMessage id='marketplace.companyNotRegistered' defaultMessage='Company not registered' />}
+          description={
+            <FormattedMessage
+              id='marketplace.companyNotRegisteredDescription'
+              defaultMessage='To ensure a safe and secure marketplace for our network we require each company to complete registration before making any transactions. To complete your order your company must finish business registration.'
+            />
+          }
+          onCancel={() => setState({ ...state, viewOnlyRegisterPopupOpen: false })}
+          onButtonClick={() => {
+            setState({
+              ...state,
+              viewOnlyRegisterPopupOpen: false,
+              viewOnlyPopupOpen: false,
+              buyAttemptHasDhs: null,
+              buyAttemptHasDeaI: null,
+              buyAttemptHasDeaII: null
+            })
+            if (isCompanyAdmin) Router.push('/onboarding')
+          }}
+          buttonText={
+            isCompanyAdmin
+              ? (<FormattedMessage id='marketplace.register' defaultMessage='Register' />)
+              : (<FormattedMessage id='marketplace.keepBrowsing' defaultMessage='Keep Browsing' />)
+          }
+        />
+      )}
+      {(buyAttemptHasDeaI || buyAttemptHasDeaII) && !buyAttemptHasDhs && !viewOnlyPopupOpen && !viewOnlyRegisterPopupOpen &&
         <DeaPopup
           deaListIIType={!buyAttemptHasDeaI}
           permissionsToBuy={regulatoryDeaListAuthorized}
@@ -222,7 +266,7 @@ const Listings = props => {
           }}
         />
       }
-      {buyAttemptHasDhs &&
+      {buyAttemptHasDhs && !viewOnlyPopupOpen && !viewOnlyRegisterPopupOpen &&
         <DhsPopup
           permissionsToBuy={regulatoryDhsCoiAuthorized}
           onCancel={() => setState({
