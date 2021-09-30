@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import { Container, Button, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
@@ -144,7 +145,11 @@ const MyPosts = props => {
         }),
         callback: async row => {
           try {
-            props.openSeeListingModal(row)
+            if (row?.rawData?.bidsCount) {  // ! ! TODO rename 'bidsCount' to correct name
+              props.openSeeListingModal(row)
+            } else {
+              Router.push('/marketplace/listings')
+            }
           } catch (e) {
             console.error(e)
           }
