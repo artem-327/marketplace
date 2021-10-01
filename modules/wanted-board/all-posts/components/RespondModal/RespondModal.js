@@ -63,10 +63,7 @@ const RespondModal = props => {
 
   useEffect(() => {
     const { popupValues, datagrid } = props
-    setState({
-      ...state,
-      searchInput: popupValues.rawData.productSearchPattern
-    })
+    setSearchInput(popupValues.rawData.productSearchPattern)
     const filter = {
       searchInput: popupValues.rawData.productSearchPattern
     }
@@ -111,7 +108,6 @@ const RespondModal = props => {
                     name='searchInput'
                     icon='search'
                     value={searchInput}
-                    clearable
                     placeholder={formatMessage({
                       id: 'wantedBoard.searchByProductName',
                       defaultMessage: 'Search by product name...'
