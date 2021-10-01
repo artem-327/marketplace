@@ -5,11 +5,13 @@ import { errorMessages, dateValidation } from '../../../../../constants/yupValid
 import { removeEmpty } from '../../../../../utils/functions'
 import { getStringISODate } from '../../../../../components/date-format'
 
-export const formValidation = Yup.object().shape({
+export const formValidation = (provinceRequired) =>
+  Yup.object().shape({
   productName: Yup.string().required(errorMessages.requiredMessage),
   quantityNeeded: Yup.number().required(errorMessages.requiredMessage),
   weightUnitFilter: Yup.number().required(errorMessages.requiredMessage),
   deliveryCountry: Yup.string().required(errorMessages.requiredMessage),
+  ...(provinceRequired && { statesFilter: Yup.string().required(errorMessages.requiredMessage)}),
   expiryDate: dateValidation(true).concat(
     Yup.string().test(
       'min-date',
@@ -26,7 +28,7 @@ export const getInitialFormValues = popupValue => {
     quantityNeeded: popupValue?.rawData?.quantity,
     weightUnitFilter: popupValue?.rawData?.unit?.id,
     deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : '',
-    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : null,
+    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '',
     expiryDate: popupValue?.postExpiry,
     conformingFilter: popupValue?.conforming,
     specialNotes: popupValue?.rawData?.notes,
