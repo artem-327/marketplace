@@ -463,7 +463,7 @@ const checkBuyAttempt = (row, props, state, setState) => {
     viewOnlyRegisterPopupOpen: showViewOnlyRegisterPopup,
     viewOnlyPopupOpen: showViewOnlyPopup
   })
-  skipBuy = hasDeaI || hasDeaII || hasDhs || !buyEligible || reviewRequested || vellociAccountStatus === 'inactive'
+  skipBuy = hasDeaI || hasDeaII || hasDhs || !buyEligible || vellociAccountStatus === 'inactive'
 
   if (skipBuy) return
   tableRowClicked(props, row.id, row?.sellerId)

@@ -1,4 +1,4 @@
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Button, Modal, Image } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 // Images
@@ -72,7 +72,7 @@ ViewOnlyRegisterPopup.defaultProps = {
   header: '',
   subHeader: '',
   description: '',
-  buttonText: 'Send'
+  buttonText: <FormattedMessage id='global.send' defaultMessage='Send' />
 }
 
 export default injectIntl(ViewOnlyRegisterPopup)
