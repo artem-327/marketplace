@@ -316,9 +316,34 @@ export const SearchByNamesAndTagsChanged = (data, props, state, setState) => {
   })
   props.handleVariableSave('tableHandlersFiltersListings', { ...state.filterValues, SearchByNamesAndTags: data })
   const filter = {
+    ...state.filterValues,
     SearchByNamesAndTags: data,
     ...(!!data && {
       ...data.filters
+    })
+  }
+  handleFiltersValue(filter, props)
+}
+
+/**
+ * Wanted Board Request ID filter Cleared
+ * @category Marketplace - Listings
+ * @method
+ */
+export const wantedBoardRequestIdCleared = (props, state, setState) => {
+  setState({
+    ...state,
+    filterValues: {
+      ...state.filterValues,
+      wantedBoardRequestId: null
+    }
+  })
+  props.handleVariableSave('tableHandlersFiltersListings', { ...state.filterValues, wantedBoardRequestId: null })
+  const filter = {
+    ...state.filterValues,
+    wantedBoardRequestId: null,
+    ...(!!state.filterValues.SearchByNamesAndTags && {
+      ...state.filterValues.SearchByNamesAndTags.filters
     })
   }
   handleFiltersValue(filter, props)

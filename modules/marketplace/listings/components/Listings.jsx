@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Container, Button } from 'semantic-ui-react'
+import { Container, Button, Icon } from 'semantic-ui-react'
 import { Sliders } from 'react-feather'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
@@ -23,6 +23,7 @@ import {
   columns,
   toDatagridFilter,
   SearchByNamesAndTagsChanged,
+  wantedBoardRequestIdCleared,
   handleSellerChange,
   handleSearchSellerChange,
   tableRowClicked,
@@ -36,6 +37,7 @@ import {
   FlexContainerSmall,
   DropdownStyled
 } from '../../styles'
+import { WiderTooltip, FilterTag } from '../../../filter/constants/layout'
 
 /**
  * Listings Component
@@ -45,7 +47,8 @@ import {
 const Listings = props => {
   const [state, setState] = useState({
     filterValues: {
-      SearchByNamesAndTags: null
+      SearchByNamesAndTags: null,
+      wantedBoardRequestId: null
     },
     viewOnlyPopupOpen: false,
     buyAttemptHasDeaI: null,
@@ -169,6 +172,29 @@ const Listings = props => {
               </Button>
             </div>
             <FiltersRow>
+              {props.tableHandlersFiltersListings?.wantedBoardRequestId && (
+                <WiderTooltip
+                  position='bottom center'
+                  trigger={
+                    <FilterTag>
+                      <div className='description'>
+                        <FormattedMessage id='marketplace.wantedBoardBids' defaultMessage='Wanted Board Bids' />
+                      </div>
+                      <Icon
+                        name='delete'
+                        onClick={() => wantedBoardRequestIdCleared(props, state, setState)}
+                        data-test='marketplace_wanted_board_request_remove_filter'
+                      />
+                    </FilterTag>
+                  }>
+                  <div>
+                    <FormattedMessage
+                      id='marketplace.wantedBoardBidsDescription'
+                      defaultMessage='Product Offers related to Wanted Board Bids'
+                    />
+                  </div>
+                </WiderTooltip>
+              )}
               <FilterTags filterType='marketplace' datagrid={datagrid} />
             </FiltersRow>
           </div>
