@@ -6,7 +6,7 @@ const RespondModal = props => {
       <>
         <DatagridProvider
           apiConfig={{
-            url: `/prodex/api/wanted-board/id/${props.id}/matching-product-offers-datagrid`,
+            url: `/prodex/api/wanted-board/id/${props.id}/product-offers-datagrid`,
             searchToFilter: v => {
               let filters = { or: [], and: [] }
               return filters

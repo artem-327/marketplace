@@ -48,7 +48,7 @@ const Listings = props => {
   const [state, setState] = useState({
     filterValues: {
       SearchByNamesAndTags: null,
-      wantedBoardRequestId: null
+      wantedBoardRequestIds: []
     },
     viewOnlyPopupOpen: false,
     buyAttemptHasDeaI: null,
@@ -172,7 +172,7 @@ const Listings = props => {
               </Button>
             </div>
             <FiltersRow>
-              {props.tableHandlersFiltersListings?.wantedBoardRequestId && (
+              {!!props.tableHandlersFiltersListings?.wantedBoardRequestIds?.length && (
                 <WiderTooltip
                   position='bottom center'
                   trigger={

@@ -144,57 +144,15 @@ const MyPosts = props => {
           defaultMessage: 'See Listings'
         }),
         callback: async row => {
-          try { // ! ! TODO - To delete on BE deploy
-            if (!row?.rawData?.submittedProductOffers) {  // ! ! TODO rename 'bidsCount' to correct name
-              props.openSeeListingModal(row)
-            } else {
-              Router.push('/marketplace/listings')
-            }
-          } catch (e) {
-            console.error(e)
-          }
-
-          let filterName = []
-          let active = []
-          let usedOptions = []
-
-          const submittedProductOffers = row.rawData.submittedProductOffers ? row.rawData.submittedProductOffers : []
-
-          submittedProductOffers.map(r => {
-            const po_id = r.rawData?.companyProduct?.id
-            const po_name = r.rawData?.companyProduct?.intProductName
-
-            if(!filterName.includes(po_name)){
-              filterName.push(po_name)
-              active.push("p_" + po_name)
-              usedOptions.push(
-                {
-                  "key": "p_" + po_id,
-                  "text": po_name,
-                  "value": "p_" + po_name
-                }
-              )
-            }
-          })
-
-          if (filterName.length > 0) {
+          if (row?.rawData?.submittedProductOffers?.length) {
             await props.handleVariableSave('tableHandlersFiltersListings', {
-              SearchByNamesAndTags: {
-                filters: {
-                  "filterName": filterName,
-                  "filterTags": [],
-                  "filterCAS": []
-                },
-                active: active,
-                usedOptions: usedOptions
-              },
-              wantedBoardRequestId: row.rawData.id
+              SearchByNamesAndTags: null,
+              wantedBoardRequestIds: row.rawData.submittedProductOffers
             })
             Router.push('/marketplace/listings')
           }
         },
-        // ! ! TODO missing in endpoint yet:
-        // ! ! hidden: row => !row?.rawData?.submittedProductOffers
+        hidden: row => !row?.rawData?.submittedProductOffers?.length
       }
     ]
   }

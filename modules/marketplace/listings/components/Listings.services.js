@@ -335,13 +335,13 @@ export const wantedBoardRequestIdCleared = (props, state, setState) => {
     ...state,
     filterValues: {
       ...state.filterValues,
-      wantedBoardRequestId: null
+      wantedBoardRequestIds: []
     }
   })
-  props.handleVariableSave('tableHandlersFiltersListings', { ...state.filterValues, wantedBoardRequestId: null })
+  props.handleVariableSave('tableHandlersFiltersListings', { ...state.filterValues, wantedBoardRequestIds: [] })
   const filter = {
     ...state.filterValues,
-    wantedBoardRequestId: null,
+    wantedBoardRequestIds: [],
     ...(!!state.filterValues.SearchByNamesAndTags && {
       ...state.filterValues.SearchByNamesAndTags.filters
     })

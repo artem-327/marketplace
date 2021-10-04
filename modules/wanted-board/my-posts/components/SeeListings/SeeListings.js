@@ -191,7 +191,7 @@ const SeeListings = props => {
                                       active: active,
                                       usedOptions: usedOptions
                                   },
-                                  wantedBoardRequestId: props.popupValues.id
+                                  wantedBoardRequestIds: props.rawData.submittedProductOffers
                                 })
                               }
                               
