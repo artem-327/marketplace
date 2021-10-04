@@ -133,7 +133,9 @@ const VellociRegister = props => {
                         openEmailPopup={props.openEmailPopup}
                         nextStep={props.nextStep}
                         mainContainer={mainContainer}
-                        selfFormikProps={selfFormikProps}>
+                        selfFormikProps={selfFormikProps}
+                        updateCoiDocumentUploaded={props.coiDocumentUploaded}
+                      >
                         {switchPages({ ...props, formikProps })}
                       </FormRectangle>
                       <ErrorFocus />
