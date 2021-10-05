@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import { Container, Button, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
@@ -143,12 +144,15 @@ const MyPosts = props => {
           defaultMessage: 'See Listings'
         }),
         callback: async row => {
-          try {
-            props.openSeeListingModal(row)
-          } catch (e) {
-            console.error(e)
+          if (row?.rawData?.submittedProductOffers?.length) {
+            await props.handleVariableSave('tableHandlersFiltersListings', {
+              SearchByNamesAndTags: null,
+              wantedBoardRequestIds: row.rawData.submittedProductOffers
+            })
+            Router.push('/marketplace/listings')
           }
-        }
+        },
+        hidden: row => !row?.rawData?.submittedProductOffers?.length
       }
     ]
   }
