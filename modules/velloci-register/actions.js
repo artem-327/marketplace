@@ -5,13 +5,13 @@ export const nextStep = index => ({ type: AT.NEXT_STEP, payload: index })
 export const prevStep = index => ({ type: AT.PREV_STEP, payload: index })
 export const countBeneficialOwners = number => ({ type: AT.COUNT_BENEFICIAL_OWNERS, payload: number })
 export const cleareActiveStep = () => ({ type: AT.CLEARE_ACTIVE_STEP })
-export const postRegisterVelloci = (body, companyId, files) => {
+export const postRegisterVelloci = (body, companyId) => {
   return async dispatch => {
     await dispatch({
       type: AT.REGISTER_VELLOCI,
       payload: api.postRegisterVelloci(body, companyId)
     })
-    dispatch(postUploadDocuments(files, companyId))
+    // dispatch(postUploadDocuments(files, companyId))
   }
 }
 export const postUploadDocuments = (files, companyId) => ({
@@ -39,6 +39,11 @@ export const inviteBeneficialOwners = (body, companyId) => ({
   payload: api.inviteBeneficialOwners(body, companyId)
 })
 
+export const setNotifiedOwners = body => ({
+  type: AT.VELLOCI_SET_NOTIFIED_OWNERS,
+  payload: body
+})
+
 export const registerBeneficialOwner = (body, token) => ({
   type: AT.VELLOCI_REGISTER_BENEFICIAL_OWNERS,
   payload: api.registerBeneficialOwner(body, token)
@@ -47,4 +52,14 @@ export const registerBeneficialOwner = (body, token) => ({
 export const checkMagicToken = token => ({
   type: AT.VELLOCI_CHECK_MAGIC_TOKEN,
   payload: api.checkMagicToken(token)
+})
+
+export const applicationSubmitted = value => ({
+  type: AT.VELLOCI_APPLICATION_SUBMITTED,
+  payload: value
+})
+
+export const coiDocumentUploaded = value => ({
+  type: AT.VELLOCI_COI_DOCUMENT_UPLOADED,
+  payload: value
 })

@@ -365,7 +365,7 @@ class AddressForm extends Component {
               onChange={this.handleChange}
               additionalInputProps={{
                 icon: null,
-                placeholder: formatMessage({ id: 'global.address.enterZip', defaultMessage: 'Enter Zip' })
+                placeholder: formatMessage({ id: 'global.address.enterZipCode' })
               }}
               name={fields.zip}
               required={required}

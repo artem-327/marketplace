@@ -658,7 +658,7 @@ class BankAccountsTable extends Component {
               </FormattedMessage>
             </DivThirdExceptions>
           )}
-          {!isThirdPartyConnectionException && bankAccounts.bankAccountList && !bankAccounts.documentOwner ? (
+          {!isThirdPartyConnectionException && bankAccounts?.bankAccountList && !bankAccounts?.documentOwner ? (
             <div className='flex stretched settings_bankaccounts listings-wrapper'>
               <ProdexTable
                 messages={
@@ -733,9 +733,9 @@ class BankAccountsTable extends Component {
             </div>
           ) : null}
 
-          {!isThirdPartyConnectionException && (bankAccounts.accountStatus || bankAccounts.documentStatus) && (
+          {!isThirdPartyConnectionException && (bankAccounts?.accountStatus || bankAccounts?.documentStatus) && (
             <Container style={{ padding: '28px 0' }}>
-              {bankAccounts.accountStatus && !bankAccounts.documentOwner && (
+              {bankAccounts?.accountStatus && !bankAccounts?.documentOwner && (
                 <>
                   <Table style={{ marginTop: 0, marginBottom: 30 }}>
                     <Table.Header>
@@ -757,7 +757,7 @@ class BankAccountsTable extends Component {
                           <FormattedMessage id={`${method}.registrationStatus.${accountStatus}`} />
                         </Table.Cell>
                         <Table.Cell>
-                          {bankAccounts.documentStatus ? (
+                          {bankAccounts?.documentStatus ? (
                             <>
                               <FormattedMessage id={`${method}.info.${accountStatus}`} />
                               &nbsp;
@@ -773,7 +773,7 @@ class BankAccountsTable extends Component {
                 </>
               )}
 
-              {bankAccounts.accountStatus && bankAccounts.documentOwner && (
+              {bankAccounts?.accountStatus && bankAccounts?.documentOwner && (
                 <CustomDiv>
                   <FormattedMessage id={`${method}.document.owner.header1`}>{text => <h3>{text}</h3>}</FormattedMessage>
                   <FormattedMessage id={`${method}.document.owner.text1`}>{text => <div>{text}</div>}</FormattedMessage>
@@ -782,7 +782,7 @@ class BankAccountsTable extends Component {
                 </CustomDiv>
               )}
 
-              {bankAccounts.documentStatus && !bankAccounts.documentOwner && (
+              {bankAccounts?.documentStatus && !bankAccounts?.documentOwner && (
                 <CustomDiv>
                   <FormattedMessage id={`${method}.document.explanatory.header1`}>
                     {text => <h3>{text}</h3>}

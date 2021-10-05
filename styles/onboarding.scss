@@ -1,0 +1,282 @@
+.form-sub-section {
+    border: solid 1px #dee2e6;
+
+    .oboarding-nav-buttons {
+        padding: 0 !important;
+    }
+}
+
+.ui.button.basic.btn-primary-color,
+.ui.button.btn-primary-color {
+    background-color: $colorPrimary;
+    color: #fff !important;
+}
+
+.border-l {
+    border-left: solid 1px #dee2e6 !important;
+}
+
+.border-r {
+    border-right: solid 1px #dee2e6 !important;
+}
+
+.border-t {
+    border-top: solid 1px #dee2e6 !important;
+}
+
+.border-b {
+    border-bottom: solid 1px #dee2e6 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.t-no-padding {
+    padding-top: 0 !important;
+}
+
+.coi {
+    .full-width {
+        display: block;
+        width: 100%;
+    }
+
+    #coi-upload[disabled] {
+        opacity: .15 !important;
+    }
+}
+
+.ownership-certifications {
+    .btn-browse-files {
+        width: 100%;
+    }
+
+    .ui.button.btn-save[disabled] {
+        opacity: .15 !important;
+    }
+}
+
+.owner-information, .checkbox-custom {
+    .ui.checkbox input.hidden + label {
+        background: #f9f9f9;
+        border: 1px solid #c1c2c5;
+        border-radius: 3px;
+        height: 40px;
+        min-height: 40px;
+        min-width: 125px;
+        width: 100% !important;
+    }
+    
+    .ui.checkbox input.hidden + label {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        padding: 0;
+    }
+    
+    .ui.checkbox input.hidden:checked + label {
+        background: #8f8f8f;
+        color: #fff;
+    }
+    
+    .ui.checkbox input ~ label:before {
+        content: none;
+    }
+    
+    .ui.checkbox input:checked ~ label:after {
+        content: none !important;
+    }
+}
+
+.risk-tolerance {
+    .oboarding-nav-buttons {
+        margin-bottom: 1rem;
+    }
+}
+
+.setup-indicator-mobile {
+    .module-grouping {
+        padding: 0;
+    }
+
+    .MuiStepper-root {
+        padding: 1rem 0 !important;
+        border: solid 1px #dee2e6;
+        border-bottom: none;
+    }
+    
+    .MuiStepIcon-root.MuiStepIcon-active, .MuiStepIcon-root.MuiStepIcon-completed {
+        color: $colorPrimary;
+    }
+    
+    .MuiStepLabel-label.MuiStepLabel-alternativeLabel {
+        font-size: .7rem;
+    }
+}
+
+.verify-personal-information {
+    .btn-add-owner,
+    .btn-remove-owner {
+        background: #fff;
+        border: 1px solid $colorPrimary;
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    .ui.modal > .actions.actions-buttons {
+        padding: 1rem !important;
+    }
+}
+
+@media screen and (max-width: 52.75em) {
+    .coi {
+        &-info {
+            margin: 1.5rem 0 0 0;
+        }
+    }
+
+    .form-sub-section {
+        border: none;
+    }
+
+    .form-sub-section > .border {
+        border: 1px solid #dee2e6;
+    }
+
+    .marketing-material, .risk-tolerance {
+        .module-title {
+            border-left: 1px solid #dee2e6;
+            border-right: 1px solid #dee2e6;
+            border-top: 1px solid #dee2e6;
+        }
+    }
+
+    .setup-indicator-mobile {
+        .module-grouping {
+            font-size: 1.25rem;
+        }
+    }
+}
+
+@media only screen and (max-width: 26.25em) {
+    .file-name {
+        font-size: .9rem;
+    }
+
+    .ui.button.basic.btn-primary-color,
+    .ui.button.btn-primary-color {
+        width: 100% !important;
+    }
+
+    .m-padding {
+        padding: 1rem;
+    }
+
+    .m-b-padding {
+        padding: 0 0 1rem 0;
+    }
+
+    .m-t-padding {
+        padding: 1rem 0 0 0;
+    }
+
+    .m-no-padding {
+        padding: 0 !important;
+    }
+
+    .onboarding-module-title {
+        padding: 1rem !important;
+    }
+
+    .oboarding-nav-buttons {
+        display: flex;
+        justify-content: space-evenly;
+        margin: 0 0 2rem 0 !important;
+        padding: 0 !important;
+
+        .btn-next {
+            order: 2;
+        }
+
+        .btn-email {
+            order: 0;
+        }
+
+        button {
+            margin: 0 !important;
+        }
+    }
+
+    .btn-email-active {
+        flex-wrap: wrap;
+
+        .btn-back {
+            order: 0;
+        }
+
+        .btn-next {
+            margin: 0 0 1rem 0 !important;
+            order: 0;
+            width: 80%;
+        }
+    }
+    
+    .invite-beneficial-owners-modal {
+        .scrolling.content .ui.grid {
+            margin: 0 !important;
+        }
+
+        .ui.button.delete {
+            margin: 0;
+        }
+    }
+
+    .marketing-material {
+        .btn-save {
+            width: 100%;
+        }
+
+        .oboarding-nav-buttons {
+            justify-content: space-evenly;
+        }
+    }
+
+    .onboarding-container {
+        padding: 1rem !important;
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .ui.stackable.grid > .row > .column.time-indicator {
+            padding: 0 !important;
+        }
+    }
+
+    .risk-tolerance {
+        .btn-save {
+            margin: 0 0 1rem 0 !important;
+        }
+
+        .oboarding-nav-buttons {
+            justify-content: space-between;
+        }
+    }
+
+    .verify-personal-information {
+        .toggle-owner-buttons {
+            justify-content: space-between;
+
+            button {
+                font-size: .95rem !important;
+            }
+
+            button > i {
+                display: none;
+            }
+        }
+
+    }
+}

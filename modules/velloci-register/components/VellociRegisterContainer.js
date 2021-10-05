@@ -78,10 +78,7 @@ const makeMapStateToProps = () => {
             zip: getZip(state),
             province: getProvince(state)
           },
-          dba: getDba(state)
-        },
-        controlPerson: {
-          isControlPerson: false,
+          dba: getDba(state),
           legalBusinessName: getCompanyName(state),
           entityType: '', // getBussinessType(state), //this is not correct match for entityType from GET payments/velloci/enums/entity-types. 15.4.2021 Tomáš Drlíček knows about this and it will be fix in the future by BE developers
           industryType: '',
@@ -91,8 +88,30 @@ const makeMapStateToProps = () => {
           ssn: '',
           isEstablishedUs: true,
           tinNumber: '',
-          naicsCode: getNaicsCode(state)
-        }
+          naicsCode: getNaicsCode(state),
+          markets: [],
+          companyType: ''
+        },
+        controlPerson: {
+          isControlPerson: false,
+          isBeneficialOwner: '',
+          isNotBeneficialOwner: '',
+          firstName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          dateOfBirth: '',
+          businessOwnershipPercentage: '',
+          businessTitle: '',
+          socialSecurityNumber: '',
+          address: {
+            streetAddress: '',
+            city: '',
+            country: '',
+            zip: '',
+            province: ''
+          }
+        },
       },
       mainContainer: getMainContainer(state),
       appInfo: getAppInfo(state),
