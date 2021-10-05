@@ -20,6 +20,16 @@ const RespondModal = props => {
                   path: 'ProductOffer.companyProduct.companyGenericProduct.code',
                   values: [`%${v.searchInput}%`]
                 })
+                filters.or.push({
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.intProductName',
+                  values: [`%${v.searchInput}%`]
+                })
+                filters.or.push({
+                  operator: 'LIKE',
+                  path: 'ProductOffer.companyProduct.intProductCode',
+                  values: [`%${v.searchInput}%`]
+                })
               }
               return filters
             }
