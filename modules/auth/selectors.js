@@ -29,6 +29,8 @@ const getTutorialCompleted = state => state?.auth?.identity?.tutorialCompleted
 const getBuyEligible = state => state?.auth?.identity?.company?.buyEligible
 const getSellEligible = state => state?.auth?.identity?.company?.sellEligible
 const getSettings = state => state?.auth?.identity?.settings
+const getVellociAccountStatus = state => state?.auth?.identity?.company?.vellociAccountStatus
+const getReviewRequested = state => state?.auth?.identity?.company?.reviewRequested
 
 export const makeGetNaicsCode = () => createSelector([getNaicsCode], naicsId => naicsId)
 export const makeGetPhoneNumber = () => createSelector([getPhoneNumber], phoneNumber => phoneNumber)
@@ -58,3 +60,5 @@ export const makeGetTutorialCompleted = () =>
 export const makeGetBuyEligible = () => createSelector([getBuyEligible], buyEligible => buyEligible ?? false)
 export const makeGetSellEligible = () => createSelector([getSellEligible], sellEligible => sellEligible ?? false)
 export const makeGetSettings = () => createSelector([getSettings], settings => settings)
+export const makeGetVellociAccountStatus = () => createSelector([getVellociAccountStatus], vellociAccountStatus => vellociAccountStatus)
+export const makeGetReviewRequested = () => createSelector([getReviewRequested], reviewRequested => reviewRequested)

@@ -6,6 +6,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Head from 'next/head'
 import { Grid, GridColumn, GridRow, Popup } from 'semantic-ui-react'
 import { ArrowLeft } from 'react-feather'
+import moment from 'moment/moment'
 
 //Components
 import HeaderRow from './HeaderRow/HeaderRow'
@@ -16,6 +17,8 @@ import Payment from './Payment/Payment'
 import FreightSelection from './FreightSelection/FreightSelection'
 import Spinner from '../../../components/Spinner/Spinner'
 import BasicButton from '../../../components/buttons/BasicButton'
+import AuthenticationSelectPopup from '../../auth/components/AuthenticationSelectPopup'
+import AuthenticationEnterPopup from '../../auth/components/AuthenticationEnterPopup'
 
 //Services
 import { getSafe, generateToastMarkup } from '../../../utils/functions'
@@ -25,7 +28,9 @@ import {
   submitUpdateCartItem,
   getShippingQuotes,
   checkAllAccepted,
-  findSectionToOpen
+  findSectionToOpen,
+  handleSubmit2FAOption,
+  handleSubmit2FACode
 } from './Checkout.services'
 import { takeOverCompanyFinish } from '../../admin/actions'
 
@@ -60,6 +65,19 @@ const Checkout = props => {
   const [fixedFreightId, setfixedFreightId] = useState(false)
   const [shipmentQuoteId, setShipmentQuoteId] = useState('')
   const [clickedFriehgt, setClickedFriehgt] = useState(true)
+  const [twoFactorAuthState, setTwoFactorAuthState] = useState('')
+  const [twoFactorAuthOptions, setTwoFactorAuthOptions] = useState([])
+  const [twoFactorAuthPass, setTwoFactorAuthPass] = useState('')
+  const [twoFactorAuthLastSent, setTwoFactorAuthLastSent] = useState(null)
+  const [twoFactorAuthtime, setTwoFactorAuthTime] = useState(Date.now())
+  let twoFactorAuthTimeoutSecs
+
+  useEffect(() => {   // To rerender every 1 second (to update timeout in seconds in Send button)
+    twoFactorAuthTimeoutSecs = setInterval(() => setTwoFactorAuthTime(Date.now()), 1000)
+    return () => {
+      clearInterval(twoFactorAuthTimeoutSecs)
+    }
+  }, [])
 
   const {
     cart,
@@ -77,7 +95,9 @@ const Checkout = props => {
     isReady,
     takeover,
     companyName,
-    takeOverCompanyFinish
+    takeOverCompanyFinish,
+    twoPhaseAuthLoading,
+    twoPhaseErrorMessage
   } = props
 
   // Similar to call componentDidMount:
@@ -106,7 +126,6 @@ const Checkout = props => {
         await props.getManualQuoteById(shippingQuoteId)
       }
     }
-
     init()
   }, [])
 
@@ -180,7 +199,13 @@ const Checkout = props => {
     shipmentQuoteId,
     setShipmentQuoteId,
     clickedFriehgt,
-    setClickedFriehgt
+    setClickedFriehgt,
+    twoFactorAuthState,
+    setTwoFactorAuthState,
+    twoFactorAuthOptions,
+    setTwoFactorAuthOptions,
+    twoFactorAuthPass,
+    setTwoFactorAuthPass
   }
 
   if (cartIsFetching) return <Spinner />
@@ -351,6 +376,37 @@ const Checkout = props => {
             </DivScrollableContent>
           </>
         ) : null}
+        {twoFactorAuthState === 'select' && (
+          <AuthenticationSelectPopup
+            loading={twoPhaseAuthLoading}
+            options={twoFactorAuthOptions}
+            message={twoPhaseErrorMessage}
+            description={(
+              <FormattedMessage
+                id='checkout.authenticationRequest'
+                defaultMessage='This purchase requires your authentication. For your safety, select which device you would like a verification code to be sent.'
+              />
+            )}
+            onAccept={value => {
+              setTwoFactorAuthLastSent(Date.now())
+              handleSubmit2FAOption(value, props, state)
+            }}
+            timeoutSeconds={twoFactorAuthLastSent ? 30 - moment().diff(twoFactorAuthLastSent, 'seconds') : 0}
+          />
+        )}
+        {twoFactorAuthState === 'enter' && (
+          <AuthenticationEnterPopup
+            loading={twoPhaseAuthLoading}
+            message={twoPhaseErrorMessage}
+            description={(
+              <FormattedMessage
+                id='auth.pleaseEnterSixDigits'
+                defaultMessage='Please Enter the six-digit code sent to your email.'
+              />
+            )}
+            onAccept={value => handleSubmit2FACode(value, props, state)}
+          />
+        )}
       </ContainerMain>
     </>
   )

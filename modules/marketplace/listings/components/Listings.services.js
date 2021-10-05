@@ -444,20 +444,26 @@ export const tableRowClicked = (props, clickedId, sellerId = null, isHoldRequest
 }
 
 const checkBuyAttempt = (row, props, state, setState) => {
+  const { buyEligible, vellociAccountStatus, reviewRequested } = props
+
   let skipBuy = false
   const elements = getSafe(() => row.companyProduct.companyGenericProduct.elements, [])
   const hasDeaI = elements.some(el => getSafe(() => el.casProduct.deaListI, false))
   const hasDeaII = elements.some(el => getSafe(() => el.casProduct.deaListII, false))
   const hasDhs = elements.some(el => getSafe(() => el.casProduct.cfChemicalOfInterest, false))
 
+  const showViewOnlyRegisterPopup = !buyEligible && reviewRequested
+  const showViewOnlyPopup = !buyEligible && !reviewRequested
+
   setState({
     ...state,
     buyAttemptHasDeaI: hasDeaI ? row : null,
     buyAttemptHasDeaII: hasDeaII ? row : null,
     buyAttemptHasDhs: hasDhs ? row : null,
-    viewOnlyPopupOpen: !props.buyEligible
+    viewOnlyRegisterPopupOpen: showViewOnlyRegisterPopup,
+    viewOnlyPopupOpen: showViewOnlyPopup
   })
-  skipBuy = hasDeaI || hasDeaII || hasDhs || !props.buyEligible
+  skipBuy = hasDeaI || hasDeaII || hasDhs || !buyEligible || vellociAccountStatus === 'inactive'
 
   if (skipBuy) return
   tableRowClicked(props, row.id, row?.sellerId)

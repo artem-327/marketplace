@@ -129,6 +129,15 @@ export const filters = {
         values: [`Confirmed`]
       }
     ]
+  },
+  disputed: {
+    filters: [
+      {
+        operator: 'EQUALS',
+        path: 'Order.cfGlobalStatus',
+        values: [`Disputed`]
+      }
+    ]
   }
 }
 

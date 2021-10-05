@@ -77,7 +77,7 @@ export const companyTypeOptions = [
   { text: 'Producer - Downstream Diversified', value: 'Producer - Downstream Diversified', key: 'Downstream Diversified' },
   { text: 'Producer - Upstream Commodity', value: 'Producer - Upstream Commodity', key: 'Upstream Commodity' },
   { text: 'Distributor', value: 'Distributor', key: 'Distributor' },
-  { text: 'CommodityTrading', value: 'CommodityTrading', key: 'CommodityTrading' },
+  { text: 'Commodity Trading', value: 'CommodityTrading', key: 'CommodityTrading' },
   { text: 'Consultant', value: 'Consultant', key: 'Consultant' },
   { text: 'Toll Blending & Compounding', value: 'Toll Blending & Compounding', key: 'Toll Blending & Compounding' },
   { text: 'Contract Manufacturing', value: 'Contract Manufacturing', key: 'Contract Manufacturing' },
