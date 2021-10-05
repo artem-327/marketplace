@@ -918,3 +918,7 @@ export const GridStyled = styled(Grid)`
     }
   }
 `
+
+export const DivPopupTableHandler = styled.div`
+  margin: 15px 51px 0;
+`
