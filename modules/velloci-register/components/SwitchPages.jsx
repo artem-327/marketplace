@@ -1,10 +1,12 @@
 //Components
-import CompanyVerification from './steps/CompanyVerification'
+import CertificateOfInsurance from './steps/CertificateOfInsurance'
 import ControlPerson from './steps/ControlPerson'
 import BusinessInfo from './steps/BusinessInfo'
-import FormationDocument from './steps/FormationDocument'
+import MarketingMaterial from './steps/MarketingMaterial'
 import OwnerInformation from './steps/OwnerInformation'
+import OwnershipCertifications from './steps/OwnershipCertifications'
 import PersonalInformation from './steps/PersonalInformation'
+import RiskTolerance from './steps/RiskTolerance'
 import TermsAndConditions from './steps/TermsAndConditions'
 //Helpers
 import { getSafe } from '../../../utils/functions'
@@ -14,33 +16,47 @@ export const switchPages = props => {
 
   switch (props.activeStep) {
     case 0: {
-      return <CompanyVerification formikProps={props.formikProps} appInfo={props.appInfo} />
+      return <TermsAndConditions formikProps={props.formikProps} />
     }
     case 1: {
-      return (
-        <ControlPerson formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
-      )
+      return <BusinessInfo formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
     }
     case 2: {
-      return <BusinessInfo formikProps={props.formikProps} />
+      return <ControlPerson formikProps={props.formikProps} />
     }
     case 3: {
-      return <FormationDocument formikProps={props.formikProps} error={error} entityDocuments={props.entityDocuments} />
+      return <OwnerInformation
+        countBeneficialOwners={props.countBeneficialOwners}
+        formikProps={props.formikProps}
+        numberBeneficialOwners={props.numberBeneficialOwners}
+      />
     }
     case 4: {
-      return <OwnerInformation formikProps={props.formikProps} countBeneficialOwners={props.countBeneficialOwners} />
-    }
-    case 5: {
       return (
         <PersonalInformation
+          countBeneficialOwners={props.countBeneficialOwners}
           formikProps={props.formikProps}
           businessRoles={props.businessRoles}
           numberBeneficialOwners={props.numberBeneficialOwners}
         />
       )
     }
+    case 5: {
+      return <MarketingMaterial formikProps={props.formikProps} />
+    }
     case 6: {
-      return <TermsAndConditions formikProps={props.formikProps} />
+      return <CertificateOfInsurance
+        activeStep={props.activeStep}
+        coiDocumentUploaded={props.coiDocumentUploaded}
+        formikProps={props.formikProps}
+        nextStep={props.nextStep}
+      />
+    }
+    case 7: {
+      return <RiskTolerance formikProps={props.formikProps} />
+    }
+    case 8: {
+      return <OwnershipCertifications formikProps={props.formikProps} />
     }
     default:
       return <></>

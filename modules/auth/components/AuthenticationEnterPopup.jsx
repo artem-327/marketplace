@@ -44,25 +44,29 @@ const AuthenticationEnterPopup = props => {
     if (inputElement) inputElement.focus()
   }
 
-  const handleValueChanged = ( e, data, index) => {
-    const enteredValue = data.trim()
-    if (!!enteredValue && index === 0 && enteredValue.length === 6) { // clipboard paste case
-      setValue(enteredValue)
+  const handlePaste = ( data, index) => {
+    const enteredValue = data.clipboardData.getData('Text')
+    const enteredValueLength = enteredValue ? enteredValue.length : 0
+
+    if (enteredValueLength) {
+      const newValue = value.slice(0, index) + enteredValue + value.slice(index + enteredValueLength)
+      setValue(newValue.slice(0, 6))
+      switchToInput(index + enteredValueLength)
     }
   }
 
   const handleKeyDown = (e, index) => {
-    if (!e.ctrlKey && !e.altKey) {
+    let newValue
+
+    if (!e.ctrlKey && !e.altKey && !e.metaKey) {
       switch (e.keyCode) {
         case 8: // Backspace
-          if (index > 0) {
-            const newValue = value.slice(0, index - 1) + value.slice(index) + " "
-            setValue(newValue)
-            switchToInput(index - 1)
-          }
+          newValue = value.slice(0, index) + value.slice(index + 1) + " "
+          setValue(newValue)
+          switchToInput(index - 1)
           break
         case 46: // Delete
-          const newValue = value.slice(0, index) + value.slice(index + 1) + " "
+          newValue = value.slice(0, index) + value.slice(index + 1) + " "
           setValue(newValue)
           break
         case 35: // End
@@ -78,10 +82,7 @@ const AuthenticationEnterPopup = props => {
           switchToInput(index + 1)
           break
       }
-      if (
-        (e.keyCode >= 96 && e.keyCode <= 105) ||  // 0 - 9 numerical keyboard
-        (e.keyCode >= 65 && e.keyCode <= 90) ||   // a - z / A - Z
-        (e.keyCode >= 48 && e.keyCode <= 57 && !e.shiftKey)) {   // 0 - 9 standard keyboard
+      if (e.key.length === 1 && e.key.match(/^[0-9a-zA-Z]+$/)) {
         const newValue = value.slice(0, index) + e.key + value.slice(index + 1)
         setValue(newValue)
         switchToInput(index + 1)
@@ -109,44 +110,44 @@ const AuthenticationEnterPopup = props => {
             <InputCode
               name='input2FACode0'
               value={value[0]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 0)}
+              onPaste={data => handlePaste(data, 0)}
               onKeyDown={e => handleKeyDown(e, 0)}
-              error={viewErrors && value[0] === ' '}
+              error={viewErrors && !value[0].match(/^[0-9a-zA-Z]+$/)}
             />
             <InputCode
               name='input2FACode1'
               value={value[1]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 1)}
+              onPaste={data => handlePaste(data, 1)}
               onKeyDown={e => handleKeyDown(e, 1)}
-              error={viewErrors && value[1] === ' '}
+              error={viewErrors && !value[1].match(/^[0-9a-zA-Z]+$/)}
             />
             <InputCode
               name='input2FACode2'
               value={value[2]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 2)}
+              onPaste={data => handlePaste(data, 2)}
               onKeyDown={e => handleKeyDown(e, 2)}
-              error={viewErrors && value[2] === ' '}
+              error={viewErrors && !value[2].match(/^[0-9a-zA-Z]+$/)}
             />
             <InputCode
               name='input2FACode3'
               value={value[3]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 3)}
+              onPaste={data => handlePaste(data, 3)}
               onKeyDown={e => handleKeyDown(e, 3)}
-              error={viewErrors && value[3] === ' '}
+              error={viewErrors && !value[3].match(/^[0-9a-zA-Z]+$/)}
             />
             <InputCode
               name='input2FACode4'
               value={value[4]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 4)}
+              onPaste={data => handlePaste(data, 4)}
               onKeyDown={e => handleKeyDown(e, 4)}
-              error={viewErrors && value[4] === ' '}
+              error={viewErrors && !value[4].match(/^[0-9a-zA-Z]+$/)}
             />
             <InputCode
               name='input2FACode5'
               value={value[5]}
-              onChange={( e, { value }) => handleValueChanged(e, value, 5)}
+              onPaste={data => handlePaste(data, 5)}
               onKeyDown={e => handleKeyDown(e, 5)}
-              error={viewErrors && value[5] === ' '}
+              error={viewErrors && !value[5].match(/^[0-9a-zA-Z]+$/)}
             />
           </DivRow>
           <DivButtons>
@@ -159,7 +160,7 @@ const AuthenticationEnterPopup = props => {
                 data-test='two_factor_auth_verify_btn'
                 onClick={() => {
                   setViewErrors(true)
-                  if (!(value.indexOf(' ') >= 0)) {
+                  if (value.match(/^[0-9a-zA-Z]+$/)) {
                     onAccept(value)
                   }
                 }}

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Formik } from 'formik'
@@ -24,11 +25,12 @@ import { formValidation, getInitialFormValues, submitHandler } from './ModalDeta
 
 const ModalDetail = props => {
   const { popupValues, updating } = props
+  const [provinceRequired, setProvinceRequired] = useState(false)
 
   return (
     <Formik
       initialValues={getInitialFormValues(popupValues)}
-      validationSchema={formValidation}
+      validationSchema={formValidation(provinceRequired)}
       enableReinitialize
       onReset={() => props.closeAddEditPopup()}
       onSubmit={()=>{}}
@@ -72,6 +74,8 @@ const ModalDetail = props => {
                 <SegmentCustomContent basic>
                   <ModalDetailContent
                     formikProps={formikProps}
+                    provinceRequired={provinceRequired}
+                    setProvinceRequired={setProvinceRequired}
                   />
                 </SegmentCustomContent>
               </DivFlexContent>
