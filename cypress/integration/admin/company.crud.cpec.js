@@ -14,6 +14,7 @@ context("Companies CRUD", () => {
         cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("dashboardload")
         cy.intercept("POST", "/prodex/api/companies/datagrid*").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
+        cy.intercept("PATCH", "/prodex/api/companies/admin/id/**").as("companyUpdate")
         cy.intercept("GET", "/_next/static/webpack/").as("datagridLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
@@ -70,7 +71,7 @@ context("Companies CRUD", () => {
     })
 
     it("Edits a company", () => {
-        cy.searchInList("Test Company 222")
+        cy.searchInList("Test Company")
         cy.waitForUI()
 
         cy.getToken().then(token => {
@@ -87,6 +88,10 @@ context("Companies CRUD", () => {
             .should("have.value", "Test Company 333")
 
         cy.clickSave()
+
+        cy.wait("@companyUpdate").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
+        })
 
         cy.getToken().then(token => {
             cy.getFirstCompanyWithFilter(token, filter).then(itemId => {

@@ -40,8 +40,8 @@ context("Units of packaging CRUD", () => {
 
         cy.enterText("#field_input_val0", "Test package")
 
-        cy.get("[data-test='admin_add_unit_packaging_type_drpdn']").click()
-        cy.get("[data-test='admin_add_unit_packaging_type_drpdn']").contains("piece").click()
+        cy.get("[data-test='admin_edit_unit_packaging_type_drpdn']").click()
+        cy.get("[data-test='admin_edit_unit_packaging_type_drpdn']").contains("piece").click()
 
         cy.enterText("#field_input_val2", "10")
         cy.enterText("#field_input_val3", "10")
@@ -58,7 +58,7 @@ context("Units of packaging CRUD", () => {
 
         cy.clickSave()
 
-        cy.get("input[type=text]").eq(0).type("Test")
+        cy.searchInList("Test")
         cy.waitForUI()
 
         cy.getToken().then(token => {

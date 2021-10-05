@@ -94,6 +94,7 @@ context("Shared Listing", () => {
     it("Change broadcasting", () => {
         cy.get("[data-test*='" + offerId + "']").parents("[data-test='table_row_action']").within(() => {
             cy.get("[class*='NetworkDropdown']").click()
+            cy.waitForUI()
             cy.contains("div", "Who should see this offer?").should("be.visible")
             cy.contains("div", "+20").click()
 

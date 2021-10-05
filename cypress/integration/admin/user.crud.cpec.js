@@ -157,14 +157,5 @@ context("Prodex Admin User CRUD", () => {
         cy.get('[data-test=confirm_dialog_proceed_btn]').click()
 
         cy.contains("Jen TesterFE").should("not.exist")
-/*
-        cy.reload()
-        cy.wait("@companiesLoad", {timeout: 100000})
-        cy.get('.flex-wrapper > :nth-child(2)').click()
-        cy.waitForUI()
-        cy.get("[data-test=tabs_menu_item_users]").click()
-        cy.wait("@usersLogin", {timeout: 100000})
-*/
-        cy.contains("Jen TesterFE").should("not.exist")
     })
 })
