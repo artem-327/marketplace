@@ -109,7 +109,7 @@ ZipDropdown.defaultProps = {
   onAddition: (e, data) => {},
   handleChange: (e, data) => {},
   onSearchChange: (e, data) => {},
-  label: <FormattedMessage id='global.zip' defaultMessage='Zip' />,
+  label: <FormattedMessage id='global.zipCode' />,
   initialZipCodes: [],
   onChange: () => {},
   required: false

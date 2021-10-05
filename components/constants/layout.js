@@ -9,7 +9,6 @@ export const TopMenu = styled(Menu)`
   top: 0;
   right: 0 !important;
   bottom: 0;
-  left: 240px !important;
   border: 0 none !important;
   z-index: 603 !important;
   &.ui.menu.fixed .item-cart {
@@ -1077,7 +1076,6 @@ export const FlexContainer = styled.div`
   top: 80px;
   right: 0;
   bottom: 0;
-  left: 240px;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -1086,6 +1084,10 @@ export const LogoImage = styled(Image)`
   width: 168px;
   margin: 12px auto;
 `
+export const TradePassLogo = styled(Image)`
+  width: 168px;
+`
+
 export const CircularLabel = styled(Label)`
   position: absolute;
   top: -0.7em;

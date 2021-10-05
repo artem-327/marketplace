@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
-import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
-import { Input } from 'formik-semantic-ui-fixed-validation'
+import { Button, Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Checkbox, Dropdown, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
+import { companyTypeOptions, marketOptions } from '../../constants'
 //Components
 import {
   Rectangle,
@@ -31,29 +32,176 @@ const DivLegalAddressTitle = styled.div`
   font-weight: bold;
 `
 
-function BusinessInfo({ formikProps, intl: { formatMessage } }) {
+const GridBusinessType = styled(Grid)`
+  margin: 0px !important;
+`
+
+const GridRowBusinessType = styled(Grid.Row)`
+  padding-bottom: 0px !important;
+`
+
+const TinLabelRow = styled(Grid.Row)`
+  padding: 0 0 .35rem 0 !important;
+`
+
+const ButtonOrCustom = styled(Button.Group)`
+  .ui.button {
+    background-color: #ffffff !important;
+    color: #9a9a9a !important;
+    font-weight: bold !important;
+    border: 1px solid #e8e9eb !important;
+  }
+  .ui.active.button {
+    background-color: #9a9a9a !important;
+    color: #ffffff !important;
+  }
+`
+
+const DivRectangleBusinessType = styled.div`
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  overflow: inherit !important;
+`
+
+const SpanEstablishedLabel = styled.span`
+  color: #848893;
+  padding-left: 1rem;
+`
+
+const PaddedRow = styled(Grid.Row)`
+  padding: 1rem 1rem 0 1rem !important;
+`
+
+function BusinessInfo({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
   return (
-    <GridBusinessInfo>
+    <GridBusinessInfo className="business-info">
       <GridRow>
         <GridColumn>
-          <Rectangle style={{ margin: '0px' }}>
-            <CustomDivTitle>
-              <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle style={{ color: '#2599d5' }}>
-                <FormattedMessage id='velloci.businessInfo.infoTitle' defaultMessage='Why do you need this info?' />
-              </CustomDivInTitle>
-            </CustomDivTitle>
-            <CustomDivContent style={{ color: '#848893', padding: '4px 30px' }}>
-              <FormattedMessage
-                id='velloci.businessInfo.infoContent'
-                defaultMessage='In order to verify the business you are opening an account for, we need to collect this information. We never share this information.'
-              />
-            </CustomDivContent>
-          </Rectangle>
+          <DivRectangleBusinessType>
+            <GridBusinessType>
+              <GridRowBusinessType>
+                <Grid.Column>
+                  <Dropdown
+                    options={entityTypes && entityTypes.data && entityTypes.data.length ? entityTypes.data : []}
+                    fieldProps={{
+                      'data-test': 'settings_velloci_registration_control_person_drpdwn'
+                    }}
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: 'velloci.businessInfo.kindBusiness.placeholder',
+                        defaultMessage: 'Pick one'
+                      }),
+                      search: true,
+                      selection: true,
+                      loading: entityTypes && entityTypes.loading
+                    }}
+                    name='businessInfo.entityType'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.businessInfo.kindBusiness',
+                          defaultMessage: 'What kind of business are you opening this account for?'
+                        })}
+                        {<Required />}
+                      </>
+                    }
+                  />
+                </Grid.Column>
+              </GridRowBusinessType>
+              <Grid.Row>
+                <Grid.Column computer={8} tablet={8} mobile={16}>
+                  <Input
+                    name='businessInfo.legalBusinessName'
+                    label={
+                      <>
+                        {formatMessage({
+                          id: 'velloci.businessInfo.legalBusinessName',
+                          defaultMessage: 'Legal Business Name'
+                        })}
+                        {<Required />}
+                      </>
+                    }
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: 'velloci.businessInfo.legalBusinessName.placeholder',
+                        defaultMessage: 'Enter Business Name'
+                      }),
+                      type: 'text',
+                      'data-test': 'settings_velloci_registration_control_person_legal_business_name_inpt'
+                    }}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+              <TinLabelRow>
+                <Grid.Column>
+                  <>
+                    <FormattedMessage id='velloci.businessInfo.tax' defaultMessage='Tax Identification Number' />
+                    <Required /> 
+                  </>
+                </Grid.Column>
+              </TinLabelRow>
+              <Grid.Row columns={2} className="no-padding" style={{ padding: '0 0 0 0 !important' }}>
+                <Grid.Column width={8}>
+                  <ButtonOrCustom widths={8}>
+                    <Button
+                      onClick={e => {
+                        formikProps.setFieldValue('businessInfo.isEin', true)
+                        formikProps.setFieldValue('businessInfo.isSsn', false)
+                      }}
+                      active={formikProps.values.businessInfo.isEin}
+                      data-test='settings_velloci_registration_control_person_ein_btn'>
+                      <FormattedMessage id='velloci.businessInfo.ein' defaultMessage='EIN' />
+                    </Button>
+                    <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                    <Button
+                      onClick={e => {
+                        formikProps.setFieldValue('businessInfo.isEin', false)
+                        formikProps.setFieldValue('businessInfo.isSsn', true)
+                      }}
+                      active={formikProps.values.businessInfo.isSsn}
+                      data-test='settings_velloci_registration_control_person_ssn_btn'>
+                      <FormattedMessage id='velloci.businessInfo.ssn' defaultMessage='SSN' />
+                    </Button>
+                  </ButtonOrCustom>
+                </Grid.Column>
+                <Grid.Column className="m-t-padding" computer={8} tablet={8} mobile={16}>
+                  <Input
+                    name={formikProps.values.businessInfo.isEin ? 'businessInfo.ein' : 'businessInfo.ssn'}
+                    inputProps={{
+                      placeholder: formatMessage({
+                        id: `velloci.businessInfo.${
+                          formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
+                        }.placeholder`,
+                        defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
+                      }),
+                      type: 'text',
+                      'data-test': `settings_velloci_registration_control_person_legal_${
+                        formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
+                      }_inpt`
+                    }}
+                  />
+                </Grid.Column>
+              </Grid.Row>
+              <PaddedRow>
+                <Checkbox
+                    inputProps={{
+                      'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
+                    }}
+                    name='businessInfo.isEstablishedUs'
+                  />
+                  <SpanEstablishedLabel>
+                    {formatMessage({
+                      id: 'velloci.businessInfo.establishedUs',
+                      defaultMessage: 'Established in the US?'
+                    })}
+                  </SpanEstablishedLabel>
+              </PaddedRow>
+            </GridBusinessType>
+          </DivRectangleBusinessType>
         </GridColumn>
       </GridRow>
-      <GridRow columns={3}>
-        <ColumnCustom>
+      <GridRow columns={2}>
+        <ColumnCustom className="m-padding" computer={8} tablet={8} mobile={16}>
           <PhoneNumber
             name='businessInfo.phoneNumber'
             values={formikProps.values}
@@ -72,7 +220,7 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
           />
         </ColumnCustom>
-        <ColumnCustom>
+        <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
           <Input
             name='businessInfo.email'
             label={
@@ -94,7 +242,9 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             }}
           />
         </ColumnCustom>
-        <ColumnCustom>
+      </GridRow>
+      <GridRow>
+        <ColumnCustom computer={8} laptop={8} mobile={16}>
           <Input
             name='businessInfo.url'
             label={formatMessage({
@@ -146,10 +296,10 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
             }}
           />
           <Rectangle style={{ margin: '0px' }}>
-            <CustomDivTitle>
-              <Info size={20} style={{ color: '#2599d5' }} />
-              <CustomDivInTitle style={{ color: '#2599d5' }}>
-                <FormattedMessage id='velloci.businessInfo.meanTitle' defaultMessage='What does this mean?' />
+            <CustomDivTitle style={{ borderColor: '#3bbef6' }}>
+              <Info size={20} style={{ color: '#3bbef6' }} />
+              <CustomDivInTitle style={{ color: '#3bbef6' }}>
+                <FormattedMessage id='velloci.businessInfo.what.does.dba.mean' />
               </CustomDivInTitle>
             </CustomDivTitle>
             <CustomDivContent style={{ color: '#848893', padding: '4px 30px' }}>
@@ -161,16 +311,102 @@ function BusinessInfo({ formikProps, intl: { formatMessage } }) {
           </Rectangle>
         </ColumnCustom>
       </GridRow>
+      <GridRow>
+        <Grid.Column>
+          <Dropdown
+            options={naicsCodes.data}
+            fieldProps={{
+              'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
+            }}
+            inputProps={{
+              placeholder: formatMessage({ id: 'company.selectIndustryType' }),
+              search: true,
+              selection: true,
+              loading: naicsCodes?.loading,
+              disabled: naicsCodes?.loading
+            }}
+            name='businessInfo.naicsCode'
+            label={
+              <>
+                {formatMessage({ id: 'velloci.businessInfo.industryType' })}
+                {<Required />}
+              </>
+            }
+          />
+        </Grid.Column>
+      </GridRow>
+      <GridRow>
+        <GridColumn>
+          <Dropdown
+              label={
+                <>
+                  <FormattedMessage id='company.companyType' defaultMessage='Company Type' />
+                  <Required />
+                </>
+              }
+              name='businessInfo.companyType'
+              options={
+                companyTypeOptions.map(option => ({
+                  text: option.text,
+                  value: option.value,
+                  key: option.key
+                }))
+              }
+              inputProps={{
+                clearable: true,
+                selection: true,
+                search: true,
+                placeholder: formatMessage({ id: 'company.selectCompanyType' }),
+                'data-test': 'onboarding_business_info_company_type_drpdn'
+              }}
+            />
+        </GridColumn>
+      </GridRow>
+      <GridRow>
+        <GridColumn>
+          <Dropdown
+              label={
+                <>
+                  <FormattedMessage id='onboarding.markets' />
+                  <Required />
+                </>
+              }
+              name='businessInfo.markets'
+              options={
+                marketOptions.map(option => ({
+                  text: option.text,
+                  value: option.value,
+                  key: option.key
+                }))
+              }
+              inputProps={{
+                clearable: true,
+                multiple: true,
+                selection: true,
+                search: true,
+                placeholder: formatMessage({
+                  id: 'company.selectMarketType',
+                  defaultMessage: 'Select Industry Type'
+                }),
+                'data-test': 'onboarding_business_info_markets_drpdn'
+              }}
+            />
+        </GridColumn>
+      </GridRow>
     </GridBusinessInfo>
   )
 }
 
 BusinessInfo.propTypes = {
-  formikProps: PropTypes.object
+  entityTypes: PropTypes.object,
+  formikProps: PropTypes.object,
+  naicsCodes: PropTypes.object
 }
 
 BusinessInfo.defaultProps = {
-  formikProps: {}
+  entityType: {},
+  formikProps: {},
+  naicsCodes: {}
 }
 
 export default injectIntl(BusinessInfo)

@@ -326,6 +326,7 @@ class Tutorial extends Component {
       isBusinessVerification,
       isTutorial,
       vellociBusinessId,
+      vellociAccountStatus,
       marginGlobalPrice,
       applicationName
     } = this.props
@@ -371,7 +372,7 @@ class Tutorial extends Component {
           </Rectangle>
         </ThemeProvider>
       )
-    } else if (!isLoading && !isAdmin && !vellociBusinessId && isBusinessVerification && !isTutorial) {
+    } else if (!isLoading && !isAdmin && (!vellociBusinessId || vellociAccountStatus === 'inactive') && isBusinessVerification && !isTutorial) {
       return (
         <ThemeProvider theme={theme}>
           <Rectangle>
@@ -425,6 +426,7 @@ const mapStateToProps = state => {
   return {
     applicationName: state?.auth?.identity?.appInfo?.applicationName,
     vellociBusinessId: getSafe(() => company.vellociBusinessId, false),
+    vellociAccountStatus: getSafe(() => company.vellociAccountStatus, ''),
     name: getSafe(() => state.auth.identity.name, ''),
     isMerchant: getSafe(() => state.auth.identity.isMerchant, false),
     isOrderProcessing: getSafe(() => state.auth.identity.isOrderProcessing, false),

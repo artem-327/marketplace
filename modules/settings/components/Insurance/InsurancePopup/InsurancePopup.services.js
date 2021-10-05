@@ -1,10 +1,15 @@
-export const SubmitFile = async (values, { setSubmitting }, props) => {
+export const SubmitFile = async (values, { setSubmitting }, props, additionalActions = null) => {
   const {
     intl: { formatMessage },
     uploadInsuranceDocument,
     getInsuranceDocuments,
     closePopup
   } = props
+
+  if (additionalActions) {
+    const { activeStep, nextStep } = additionalActions
+    nextStep(activeStep + 1)
+  }
 
   try {
     await uploadInsuranceDocument(values.file, values.documentId)
