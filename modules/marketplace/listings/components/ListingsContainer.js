@@ -23,7 +23,9 @@ import {
   makeGetIsCompanyAdmin,
   makeGetTutorialCompleted,
   makeGetBuyEligible,
-  makeGetSellEligible
+  makeGetSellEligible,
+  makeGetVellociAccountStatus,
+  makeGetReviewRequested
 } from '../../../auth/selectors'
 import { makeGetSidebar } from '../../../purchase-order/selectors'
 import { makeGetIsOpen } from '../../../company-product-info/selectors'
@@ -44,6 +46,8 @@ const makeMapStateToProps = () => {
   const getSelectedSellerOption = makeGetSelectedSellerOption()
   const getCurrentUserDeaAuthorized = makeGetCurrentUserDeaAuthorized()
   const getCurrentUserDhsAuthorized = makeGetCurrentUserDhsAuthorized()
+  const getVellociAccountStatus = makeGetVellociAccountStatus()
+  const getReviewRequested = makeGetReviewRequested()
 
   const mapStateToProps = (store, {datagrid}) => {
     return {
@@ -63,7 +67,9 @@ const makeMapStateToProps = () => {
       searchedCompaniesDropdown: getSearchedCompaniesDropdown(store),
       selectedSellerOption: getSelectedSellerOption(store),
       regulatoryDeaListAuthorized: getCurrentUserDeaAuthorized(store),
-      regulatoryDhsCoiAuthorized: getCurrentUserDhsAuthorized(store)
+      regulatoryDhsCoiAuthorized: getCurrentUserDhsAuthorized(store),
+      vellociAccountStatus: getVellociAccountStatus(store),
+      reviewRequested: getReviewRequested(store)
     }
   }
   return mapStateToProps

@@ -124,6 +124,21 @@ export const FlexSidebar = styled(Sidebar)`
   &.ui.visible.bottom.overlay.sidebar {
     height: 87vh !important;
   }
+  .ui.grid .row textarea {
+    min-height: 32px;
+    font-size: 1em;
+    line-height: 1.29;
+    border: solid 1px #dee2e6;
+    background-color: #fdfdfd;
+    width: 100%;
+    &.disabled {
+      opacity: 1;
+      color: #cecfd4;
+    }
+    > .default.text {
+      margin: 0 0 0 0.64285714em;
+    }
+  }
   .field {
     font-size: 1em !important;
     line-height: 1.29 !important;
@@ -132,8 +147,11 @@ export const FlexSidebar = styled(Sidebar)`
       font-size: 1em !important;
       color: #404040;
     }
-    > textarea,
+    > .ui.input {
+      width: 100%;
+    }
     > .ui.input input,
+    > .phone-number input,
     > .ui.dropdown {
       min-height: 32px;
       font-size: 1em;

@@ -64,7 +64,12 @@ function mapStateToProps(store) {
     loading: getSafe(() => store.cart.loading, false),
     isOpenModal: getSafe(() => store.cart.isOpenModal, false),
     isThirdPartyConnectionException: getSafe(() => store.cart.isThirdPartyConnectionException, false),
-    manualQuoteById: getSafe(() => store.cart.manualQuoteById, null)
+    manualQuoteById: getSafe(() => store.cart.manualQuoteById, null),
+    companyTwoFactorAuth: getSafe(() => store.auth.identity.settings.some(el =>
+      el.key === 'COMPANY_PURCHASE_TWO_FACTOR_AUTHENTICATION' && el.value.toUpperCase() === 'TRUE'), false),
+    companyTransactionThreshold: parseFloat(
+      getSafe(() => store.auth.identity.settings.find(el => el.key === 'COMPANY_TRANSACTION_THRESHOLD').value, 0)
+    )
   }
 }
 

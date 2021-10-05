@@ -194,7 +194,12 @@ const MarketingMaterial = props => {
                                     <GridRow>
                                         <GridColumn computer={10} tablet={16} mobile={16}>
                                             <Input
-                                                label={<FormattedMessage id='company.emailAddress' defaultMessage='Email Address' />}
+                                                label={
+                                                    <>
+                                                        <FormattedMessage id='company.emailAddress' defaultMessage='Email Address' />
+                                                        <Required />
+                                                    </>
+                                                }
                                                 name='email'
                                                 inputProps={{
                                                 placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' })
@@ -234,7 +239,12 @@ const MarketingMaterial = props => {
                                     <GridRow>
                                         <GridColumn width={16}>
                                             <Input
-                                            label={<FormattedMessage id={`company.${el}`} defaultMessage={el} />}
+                                            label={
+                                                <>
+                                                    <FormattedMessage id={`company.${el}`} defaultMessage={el} />
+                                                    {el === 'website' && <Required />}
+                                                </>
+                                            }
                                             name={el}
                                             inputProps={{
                                                 placeholder: formatMessage({
