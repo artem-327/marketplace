@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Container, Button, Icon } from 'semantic-ui-react'
 import { Sliders } from 'react-feather'
-import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
