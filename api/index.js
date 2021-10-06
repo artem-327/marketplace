@@ -5,6 +5,7 @@ import { Message } from '../modules/messages'
 import { refreshToken } from '../utils/auth'
 import { getSafe } from '../utils/functions'
 const customAxios = axios.create()
+const hasWindow = typeof window !== 'undefined'
 //axios.defaults.baseURL = process.env.REACT_APP_API_URL
 
 customAxios.defaults.validateStatus = status => {
@@ -13,6 +14,8 @@ customAxios.defaults.validateStatus = status => {
 
 customAxios.interceptors.request.use(
   async function (config) {
+    hasWindow && window.sessionStorage.removeItem('registrationError') // clear any existing registration errors
+
     // Do something before request is sent
     const auth = await Cookie.getJSON('auth')
 
@@ -46,10 +49,12 @@ customAxios.interceptors.response.use(
       response: { status, config }
     } = error
 
-    const hasWindow = typeof window !== 'undefined'
-
     if (status === 401) {
       return resetTokenAndReattemptRequest(error)
+    }
+
+    if (!config?.url?.includes('/onboarding') && status !== 200) {
+      hasWindow && window.sessionStorage.setItem('registrationError', status)
     }
 
     if (status === 500 && !config?.url?.includes('/prodex/api/payments/bank-accounts/velloci/add?publicToken')) {

@@ -6,6 +6,7 @@ import {
   Popup,
   Radio
 } from 'semantic-ui-react'
+import { debounce } from 'lodash'
 import { Warning } from '@material-ui/icons'
 import { getSafe } from '../../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../../components/date-format'
@@ -428,3 +429,12 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
   }
 })
 
+export const handleFilterChangeInputSearch = (value, props, searchInput, setSearchInput) => {
+  setSearchInput(value)
+  const filter = { searchInput: value }
+  handleFiltersValue(filter, props)
+}
+
+const handleFiltersValue = debounce((filter, props) => {
+  props.datagrid.setSearch(filter, true, 'modalFilters')
+}, 300)
