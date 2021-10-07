@@ -1,6 +1,7 @@
 import Cookie from 'js-cookie'
 import api from '../api'
 import Router from 'next/router'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 export const setAuth = async auth => {
   let now = new Date()
@@ -43,15 +44,19 @@ export const unsetAuth = () => {
 // }
 
 export async function authorize(username, password, session = null, option = null, code = null) {
+  const fp = await FingerprintJS.load()
+  const result = await fp.get()
+  const visitorId = result.visitorId
+
   const { data } = await api.post(
     '/prodex/oauth/token',
     session
       ? (
         option
-          ? `grant_type=password&username=${username}&mfa_session=${session}&mfa_option=${option}`
-          : `grant_type=password&username=${username}&mfa_session=${session}&mfa_code=${code}`
+          ? `grant_type=password&username=${username}&mfa_session=${session}&mfa_option=${option}&device_id=${visitorId}`
+          : `grant_type=password&username=${username}&mfa_session=${session}&mfa_code=${code}&device_id=${visitorId}`
       )
-      : `grant_type=password&username=${username}&password=${password}`,
+      : `grant_type=password&username=${username}&password=${password}&device_id=${visitorId}`,
     {
       headers: {
         Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
