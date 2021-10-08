@@ -87,6 +87,20 @@ export const updateWantedBoard = (id, values) => {
   }
 }
 
+export const getWantedBoard = id => {
+  return {
+    type: AT.WB_GET_WANTED_BOARD,
+    payload: api.getWantedBoardApi(id)
+  }
+}
+
+export const getWantedBoardOwn = id => {
+  return {
+    type: AT.WB_GET_WANTED_BOARD,
+    payload: api.getWantedBoardOwnApi(id)
+  }
+}
+
 export const deleteWantedBoard = (id) => {
   return {
     type: AT.WB_DELETE,
