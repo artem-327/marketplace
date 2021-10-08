@@ -12,7 +12,8 @@ export const initialState = {
   popupValues: null,
   sending: false,
   allPostsFilters: null,
-  myPostsFilters: null
+  myPostsFilters: null,
+  loading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -111,6 +112,27 @@ export default function reducer(state = initialState, action) {
         openedSeeListingModal: false,
         editID: null,
         popupValues: null
+      }
+    }
+
+    case AT.WB_GET_WANTED_BOARD_PENDING: {
+      return {
+        ...state,
+        loading: true,
+      }
+    }
+
+    case AT.WB_GET_WANTED_BOARD_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+      }
+    }
+
+    case AT.WB_GET_WANTED_BOARD_REJECTED: {
+      return {
+        ...state,
+        loading: false,
       }
     }
 
