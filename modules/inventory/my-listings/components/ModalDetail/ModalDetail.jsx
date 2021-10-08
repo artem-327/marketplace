@@ -819,10 +819,10 @@ const ModalDetail = props => {
                                               disabled:
                                                 !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                               'data-test': 'modal_detail_expiration_date',
-                                              fluid: true
+                                              fluid: true,
+                                              minDate: moment(),
                                               }}
                                             name='edit.expirationDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
@@ -943,7 +943,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
@@ -978,7 +977,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotManufacturedDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
