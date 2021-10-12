@@ -645,14 +645,14 @@ class Broadcast extends Component {
     if (asModal) {
       return (
         <UnpaddedRow.Top verticalAlign='middle'>
-          <GridColumn computer={8}>{this.getAssociationsDropdown()}</GridColumn>
+          {false && /*DT-1072*/ (<GridColumn computer={8}>{this.getAssociationsDropdown()}</GridColumn>)}
           <GridColumn computer={8}>{broadcastButton}</GridColumn>
         </UnpaddedRow.Top>
       )
     }
     return (
       <Form.Group widths='equal'>
-        {this.getAssociationsDropdown()}
+        {false && /*DT-1072*/ this.getAssociationsDropdown()}
         {broadcastButton}
       </Form.Group>
     )
@@ -896,7 +896,7 @@ class Broadcast extends Component {
                         ]}
                       />
                     </GridColumnFiltersModal>
-                    <GridColumnFiltersModal secondColumn>
+                    {false && /*DT-1072*/ (<GridColumnFiltersModal secondColumn>
                       <DropdownInHeaderTable
                         fluid
                         value={this.state.associationFilter}
@@ -905,7 +905,7 @@ class Broadcast extends Component {
                         options={[{ key: 'ALL', text: 'Partners', value: 'ALL' }].concat(options)}
                         onChange={(_e, { value }) => this.setState({ associationFilter: value })}
                       />
-                    </GridColumnFiltersModal>
+                    </GridColumnFiltersModal>)}
                     <GridColumnFiltersModal thirdColumn>
                       <DropdownInHeaderTable
                         fluid
@@ -1097,7 +1097,7 @@ class Broadcast extends Component {
                               ]}
                             />
                           </FieldInHeaderTable>
-                          {this.getAssociationsDropdown()}
+                          {false && /*DT-1072*/ this.getAssociationsDropdown()}
                           <FieldInHeaderTable>
                             <DropdownInHeaderTable
                               fluid
