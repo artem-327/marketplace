@@ -30,8 +30,8 @@ export const getInitialFormValues = (popupValue, primaryBranch) => {
     deliveryCountry: popupValue?.rawData?.deliveryCountry?.id
       ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces})
       : (primaryBranch ? JSON.stringify({countryId: primaryBranch.country.id, hasProvinces: primaryBranch.country.hasProvinces}) : ''),
-    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces
-      ? popupValue?.rawData?.deliveryProvince?.id
+    statesFilter: popupValue?.rawData?.deliveryCountry?.id
+      ? (popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '')
       : (primaryBranch.country.hasProvinces ? primaryBranch.province.id : ''),
     expiryDate: popupValue?.postExpiry,
     conformingFilter: popupValue?.conforming,
