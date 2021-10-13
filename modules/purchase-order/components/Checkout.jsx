@@ -105,6 +105,9 @@ const Checkout = props => {
     const init = async () => {
       await props.getIdentity()
       const { value } = await props.getCart()
+      if (value.cartItems?.length === 0) {
+        Router.push('/cart')
+      }
       const initVal = value.cartItems.map(item => ({
         id: item.id,
         quantity: item.pkgAmount.toString(),

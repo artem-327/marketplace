@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import { Container, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
@@ -8,6 +9,8 @@ import RespondModal from './RespondModal/index'
 import { CustomRowDiv } from '../../styles'
 import ActionCell from '../../../../components/table/ActionCell'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
+import moment from 'moment'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 
 const AllPosts = props => {
 
@@ -56,7 +59,7 @@ const AllPosts = props => {
     }
   ]
 
-  useEffect(() => {
+  useEffect(async () => {
     const { allPostsFilters } = props
 
     if (allPostsFilters) {
@@ -71,6 +74,30 @@ const AllPosts = props => {
       if (filter) {
         props.datagrid.clear()
         handleFiltersValue(filter, props)
+      }
+    }
+
+    let openId = Router.router?.query?.id ? parseInt(Router.router?.query?.id) : 0
+    openId = openId && !isNaN(openId) ? openId : 0
+
+    if (openId) {
+      try {
+        const { value } = await props.getWantedBoard(openId)
+        const row = value.data
+        let province = row?.deliveryProvince?.name
+        let country = row?.deliveryCountry?.name
+        const payload = {
+          id: row.id,
+          rawData: row,
+          productName: row?.productSearchPattern || row?.element?.productGroup?.name || row?.element?.casProduct?.name || row?.element?.casProduct?.casIndexName,
+          quantity: `${row?.quantity} ${row?.unit?.nameAbbreviation}`,
+          shippingLocation: province ? province + ", " + country : country ? country : "",
+          conforming: row?.conforming ? 'Yes' : 'No',
+          postExpiry: moment(row.expiresAt).format(getLocaleDateFormat())
+        }
+        props.openInfoModal(payload)
+      } catch (e) {
+        console.error(e)
       }
     }
   }, [])
@@ -140,7 +167,8 @@ const AllPosts = props => {
       openedRespondModal,
       popupValues,
       intl: {formatMessage},
-      editID
+      editID,
+      loading
     } = props
 
     return (
@@ -177,6 +205,7 @@ const AllPosts = props => {
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
+            loading={datagrid.tableProps.loading || loading}
           />
         </div>
       </>

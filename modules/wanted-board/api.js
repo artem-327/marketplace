@@ -1,6 +1,13 @@
 import api from '../../api'
 
 export default {
+  getWantedBoardOwnApi: id => api.post('/prodex/api/wanted-board/own/datagrid', {
+    filters: [{operator: "EQUALS", path: "WantedBoardRequest.id", values: [id]}],
+    orFilters: [],
+    pageNumber: 0,
+    pageSize: 50
+  }).then(resp => resp),
+  getWantedBoardApi: id => api.get(`/prodex/api/wanted-board/id/${id}`).then(resp => resp),
   deleteWantedBoardApi: id => api.delete(`/prodex/api/wanted-board/id/${id}`).then(() => id),
   postNewWantedBoardApi: value => api.post('/prodex/api/wanted-board', value),
   updateWantedBoardApi: (id, value) => api.patch(`/prodex/api/wanted-board/id/${id}`, value)
