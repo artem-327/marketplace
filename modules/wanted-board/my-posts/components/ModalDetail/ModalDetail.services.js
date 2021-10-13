@@ -22,13 +22,17 @@ export const formValidation = (provinceRequired) =>
   conformingFilter: Yup.string().required(errorMessages.requiredMessage)
 })
 
-export const getInitialFormValues = popupValue => {
+export const getInitialFormValues = (popupValue, primaryBranch) => {
   return {
     productName: popupValue?.productName,
     quantityNeeded: popupValue?.rawData?.quantity,
     weightUnitFilter: popupValue?.rawData?.unit?.id,
-    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : '',
-    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '',
+    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id
+      ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces})
+      : (primaryBranch ? JSON.stringify({countryId: primaryBranch.country.id, hasProvinces: primaryBranch.country.hasProvinces}) : ''),
+    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces
+      ? popupValue?.rawData?.deliveryProvince?.id
+      : (primaryBranch.country.hasProvinces ? primaryBranch.province.id : ''),
     expiryDate: popupValue?.postExpiry,
     conformingFilter: popupValue?.conforming,
     specialNotes: popupValue?.rawData?.notes,
