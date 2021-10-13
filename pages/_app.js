@@ -13,7 +13,12 @@ import '../semantic/dist/semantic.css'
 import '../styles/base.scss'
 import 'nprogress/nprogress.css'
 import { ToastProvider } from 'react-toast-notifications'
+import TagManager from 'react-gtm-module'
 import { AlertCircle, AlertTriangle, CheckCircle, Info, X } from 'react-feather'
+
+const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-NSLBBQG'
+
+const tagManagerArgs = { gtmId: gtmId }
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -53,6 +58,12 @@ const ProdexToast = toast => {
 }
 
 class ProdexApp extends App {
+  componentDidMount() {
+    if (gtmId && process.env.BABEL_ENV !== 'review' && process.env.NODE_ENV === 'production') {
+      TagManager.initialize(tagManagerArgs)
+    }
+  }
+
   render() {
     const { Component, pageProps, store } = this.props
     return (
