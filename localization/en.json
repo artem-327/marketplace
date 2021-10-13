@@ -1034,6 +1034,7 @@
   "global.errorValidation.title": "Errors on form",
   "global.errorValidation.content": "Fields on form are incomplete/non-validating, please fix the issues first",
   "global.copyright": "Copyright {currentYear} {companyName}",
+  "global.copyToClipboard": "Copy to clipboard",
   "global.addDocument": "Add Document",
   "global.notes": "Notes",
   "global.processed": "Processed",
