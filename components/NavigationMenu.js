@@ -460,7 +460,7 @@ class Navigation extends Component {
                 icon={<Globe size={22} />}
                 text={
                   <>
-                    <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+                    <FormattedMessage id='navigation.network' defaultMessage='Network' />
                     {myNetwork ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
@@ -637,7 +637,7 @@ class Navigation extends Component {
                 }
                 text={
                   <>
-                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
+                    <FormattedMessage id='navigation.tradePass' defaultMessage='TradePass' />
                     {settings ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }

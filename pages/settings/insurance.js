@@ -20,7 +20,7 @@ class Index extends Component {
     } = this.props
     const titleName = formatMessage({
       id: 'title.myTradePass',
-      defaultMessage: 'My TradePass'
+      defaultMessage: 'TradePass'
     })
 
     return (
