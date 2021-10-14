@@ -63,3 +63,13 @@ export const coiDocumentUploaded = value => ({
   type: AT.VELLOCI_COI_DOCUMENT_UPLOADED,
   payload: value
 })
+
+export const getEnumsBusinessMarkets = () => ({
+  type: AT.GET_VELLOCI_BUSINESS_MARKETS,
+  payload: api.getEnumsBusinessMarkets()
+})
+
+export const getEnumsBusinessTypes = () => ({
+  type: AT.GET_VELLOCI_BUSINESS_TYPES,
+  payload: api.getEnumsBusinessTypes()
+})
