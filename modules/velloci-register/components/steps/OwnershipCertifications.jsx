@@ -67,7 +67,14 @@ const OwnershipCertifications = props => {
                     </GridRow>
                     <GridRow>
                         <GridColumn computer={8} tablet={8} mobile={16}>
-                            <ButtonSemantic className="btn-browse-files" basic icon as='label'>
+                            <ButtonSemantic
+                              as='label'
+                              basic
+                              className="btn-browse-files"
+                              data-test='ownership-certifications-browse-files'
+                              icon
+                              role='button'
+                            >
                                 <PaperclipIcon size='15' />
                                 <FormattedMessage id='company.browseFileHere' defaultMessage='Browse file here' />
                                 <InputHidden
@@ -99,7 +106,7 @@ const OwnershipCertifications = props => {
                                         id: 'company.selectFederalOwnershipCertifications',
                                         defaultMessage: 'Select Federal Ownership Certifications'
                                         }),
-                                    'data-test': 'company_form_select_federal_certification_drpdn'
+                                    'data-test': 'ownership-certifications-federal'
                                 }}
                             />
                         </GridColumn>
@@ -123,14 +130,19 @@ const OwnershipCertifications = props => {
                                         id: 'company.selectManagementCertifications',
                                         defaultMessage: 'Select Management Certifications'
                                         }),
-                                    'data-test': 'company_form_select_management_certification_drpdn'
+                                    'data-test': 'ownership-certifications-management'
                                 }}
                             />
                         </GridColumn>
                     </GridRow>
                     <GridRow>
                         <GridColumn>
-                            <Button.Submit className="btn-save s-full-width btn-primary-color" disabled={!values.file || !values.documentId} onClick={handleSubmit} data-test='company_form_add_legal_document_submit_btn'>
+                            <Button.Submit
+                              className="btn-save s-full-width btn-primary-color"
+                              data-test='ownership-certifications-add-another'
+                              disabled={!values.file || !values.documentId}
+                              onClick={handleSubmit}
+                            >
                                 <FormattedMessage id='onboarding.setup.indicator.add.another' />
                             </Button.Submit>
                         </GridColumn>
