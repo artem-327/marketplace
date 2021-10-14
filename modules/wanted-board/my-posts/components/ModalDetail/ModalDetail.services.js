@@ -60,18 +60,22 @@ export const submitHandler = async (values, {setSubmitting}, props) => {
     // "neededAt": "2021-09-14T12:56:38.558Z"
   }
 
-  const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid } = props
+  const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid, openGlobalAddForm } = props
   try {
     removeEmpty(payload)
 
     if (popupValues) {
       await updateWantedBoard(popupValues.id, payload)
-      datagrid.loadData()
+      !openGlobalAddForm && datagrid.loadData()
     } else {
       await postNewWantedBoard(payload)
-      datagrid.loadData()
+      !openGlobalAddForm && datagrid.loadData()
     }
-    props.closeAddEditPopup()
+    if (openGlobalAddForm) {
+      openGlobalAddForm('')
+    } else {
+      props.closeAddEditPopup()
+    }
   } catch (e) {
     console.error(e)
   } finally {
