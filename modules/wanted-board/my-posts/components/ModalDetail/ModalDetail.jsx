@@ -24,12 +24,12 @@ import {
 import { formValidation, getInitialFormValues, submitHandler } from './ModalDetail.services'
 
 const ModalDetail = props => {
-  const { popupValues, updating, openGlobalAddForm } = props
+  const { popupValues, updating, primaryBranch, openGlobalAddForm } = props
   const [provinceRequired, setProvinceRequired] = useState(false)
 
   return (
     <Formik
-      initialValues={getInitialFormValues(popupValues)}
+      initialValues={getInitialFormValues(popupValues, primaryBranch)}
       validationSchema={formValidation(provinceRequired)}
       enableReinitialize
       onReset={() => props.closeAddEditPopup()}
