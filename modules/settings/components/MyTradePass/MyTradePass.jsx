@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { number, string, bool, array, object, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, FormattedDate, injectIntl } from 'react-intl'
-import { Image, Loader, Dimmer, GridRow, GridColumn, Divider } from 'semantic-ui-react'
+import { Image, Loader, Dimmer, GridRow, GridColumn, Divider, Popup } from 'semantic-ui-react'
 
 // Components
 import TradeCriteria from '../../../../components/detail-row/header'
@@ -26,7 +26,8 @@ import {
   DivLeftAligned,
   DivValue,
   DivTitleTradeCriteria,
-  DivBarGraph
+  DivBarGraph,
+  CopyIcon
 } from './MyTradePass.styles'
 
 // Services
@@ -106,7 +107,32 @@ const MyTradePass = props => {
                 <DivCollectionStat>
                   <DivLeftAligned $flexWidth='60%'>
                     <FormattedMessage id='company.myTradePassId' defaultMessage='My TradePass ID' />
-                    <DivValue>{myTradePass?.tradepassId}</DivValue>
+                    <DivValue>
+                      {myTradePass?.tradepassId}
+                      <Popup
+                        content={<FormattedMessage id='global.copyToClipboard' defaultMessage='Copy to clipboard' />}
+                        inverted
+                        style={{
+                          fontSize: '12px',
+                          color: '#cecfd4',
+                          opacity: '0.9'
+                        }}
+                        trigger={
+                          <span>
+                            <CopyIcon
+                              name='copy outline'
+                              onClick={() => {
+                                try {
+                                  navigator.clipboard.writeText(myTradePass?.tradepassId)
+                                } catch (e) {
+                                  console.error(e)
+                                }
+                              }}
+                            />
+                          </span>
+                        }
+                      />
+                    </DivValue>
                   </DivLeftAligned>
                   <DivLeftAligned $leftBorder $flexWidth='20%'>
                     <FormattedMessage id='myNetworks.detailRow.transactions' defaultMessage='Transactions' />

@@ -1,4 +1,4 @@
-import { Grid, Segment } from 'semantic-ui-react'
+import { Grid, Segment, Icon } from 'semantic-ui-react'
 import styled from 'styled-components'
 
 export const DivPageWrapper = styled.div`
@@ -113,4 +113,11 @@ export const DivBarGraph = styled.div`
   margin: auto 50px;
   width: 300px;
   height: 100px;
+`
+
+export const CopyIcon = styled(Icon)`
+  margin-left: 7px !important;
+  color: #2599d5;
+  font-size: 18px;
+  cursor: pointer;
 `
