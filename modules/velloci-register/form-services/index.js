@@ -228,6 +228,8 @@ export const getBody = (values, beneficialOwnersNotified) => {
     legalZipCode: getSafe(() => businessInfo.address.zip, ''),
     naicsCode: getSafe(() => businessInfo.naicsCode, ''),
     phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
+    companyType: getSafe(() => businessInfo.companyType, ''),
+    applicableMarkets: getSafe(() => businessInfo.markets, ''),
     tinNumber: getSafe(() => tinNumber, ''),
     controller,
     beneficialOwners,
