@@ -100,6 +100,7 @@ const FreightSelection = props => {
     item => getSafe(() => item.productOffer.companyProduct.hazardous, false) === true
   )
   const isOwn = value && value.freightType === FREIGHT_TYPES.OWN
+  const sharedListings = cart?.cartItems?.some(item => item.productOffer?.brokeredOffer)
 
   return (
     <RowComponent
@@ -302,8 +303,9 @@ const FreightSelection = props => {
                         </GridColumn>
                       </GridRowCustomPadding>
                     </GridStyled>
-                  )}
-                <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />
+                  )
+                }
+                {(!sharedListings || isOwn) && <FreightLabel isOwn={isOwn} onChange={val => onValueChange(val)} />}
               </div>
             ) : (
               <DivSectionCollapsedWrapper>
