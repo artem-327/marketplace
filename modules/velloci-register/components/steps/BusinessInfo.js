@@ -4,7 +4,6 @@ import { Checkbox, Dropdown, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
-import { companyTypeOptions, marketOptions } from '../../constants'
 //Components
 import {
   Rectangle,
@@ -72,7 +71,14 @@ const PaddedRow = styled(Grid.Row)`
   padding: 1rem 1rem 0 1rem !important;
 `
 
-function BusinessInfo({ formikProps, intl: { formatMessage }, entityTypes, naicsCodes }) {
+function BusinessInfo({
+  formikProps,
+  intl: { formatMessage },
+  entityTypes,
+  naicsCodes,
+  enumsBusinessMarkets,
+  enumsBusinessTypes
+}) {
   return (
     <GridBusinessInfo className="business-info">
       <GridRow>
@@ -346,13 +352,14 @@ function BusinessInfo({ formikProps, intl: { formatMessage }, entityTypes, naics
               }
               name='businessInfo.companyType'
               options={
-                companyTypeOptions.map(option => ({
-                  text: option.text,
+                enumsBusinessTypes.data.map(option => ({
+                  text: option.name,
                   value: option.value,
-                  key: option.key
+                  key: option.value
                 }))
               }
               inputProps={{
+                loading: enumsBusinessTypes.loading,
                 clearable: true,
                 selection: true,
                 search: true,
@@ -373,13 +380,14 @@ function BusinessInfo({ formikProps, intl: { formatMessage }, entityTypes, naics
               }
               name='businessInfo.markets'
               options={
-                marketOptions.map(option => ({
-                  text: option.text,
+                enumsBusinessMarkets.data.map(option => ({
+                  text: option.name,
                   value: option.value,
-                  key: option.key
+                  key: option.value
                 }))
               }
               inputProps={{
+                loading: enumsBusinessMarkets.loading,
                 clearable: true,
                 multiple: true,
                 selection: true,
@@ -400,13 +408,17 @@ function BusinessInfo({ formikProps, intl: { formatMessage }, entityTypes, naics
 BusinessInfo.propTypes = {
   entityTypes: PropTypes.object,
   formikProps: PropTypes.object,
-  naicsCodes: PropTypes.object
+  naicsCodes: PropTypes.object,
+  enumsBusinessMarkets: PropTypes.object,
+  enumsBusinessTypes: PropTypes.object
 }
 
 BusinessInfo.defaultProps = {
   entityType: {},
   formikProps: {},
-  naicsCodes: {}
+  naicsCodes: {},
+  enumsBusinessMarkets: {},
+  enumsBusinessTypes: {}
 }
 
 export default injectIntl(BusinessInfo)
