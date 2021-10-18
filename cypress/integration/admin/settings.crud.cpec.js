@@ -26,11 +26,8 @@ context("Admin Settings RUD", () => {
 
     it("Update settings", function () {
         cy.contains("Other Settings")
-        cy.get("div:nth-child(44)").within(() => {
-            cy.get("input")
-                .clear()
-                .type("tomas-artio@email.cz")
-        })
+        cy.get("input[id='field_input_admin\.OTHER_SETTINGS\.APP_OPERATIONS_EMAIL_ADDRESS\.value\.visible']").clear()
+            .type("tomas-artio@email.cz")
         cy.get("button[class='ui primary button']").click({force: true})
         cy.wait('@settingsSaving').then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)

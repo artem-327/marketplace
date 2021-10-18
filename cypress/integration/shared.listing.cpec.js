@@ -1,6 +1,7 @@
 context("Shared Listing", () => {
 
     let productId
+    let productName
     let offerId
     const userJSON = require('../fixtures/user.json')
     const userJSON2 = require('../fixtures/user2.json')
@@ -9,6 +10,7 @@ context("Shared Listing", () => {
         cy.getUserToken(userJSON2.email, userJSON2.password).then(token => {
             cy.getMyProductsBody(token).then(productBody => {
                 productId = productBody[ 0 ].id
+                productName = productBody[ 0 ].intProductName
                 cy.getFirstEntityWithFilter(token, 'branches/warehouses', []).then(warehouseId => {
                     cy.createProductOffer(token, productId, warehouseId).then(offer => {
                         let idHelper = offer
@@ -92,6 +94,7 @@ context("Shared Listing", () => {
     })
 
     it("Change broadcasting", () => {
+        cy.searchInList(productName)
         cy.get("[data-test*='" + offerId + "']").parents("[data-test='table_row_action']").within(() => {
             cy.get("[class*='NetworkDropdown']").click()
             cy.waitForUI()
