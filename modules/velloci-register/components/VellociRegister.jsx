@@ -43,6 +43,8 @@ const VellociRegister = props => {
       !getSafe(() => props.businessRoles.data.length, false) && props.getBusinessRoles()
       !getSafe(() => props.entityDocuments.data.length, false) && props.getEntityDocuments()
       !getSafe(() => props.politicallyExposedPersons.data.length, false) && props.getPoliticallyExposedPersons()
+      !getSafe(() => props.enumsBusinessMarkets.data.length, false) && props.getEnumsBusinessMarkets()
+      !getSafe(() => props.enumsBusinessTypes.data.length, false) && props.getEnumsBusinessTypes()
       //!getSafe(() => tinTypes.data.length, false) && getTinTypes()
     } catch (error) {
       console.error(error)
@@ -183,6 +185,10 @@ VellociRegister.propTypes = {
   getBusinessRoles: PropTypes.func,
   entityDocuments: PropTypes.object,
   getEntityDocuments: PropTypes.func,
+  enumsBusinessMarkets: PropTypes.object,
+  getEnumsBusinessMarkets: PropTypes.func,
+  enumsBusinessTypes: PropTypes.object,
+  getEnumsBusinessTypes: PropTypes.func,
   politicallyExposedPersons: PropTypes.object,
   getPoliticallyExposedPersons: PropTypes.func,
   cleareActiveStep: PropTypes.func,
@@ -210,6 +216,10 @@ VellociRegister.defaultProps = {
   getEntityTypes: () => {},
   naicsCodes: {},
   getNaicsCodes: () => {},
+  enumsBusinessMarkets: {},
+  getEnumsBusinessMarkets: () => {},
+  enumsBusinessTypes: {},
+  getEnumsBusinessTypes: () => {},
   businessRoles: {},
   getBusinessRoles: () => {},
   entityDocuments: {},

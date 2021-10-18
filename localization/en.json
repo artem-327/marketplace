@@ -2334,6 +2334,8 @@
   "marketplace.keepBrowsing": "Keep Browsing",
   "marketplace.register": "Register",
   "marketplace.allSellers": "All Sellers",
+  "marketplace.wantedBoardBids": "Wanted Board Bids",
+  "marketplace.wantedBoardBidsDescription": "Product Offers related to Wanted Board Bids",
   "myNetwork.riskMatch": "Risk Match",
   "myNetwork.riskTolerance": "Risk Tolerance",
   "myNetwork.insurance": "Insurance",

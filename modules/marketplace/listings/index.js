@@ -50,6 +50,15 @@ const Listings = props => {
           }])
         })
       }
+      if (v?.wantedBoardRequestIds?.length) {
+        v.wantedBoardRequestIds.map(id => {
+          filters.or =  filters.or.concat([{
+            operator: 'EQUALS',
+            path: 'ProductOffer.id',
+            values: [id]
+          }])
+        })
+      }
       return filters
     }
   }
