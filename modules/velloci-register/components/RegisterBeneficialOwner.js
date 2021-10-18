@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { Grid, Form, Dimmer, Loader } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow, Form, Dimmer, Loader } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import moment from 'moment'
@@ -125,7 +125,7 @@ class RegisterBeneficialOwner extends Component {
     formikProps
       .validateForm()
       .then(errors => {
-        if (errors[titleForms[5]]) {
+        if (errors[titleForms[4]]) {
           formikProps.handleSubmit()
         } else {
           this.handleSubmit()
@@ -135,7 +135,7 @@ class RegisterBeneficialOwner extends Component {
   }
 
   render() {
-    const { isLoadingSubmitButton } = this.props
+    const { isLoadingSubmitButton, beneficialOwner } = this.props
     const { tokenOk, isLoading } = this.state
 
     if (isLoading) {
@@ -148,41 +148,50 @@ class RegisterBeneficialOwner extends Component {
       return <ErrorPage type='forbidden' status='403' />
     } else {
       return (
-        <Formik
-          onSubmit={this.handleSubmit}
-          enableReinitialize
-          validateOnChange={true}
-          initialValues={initialValues}
-          validationSchema={this.getValidationSchema()}
-          render={formikProps => {
-            this.formikProps = formikProps
-            return (
-              <Form>
-                <Grid verticalAlign='middle' centered>
-                  <FormRectangle
-                    formikProps={formikProps}
-                    title={titleIds[5]}
-                    subtitle={subtitleIds[5]}
-                    prevStep={5}
-                    submitForm={this.submitForm}
-                    activeStep={5}
-                    numberBeneficialOwners={0}
-                    countBeneficialOwners={1}
-                    isLoadingSubmitButton={isLoadingSubmitButton}
-                    registerBeneficialOwner={true}>
-                    <PersonalInformation
-                      formikProps={formikProps}
-                      businessRoles={[]}
-                      numberBeneficialOwners={0}
-                      registerBeneficialOwner={true}
-                    />
-                  </FormRectangle>
-                </Grid>
-                <ErrorFocus />
-              </Form>
-            )
-          }}
-        />
+        <Grid columns='equal' padded stackable >
+          <GridRow>
+            <GridColumn width={2} only='large screen' />
+            <GridColumn>
+              <Formik
+                onSubmit={this.handleSubmit}
+                enableReinitialize
+                validateOnChange={true}
+                initialValues={initialValues}
+                validationSchema={this.getValidationSchema()}
+                render={formikProps => {
+                  this.formikProps = formikProps
+                  return (
+                    <Form>
+                      <Dimmer active={beneficialOwner.isUpdating} inverted>
+                        <Loader active={beneficialOwner.isUpdating} />
+                      </Dimmer>
+                      <FormRectangle
+                        formikProps={formikProps}
+                        title={titleIds[5]}
+                        subtitle={subtitleIds[5]}
+                        prevStep={5}
+                        submitForm={this.submitForm}
+                        activeStep={5}
+                        numberBeneficialOwners={0}
+                        countBeneficialOwners={1}
+                        isLoadingSubmitButton={isLoadingSubmitButton}
+                        registerBeneficialOwner={true}>
+                        <PersonalInformation
+                          formikProps={formikProps}
+                          businessRoles={[]}
+                          numberBeneficialOwners={0}
+                          registerBeneficialOwner={true}
+                        />
+                      </FormRectangle>
+                      <ErrorFocus />
+                    </Form>
+                  )
+                }}
+              />
+            </GridColumn>
+            <GridColumn width={2} only='large screen' />
+          </GridRow>
+        </Grid>
       )
     }
   }
