@@ -1,23 +1,41 @@
+import { useEffect, useState } from 'react'
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
+import moment from 'moment'
+const timezone = require('moment-timezone')
 // Components
-import { DateInput, TimeWithZoneInput } from '../../../../components/custom-formik'
+import { DateInput } from '../../../../components/custom-formik'
 import ErrorFocus from '../../../../components/error-focus'
 import { Required } from '../../../../components/constants/layout'
 // Services
 import { generateBOLValidation } from './ShippingQuotes.services'
 import { getStringISODate } from '../../../../components/date-format'
+// Constants
+import { TIMEZONE_OPTIONS } from '../../../../constants/constants'
 
 const GenerateBOLPopup = props => {
+  const [timezoneOptions, setTimezoneOptions] = useState([])
+  const [timezone, setTimezone] = useState('')
+  const [time, setTime] = useState('')
+
   const {
     row,
     intl: { formatMessage },
     datagrid,
     generateBOL,
-    closeGenBOLPopup
+    closeGenBOLPopup,
+    defaultTimezone
   } = props
+
+  useEffect(() => {
+    setTimezoneOptions(TIMEZONE_OPTIONS.map(el => ({
+      key: el.value,
+      text: el.display_name,
+      value: el.value
+    })))
+  }, [])
 
   return (
     <Modal closeIcon onClose={closeGenBOLPopup} open centered={false} size='small'>
@@ -28,25 +46,36 @@ const GenerateBOLPopup = props => {
         <Form
           enableReinitialize
           initialValues={{
-            carrierName: row?.carrierName, pickupTimeZone: '', pickupDate: '', pickupTime:'', timeWithZone: ''
+            carrierName: row?.carrierName,
+            pickupTimeZone: defaultTimezone ? defaultTimezone.value : '',
+            pickupDate: '',
+            pickupTime:''
           }}
           validationSchema={generateBOLValidation()}
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
-            const pickupDate = getStringISODate(values.pickupDate).slice(0, 11) + values.pickupTime + ':00' + values.pickupTimeZone
+            const userTimezone = defaultTimezone?.value
 
-            console.log('!!!!!!!!!! onSubmit pickupDate', pickupDate)
-            //closeGenBOLPopup()
+            const enteredDate = getStringISODate(values.pickupDate).slice(0, 10) + ' ' + values.pickupTime
+            const enteredDateWithSelectedTZ = moment.tz(enteredDate, values.pickupTimeZone).format()
+            const enteredDateWithUserSettingsTZ = moment.tz(enteredDateWithSelectedTZ, userTimezone).format()
+
+            console.log('!!!!!!!!!! ------------------------')
+            console.log('!!!!!!!!!! onSubmit values.pickupTimeZone: ', values.pickupTimeZone)
+            console.log('!!!!!!!!!! onSubmit User default (settings) Timezone: ', userTimezone)
+            console.log('!!!!!!!!!! onSubmit enteredDate + time: ', enteredDate)
+            console.log('!!!!!!!!!! onSubmit enteredDateTime with "Pick Up Time Zone" option applied: ', enteredDateWithSelectedTZ)
+            console.log('!!!!!!!!!! onSubmit enteredDateTime converted to User Settings TZ value: ', enteredDateWithUserSettingsTZ)
+
             try {
-              //! ! await generateBOL(row?.id, values.carrierName, pickupDate)
+              //! ! await generateBOL(row?.id, values.carrierName, enteredDateWithUserSettingsTZ)
               //! ! datagrid.loadData()
+              //! ! closeGenBOLPopup()
             } catch (e) {
             }
+            setSubmitting(false)
           }}>
           {(formikProps) => {
-
-            console.log('!!!!!!!!!! GenerateBOLPopup values', formikProps.values)
-
             return (
               <>
                 <FormGroup>
@@ -69,15 +98,10 @@ const GenerateBOLPopup = props => {
                     }
                     name='pickupTimeZone'
                     inputProps={{
-                      placeholder: formatMessage({ id: 'operations.selectTimeZone', defaultMessage: 'Please select time zone' })
+                      placeholder: formatMessage({ id: 'operations.selectTimeZone', defaultMessage: 'Please select time zone' }),
+                      search: true
                     }}
-                    options={[
-                      {
-                        text: 'US/Central',
-                        value: '-05:00',
-                        key: 1
-                      }
-                    ]}
+                    options={timezoneOptions}
                     fieldProps={{ width: 8 }}
                   />
                 </FormGroup>
@@ -91,7 +115,8 @@ const GenerateBOLPopup = props => {
                     }
                     name='pickupDate'
                     inputProps={{
-                      clearable: true
+                      clearable: true,
+                      minDate: moment()
                     }}
                     fieldProps={{ width: 8 }}
                   />
@@ -108,41 +133,7 @@ const GenerateBOLPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
-
-
                 </FormGroup>
-
-                <FormGroup>
-                  Debug
-                </FormGroup>
-
-                <FormGroup>
-                  <DateInput
-                    label={
-                      <>
-                        {formatMessage({ id: 'operations.pickupDate', defaultMessage: 'Pick Up Date' })}
-                        <Required />
-                      </>
-                    }
-                    name='pickupDate'
-                    inputProps={{
-                      clearable: true
-                    }}
-                    fieldProps={{ width: 8 }}
-                  />
-                  <TimeWithZoneInput
-                    name='timeWithZone'
-                    required
-                    label={
-                      <>
-                        {formatMessage({ id: 'operations.pickupTime', defaultMessage: 'Pick Up Time' })}
-                        <Required />
-                      </>
-                    }
-                  />
-                </FormGroup>
-
-
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_shipping_quote_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />

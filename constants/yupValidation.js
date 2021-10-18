@@ -163,7 +163,10 @@ export const errorMessages = {
   ),
   passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
   invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />,
-  invalidHashtag: <FormattedMessage id='validation.invalidHashtag' defaultMessage='Invalid hashtag' />
+  invalidHashtag: <FormattedMessage id='validation.invalidHashtag' defaultMessage='Invalid hashtag' />,
+  mustBeInHhMmFormat: (
+    <FormattedMessage id='validation.mustBeInHhMmFormat' defaultMessage='Time must be in HH:MM format' />
+  )
 }
 
 export const provinceObjectRequired = hasProvinces =>

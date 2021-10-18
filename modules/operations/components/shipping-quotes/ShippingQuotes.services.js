@@ -88,7 +88,7 @@ export const generateBOLValidation = () =>
         ),
       pickupTime: Yup.string().test(
           'hh:mm',
-          'Time must be in hh:mm type',
+          errorMessages.mustBeInHhMmFormat,
           val => {
             var pattern = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
             return pattern.test(val)
