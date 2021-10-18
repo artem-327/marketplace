@@ -52,7 +52,18 @@ const ModalDetailContent = props => {
     useEffect( () => {
         const init = async () => {
             if (!props.hazardClasses.length) props.getHazardClasses()
-            let { countries, countriesLoading, units, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades, deliveryCountry } = props
+            let {
+                countries,
+                countriesLoading,
+                units,
+                getUnits,
+                getPackagingTypes,
+                getProductConditions,
+                getProductForms,
+                getProductGrades,
+                deliveryCountry,
+                primaryBranch
+            } = props
             try {
                 if (countries.length === 0 && !countriesLoading) await props.getCountries()
                 if (units.length === 0) getUnits()
@@ -61,7 +72,10 @@ const ModalDetailContent = props => {
                 if (productForms.length === 0) getProductForms()
                 if (productGrades.length === 0) getProductGrades()
 
-                await fetchProvinces(deliveryCountry?.id, deliveryCountry?.hasProvinces)
+                await fetchProvinces(
+                  deliveryCountry ? deliveryCountry.id : primaryBranch?.country?.id,
+                  deliveryCountry ? deliveryCountry.hasProvinces : primaryBranch?.country?.hasProvinces
+                )
             } catch (e) {
                 console.error(e)
             }

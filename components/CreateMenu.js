@@ -116,11 +116,10 @@ class CreateMenu extends Component {
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
             </Dropdown.Item>
           )}
-          {/* Temporary comented based on https://bluepallet.atlassian.net/browse/DT-88 */}
-          {false && (isCompanyAdmin || isMerchant) && (
+          {(isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
-                openGlobalAddForm('wanted-board-listings')
+                openGlobalAddForm('wanted-board-my-posts')
               }}>
               <Inbox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />

@@ -16,7 +16,7 @@ const Networks = props => {
   }, [])
 
   return (
-    <Layout title={props.intl.formatMessage({id: 'navigation.myNetwork', defaultMessage: 'My Network'})}>
+    <Layout title={props.intl.formatMessage({id: 'navigation.network', defaultMessage: 'Network'})}>
       {!(auth?.identity?.isCompanyAdmin || auth?.identity?.isOrderProcessing)
         ? (null)
         : (<MyNetwork/>)

@@ -24,12 +24,12 @@ import {
 import { formValidation, getInitialFormValues, submitHandler } from './ModalDetail.services'
 
 const ModalDetail = props => {
-  const { popupValues, updating } = props
+  const { popupValues, updating, primaryBranch, openGlobalAddForm } = props
   const [provinceRequired, setProvinceRequired] = useState(false)
 
   return (
     <Formik
-      initialValues={getInitialFormValues(popupValues)}
+      initialValues={getInitialFormValues(popupValues, primaryBranch)}
       validationSchema={formValidation(provinceRequired)}
       enableReinitialize
       onReset={() => props.closeAddEditPopup()}
@@ -54,11 +54,14 @@ const ModalDetail = props => {
                   <Loader />
                 </Dimmer>
                 <CustomHighSegment
-                  onClick={() => props.closeAddEditPopup()}
+                  onClick={() => {
+                    !!openGlobalAddForm && openGlobalAddForm('')
+                    props.closeAddEditPopup()}
+                  }
                   basic>
                   <DivTitle>
                     <DivHeader>
-                      {popupValues ? (
+                      {!openGlobalAddForm && popupValues ? (
                         <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted Board' />
                       ) : (
                         <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted Board' />
@@ -80,12 +83,14 @@ const ModalDetail = props => {
                 </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>
-                <BasicButton
-                  noborder
-                  onClick={() => props.closeAddEditPopup()}
-                  data-test='wanted_board_sidebar_reset_btn'>
-                  <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
-                </BasicButton>
+                {!openGlobalAddForm && (
+                  <BasicButton
+                    noborder
+                    onClick={() => props.closeAddEditPopup()}
+                    data-test='wanted_board_sidebar_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                  </BasicButton>
+                )}
                 <BasicButton
                   onClick={() => {
                     formikProps.validateForm().then(async err => {

@@ -59,6 +59,7 @@ import ModalDetailContainer from '../modules/inventory/my-listings/components/Mo
 import ProductPopup from '../modules/inventory/my-products/components/ProductPopupContainer'
 import UserEditSidebar from '../modules/settings/components/UserTable/UserEditSidebar/UserEditSidebar'
 import WarehouseSidebar from '../modules/settings/components/Locations/Warehouses/WarehousesSidebar/WarehousesSidebar'
+import WantedBoardPopup from '../modules/wanted-board/my-posts/components/ModalDetail/ModalDetailContainer'
 
 //Components
 import InviteModal from '../modules/my-network/components/InviteModal/InviteModal'
@@ -512,6 +513,9 @@ class Layout extends Component {
               detailCompany={inviteDetailCompany}
               buttonActionsDetailRow={buttonActionsDetailRow}
             />
+          )}
+          {openGlobalAddFormName === 'wanted-board-my-posts' && (
+            <WantedBoardPopup openGlobalAddForm={openGlobalAddForm} />
           )}
         </GlobalSidebars>
         <ImmediateModal />

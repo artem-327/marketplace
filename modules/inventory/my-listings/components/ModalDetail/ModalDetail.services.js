@@ -357,47 +357,6 @@ export const changedForm = (isChanged, state, setState) => {
   setState({ ...state, changedForm: isChanged })
 }
 
-const handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
-  // be sure that splits is integer and larger than 0
-  splits = parseInt(splits)
-  if (splits < 1 || isNaN(splits)) return false
-
-  // correct quantity before anchor calculation
-  if (quantity > 0) quantity -= splits
-
-  const prices = getSafe(() => values.priceTiers.pricingTiers, [])
-
-  for (let i = 0; i < prices.length; i++) {
-    const qtyFrom = parseInt(prices[i].quantityFrom)
-
-    // get level quantity (must be larger than previous level quantity)
-    let anchor = Math.max(qtyFrom, ++quantity)
-    if (!parseInt(values.priceTiers.pricingTiers[i].manuallyModified)) {
-      // if not manually modified then change quantity value
-      quantity = Math.ceil(anchor / splits) * splits
-      setFieldValue(`priceTiers.pricingTiers[${i}].quantityFrom`, quantity)
-    } else {
-      // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
-      quantity = Math.max(qtyFrom, quantity)
-    }
-  }
-}
-
-export const onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
-  value = parseInt(value)
-  const minimum = parseInt(values.edit.minimum)
-
-  handleQuantities(setFieldValue, values, value)
-
-  if (isNaN(value) || isNaN(minimum)) return false
-
-  if (minimum !== value && minimum % value !== 0) {
-    await setFieldValue('edit.minimum', value)
-  }
-
-  validateForm()
-}, 250)
-
 export const renderPricingTiers = (props, state, setState, formikPropsNew, pricingTiers) => {
   if (!pricingTiers || !getSafe(() => pricingTiers.length, '')) return
   let tiers = []
