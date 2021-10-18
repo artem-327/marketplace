@@ -29,6 +29,14 @@ export const initialState = {
     data: [],
     loading: false
   },
+  enumsBusinessMarkets: {
+    data: [],
+    loading: false
+  },
+  enumsBusinessTypes: {
+    data: [],
+    loading: false
+  },
   businessDetails: {
     data: [],
     loading: false
@@ -308,6 +316,48 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessDetails: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_PENDING: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_REJECTED: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_FULFILLED: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_PENDING: {
+      return {
+        ...state,
+        enumsBusinessTypes: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_REJECTED: {
+      return {
+        ...state,
+        enumsBusinessTypes: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_FULFILLED: {
+      return {
+        ...state,
+        enumsBusinessTypes: { data: payload, loading: false }
       }
     }
 

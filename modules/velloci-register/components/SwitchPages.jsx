@@ -19,7 +19,13 @@ export const switchPages = props => {
       return <TermsAndConditions formikProps={props.formikProps} />
     }
     case 1: {
-      return <BusinessInfo formikProps={props.formikProps} entityTypes={props.entityTypes} naicsCodes={props.naicsCodes} />
+      return <BusinessInfo
+        formikProps={props.formikProps}
+        entityTypes={props.entityTypes}
+        naicsCodes={props.naicsCodes}
+        enumsBusinessMarkets={props.enumsBusinessMarkets}
+        enumsBusinessTypes={props.enumsBusinessTypes}
+      />
     }
     case 2: {
       return <ControlPerson formikProps={props.formikProps} />

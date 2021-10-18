@@ -16,6 +16,7 @@ import { Required } from '../../../../../components/constants/layout'
 import { getStringISODate, getLocaleDateFormat } from '../../../../../components/date-format'
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../utils/functions'
+import confirm from '../../../../../components/Confirmable/confirm'
 // Styles
 import { PriceField } from '../../../../../styles/styledComponents'
 import {
@@ -306,6 +307,7 @@ export const loadProductOffer = async (id, shouldSwitchTab, props, state, setSta
 
 export const validateSaveOrSwitchToErrors = async (props, state, setState, formikPropsNew, callback = null) => {
   const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = formikPropsNew
+  const { intl: { formatMessage } } = props
 
   //! !if (Object.keys(touched).length || state.edited && !state.saved) {
   if (state.edited) {
@@ -320,11 +322,14 @@ export const validateSaveOrSwitchToErrors = async (props, state, setState, formi
       } else {
         // Edited, Errors not found, try to save
         confirm(
-          <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-          <FormattedMessage
-            id='confirm.global.unsavedChanges.content'
-            defaultMessage='You have unsaved changes. Do you wish to save them?'
-          />
+          formatMessage({
+            id: 'confirm.global.unsavedChanges.header',
+            defaultMessage: 'Unsaved changes'
+          }),
+          formatMessage({
+            id: 'confirm.global.unsavedChanges.content',
+            defaultMessage: 'You have unsaved changes. Do you wish to save them?'
+          })
         ).then(
             async () => {
               // Confirm
@@ -451,7 +456,7 @@ export const searchProducts = debounce((text, props) => {
 }, 250)
 
 export const submitFormFunc = async (values, setSubmitting, setTouched, props, state, setState) => {
-  const { addProductOffer, datagrid } = props
+  const { addProductOffer, datagrid, intl: { formatMessage } } = props
   const { detailValues, attachmentFiles } = state
   let isEdit = getSafe(() => detailValues.id, null)
   let isGrouped = getSafe(() => detailValues.grouped, false)
@@ -531,14 +536,14 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
 
       if (entityId) {
         await confirm(
-          <FormattedMessage
-            id='notifications.productOffer.alreadyExists.header'
-            defaultMessage='Product Offer already exists'
-          />,
-          <FormattedMessage
-            id='notifications.productOffer.alreadyExists.content'
-            defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
-          />
+          formatMessage({
+            id: 'notifications.productOffer.alreadyExists.header',
+            defaultMessage: 'Product Offer already exists'
+          }),
+          formatMessage({
+            id: 'notifications.productOffer.alreadyExists.content',
+            defaultMessage: `Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`
+          })
         )
           .then(async () => {
             let po = await addProductOffer(obj, entityId, false, isGrouped, attachmentFiles)

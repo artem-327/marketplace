@@ -31,6 +31,8 @@ export default {
   getPoliticallyExposedPersons: () =>
     api.get('/prodex/api/payments/velloci/enums/politically-exposed-persons').then(response => response.data),
   getTinTypes: () => api.get('/prodex/api/payments/velloci/enums/tin-types').then(response => response.data),
+  getEnumsBusinessMarkets: () => api.get('/prodex/api/payments/velloci/enums/business-markets').then(response => response.data),
+  getEnumsBusinessTypes: () => api.get('/prodex/api/payments/velloci/enums/business-types').then(response => response.data),
   getBusinessDetails: () => api.get('/prodex/api/payments/velloci/business-details').then(response => response.data),
   inviteBeneficialOwners: (body, companyId) =>
     api
