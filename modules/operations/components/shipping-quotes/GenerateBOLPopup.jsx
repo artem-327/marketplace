@@ -60,17 +60,10 @@ const GenerateBOLPopup = props => {
             const enteredDateWithSelectedTZ = moment.tz(enteredDate, values.pickupTimeZone).format()
             const enteredDateWithUserSettingsTZ = moment.tz(enteredDateWithSelectedTZ, userTimezone).format()
 
-            console.log('!!!!!!!!!! ------------------------')
-            console.log('!!!!!!!!!! onSubmit values.pickupTimeZone: ', values.pickupTimeZone)
-            console.log('!!!!!!!!!! onSubmit User default (settings) Timezone: ', userTimezone)
-            console.log('!!!!!!!!!! onSubmit enteredDate + time: ', enteredDate)
-            console.log('!!!!!!!!!! onSubmit enteredDateTime with "Pick Up Time Zone" option applied: ', enteredDateWithSelectedTZ)
-            console.log('!!!!!!!!!! onSubmit enteredDateTime converted to User Settings TZ value: ', enteredDateWithUserSettingsTZ)
-
             try {
-              //! ! await generateBOL(row?.id, values.carrierName, enteredDateWithUserSettingsTZ)
-              //! ! datagrid.loadData()
-              //! ! closeGenBOLPopup()
+              await generateBOL(row?.id, values.carrierName, enteredDateWithUserSettingsTZ)
+              datagrid.loadData()
+              closeGenBOLPopup()
             } catch (e) {
             }
             setSubmitting(false)
