@@ -1,9 +1,10 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
-
+import get from 'lodash/get'
 import * as Yup from 'yup'
 
 import { errorMessages } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
+import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
 
 export const roles = {
   admin: 'admin',
@@ -34,7 +35,8 @@ export const dataTypes = {
   NUMBER: numberAllowEmptyString,
   FLOAT: numberAllowEmptyString,
   LARGE_TEXT: Yup.string(errorMessages.invalidString),
-  TEXT: Yup.string(errorMessages.invalidString)
+  TEXT: Yup.string(errorMessages.invalidString),
+  BASE64_FILE: Yup.string(errorMessages.invalidString)
 }
 
 const defaultDataType = 'STRING'
@@ -46,7 +48,7 @@ export const getRole = accessRights => {
   return roles.user
 }
 
-export const typeToComponent = (type, options = {}) => {
+export const typeToComponent = (type, options = {}, formikProps, componentName) => {
   switch (type) {
     case 'NUMBER':
       return (
@@ -132,6 +134,58 @@ export const typeToComponent = (type, options = {}) => {
             fitted: true,
             ...getSafe(() => options.inputProps, {})
           }}
+        />
+      )
+    }
+    case 'BASE64_FILE': {
+      const { values, setFieldValue } = formikProps
+      const picture = get(values, componentName, '')
+
+      console.log('!!!!!!!!!! aaaaa BASE64_FILE options', options)
+      console.log('!!!!!!!!!! aaaaa BASE64_FILE componentName', componentName)
+      console.log('!!!!!!!!!! aaaaa BASE64_FILE formikProps', formikProps)
+      console.log('!!!!!!!!!! aaaaa BASE64_FILE picture', picture)
+
+
+      return (
+        <UploadAttachment
+          {...getSafe(() => options.props, {})}
+          {...getSafe(() => options.inputProps, {})}
+          acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+          name={componentName}
+          filesLimit={1}
+          fileMaxSize={2}
+          attachments={(picture && picture !== 'EMPTY_SETTING') ? [picture] : []}
+          onChange={file => {
+            try {
+              const reader = new FileReader()
+              reader.readAsDataURL(file[0])
+              reader.onloadend = function () {
+                const base64String = reader.result
+                // without additional data: Attributes.
+                const newBase64Pic = base64String.substr(base64String.indexOf(', ') + 1)
+                setFieldValue(componentName, newBase64Pic)
+              }
+            } catch (e) {
+              console.error(e)
+            }
+          }}
+          removeAttachment={() => {
+            setFieldValue(componentName, 'EMPTY_SETTING')
+          }}
+          emptyContent={
+            <div>
+              empty content
+            </div>
+          }
+          uploadedContent={
+            <div>
+              {(picture && picture !== 'EMPTY_SETTING') && (
+                <img src={picture}/>
+              )}
+            </div>
+          }
+
         />
       )
     }
