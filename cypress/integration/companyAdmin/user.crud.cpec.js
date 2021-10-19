@@ -3,7 +3,7 @@ context("Prodex User CRUD", () => {
     let filter = [{ "operator": "LIKE", "path": "User.name", "values": ["%Automator%"] },
         { "operator": "LIKE", "path": "User.homeBranch.deliveryAddress.contactName", "values": ["%Automator%"] }]
     const userJSON = require('../../fixtures/user.json')
-    const serverId = '3drjjanh'
+    const serverId = 'whwenjcq'
     const testEmail = `companyusercreate@${serverId}.mailosaur.net`
     const sendingTime = new Date()
 

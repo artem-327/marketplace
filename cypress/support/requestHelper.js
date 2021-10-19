@@ -56,10 +56,10 @@ Cypress.Commands.add("getFirstItemId", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: [], pageSize: 50}
+        body: { pageNumber: 0, filters: [], pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -85,10 +85,10 @@ Cypress.Commands.add("getFirstItemIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter, pageNumber: 0, pageSize: 50}
+        body: { filters: filter, pageNumber: 0, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -99,10 +99,10 @@ Cypress.Commands.add("getFirstGenericProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter, pageNumber: 0, pageSize: 50}
+        body: { filters: filter, pageNumber: 0, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -113,10 +113,10 @@ Cypress.Commands.add("getFirstMarketName", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {filters: filter, pageNumber: 0, pageSize: 50}
+        body: { filters: filter, pageNumber: 0, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].companyProduct.intProductName
+        return response.body[ 0 ].companyProduct.intProductName
     })
 })
 
@@ -153,9 +153,23 @@ Cypress.Commands.add("getMarketPlaceDatagridBody", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: [], pageSize: 50}
+        body: { pageNumber: 0, filters: [], pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
+        return response.body
+    })
+})
+
+Cypress.Commands.add("addToCart", (token, productOffer, amount, seller) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/cart/items',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: { productOffer: productOffer, pkgAmount: amount, sellerId: seller }
+    }).then((response) => {
+        expect(response.status).to.eq(201)
         return response.body
     })
 })
@@ -167,7 +181,7 @@ Cypress.Commands.add("getMarketPlaceFilteredDatagridBody", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body
@@ -181,7 +195,7 @@ Cypress.Commands.add("getInventoryDatagridBody", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: [], pageSize: 50}
+        body: { pageNumber: 0, filters: [], pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body
@@ -195,10 +209,10 @@ Cypress.Commands.add("getExpectedCartPrice", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: [], pageSize: 50}
+        body: { pageNumber: 0, filters: [], pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        let price = parseInt(response.body[0].pricingTiers[0].price.amount, 10) + parseInt(response.body[0].companyProduct.packagingSize, 10)
+        let price = parseInt(response.body[ 0 ].pricingTiers[ 0 ].price.amount, 10) + parseInt(response.body[ 0 ].companyProduct.packagingSize, 10)
         return price
     })
 })
@@ -210,10 +224,10 @@ Cypress.Commands.add("getFirstMarketIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -224,10 +238,10 @@ Cypress.Commands.add("getFirstUser", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -238,10 +252,10 @@ Cypress.Commands.add("getFirstUserIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters: filter}
+        body: { pageSize: 50, orFilters: filter }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -252,10 +266,10 @@ Cypress.Commands.add("getFirstBranchIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters : filter}
+        body: { pageSize: 50, orFilters: filter }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -266,10 +280,10 @@ Cypress.Commands.add("getFirstProductIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -280,10 +294,10 @@ Cypress.Commands.add("getFirstAddressIdWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -294,13 +308,13 @@ Cypress.Commands.add("getFirstCasProductWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters: filter}
+        body: { pageSize: 50, orFilters: filter }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        if (response.body[0] == undefined) {
+        if (response.body[ 0 ] == undefined) {
             return null
         } else {
-            return response.body[0].id
+            return response.body[ 0 ].id
         }
     })
 })
@@ -312,7 +326,7 @@ Cypress.Commands.add("getMyProductsBody", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters: []}
+        body: { pageSize: 50, orFilters: [] }
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body
@@ -326,7 +340,19 @@ Cypress.Commands.add("createProductOffer", (token, companyProduct, warehouse) =>
         headers: {
             authorization: "Bearer " + token
         },
-        body: {"acceptBids": true,"companyProduct":companyProduct,"conforming":true,"inStock":false,"leadTime":1,"minPkg":1,"pkgAvailable":10,"pricingTiers":[{"pricePerUOM":2,"quantityFrom":1}],"splitPkg":1,"warehouse":warehouse, "shared":true}
+        body: {
+            "acceptBids": true,
+            "companyProduct": companyProduct,
+            "conforming": true,
+            "inStock": false,
+            "leadTime": 1,
+            "minPkg": 1,
+            "pkgAvailable": 10,
+            "pricingTiers": [{ "pricePerUOM": 2, "quantityFrom": 1 }],
+            "splitPkg": 1,
+            "warehouse": warehouse,
+            "shared": true
+        }
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
@@ -340,7 +366,7 @@ Cypress.Commands.add("createUser", (token, name, email) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {"email":email,"name":name,"preferredCurrency":1,"roles":[34]}
+        body: { "email": email, "name": name, "preferredCurrency": 1, "roles": [34] }
     }).then((response) => {
         expect(response.status).to.eq(200)
         return response.body.id
@@ -400,13 +426,13 @@ Cypress.Commands.add("getFirstEntityWithFilter", (token, entity, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters: filter}
+        body: { pageSize: 50, orFilters: filter }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        if (response.body[0] == undefined) {
+        if (response.body[ 0 ] == undefined) {
             return null
         } else {
-            return response.body[0].id
+            return response.body[ 0 ].id
         }
     })
 })
@@ -430,13 +456,13 @@ Cypress.Commands.add("getFirstPurchaseRequestWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageSize: 50, orFilters: filter}
+        body: { pageSize: 50, orFilters: filter }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        if (response.body[0] == undefined) {
+        if (response.body[ 0 ] == undefined) {
             return null
         } else {
-            return response.body[0].id
+            return response.body[ 0 ].id
         }
     })
 })
@@ -448,10 +474,10 @@ Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -462,10 +488,10 @@ Cypress.Commands.add("getFirstDocumentTypeWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -476,10 +502,10 @@ Cypress.Commands.add("getFirstMarketSegmentWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -490,10 +516,10 @@ Cypress.Commands.add("getFirstManufacturerWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -504,10 +530,10 @@ Cypress.Commands.add("getFirstConditionWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -518,10 +544,10 @@ Cypress.Commands.add("getFirstGradeWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -532,10 +558,10 @@ Cypress.Commands.add("getFirstFormWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -546,10 +572,10 @@ Cypress.Commands.add("getFirstConditionWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -560,10 +586,10 @@ Cypress.Commands.add("getFirstCompanyWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -574,10 +600,10 @@ Cypress.Commands.add("getFirstCompanyProductWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -588,10 +614,10 @@ Cypress.Commands.add("getFirstAttachmentWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, filters: filter, pageSize: 50}
+        body: { pageNumber: 0, filters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[0].id
+        return response.body[ 0 ].id
     })
 })
 
@@ -602,13 +628,13 @@ Cypress.Commands.add("getFirstAdminUsersWithFilter", (token, filter) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pageNumber: 0, orFilters: filter, pageSize: 50}
+        body: { pageNumber: 0, orFilters: filter, pageSize: 50 }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        if (response.body[0] == undefined) {
+        if (response.body[ 0 ] == undefined) {
             return null
         } else {
-            return response.body[0].id
+            return response.body[ 0 ].id
         }
     })
 })
@@ -620,7 +646,7 @@ Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {anonymous: 0, broadcast: 1, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root"}
+        body: { anonymous: 0, broadcast: 1, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root" }
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
@@ -633,12 +659,14 @@ Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {type: "root",
+        body: {
+            type: "root",
             broadcast: 0,
             anonymous: 0,
             priceAddition: 0,
             priceMultiplier: 0,
-            priceOverride: 0}
+            priceOverride: 0
+        }
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
@@ -660,7 +688,7 @@ Cypress.Commands.add("getDeliveryWarehouses", (token) => {
 Cypress.Commands.add("setOfferBroadcasting", (token, id, state) => {
     cy.request({
         method: 'PATCH',
-        url: '/prodex/api/product-offers/' + id +'/broadcast-option?option='+ state,
+        url: '/prodex/api/product-offers/' + id + '/broadcast-option?option=' + state,
         headers: {
             authorization: "Bearer " + token
         }
@@ -721,7 +749,7 @@ Cypress.Commands.add("createPurchaseRequest", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {quantity:"5",unit:8,element:{productGroup:31}}
+        body: { quantity: "5", unit: 8, element: { productGroup: 31 } }
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
@@ -735,7 +763,7 @@ Cypress.Commands.add("createBid", (token, marketplaceId) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: {pkgAmount: 1, pricePerUOM: 1, productOffer: marketplaceId}
+        body: { pkgAmount: 1, pricePerUOM: 1, productOffer: marketplaceId }
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
@@ -751,6 +779,6 @@ Cypress.Commands.add("getPurchaseRequestFirstOfferId", (token, purchaseRequestId
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body.purchaseRequestOffers[0].id
+        return response.body.purchaseRequestOffers[ 0 ].id
     })
 })
