@@ -1,6 +1,6 @@
 describe('Onboarding', function () {
     const adminJSON = require('../../fixtures/admin.json')
-    const serverId = '3drjjanh'
+    const serverId = 'whwenjcq'
     const testEmail = `onboarding@${serverId}.mailosaur.net`
     const filter = [{ "operator": "EQUALS", "path": "Company.name", "values": ["FE Onboarding"] }]
     const sendingTime = new Date()

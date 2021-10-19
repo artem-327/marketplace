@@ -3,7 +3,7 @@ context("Prodex Admin User CRUD", () => {
     let filter = [{"operator":"LIKE","path":"User.name","values":["%TesterFE%"]},
         {"operator":"LIKE","path":"User.homeBranch.deliveryAddress.contactName","values":["%TesterFE%"]}]
     const adminJSON = require('../../fixtures/admin.json')
-    const serverId = '3drjjanh'
+    const serverId = 'whwenjcq'
     const testEmail = `superadmincreate@${serverId}.mailosaur.net`
     const sendingTime = new Date()
 

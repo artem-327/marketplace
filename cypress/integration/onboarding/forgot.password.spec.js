@@ -1,6 +1,6 @@
 describe('Onboarding', () => {
     const adminJSON = require('../../fixtures/admin.json')
-    const serverId = '3drjjanh'
+    const serverId = 'whwenjcq'
     const testEmail = `password@${serverId}.mailosaur.net`
     const filter = [{ "operator": "EQUALS", "path": "User.email", "values": [testEmail] }]
     const resetPassword = "Echopass123"
