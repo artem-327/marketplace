@@ -45,6 +45,10 @@ export const formValidationNew = () =>
     let validation = Yup.object().shape({
       name: Yup.string().trim().min(2, minLength).required(minLength),
       tinType: Yup.string().required(errorMessages.requiredMessage),
+      tin: Yup.string()
+        .trim()
+        .matches(/^\d{9}$/, errorMessages.exactLength(9))
+        .required(errorMessages.requiredMessage),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
 
