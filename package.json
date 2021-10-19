@@ -41,6 +41,7 @@
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.3.2",
+    "moment-timezone": "^0.5.33",
     "next": "^10.2.0",
     "next-cookies": "^1.1.2",
     "next-redux-wrapper": "^2.0.0",
