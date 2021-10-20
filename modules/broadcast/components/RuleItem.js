@@ -121,7 +121,7 @@ const RuleItem = props => {
         <Rule.RowContent depth={nodePath.length}>
           {displayArrow ? <Icon name={`chevron ${item.model.rule.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           {rule.type !== 'branch' || (rule.type === 'branch' && companyName) ? (
-            <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+            <span>{companyName ? `${companyName}, ${name}` : `${name}`}</span>
           ) : (
             <a
               onClick={() => {
@@ -134,7 +134,7 @@ const RuleItem = props => {
                   console.error(error)
                 }
               }}>
-              <span>{companyName ? `${companyName} ${name}` : `${name}`}</span>
+              <span>{companyName ? `${companyName}, ${name}` : `${name}`}</span>
             </a>
           )}
         </Rule.RowContent>
