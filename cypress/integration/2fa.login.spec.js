@@ -9,15 +9,15 @@ context("2FA Workflow", () => {
         cy.url().should("include", "login")
     })
 
-    it('User with bad code cannot login', () => {
+    it('User with bad code cannot login', function () {
         //This is the post call we are interested in capturing
         cy.get("input[name=username]")
-            .type("automation2fa@echoinvest.cz")
-            .should("have.value", "automation2fa@echoinvest.cz")
+            .type("automation2fa@whwenjcq.mailosaur.net")
+            .should("have.value", "automation2fa@whwenjcq.mailosaur.net")
         cy.get("input[name=password]")
             .type("echopass123")
             .should("have.value", "echopass123")
-        cy.get("button[type=submit]").click({force: true})
+        cy.get("button[type=submit]").click({ force: true })
         //Assert on XHR
         cy.wait('@login').then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
@@ -39,14 +39,14 @@ context("2FA Workflow", () => {
         cy.contains("Invalid mfa_code parameter.")
     })
 
-    it('2FA good code login', () => {
+    it('2FA good code login', function () {
         cy.get("input[name=username]")
-            .type("automation2fa@echoinvest.cz")
-            .should("have.value", "automation2fa@echoinvest.cz")
+            .type("automation2fa@whwenjcq.mailosaur.net")
+            .should("have.value", "automation2fa@whwenjcq.mailosaur.net")
         cy.get("input[name=password]")
             .type("echopass123")
             .should("have.value", "echopass123")
-        cy.get("button[type=submit]").click({force: true})
+        cy.get("button[type=submit]").click({ force: true })
         //Assert on XHR
         cy.wait('@login').then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
@@ -56,22 +56,22 @@ context("2FA Workflow", () => {
         cy.contains("Two-Factor Authentication").should("be.visible")
         cy.contains("label", "Email - ").click()
         cy.get("[data-test=two_factor_auth_send_btn]").click()
-        let sendingTime =  new Date()
+        let sendingTime = new Date()
 
         cy.mailosaurGetMessage(serverId, {
-            sentTo: testEmail,
+            sentTo: "automation2fa@whwenjcq.mailosaur.net",
             options: {
-                timeout: 60,
+                timeout: 120,
                 receivedAfter: sendingTime
             }
         }).as("email")
 
         cy.then(() => {
-            expect(this.email.subject).to.equal('2FA Code')
+            expect(this.email.subject).to.equal('2FA code')
         })
 
         cy.then(() => {
-            let code = this.email.html.body.match(/\w{6}</g).substring(0,6)
+            let code = this.email.html.body.match(/\w{6}</g).substring(0, 6)
 
             cy.get("[name='input2FACode0']").type(code)
             cy.get("[data-test='two_factor_auth_verify_btn']").click()
@@ -80,17 +80,17 @@ context("2FA Workflow", () => {
     })
 
 
-    it('User with bad code cannot purchase', () => {
-        cy.intercept("GET","/prodex/api/dashboard*").as("inventoryLoading")
+    xit('User with bad code cannot purchase', () => {
+        cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("POST", "/prodex/api/product-offers/broadcasted/datagrid*").as("marketplaceLoading")
 
-        cy.FElogin("automation3@echoinvest.cz", "echopass123")
+        cy.FElogin("automation2fa2@whwenjcq.mailosaur.net", "echopass123")
 
         cy.waitForUI()
-        cy.wait('@inventoryLoading', {timeout: 30000})
+        cy.wait('@inventoryLoading', { timeout: 30000 })
         cy.contains("Marketplace").click()
 
-        cy.wait("@marketplaceLoading", {timeout: 30000})
+        cy.wait("@marketplaceLoading", { timeout: 30000 })
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.getMarketPlaceDatagridBody(token).then(marketPlaceBody => {

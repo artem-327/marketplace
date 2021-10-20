@@ -54,7 +54,7 @@ context("Company Details", () => {
 
         cy.contains("button", "Save").click()
         cy.waitForUI()
-        cy.get("@detailsSaving").then(({ request, response }) => {
+        cy.wait("@detailsSaving").then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
         })
 

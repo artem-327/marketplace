@@ -75,6 +75,14 @@ context("Shared Listing", () => {
     })
 
     it("Set quick pricing tier", () => {
+        cy.get("input[type=text]").type(productName, {force: true})
+        cy.wait('@sharedListingLoading')
+        cy.get("i[class='search icon']").next().within(() => {
+            cy.get("[role=option]").within(() => {
+                cy.contains(productName).click()
+            })
+        })
+
         cy.get("[data-test*='" + offerId + "']").parent().parent().parent().click({force: true})
         cy.waitForUI()
         //Cypress losing focus while typing
@@ -94,7 +102,15 @@ context("Shared Listing", () => {
     })
 
     it("Change broadcasting", () => {
-        cy.searchInList(productName)
+        cy.waitForUI()
+        cy.get("input[type=text]").type(productName, {force: true})
+        cy.wait('@sharedListingLoading')
+        cy.get("i[class='search icon']").next().within(() => {
+            cy.get("[role=option]").within(() => {
+                cy.contains(productName).click()
+            })
+        })
+
         cy.get("[data-test*='" + offerId + "']").parents("[data-test='table_row_action']").within(() => {
             cy.get("[class*='NetworkDropdown']").click()
             cy.waitForUI()
