@@ -402,7 +402,8 @@ class Settings extends Component {
                                           }
                                         },
                                         formikProps,
-                                        componentName
+                                        componentName,
+                                        this.props
                                       ),
                                       {
                                         name: componentName

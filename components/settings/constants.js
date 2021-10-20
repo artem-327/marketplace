@@ -1,10 +1,11 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import get from 'lodash/get'
 import * as Yup from 'yup'
-
 import { errorMessages } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
 import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
+
+import { DivLogoWrapper, ImageSearchStyled } from './settings.styles'
 
 export const roles = {
   admin: 'admin',
@@ -48,7 +49,8 @@ export const getRole = accessRights => {
   return roles.user
 }
 
-export const typeToComponent = (type, options = {}, formikProps, componentName) => {
+export const typeToComponent = (type, options = {}, formikProps, componentName, props) => {
+  const { intl: { formatMessage } } = props
   switch (type) {
     case 'NUMBER':
       return (
@@ -141,12 +143,6 @@ export const typeToComponent = (type, options = {}, formikProps, componentName) 
       const { values, setFieldValue } = formikProps
       const picture = get(values, componentName, '')
 
-      console.log('!!!!!!!!!! aaaaa BASE64_FILE options', options)
-      console.log('!!!!!!!!!! aaaaa BASE64_FILE componentName', componentName)
-      console.log('!!!!!!!!!! aaaaa BASE64_FILE formikProps', formikProps)
-      console.log('!!!!!!!!!! aaaaa BASE64_FILE picture', picture)
-
-
       return (
         <UploadAttachment
           {...getSafe(() => options.props, {})}
@@ -155,7 +151,13 @@ export const typeToComponent = (type, options = {}, formikProps, componentName) 
           name={componentName}
           filesLimit={1}
           fileMaxSize={2}
-          attachments={(picture && picture !== 'EMPTY_SETTING') ? [picture] : []}
+          attachments={(picture && picture !== 'EMPTY_SETTING')
+            ? [{
+              id: componentName,
+              name: formatMessage({id: 'profile.avatarPicture', defaultMessage: 'Avatar Picture'})
+            }]
+            : []
+          }
           onChange={file => {
             try {
               const reader = new FileReader()
@@ -170,14 +172,8 @@ export const typeToComponent = (type, options = {}, formikProps, componentName) 
               console.error(e)
             }
           }}
-          removeAttachment={() => {
-            setFieldValue(componentName, 'EMPTY_SETTING')
-          }}
-          emptyContent={
-            <div>
-              empty content
-            </div>
-          }
+          removeAttachment={() => setFieldValue(componentName, 'EMPTY_SETTING')}
+          emptyContent={<DivLogoWrapper><ImageSearchStyled /></DivLogoWrapper>}
           uploadedContent={
             <div>
               {(picture && picture !== 'EMPTY_SETTING') && (
