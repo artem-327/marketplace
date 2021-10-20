@@ -33,8 +33,13 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer, s
   }
 })
 
-export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async settings => {
-  let data = await api.loadGeneralRules()
+export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async (settings, value = null) => {
+  let data
+  if (value) {
+    data = value
+  } else {
+    data = await api.loadGeneralRules()
+  }
 
   const companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
 

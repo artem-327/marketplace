@@ -18,7 +18,7 @@ export const saveRules = (id, rules) =>
     .then(response => response.data)
     .catch(e => console.error(e))
 export const saveGeneralRules = rules => api.post('/prodex/api/broadcast-rules/general', rules)
-
+  .then(response => response.data.rules)
 export const saveTemplate = payload =>
   api.post('/prodex/api/broadcast-templates', payload).then(response => response.data)
 export const updateTemplate = (id, payload) => api.put(`/prodex/api/broadcast-templates/${id}`, payload)
