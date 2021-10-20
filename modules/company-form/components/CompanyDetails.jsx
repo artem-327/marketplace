@@ -185,7 +185,6 @@ const CompanyDetails = props => {
                     )
                   }}
                 />
-                <Required />
               </>
             }
             name='dba'
