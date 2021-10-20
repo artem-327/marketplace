@@ -21,7 +21,7 @@ export const switchPages = props => {
     case 1: {
       return <BusinessInfo
         formikProps={props.formikProps}
-        entityTypes={props.entityTypes}
+        businessTypes={props.businessTypes}
         naicsCodes={props.naicsCodes}
         enumsBusinessMarkets={props.enumsBusinessMarkets}
         enumsBusinessTypes={props.enumsBusinessTypes}
