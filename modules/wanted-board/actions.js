@@ -128,3 +128,10 @@ export const deleteWantedBoardBids = (id) => {
     payload: api.deleteWantedBoardBidsApi(id)
   }
 }
+
+export const toggleDisable = (value) => {
+  return {
+    type: AT.WB_TOGGLE_DISABLED,
+    payload: value
+  }
+}

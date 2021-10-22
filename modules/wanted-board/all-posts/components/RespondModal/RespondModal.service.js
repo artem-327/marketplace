@@ -308,7 +308,9 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
     postNewWantedBoardBids,
     deleteWantedBoardBids,
     editID,
-    datagrid
+    datagrid,
+    toggleDisable,
+    toggleDisabled
   } = props
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
   let useToggleStatus = submittedBids.length > 0 ? true : false
@@ -380,11 +382,14 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
     use: (
       <Radio 
         toggle 
+        disabled={toggleDisabled}
         checked={useToggleStatus} 
         onClick={async () => {
+          toggleDisable(true)
           if(useToggleStatus) {
             await deleteWantedBoardBids(submittedBids[0].wantedBoardDirectBidId)
             datagrid.loadData()
+            toggleDisable(false)
           } else {
             const values = {
               "productOffer": po.id,
@@ -392,6 +397,7 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
             }
             await postNewWantedBoardBids(values)
             datagrid.loadData()
+            toggleDisable(false)
           }
         }}
       />
