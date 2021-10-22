@@ -38,7 +38,7 @@ const VellociRegister = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     try {
-      !getSafe(() => props.entityTypes.data.length, false) && props.getEntityTypes()
+      !getSafe(() => props.businessTypes.data.length, false) && props.getBusinessTypes()
       !getSafe(() => props.naicsCodes.data.length, false) && props.getNaicsCodes()
       !getSafe(() => props.businessRoles.data.length, false) && props.getBusinessRoles()
       !getSafe(() => props.entityDocuments.data.length, false) && props.getEntityDocuments()
@@ -177,8 +177,8 @@ VellociRegister.propTypes = {
   initialValues: PropTypes.object,
   openEmailPopup: PropTypes.func,
   emailPopup: PropTypes.object,
-  entityTypes: PropTypes.object,
-  getEntityTypes: PropTypes.func,
+  businessTypes: PropTypes.object,
+  getBusinessTypes: PropTypes.func,
   naicsCodes: PropTypes.object,
   getNaicsCodes: PropTypes.func,
   businessRoles: PropTypes.object,
@@ -212,8 +212,8 @@ VellociRegister.defaultProps = {
   initialValues: {},
   openEmailPopup: () => {},
   emailPopup: {},
-  entityTypes: {},
-  getEntityTypes: () => {},
+  businessTypes: {},
+  getBusinessTypes: () => {},
   naicsCodes: {},
   getNaicsCodes: () => {},
   enumsBusinessMarkets: {},

@@ -74,7 +74,7 @@ const PaddedRow = styled(Grid.Row)`
 function BusinessInfo({
   formikProps,
   intl: { formatMessage },
-  entityTypes,
+  businessTypes,
   naicsCodes,
   enumsBusinessMarkets,
   enumsBusinessTypes
@@ -88,7 +88,7 @@ function BusinessInfo({
               <GridRowBusinessType>
                 <Grid.Column>
                   <Dropdown
-                    options={entityTypes && entityTypes.data && entityTypes.data.length ? entityTypes.data : []}
+                    options={businessTypes && businessTypes.data && businessTypes.data.length ? businessTypes.data : []}
                     fieldProps={{
                       'data-test': 'settings_velloci_registration_control_person_drpdwn'
                     }}
@@ -99,7 +99,7 @@ function BusinessInfo({
                       }),
                       search: true,
                       selection: true,
-                      loading: entityTypes && entityTypes.loading
+                      loading: businessTypes && businessTypes.loading
                     }}
                     name='businessInfo.entityType'
                     label={
@@ -406,7 +406,7 @@ function BusinessInfo({
 }
 
 BusinessInfo.propTypes = {
-  entityTypes: PropTypes.object,
+  businessTypes: PropTypes.object,
   formikProps: PropTypes.object,
   naicsCodes: PropTypes.object,
   enumsBusinessMarkets: PropTypes.object,
@@ -414,7 +414,7 @@ BusinessInfo.propTypes = {
 }
 
 BusinessInfo.defaultProps = {
-  entityType: {},
+  businessTypes: {},
   formikProps: {},
   naicsCodes: {},
   enumsBusinessMarkets: {},
