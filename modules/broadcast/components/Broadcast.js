@@ -1286,7 +1286,7 @@ class Broadcast extends Component {
       //if (this.setFieldValue) this.setFieldValue('templates', dataId)
 
       if (!asModal) {
-        await initGlobalBroadcast(settings)
+        await initGlobalBroadcast(settings, value)
       }
       this.setState({
         saved: true,
