@@ -72,7 +72,6 @@ const RespondModal = props => {
 
   const {
     intl: { formatMessage },
-    isSending,
     datagrid,
     purchaseRequestPending,
     updatingDatagrid,
@@ -96,9 +95,6 @@ const RespondModal = props => {
           return (
             <>
               <Modal closeIcon onClose={closeRespondModal} open={true} size='large'>
-                <Dimmer active={isSending} inverted>
-                  <Loader />
-                </Dimmer>
                 <Modal.Header>
                   <FormattedMessage id='wantedBoard.productRespondHeader' defaultMessage='Respond' />
                 </Modal.Header>
@@ -115,8 +111,8 @@ const RespondModal = props => {
                     onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
                   />
                 </DivPopupTableHandler>
-                <ModalContent scrolling={datagrid.rows?.length !== 0}>
-                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '0 30px 10px' }}>
+                <ModalContent scrolling={false}>
+                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '0 30px 10px', height: "100%", overflowY: "auto", overflowX: "hidden" }}>
                     <ProdexTable
                       {...datagrid.tableProps}
                       tableName='wanted_board_respond_modal'
