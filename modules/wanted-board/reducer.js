@@ -13,8 +13,7 @@ export const initialState = {
   sending: false,
   allPostsFilters: null,
   myPostsFilters: null,
-  loading: false,
-  toggleDisabled: false
+  loading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -204,13 +203,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [action.payload.variable]: action.payload.value
-      }
-    }
-
-    case AT.WB_TOGGLE_DISABLED: {
-      return {
-        ...state,
-        toggleDisabled: action.payload
       }
     }
 

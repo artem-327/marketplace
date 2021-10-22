@@ -72,7 +72,6 @@ const RespondModal = props => {
 
   const {
     intl: { formatMessage },
-    isSending,
     datagrid,
     purchaseRequestPending,
     updatingDatagrid,
@@ -96,9 +95,6 @@ const RespondModal = props => {
           return (
             <>
               <Modal closeIcon onClose={closeRespondModal} open={true} size='large'>
-                <Dimmer active={isSending} inverted>
-                  <Loader />
-                </Dimmer>
                 <Modal.Header>
                   <FormattedMessage id='wantedBoard.productRespondHeader' defaultMessage='Respond' />
                 </Modal.Header>
