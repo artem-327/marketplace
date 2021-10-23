@@ -69,8 +69,9 @@ export default class TimeoutWarning extends Component {
     settings = settings[1].settings
     let autoLogOutSettings = settings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")
     let timeout = parseInt(autoLogOutSettings[0].value)
+    let timediff = timeout * 60 * 1000 - WARNING_OFFSET
     if(timeout > 0) {
-      this.timeoutInterval = setTimeout(this.handleIdle, timeout * 60 * 1000)
+      this.timeoutInterval = setTimeout(this.handleIdle, timediff)
     }
   }
 
