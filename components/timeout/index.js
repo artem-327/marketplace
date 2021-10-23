@@ -1,10 +1,11 @@
 import { Component } from 'react'
 import { Modal, Button } from 'semantic-ui-react'
 import Router from 'next/router'
-import { refreshToken } from '~/utils/auth'
+import { refreshToken } from '../../utils/auth'
 import moment from 'moment'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
+import api from '../../modules/settings/api'
 
 const WARNING_OFFSET = 3 * 60 * 1000
 
@@ -60,17 +61,17 @@ export default class TimeoutWarning extends Component {
       warningOpen: false
     })
     this.setIdleTimeout()
-    this.idleTimer && this.idleTimer.reset()
-
     this.setState({ loading: false })
   }
 
-  setIdleTimeout = () => {
-    let ttl = window.localStorage.getItem('ttl')
-    let date = new Date(parseInt(ttl, 10))
-    const timeout = moment(date).diff(moment())
-    this.setState({ timeout })
-    this.timeoutInterval = setTimeout(this.handleIdle, timeout - WARNING_OFFSET)
+  setIdleTimeout = async () => {
+    let settings = await api.getSettings('user')
+    settings = settings[1].settings
+    let autoLogOutSettings = settings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")
+    let timeout = parseInt(autoLogOutSettings[0].value)
+    if(timeout > 0) {
+      this.timeoutInterval = setTimeout(this.handleIdle, timeout * 60 * 1000)
+    }
   }
 
   componentDidMount() {
@@ -118,9 +119,7 @@ export default class TimeoutWarning extends Component {
               primary
               data-test='logout_timeout_keep_working_btn'
               onClick={this.resetIdleTimer}>
-              <FormattedMessage id='auth.sessionTimeout.buttonKeepWorking' defaultMessage='Keep Working'>
-                {text => text}
-              </FormattedMessage>
+              <FormattedMessage id='auth.sessionTimeout.buttonKeepWorking' defaultMessage='Keep Working' />
             </Button>
           </Modal.Actions>
         </Modal>
