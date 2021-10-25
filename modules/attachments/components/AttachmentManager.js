@@ -86,7 +86,6 @@ class AttachmentClass extends Component {
       })
 
       if (!this.state.initialDatagridLoaded) {
-        console.log('!!!!!!!!!! componentDidUpdate')
         const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
         this.handleSearch({ name: '', type: docTypeIds })
         this.setState({ open: true, documentTypes: docTypeIds, initialDatagridLoaded: true })
@@ -106,7 +105,6 @@ class AttachmentClass extends Component {
 
   handleSearch = debounce(value => {
     let { datagrid } = this.props
-    console.log('!!!!!!!!!! handleSearch')
     datagrid.setSearch(value)
   }, 500)
 
@@ -260,7 +258,6 @@ class AttachmentClass extends Component {
                       placeholder='Search'
                       value={searchValue}
                       onChange={(_, data) => {
-                        console.log('!!!!!!!!!! onChange')
                         this.setState({ searchValue: data?.value ? data.value : '' })
                         this.handleSearch({ name: data.value, type: this.state.documentTypes })
                       }}
@@ -389,7 +386,7 @@ class AttachmentManager extends Component {
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <AttachmentModal {...this.props} />
       </DatagridProvider>
     )
