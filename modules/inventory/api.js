@@ -139,3 +139,5 @@ export const getTdsTemplates = () =>
 
 export const deleteTdsTemplate = templateId =>
   api.delete(`/prodex/api/technical-datasheet-templates/${templateId}`).then(response => response.data)
+
+export const getProductOfferById = poId => api.get(`/prodex/api/product-offers/${poId}`).then(response => response.data)

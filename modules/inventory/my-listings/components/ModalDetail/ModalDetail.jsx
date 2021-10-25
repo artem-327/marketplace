@@ -120,7 +120,7 @@ const ModalDetail = props => {
       modalActiveTab
     } = props
     if (detailValues) {
-      loadProductOffer(detailValues.id, null, props, state, setState, formikPropsNew, resetFormNew) // Start editing, reload product offer
+      loadProductOffer(null, props, state, setState, formikPropsNew, resetFormNew) // Start editing, reload product offer
     }
     fetchIfNoData('productFormsDropdown', getProductForms, props)
     fetchIfNoData('productGradesDropdown', getProductGrades, props)
@@ -148,12 +148,12 @@ const ModalDetail = props => {
         if (!prevModalActiveTab) {
           // Add new to Edit mode
           validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
-            loadProductOffer(props.detailValues.id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
+            loadProductOffer(shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
           })
         } else {
           // Edit to Edit mode
           validateSaveOrSwitchToErrors(props, state, setState, formikPropsNew, () => {
-            loadProductOffer(props.detailValues.id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
+            loadProductOffer(shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew)
           })
         }
       } else {
