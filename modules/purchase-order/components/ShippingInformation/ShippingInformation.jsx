@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { connect } from 'react-redux'
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -14,7 +13,7 @@ import { Form, Input, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import { ModalStyled, LabelBlueText } from './ShippingInformation.styles'
 
 //Services
-import { getInitValues, validationSchema } from './ShippingInformation.services'
+import { getInitValues } from './ShippingInformation.services'
 
 const ShippingInformation = props => {
   const [openModal, setOpenModal] = useState(false)
@@ -44,7 +43,7 @@ const ShippingInformation = props => {
         <Modal.Content>
           <Form
             initialValues={getInitValues(item)}
-            validationSchema={validationSchema}
+            validationSchema={{}}
             enableReinitialize
             onSubmit={() => {}}
             children={() => {

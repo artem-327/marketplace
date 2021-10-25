@@ -1,7 +1,4 @@
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { freightClassValidation } from '~/constants/yupValidation'
-import { debounce } from 'lodash'
-import * as Yup from 'yup'
+import { getSafe } from '~/utils/functions'
 
 export const getInitValues = item => {
   let {
@@ -38,7 +35,3 @@ export const getInitValues = item => {
     stackable: getSafe(() => item.stackable, companyProduct.stackable || false)
   }
 }
-
-export const validationSchema = Yup.object().shape({
-  freightClass: freightClassValidation()
-})
