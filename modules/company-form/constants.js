@@ -9,5 +9,10 @@ export const validationSchema = Yup.object().shape({
     .required(),
   website: websiteValidationNotRequired(),
   phone: phoneValidation(10),
-  tinType: Yup.string().required(errorMessages.requiredMessage)
+  tinType: Yup.string()
+    .when('tin', {
+      is: value => !!value,
+      then: Yup.string().required(errorMessages.requiredMessage),
+      otherwise: Yup.string()
+    })
 })

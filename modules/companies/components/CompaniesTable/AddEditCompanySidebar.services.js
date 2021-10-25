@@ -44,7 +44,12 @@ export const formValidationNew = () =>
 
     let validation = Yup.object().shape({
       name: Yup.string().trim().min(2, minLength).required(minLength),
-      tinType: Yup.string().required(errorMessages.requiredMessage),
+      tinType: Yup.string()
+        .when('tin', {
+          is: value => !!value,
+          then: Yup.string().required(errorMessages.requiredMessage),
+          otherwise: Yup.string()
+        }),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
 

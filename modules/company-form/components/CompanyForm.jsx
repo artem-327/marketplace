@@ -209,6 +209,7 @@ class CompanyForm extends Component {
       associations
     } = this.props
     const { formatMessage } = intl
+
     return (
       <>
         <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
@@ -283,7 +284,7 @@ class CompanyForm extends Component {
               label={
                 <label>
                   <FormattedMessage id='company.tinType' defaultMessage='TIN Type' />
-                  <Required />
+                  {!!values.tin.trim() && (<Required />)}
                 </label>
               }
               fluid
@@ -513,7 +514,7 @@ class CompanyForm extends Component {
               label={
                 <label>
                   <FormattedMessage id='company.tinType' defaultMessage='TIN Type' />
-                  <Required />
+                  {!!values.tin.trim() && (<Required />)}
                 </label>
               }
               fluid
