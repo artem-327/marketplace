@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import { Container, Button, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
@@ -7,7 +8,8 @@ import { CustomRowDiv } from '../../styles'
 import ActionCell from '../../../../components/table/ActionCell'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import confirm from '../../../../components/Confirmable/confirm'
-
+import moment from 'moment'
+import { getLocaleDateFormat } from '../../../../components/date-format'
 import ModalDetailContainer from './ModalDetail/ModalDetailContainer'
 import SeeListings from './SeeListings/index'
 
@@ -58,7 +60,7 @@ const MyPosts = props => {
     }
   ]
 
-  useEffect(() => {
+  useEffect(async () => {
     const { myPostsFilters } = props
 
     if (myPostsFilters) {
@@ -75,6 +77,33 @@ const MyPosts = props => {
         handleFiltersValue(filter, props)
       }
     }
+
+    let openId = Router.router?.query?.id ? parseInt(Router.router?.query?.id) : 0
+    openId = openId && !isNaN(openId) ? openId : 0
+    if (openId) {
+      try {
+        const { value } = await props.getWantedBoardOwn(openId)
+        if (value?.data?.length === 1)
+        {
+          const row = value.data[0]
+          let province = row?.deliveryCountry?.hasProvinces ? row?.deliveryProvince?.name : null
+          let country = row?.deliveryCountry?.name
+          const payload = {
+            id: row.id,
+            rawData: row,
+            productName: row?.productSearchPattern || row?.element?.productGroup?.name || row?.element?.casProduct?.name || row?.element?.casProduct?.casIndexName,
+            quantity: `${row?.quantity} ${row?.unit?.nameAbbreviation}`,
+            shippingLocation: province ? province + ", " + country : country ? country : "",
+            conforming: row?.conforming ? 'Yes' : 'No',
+            postExpiry: moment(row.expiresAt).format(getLocaleDateFormat())
+          }
+          props.openAddEditModal(payload)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
   }, [])
 
   const handleFilterChangeInputSearch = (data, props, state, setState) => {
@@ -143,12 +172,15 @@ const MyPosts = props => {
           defaultMessage: 'See Listings'
         }),
         callback: async row => {
-          try {
-            props.openSeeListingModal(row)
-          } catch (e) {
-            console.error(e)
+          if (row?.rawData?.submittedProductOffers?.length) {
+            await props.handleVariableSave('tableHandlersFiltersListings', {
+              SearchByNamesAndTags: null,
+              wantedBoardRequestIds: row.rawData.submittedProductOffers
+            })
+            Router.push('/marketplace/listings')
           }
-        }
+        },
+        hidden: row => !row?.rawData?.submittedProductOffers?.length
       }
     ]
   }
@@ -170,7 +202,8 @@ const MyPosts = props => {
       intl: { formatMessage },
       openAddEditModal,
       openedSeeListingModal,
-      editID
+      editID,
+      loading
     } = props
 
     return (
@@ -221,6 +254,7 @@ const MyPosts = props => {
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
+            loading={datagrid.tableProps.loading || loading}
           />
         </div>
       </>

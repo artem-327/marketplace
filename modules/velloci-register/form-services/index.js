@@ -228,6 +228,8 @@ export const getBody = (values, beneficialOwnersNotified) => {
     legalZipCode: getSafe(() => businessInfo.address.zip, ''),
     naicsCode: getSafe(() => businessInfo.naicsCode, ''),
     phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
+    companyType: getSafe(() => businessInfo.companyType, ''),
+    applicableMarkets: getSafe(() => businessInfo.markets, ''),
     tinNumber: getSafe(() => tinNumber, ''),
     controller,
     beneficialOwners,
@@ -263,6 +265,14 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
         if (errors[titleForms[activeStep]]) {
           formikProps.handleSubmit()
         } else {
+          const additionalActions = overrideCOI?.coiDocumentUploaded ? { activeStep, nextStep } : {
+            resetForm: () => {
+              formikProps.resetForm()
+              formikProps?.setFieldValue('certificateOfInsurance.file', '')
+              formikProps?.setFieldValue('certificateOfInsurance.documentId', '')
+            }
+          }
+
           CoiSubmit(
             overrideCOI.values,
             { setSubmitting: overrideCOI.setSubmitting },
@@ -272,9 +282,8 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
               uploadInsuranceDocument: overrideCOI.uploadInsuranceDocument,
               getInsuranceDocuments: overrideCOI.getInsuranceDocuments
             },
-            { activeStep, nextStep }
+            additionalActions
           )
-          nextStep(activeStep + 1)
         }
       } else {
         if (errors[titleForms[activeStep]] || activeStep === FINAL_STEP) {

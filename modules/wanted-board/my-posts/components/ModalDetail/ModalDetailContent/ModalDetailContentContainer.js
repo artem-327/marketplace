@@ -23,7 +23,8 @@ const makeMapStateToProps = () => {
       productGradesLoading: state.globalData.productGradesLoading,
       hazardClasses: getHazardClasses(state),
       hazardClassesLoading: getHazardClassesLoading(state),
-      deliveryCountry: state.wantedBoard?.popupValues?.rawData?.deliveryCountry
+      deliveryCountry: state.wantedBoard?.popupValues?.rawData?.deliveryCountry,
+      primaryBranch: state.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address
     }
   }
   return mapStateToProps

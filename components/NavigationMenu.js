@@ -460,7 +460,7 @@ class Navigation extends Component {
                 icon={<Globe size={22} />}
                 text={
                   <>
-                    <FormattedMessage id='navigation.myNetwork' defaultMessage='My Network' />
+                    <FormattedMessage id='navigation.network' defaultMessage='Network' />
                     {myNetwork ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }
@@ -547,7 +547,8 @@ class Navigation extends Component {
               </DropdownItem>
             )}
 
-            {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
+            {process?.env?.NODE_ENV !== 'production' &&
+              (isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
               <DropdownItem
                 icon={<Grid size={22} />}
                 text={
@@ -637,7 +638,7 @@ class Navigation extends Component {
                 }
                 text={
                   <>
-                    <FormattedMessage id='navigation.myTradePass' defaultMessage='My TradePass' />
+                    <FormattedMessage id='navigation.tradePass' defaultMessage='TradePass' />
                     {settings ? <ChevronUp /> : <ChevronDown />}
                   </>
                 }

@@ -68,7 +68,6 @@ const Checkout = props => {
   const [twoFactorAuthState, setTwoFactorAuthState] = useState('')
   const [twoFactorAuthOptions, setTwoFactorAuthOptions] = useState([])
   const [twoFactorAuthPass, setTwoFactorAuthPass] = useState('')
-  const [twoFactorAuthLastSent, setTwoFactorAuthLastSent] = useState(null)
   const [twoFactorAuthtime, setTwoFactorAuthTime] = useState(Date.now())
   let twoFactorAuthTimeoutSecs
 
@@ -97,7 +96,8 @@ const Checkout = props => {
     companyName,
     takeOverCompanyFinish,
     twoPhaseAuthLoading,
-    twoPhaseErrorMessage
+    twoPhaseErrorMessage,
+    twoPhaseAuthSentDatetime
   } = props
 
   // Similar to call componentDidMount:
@@ -105,6 +105,9 @@ const Checkout = props => {
     const init = async () => {
       await props.getIdentity()
       const { value } = await props.getCart()
+      if (value.cartItems?.length === 0) {
+        Router.push('/cart')
+      }
       const initVal = value.cartItems.map(item => ({
         id: item.id,
         quantity: item.pkgAmount.toString(),
@@ -387,11 +390,8 @@ const Checkout = props => {
                 defaultMessage='This purchase requires your authentication. For your safety, select which device you would like a verification code to be sent.'
               />
             )}
-            onAccept={value => {
-              setTwoFactorAuthLastSent(Date.now())
-              handleSubmit2FAOption(value, props, state)
-            }}
-            timeoutSeconds={twoFactorAuthLastSent ? 30 - moment().diff(twoFactorAuthLastSent, 'seconds') : 0}
+            onAccept={value => handleSubmit2FAOption(value, props, state)}
+            timeoutSeconds={twoPhaseAuthSentDatetime ? 30 - moment().diff(twoPhaseAuthSentDatetime, 'seconds') : 0}
           />
         )}
         {twoFactorAuthState === 'enter' && (

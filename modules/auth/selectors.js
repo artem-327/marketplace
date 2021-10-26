@@ -18,7 +18,7 @@ const getZipHomeBranch = state => state?.auth?.identity?.homeBranch?.deliveryAdd
 const getProvince = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.province?.id
 const getDba = state => state?.auth?.identity?.company?.dba
 const getCompanyName = state => state?.auth?.identity?.company?.name
-const getBussinessType = state => state?.auth?.identity?.company?.businessType?.id
+const getBussinessType = state => state?.auth?.identity?.company?.businessType?.vellociName
 const getEin = state => state?.auth?.identity?.company?.tin
 const getAppInfo = state => state?.auth?.identity?.appInfo
 const getCompanyId = state => state?.auth?.identity?.company?.id

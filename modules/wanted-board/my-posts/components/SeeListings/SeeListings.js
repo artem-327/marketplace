@@ -190,7 +190,8 @@ const SeeListings = props => {
                                       },
                                       active: active,
                                       usedOptions: usedOptions
-                                  }
+                                  },
+                                  wantedBoardRequestIds: props.rawData.submittedProductOffers
                                 })
                               }
                               

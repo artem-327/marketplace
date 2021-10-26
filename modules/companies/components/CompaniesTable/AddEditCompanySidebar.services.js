@@ -50,6 +50,9 @@ export const formValidationNew = () =>
           then: Yup.string().required(errorMessages.requiredMessage),
           otherwise: Yup.string()
         }),
+      tin: Yup.string()
+        .trim()
+        .matches(/^\d{9}$/, errorMessages.exactLength(9)),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
 

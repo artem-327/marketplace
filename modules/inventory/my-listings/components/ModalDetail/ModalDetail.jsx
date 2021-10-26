@@ -40,7 +40,6 @@ import {
   loadProductOffer,
   validateSaveOrSwitchToErrors,
   changedForm,
-  onSplitsChange,
   renderPricingTiers,
   searchProducts,
   submitFormFunc,
@@ -545,17 +544,16 @@ const ModalDetail = props => {
                                                     min: 1,
                                                     onChange: (e, { value }) => {
                                                       value = parseInt(value)
-                                                      if (value > 1 && !isNaN(value)) {
-                                                        onSplitsChange(
-                                                          value,
-                                                          values,
-                                                          setFieldValue,
-                                                          validateForm
+                                                      if (value >= 1 && !isNaN(value)) {
+                                                        setFieldValue('priceTiers',
+                                                          {
+                                                            priceTiers: 1,
+                                                            pricingTiers: [{
+                                                              price: values.edit.fobPrice ? values.edit.fobPrice : '',
+                                                              quantityFrom: value
+                                                            }]
+                                                          }
                                                         )
-
-                                                        // It seems to do bug when created new inventory
-                                                        // value is adding in handleSubmit
-                                                        //setFieldValue('priceTiers.pricingTiers[0].quantityFrom', value)
                                                       }
                                                       if (values?.edit?.pkgAvailable && !isNaN(value)) {
                                                         values.edit.pkgAvailable < value
@@ -584,9 +582,7 @@ const ModalDetail = props => {
                                                     disabled: detailValues && detailValues.grouped,
                                                     type: 'number',
                                                     min: 1,
-                                                    fluid: true,
-                                                    onChange: (e, { value }) =>
-                                                      onSplitsChange(value, values, setFieldValue, validateForm)
+                                                    fluid: true
                                                   }}
                                                 />
                                               </FormField>
@@ -819,10 +815,10 @@ const ModalDetail = props => {
                                               disabled:
                                                 !values.edit.doesExpire || (detailValues && detailValues.grouped),
                                               'data-test': 'modal_detail_expiration_date',
-                                              fluid: true
+                                              fluid: true,
+                                              minDate: moment(),
                                               }}
                                             name='edit.expirationDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
@@ -943,7 +939,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotExpirationDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
@@ -978,7 +973,6 @@ const ModalDetail = props => {
                                               fluid: true
                                             }}
                                             name='edit.lotManufacturedDate'
-                                            inputOnly
                                             addSeparator
                                           />
                                         </GridColumn>
