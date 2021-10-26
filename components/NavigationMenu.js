@@ -547,7 +547,8 @@ class Navigation extends Component {
               </DropdownItem>
             )}
 
-            {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
+            {process?.env?.NODE_ENV !== 'production' &&
+              (isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager) && (
               <DropdownItem
                 icon={<Grid size={22} />}
                 text={
