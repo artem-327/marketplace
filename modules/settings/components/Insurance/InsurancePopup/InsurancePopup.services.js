@@ -7,8 +7,14 @@ export const SubmitFile = async (values, { setSubmitting }, props, additionalAct
   } = props
 
   if (additionalActions) {
-    const { activeStep, nextStep } = additionalActions
-    nextStep(activeStep + 1)
+    const reset = additionalActions?.resetForm
+
+    if (reset) {
+      reset()
+    } else {
+      const { activeStep, nextStep } = additionalActions
+      nextStep(activeStep + 1)
+    }
   }
 
   try {

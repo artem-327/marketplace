@@ -379,9 +379,10 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
         ),
     use: (
       <Radio 
-        toggle 
+        toggle
         checked={useToggleStatus} 
         onClick={async () => {
+          datagrid.setLoading(true)
           if(useToggleStatus) {
             await deleteWantedBoardBids(submittedBids[0].wantedBoardDirectBidId)
             datagrid.loadData()

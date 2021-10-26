@@ -19,7 +19,7 @@ export default {
       }
     })
   },
-  getEntityTypes: () => api.get('/prodex/api/payments/velloci/enums/entity-types').then(response => response.data),
+  getBusinessTypes: () => api.get('/prodex/api/business-types').then(response => response.data),
   getNaicsCodes: () =>
     api
       .get('/prodex/api/companies/naics-categories')

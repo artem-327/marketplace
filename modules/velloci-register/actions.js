@@ -18,7 +18,7 @@ export const postUploadDocuments = (files, companyId) => ({
   type: AT.UPLOAD_DOCUMENTS,
   payload: api.postUploadDocuments(files, companyId)
 })
-export const getEntityTypes = () => ({ type: AT.GET_ENTITY_TYPES, payload: api.getEntityTypes() })
+export const getBusinessTypes = () => ({ type: AT.GET_BUSINESS_TYPES, payload: api.getBusinessTypes() })
 export const getNaicsCodes = () => ({ type: AT.GET_NAICS_CODES, payload: api.getNaicsCodes() })
 
 export const getBusinessRoles = () => ({ type: AT.GET_VELLOCI_BUSINESS_ROLES, payload: api.getBusinessRoles() })

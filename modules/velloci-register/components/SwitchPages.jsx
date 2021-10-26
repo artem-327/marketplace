@@ -21,7 +21,7 @@ export const switchPages = props => {
     case 1: {
       return <BusinessInfo
         formikProps={props.formikProps}
-        entityTypes={props.entityTypes}
+        businessTypes={props.businessTypes}
         naicsCodes={props.naicsCodes}
         enumsBusinessMarkets={props.enumsBusinessMarkets}
         enumsBusinessTypes={props.enumsBusinessTypes}
@@ -53,7 +53,7 @@ export const switchPages = props => {
     case 6: {
       return <CertificateOfInsurance
         activeStep={props.activeStep}
-        coiDocumentUploaded={props.coiDocumentUploaded}
+        updateCoiDocumentUploaded={props.coiDocumentUploaded}
         formikProps={props.formikProps}
         nextStep={props.nextStep}
       />

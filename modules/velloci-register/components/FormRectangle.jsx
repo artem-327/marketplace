@@ -33,6 +33,7 @@ const FormRectangle = props => {
     beneficialOwnersNotified,
     children,
     coiDocumentUploaded,
+    updateCoiDocumentUploaded,
     formikProps,
     title,
     subtitle,
@@ -85,6 +86,25 @@ const FormRectangle = props => {
   const submitEarly = (activeStep === 3 && formikProps?.values?.ownerInformation?.isNotOtherBeneficialOwner) ||
                       (activeStep === 4 && valididateOwners())
 
+  const uploadDocument = () => {
+    submitForm(
+      formikProps,
+      determineNextStep(),
+      nextStep,
+      mainContainer,
+      null,
+      {
+        closePopup: props?.closePopup,
+        getInsuranceDocuments: props?.getInsuranceDocuments,
+        intl: props?.intl,
+        setSubmitting: formikProps?.setSubmitting,
+        values: formikProps?.values?.certificateOfInsurance,
+        uploadInsuranceDocument: props?.uploadInsuranceDocument,
+        coiDocumentUploaded
+      }
+    )
+  }
+
   const override = {
     extraProps: {
       getIdentity: props?.getIdentity,
@@ -104,6 +124,14 @@ const FormRectangle = props => {
         const file = formikProps?.values?.certificateOfInsurance?.file
         const documentId = formikProps?.values?.certificateOfInsurance?.documentId
 
+        if (documentId && documentId === 'INSURANCE_GENERAL_LIABILITY') {
+          uploadDocument()
+          updateCoiDocumentUploaded(true)
+          nextStep(activeStep + 1)
+          return
+        }
+
+        // if coi doc has been uploaded (with either upload another or next button), allow user to move to next step
         if (coiDocumentUploaded) {
           if (isFileEmpty(file) || !documentId) {
             nextStep(activeStep + 1)
@@ -114,21 +142,7 @@ const FormRectangle = props => {
         if (isFileEmpty(file) || !documentId) {
           formikProps?.handleSubmit()
         } else {
-          submitForm(
-            formikProps,
-            determineNextStep(),
-            nextStep,
-            mainContainer,
-            null,
-            {
-              closePopup: props?.closePopup,
-              getInsuranceDocuments: props?.getInsuranceDocuments,
-              intl: props?.intl,
-              setSubmitting: formikProps?.setSubmitting,
-              values: formikProps?.values?.certificateOfInsurance,
-              uploadInsuranceDocument: props?.uploadInsuranceDocument
-            }
-          )
+          uploadDocument()
         }
 
         return
