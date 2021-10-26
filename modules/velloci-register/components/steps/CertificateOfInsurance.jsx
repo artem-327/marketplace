@@ -68,7 +68,8 @@ const CertificateOfInsurance = props => {
     insuranceDocumentsTypesLoading,
     getInsuranceDocumentsTypes,
     nextStep,
-    popupValues
+    popupValues,
+    updateCoiDocumentUploaded
   } = props
 
   useEffect(() => {
@@ -121,7 +122,23 @@ const CertificateOfInsurance = props => {
                                 />
                             </ButtonSemantic>
                             {fileName && <p className="file-name" style={{ margin: '.5rem 0 0 0' }}>{fileName}</p>}
-                            <ErrorMessage component='span' name='certificateOfInsurance.file' style={{ color: '#9f3a38' }} />
+                            <ErrorMessage name='certificateOfInsurance.file'>
+                                {() => {
+                                    if (!coiDocumentUploaded) {
+                                        return (
+                                            <p style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }}>
+                                                <FormattedMessage id='onboarding.coi.document.mandatory' />
+                                            </p>
+                                        )
+                                    } else {
+                                        return (
+                                            <p style={{ color: '#9f3a38' }}>
+                                                <FormattedMessage id='global.required' />    
+                                            </p>
+                                        )
+                                    }
+                                }}
+                            </ErrorMessage>
                         </GridColumn>
                         <GridColumn computer={4} tablet={4} mobile={16}>
                             <Rectangle className="coi-info">
@@ -198,7 +215,9 @@ const CertificateOfInsurance = props => {
                                 className="s-full-width btn-primary-color"
                                 disabled={!values?.certificateOfInsurance?.documentId || isFileEmpty(values?.certificateOfInsurance?.file)}
                                 onClick={() => {
-                                    coiDocumentUploaded(true)
+                                    if (values?.certificateOfInsurance?.documentId === 'INSURANCE_GENERAL_LIABILITY') {
+                                        updateCoiDocumentUploaded(true)
+                                    }
                                     SubmitFile(
                                         formikProps?.values?.certificateOfInsurance,
                                         { setSubmitting: formikProps?.setSubmitting },
@@ -225,6 +244,7 @@ const CertificateOfInsurance = props => {
 
 function mapStateToProps(state) {
   return {
+    coiDocumentUploaded: state?.vellociRegister?.coiDocumentUploaded,
     popupValues: state.settings.popupValues,
     insuranceDocumentsTypes: state.settings.insuranceDocumentsTypes,
     insuranceDocumentsTypesLoading: state.settings.insuranceDocumentsTypesLoading

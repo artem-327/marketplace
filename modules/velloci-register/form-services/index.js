@@ -265,6 +265,14 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
         if (errors[titleForms[activeStep]]) {
           formikProps.handleSubmit()
         } else {
+          const additionalActions = overrideCOI?.coiDocumentUploaded ? { activeStep, nextStep } : {
+            resetForm: () => {
+              formikProps.resetForm()
+              formikProps?.setFieldValue('certificateOfInsurance.file', '')
+              formikProps?.setFieldValue('certificateOfInsurance.documentId', '')
+            }
+          }
+
           CoiSubmit(
             overrideCOI.values,
             { setSubmitting: overrideCOI.setSubmitting },
@@ -274,9 +282,8 @@ export const submitForm = async (formikProps, activeStep, nextStep, mainContaine
               uploadInsuranceDocument: overrideCOI.uploadInsuranceDocument,
               getInsuranceDocuments: overrideCOI.getInsuranceDocuments
             },
-            { activeStep, nextStep }
+            additionalActions
           )
-          nextStep(activeStep + 1)
         }
       } else {
         if (errors[titleForms[activeStep]] || activeStep === FINAL_STEP) {
