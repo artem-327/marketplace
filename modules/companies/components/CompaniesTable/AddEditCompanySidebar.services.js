@@ -47,7 +47,10 @@ export const formValidationNew = () =>
       tinType: Yup.string()
         .when('tin', {
           is: value => !!value,
-          then: Yup.string().required(errorMessages.requiredMessage),
+          then: Yup.string()
+            .trim()
+            .matches(/^\d{9}$/, errorMessages.exactLength(9))
+            .required(errorMessages.requiredMessage),
           otherwise: Yup.string()
         }),
       website: websiteValidationNotRequired(),

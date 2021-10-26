@@ -5,7 +5,7 @@ export const initialState = {
   finalStep: 8,
   loading: false,
   numberBeneficialOwners: 0,
-  entityTypes: {
+  businessTypes: {
     data: [],
     loading: false
   },
@@ -26,6 +26,14 @@ export const initialState = {
     loading: false
   },
   tinTypes: {
+    data: [],
+    loading: false
+  },
+  enumsBusinessMarkets: {
+    data: [],
+    loading: false
+  },
+  enumsBusinessTypes: {
     data: [],
     loading: false
   },
@@ -126,34 +134,31 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_ENTITY_TYPES_PENDING: {
+    case AT.GET_BUSINESS_TYPES_PENDING: {
       return {
         ...state,
-        entityTypes: { loading: true }
+        businessTypes: { loading: true }
       }
     }
 
-    case AT.GET_ENTITY_TYPES_REJECTED: {
+    case AT.GET_BUSINESS_TYPES_REJECTED: {
       return {
         ...state,
-        entityTypes: { loading: false }
+        businessTypes: { loading: false }
       }
     }
 
-    case AT.GET_ENTITY_TYPES_FULFILLED: {
+    case AT.GET_BUSINESS_TYPES_FULFILLED: {
       return {
         ...state,
-        entityTypes: {
+        businessTypes: {
           data:
             payload && payload.length
               ? payload.map(el => {
-                  let text = ''
-                  if (el === 'llc' || el === 'llp' || el === 'lp') text = el.toUpperCase()
-                  else text = el.charAt(0).toUpperCase() + el.replace(/_/g, ' ').slice(1)
                   return {
-                    key: el,
-                    value: el,
-                    text
+                    key: el.vellociName,
+                    value: el.vellociName,
+                    text: el.name
                   }
                 })
               : [],
@@ -308,6 +313,48 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         businessDetails: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_PENDING: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_REJECTED: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_MARKETS_FULFILLED: {
+      return {
+        ...state,
+        enumsBusinessMarkets: { data: payload, loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_PENDING: {
+      return {
+        ...state,
+        enumsBusinessTypes: { loading: true }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_REJECTED: {
+      return {
+        ...state,
+        enumsBusinessTypes: { loading: false }
+      }
+    }
+
+    case AT.GET_VELLOCI_BUSINESS_TYPES_FULFILLED: {
+      return {
+        ...state,
+        enumsBusinessTypes: { data: payload, loading: false }
       }
     }
 

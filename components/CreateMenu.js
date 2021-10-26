@@ -116,11 +116,12 @@ class CreateMenu extends Component {
               <FormattedMessage id='createMenu.newListing' defaultMessage='New Listing' />
             </Dropdown.Item>
           )}
-          {/* Temporary comented based on https://bluepallet.atlassian.net/browse/DT-88 */}
-          {false && (isCompanyAdmin || isMerchant) && (
+          {/* Temporary commented based on https://bluepallet.atlassian.net/browse/DT-88 */}
+          {/* + disabled in 2.1.2 on production https://bluepallet.atlassian.net/browse/DT-1173 */}
+          {false && process?.env?.NODE_ENV !== 'production' && (isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
-                openGlobalAddForm('wanted-board-listings')
+                openGlobalAddForm('wanted-board-my-posts')
               }}>
               <Inbox className={'menu-icon'} />
               <FormattedMessage id='createMenu.newWanted' defaultMessage='New Wanted' />

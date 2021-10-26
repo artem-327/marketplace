@@ -501,6 +501,7 @@ class CompanyForm extends Component {
                   trigger={
                     <label>
                       <FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' />
+                      <Required />
                     </label>
                   }
                 />

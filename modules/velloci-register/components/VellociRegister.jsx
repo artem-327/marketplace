@@ -38,11 +38,13 @@ const VellociRegister = props => {
   // Similar to call componentDidMount:
   useEffect(() => {
     try {
-      !getSafe(() => props.entityTypes.data.length, false) && props.getEntityTypes()
+      !getSafe(() => props.businessTypes.data.length, false) && props.getBusinessTypes()
       !getSafe(() => props.naicsCodes.data.length, false) && props.getNaicsCodes()
       !getSafe(() => props.businessRoles.data.length, false) && props.getBusinessRoles()
       !getSafe(() => props.entityDocuments.data.length, false) && props.getEntityDocuments()
       !getSafe(() => props.politicallyExposedPersons.data.length, false) && props.getPoliticallyExposedPersons()
+      !getSafe(() => props.enumsBusinessMarkets.data.length, false) && props.getEnumsBusinessMarkets()
+      !getSafe(() => props.enumsBusinessTypes.data.length, false) && props.getEnumsBusinessTypes()
       //!getSafe(() => tinTypes.data.length, false) && getTinTypes()
     } catch (error) {
       console.error(error)
@@ -133,7 +135,9 @@ const VellociRegister = props => {
                         openEmailPopup={props.openEmailPopup}
                         nextStep={props.nextStep}
                         mainContainer={mainContainer}
-                        selfFormikProps={selfFormikProps}>
+                        selfFormikProps={selfFormikProps}
+                        updateCoiDocumentUploaded={props.coiDocumentUploaded}
+                      >
                         {switchPages({ ...props, formikProps })}
                       </FormRectangle>
                       <ErrorFocus />
@@ -175,14 +179,18 @@ VellociRegister.propTypes = {
   initialValues: PropTypes.object,
   openEmailPopup: PropTypes.func,
   emailPopup: PropTypes.object,
-  entityTypes: PropTypes.object,
-  getEntityTypes: PropTypes.func,
+  businessTypes: PropTypes.object,
+  getBusinessTypes: PropTypes.func,
   naicsCodes: PropTypes.object,
   getNaicsCodes: PropTypes.func,
   businessRoles: PropTypes.object,
   getBusinessRoles: PropTypes.func,
   entityDocuments: PropTypes.object,
   getEntityDocuments: PropTypes.func,
+  enumsBusinessMarkets: PropTypes.object,
+  getEnumsBusinessMarkets: PropTypes.func,
+  enumsBusinessTypes: PropTypes.object,
+  getEnumsBusinessTypes: PropTypes.func,
   politicallyExposedPersons: PropTypes.object,
   getPoliticallyExposedPersons: PropTypes.func,
   cleareActiveStep: PropTypes.func,
@@ -206,10 +214,14 @@ VellociRegister.defaultProps = {
   initialValues: {},
   openEmailPopup: () => {},
   emailPopup: {},
-  entityTypes: {},
-  getEntityTypes: () => {},
+  businessTypes: {},
+  getBusinessTypes: () => {},
   naicsCodes: {},
   getNaicsCodes: () => {},
+  enumsBusinessMarkets: {},
+  getEnumsBusinessMarkets: () => {},
+  enumsBusinessTypes: {},
+  getEnumsBusinessTypes: () => {},
   businessRoles: {},
   getBusinessRoles: () => {},
   entityDocuments: {},

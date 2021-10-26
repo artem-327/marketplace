@@ -51,7 +51,8 @@ export const initialState = {
   isOpenModal: false,
   isThirdPartyConnectionException: false,
   twoPhaseAuthLoading: false,
-  twoPhaseErrorMessage: null
+  twoPhaseErrorMessage: null,
+  twoPhaseAuthSentDatetime: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -710,6 +711,14 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.PURCHASE_ORDER_MFA_REQUEST_CODE_FULFILLED:
+    {
+      return {
+        ...state,
+        twoPhaseAuthLoading: false,
+        twoPhaseAuthSentDatetime: Date.now()
+      }
+    }
+
     case AT.PURCHASE_ORDER_MFA_GET_PASS_FULFILLED: {
       return {
         ...state,

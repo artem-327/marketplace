@@ -2,6 +2,7 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { withDatagrid } from '../../../datagrid'
 import * as Actions from '../../actions'
+import { handleVariableSave } from '../../../marketplace/actions'
 import MyPosts from './MyPosts'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 
@@ -26,6 +27,7 @@ function mapStateToProps(store, { datagrid }) {
 
 export default withDatagrid(
   connect(mapStateToProps, {
-    ...Actions
+    ...Actions,
+    handleVariableSave
   })(MyPosts)
 )

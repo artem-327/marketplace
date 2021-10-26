@@ -6,6 +6,7 @@ const getAuth = state => getSafe(() => state.auth, null)
 const getIsOpenPopup = state => getSafe(() => state.operations.isOpenPopup, false)
 const getIsOpenGenBOLPopup = state => getSafe(() => state.operations.isOpenGenBOLPopup, false)
 const getRowBOL = state => getSafe(() => state.operations.rowBOL, null)
+const getTimezone = state => getSafe(() => state.auth?.identity?.settings?.find(item => item.key === 'USER_TIME_ZONE'), null)
 const getOrderDetailData = state => getSafe(() => state.operations.orderDetailData, null)
 const getCompanyProductUnmappedOnly = state => getSafe(() => state.operations.companyProductUnmappedOnly, 'ALL')
 const getTableHandlersFilters = state => getSafe(() => state.operations.tableHandlersFilters, null)
@@ -52,6 +53,9 @@ export const makeGetIsOpenGenBOLPopup = () => {
 }
 export const makeGetRowBOL = () => {
     return createSelector([getRowBOL], rowBOL => rowBOL)
+}
+export const makeGetTimezone = () => {
+    return createSelector([getTimezone], data => data)
 }
 export const makeGetOrderDetailData = () => {
     return createSelector([getOrderDetailData], orderDetailData => orderDetailData)

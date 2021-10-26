@@ -70,39 +70,6 @@ const ShippingQuoteInfo = props => {
         }
         <GridRow>
           <GridColumn width={16}>
-            {
-              !!getSafe(() => row.info.originCompanyName, false) &&
-              !!getSafe(() => row.info.destinationCompanyName, false)
-                ? (
-                  <AddressRow>
-                    {displayAddress({
-                      company: getSafe(() => row.info.originCompanyName, ''),
-                      address: {
-                        country: getSafe(() => row.info.originCountry, ''),
-                        province: getSafe(() => row.info.originProvince, ''),
-                        city: getSafe(() => row.info.originCity, ''),
-                        streetAddress: getSafe(() => row.info.originStreet, ''),
-                        zip: getSafe(() => row.info.originZip, '')
-                      }
-                    })}
-                    {displayAddress({
-                      company: getSafe(() => row.info.destinationCompanyName, ''),
-                      address: {
-                        country: getSafe(() => row.info.destinationCountry, ''),
-                        province: getSafe(() => row.info.destinationProvince, ''),
-                        city: getSafe(() => row.info.destinationCity, ''),
-                        streetAddress: getSafe(() => row.info.destinationStreet, ''),
-                        zip: getSafe(() => row.info.destinationZip, '')
-                      }
-                    })}
-                  </AddressRow>
-                ) : null
-            }
-          </GridColumn>
-        </GridRow>
-
-        <GridRow>
-          <GridColumn width={16}>
             <TableSegment>
               <ListTable divided relaxed horizontal size='large'>
                 {
