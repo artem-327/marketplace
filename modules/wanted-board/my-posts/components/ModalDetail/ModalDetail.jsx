@@ -36,6 +36,9 @@ const ModalDetail = props => {
       onSubmit={()=>{}}
     >
       {formikProps => {
+
+        console.log('!!!!!!!!!! aaaaa values', formikProps.values)
+
         return (
           <FormCustom autoComplete='off'>
             <DimmerSidebarOpened
@@ -100,7 +103,7 @@ const ModalDetail = props => {
                     })
                   }}
                   data-test='wanted_board_sidebar_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save' />
+                  <FormattedMessage id='global.post' defaultMessage='Post' />
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>

@@ -12,14 +12,16 @@ export const formValidation = (provinceRequired) =>
   weightUnitFilter: Yup.number().required(errorMessages.requiredMessage),
   deliveryCountry: Yup.string().required(errorMessages.requiredMessage),
   ...(provinceRequired && { statesFilter: Yup.string().required(errorMessages.requiredMessage)}),
-  expiryDate: dateValidation(true).concat(
+  neededAt: dateValidation(true).concat(
     Yup.string().test(
       'min-date',
       errorMessages.mustBeInFuture,
       val => moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
     )
   ),
-  conformingFilter: Yup.string().required(errorMessages.requiredMessage)
+  maximumPricePerUOM: Yup.number(),
+  assayMin: Yup.number(),
+  assayMax: Yup.number()
 })
 
 export const getInitialFormValues = popupValue => {
@@ -29,32 +31,37 @@ export const getInitialFormValues = popupValue => {
     weightUnitFilter: popupValue?.rawData?.unit?.id,
     deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : '',
     statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '',
-    expiryDate: popupValue?.postExpiry,
-    conformingFilter: popupValue?.conforming,
+    neededAt: popupValue?.neededAt,
     specialNotes: popupValue?.rawData?.notes,
-    gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades[0].id : null,
+    gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades.map(el => el.id) : [],
     packaingFilter: popupValue?.rawData?.packagingTypes?.length ? popupValue?.rawData?.packagingTypes[0].id : null,
-    conditionFilter: popupValue?.rawData?.condition?.id,
+    conditionFilter: popupValue?.rawData?.condition?.length ? popupValue?.rawData?.condition.map(el => el.id) : [],
     originCountryFilter: popupValue?.rawData?.origins?.length ? popupValue?.rawData?.origins[0].id : null,
-    formFilter: popupValue?.rawData?.forms?.length ? popupValue?.rawData?.forms[0].id : null,
+    formFilter: popupValue?.rawData?.forms?.length ? popupValue?.rawData?.forms.map(el => el.id) : [],
+    willAcceptEquivalents: popupValue?.rawData?.willAcceptEquivalents ? popupValue?.rawData?.willAcceptEquivalents : '', // ! ! TBD
+    maximumPricePerUOM: popupValue?.rawData?.maximumPricePerUOM ? popupValue?.rawData?.maximumPricePerUOM : '',
+    assayMin: popupValue?.rawData?.element?.assayMin ? popupValue?.rawData?.element.assayMin : '',
+    assayMax: popupValue?.rawData?.element?.assayMax ? popupValue?.rawData?.element.assayMax : ''
   }
 }
 
 export const submitHandler = async (values, {setSubmitting}, props) => {
   let payload = {
-    "conforming": values.conformingFilter == 'Yes' ? true : false,
     "deliveryCountry": values.deliveryCountry ? JSON.parse(values.deliveryCountry).countryId : '',
     "deliveryProvince": values.deliveryCountry && JSON.parse(values.deliveryCountry).hasProvinces ? values.statesFilter : null,
-    "expiresAt": values.expiryDate ? getStringISODate(values.expiryDate) : '',
+    "neededAt": values.neededAt ? getStringISODate(values.neededAt) : '',
     "notes": values.specialNotes,
     "origins": values.originCountryFilter ? [values.originCountryFilter] : [],
     "packagingTypes": values.packaingFilter ? [values.packaingFilter] : [],
     "productSearchPattern": values.productName,
     "quantity": values.quantityNeeded,
     "unit": values.weightUnitFilter,
-    "forms": values.formFilter ? [values.formFilter] : [],
-    "grades": values.gradeFilter ? [values.gradeFilter] : [],
+    "forms": values.formFilter,
+    "grades": values.gradeFilter,
     "condition": values.conditionFilter,
+    "maximumPricePerUOM": values.maximumPricePerUOM,
+    "assayMin": values.assayMin,
+    "assayMax": values.assayMax,
     // "manufacturers": [0],
     // "maximumPricePerUOM": 0,
     // "neededAt": "2021-09-14T12:56:38.558Z"

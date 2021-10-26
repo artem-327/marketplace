@@ -1,6 +1,6 @@
 import { FormattedMessage } from 'react-intl'
 
-export const CONFORMING_FILTER = [
+export const YES_NO_OPTIONS = [
     {
         key: 'Yes',
         text: <FormattedMessage id='wantedBoard.yes' defaultMessage='Yes' />,

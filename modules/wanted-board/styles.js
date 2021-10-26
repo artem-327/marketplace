@@ -918,3 +918,58 @@ export const GridStyled = styled(Grid)`
     }
   }
 `
+
+export const DivInputWrapper = styled.div`
+  position: relative;
+  > .field .ui.input {
+    height: 38px;
+    input[type=number]::-webkit-outer-spin-button,    // Remove browser arrows
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type=number] {                              // Remove browser arrows
+      -moz-appearance:textfield;
+    }
+  
+    input {
+      width: 100% !important;
+      position: static;
+      padding-right: 52px;        
+    }
+  }
+  
+  > .ui.label {
+    height: 30px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #848893;
+    background-color: #edeef2;
+    align-items: center;
+    position: absolute;
+    top: 5px;
+    right: 6px;
+    border: none !important;
+    margin: 0;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  &.price {
+    > .field .ui.input input {
+      padding-right: 14px;
+      padding-left: 50px;
+    }
+  
+    > .ui.label {
+      right: auto;
+      left: 6px;
+    }
+  }
+`
