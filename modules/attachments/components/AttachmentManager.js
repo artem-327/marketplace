@@ -186,14 +186,6 @@ class AttachmentClass extends Component {
               this.handleSearch({ name: '', type: docTypeIds })
               this.setState({ open: true, documentTypes: docTypeIds, initialDatagridLoaded: true })
             }
-      /*
-            if (documentTypeIds && documentTypeIds.length) {
-              this.handleSearch({ name: '', type: documentTypeIds })
-              this.setState({ documentTypes: documentTypeIds })
-            } else {
-              this.setState({ documentTypes: [] })
-            }
-    */
           }}>
           <CustomIcon size='14' />
           <FormattedMessage id='global.documentManager' defaultMessage='Document Manager'>
