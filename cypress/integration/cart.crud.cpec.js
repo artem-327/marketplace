@@ -205,7 +205,7 @@ context("Shopping cart CRUD", () => {
         cy.get("div.radio:visible").first().click()
         cy.contains("button", "Use this Payment Method").click()
 
-        cy.contains("Own Freight").click({ timeout: 60000 })
+        cy.get("div.radio:visible").first().click()
         cy.contains("button", "Use this Freight", { timeout: 60000 }).click()
 
         cy.contains("Place Order").should('be.visible')

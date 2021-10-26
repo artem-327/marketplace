@@ -8,6 +8,12 @@ context("Shared Listing", () => {
 
     before(function () {
         cy.getUserToken(userJSON2.email, userJSON2.password).then(token => {
+            let filter = [{ "operator": "EQUALS", "path": "ProductOffer.companyProduct.id", "values": [productId] }]
+            cy.getFirstEntityWithFilter(token, 'product-offers/own', filter).then(itemId => {
+                if (itemId != null)
+                    cy.deleteEntity(token, 'product-offers', itemId)
+            })
+
             cy.getMyProductsBody(token).then(productBody => {
                 productId = productBody[ 0 ].id
                 productName = productBody[ 0 ].intProductName
@@ -83,6 +89,8 @@ context("Shared Listing", () => {
             })
         })
 
+        cy.wait("@sharedListingLoading", { timeout: 100000 })
+
         cy.get("[data-test*='" + offerId + "']").parent().parent().parent().click({force: true})
         cy.waitForUI()
         //Cypress losing focus while typing
@@ -110,6 +118,7 @@ context("Shared Listing", () => {
                 cy.contains(productName).click()
             })
         })
+        cy.wait("@sharedListingLoading", { timeout: 100000 })
 
         cy.get("[data-test*='" + offerId + "']").parents("[data-test='table_row_action']").within(() => {
             cy.get("[class*='NetworkDropdown']").click()

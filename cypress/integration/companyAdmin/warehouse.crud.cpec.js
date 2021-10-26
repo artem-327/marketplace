@@ -42,7 +42,9 @@ context("Prodex Warehouse CRUD", () => {
         cy.enterText("input[id='field_input_deliveryAddress.address.streetAddress']", "125 N G St")
         cy.enterText("input[id='field_input_deliveryAddress.address.city']", "Harlingen")
 
-        cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.country']", "Bahamas")
+        cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.country']", "USA")
+        cy.waitForUI()
+        cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.province']", "Arizona")
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_deliveryAddress.address.zip']", "75000")
 

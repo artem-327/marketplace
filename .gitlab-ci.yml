@@ -25,7 +25,7 @@ after_script:
     echo $token
     for FILE in ./cypress/results/results*.xml
     do
-      curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?projectKey=DT&testExecKey=DT-1170"
+      curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?projectKey=DT"
     done
     echo "done"
   - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0

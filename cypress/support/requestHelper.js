@@ -386,7 +386,7 @@ Cypress.Commands.add("createCompany", (token, companyName, contactEmail) => {
             "industryType": "accounting_and_tax_preparation",
             "naicsCode": 4246,
             "name": companyName,
-            "phone": "+123456789",
+            "phone": "+12345678958",
             "primaryBranch": {
                 "deliveryAddress": {
                     "address": {
@@ -399,14 +399,14 @@ Cypress.Commands.add("createCompany", (token, companyName, contactEmail) => {
                     "addressName": "New York",
                     "contactEmail": contactEmail,
                     "contactName": "Test User",
-                    "contactPhone": "+123456789"
+                    "contactPhone": "+12345678958"
                 },
                 "warehouse": true
             },
             "primaryUser": {
                 "email": contactEmail,
                 "name": "Test User",
-                "phone": "+123456789"
+                "phone": "+12345678958"
             },
             "purchaseHazmatEligible": true,
             "tin": "123456789",

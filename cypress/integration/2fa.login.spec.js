@@ -57,6 +57,7 @@ context("2FA Workflow", () => {
         cy.contains("label", "Email - ").click()
         cy.get("[data-test=two_factor_auth_send_btn]").click()
         let sendingTime = new Date()
+        cy.wait(5000)
 
         cy.mailosaurGetMessage(serverId, {
             sentTo: "automation2fa@whwenjcq.mailosaur.net",
@@ -71,9 +72,10 @@ context("2FA Workflow", () => {
         })
 
         cy.then(() => {
-            let code = this.email.html.body.match(/\w{6}</g).substring(0, 6)
+            let codes = this.email.html.body.match(/\w{6}</g)
+            let passwordCode = codes[ 1 ].substring(0, 6)
 
-            cy.get("[name='input2FACode0']").type(code)
+            cy.get("[name='input2FACode0']").type(passwordCode)
             cy.get("[data-test='two_factor_auth_verify_btn']").click()
             cy.get(".user-menu-wrapper").should("be.visible")
         })
