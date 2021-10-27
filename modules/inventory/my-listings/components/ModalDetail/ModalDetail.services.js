@@ -16,6 +16,7 @@ import { Required } from '../../../../../components/constants/layout'
 import { getStringISODate, getLocaleDateFormat } from '../../../../../components/date-format'
 import { errorMessages, dateValidation } from '../../../../../constants/yupValidation'
 import { getSafe } from '../../../../../utils/functions'
+import confirm from '../../../../../components/Confirmable/confirm'
 // Styles
 import { PriceField } from '../../../../../styles/styledComponents'
 import {
@@ -306,6 +307,7 @@ export const loadProductOffer = async (id, shouldSwitchTab, props, state, setSta
 
 export const validateSaveOrSwitchToErrors = async (props, state, setState, formikPropsNew, callback = null) => {
   const { touched, validateForm, submitForm, values, setSubmitting, setTouched } = formikPropsNew
+  const { intl: { formatMessage } } = props
 
   //! !if (Object.keys(touched).length || state.edited && !state.saved) {
   if (state.edited) {
@@ -320,11 +322,14 @@ export const validateSaveOrSwitchToErrors = async (props, state, setState, formi
       } else {
         // Edited, Errors not found, try to save
         confirm(
-          <FormattedMessage id='confirm.global.unsavedChanges.header' defaultMessage='Unsaved changes' />,
-          <FormattedMessage
-            id='confirm.global.unsavedChanges.content'
-            defaultMessage='You have unsaved changes. Do you wish to save them?'
-          />
+          formatMessage({
+            id: 'confirm.global.unsavedChanges.header',
+            defaultMessage: 'Unsaved changes'
+          }),
+          formatMessage({
+            id: 'confirm.global.unsavedChanges.content',
+            defaultMessage: 'You have unsaved changes. Do you wish to save them?'
+          })
         ).then(
             async () => {
               // Confirm
@@ -351,47 +356,6 @@ export const validateSaveOrSwitchToErrors = async (props, state, setState, formi
 export const changedForm = (isChanged, state, setState) => {
   setState({ ...state, changedForm: isChanged })
 }
-
-const handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
-  // be sure that splits is integer and larger than 0
-  splits = parseInt(splits)
-  if (splits < 1 || isNaN(splits)) return false
-
-  // correct quantity before anchor calculation
-  if (quantity > 0) quantity -= splits
-
-  const prices = getSafe(() => values.priceTiers.pricingTiers, [])
-
-  for (let i = 0; i < prices.length; i++) {
-    const qtyFrom = parseInt(prices[i].quantityFrom)
-
-    // get level quantity (must be larger than previous level quantity)
-    let anchor = Math.max(qtyFrom, ++quantity)
-    if (!parseInt(values.priceTiers.pricingTiers[i].manuallyModified)) {
-      // if not manually modified then change quantity value
-      quantity = Math.ceil(anchor / splits) * splits
-      setFieldValue(`priceTiers.pricingTiers[${i}].quantityFrom`, quantity)
-    } else {
-      // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
-      quantity = Math.max(qtyFrom, quantity)
-    }
-  }
-}
-
-export const onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
-  value = parseInt(value)
-  const minimum = parseInt(values.edit.minimum)
-
-  handleQuantities(setFieldValue, values, value)
-
-  if (isNaN(value) || isNaN(minimum)) return false
-
-  if (minimum !== value && minimum % value !== 0) {
-    await setFieldValue('edit.minimum', value)
-  }
-
-  validateForm()
-}, 250)
 
 export const renderPricingTiers = (props, state, setState, formikPropsNew, pricingTiers) => {
   if (!pricingTiers || !getSafe(() => pricingTiers.length, '')) return
@@ -492,7 +456,7 @@ export const searchProducts = debounce((text, props) => {
 }, 250)
 
 export const submitFormFunc = async (values, setSubmitting, setTouched, props, state, setState) => {
-  const { addProductOffer, datagrid } = props
+  const { addProductOffer, datagrid, intl: { formatMessage } } = props
   const { detailValues, attachmentFiles } = state
   let isEdit = getSafe(() => detailValues.id, null)
   let isGrouped = getSafe(() => detailValues.grouped, false)
@@ -572,14 +536,14 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
 
       if (entityId) {
         await confirm(
-          <FormattedMessage
-            id='notifications.productOffer.alreadyExists.header'
-            defaultMessage='Product Offer already exists'
-          />,
-          <FormattedMessage
-            id='notifications.productOffer.alreadyExists.content'
-            defaultMessage={`Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`}
-          />
+          formatMessage({
+            id: 'notifications.productOffer.alreadyExists.header',
+            defaultMessage: 'Product Offer already exists'
+          }),
+          formatMessage({
+            id: 'notifications.productOffer.alreadyExists.content',
+            defaultMessage: `Product offer with given Lot number, warehouse and company product already exists. \n Would you like to overwrite it?`
+          })
         )
           .then(async () => {
             let po = await addProductOffer(obj, entityId, false, isGrouped, attachmentFiles)

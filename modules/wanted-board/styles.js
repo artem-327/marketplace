@@ -973,3 +973,7 @@ export const DivInputWrapper = styled.div`
     }
   }
 `
+
+export const DivPopupTableHandler = styled.div`
+  margin: 15px 51px 0;
+`

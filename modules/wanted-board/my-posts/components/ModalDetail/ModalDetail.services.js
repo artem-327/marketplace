@@ -24,13 +24,17 @@ export const formValidation = (provinceRequired) =>
   assayMax: Yup.number()
 })
 
-export const getInitialFormValues = popupValue => {
+export const getInitialFormValues = (popupValue, primaryBranch) => {
   return {
     productName: popupValue?.productName,
     quantityNeeded: popupValue?.rawData?.quantity,
     weightUnitFilter: popupValue?.rawData?.unit?.id,
-    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces}) : '',
-    statesFilter: popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '',
+    deliveryCountry: popupValue?.rawData?.deliveryCountry?.id
+      ? JSON.stringify({countryId: popupValue?.rawData?.deliveryCountry?.id, hasProvinces: popupValue?.rawData?.deliveryCountry?.hasProvinces})
+      : (primaryBranch ? JSON.stringify({countryId: primaryBranch.country.id, hasProvinces: primaryBranch.country.hasProvinces}) : ''),
+    statesFilter: popupValue?.rawData?.deliveryCountry?.id
+      ? (popupValue?.rawData?.deliveryCountry?.hasProvinces ? popupValue?.rawData?.deliveryProvince?.id : '')
+      : (primaryBranch.country.hasProvinces ? primaryBranch.province.id : ''),
     neededAt: popupValue?.neededAt,
     specialNotes: popupValue?.rawData?.notes,
     gradeFilter: popupValue?.rawData?.grades?.length ? popupValue?.rawData?.grades.map(el => el.id) : [],
@@ -67,18 +71,22 @@ export const submitHandler = async (values, {setSubmitting}, props) => {
     // "neededAt": "2021-09-14T12:56:38.558Z"
   }
 
-  const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid } = props
+  const { popupValues, updateWantedBoard, postNewWantedBoard, datagrid, openGlobalAddForm } = props
   try {
     removeEmpty(payload)
 
     if (popupValues) {
       await updateWantedBoard(popupValues.id, payload)
-      datagrid.loadData()
+      !openGlobalAddForm && datagrid.loadData()
     } else {
       await postNewWantedBoard(payload)
-      datagrid.loadData()
+      !openGlobalAddForm && datagrid.loadData()
     }
-    props.closeAddEditPopup()
+    if (openGlobalAddForm) {
+      openGlobalAddForm('')
+    } else {
+      props.closeAddEditPopup()
+    }
   } catch (e) {
     console.error(e)
   } finally {

@@ -6,7 +6,7 @@ import { withDatagrid } from '../../../datagrid'
 // Actions
 import { closeGenBOLPopup, generateBOL } from '../../actions'
 // Selectors
-import { makeGetRowBOL } from '../../selectors'
+import { makeGetRowBOL, makeGetTimezone } from '../../selectors'
 
 const mapDispatchToProps = {
     closeGenBOLPopup,
@@ -15,10 +15,12 @@ const mapDispatchToProps = {
 
 const makeMapStateToProps = () => {
     const getRowBOL = makeGetRowBOL()
+    const getTimezone = makeGetTimezone()
 
     const mapStateToProps = state => {
         return {
-            row: getRowBOL(state)
+            row: getRowBOL(state),
+            defaultTimezone: getTimezone(state)
         }
     }
     return mapStateToProps

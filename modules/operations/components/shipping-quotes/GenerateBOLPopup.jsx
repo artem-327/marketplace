@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Modal, FormGroup } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import PropTypes from 'prop-types'
+import moment from 'moment'
+const timezone = require('moment-timezone')
 // Components
 import { DateInput } from '../../../../components/custom-formik'
 import ErrorFocus from '../../../../components/error-focus'
@@ -9,15 +12,30 @@ import { Required } from '../../../../components/constants/layout'
 // Services
 import { generateBOLValidation } from './ShippingQuotes.services'
 import { getStringISODate } from '../../../../components/date-format'
+// Constants
+import { TIMEZONE_OPTIONS } from '../../../../constants/constants'
 
 const GenerateBOLPopup = props => {
+  const [timezoneOptions, setTimezoneOptions] = useState([])
+  const [timezone, setTimezone] = useState('')
+  const [time, setTime] = useState('')
+
   const {
     row,
     intl: { formatMessage },
     datagrid,
     generateBOL,
-    closeGenBOLPopup
+    closeGenBOLPopup,
+    defaultTimezone
   } = props
+
+  useEffect(() => {
+    setTimezoneOptions(TIMEZONE_OPTIONS.map(el => ({
+      key: el.value,
+      text: el.display_name,
+      value: el.value
+    })))
+  }, [])
 
   return (
     <Modal closeIcon onClose={closeGenBOLPopup} open centered={false} size='small'>
@@ -27,17 +45,28 @@ const GenerateBOLPopup = props => {
       <Modal.Content>
         <Form
           enableReinitialize
-          initialValues={{ carrierName: row?.carrierName, pickupTimeZone: '', pickupDate: '', pickupTime:'' }}
+          initialValues={{
+            carrierName: row?.carrierName,
+            pickupTimeZone: defaultTimezone ? defaultTimezone.value : '',
+            pickupDate: '',
+            pickupTime:''
+          }}
           validationSchema={generateBOLValidation()}
           onReset={closeGenBOLPopup}
           onSubmit={async (values, { setSubmitting }) => {
-            const pickupDate = getStringISODate(values.pickupDate).slice(0, 11) + values.pickupTime + ':00' + values.pickupTimeZone
-            closeGenBOLPopup()
+            const userTimezone = defaultTimezone?.value
+
+            const enteredDate = getStringISODate(values.pickupDate).slice(0, 10) + ' ' + values.pickupTime
+            const enteredDateWithSelectedTZ = moment.tz(enteredDate, values.pickupTimeZone).format()
+            const enteredDateWithUserSettingsTZ = moment.tz(enteredDateWithSelectedTZ, userTimezone).format()
+
             try {
-              await generateBOL(row?.id, values.carrierName, pickupDate)
+              await generateBOL(row?.id, values.carrierName, enteredDateWithUserSettingsTZ)
               datagrid.loadData()
+              closeGenBOLPopup()
             } catch (e) {
             }
+            setSubmitting(false)
           }}>
           {(formikProps) => {
             return (
@@ -62,15 +91,10 @@ const GenerateBOLPopup = props => {
                     }
                     name='pickupTimeZone'
                     inputProps={{
-                      placeholder: formatMessage({ id: 'operations.selectTimeZone', defaultMessage: 'Please select time zone' })
+                      placeholder: formatMessage({ id: 'operations.selectTimeZone', defaultMessage: 'Please select time zone' }),
+                      search: true
                     }}
-                    options={[
-                      {
-                        text: 'US/Central',
-                        value: '-05:00',
-                        key: 1
-                      }
-                    ]}
+                    options={timezoneOptions}
                     fieldProps={{ width: 8 }}
                   />
                 </FormGroup>
@@ -84,7 +108,8 @@ const GenerateBOLPopup = props => {
                     }
                     name='pickupDate'
                     inputProps={{
-                      clearable: true
+                      clearable: true,
+                      minDate: moment()
                     }}
                     fieldProps={{ width: 8 }}
                   />

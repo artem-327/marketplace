@@ -80,7 +80,7 @@ const makeMapStateToProps = () => {
           },
           dba: getDba(state),
           legalBusinessName: getCompanyName(state),
-          entityType: '', // getBussinessType(state), //this is not correct match for entityType from GET payments/velloci/enums/entity-types. 15.4.2021 Tomáš Drlíček knows about this and it will be fix in the future by BE developers
+          entityType: getBussinessType(state) || '',
           industryType: '',
           isEin: true,
           isSsn: false,

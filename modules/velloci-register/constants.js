@@ -70,43 +70,7 @@ export const setupIndicatorStepMobile = [
           { type: 'step', text: 'onboarding.setup.indicator.ownership.certifications', step: 3, active: 8 }
       ]
   }
-];
-
-export const companyTypeOptions = [
-  { text: 'Producer - Specialty Chemicals', value: 'Producer - Specialty Chemicals', key: 'Specialty Chemicals' },
-  { text: 'Producer - Downstream Diversified', value: 'Producer - Downstream Diversified', key: 'Downstream Diversified' },
-  { text: 'Producer - Upstream Commodity', value: 'Producer - Upstream Commodity', key: 'Upstream Commodity' },
-  { text: 'Distributor', value: 'Distributor', key: 'Distributor' },
-  { text: 'Commodity Trading', value: 'CommodityTrading', key: 'CommodityTrading' },
-  { text: 'Consultant', value: 'Consultant', key: 'Consultant' },
-  { text: 'Toll Blending & Compounding', value: 'Toll Blending & Compounding', key: 'Toll Blending & Compounding' },
-  { text: 'Contract Manufacturing', value: 'Contract Manufacturing', key: 'Contract Manufacturing' },
-  { text: 'End User - Manufacturing', value: 'End User - Manufacturing', key: 'End User - Manufacturing' },
-  { text: 'End User - Finished Goods', value: 'End User - Finished Goods', key: 'End User - Finished Goods' }
-];
-
-export const marketOptions = [
-  { text: 'Adhesives, Sealants', value: 'Adhesives, Sealants', key: 'Adhesives, Sealants' },
-  { text: 'Agriculture & Feed', value: 'Agriculture & Feed', key: 'Agriculture & Feed' },
-  { text: 'Automative & Transportation', value: 'Automative & Transportation', key: 'Automative & Transportation' },
-  { text: 'Aerospace', value: 'Aerospace', key: 'Aerospace' },
-  { text: 'Building & Construction', value: 'Building & Construction', key: 'Building & Construction' },
-  { text: 'Food & Nutrition', value: 'Food & Nutrition', key: 'Food & Nutrition' },
-  { text: 'Healthcare & Pharma', value: 'Healthcare & Pharma', key: 'Healthcare & Pharma' },
-  { text: 'Home & Personal Care', value: 'Home & Personal Care', key: 'Home & Personal Care' },
-  { text: 'Household, Institutional & Industrial Cleaning', value: 'Household, Institutional & Industrial Cleaning', key: 'Household, Institutional & Industrial Cleaning' },
-  { text: 'Industrial Lubricants', value: 'Industrial Lubricants', key: 'Industrial Lubricants' },
-  { text: 'Metalworking Fluids', value: 'Metalworking Fluids', key: 'Metalworking Fluids' },
-  { text: 'Paints, Inks, Coatings', value: 'Paints, Inks, Coatings', key: 'Paints, Inks, Coatings' },
-  { text: 'Petrochemicals', value: 'Petrochemicals', key: 'Petrochemicals' },
-  { text: 'Chemical Intermediates', value: 'Chemical Intermediates', key: 'Chemical Intermediates' },
-  { text: 'Plastics, Elastomers', value: 'Plastics, Elastomers', key: 'Plastics, Elastomers' },
-  { text: 'Printing & Packaging', value: 'Printing & Packaging', key: 'Printing & Packaging' },
-  { text: 'Pigments, Dyes', value: 'Pigments, Dyes', key: 'Pigments, Dyes' },
-  { text: 'Inorganic Oil, Gas, & Mining Commodities', value: 'Inorganic Commodities', key: 'Inorganic Commodities' },
-  { text: 'Oil, Gas, & Mining', value: 'Oil, Gas, & Mining', key: 'Oil, Gas, & Mining' },
-  { text: 'Bio-based Chemicals', value: 'Bio-based Chemicals', key: 'Bio-based Chemicals' },
-];
+]
 
 export const verifyPersonalInformation = {
   firstName: '',
