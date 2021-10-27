@@ -65,7 +65,7 @@ export default class ZipDropdown extends Component {
           </>
         }
         inputProps={{
-          'data-test': 'ZipDropdown_drpdn',
+          'data-test': 'zip-code',
           // onChange: this.handleChange,
           onSearchChange: (e, data) => {
             this.props.onSearchChange(e, data)
