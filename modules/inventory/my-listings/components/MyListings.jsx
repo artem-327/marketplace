@@ -65,7 +65,7 @@ const MyListings = props => {
     } = props
     const getProductOffer = async (idOffer, tabOffer) => {
       const data = await getProductOfferById(idOffer.id)
-      modalDetailTrigger(data, true, tabOffer)
+      if(data && data.id) modalDetailTrigger(data, true, tabOffer)
     }
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
