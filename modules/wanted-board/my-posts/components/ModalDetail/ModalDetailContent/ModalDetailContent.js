@@ -23,7 +23,8 @@ import {
 
 import {
     SmallGrid,
-    DivInputWrapper
+    DivInputWrapper,
+    CustomLabel
 } from '../../../../styles'
 
 const ModalDetailContent = props => {
@@ -258,13 +259,15 @@ const ModalDetailContent = props => {
                 </GridRow>
                 <GridRow>
                     <GridColumn width={8}>
-                        <FormattedMessage id='wantedBoard.myPostPreferredFOBPrice' defaultMessage='Preferred FOB Price' />
+                        <CustomLabel>
+                          <FormattedMessage id='wantedBoard.myPostPreferredFOBPrice' defaultMessage='Preferred FOB Price' />
+                        </CustomLabel>
                         <DivInputWrapper className='price'>
                             <Input
-                              name={'maximumPricePerUOM'}
+                              name='maximumPricePerUOM'
                               inputProps={{
                                   type: 'number',
-                                  placeholder: '0',
+                                  placeholder: '0.00',
                                   fluid: true
                               }}
                             />
@@ -305,7 +308,7 @@ const ModalDetailContent = props => {
                                     <FormattedMessage id='wantedBoard.myPostAssayMin' defaultMessage='Assay Min' />
                                     <DivInputWrapper>
                                         <Input
-                                          name={'assayMin'}
+                                          name='assayMin'
                                           inputProps={{
                                               type: 'number',
                                               placeholder: '0',
@@ -319,7 +322,7 @@ const ModalDetailContent = props => {
                                     <FormattedMessage id='wantedBoard.myPostAssayMax' defaultMessage='Assay Max' />
                                     <DivInputWrapper>
                                         <Input
-                                          name={'assayMax'}
+                                          name='assayMax'
                                           inputProps={{
                                               type: 'number',
                                               placeholder: '0',

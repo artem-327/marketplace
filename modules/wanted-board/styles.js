@@ -942,6 +942,7 @@ export const DivInputWrapper = styled.div`
   
   > .ui.label {
     height: 30px;
+    min-width: 30px;
     border-radius: 2px;
     font-size: 14px;
     font-weight: normal;
@@ -976,4 +977,8 @@ export const DivInputWrapper = styled.div`
 
 export const DivPopupTableHandler = styled.div`
   margin: 15px 51px 0;
+`
+
+export const CustomLabel2 = styled.label`
+
 `
