@@ -2778,6 +2778,10 @@ i.file {
   }
 }
 
+.modal .table-responsive table.table tr td.p-0 {
+  background: #fff !important;
+}
+
 .ui.fluid.container > .left.collapsed ~ div {
   .table-responsive {
     table.table {
