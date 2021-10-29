@@ -57,11 +57,12 @@ class AttachmentClass extends Component {
     uploadOpen: false,
     selectedRows: [],
     documentTypes: [],
-    searchValue: ''
+    searchValue: '',
+    initialDatagridLoaded: false
   }
 
   componentDidMount() {
-    const { documentTypes, documentTypeIds, getDocumentTypes, isOpenManager } = this.props
+    const { documentTypes, documentTypeIds, getDocumentTypes, isOpenManager, asModal } = this.props
     if (!documentTypes || (documentTypes && !documentTypes.length)) {
       getDocumentTypes()
     }
@@ -69,17 +70,26 @@ class AttachmentClass extends Component {
       this.setState({ open: true })
     }
 
-    // basic settings - necessary especially for Orders list (auto-opening Attachment Manager by click on grey icon without any document)
-    const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
-    this.handleSearch({ name: '', type: docTypeIds })
-    this.setState({ documentTypes: docTypeIds })
+    if (!asModal || (asModal && isOpenManager)) {
+      // basic settings - necessary especially for Orders list (auto-opening Attachment Manager by click on grey icon without any document)
+      const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
+      this.handleSearch({ name: '', type: docTypeIds })
+      this.setState({ documentTypes: docTypeIds, initialDatagridLoaded: true })
+    }
   }
 
   componentDidUpdate(prevProps) {
-    if (!prevProps.isOpenManager && this.props.isOpenManager) {
+    const { documentTypeIds, isOpenManager, asModal } = this.props
+    if (!prevProps.isOpenManager && isOpenManager) {
       this.setState({
         open: true
       })
+
+      if (!this.state.initialDatagridLoaded) {
+        const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
+        this.handleSearch({ name: '', type: docTypeIds })
+        this.setState({ open: true, documentTypes: docTypeIds, initialDatagridLoaded: true })
+      }
     }
   }
 
@@ -159,6 +169,8 @@ class AttachmentClass extends Component {
     } = this.props
     if (!asModal) return this.getContent()
 
+    const { searchValue, initialDatagridLoaded } = this.state
+
     return (
       <>
         <CustomButton
@@ -169,11 +181,10 @@ class AttachmentClass extends Component {
           type='button'
           onClick={() => {
             this.setState({ open: true })
-            if (documentTypeIds && documentTypeIds.length) {
-              this.handleSearch({ name: '', type: documentTypeIds })
-              this.setState({ documentTypes: documentTypeIds })
-            } else {
-              this.setState({ documentTypes: [] })
+            if (!initialDatagridLoaded) {
+              const docTypeIds = documentTypeIds && documentTypeIds.length ? documentTypeIds : []
+              this.handleSearch({ name: '', type: docTypeIds })
+              this.setState({ open: true, documentTypes: docTypeIds, initialDatagridLoaded: true })
             }
           }}>
           <CustomIcon size='14' />
@@ -237,8 +248,9 @@ class AttachmentClass extends Component {
                     <Input
                       icon='search'
                       placeholder='Search'
+                      value={searchValue}
                       onChange={(_, data) => {
-                        this.setState({ searchValue: data && data.value })
+                        this.setState({ searchValue: data?.value ? data.value : '' })
                         this.handleSearch({ name: data.value, type: this.state.documentTypes })
                       }}
                     />
@@ -366,7 +378,7 @@ class AttachmentManager extends Component {
 
   render() {
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
         <AttachmentModal {...this.props} />
       </DatagridProvider>
     )

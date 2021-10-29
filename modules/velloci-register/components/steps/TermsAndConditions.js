@@ -48,13 +48,8 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
         </GridColumn>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_electronic_comunications_chckb'
-            }}
-            name='termsAndConditions.electronicComunications'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-1">
+          <Checkbox name='termsAndConditions.electronicComunications'/>
           <LabelCheckbox>
             <LinkLabelCheckbox href={URL_ECA} target='_blank'>
               <FormattedMessage
@@ -66,13 +61,8 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_privacy_policy_chckb'
-            }}
-            name='termsAndConditions.privacyPolicy'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-2">
+          <Checkbox name='termsAndConditions.privacyPolicy' />
           <LabelCheckbox>
             <LinkLabelCheckbox href={URL_PRIVACY} target='_blank'>
               <FormattedMessage
@@ -88,13 +78,8 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_deposit_account_chckb'
-            }}
-            name='termsAndConditions.depositAccountAgreement'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-3">
+          <Checkbox name='termsAndConditions.depositAccountAgreement' />
           <LabelCheckbox>
             <LinkLabelCheckbox href='https://silamoney.com/evolve-bank-deposit-agreement/' target='_blank'>
               <FormattedMessage id='velloci.termsAndConditions.depositAccountAgreement.link' />
@@ -110,13 +95,8 @@ function TermsAndConditions({ formikProps, intl: { formatMessage } }) {
         </GridColumnCheckbox>
       </GridRowCheckbox>
       <GridRowCheckbox>
-        <GridColumnCheckbox>
-          <Checkbox
-            inputProps={{
-              'data-test': 'settings_velloci_registration_terms_and_conditions_true_complete_chckb'
-            }}
-            name='termsAndConditions.trueComplete'
-          />
+        <GridColumnCheckbox data-test="legal-agreements-checkbox-4">
+          <Checkbox name='termsAndConditions.trueComplete' />
           <LabelCheckbox>
             <FormattedMessage
               id='velloci.termsAndConditions.trueComplete'

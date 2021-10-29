@@ -65,7 +65,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   <GridColumn>
                     <CheckboxControlPerson
                       inputProps={{
-                        'data-test': 'settings_velloci_registration_control_person_chckb'
+                        'data-test': 'control-person-is-control-person'
                       }}
                       label={formatMessage({ id: 'velloci.controlPerson.checkboxLabel' })}
                       name='controlPerson.isControlPerson'
@@ -80,7 +80,10 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                         defaultMessage='Do you own 25% or more of the company (Beneficial Owner)?'
                       />
                     </label>
-                    <DivCheckboxes className="checkbox-custom">
+                    <DivCheckboxes
+                      className="checkbox-custom"
+                      data-test='control-person-is-beneficial-owner'
+                    >
                       <Checkbox
                         label={formatMessage({
                           id: 'global.yes',
@@ -90,8 +93,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                           onChange: () => {
                             formikProps.setFieldValue('controlPerson.isBeneficialOwner', true)
                             formikProps.setFieldValue('controlPerson.isNotBeneficialOwner', false)
-                          },
-                          'data-test': 'settings_velloci_registration_control_person_isBeneficialOwner_chckbx'
+                          }
                         }}
                         name='controlPerson.isBeneficialOwner'
                       />
@@ -104,8 +106,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                           onChange: () => {
                             formikProps.setFieldValue('controlPerson.isBeneficialOwner', false)
                             formikProps.setFieldValue('controlPerson.isNotBeneficialOwner', true)
-                          },
-                          'data-test': 'settings_velloci_registration_control_person_isNotBeneficialOwner_chckbx'
+                          }
                         }}
                         name='controlPerson.isNotBeneficialOwner'
                       />
@@ -157,7 +158,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'Enter first name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_first_name_inpt'
+                'data-test': 'control-person-first-name'
               }}
             />
           </GridColumn>
@@ -174,7 +175,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'Enter middle name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_middle_name_inpt'
+                'data-test': 'control-person-middle-name'
               }}
             />
           </GridColumn>
@@ -198,7 +199,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'Enter last name'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_last_name_inpt'
+                'data-test': 'control-person-last-name'
               }}
             />
           </GridColumn>
@@ -222,7 +223,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'Enter email address'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_personal_email_address_inpt'
+                'data-test': 'control-person-email-address'
               }}
             />
           </GridColumn>
@@ -313,7 +314,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   type: 'text',
                   pattern: 'd*', //!! autosave can save incorect pattern. Correct pattern is '\d*'
                   maxLength: '3',
-                  'data-test': 'settings_velloci_registration_personal_info_business_ownership_percentage_inpt'
+                  'data-test': 'control-person-ownership-percentage'
                 }}
               />
             </GridColumn>
@@ -338,7 +339,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'Enter business role'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_business_role_inpt'
+                'data-test': 'control-person-business-role'
               }}
             />
           </GridColumn>
@@ -362,7 +363,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'xxx-xx-xxxx'
                 }),
                 type: 'text',
-                'data-test': 'settings_velloci_registration_control_person_social_security_number_inpt'
+                'data-test': 'control-person-ssn'
               }}
             />
           </GridColumn>
