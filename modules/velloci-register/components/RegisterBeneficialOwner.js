@@ -51,8 +51,8 @@ class RegisterBeneficialOwner extends Component {
               ? { businessOwnershipPercentage: Yup.string().required(errorMessages.requiredMessage) }
               : null
             return Yup.object().shape({
-              firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-              lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+              firstName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+              lastName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
               email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
               phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
               dateOfBirth: Yup.string()
@@ -61,7 +61,7 @@ class RegisterBeneficialOwner extends Component {
               address: addressValidationSchema(),
               businessTitle: Yup.string()
                 .trim()
-                .min(3, errorMessages.minLength(3))
+                .min(2, errorMessages.minLength(2))
                 .required(errorMessages.requiredMessage),
               socialSecurityNumber: Yup.string()
                 .trim()
