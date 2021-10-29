@@ -16,7 +16,10 @@ export const Modal = props => {
                     <img style={{ width: '4rem', height: '4rem' }} src={TradePassLogo} alt="TradePass Logo" />
                 </HVCenteredContentContainer>
                 {title &&
-                    <HVCenteredContentContainer style={{ marginBlockEnd: '.5rem' }}>
+                    <HVCenteredContentContainer
+                        data-test='modal-title'
+                        style={{ marginBlockEnd: '.5rem' }}
+                    >
                         <HeadingContainer style={{ fontSize: '1.5rem' }}>
                             <FormattedMessage id={title} />
                         </HeadingContainer>
@@ -31,7 +34,7 @@ export const Modal = props => {
                 }
                 {children}
                 <HVCenteredContentContainer>
-                    <ButtonPrimary onClick={() => handleClick()}>
+                    <ButtonPrimary data-test='modal-button' onClick={() => handleClick()}>
                         <FormattedMessage id={buttonText} />
                     </ButtonPrimary>
                 </HVCenteredContentContainer>

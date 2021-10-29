@@ -90,7 +90,7 @@ function BusinessInfo({
                   <Dropdown
                     options={businessTypes && businessTypes.data && businessTypes.data.length ? businessTypes.data : []}
                     fieldProps={{
-                      'data-test': 'settings_velloci_registration_control_person_drpdwn'
+                      'data-test': 'business-info-entity-type-dropdown'
                     }}
                     inputProps={{
                       placeholder: formatMessage({
@@ -133,7 +133,7 @@ function BusinessInfo({
                         defaultMessage: 'Enter Business Name'
                       }),
                       type: 'text',
-                      'data-test': 'settings_velloci_registration_control_person_legal_business_name_inpt'
+                      'data-test': 'business-info-business-name-input'
                     }}
                   />
                 </Grid.Column>
@@ -181,9 +181,7 @@ function BusinessInfo({
                         defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
                       }),
                       type: 'text',
-                      'data-test': `settings_velloci_registration_control_person_legal_${
-                        formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
-                      }_inpt`
+                      'data-test': `business-info-tin-${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'}`
                     }}
                   />
                 </Grid.Column>
@@ -244,7 +242,7 @@ function BusinessInfo({
                 defaultMessage: 'Enter your email address'
               }),
               type: 'text',
-              'data-test': 'settings_velloci_registration_business_info_email_address_inpt'
+              'data-test': 'business-info-email-input'
             }}
           />
         </ColumnCustom>
@@ -322,7 +320,7 @@ function BusinessInfo({
           <Dropdown
             options={naicsCodes.data}
             fieldProps={{
-              'data-test': 'settings_velloci_registration_control_person_industry_type_drpdwn'
+              'data-test': 'business-info-industry-type'
             }}
             inputProps={{
               placeholder: formatMessage({ id: 'company.selectIndustryType' }),
@@ -364,7 +362,7 @@ function BusinessInfo({
                 selection: true,
                 search: true,
                 placeholder: formatMessage({ id: 'company.selectCompanyType' }),
-                'data-test': 'onboarding_business_info_company_type_drpdn'
+                'data-test': 'business-info-company-type'
               }}
             />
         </GridColumn>
@@ -396,7 +394,7 @@ function BusinessInfo({
                   id: 'company.selectMarketType',
                   defaultMessage: 'Select Industry Type'
                 }),
-                'data-test': 'onboarding_business_info_markets_drpdn'
+                'data-test': 'business-info-market-type'
               }}
             />
         </GridColumn>

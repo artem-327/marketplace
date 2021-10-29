@@ -32,7 +32,7 @@ const FINAL_STEP = makeStore()?.getState()?.vellociRegister?.finalStep
 export const getValidationSchema = (beneficialOwnersNotified = false) =>
   Yup.lazy(values => {
     const { requiredMessage, invalidString, invalidEmail, minLength } = errorMessages
-    const minLengthValue = 3
+    const minLengthValue = 2
     const minLengthErr = minLength(minLengthValue)
 
     return Yup.object().shape({
@@ -73,7 +73,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
           address: addressValidationSchema(),
           businessTitle: Yup.string()
               .trim()
-              .min(3, errorMessages.minLength(3))
+              .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
           socialSecurityNumber: ssnValidation(),
           businessOwnershipPercentage: values?.controlPerson?.isBeneficialOwner ? 
@@ -132,7 +132,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
             address: addressValidationSchema(),
             businessTitle: Yup.string()
               .trim()
-              .min(3, errorMessages.minLength(3))
+              .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
             socialSecurityNumber: ssnValidation(),
             ...businessOwnershipPercentage
