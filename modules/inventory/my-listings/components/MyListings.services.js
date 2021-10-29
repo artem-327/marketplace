@@ -74,7 +74,7 @@ export const columns = [
     { name: 'echoName', disabled: true },
     { name: 'echoCode', disabled: true },
     {
-      name: 'warehouse',
+      name: 'warehouseName',
       title: (
         <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />
       ),
@@ -962,7 +962,7 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     echoName: getSafe(() => po.companyProduct.companyGenericProduct.name, ''),
     echoCode: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
     chemicalName: getSafe(() => po.product.casProduct.chemicalName, po?.companyProduct?.intProductName),
-    warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
+    warehouseName: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
     productId: getSafe(() => po.product.casProduct.id, 0),
     available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
     packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),

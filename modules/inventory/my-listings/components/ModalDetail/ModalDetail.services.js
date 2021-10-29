@@ -280,10 +280,9 @@ export const fetchIfNoData = (name, fn, props) => {
   if (props[name].length === 0) fn()
 }
 
-export const loadProductOffer = async (id, shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew) => {
+export const loadProductOffer = async (shouldSwitchTab, props, state, setState, formikPropsNew, resetFormNew) => {
   if(props.countriesDropdown.length === 0) await props.getCountries()
-  const row = props.datagrid.rows.filter(row => row.id === id)
-  const data = row[0]
+  const data = props.detailValues
   await props.getProductOffer(data)
   if (shouldSwitchTab) {
     switchTab(props, state, setState, props.modalActiveTab, data)
@@ -294,7 +293,7 @@ export const loadProductOffer = async (id, shouldSwitchTab, props, state, setSta
     getSafe(() => data.origin.name, ''),
     30
   )
-  if (data.companyProduct) {
+  if (data?.companyProduct) {
     searchProducts(data.companyProduct.intProductName, props)
   }
   setState(prevState => ({
