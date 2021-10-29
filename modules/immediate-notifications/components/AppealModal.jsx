@@ -34,7 +34,7 @@ const ImmediateAppealModal = props => {
           icon: 'SUCCESS',
           title: 'Your Message has Been Sent.',
           text: 'A representative will review your appeal and will reach out within 24 hours.',
-          leftButtonText: 'Explore BluePallet',
+          leftButtonText: 'Explore BluePallet Marketplace',
           leftButtonRedirect: '',
           rightButtonText: '',
           rightButtonRedirect: ''

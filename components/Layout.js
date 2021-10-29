@@ -19,7 +19,7 @@ import {
 import { Container, Menu, Dropdown, Icon, Image, FormField, Popup, Dimmer } from 'semantic-ui-react'
 import { Sidebar, Minimize2, LogOut } from 'react-feather'
 import styled from 'styled-components'
-import Logo from '../assets/images/nav/logo-bluepallet.svg'
+import Logo from '../assets/images/nav/logo-bluepallet-marketplace.png'
 import LogoSmall from '../assets/images/nav/logo4x.png'
 import { TradePassLogo } from '../components/constants/layout'
 import NavigationMenu from './NavigationMenu'

@@ -7,7 +7,7 @@ import { injectIntl } from 'react-intl'
 const Layout = ({ children, intl: { formatMessage } }) => (
   <Container fluid>
     <Head>
-      <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'BluePallet' })}</title>
+      <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'BluePallet Marketplace' })}</title>
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
     </Head>

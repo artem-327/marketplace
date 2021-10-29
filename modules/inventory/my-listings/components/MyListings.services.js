@@ -383,7 +383,7 @@ export const getRows = (props, state, setState) => {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
         id: 'myInventory.allSubtitle',
-        defaultMessage: 'My Network + BlueTrade'
+        defaultMessage: 'My Network + BluePallet Marketplace'
         }, {
         companyName: applicationName
         }),
@@ -415,7 +415,7 @@ export const getRows = (props, state, setState) => {
     },
     {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BlueTrade' }, {
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BluePallet Marketplace' }, {
         companyName: applicationName
         }),
         subtitle: formatMessage({
