@@ -434,6 +434,7 @@ class CompanyForm extends Component {
           <FormField className='upload-input'>
             <label htmlFor='field_dropdown_associations'>
               <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
+              <Required />
             </label>
             <Dropdown
               options={
