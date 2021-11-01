@@ -2,6 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
   openedSubmitOfferPopup: false,
+  openedConfirmModal: false,
   openedInfoModal: false,
   openedRespondModal: false,
   openedAddEditModal: false,
@@ -24,6 +25,20 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         openedSubmitOfferPopup: true,
+      }
+    }
+
+    case AT.WB_OPEN_CONFIRM_MODAL: {
+      return {
+        ...state,
+        openedConfirmModal: true
+      }
+    }
+
+    case AT.WB_CLOSE_CONFIRM_MODAL: {
+      return {
+        ...state,
+        openedConfirmModal: false,
       }
     }
 

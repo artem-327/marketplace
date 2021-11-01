@@ -8,6 +8,19 @@ export const openSubmitOffer = (row) => {
   }
 }
 
+export const openConfirmModal = (row) => {
+  return {
+    type: AT.WB_OPEN_CONFIRM_MODAL,
+    payload: { row }
+  }
+}
+
+export const closeConfirmModal = () => {
+  return {
+    type: AT.WB_CLOSE_CONFIRM_MODAL,
+  }
+}
+
 export const openInfoModal = (row) => {
   return {
     type: AT.WB_OPEN_INFO_MODAL,

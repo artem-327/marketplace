@@ -99,11 +99,11 @@ const InfoModal = props => {
       isSending,
       purchaseRequestPending,
       updatingDatagrid,
-      infoModalData
+      infoModalData,
+      closeInfoModal
     } = props
     
     const rows = []
-    const { closeInfoModal } = props;
 
     return (
       <>
@@ -216,8 +216,6 @@ const InfoModal = props => {
                               primary
                               type='submit'
                               onClick={() => {
-                                closeInfoModal()
-                                props.openRespondModal(props.row)
                               }}
                             >
                               <FormattedMessage id='wantedBoard.respond' defaultMessage='Respond' tagName='span' />
