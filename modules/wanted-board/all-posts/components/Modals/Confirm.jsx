@@ -1,14 +1,10 @@
 import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
+import { openGlobalAddForm } from '../../../../layout/actions'
 import {
   Modal,
-  Button,
-  Grid,
-  GridRow,
-  GridColumn,
-  Segment
+  Button
 } from 'semantic-ui-react'
-import { Form } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { withDatagrid } from '../../../../datagrid'
@@ -19,64 +15,42 @@ const ModalContent = styled(Modal.Content)`
   margin-bottom: 10px !important;
 `
 
-
-const ToggleForm = styled(Form)`
-  opacity: ${props => (props.hidden ? 0 : 1)};
-`
-
-const SubmitButton = styled(Button)`
-  background-color: #2599d5 !important;
-  color: #ffffff !important;
-`
-
 const ConfirmModal = props => {
 
   const {
-    purchaseRequestPending,
-    updatingDatagrid,
-    closeConfirmModal
+    closeConfirmModal,
+    openRespondModal,
+    openGlobalAddForm,
+    closeInfoModal
   } = props
 
   return (
-    <>
-      <ToggleForm
-        validationSchema={()=>{}}
-        validateOnChange
-        enableReinitialize
-        initialValues=''
-        render={(formikProps) => {
-
-          return (
-            <>
-              <Modal closeIcon onClose={closeConfirmModal} open={true} size='tiny'>
-                <ModalContent>
-                  <p><FormattedMessage id='wantedboard.respond' defaultMessage='Respond' /></p>
-                  <p>
-                    okokokok
-                  </p>
-                  <Grid verticalAlign='middle'>
-                    <GridRow columns={3}>
-                      <Button basic type='button' onClick={closeConfirmModal}>
-                        <FormattedMessage id='aa' defaultMessage='Use Existing Listing' tagName='span' />
-                      </Button>
-                      <SubmitButton
-                        loading={purchaseRequestPending || updatingDatagrid}
-                        primary
-                        type='submit'
-                        onClick={() => {
-                        }}
-                      >
-                        <FormattedMessage id='bb' defaultMessage='Create New Listing' tagName='span' />
-                      </SubmitButton>
-                    </GridRow>
-                  </Grid>
-                </ModalContent>
-              </Modal>
-            </>
-          )
-        }}
-      />
-    </>
+    <Modal onClose={closeConfirmModal} open={true} size='tiny'>
+      <ModalContent>
+        <p style={{fontSize: '24px', textAlign: 'center', color: '#20273a'}}>
+          <FormattedMessage id='wantedboard.respond' defaultMessage='Respond' />
+        </p>
+        <p style={{fontSize: '14px', textAlign: 'center', color: '#20273a'}}>
+          How would you like to respond to this Wanted Board Post?
+        </p>
+        <div style={{display: 'flex', justifyContent: 'center', margin: '30px auto 10px'}}>
+          <Button basic type='button' onClick={() => {
+            closeConfirmModal()
+            closeInfoModal()
+            openRespondModal()
+          }}>
+            <FormattedMessage id='aa' defaultMessage='Use Existing Listing' tagName='span' />
+          </Button>
+          <Button primary type='button' onClick={() => {
+            closeConfirmModal()
+            closeInfoModal()
+            openGlobalAddForm('inventory-my-listings')
+          }}>
+            <FormattedMessage id='aa' defaultMessage='Create New Listing' tagName='span' />
+          </Button>
+        </div>
+      </ModalContent>
+    </Modal>
   )
 }
 
@@ -87,4 +61,4 @@ function mapStateToProps(store, props) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions })(withToastManager(injectIntl(ConfirmModal))))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openGlobalAddForm })(withToastManager(injectIntl(ConfirmModal))))

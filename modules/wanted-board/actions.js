@@ -34,10 +34,9 @@ export const closeInfoModal = () => {
   }
 }
 
-export const openRespondModal = (row) => {
+export const openRespondModal = () => {
   return {
-    type: AT.WB_OPEN_RESPOND_MODAL,
-    payload: { row }
+    type: AT.WB_OPEN_RESPOND_MODAL
   }
 }
 

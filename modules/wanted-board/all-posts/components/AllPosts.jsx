@@ -142,7 +142,7 @@ const AllPosts = props => {
         }),
         callback: async row => {
           try {
-            props.openConfirmModal()
+            props.openConfirmModal(row)
           } catch (e) {
             console.error(e)
           }

@@ -31,14 +31,16 @@ export default function reducer(state = initialState, action) {
     case AT.WB_OPEN_CONFIRM_MODAL: {
       return {
         ...state,
-        openedConfirmModal: true
+        openedConfirmModal: true,
+        editID: payload.row.id,
+        popupValues: payload.row
       }
     }
 
     case AT.WB_CLOSE_CONFIRM_MODAL: {
       return {
         ...state,
-        openedConfirmModal: false,
+        openedConfirmModal: false
       }
     }
 
@@ -53,16 +55,14 @@ export default function reducer(state = initialState, action) {
     case AT.WB_CLOSE_INFO_MODAL: {
       return {
         ...state,
-        openedInfoModal: false,
+        openedInfoModal: false
       }
     }
 
     case AT.WB_OPEN_RESPOND_MODAL: {
       return {
         ...state,
-        openedRespondModal: true,
-        editID: payload.row.id,
-        popupValues: payload.row
+        openedRespondModal: true
       }
     }
 
