@@ -39,14 +39,14 @@ const ConfirmModal = props => {
             closeInfoModal()
             openRespondModal()
           }}>
-            <FormattedMessage id='aa' defaultMessage='Use Existing Listing' tagName='span' />
+            <FormattedMessage id='wantedboard.useExistingListing' defaultMessage='Use Existing Listing' tagName='span' />
           </Button>
           <Button primary type='button' onClick={() => {
             closeConfirmModal()
             closeInfoModal()
             openGlobalAddForm('inventory-my-listings')
           }}>
-            <FormattedMessage id='aa' defaultMessage='Create New Listing' tagName='span' />
+            <FormattedMessage id='wantedboard.createNewListing' defaultMessage='Create New Listing' tagName='span' />
           </Button>
         </div>
       </ModalContent>
