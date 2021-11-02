@@ -43,6 +43,7 @@ export default class MyDocument extends Document {
           <link rel='manifest' href='/static/site.webmanifest' />
           <link rel='shortcut icon' href='/static/favicon.ico' />
           <link rel='mask-icon' href='/static/safari-pinned-tab.svg' color='#1b3454' />
+          <link rel='canonical' href='https://app.bluepallet.io/' />
           <meta name='msapplication-TileColor' content='#1b3454' />
           <meta name='msapplication-config' content='/static/browserconfig.xml' />
           <meta name='theme-color' content='#1b3454' />
