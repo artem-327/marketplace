@@ -11,7 +11,8 @@ import {
 export const validationSchema = Yup.object().shape({
   name: Yup.string(<FormattedMessage id='validation.required' defaultMessage='Required' />)
     .trim()
-    .min(2, <FormattedMessage id='validation.minLength' values={{ min: 2 }} />)
+    .min(3, errorMessages.minLength(3))
+    .max(200, errorMessages.maxLength(200))
     .required(),
   website: websiteValidationNotRequired(),
   socialLinkedin: websiteValidationNotRequired(),
