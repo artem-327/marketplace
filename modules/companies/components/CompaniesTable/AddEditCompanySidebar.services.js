@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { cloneDeep } from 'lodash'
+import { FormattedMessage } from 'react-intl'
 
 // Constants
 import { INITIAL_FORM_VALUES } from './AddEditCompanySidebar.constants'
@@ -43,7 +44,11 @@ export const formValidationNew = () =>
     let minLength = errorMessages.minLength(2)
 
     let validation = Yup.object().shape({
-      name: Yup.string().trim().min(2, minLength).required(minLength),
+      name: Yup.string(<FormattedMessage id='validation.required' defaultMessage='Required' />)
+        .trim()
+        .min(3, errorMessages.minLength(3))
+        .max(200, errorMessages.maxLength(200))
+        .required(),
       tinType: Yup.string()
         .when('tin', {
           is: value => !!value,
