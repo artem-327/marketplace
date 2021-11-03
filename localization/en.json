@@ -3247,6 +3247,8 @@
   "wantedBoard.myPostPackaing": "Packaging",
   "wantedBoard.myPostIndexSpecialNotesFilter": "Special Notes",
   "wantedBoard.openInMarketPlace": "Open In Marketplace",
+  "wantedBoard.useExistingListing": "Use Existing Listing",
+  "wantedBoard.createNewListing": "Create New Listing",
   "global.enabled": "Enabled",
   "global.selectTags": "Select tags",
   "global.marketSegments": "Market Segments",

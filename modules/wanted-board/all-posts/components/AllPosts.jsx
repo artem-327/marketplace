@@ -4,6 +4,7 @@ import { Container, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { debounce } from 'lodash'
 import ProdexGrid from '../../../../components/table'
+import ConfirmModal from './Modals/Confirm'
 import InfoModal from './Modals/Info'
 import RespondModal from './RespondModal/index'
 import { CustomRowDiv } from '../../styles'
@@ -141,7 +142,7 @@ const AllPosts = props => {
         }),
         callback: async row => {
           try {
-            props.openRespondModal(row)
+            props.openConfirmModal(row)
           } catch (e) {
             console.error(e)
           }
@@ -163,6 +164,7 @@ const AllPosts = props => {
     const {
       datagrid,
       rows,
+      openedConfirmModal,
       openedInfoModal,
       openedRespondModal,
       popupValues,
@@ -173,6 +175,7 @@ const AllPosts = props => {
 
     return (
       <>
+        {openedConfirmModal && <ConfirmModal />}
         {openedInfoModal && <InfoModal {...popupValues} />}
         {openedRespondModal && <RespondModal id={editID} />}
         <div style={{ padding: '10px 0' }}>
