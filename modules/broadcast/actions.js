@@ -33,7 +33,7 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer, s
   }
 })
 
-export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async (settings, value = null) => {
+export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async (settings = null, value = null) => {
   let data
   if (value) {
     data = value

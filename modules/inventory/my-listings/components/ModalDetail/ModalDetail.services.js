@@ -574,7 +574,7 @@ export const switchTab = async (props, state, setState, newTab, data = null) => 
   }))
   try {
     if (newTab === INDEX_TAB_PRICE_BOOK) {
-      await props.openBroadcast(data ? data : state.detailValues, props.settings).then(async () => {
+      await props.openBroadcast(data ? data : state.detailValues).then(async () => {
         setState(prevState => ({ ...prevState, broadcastLoading: false, activeTab: newTab }))
       })
     }
