@@ -19,7 +19,8 @@ const makeMapStateToProps = () => {
     return {
       rows: getMappedRows(datagrid), //Memoized. Recalculate rows only if in prevProps.datagrid.rows !== props.datagrid.rows
       ...state.simpleAdd,
-      broadcastTemplates: getBroadcastTemplates(state) //Not memoized.
+      broadcastTemplates: getBroadcastTemplates(state), //Not memoized.
+      settings: state?.auth?.identity?.settings
     }
   }
   return mapStateToProps

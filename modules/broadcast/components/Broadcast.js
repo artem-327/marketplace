@@ -1286,7 +1286,7 @@ class Broadcast extends Component {
       //if (this.setFieldValue) this.setFieldValue('templates', dataId)
 
       if (!asModal) {
-        await initGlobalBroadcast(settings, value)
+        await initGlobalBroadcast(dataType === 'shared-listings' ? settings : null, value)
       }
       this.setState({
         saved: true,

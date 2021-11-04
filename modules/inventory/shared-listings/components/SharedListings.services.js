@@ -20,13 +20,13 @@ import { FormattedUnit } from '../../../../components/formatted-messages'
  * @category Inventory - Shared Listings
  * @method
  */
-export const getActions = (triggerPriceBookModal, openBroadcast) => {
+export const getActions = (triggerPriceBookModal, openBroadcast, settings) => {
   return [
     {
       text: 'Price Book',
       callback: row => {
         triggerPriceBookModal(true, row)
-        openBroadcast(row)
+        openBroadcast(row, settings)
       }
     }
   ]
@@ -46,7 +46,8 @@ export const getRows = (rows, props) => {
     broadcastTemplates,
     broadcastChange,
     datagrid,
-    intl: { formatMessage }
+    intl: { formatMessage },
+    settings
   } = props
 
   const options = BROADCAST_OPTIONS.map(opt => {
@@ -130,7 +131,7 @@ export const getRows = (rows, props) => {
       productName: (
         <ActionCell
           row={r}
-          getActions={() => getActions(triggerPriceBookModal, openBroadcast)}
+          getActions={() => getActions(triggerPriceBookModal, openBroadcast, settings)}
           content={r.productName}
           rightAlignedContent={
             r.expired || productStatusText ? (
@@ -186,7 +187,7 @@ export const getRows = (rows, props) => {
               onClick: () => {
                 if (option.value === 'CUSTOM_RULES') {
                   triggerPriceBookModal(true, r)
-                  openBroadcast(r)
+                  openBroadcast(r, settings)
                 } else {
                   onClickBroadcast(
                     r,
