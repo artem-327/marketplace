@@ -9,6 +9,7 @@ context("Prodex Warehouse CRUD", () => {
         cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/settings/user").as("settingsLoading")
         cy.intercept("POST", "/prodex/api/branches/warehouses/datagrid*").as("warehouseLoading")
+        cy.intercept("PUT", "/prodex/api/branches/**").as("warehouseEdit")
         cy.intercept("POST", "/prodex/api/branches?createWarehouse=true").as("warehouseCreate")
         cy.intercept("POST", "/prodex/api/customers/datagrid*").as("customersPOST")
 
@@ -90,8 +91,9 @@ context("Prodex Warehouse CRUD", () => {
             .type("Arnold Schwarzenegger")
             .should("have.value", "Arnold Schwarzenegger")
 
-        cy.get('[data-test=settings_warehouse_popup_submit_btn]').click()
-
+        cy.get("[data-test=settings_warehouse_popup_submit_btn]").click()
+        cy.wait("@warehouseEdit")
+        cy.waitForUI()
         cy.openElement(branchId, 0)
 
         cy.get("input[id='field_input_deliveryAddress.contactName']")

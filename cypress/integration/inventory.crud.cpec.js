@@ -179,9 +179,11 @@ context("Inventory CRUD", () => {
         cy.setNumberInput("[id='field_input_edit.pkgAvailable']", "5")
         cy.setNumberInput("[id='field_input_edit.fobPrice']", "20")
 
-        cy.contains("Optional Information").click()
+        cy.contains("Optional Information").find("svg").click()
+        cy.waitForUI()
+        cy.get("[id='field_input_edit.costPerUOM']").should("be.visible")
 
-        cy.setNumberInput("[id='field_input_edit.costPerUOM']", "0")
+        cy.setNumberInput("[id='field_input_edit.costPerUOM']", "5")
         cy.enterText("[id='field_textarea_edit.internalNotes']", "Hello")
         cy.enterText("[id='field_textarea_edit.externalNotes']", "Hello")
 

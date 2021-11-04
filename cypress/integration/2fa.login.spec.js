@@ -24,7 +24,7 @@ context("2FA Workflow", () => {
         })
 
         cy.waitForUI()
-        cy.contains("Two-Factor Authentication").should("be.visible")
+        cy.contains("Two-Factor Authentication",  { timeout: 30000 }).should("be.visible")
         cy.contains("label", "Email - ").click()
         cy.get("[data-test=two_factor_auth_send_btn]").click()
         cy.wait('@login').then(({ request, response }) => {
@@ -53,7 +53,7 @@ context("2FA Workflow", () => {
         })
 
         cy.waitForUI()
-        cy.contains("Two-Factor Authentication").should("be.visible")
+        cy.contains("Two-Factor Authentication",  { timeout: 30000 }).should("be.visible")
         cy.contains("label", "Email - ").click()
         cy.get("[data-test=two_factor_auth_send_btn]").click()
         let sendingTime = new Date()

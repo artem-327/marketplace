@@ -56,7 +56,9 @@ context("Checkout Addresses CRUD", () => {
         cy.enterText("input[id='field_input_address.streetAddress']", "130 N G St")
         cy.enterText("input[id='field_input_address.city']", "Harlingen")
 
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
+        cy.selectFromDropdown("div[data-test=address_form_country_drpdn]", "USA")
+        cy.waitForUI()
+        cy.selectFromDropdown("div[id='field_dropdown_address.province']", "Arizona")
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
 
@@ -70,6 +72,7 @@ context("Checkout Addresses CRUD", () => {
         cy.wait("@warehouseUpdate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })
+        cy.waitForUI()
     })
 
     it("Edit warehouse", () => {
@@ -97,7 +100,9 @@ context("Checkout Addresses CRUD", () => {
         cy.enterText("input[id='field_input_address.streetAddress']", "130 N G St")
         cy.enterText("input[id='field_input_address.city']", "Harlingen")
 
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "Bahamas")
+        cy.selectFromDropdown("div[data-test=address_form_country_drpdn]", "USA")
+        cy.waitForUI()
+        cy.selectFromDropdown("div[id='field_dropdown_address.province']", "Arizona")
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
 
