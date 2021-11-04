@@ -111,8 +111,8 @@ const RespondModal = props => {
                     onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
                   />
                 </DivPopupTableHandler>
-                <ModalContent scrolling={false}>
-                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{ padding: '0 30px 10px', height: "100%", overflowY: "auto", overflowX: "hidden" }}>
+                <ModalContent scrolling={true}>
+                  <div className='flex stretched wanted-board-wrapper listings-wrapper'>
                     <ProdexTable
                       {...datagrid.tableProps}
                       tableName='wanted_board_respond_modal'
