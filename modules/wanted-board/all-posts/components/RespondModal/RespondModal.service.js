@@ -8,6 +8,8 @@ import {
 } from 'semantic-ui-react'
 import { debounce } from 'lodash'
 import { Warning } from '@material-ui/icons'
+import styled from 'styled-components'
+
 import { getSafe } from '../../../../../utils/functions'
 import { getLocaleDateFormat } from '../../../../../components/date-format'
 import { ArrayToFirstItem, FormattedAssay } from '../../../../../components/formatted-messages'
@@ -67,13 +69,12 @@ export const columns = [
       ),
     },
     {
-      name: 'use',
+      name: 'select',
       title: (
-        <FormattedMessage id='wantedBoard.respondModalUse' defaultMessage='USE' />
+        <FormattedMessage id='wantedBoard.respondModalSelect' defaultMessage='SELECT' />
       )
     }
 ]
-
 
 export const getRows = (data, props, state, setState) => {
   const {
@@ -300,7 +301,7 @@ export const getRows = (data, props, state, setState) => {
   setState(prevState => ({ ...prevState, rows: result }))
 }
 
-export const getMappedRows = props => props.datagrid?.rows?.map(r => {
+export const getMappedRows = (props, localDeleteWantedBoardBids, localPostNewWantedBoardBids) => props.datagrid?.rows?.map((r, key) => {
   const po = r.productOffer
   const submittedBids = r.submittedBids
 
@@ -377,25 +378,26 @@ export const getMappedRows = props => props.datagrid?.rows?.map(r => {
             {qtyPart && `/ ${qtyPart}`}{' '}
           </>
         ),
-    use: (
-      <Radio 
-        toggle
-        checked={useToggleStatus} 
-        onClick={async () => {
-          datagrid.setLoading(true)
-          if(useToggleStatus) {
-            await deleteWantedBoardBids(submittedBids[0].wantedBoardDirectBidId)
-            datagrid.loadData()
-          } else {
-            const values = {
-              "productOffer": po.id,
-              "wantedBoardRequest": editID
+    select: (
+      <RadioContainer>
+        <Radio
+          radio
+          // toggle
+          checked={useToggleStatus}
+          onClick={async () => {
+            if(useToggleStatus) {
+              await localDeleteWantedBoardBids(editID, key)
+            } else {
+              const values = {
+                "productOffer": po.id,
+                "wantedBoardRequest": editID,
+                key,
+              }
+              await localPostNewWantedBoardBids(values)
             }
-            await postNewWantedBoardBids(values)
-            datagrid.loadData()
-          }
-        }}
-      />
+          }}
+        />
+      </RadioContainer>
     ),
     pricingTiers: po.pricingTiers,
     manufacturer: getSafe(() => po.companyProduct.companyGenericProduct.manufacturer.name, 'N/A'),
@@ -439,3 +441,9 @@ export const handleFilterChangeInputSearch = (value, props, searchInput, setSear
 const handleFiltersValue = debounce((filter, props) => {
   props.datagrid.setSearch(filter, true, 'modalFilters')
 }, 300)
+
+const RadioContainer = styled.div`
+  .ui.radio.checkbox input:checked ~ label:after {
+    background-color: #2599d5 !important;
+  }
+`
