@@ -1,5 +1,5 @@
 context("Marketplace tests",() => {
-    const userJSON = require('../fixtures/user.json')
+    const userJSON = require('../../fixtures/user.json')
 
     beforeEach(function () {
         cy.intercept("GET","/prodex/api/dashboard*").as("inventoryLoading")

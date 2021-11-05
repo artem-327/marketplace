@@ -2,7 +2,7 @@ context("Shopping cart CRUD", () => {
 
     let marketPlaceId = null
     let marketPlaceName = null
-    const userJSON = require('../fixtures/user2.json')
+    const userJSON = require('../../fixtures/user2.json')
 
     beforeEach(function () {
         cy.viewport(2500, 3500)

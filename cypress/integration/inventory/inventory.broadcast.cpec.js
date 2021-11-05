@@ -1,6 +1,6 @@
 context("Inventory Broadcasting", () => {
     let offerId = null
-    const userJSON = require('../fixtures/user.json')
+    const userJSON = require('../../fixtures/user.json')
 
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {

@@ -3,8 +3,8 @@ context("Shared Listing", () => {
     let productId
     let productName
     let offerId
-    const userJSON = require('../fixtures/user.json')
-    const userJSON2 = require('../fixtures/user2.json')
+    const userJSON = require('../../fixtures/user.json')
+    const userJSON2 = require('../../fixtures/user2.json')
 
     before(function () {
         cy.getUserToken(userJSON2.email, userJSON2.password).then(token => {

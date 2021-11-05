@@ -3,8 +3,8 @@ xcontext("Holds tests", () => {
     let warehouseFilter = [{"operator": "EQUALS", "path": "ProductOffer.warehouse.id", "values": [9]}]
     let warehouseOffer = null
     let holdId = null
-    const userJSON1 = require('../fixtures/user.json')
-    const userJSON2 = require('../fixtures/user2.json')
+    const userJSON1 = require('../../fixtures/user.json')
+    const userJSON2 = require('../../fixtures/user2.json')
 
     beforeEach(function () {
         cy.viewport(2750, 3000)

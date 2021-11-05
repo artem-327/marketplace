@@ -1,6 +1,6 @@
 context("Checkout Addresses CRUD", () => {
 
-    const userJSON = require("../fixtures/user2.json")
+    const userJSON = require("../../fixtures/user2.json")
 
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
@@ -20,7 +20,11 @@ context("Checkout Addresses CRUD", () => {
         cy.intercept("GET", "/prodex/api/cart").as("cartLoading")
         cy.intercept("GET", "/prodex/api/dashboard*").as("inventoryLoading")
         cy.intercept("GET", "/prodex/api/delivery-addresses/search-broadcasted-by-cart").as("addressLoading")
-        cy.intercept("/prodex/api/branches*").as("warehouseUpdate")
+        cy.intercept("/prodex/api/branches*").as("warehouseCreate")
+        cy.intercept("PUT", "/prodex/api/branches/**").as("warehouseUpdate")
+        cy.intercept("/prodex/api/delivery-addresses*").as("deliveryCreate")
+        cy.intercept("PUT", "/prodex/api/delivery-addresses/**").as("deliveryUpdate")
+
 
         cy.FElogin(userJSON.email, userJSON.password)
 
@@ -38,13 +42,17 @@ context("Checkout Addresses CRUD", () => {
             cy.deleteWholeCart(token)
 
             let filter = [{ "operator": "LIKE", "path": "Branch.deliveryAddress.addressName", "values": ["%Checkout%"] }]
-            cy.getFirstEntityWithFilter(token, 'branches/warehouses' ,filter).then(itemId => {
+            cy.getFirstEntityWithFilter(token, 'branches/warehouses', filter).then(itemId => {
+                if (itemId != null) {
                     cy.deleteEntity(token, 'branches', itemId)
+                }
             })
 
             filter = [{ "operator": "LIKE", "path": "DeliveryAddress.addressName", "values": ["%Address%"] }]
-            cy.getFirstEntityWithFilter(token, filter).then(itemId => {
-                cy.deleteEntity(token, 'delivery-addresses', itemId)
+            cy.getFirstEntityWithFilter(token, 'delivery-addresses', filter).then(itemId => {
+                if (itemId != null) {
+                    cy.deleteEntity(token, 'delivery-addresses/id', itemId)
+                }
             })
         })
     })
@@ -69,16 +77,20 @@ context("Checkout Addresses CRUD", () => {
         cy.enterText("input[id='field_input_contactEmail']", "test@central.com")
 
         cy.get("[data-test='checkout_add_address_save']").click()
-        cy.wait("@warehouseUpdate").then(({ request, response }) => {
+        cy.wait("@warehouseCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })
         cy.waitForUI()
     })
 
     it("Edit warehouse", () => {
-        cy.contains("Checkout Warehouse").parent().parent().get("svg[class*='IconEdit']").click()
+        cy.contains("Checkout Warehouse").parent().parent().find("svg[class*='IconEdit']").click()
 
-        cy.enterText("input[id='field_input_addressName']", "Checkout Edited")
+        cy.waitForUI()
+        cy.get("input[id='field_input_addressName']")
+            .clear()
+            .type("Checkout Edited")
+            .should("have.value", "Checkout Edited")
 
         cy.get("[data-test='checkout_add_address_save']").click()
         cy.wait("@warehouseUpdate").then(({ request, response }) => {
@@ -89,7 +101,7 @@ context("Checkout Addresses CRUD", () => {
     it("Search warehouse", () => {
         cy.searchInList("Checkout")
 
-        cy.contains("Checkout Warehouse").should("be.visible")
+        cy.contains("Checkout Edited").should("be.visible")
     })
 
     it("Add new delivery address", () => {
@@ -97,14 +109,14 @@ context("Checkout Addresses CRUD", () => {
         cy.contains("button", "Add New").click()
 
         cy.enterText("input[id='field_input_addressName']", "Checkout Address")
-        cy.enterText("input[id='field_input_address.streetAddress']", "130 N G St")
-        cy.enterText("input[id='field_input_address.city']", "Harlingen")
+        cy.enterText("input[id='field_input_address.streetAddress']", "135 N G St")
+        cy.enterText("input[id='field_input_address.city']", "Harlingens")
 
         cy.selectFromDropdown("div[data-test=address_form_country_drpdn]", "USA")
         cy.waitForUI()
         cy.selectFromDropdown("div[id='field_dropdown_address.province']", "Arizona")
         cy.waitForUI()
-        cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "75000")
+        cy.selectFromDropdown("div[id='field_dropdown_address.zip']", "76000")
 
         cy.enterText("input[id='field_input_contactName']", "David Cameron")
         cy.get("span[class='phone-number']").within(($form) => {
@@ -113,25 +125,31 @@ context("Checkout Addresses CRUD", () => {
         cy.enterText("input[id='field_input_contactEmail']", "test@central.com")
 
         cy.get("[data-test='checkout_add_address_save']").click()
-        cy.wait("@warehouseUpdate").then(({ request, response }) => {
-            expect(response.statusCode).to.eq(201)
-            warehouseId = response.body.id
+        cy.wait("@deliveryCreate").then(({ request, response }) => {
+            expect(response.statusCode).to.eq(200)
         })
+        cy.waitForUI()
     })
 
     it("Edit delivery address", () => {
         cy.contains("div", "Delivery Addresses").click()
-        cy.contains("Checkout Address").parent().parent().get("svg[class*='IconEdit']").click()
+        cy.contains("Checkout Address").parent().parent().find("svg[class*='IconEdit']").click()
 
-        cy.enterText("input[id='field_input_addressName']", "Checkout Address Edited")
+        cy.waitForUI()
+        cy.get("input[id='field_input_addressName']")
+            .clear()
+            .type("Checkout Address Edited")
+            .should("have.value", "Checkout Address Edited")
 
         cy.get("[data-test='checkout_add_address_save']").click()
-        cy.wait("@warehouseUpdate").then(({ request, response }) => {
+        cy.wait("@deliveryUpdate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)
         })
+        cy.waitForUI()
     })
 
-    it("Search warehouse", () => {
+    it("Search delivery address", () => {
+        cy.contains("div", "Delivery Addresses").click()
         cy.searchInList("Checkout")
 
         cy.contains("Checkout Address Edited").should("be.visible")

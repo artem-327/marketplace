@@ -60,6 +60,7 @@ context("Company Details", () => {
 
         cy.reload()
         cy.wait("@logoLoading", { timeout: 100000 })
+        cy.waitForUI()
 
         cy.get('#field_input_website').should("have.value", "https://automation" + recogniser + ".com")
         cy.get('#field_input_socialLinkedin').should("have.value", "https://automation" + recogniser + ".com")

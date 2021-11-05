@@ -2,8 +2,8 @@ xcontext("Wanted Board Purchase Request Offers CRUD", () => {
 
     let productName = "Rukavice"
     let purchaseRequestId = null
-    const sellerJSON = require('../fixtures/user.json')
-    const buyerJSON = require('../fixtures/user2.json')
+    const sellerJSON = require('../../fixtures/user.json')
+    const buyerJSON = require('../../fixtures/user2.json')
     let purchaseRequestOfferFilter = [{"operator": "EQUALS", "path": "PurchaseRequestOffer.productOffer.companyProduct.companyGenericProduct.productGroup.name", "values": [productName]}]
     let purchaseRequestFilter = [{"operator": "EQUALS", "path": "PurchaseRequest.offers.productOffer.companyProduct.companyGenericProduct.productGroup.name", "values": [productName]}]
 

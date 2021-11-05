@@ -3,13 +3,13 @@
  */
 
 context("Login and logout", () => {
-    const merchantUser = require('../fixtures/merchant.json')
-    const orderProcessingUser = require('../fixtures/orderProcessing.json')
-    const orderViewUser = require('../fixtures/orderView.json')
-    const productCatalogUser =  require('../fixtures/productCatalogAdmin.json')
-    const productOfferManager  =  require('../fixtures/productOfferManager.json')
-    const userAdmin =  require('../fixtures/userAdmin.json')
-    const operator =  require('../fixtures/operator.json')
+    const merchantUser = require('../../fixtures/merchant.json')
+    const orderProcessingUser = require('../../fixtures/orderProcessing.json')
+    const orderViewUser = require('../../fixtures/orderView.json')
+    const productCatalogUser =  require('../../fixtures/productCatalogAdmin.json')
+    const productOfferManager  =  require('../../fixtures/productOfferManager.json')
+    const userAdmin =  require('../../fixtures/userAdmin.json')
+    const operator =  require('../../fixtures/operator.json')
 
     it('Bad credentials', () => {
         //This is the post call we are interested in capturing

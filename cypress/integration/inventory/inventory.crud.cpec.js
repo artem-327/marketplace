@@ -3,7 +3,7 @@ context("Inventory CRUD", () => {
     let filterQuantity = null
     let productName = null
     let offerId = null
-    const userJSON = require('../fixtures/user.json')
+    const userJSON = require('../../fixtures/user.json')
 
     before(function () {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {

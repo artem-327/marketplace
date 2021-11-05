@@ -1,6 +1,6 @@
 context("Bids Tests", () => {
-    const userJSON = require('../fixtures/user.json')
-    const userJSON2 = require('../fixtures/user2.json')
+    const userJSON = require('../../fixtures/user.json')
+    const userJSON2 = require('../../fixtures/user2.json')
     let offerId
     let productName
     let bidId

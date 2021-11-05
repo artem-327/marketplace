@@ -1,7 +1,7 @@
 xcontext("Wanted Board Purchase Request CRUD", () => {
 
     let productName = "Rukavice"
-    const userJSON = require('../fixtures/user.json')
+    const userJSON = require('../../fixtures/user.json')
     let purchaseRequestFilter = [{"operator": "EQUALS", "path": "PurchaseRequest.elements.productGroup.name", "values": [productName]}]
 
     beforeEach(function () {
