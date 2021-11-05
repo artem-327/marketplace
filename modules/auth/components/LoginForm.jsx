@@ -10,7 +10,7 @@ import { LogoWrapper, LoginContainer, LoginSegment, InstructionsDiv, LoginHeader
 import AuthenticationSelectPopup from './AuthenticationSelectPopup'
 import AuthenticationEnterPopup from './AuthenticationEnterPopup'
 //Images
-import Logo from '../../../assets/images/login/logo-bluepallet-marketplace.png'
+import Logo from '../../../assets/images/login/logo-bluepallet.svg'
 import Icon from '../../../assets/images/login/icon-bluepallet.svg'
 //Styles
 import { StyledForm, LoginButton, AutoColumn } from '../styles'
