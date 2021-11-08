@@ -80,21 +80,18 @@ export const SegmentCustomContent = styled(Segment)`
 
 export const DivHeaderRow = styled.div`
   display: flex;
-  justify-content: space-between;
-  width: -webkit-fill-available;
-  background-color: #edeef2;
-  height: 30px;
-  padding: 0 11px;
-  margin: 20px 0 30px;
+  justify-content: left;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.67;
+  letter-spacing: normal;
+  color: #848893;
+  text-transform: uppercase;
 `
-export const DivHeaderCaption = styled.div`
-  font-size: 14px;
-  color: #404040;
-  margin: auto 0;
-`
+
 export const CasGridStyled = styled(Grid)`
   &.ui.grid {
-    margin: -27.5px -10px 2.5px;
+    margin: 2.5px -10px 2.5px;
 
     > div.row {
       padding: 7.5px 0;
@@ -103,5 +100,29 @@ export const CasGridStyled = styled(Grid)`
         padding: 0 10px;
       }
     }
+  }
+`
+
+export const AssayGridStyled = styled(Grid)`
+  &.ui.grid {
+    margin: -7.5px -5px;
+
+    > div.row {
+      padding: 7.5px 0;
+
+      > div.column {
+        padding: 0 5px;
+      }
+    }
+  }
+`
+
+export const SegmentStyled = styled(Segment)`
+  &.ui.segment {
+    border-radius: 4px;
+    border: solid 1px #dee2e6;
+    background-color: #f5f7fa;
+    padding: 7.5px 20px 12.5px;
+    margin: 5px 0 30px; 
   }
 `

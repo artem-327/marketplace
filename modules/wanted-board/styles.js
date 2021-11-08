@@ -440,18 +440,6 @@ export const QuantityWrapper = styled.div`
   }
 `
 
-export const SmallGrid = styled(Grid)`
-  & {
-    margin: 0 -0.357142857em !important;
-    > .row {
-      padding: 0.535714286em 0 !important;
-      > .column {
-        padding: 0 0.357142857em !important;
-      }
-    }
-  }
-`
-
 export const CustomLabel = styled.div`
   margin: 0em 0em 0.428571429em 0em;
   font-size: 1em;
@@ -941,7 +929,7 @@ export const DivInputWrapper = styled.div`
   }
   
   > .ui.label {
-    height: 30px;
+    height: 28px;
     min-width: 30px;
     border-radius: 2px;
     font-size: 14px;
