@@ -146,6 +146,8 @@ const CertificateOfInsurance = props => {
                                     }
                                 }}
                             </ErrorMessage>
+                            {formikProps?.error?.certificateOfInsurance && <p style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }}>Please upload only PDFs</p>}
+                            <ErrorMessage component='p' name='certificateOfInsurance.file' style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }} />
                         </GridColumn>
                         <GridColumn computer={4} tablet={4} mobile={16}>
                             <Rectangle className="coi-info">
@@ -223,9 +225,24 @@ const CertificateOfInsurance = props => {
                                 data-test='certificate-of-insurance-add-another'
                                 disabled={!values?.certificateOfInsurance?.documentId || isFileEmpty(values?.certificateOfInsurance?.file)}
                                 onClick={() => {
-                                    if (values?.certificateOfInsurance?.documentId === 'INSURANCE_GENERAL_LIABILITY') {
+                                    // do not proceed if errors exist
+                                    if (formikProps?.error?.certificateOfInsurance) {
+                                        formikProps?.handleSubmit()
+                                        return    
+                                    }
+
+                                    const file = formikProps?.values?.certificateOfInsurance?.file
+                                    const fileType = file?.type
+
+                                    // check that file type is PDF, that we have a file and it is general liabilty before flipping
+                                    // value of coiDocumentUpload
+                                    if (
+                                        !isFileEmpty(file) && fileType === 'application/pdf' &&
+                                        values?.certificateOfInsurance?.documentId === 'INSURANCE_GENERAL_LIABILITY'
+                                    ) {
                                         updateCoiDocumentUploaded(true)
                                     }
+
                                     SubmitFile(
                                         formikProps?.values?.certificateOfInsurance,
                                         { setSubmitting: formikProps?.setSubmitting },

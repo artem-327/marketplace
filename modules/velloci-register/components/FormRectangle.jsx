@@ -63,7 +63,7 @@ const FormRectangle = props => {
     return activeStep
   }
 
-  const valididateOwners = () => {
+  const validateOwners = () => {
     const owners = formikProps?.values?.verifyPersonalInformation.map(owner => {
       delete owner['businessRole']
       delete owner['middleName']
@@ -84,7 +84,7 @@ const FormRectangle = props => {
   }
   
   const submitEarly = (activeStep === 3 && formikProps?.values?.ownerInformation?.isNotOtherBeneficialOwner) ||
-                      (activeStep === 4 && valididateOwners())
+                      (activeStep === 4 && validateOwners())
 
   const uploadDocument = () => {
     submitForm(
@@ -121,8 +121,23 @@ const FormRectangle = props => {
   const handleClick = () => {
     switch (activeStep) {
       case 6: {
+        // clear existing errors, if any
+        if (formikProps?.error?.certificateOfInsurance) {
+          formikProps?.setError({})
+        }
+
         const file = formikProps?.values?.certificateOfInsurance?.file
+        const fileType = file?.type
         const documentId = formikProps?.values?.certificateOfInsurance?.documentId
+
+        // if coi doc has been uploaded (with either upload another or next button), allow user to move to next step
+        if (fileType && fileType !== 'application/pdf') {
+          formikProps?.resetForm()
+          formikProps?.setError({
+            'certificateOfInsurance': 'Please upoad only PDFs'
+          })
+          return
+        }
 
         if (documentId && documentId === 'INSURANCE_GENERAL_LIABILITY') {
           uploadDocument()
@@ -131,7 +146,7 @@ const FormRectangle = props => {
           return
         }
 
-        // if coi doc has been uploaded (with either upload another or next button), allow user to move to next step
+        // if user has moved on from COI, but comes back for whatever reason, we should allow them to move forward
         if (coiDocumentUploaded) {
           if (isFileEmpty(file) || !documentId) {
             nextStep(activeStep + 1)
