@@ -1,12 +1,17 @@
 import Document, { Html, Head as HeadDocument, Main, NextScript } from 'next/document'
 import Head from 'next/head'
 import { ServerStyleSheet } from 'styled-components'
+
+let host_name = '/'
+
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
+    const { req } = ctx;
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
 
     try {
+      host_name = req.headers.host
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
@@ -43,6 +48,7 @@ export default class MyDocument extends Document {
           <link rel='manifest' href='/static/site.webmanifest' />
           <link rel='shortcut icon' href='/static/favicon.ico' />
           <link rel='mask-icon' href='/static/safari-pinned-tab.svg' color='#1b3454' />
+          <link rel='canonical' href={host_name} />
           <meta name='msapplication-TileColor' content='#1b3454' />
           <meta name='msapplication-config' content='/static/browserconfig.xml' />
           <meta name='theme-color' content='#1b3454' />
