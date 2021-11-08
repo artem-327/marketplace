@@ -146,7 +146,8 @@ const MarketingMaterial = props => {
                                             inputProps={{
                                             placeholder: formatMessage({
                                                 id: 'company.enterLegalBusinessName',
-                                                defaultMessage: 'Enter Legal Business Name'
+                                                defaultMessage: 'Enter Legal Business Name',
+                                                'data-test': 'marketing-material-business-name'
                                             })
                                             }}
                                         />
@@ -202,7 +203,8 @@ const MarketingMaterial = props => {
                                                 }
                                                 name='email'
                                                 inputProps={{
-                                                placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' })
+                                                    placeholder: formatMessage({ id: 'company.enterEmailAddress', defaultMessage: 'Enter Email Address' }),
+                                                    'data-test': 'marketing-material-email-address'
                                                 }}
                                             />
                                         </GridColumn>
@@ -249,7 +251,8 @@ const MarketingMaterial = props => {
                                             inputProps={{
                                                 placeholder: formatMessage({
                                                     id: `company.enter.${el}Url`,
-                                                    defaultMessage: `Enter ${el} URL`
+                                                    defaultMessage: `Enter ${el} URL`,
+                                                    'data-test': `marketing-material-${el}`    
                                                 })
                                             }}
                                             />

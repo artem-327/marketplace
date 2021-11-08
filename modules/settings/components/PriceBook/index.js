@@ -20,7 +20,7 @@ class PriceBook extends Component {
 
   async componentDidMount() {
     try {
-      await this.props.initGlobalBroadcast(this.props.settings)
+      await this.props.initGlobalBroadcast()
     } catch (err) {
       console.error(err)
     }
@@ -35,10 +35,4 @@ class PriceBook extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    settings: state?.auth?.identity?.settings
-  }
-}
-
-export default connect(mapStateToProps, { initGlobalBroadcast })(PriceBook)
+export default connect(null, { initGlobalBroadcast })(PriceBook)

@@ -378,9 +378,9 @@ a.ui.button {
   width: calc(100% + 2.2857143em);
 }
 
-.modal .table-responsive-wider .table-responsive {
-  overflow-y: hidden;
-}
+// .modal .table-responsive-wider .table-responsive {
+//   overflow-y: hidden;
+// }
 
 body > *:not(.modals) .bootstrapiso .table-responsive {
   margin-right: -2.2857143em;
@@ -2778,6 +2778,11 @@ i.file {
   }
 }
 
+.modal .table-responsive table.table tr td.p-0 {
+  background: #fff !important;
+  box-shadow: none;
+}
+
 .ui.fluid.container > .left.collapsed ~ div {
   .table-responsive {
     table.table {
@@ -2885,7 +2890,7 @@ input[type='number'] {
         tr {
           td {
             position: relative;
-            overflow: visible;
+            overflow: hidden;
             height: 20px;
             padding: 9px 10px !important;
             box-shadow: 0 6px 0 0 #f8f9fb;

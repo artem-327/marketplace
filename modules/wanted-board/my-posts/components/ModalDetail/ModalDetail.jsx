@@ -65,9 +65,9 @@ const ModalDetail = props => {
                   <DivTitle>
                     <DivHeader>
                       {!openGlobalAddForm && popupValues ? (
-                        <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted Board' />
+                        <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted' />
                       ) : (
-                        <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted Board' />
+                        <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted' />
                       )}
                     </DivHeader>
                     <div>

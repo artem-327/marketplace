@@ -99,11 +99,10 @@ const InfoModal = props => {
       isSending,
       purchaseRequestPending,
       updatingDatagrid,
-      infoModalData
+      infoModalData,
+      closeInfoModal,
+      openConfirmModal
     } = props
-    
-    const rows = []
-    const { closeInfoModal } = props;
 
     return (
       <>
@@ -124,7 +123,7 @@ const InfoModal = props => {
                     <FormattedMessage id='wantedBoard.productInfoHeader' defaultMessage='PRODUCT INFO' />
                   </Modal.Header>
 
-                  <ModalContent scrolling={rows?.length !== 0}>
+                  <ModalContent>
                     <>
                       <SubmitOfferHighSegment>
                       <Grid divided='horizontally'>
@@ -216,8 +215,7 @@ const InfoModal = props => {
                               primary
                               type='submit'
                               onClick={() => {
-                                closeInfoModal()
-                                props.openRespondModal(props.row)
+                                openConfirmModal(infoModalData)
                               }}
                             >
                               <FormattedMessage id='wantedBoard.respond' defaultMessage='Respond' tagName='span' />
@@ -238,8 +236,7 @@ const InfoModal = props => {
 
 function mapStateToProps(store, props) {
   return {
-    ...store.wantedBoard,
-    row: store?.wantedBoard?.infoModalData
+    ...store.wantedBoard
   }
 }
 

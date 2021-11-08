@@ -25,6 +25,8 @@ import {
   tableRowClickedProductOffer
 } from './MyListings.services'
 import { CustomRowDiv } from '../../styles'
+// Apis
+import { getProductOfferById } from '../../api'
 // Hooks
 import { usePrevious } from '../../../../hooks'
 //Constants
@@ -61,6 +63,10 @@ const MyListings = props => {
       applyDatagridFilter,
       broadcastTemplates
     } = props
+    const getProductOffer = async (idOffer, tabOffer) => {
+      const data = await getProductOfferById(idOffer.id)
+      if(data && data.id) modalDetailTrigger(data, true, tabOffer)
+    }
     if (window) {
       const searchParams = new URLSearchParams(getSafe(() => window.location.href, ''))
 
@@ -75,7 +81,7 @@ const MyListings = props => {
             ? Number(searchParams.get('tab'))
             : Number(searchParams.get(`${window.location.href.split('?')[0]}?tab`))
         }
-        modalDetailTrigger(idOffer, true, tabOffer)
+        getProductOffer(idOffer, tabOffer)
       }
     }
     if (broadcastTemplates && !broadcastTemplates.length) {

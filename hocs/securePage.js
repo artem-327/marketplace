@@ -2,7 +2,7 @@ import { createContext, Component } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import nextCookie from 'next-cookies'
-import Timeout from '~/components/timeout'
+import Timeout from '../components/timeout'
 
 export const SecureContext = createContext()
 
@@ -68,6 +68,7 @@ const securePageHoc = Page =>
       return (
         <SecureContext.Provider value={{ auth }}>
           <Page {...this.props} />
+          <Timeout />
         </SecureContext.Provider>
       )
     }

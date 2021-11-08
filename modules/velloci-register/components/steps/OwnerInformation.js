@@ -88,7 +88,7 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
               defaultMessage='Are there any other Beneficial Owners?'
             />
           </label>
-          <DivCheckboxes>
+          <DivCheckboxes data-test="beneficial-ownership-other-owners">
             <Checkbox
               label={formatMessage({
                 id: 'global.yes',
@@ -98,8 +98,7 @@ function OwnerInformation({ formikProps, intl: { formatMessage }, countBeneficia
                 onChange: () => {
                   formikProps.setFieldValue('ownerInformation.isOtherBeneficialOwner', true)
                   formikProps.setFieldValue('ownerInformation.isNotOtherBeneficialOwner', false)
-                },
-                'data-test': 'settings_velloci_registration_owner_information_isOtherBeneficialOwner_chckbx'
+                }
               }}
               name='ownerInformation.isOtherBeneficialOwner'
             />

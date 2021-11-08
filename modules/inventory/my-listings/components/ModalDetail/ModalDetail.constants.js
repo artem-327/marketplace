@@ -80,7 +80,7 @@ export const OPTIONS_BROADCAST = [
     ),
     title: <FormattedMessage id='global.all' defaultMessage='All' />,
     subtitleId: 'myInventory.allSubtitle',
-    subtitleText: 'My Network + BlueTrade',
+    subtitleText: 'My Network + BluePallet Marketplace',
     value: GLOBAL_RULES,
     id: null,
     tmp: null
@@ -116,7 +116,7 @@ export const OPTIONS_BROADCAST = [
       </DivIconOptions>
     ),
     titleId: 'myInventory.bluePalletDirect',
-    titleText: 'BlueTrade',
+    titleText: 'BluePallet Marketplace',
     subtitleId: 'myInventory.bluePalletDirectSubtitle',
     subtitleText: 'Open Marketplace',
     value: 'GLOBAL_RULES_ONLY_BROKERS'

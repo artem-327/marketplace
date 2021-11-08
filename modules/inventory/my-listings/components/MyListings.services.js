@@ -74,7 +74,7 @@ export const columns = [
     { name: 'echoName', disabled: true },
     { name: 'echoCode', disabled: true },
     {
-      name: 'warehouse',
+      name: 'warehouseName',
       title: (
         <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />
       ),
@@ -383,7 +383,7 @@ export const getRows = (props, state, setState) => {
         title: formatMessage({ id: 'global.all', defaultMessage: 'All' }),
         subtitle: formatMessage({
         id: 'myInventory.allSubtitle',
-        defaultMessage: 'My Network + BlueTrade'
+        defaultMessage: 'My Network + BluePallet Marketplace'
         }, {
         companyName: applicationName
         }),
@@ -415,7 +415,7 @@ export const getRows = (props, state, setState) => {
     },
     {
         icon: <Image size='mini' src={BluePalletLogoMini} />,
-        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BlueTrade' }, {
+        title: formatMessage({ id: 'myInventory.bluePalletDirect', defaultMessage: 'BluePallet Marketplace' }, {
         companyName: applicationName
         }),
         subtitle: formatMessage({
@@ -962,7 +962,7 @@ export const getMappedRows = datagrid => datagrid?.rows?.map(po => {
     echoName: getSafe(() => po.companyProduct.companyGenericProduct.name, ''),
     echoCode: getSafe(() => po.companyProduct.companyGenericProduct.code, 'Unmapped'),
     chemicalName: getSafe(() => po.product.casProduct.chemicalName, po?.companyProduct?.intProductName),
-    warehouse: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
+    warehouseName: getSafe(() => po.warehouse.deliveryAddress.cfName, ''),
     productId: getSafe(() => po.product.casProduct.id, 0),
     available: po.pkgAvailable ? <FormattedNumber minimumFractionDigits={0} value={po.pkgAvailable} /> : 'N/A',
     packagingType: getSafe(() => po.companyProduct.packagingType.name, ''),
