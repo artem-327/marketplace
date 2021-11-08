@@ -98,6 +98,7 @@ const RespondModal = props => {
     closeRespondModal,
     openGlobalAddForm,
     postNewWantedBoardBids,
+    postUpdatedWantedBoardBids,
   } = props
 
   useEffect(() => {
@@ -188,14 +189,14 @@ const RespondModal = props => {
 
   const submitOffers = async () => {
     if (submitOffer.wantedBoardRequest) {
-      console.log(datagrid.rows)
-      // datagrid.setLoading(true)
-      // await postNewWantedBoardBids(submitOffer)
-      // datagrid.loadData()
-      // setSubmitOffer({
-      //   ...submitOffer,
-      //   wantedBoardRequest: false
-      // })
+      // console.log(datagrid.rows)
+      datagrid.setLoading(true)
+      await postUpdatedWantedBoardBids(submitOffer)
+      datagrid.loadData()
+      setSubmitOffer({
+        ...submitOffer,
+        wantedBoardRequest: false
+      })
     }
   }
   return (
