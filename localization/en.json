@@ -2676,6 +2676,7 @@
   "marketplace.DhsChemicalOfInterest": "DHS Chemical of Interest",
   "marketplace.notUserPermissionsToBuy": "You have not signed documents proving you are authorized to purchase regulated products yet, or the authorization has expired. Please, check the authorization under you user settings.",
   "marketplace.cfats": "CFATS",
+  "onboarding.please.upload.only.pdfs": "Please upload only PDFs",
   "onboarding.setup.indicator.business.verification": "Business Verification",
   "onboarding.setup.indicator.agreements.and.terms": "Agreements & Terms",
   "onboarding.setup.indicator.ein.documents": "EIN Document SS-4",
