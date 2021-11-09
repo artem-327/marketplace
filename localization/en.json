@@ -3227,7 +3227,7 @@
   "wantedBoard.respondModalQuantity": "QUANTITY",
   "wantedBoard.respondModalWarehouse": "WAREHOUSE",
   "wantedBoard.respondModalPrice": "FOB PRICE",
-  "wantedBoard.respondModalUse": "USE",
+  "wantedBoard.respondModalSelect": "SELECT",
   "wantedBoard.myPostEdit": "Edit",
   "wantedBoard.myPostDelete": "Delete",
   "wantedBoard.mypostSeeListings": "See Listings",

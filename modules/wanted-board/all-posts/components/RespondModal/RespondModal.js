@@ -61,6 +61,12 @@ const RespondModal = props => {
     rows: []
   })
 
+  const [localDataState, setLocalDataState] = useState(props)
+  const [submitOffer, setSubmitOffer] = useState({
+    productOffers: [],
+    wantedBoardRequest: false,
+  })
+
   useEffect(() => {
     const { popupValues, datagrid } = props
     setSearchInput(popupValues.rawData.productSearchPattern)
@@ -68,6 +74,20 @@ const RespondModal = props => {
       searchInput: popupValues.rawData.productSearchPattern
     }
     datagrid.setSearch(filter, true, 'modalFilters')
+    const { rows } = datagrid
+    let productOfferArray = []
+    for (const row of rows) {
+      let { submittedBids } = row
+      submittedBids = submittedBids[0]
+      if (submittedBids) {
+        const { productOfferId } = submittedBids
+        productOfferArray = [...productOfferArray, productOfferId]
+      }
+    }
+    setSubmitOffer({
+      ...submitOffer,
+      productOffers: productOfferArray
+    })
   }, [])
 
   const {
@@ -76,13 +96,109 @@ const RespondModal = props => {
     purchaseRequestPending,
     updatingDatagrid,
     closeRespondModal,
-    openGlobalAddForm
+    openGlobalAddForm,
+    postNewWantedBoardBids,
+    postUpdatedWantedBoardBids,
   } = props
 
   useEffect(() => {
-    getRows(getMappedRows(props), props, state, setState)
+    setLocalDataState(props)
+    // getRows(getMappedRows(props), props, state, setState);
+    getRows(getMappedRows(
+      localDataState,
+      localDeleteWantedBoardBids,
+      localPostNewWantedBoardBids
+    ), props, state, setState);
+
+    const { rows } = datagrid
+    let productOfferArray = []
+    for (const row of rows) {
+      let { submittedBids } = row
+      submittedBids = submittedBids[0]
+      if (submittedBids) {
+        const { productOfferId } = submittedBids
+        productOfferArray = [...productOfferArray, productOfferId]
+      }
+    }
+    setSubmitOffer({
+      ...submitOffer,
+      productOffers: productOfferArray
+    })
   }, [datagrid])
 
+  const localPostNewWantedBoardBids = (value) => {
+    const { key, productOffer, wantedBoardRequest } = value
+    let changeData = localDataState;
+    
+    let { rows } = datagrid;
+    rows[key].submittedBids = [
+      {
+        productOfferId: productOffer,
+        wantedBoardDirectBidId: wantedBoardRequest,
+      }
+    ]
+    changeData.datagrid.rows = rows
+    setLocalDataState(changeData)
+    getRows(getMappedRows(
+      changeData,
+      localDeleteWantedBoardBids,
+      localPostNewWantedBoardBids
+    ), props, state, setState);
+
+    let productOfferArray = []
+    for (const row of rows) {
+      let { submittedBids } = row
+      submittedBids = submittedBids[0]
+      if (submittedBids) {
+        const { productOfferId } = submittedBids
+        productOfferArray = [...productOfferArray, productOfferId]
+      }
+    }
+    setSubmitOffer({
+      wantedBoardRequest,
+      productOffers: productOfferArray
+    })
+  }
+
+  const localDeleteWantedBoardBids = (wantedBoardRequest, key) => {
+    let changeData = localDataState
+    let { rows } = datagrid
+    rows[key].submittedBids = []
+    changeData.datagrid.rows = rows
+    setLocalDataState(changeData)
+    getRows(getMappedRows(
+      changeData,
+      localDeleteWantedBoardBids,
+      localPostNewWantedBoardBids
+    ), props, state, setState)
+
+    let productOfferArray = []
+    for (const row of rows) {
+      let { submittedBids } = row
+      submittedBids = submittedBids[0]
+      if (submittedBids) {
+        const { productOfferId } = submittedBids
+        productOfferArray = [...productOfferArray, productOfferId]
+      }
+    }
+    setSubmitOffer({
+      wantedBoardRequest,
+      productOffers: productOfferArray
+    })
+  }
+
+  const submitOffers = async () => {
+    if (submitOffer.wantedBoardRequest) {
+      // console.log(datagrid.rows)
+      datagrid.setLoading(true)
+      await postUpdatedWantedBoardBids(submitOffer)
+      datagrid.loadData()
+      setSubmitOffer({
+        ...submitOffer,
+        wantedBoardRequest: false
+      })
+    }
+  }
   return (
     <>
       <ToggleForm
@@ -111,8 +227,8 @@ const RespondModal = props => {
                     onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
                   />
                 </DivPopupTableHandler>
-                <ModalContent scrolling={true}>
-                  <div className='flex stretched wanted-board-wrapper listings-wrapper'>
+                <ModalContent scrolling={true} style={{height: 500}}>
+                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{padding: '0px 20px'}}>
                     <ProdexTable
                       {...datagrid.tableProps}
                       tableName='wanted_board_respond_modal'
@@ -150,7 +266,7 @@ const RespondModal = props => {
                   </div>
                 </ModalContent>
 
-                <Modal.Actions> 
+                <Modal.Actions>
                   <Grid verticalAlign='middle'>
                     <GridRow columns={3}>
                         <>
@@ -167,11 +283,9 @@ const RespondModal = props => {
                             loading={purchaseRequestPending || updatingDatagrid}
                             primary
                             type='submit'
-                            onClick={() => {
-                              openGlobalAddForm('inventory-my-listings')
-                            }}
+                            onClick={() => submitOffers()}
                           >
-                            <FormattedMessage id='wantedBoard.respondModalCreateNewListing' defaultMessage='Create New Listing' tagName='span' />
+                            <FormattedMessage id='wantedBoard.submit' defaultMessage='Submit' tagName='span' />
                           </SubmitButton>
                         </RightColumn>
                     </GridRow>

@@ -134,6 +134,13 @@ export const postNewWantedBoardBids = (values) => {
   }
 }
 
+export const postUpdatedWantedBoardBids = (values) => {
+  return {
+    type: AT.WB_POST_NEW,
+    payload: api.postUpdatedWantedBoardBidsApi(values)
+  }
+}
+
 export const deleteWantedBoardBids = (id) => {
   return {
     type: AT.WB_DELETE,

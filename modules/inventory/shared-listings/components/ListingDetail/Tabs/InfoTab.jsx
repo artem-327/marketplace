@@ -20,7 +20,15 @@ import {
  * @category Inventory - Shared Listings
  * @component
  */
+
+const capitalizeFirstLetter = (string) => {
+  string = string.replace('_', ' ')
+  string = string.toLowerCase()
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 const InfoTab = ({ row }) => {
+  let { paymentTerms } = row;
   return useMemo(() => {
     return (
       <SegmentGroupTab horizontal $noneBorder>
@@ -50,7 +58,7 @@ const InfoTab = ({ row }) => {
               <Grid.Column width={6}>
                 <FormattedMessage id={`global.paymentTerms`} defaultMessage='Payment Terms' />
               </Grid.Column>
-              <GridColumnTabFieldValue width={10}>{row?.paymentTerms}</GridColumnTabFieldValue>
+              <GridColumnTabFieldValue width={10}>{paymentTerms ? capitalizeFirstLetter(paymentTerms) : ''}</GridColumnTabFieldValue>
             </GridRowTabField>
 
             <GridRowTabField>

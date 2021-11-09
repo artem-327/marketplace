@@ -350,14 +350,14 @@ function BusinessInfo({
               }
               name='businessInfo.companyType'
               options={
-                enumsBusinessTypes.data.map(option => ({
+                enumsBusinessTypes?.data?.map(option => ({
                   text: option.name,
                   value: option.value,
                   key: option.value
                 }))
               }
               inputProps={{
-                loading: enumsBusinessTypes.loading,
+                loading: enumsBusinessTypes?.loading,
                 clearable: true,
                 selection: true,
                 search: true,
