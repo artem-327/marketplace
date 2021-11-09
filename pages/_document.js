@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
 
     try {
       host_name = req.headers.host;
-      const protocol = req.headers.referer.split('://')[0];
+      const protocol = (req.headers.referer) ? req.headers.referer.split('://')[0] : 'https';
       (protocol==='http') ? host_name = 'http://' + host_name : host_name = 'https://' + host_name;
 
       ctx.renderPage = () =>
