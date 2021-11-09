@@ -12,6 +12,7 @@ import ActionCell from '../../../../components/table/ActionCell'
 import ColumnSettingButton from '../../../../components/table/ColumnSettingButton'
 import moment from 'moment'
 import { getLocaleDateFormat } from '../../../../components/date-format'
+import ModalDetailContainer from '../../../inventory/my-listings/components/ModalDetail/ModalDetailContainer'
 
 const AllPosts = props => {
 
@@ -167,9 +168,12 @@ const AllPosts = props => {
       openedConfirmModal,
       openedInfoModal,
       openedRespondModal,
+      openRespondModal,
       popupValues,
       intl: {formatMessage},
       editID,
+      openGlobalAddFormName,
+      openGlobalAddForm,
       loading
     } = props
 
@@ -178,6 +182,16 @@ const AllPosts = props => {
         {openedConfirmModal && <ConfirmModal />}
         {openedInfoModal && <InfoModal {...popupValues} />}
         {openedRespondModal && <RespondModal id={editID} />}
+        {openGlobalAddFormName === 'inventory-my-listings-wanted' && (
+          <ModalDetailContainer
+            openGlobalAddForm={openGlobalAddForm}
+            wantedRespond
+            onCreated={productOffer => {
+              openGlobalAddForm('')
+              openRespondModal(productOffer)
+            }}
+          />
+        )}
         <div style={{ padding: '10px 0' }}>
           <CustomRowDiv>
             <div>

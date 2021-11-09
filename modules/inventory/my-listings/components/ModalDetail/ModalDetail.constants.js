@@ -156,6 +156,52 @@ export const OPTIONS_BROADCAST = [
   }
 ]
 
+
+/**
+ * @category Inventory - My Listings
+ * @constant {{icon: JSX.Element, title: JSX.Element, subtitleId: string, subtitleText: string, value: CLIENT_COMPANIES | NO_BROADCAST | GLOBAL_RULES}[] } OPTIONS_BROADCAST  Options for dropdown "Who should see this offer?"
+ */
+export const OPTIONS_BROADCAST_WANTED_RESPOND = [
+  {
+    icon: (
+      <DivIconOptions>
+        <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'>
+          <g fill='none' fill-rule='evenodd'>
+            <path
+              d='M0 0L24 0 24 24 0 24z'
+              transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+            />
+            <path
+              fill='#20273A'
+              fill-rule='nonzero'
+              d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z'
+              transform='translate(-1125 -387) translate(1105 295) translate(0 29) translate(20 63)'
+            />
+          </g>
+        </svg>
+      </DivIconOptions>
+    ),
+    title: <FormattedMessage id='global.all' defaultMessage='All' />,
+    subtitleId: 'myInventory.allSubtitle',
+    subtitleText: 'My Network + BluePallet Marketplace',
+    value: GLOBAL_RULES,
+    id: null,
+    tmp: null
+  },
+  {
+    icon: (
+      <DivIconOptions>
+        <Image size='mini' src={BluePalletLogoMini} />
+      </DivIconOptions>
+    ),
+    titleId: 'myInventory.bluePalletDirect',
+    titleText: 'BluePallet Marketplace',
+    subtitleId: 'myInventory.bluePalletDirectSubtitle',
+    subtitleText: 'Open Marketplace',
+    value: 'GLOBAL_RULES_ONLY_BROKERS'
+  }
+]
+
 /**
  * @category Inventory - My Listings
  * @constant {{

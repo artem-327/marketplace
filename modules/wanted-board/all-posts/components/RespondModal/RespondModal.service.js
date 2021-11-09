@@ -309,10 +309,13 @@ export const getMappedRows = (props, localDeleteWantedBoardBids, localPostNewWan
     postNewWantedBoardBids,
     deleteWantedBoardBids,
     editID,
-    datagrid
+    datagrid,
+    createdProductOffer
   } = props
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-  let useToggleStatus = submittedBids.length > 0 ? true : false
+  let useToggleStatus = createdProductOffer
+    ? (po.id === createdProductOffer.id)
+    : (submittedBids.length > 0 ? true : false)
 
   return {
     ...po,
