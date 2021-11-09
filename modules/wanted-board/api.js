@@ -15,4 +15,10 @@ export default {
   deleteWantedBoardBidsApi: id => api.delete(`/prodex/api/wanted-board-direct-bids/id/${id}`).then(resp => resp).catch(err => console.error(err)),
   postNewWantedBoardBidsApi: value => api.post('/prodex/api/wanted-board-direct-bids', value).then(resp => resp).catch(err => console.error(err)),
   postUpdatedWantedBoardBidsApi: value => api.patch('/prodex/api/wanted-board-direct-bids/update-submissions', value).then(resp => resp).catch(err => console.error(err)),
+  searchManufacturers: (text, limit = 5) =>
+    api.get(
+      `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
+        Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
+        }`
+    ).then(resp => resp).catch(err => console.error(err)),
 }

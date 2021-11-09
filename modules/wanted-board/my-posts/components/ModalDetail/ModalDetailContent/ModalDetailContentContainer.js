@@ -2,6 +2,7 @@ import ModalDetailContent from './ModalDetailContent'
 import { connect } from 'react-redux'
 // Actions
 import { getHazardClasses, getCountries, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades } from '../../../../../global-data/actions'
+import { searchManufacturers } from '../../../../actions'
 import { makeGetHazardClasses } from '../../../../selector'
 import { makeGetHazardClassesLoading } from '../../../../../global-data/selectors'
 
@@ -24,10 +25,12 @@ const makeMapStateToProps = () => {
       hazardClasses: getHazardClasses(state),
       hazardClassesLoading: getHazardClassesLoading(state),
       deliveryCountry: state.wantedBoard?.popupValues?.rawData?.deliveryCountry,
-      primaryBranch: state.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address
+      primaryBranch: state.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address,
+      searchedManufacturers: state.wantedBoard?.searchedManufacturers,
+      searchedManufacturersLoading: state.wantedBoard?.searchedManufacturersLoading
     }
   }
   return mapStateToProps
 }
 
-export default connect(makeMapStateToProps, { getHazardClasses, getCountries, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades })(ModalDetailContent)
+export default connect(makeMapStateToProps, { getHazardClasses, getCountries, getUnits, getPackagingTypes, getProductConditions, getProductForms, getProductGrades, searchManufacturers })(ModalDetailContent)
