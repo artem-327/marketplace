@@ -14,6 +14,7 @@ export const initialState = {
   sending: false,
   allPostsFilters: null,
   myPostsFilters: null,
+  createdProductOffer: null,
   loading: false,
   searchedManufacturers: [],
   searchedManufacturersLoading: false
@@ -64,7 +65,8 @@ export default function reducer(state = initialState, action) {
     case AT.WB_OPEN_RESPOND_MODAL: {
       return {
         ...state,
-        openedRespondModal: true
+        openedRespondModal: true,
+        createdProductOffer: payload
       }
     }
 

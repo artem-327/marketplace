@@ -33,7 +33,7 @@ const MyPosts = props => {
     {
       name: 'quantity',
       title: (
-        <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Qty.Needed' />
+        <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed' />
       ),
       width: 200
     },

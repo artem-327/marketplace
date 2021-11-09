@@ -568,13 +568,13 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/wanted-board/all-posts'
                       dataTest='navigation_wanted_board_all_posts_drpdn'>
-                      {formatMessage({ id: 'navigation.wantedBoardAllPosts', defaultMessage: 'All posts' })}
+                      {formatMessage({ id: 'navigation.wantedBoardAllPosts', defaultMessage: 'All Posts' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}
                       to='/wanted-board/my-posts'
                       dataTest='navigation_wanted_board_my_posts_drpdn'>
-                      {formatMessage({ id: 'navigation.wantedBoardMyPosts', defaultMessage: 'My posts' })}
+                      {formatMessage({ id: 'navigation.wantedBoardMyPosts', defaultMessage: 'My Posts' })}
                     </Dropdown.Item>
                   </PerfectScrollbar>
                 </Dropdown.Menu>

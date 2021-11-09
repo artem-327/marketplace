@@ -2,12 +2,14 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { withDatagrid } from '../../../datagrid'
 import * as Actions from '../../actions'
+import { openGlobalAddForm } from '../../../layout/actions'
 import AllPosts from './AllPosts'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 
 function mapStateToProps(store, { datagrid }) {
   return {
     ...store.wantedBoard,
+    openGlobalAddFormName: store.layout.openGlobalAddFormName,
     rows: datagrid.rows.map(row => {
       let province = row?.deliveryProvince?.name
       let country = row?.deliveryCountry?.name
@@ -26,6 +28,6 @@ function mapStateToProps(store, { datagrid }) {
 
 export default withDatagrid(
   connect(mapStateToProps, {
-    ...Actions
+    ...Actions, openGlobalAddForm
   })(AllPosts)
 )
