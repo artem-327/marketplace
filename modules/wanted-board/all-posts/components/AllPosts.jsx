@@ -13,13 +13,15 @@ import ColumnSettingButton from '../../../../components/table/ColumnSettingButto
 import moment from 'moment'
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import ModalDetailContainer from '../../../inventory/my-listings/components/ModalDetail/ModalDetailContainer'
+import AllPostsDetail from './AllPostsDetail/AllPostsDetail'
 
 const AllPosts = props => {
 
   const [state, setState] = useState({
     filterValue: {
       searchInput: ''
-    }
+    },
+    expandedRowId: null
   })
 
   const columns = [
@@ -28,13 +30,13 @@ const AllPosts = props => {
       title: (
         <FormattedMessage id='wantedBoard.productName' defaultMessage='Product Name' />
       ),
-      width: 500,
+      width: 900,
       allowReordering: false
     },
     {
       name: 'quantity',
       title: (
-        <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Qty.Needed' />
+        <FormattedMessage id='wantedBoard.quantityNeeded' defaultMessage='Quantity Needed' />
       ),
       width: 200
     },
@@ -42,20 +44,6 @@ const AllPosts = props => {
       name: 'shippingLocation',
       title: (
         <FormattedMessage id='wantedBoard.shippingLocation' defaultMessage='Shipping Location' />
-      ),
-      width: 200
-    },
-    {
-      name: 'conforming',
-      title: (
-        <FormattedMessage id='wantedBoard.conforming' defaultMessage='Confirming' />
-      ),
-      width: 200
-    },
-    {
-      name: 'postExpiry',
-      title: (
-        <FormattedMessage id='wantedBoard.postExpiry' defaultMessage='Post Expiry' />
       ),
       width: 200
     }
@@ -152,13 +140,29 @@ const AllPosts = props => {
     ]
   }
 
-  const getRows = rows => {
+  const getRows = (rows, expandedRowId) => {
     return rows.map(r => {
       return {
         ...r,
-        productName: <ActionCell row={r} getActions={getActions} content={r.productName} />
+        productName: <ActionCell row={r} getActions={getActions} content={r.productName} />,
+        clsName: expandedRowId
+          ? (expandedRowId === r.id
+              ? 'open zoomed'
+              : 'bids-greyed'
+          )
+          : ''
       }
     })
+  }
+
+  const getRowDetail = (row, props, setState) => {
+    return (
+      <AllPostsDetail
+        row={row.rawData}
+        onClose={() => setState({ ...state, expandedRowId: null })}
+        onRespond={() => props.openConfirmModal(row)}
+      />
+      )
   }
 
   const renderContent = () => {
@@ -176,6 +180,8 @@ const AllPosts = props => {
       openGlobalAddForm,
       loading
     } = props
+
+    const { expandedRowId } = state
 
     return (
       <>
@@ -214,15 +220,23 @@ const AllPosts = props => {
             </div>
           </CustomRowDiv>
         </div>
-        <div className='flex stretched listings-wrapper' style={{ padding: '10px 0 20px 0' }}>
+        <div className='flex stretched table-detail-rows-wrapper' style={{ padding: '10px 0 20px 0' }}>
           <ProdexGrid
-            tableName={'wanted_board_listings_grid'}
+            tableName={'wanted_board_all_posts_grid'}
             {...datagrid.tableProps}
-            rows={getRows(rows)}
+            rows={getRows(rows, expandedRowId)}
             columns={columns}
             rowSelection={false}
             showSelectionColumn={false}
             loading={datagrid.tableProps.loading || loading}
+            rowDetailType={true}
+            rowDetail={({ row }) => getRowDetail(row, props, setState)}
+            expandedRowIds={[expandedRowId]}
+            onRowClick={async (_, row) => setState({ ...state, expandedRowId: expandedRowId === row.id ? null : row.id })}
+            lockSelection={false}
+            showSelectAll={false}
+            isToggleCellComponent={false}
+            estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           />
         </div>
       </>
