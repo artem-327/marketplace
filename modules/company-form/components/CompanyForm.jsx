@@ -431,36 +431,36 @@ class CompanyForm extends Component {
           </FormField>
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
-          <FormField className='upload-input'>
-            <label htmlFor='field_dropdown_associations'>
-              <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
-              <Required />
-            </label>
-            <Dropdown
-              options={
-                data && data.length
-                  ? data.map(type => ({
-                      text: type.name,
-                      value: type.id,
-                      key: type.id
-                    }))
-                  : []
-              }
-              clearable
-              loading={loading}
-              selection
-              value={this.state.businessType.id}
-              onChange={(e, data) => {
-                e.preventDefault()
-                this.setState({
-                  businessType: { id: data.value }
-                })
-                setFieldValue('businessType.id', data.value)
-              }}
-              name='businessType.id'
-              data-test='company_form_businessType_drpdn'
-            />
-          </FormField>
+          <FixedDropdown
+            label={
+              <label>
+                <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
+                <Required />
+              </label>
+            }
+            options={
+              data && data.length
+                ? data.map(type => ({
+                    text: type.name,
+                    value: type.id,
+                    key: type.id
+                  }))
+                : []
+            }
+            clearable
+            loading={loading}
+            selection
+            value={this.state.businessType.id}
+            onChange={(e, data) => {
+              e.preventDefault()
+              this.setState({
+                businessType: { id: data.value }
+              })
+              setFieldValue('businessType.id', data.value)
+            }}
+            name='businessType.id'
+            data-test='company_form_businessType_drpdn'
+          />
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
         </FormGroup>
 

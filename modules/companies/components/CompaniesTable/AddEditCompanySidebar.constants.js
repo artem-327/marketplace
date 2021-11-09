@@ -8,7 +8,7 @@ export const INITIAL_FORM_VALUES = {
   phone: '',
   purchaseHazmatEligible: false,
   businessType: {
-    id: null
+    id: ''
   },
   tinType: '',
   tin: '',

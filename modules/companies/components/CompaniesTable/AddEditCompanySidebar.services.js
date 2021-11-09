@@ -11,7 +11,8 @@ import { errorMessages } from '../../../../constants/yupValidation'
 import {
   addressValidationSchema,
   phoneValidation,
-  websiteValidationNotRequired
+  websiteValidationNotRequired,
+  businessValidationSchema,
 } from '../../../../constants/yupValidation'
 
 /**
@@ -39,8 +40,7 @@ export const formValidationNew = () =>
   Yup.lazy(values => {
     let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
       ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
-      : ''
-
+      : '';
     let minLength = errorMessages.minLength(2)
 
     let validation = Yup.object().shape({
@@ -49,6 +49,8 @@ export const formValidationNew = () =>
         .min(3, errorMessages.minLength(3))
         .max(200, errorMessages.maxLength(200))
         .required(),
+
+      businessType: businessValidationSchema(),
       tinType: Yup.string()
         .when('tin', {
           is: value => !!value,
