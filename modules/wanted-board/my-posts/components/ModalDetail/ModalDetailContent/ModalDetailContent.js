@@ -40,7 +40,7 @@ const ModalDetailContent = props => {
         provicesAreFetching: false,
         previousAddressLength: 0,
         provincesAreFetching: false,
-        isOpenOptionalInformation: true,
+        isOpenOptionalInformation: false,
         selectedManufacturers: []
     })
     const {
