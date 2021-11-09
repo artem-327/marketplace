@@ -2903,13 +2903,6 @@ input[type='number'] {
               padding-right: 0 !important;
             }
 
-            .cell-wrapper {
-              overflow: hidden;
-              //display: block;
-              width: 100%;
-              text-overflow: ellipsis;
-            }
-
             &:not(.p-0):before {
               content: '';
               position: absolute;
@@ -3158,8 +3151,27 @@ input[type='number'] {
           td {
             position: relative;
             overflow: visible;
+          }
+        }
+      }
+    }
+  }
+}
 
-            .cell-wrapper {
+.table-responsive {
+  overflow: visible;
+
+  table.table {
+    tbody {
+      tr {
+        td {
+          .cell-wrapper {
+            overflow: hidden;
+            display: block;
+            width: 100%;
+            text-overflow: ellipsis;
+
+            > div:not([class]):not([id]) {
               overflow: hidden;
               display: block;
               width: 100%;
@@ -3344,13 +3356,6 @@ input[type='number'] {
 
             &.actions {
               padding-right: 0 !important;
-            }
-
-            .cell-wrapper {
-              overflow: hidden;
-              //display: block;
-              width: 100%;
-              text-overflow: ellipsis;
             }
 
             &:not(.p-0):before {
