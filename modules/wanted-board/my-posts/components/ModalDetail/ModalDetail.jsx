@@ -62,9 +62,9 @@ const ModalDetail = props => {
                   <DivTitle>
                     <DivHeader>
                       {!openGlobalAddForm && popupValues ? (
-                        <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted Board' />
+                        <FormattedMessage id='wantedBoard.editWantedBoardProduct' defaultMessage='Edit Wanted' />
                       ) : (
-                        <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted Board' />
+                        <FormattedMessage id='wantedBoard.addWantedBoardProduct' defaultMessage='Add Wanted' />
                       )}
                     </DivHeader>
                     <div>
@@ -79,19 +79,21 @@ const ModalDetail = props => {
                     formikProps={formikProps}
                     provinceRequired={provinceRequired}
                     setProvinceRequired={setProvinceRequired}
+                    popupValues={popupValues?.rawData}
                   />
                 </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>
                 {!openGlobalAddForm && (
                   <BasicButton
-                    noborder
                     onClick={() => props.closeAddEditPopup()}
                     data-test='wanted_board_sidebar_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </BasicButton>
                 )}
                 <BasicButton
+                  background='#2599d5 !important'
+                  textcolor='#FFF !important'
                   onClick={() => {
                     formikProps.validateForm().then(async err => {
                       const errors = Object.keys(err)
@@ -105,7 +107,10 @@ const ModalDetail = props => {
                     })
                   }}
                   data-test='wanted_board_sidebar_submit_btn'>
-                  <FormattedMessage id='global.save' defaultMessage='Save' />
+                  {popupValues
+                    ? (<FormattedMessage id='global.postChanges' defaultMessage='Post Changes'/>)
+                    : (<FormattedMessage id='global.post' defaultMessage='Post'/>)
+                  }
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>

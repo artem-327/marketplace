@@ -11,7 +11,13 @@ export default class MyDocument extends Document {
     const originalRenderPage = ctx.renderPage
 
     try {
-      host_name = req.headers.host
+      host_name = req.headers.host;
+      let protocol = req.headers.referer?.split('://')
+      if (typeof protocol !== 'undefined') {
+        protocol = protocol[0];
+        (protocol==='http') ? host_name = 'http://' + host_name : host_name = 'https://' + host_name;
+      }
+
       ctx.renderPage = () =>
         originalRenderPage({
           enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
