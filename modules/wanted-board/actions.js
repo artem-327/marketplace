@@ -140,3 +140,10 @@ export const deleteWantedBoardBids = (id) => {
     payload: api.deleteWantedBoardBidsApi(id)
   }
 }
+
+export const searchManufacturers = (text) => {
+  return {
+    type: AT.WB_SEARCH_MANUFACTURERS,
+    payload: api.searchManufacturers(text)
+  }
+}

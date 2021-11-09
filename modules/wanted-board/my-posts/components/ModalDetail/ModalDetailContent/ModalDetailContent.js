@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import moment from 'moment'
 import { ChevronDown, ChevronUp } from 'react-feather'
+import debounce from 'lodash/debounce'
 
 // Components
 import { GridRow, GridColumn, Label } from 'semantic-ui-react'
@@ -28,6 +29,9 @@ import {
     CustomLabel
 } from '../../../../styles'
 
+// Services
+import { uniqueArrayByKey } from '../../../../../../utils/functions'
+
 const ModalDetailContent = props => {
     const [state, setState] = useState({
         provinces: [],
@@ -36,7 +40,8 @@ const ModalDetailContent = props => {
         provicesAreFetching: false,
         previousAddressLength: 0,
         provincesAreFetching: false,
-        isOpenOptionalInformation: true
+        isOpenOptionalInformation: true,
+        selectedManufacturers: []
     })
     const {
         intl: { formatMessage },
@@ -52,7 +57,11 @@ const ModalDetailContent = props => {
         productFormsLoading,
         productGradesLoading,
         provinceRequired,
-        setProvinceRequired
+        setProvinceRequired,
+        searchManufacturers,
+        searchedManufacturers,
+        searchedManufacturersLoading,
+        popupValues
     } = props
     const { values, setFieldValue } = formikProps
 
@@ -79,6 +88,15 @@ const ModalDetailContent = props => {
                 if (productForms.length === 0) getProductForms()
                 if (productGrades.length === 0) getProductGrades()
 
+                if (popupValues) {
+                    let selectedManufacturers = popupValues.manufacturers.map(item => ({
+                        key: item.id,
+                        value: item.id,
+                        text: item.name
+                    }))
+                    setState(prevState => ({ ...prevState, selectedManufacturers: selectedManufacturers }))
+                }
+
                 await fetchProvinces(
                   deliveryCountry ? deliveryCountry.id : primaryBranch?.country?.id,
                   deliveryCountry ? deliveryCountry.hasProvinces : primaryBranch?.country?.hasProvinces
@@ -100,7 +118,7 @@ const ModalDetailContent = props => {
             setProvinceRequired(false)
         }
     }
-
+    let manufacturerOptions = uniqueArrayByKey(searchedManufacturers.concat(state.selectedManufacturers), 'key')
     return (
         <div>
             <DivHeaderRow>
@@ -306,6 +324,7 @@ const ModalDetailContent = props => {
                         </GridColumn>
                     </GridRow>
                     <GridRow>
+                      {false && /* Temporary disabled - https://bluepallet.atlassian.net/browse/DT-1196 */ (
                         <GridColumn width={8}>
                             <AssayGridStyled>
                                 <GridRow>
@@ -344,6 +363,7 @@ const ModalDetailContent = props => {
                                 </GridRow>
                             </AssayGridStyled>
                         </GridColumn>
+                        )}
                         <GridColumn width={8}>
                             <Dropdown
                               label={
@@ -412,13 +432,26 @@ const ModalDetailContent = props => {
                         <GridColumn width={8}>
                             <Dropdown
                               label={<FormattedMessage id='wantedBoard.myPostManufacturer' defaultMessage='Manufacturer' />}
-                              options={productGrades}
+                              options={manufacturerOptions}
                               name='manufacturers'
                               inputProps={{
                                   multiple: true,
                                   clearable: true,
                                   search: true,
-                                  loading: productGradesLoading,
+                                  loading: searchedManufacturersLoading,
+                                  onSearchChange: debounce((e, { searchQuery }) => {
+                                      try {
+                                          searchManufacturers(searchQuery)
+                                      } catch (e) {
+                                          console.error(e)
+                                      }
+                                  }, 500),
+
+                                  onChange: (_, { value }) => {
+                                      let newSelectedManufacturers = []
+                                      manufacturerOptions.forEach(item => value.some(val => val === item.key) && newSelectedManufacturers.push(item))
+                                      setState(prevState => ({ ...prevState, selectedManufacturers: newSelectedManufacturers }))
+                                  },
                                   'data-test': 'wanted_board_sidebar_manufacturers_drpdn',
                                   placeholder: formatMessage({ id: 'wantedBoard.myPostSelectManufacturer', defaultMessage: 'Select Manufacturer' })
                               }}
@@ -451,7 +484,10 @@ ModalDetailContent.propTypes = {
     setProvinceRequired: PropTypes.func,
     provinceRequired: PropTypes.bool,
     intl: PropTypes.object,
-    formikProps: PropTypes.object
+    formikProps: PropTypes.object,
+    searchManufacturers: PropTypes.func,
+    searchedManufacturers: PropTypes.array,
+    searchedManufacturersLoading: PropTypes.bool
 }
 
 ModalDetailContent.defaultProps = {
@@ -459,7 +495,10 @@ ModalDetailContent.defaultProps = {
     setProvinceRequired: () => {},
     provinceRequired: false,
     intl: {},
-    formikProps: {}
+    formikProps: {},
+    searchManufacturers: () => {},
+    searchedManufacturers: [],
+    searchedManufacturersLoading: false
 }
 
 export default injectIntl(ModalDetailContent)

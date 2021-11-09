@@ -36,9 +36,6 @@ const ModalDetail = props => {
       onSubmit={()=>{}}
     >
       {formikProps => {
-
-        console.log('!!!!!!!!!! aaaaa values', formikProps.values)
-
         return (
           <FormCustom autoComplete='off'>
             <DimmerSidebarOpened
@@ -82,19 +79,21 @@ const ModalDetail = props => {
                     formikProps={formikProps}
                     provinceRequired={provinceRequired}
                     setProvinceRequired={setProvinceRequired}
+                    popupValues={popupValues?.rawData}
                   />
                 </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>
                 {!openGlobalAddForm && (
                   <BasicButton
-                    noborder
                     onClick={() => props.closeAddEditPopup()}
                     data-test='wanted_board_sidebar_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </BasicButton>
                 )}
                 <BasicButton
+                  background='#2599d5 !important'
+                  textcolor='#FFF !important'
                   onClick={() => {
                     formikProps.validateForm().then(async err => {
                       const errors = Object.keys(err)
@@ -108,7 +107,10 @@ const ModalDetail = props => {
                     })
                   }}
                   data-test='wanted_board_sidebar_submit_btn'>
-                  <FormattedMessage id='global.post' defaultMessage='Post' />
+                  {popupValues
+                    ? (<FormattedMessage id='global.postChanges' defaultMessage='Post Changes'/>)
+                    : (<FormattedMessage id='global.post' defaultMessage='Post'/>)
+                  }
                 </BasicButton>
               </DivBottomSidebar>
             </SidebarFlex>

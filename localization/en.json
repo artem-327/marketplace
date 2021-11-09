@@ -1088,6 +1088,7 @@
   "global.emailAndPhoneNumber": "{emailAndPhoneNumber}",
   "global.insurance": "Insurance",
   "global.post": "Post",
+  "global.postChanges": "Post Changes",
   "import.assayMin": "Assay Min",
   "import.assayMax": "Assay Max",
   "import.broadcasted": "Broadcasted",
