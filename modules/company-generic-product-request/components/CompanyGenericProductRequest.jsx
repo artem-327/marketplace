@@ -14,6 +14,7 @@ import UploadAttachment from '~/modules/inventory/components/upload/UploadAttach
 import { UploadCloud } from 'react-feather'
 import { object, bool } from 'prop-types'
 import { createCompanyGenericProductRequest } from '../api'
+import { Required } from '../../../components/constants/layout'
 
 const CustomButton = styled(Button)`
   color: #2599d5 !important;
@@ -56,7 +57,8 @@ class CompanyGenericProductRequestForm extends Component {
   state = {
     open: false,
     loading: false,
-    attachments: []
+    attachments: [],
+    uploadFileRequired: false,
   }
 
   submitForm = async ({ values }) => {
@@ -76,10 +78,17 @@ class CompanyGenericProductRequestForm extends Component {
     } catch (error) {
       console.error(error)
     } finally {
-      this.setState({ loading: false, open: false, attachments: [] })
+      this.setState({ loading: false, open: false, attachments: [], uploadFileRequired: false })
     }
   }
 
+  uploadFileCheck = () => {
+    if (this.state.attachments.length===0) {
+      this.setState({uploadFileRequired: true})
+      return false;
+    }
+    return true;
+  }
   render() {
     const {
       intl: { formatMessage },
@@ -129,7 +138,12 @@ class CompanyGenericProductRequestForm extends Component {
                           <Input
                             name='productName'
                             type='text'
-                            label={<FormattedMessage id='global.productName' defaultMessage='Product Name' />}
+                            label={
+                              <>
+                                <FormattedMessage id='global.productName' defaultMessage='Product Name' />
+                                <Required />
+                              </>
+                            }
                             inputProps={{
                               placeholder: formatMessage({
                                 id: 'productCatalog.enterProductName',
@@ -141,13 +155,22 @@ class CompanyGenericProductRequestForm extends Component {
                       </GridRow>
                       <GridRow>
                         <GridColumn>
-                          <div style={{ marginBottom: '4px' }}>
+                          <div style={
+                            this.state.uploadFileRequired ? { marginBottom: 4, color: '#9f3a38' } : { marginBottom: 4 }
+                          }>
                             <FormattedMessage
                               id='global.uploadASDSInfoSheet'
                               defaultMessage='Upload a SDS/Info Sheet'
                             />
+                            <Required />
                           </div>
                           <UploadAttachment
+                            style={
+                              this.state.uploadFileRequired ? {
+                                border: '1px solid #f16844',
+                                borderRadius: 3,
+                              } : {}
+                            }
                             {...this.props}
                             name='attachments'
                             attachments={attachments}
@@ -156,11 +179,12 @@ class CompanyGenericProductRequestForm extends Component {
                             onChange={file => {
                               let newAttachments = attachments.filter(att => att.id !== file.id)
                               newAttachments.push(file)
-                              this.setState({ attachments: newAttachments })
+                              this.setState({ attachments: newAttachments, uploadFileRequired: false })
                             }}
                             onRemoveFile={fileId => {
                               let newAttachments = attachments.filter(att => att.id !== fileId)
                               this.setState({ attachments: newAttachments })
+                              if (newAttachments.length===0) this.setState({uploadFileRequired: true})
                             }}
                             data-test='company_generic_product_request_create_attachments_drop'
                             emptyContent={
@@ -204,6 +228,13 @@ class CompanyGenericProductRequestForm extends Component {
                               </label>
                             }
                           />
+                          {this.state.uploadFileRequired && (
+                            <div style={{ margin: '4.5px auto 4px auto', color: '#9f3a38' }}>
+                              <FormattedMessage
+                                id='global.uploadFileRequired'
+                                defaultMessage='Required'
+                              />
+                            </div>)}
                         </GridColumn>
                       </GridRow>
                       <GridRow>
@@ -242,8 +273,11 @@ class CompanyGenericProductRequestForm extends Component {
                         if (errors.length && errors[0] !== 'isCanceled') {
                           // Errors found
                           formikProps.submitForm() // to show errors
+                          this.uploadFileCheck()
                         } else {
                           // No errors found
+                          const uploadCheck = this.uploadFileCheck();
+                          if (!uploadCheck) return;
                           this.setState({ loadSidebar: true })
                           this.submitForm(formikProps)
                         }
