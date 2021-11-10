@@ -30,7 +30,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import api from '../../modules/settings/api'
 import { getIdentity } from '../../modules/auth/actions'
-import securePage from '../../hocs/securePage'
+import { SETTINGS } from "../../modules/auth/constants"
 
 const FixyWrapper = styled.div`
   position: relative;
@@ -221,7 +221,7 @@ class Settings extends Component {
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
-  handleSubmit = async values => {
+  handleSubmit = async (values, initialValues) => {
     // Original = false => value is inherited from above; no value is set at current level
     // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
     // Original = true => Value was set at current level or contains EMPTY_SETTING
@@ -231,27 +231,40 @@ class Settings extends Component {
 
     const { triggerSystemSettingsModal, role } = this.props
     this.setState({ loading: true })
-    let payload = {
+    const payload = {
       settings: []
     }
     Object.keys(values[role]).forEach(group => {
-      Object.keys(values[role][group]).forEach(key => {
-        let el = values[role][group][key]
-        if (el.changeable) {
-          if (
-            (!el.edit && role !== 'admin') ||
-            (el.value.actual === 'EMPTY_SETTING' && el.value.visible.trim() === '')
-          ) {
-            payload.settings.push({ id: el.id, value: 'EMPTY_SETTING' })
-          } else if (el.value.visible !== null) {
-            payload.settings.push({
-              id: el.id,
-              value: el.type === 'BOOL' ? el.value.actual.toString().toUpperCase() : el.value.visible
+      Object.keys(values[role][group])
+          .map((key) => ({
+            currentSetting: values[role][group][key],
+            initialSetting: initialValues[role][group][key]
+          }))
+          .filter((settingsTuple) => isChangedAndEditable(settingsTuple.currentSetting, settingsTuple.initialSetting))
+          .forEach((settingsTuple) => {
+            const changedSetting = settingsTuple.currentSetting
+            if ((!changedSetting.edit && role !== 'admin') ||
+                (changedSetting.value.visible === SETTINGS.EMPTY_SETTING || changedSetting.value.visible.trim() === '')) {
+              payload.settings.push({
+                id: changedSetting.id,
+                value: SETTINGS.EMPTY_SETTING
+              })
+            } else {
+              payload.settings.push({
+                id: changedSetting.id,
+                value: changedSetting.type === 'BOOL' ? changedSetting.value.actual.toString().toUpperCase() : changedSetting.value.visible
             })
           }
-        }
       })
     })
+
+    // If there is nothing to change, do not send a request
+    if (!payload.settings || payload.settings.length < 1) {
+      this.setState({ loading: false })
+      this.resetForm(initialValues)
+      triggerSystemSettingsModal(false)
+      return
+    }
 
     try {
       settings = await api.updateSettings(role, payload)
@@ -281,11 +294,11 @@ class Settings extends Component {
             original: setting.original,
             value: {
               actual: setting.type === 'BOOL' ? setting.value.toLowerCase() === 'true' : setting.value,
-              visible: setting.value === 'EMPTY_SETTING' ? '' : setting.value ? setting.value : ''
+              visible: setting.value === SETTINGS.EMPTY_SETTING ? '' : setting.value ? setting.value : ''
             },
             type: setting.type,
             changeable: setting.changeable,
-            edit: setting.changeable && setting.original && setting.value !== 'EMPTY_SETTING'
+            edit: setting.changeable && setting.original && setting.value !== Settings.EMPTY_SETTING
           }
         })
       })
@@ -313,7 +326,7 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          this.handleSubmit(values)
+          this.handleSubmit(values, initialValues)
         }}
         render={formikProps => {
           let { values, resetForm, isSubmitting } = formikProps
@@ -500,6 +513,18 @@ Settings.defaultProps = {
   isUserSettings: false,
   isUserAdmin: false,
   isCompanyAdmin: false
+}
+
+const isChangedAndEditable = (currentSetting, initialSetting) => {
+  if (currentSetting.changeable && currentSetting.value) {
+    switch (currentSetting.type) {
+      case 'BOOL':
+        return currentSetting.value.actual.toString().toLowerCase() !== initialSetting.value.actual.toString().toLowerCase()
+      default:
+        return currentSetting.value.visible !== initialSetting.value.visible
+    }
+  }
+  return false
 }
 
 export default connect(
