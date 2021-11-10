@@ -301,21 +301,11 @@ export const getRows = (data, props, state, setState) => {
   setState(prevState => ({ ...prevState, rows: result }))
 }
 
-export const getMappedRows = (props, localDeleteWantedBoardBids, localPostNewWantedBoardBids) => props.datagrid?.rows?.map((r, key) => {
+export const getMappedRows = (props, selectRow, unselectRow, selectedProductOffers) => props.datagrid?.rows?.map((r, key) => {
   const po = r.productOffer
-  const submittedBids = r.submittedBids
 
-  const {
-    postNewWantedBoardBids,
-    deleteWantedBoardBids,
-    editID,
-    datagrid,
-    createdProductOffer
-  } = props
   const qtyPart = getSafe(() => po.companyProduct.packagingUnit.nameAbbreviation)
-  let useToggleStatus = createdProductOffer
-    ? (po.id === createdProductOffer.id)
-    : (submittedBids.length > 0 ? true : false)
+  let useToggleStatus = selectedProductOffers.some(el => el === po.id)
 
   return {
     ...po,
@@ -387,16 +377,11 @@ export const getMappedRows = (props, localDeleteWantedBoardBids, localPostNewWan
           radio
           // toggle
           checked={useToggleStatus}
-          onClick={async () => {
+          onClick={() => {
             if(useToggleStatus) {
-              await localDeleteWantedBoardBids(editID, key)
+              unselectRow(po.id)
             } else {
-              const values = {
-                "productOffer": po.id,
-                "wantedBoardRequest": editID,
-                key,
-              }
-              await localPostNewWantedBoardBids(values)
+              selectRow(po.id)
             }
           }}
         />
