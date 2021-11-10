@@ -179,6 +179,7 @@ const RespondModal = props => {
           productOffers: []
         })
         datagrid.loadData()
+        closeRespondModal()
       } catch (e) {
         console.error(e)
       } finally {

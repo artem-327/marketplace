@@ -3224,6 +3224,7 @@
   "wantedBoard.infoModalDeliveryLocation": "Delivery Location",
   "wantedBoard.infoModalCountryOfOrigin": "Country of Origin",
   "wantedBoard.infoModalExpiryDate": "Expiry Date",
+  "wantedBoard.infoModalDateNeededBy": "Date Needed By",
   "wantedBoard.infoModalSpecialNotes": "Special Notes",
   "wantedBoard.respondModalCreateNewListing": "Create New Listing",
   "wantedBoard.respondModalShippingLocation": "YOUR LISTINGS AVAILABLE FOR THIS SHIPPING LOCATION",

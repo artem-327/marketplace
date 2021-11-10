@@ -203,7 +203,7 @@ const InfoModal = props => {
                                     </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
-                                        <FormattedMessage id='wantedBoard.infoModalExpiryDate' defaultMessage='Expiry Date' />
+                                        <FormattedMessage id='wantedBoard.infoModalDateNeededBy' defaultMessage='Date Needed By' />
                                     </GridDataColumn>
                                     <GridDataColumn width={valColumn}>
                                       {infoModalData?.postExpiry}
