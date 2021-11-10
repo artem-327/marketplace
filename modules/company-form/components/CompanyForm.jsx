@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
+import { FormGroup, FormField, Popup, Image, Dropdown, Grid,
+  GridRow, GridColumn, Button, Checkbox as SemenCheckbox } from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown as FixedDropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
@@ -619,13 +620,15 @@ class CompanyForm extends Component {
               data-test='company_form_enabled_chckb'
             />
           )}
-          <Checkbox
+          <SemenCheckbox
             label={formatMessage({
               id: 'company.purchaseHazmatEligible ',
               defaultMessage: 'Purchase Hazardous Materials'
             })}
             name='purchaseHazmatEligible'
             data-test='company_form_purchaseHazmatEligible_chckb'
+            defaultChecked
+            style={{marginLeft: 7}}
           />
         </FormGroup>
       </>
