@@ -67,6 +67,19 @@ const RespondModal = props => {
     wantedBoardRequest: false,
   })
 
+  const updateProductOfferArray = (rows) => {
+    let productOfferArray = [];
+    for (const row of rows) {
+      let { submittedBids } = row
+      submittedBids = submittedBids[0]
+      if (submittedBids) {
+        const { productOfferId } = submittedBids
+        productOfferArray = [...productOfferArray, productOfferId]
+      }
+    }
+    return productOfferArray;
+  }
+
   useEffect(() => {
     const { popupValues, datagrid, createdProductOffer } = props
 
@@ -80,15 +93,8 @@ const RespondModal = props => {
     }
     datagrid.setSearch(filter, true, 'modalFilters')
     const { rows } = datagrid
-    let productOfferArray = []
-    for (const row of rows) {
-      let { submittedBids } = row
-      submittedBids = submittedBids[0]
-      if (submittedBids) {
-        const { productOfferId } = submittedBids
-        productOfferArray = [...productOfferArray, productOfferId]
-      }
-    }
+
+    let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       ...submitOffer,
       productOffers: productOfferArray
@@ -117,15 +123,8 @@ const RespondModal = props => {
     ), props, state, setState);
 
     const { rows } = datagrid
-    let productOfferArray = []
-    for (const row of rows) {
-      let { submittedBids } = row
-      submittedBids = submittedBids[0]
-      if (submittedBids) {
-        const { productOfferId } = submittedBids
-        productOfferArray = [...productOfferArray, productOfferId]
-      }
-    }
+
+    let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       ...submitOffer,
       productOffers: productOfferArray
@@ -151,15 +150,7 @@ const RespondModal = props => {
       localPostNewWantedBoardBids
     ), props, state, setState);
 
-    let productOfferArray = []
-    for (const row of rows) {
-      let { submittedBids } = row
-      submittedBids = submittedBids[0]
-      if (submittedBids) {
-        const { productOfferId } = submittedBids
-        productOfferArray = [...productOfferArray, productOfferId]
-      }
-    }
+    let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       wantedBoardRequest,
       productOffers: productOfferArray
@@ -178,15 +169,7 @@ const RespondModal = props => {
       localPostNewWantedBoardBids
     ), props, state, setState)
 
-    let productOfferArray = []
-    for (const row of rows) {
-      let { submittedBids } = row
-      submittedBids = submittedBids[0]
-      if (submittedBids) {
-        const { productOfferId } = submittedBids
-        productOfferArray = [...productOfferArray, productOfferId]
-      }
-    }
+    let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       wantedBoardRequest,
       productOffers: productOfferArray
@@ -195,7 +178,6 @@ const RespondModal = props => {
 
   const submitOffers = async () => {
     if (submitOffer.wantedBoardRequest) {
-      // console.log(datagrid.rows)
       datagrid.setLoading(true)
       await postUpdatedWantedBoardBids(submitOffer)
       datagrid.loadData()
@@ -233,8 +215,8 @@ const RespondModal = props => {
                     onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
                   />
                 </DivPopupTableHandler>
-                <ModalContent scrolling={true} style={{height: 500}}>
-                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{padding: '0px 20px'}}>
+                <ModalContent scrolling={false} style={{height: 500}}>
+                  <div className='flex stretched wanted-board-wrapper listings-wrapper' style={{padding: '0px 20px', height: '100%'}}>
                     <ProdexTable
                       {...datagrid.tableProps}
                       tableName='wanted_board_respond_modal'
@@ -271,7 +253,6 @@ const RespondModal = props => {
                     />
                   </div>
                 </ModalContent>
-
                 <Modal.Actions>
                   <Grid verticalAlign='middle'>
                     <GridRow columns={3}>
