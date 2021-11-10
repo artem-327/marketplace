@@ -79,7 +79,13 @@ import {
   DivFlex
 } from './ModalDetail.styles'
 //Constants
-import { INIT_VALUES, OPTIONS_YES_NO, LIST_CONFORMING, OPTIONS_BROADCAST } from './ModalDetail.constants'
+import {
+  INIT_VALUES,
+  OPTIONS_YES_NO,
+  LIST_CONFORMING,
+  OPTIONS_BROADCAST,
+  OPTIONS_BROADCAST_WANTED_RESPOND
+} from './ModalDetail.constants'
 // Hooks
 import { usePrevious } from '../../../../../hooks'
 
@@ -194,7 +200,8 @@ const ModalDetail = props => {
     autocompleteData,
     applicationName,
     countriesDropdown,
-    openGlobalAddForm
+    openGlobalAddForm,
+    wantedRespond
   } = props
   const { openedTdsList, openedTdsSaveAs } = state
 
@@ -211,7 +218,7 @@ const ModalDetail = props => {
       value: el.id
     }
   })
-  const optionsSeeOffer = OPTIONS_BROADCAST.map(opt => {
+  let optionsSeeOffer = (wantedRespond ? OPTIONS_BROADCAST_WANTED_RESPOND : OPTIONS_BROADCAST).map(opt => {
     if (opt.titleId && opt.titleText)
       return {
         ...opt,
@@ -229,7 +236,9 @@ const ModalDetail = props => {
           { companyName: applicationName }
         )
       }
-  }).concat([
+  })
+
+  optionsSeeOffer = wantedRespond ? optionsSeeOffer : optionsSeeOffer.concat([
     ...broadcastTemplates.map(template => {
       return {
         icon: (
@@ -258,7 +267,7 @@ const ModalDetail = props => {
       }
     })
   ])
-  
+
   return (
     <>
       <Formik
@@ -303,10 +312,10 @@ const ModalDetail = props => {
                       {formatMessage({
                         id: getSafe(() => state.detailValues.id, false)
                           ? 'inventory.modal.editListing'
-                          : 'inventory.modal.addListing',
+                          : (wantedRespond ? 'inventory.modal.addWanted' : 'inventory.modal.addListing'),
                         defaultMessage: getSafe(() => state.detailValues.id, false)
                           ? 'Edit Listing'
-                          : 'Add Listing'
+                          : (wantedRespond ? 'Add Wanted' : 'Add Listing')
                       })}
                     </DivTitle>
                     <FlexTabs>
@@ -1509,34 +1518,40 @@ const ModalDetail = props => {
                             } else {
                               let { data } = await submitFormFunc(values, setSubmitting, setTouched, props, state, setState)
 
-                              if (data && !getSafe(() => state.detailValues.id, false)) {
+                              if (data && (wantedRespond || !getSafe(() => state.detailValues.id, false))) {
                                 confirm(
                                   formatMessage({
-                                    id: 'confirm.editOrAddNew.header',
-                                    defaultMessage: 'Edit or Add New'
+                                    id: wantedRespond ? 'confirm.continueEditOrSaveNow.header' : 'confirm.editOrAddNew.header',
+                                    defaultMessage: wantedRespond ? 'Continue Editing or Save Now' : 'Edit or Add New'
                                   }),
                                   formatMessage({
-                                    id: 'confirm.editOrAddNew.content',
-                                    defaultMessage:
-                                      'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
+                                    id: wantedRespond ? 'confirm.continueEditOrSaveNow.content' : 'confirm.editOrAddNew.content',
+                                    defaultMessage: wantedRespond
+                                      ? 'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Continue Editing. If you would like to save, click Save Now.'
+                                      : 'If you like to continue editing this product offer by adding documents, price tiers, or price book rules, click Edit. If you would like to add a new Inventory Item, click New.'
                                   }),
                                   {
-                                    cancelText: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-                                    proceedText: formatMessage({ id: 'global.new', defaultMessage: 'New' })
+                                    cancelText: wantedRespond
+                                      ? formatMessage({id: 'global.continueEditing', defaultMessage: 'Continue Editing'})
+                                      : formatMessage({id: 'global.edit', defaultMessage: 'Edit'}),
+                                    proceedText: wantedRespond
+                                      ? formatMessage({id: 'global.saveNow', defaultMessage: 'Save Now'})
+                                      : formatMessage({id: 'global.new', defaultMessage: 'New'})
                                   }
                                 ).then(
                                   () => {
                                     setState(state => ({
                                       ...state,
-                                      detailValues: { ...state.detailValues, id: null }
+                                      detailValues: {...state.detailValues, id: null}
                                     })) // confirm (New)
+                                    if (wantedRespond) props.onCreated(data)
                                   },
                                   () => {
                                     setState(state => ({
                                       ...state,
-                                      detailValues: { ...state.detailValues, id: data.id }
+                                      detailValues: {...state.detailValues, id: data.id}
                                     })) // cancel (Edit)
-                                    props.getProductOffer({ ...state.detailValues, ...data })
+                                    props.getProductOffer({...state.detailValues, ...data})
                                   }
                                 )
                               }
@@ -1544,7 +1559,10 @@ const ModalDetail = props => {
                           })
                         }}
                         data-test='modal_inventory_save_new'>
-                        {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                        {wantedRespond
+                          ? formatMessage({ id: 'global.saveContinue', defaultMessage: 'Save & Continue' })
+                          : formatMessage({ id: 'global.save', defaultMessage: 'Save' })
+                        }
                       </Button>
                     </div>
                   </Modal.Actions>
@@ -1595,7 +1613,9 @@ ModalDetail.propTypes = {
   saveTdsAsTemplate: PropTypes.func,
   getAutocompleteData: PropTypes.func,
   addProductOffer: PropTypes.func,
-  openBroadcast: PropTypes.func
+  openBroadcast: PropTypes.func,
+  onCreated: PropTypes.func,
+  wantedRespond: PropTypes.bool
 }
 
 ModalDetail.defaultProps = {
@@ -1634,7 +1654,9 @@ ModalDetail.defaultProps = {
   saveTdsAsTemplate: () => {},
   getAutocompleteData: () => {},
   addProductOffer: () => {},
-  openBroadcast: () => {}
+  openBroadcast: () => {},
+  onCreated: () => {},
+  wantedRespond: false
 }
 
 export default injectIntl(ModalDetail)

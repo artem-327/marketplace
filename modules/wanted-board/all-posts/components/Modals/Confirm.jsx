@@ -44,7 +44,7 @@ const ConfirmModal = props => {
           <Button primary type='button' onClick={() => {
             closeConfirmModal()
             closeInfoModal()
-            openGlobalAddForm('inventory-my-listings')
+            openGlobalAddForm('inventory-my-listings-wanted')
           }}>
             <FormattedMessage id='wantedboard.createNewListing' defaultMessage='Create New Listing' tagName='span' />
           </Button>

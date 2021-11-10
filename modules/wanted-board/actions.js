@@ -34,9 +34,10 @@ export const closeInfoModal = () => {
   }
 }
 
-export const openRespondModal = () => {
+export const openRespondModal = (productOffer = null) => {
   return {
-    type: AT.WB_OPEN_RESPOND_MODAL
+    type: AT.WB_OPEN_RESPOND_MODAL,
+    payload: productOffer
   }
 }
 
@@ -145,5 +146,12 @@ export const deleteWantedBoardBids = (id) => {
   return {
     type: AT.WB_DELETE,
     payload: api.deleteWantedBoardBidsApi(id)
+  }
+}
+
+export const searchManufacturers = (text) => {
+  return {
+    type: AT.WB_SEARCH_MANUFACTURERS,
+    payload: api.searchManufacturers(text)
   }
 }

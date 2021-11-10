@@ -81,10 +81,15 @@ const RespondModal = props => {
   }
 
   useEffect(() => {
-    const { popupValues, datagrid } = props
-    setSearchInput(popupValues.rawData.productSearchPattern)
+    const { popupValues, datagrid, createdProductOffer } = props
+
+    const productSearchPattern = createdProductOffer
+      ? createdProductOffer.companyProduct.intProductName
+      : popupValues.rawData.productSearchPattern
+
+    setSearchInput(productSearchPattern)
     const filter = {
-      searchInput: popupValues.rawData.productSearchPattern
+      searchInput: productSearchPattern
     }
     datagrid.setSearch(filter, true, 'modalFilters')
     const { rows } = datagrid
@@ -105,6 +110,7 @@ const RespondModal = props => {
     openGlobalAddForm,
     postNewWantedBoardBids,
     postUpdatedWantedBoardBids,
+    createdProductOffer
   } = props
 
   useEffect(() => {
@@ -173,7 +179,6 @@ const RespondModal = props => {
   const submitOffers = async () => {
     if (submitOffer.wantedBoardRequest) {
       datagrid.setLoading(true)
-      console.log(submitOffer)
       await postUpdatedWantedBoardBids(submitOffer)
       datagrid.loadData()
       setSubmitOffer({

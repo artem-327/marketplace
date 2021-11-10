@@ -14,7 +14,10 @@ export const initialState = {
   sending: false,
   allPostsFilters: null,
   myPostsFilters: null,
-  loading: false
+  createdProductOffer: null,
+  loading: false,
+  searchedManufacturers: [],
+  searchedManufacturersLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -62,7 +65,8 @@ export default function reducer(state = initialState, action) {
     case AT.WB_OPEN_RESPOND_MODAL: {
       return {
         ...state,
-        openedRespondModal: true
+        openedRespondModal: true,
+        createdProductOffer: payload
       }
     }
 
@@ -218,6 +222,32 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         [action.payload.variable]: action.payload.value
+      }
+    }
+
+    case AT.WB_SEARCH_MANUFACTURERS_PENDING: {
+      return {
+        ...state,
+        searchedManufacturersLoading: true,
+      }
+    }
+
+    case AT.WB_SEARCH_MANUFACTURERS_FULFILLED: {
+      return {
+        ...state,
+        searchedManufacturers: payload.data.map(item => ({
+          key: item.id,
+          value: item.id,
+          text: item.name
+        })),
+        searchedManufacturersLoading: false,
+      }
+    }
+
+    case AT.WB_SEARCH_MANUFACTURERS_REJECTED: {
+      return {
+        ...state,
+        searchedManufacturersLoading: false,
       }
     }
 
