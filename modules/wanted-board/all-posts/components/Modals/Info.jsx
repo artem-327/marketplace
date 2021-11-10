@@ -16,6 +16,7 @@ import styled from 'styled-components'
 import { withDatagrid } from '../../../../datagrid'
 import { withToastManager } from 'react-toast-notifications'
 import ErrorFocus from '../../../../../components/error-focus'
+import { ArrayToFirstItem } from '../../../../../components/formatted-messages/'
 import {
     GridData,
     GridDataColumn
@@ -77,8 +78,17 @@ const ModalContent = styled(Modal.Content)`
   margin-bottom: 10px !important;
 `
 
+const ModalActions = styled(Modal.Actions)`
+  &.actions {
+    padding: 10px 5px !important;
+    background: #ffffff !important;
+  }
+`
+
 const RightColumn = styled(GridColumn)`
-  padding-right: 1.5rem !important;
+  .ui.button {
+    margin: 0 5px;
+  }
 `
 
 const ToggleForm = styled(Form)`
@@ -103,6 +113,8 @@ const InfoModal = props => {
       closeInfoModal,
       openConfirmModal
     } = props
+
+    const row = infoModalData?.rawData
 
     return (
       <>
@@ -134,32 +146,37 @@ const InfoModal = props => {
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalProductName' defaultMessage='Product Name' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.productName } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      {infoModalData?.productName}
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalQuantityNeeded' defaultMessage='Quantity Needed' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.quantity } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      {infoModalData?.quantity}
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'> 
                                         <FormattedMessage id='wantedBoard.infoModalPackaging' defaultMessage='Packaging' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.packagingTypes?.length ? infoModalData?.rawData?.packagingTypes[0].name : '' } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      <ArrayToFirstItem values={row?.packagingTypes?.map(data => data.name)} rowItems={2} />
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalCondition' defaultMessage='Condition' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.condition?.name } </GridDataColumn>
-
-                                    <GridDataColumn width={keyColumn} className='key'>
-                                        <FormattedMessage id='wantedBoard.infoModalConforming' defaultMessage='Conforming' />
+                                    <GridDataColumn width={valColumn}>
+                                      <ArrayToFirstItem values={row?.conditions?.map(data => data.name)} rowItems={2} />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.conforming } </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalGrade' defaultMessage='Grade' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.grades?.length ? infoModalData?.rawData?.grades[0].name : '' } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      <ArrayToFirstItem values={row?.grades?.map(data => data.name)} rowItems={2} />
+                                    </GridDataColumn>
 
                                 </GridData>
                             </GridColumn>
@@ -169,7 +186,9 @@ const InfoModal = props => {
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalForm' defaultMessage='Form' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.forms?.length ? infoModalData?.rawData?.forms[0].name : '' } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      <ArrayToFirstItem values={row?.forms?.map(data => data.name)} rowItems={2} />
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalDeliveryLocation' defaultMessage='Delivery Location' />
@@ -179,12 +198,16 @@ const InfoModal = props => {
                                     <GridDataColumn width={keyColumn} className='key'> 
                                         <FormattedMessage id='wantedBoard.infoModalCountryOfOrigin' defaultMessage='Country of Origin' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.rawData?.origins?.length ? infoModalData?.rawData?.origins[0].name : '' } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      <ArrayToFirstItem values={row?.origins?.map(data => data.name)} rowItems={2} />
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalExpiryDate' defaultMessage='Expiry Date' />
                                     </GridDataColumn>
-                                    <GridDataColumn width={valColumn}> { infoModalData?.postExpiry } </GridDataColumn>
+                                    <GridDataColumn width={valColumn}>
+                                      {infoModalData?.postExpiry}
+                                    </GridDataColumn>
 
                                     <GridDataColumn width={keyColumn} className='key'>
                                         <FormattedMessage id='wantedBoard.infoModalSpecialNotes' defaultMessage='Special Notes' />
@@ -192,7 +215,7 @@ const InfoModal = props => {
                                     <GridDataColumn width={valColumn}>  </GridDataColumn>
 
                                     <GridDataColumn width={16} className='specialKey'>
-                                      { infoModalData?.rawData?.notes }
+                                      {row?.notes }
                                     </GridDataColumn>
 
                                 </GridData>
@@ -203,7 +226,7 @@ const InfoModal = props => {
                     </>
                   </ModalContent>
 
-                  <Modal.Actions>
+                  <ModalActions>
                     <Grid verticalAlign='middle'>
                       <GridRow columns={3}>
                           <RightColumn width={5} floated='right'>
@@ -223,7 +246,7 @@ const InfoModal = props => {
                           </RightColumn>
                       </GridRow>
                     </Grid>
-                  </Modal.Actions>
+                  </ModalActions>
                 </Modal>
                 <ErrorFocus />
               </>
