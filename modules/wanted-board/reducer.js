@@ -75,7 +75,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         openedRespondModal: false,
         editID: null,
-        popupValues: null
+        popupValues: null,
+        createdProductOffer: null
       }
     }
 
@@ -166,6 +167,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         sending: false,
+        createdProductOffer: null
       }
     }
 

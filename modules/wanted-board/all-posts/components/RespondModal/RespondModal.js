@@ -53,12 +53,14 @@ const SubmitButton = styled(Button)`
 
 const RespondModal = props => {
   const [searchInput, setSearchInput] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const [state, setState] = useState({
     select: '',
     nextSubmit: false,
     inputRows: 0,
     selectedRow: { id: '' },
-    rows: []
+    rows: [],
+    useCreatedProductOffer: true
   })
 
   const [localDataState, setLocalDataState] = useState(props)
@@ -69,12 +71,17 @@ const RespondModal = props => {
 
   const updateProductOfferArray = (rows) => {
     let productOfferArray = [];
-    for (const row of rows) {
-      let { submittedBids } = row
-      submittedBids = submittedBids[0]
-      if (submittedBids) {
-        const { productOfferId } = submittedBids
-        productOfferArray = [...productOfferArray, productOfferId]
+
+    if (props.createdProductOffer && state.useCreatedProductOffer) {
+      productOfferArray = [props.createdProductOffer.id]
+    } else {
+      for (const row of rows) {
+        let {submittedBids} = row
+        submittedBids = submittedBids[0]
+        if (submittedBids) {
+          const {productOfferId} = submittedBids
+          productOfferArray = [...productOfferArray, productOfferId]
+        }
       }
     }
     return productOfferArray;
@@ -97,6 +104,7 @@ const RespondModal = props => {
     let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       ...submitOffer,
+      wantedBoardRequest: props.editID,
       productOffers: productOfferArray
     })
   }, [])
@@ -109,84 +117,76 @@ const RespondModal = props => {
     closeRespondModal,
     openGlobalAddForm,
     postNewWantedBoardBids,
-    postUpdatedWantedBoardBids,
-    createdProductOffer
+    postUpdatedWantedBoardBids
   } = props
 
   useEffect(() => {
     setLocalDataState(props)
-    // getRows(getMappedRows(props), props, state, setState);
-    getRows(getMappedRows(
-      localDataState,
-      localDeleteWantedBoardBids,
-      localPostNewWantedBoardBids
-    ), props, state, setState);
-
     const { rows } = datagrid
 
     let productOfferArray = updateProductOfferArray(rows);
     setSubmitOffer({
       ...submitOffer,
+      wantedBoardRequest: props.editID,
       productOffers: productOfferArray
     })
+
+    getRows(getMappedRows(
+      localDataState,
+      selectRow,
+      unselectRow,
+      submitOffer.productOffers
+    ), props, state, setState)
   }, [datagrid])
 
-  const localPostNewWantedBoardBids = (value) => {
-    const { key, productOffer, wantedBoardRequest } = value
-    let changeData = localDataState;
-    
-    let { rows } = datagrid;
-    rows[key].submittedBids = [
-      {
-        productOfferId: productOffer,
-        wantedBoardDirectBidId: wantedBoardRequest,
-      }
-    ]
-    changeData.datagrid.rows = rows
-    setLocalDataState(changeData)
-    getRows(getMappedRows(
-      changeData,
-      localDeleteWantedBoardBids,
-      localPostNewWantedBoardBids
-    ), props, state, setState);
 
-    let productOfferArray = updateProductOfferArray(rows);
+  useEffect(() => {
+    getRows(getMappedRows(
+      localDataState,
+      selectRow,
+      unselectRow,
+      submitOffer.productOffers
+    ), props, state, setState)
+
+  }, [submitOffer])
+
+
+  const selectRow = id => {
+    if (state.useCreatedProductOffer) setState({ ...state, useCreatedProductOffer: false })
     setSubmitOffer({
-      wantedBoardRequest,
-      productOffers: productOfferArray
+      ...submitOffer,
+      productOffers: [ ...submitOffer.productOffers, id ]
     })
   }
 
-  const localDeleteWantedBoardBids = (wantedBoardRequest, key) => {
-    let changeData = localDataState
-    let { rows } = datagrid
-    rows[key].submittedBids = []
-    changeData.datagrid.rows = rows
-    setLocalDataState(changeData)
-    getRows(getMappedRows(
-      changeData,
-      localDeleteWantedBoardBids,
-      localPostNewWantedBoardBids
-    ), props, state, setState)
-
-    let productOfferArray = updateProductOfferArray(rows);
+  const unselectRow = id => {
+    if (state.useCreatedProductOffer) setState({ ...state, useCreatedProductOffer: false })
     setSubmitOffer({
-      wantedBoardRequest,
-      productOffers: productOfferArray
+      ...submitOffer,
+      productOffers: submitOffer.productOffers.filter(el => el !== id)
     })
   }
 
   const submitOffers = async () => {
-    if (submitOffer.wantedBoardRequest) {
-      datagrid.setLoading(true)
-      await postUpdatedWantedBoardBids(submitOffer)
-      datagrid.loadData()
-      setSubmitOffer({
-        ...submitOffer,
-        wantedBoardRequest: false
-      })
+    if (submitOffer.productOffers.length) {
+      setSubmitting(true)
+      try {
+        datagrid.setLoading(true)
+        await postUpdatedWantedBoardBids(submitOffer)
+        if (state.useCreatedProductOffer) setState({ ...state, useCreatedProductOffer: false })
+        setSubmitOffer({
+          ...submitOffer,
+          productOffers: []
+        })
+        datagrid.loadData()
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setSubmitting(false)
+      }
     }
   }
+
   return (
     <>
       <ToggleForm
@@ -212,7 +212,10 @@ const RespondModal = props => {
                       id: 'wantedBoard.searchByProductName',
                       defaultMessage: 'Search by product name...'
                     })}
-                    onChange={(e, { value }) => handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)}
+                    onChange={(e, { value }) => {
+                      if (state.useCreatedProductOffer) setState({ ...state, useCreatedProductOffer: false })
+                      handleFilterChangeInputSearch(value, props, searchInput, setSearchInput)
+                    }}
                   />
                 </DivPopupTableHandler>
                 <ModalContent scrolling={false} style={{height: 500}}>
@@ -267,8 +270,9 @@ const RespondModal = props => {
                             <FormattedMessage id='global.cancel' defaultMessage='Close' tagName='span' />
                           </Button>
                           <SubmitButton
-                            loading={purchaseRequestPending || updatingDatagrid}
+                            loading={purchaseRequestPending || updatingDatagrid || submitting}
                             primary
+                            disabled={!submitOffer.productOffers.length || submitting}
                             type='submit'
                             onClick={() => submitOffers()}
                           >
