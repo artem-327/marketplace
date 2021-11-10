@@ -209,27 +209,30 @@ padding-bottom: 1em !important;
 `
 
 export const GridDataColumn = styled(GridColumn)`
-padding-top: 10px !important;
-padding-bottom: 10px !important;
-font-size: 14px !important;
-line-height: 1.4285714 !important;
-
-&.key {
-  padding-left: 30px !important;
-  padding-right: 0 !important;
-  font-size: 14px;
-  font-weight: 400;
-  color: #848893;
-  line-height: 2.86;
-}
-&.specialKey {
+&.column {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  font-size: 14px !important;
+  line-height: 1.4285714 !important;
+  color: #20273a !important;
+  
+  &.key {
     padding-left: 30px !important;
     padding-right: 0 !important;
     font-size: 14px;
     font-weight: 400;
-    color: #848893;
+    color: #848893 !important;
     line-height: 2.86;
   }
+  &.specialKey {
+      padding-left: 30px !important;
+      padding-right: 0 !important;
+      font-size: 14px;
+      font-weight: 400;
+      color: #848893;
+      line-height: 2.86;
+    }
+}
 `
 
 export const StyledTable = styled(Table)`
