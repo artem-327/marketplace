@@ -101,7 +101,7 @@ const AllPostsDetail = props => {
             </GridRowTabField>
             <GridRowTabField>
               <Grid.Column width={6}>
-                <FormattedMessage id={`wantedBoard.infoModalExpiryDate`} defaultMessage='Expiry Date' />
+                <FormattedMessage id={`wantedBoard.infoModalDateNeededBy`} defaultMessage='Date Needed By' />
               </Grid.Column>
               <GridColumnTabFieldValue width={10}>
                 {moment(row.expiresAt).format(getLocaleDateFormat())}
