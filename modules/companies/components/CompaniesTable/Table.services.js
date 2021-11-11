@@ -20,6 +20,8 @@ import { StyledReRegisterButton, StyledReRegisterBlackButton } from './Table.sty
  * @returns {array}
  */
 export const getRows = (rows, state, props) => {
+  const { isBusinessDevelopmentRepresentativeOnly } = props
+
   return rows.map(row => {
     return {
       ...row,
@@ -27,9 +29,11 @@ export const getRows = (rows, state, props) => {
       companyName: (
         <ActionCell
           row={row}
-          getActions={() => getActions(props)}
           content={row.companyName}
-          onContentClick={() => props.openEditCompany(row.id, row.rawData)}
+          {...(!isBusinessDevelopmentRepresentativeOnly && {
+            getActions: () => getActions(props),
+            onContentClick: () => props.openEditCompany(row.id, row.rawData)
+          })}
         />
       ),
       paymentAccountStatus:
@@ -44,8 +48,9 @@ export const getRows = (rows, state, props) => {
         <Checkbox
           key={`review${row.id}`}
           toggle={true}
+          disabled={isBusinessDevelopmentRepresentativeOnly}
           defaultChecked={row.reviewRequested}
-          onClick={() => props.reviewRequest(row, props.datagrid)}
+          onClick={() => !isBusinessDevelopmentRepresentativeOnly && props.reviewRequest(row, props.datagrid)}
           data-test={`admin_company_table_${row.id}_chckb`}
         />
       ),
@@ -54,7 +59,8 @@ export const getRows = (rows, state, props) => {
           key={`enabled${row.id}`}
           toggle={true}
           defaultChecked={row.enabled}
-          onClick={() => handleEnabled(row.rawData, props)}
+          disabled={isBusinessDevelopmentRepresentativeOnly}
+          onClick={() => !isBusinessDevelopmentRepresentativeOnly && handleEnabled(row.rawData, props)}
           data-test={`admin_company_table_enable_${row.id}_chckb`}
         />
       ),
@@ -67,7 +73,7 @@ export const getRows = (rows, state, props) => {
               reRegisterP44(row.id, state, props)
             }}
             loading={props.reRegisterP44Pending && state.reRegisterCompanyId === row.id}
-            disabled={state.reRegisterCompanyId === row.id}>
+            disabled={state.reRegisterCompanyId === row.id || isBusinessDevelopmentRepresentativeOnly}>
             <RefreshCw size={18} style={{ color: '#2599d5' }} />
           </StyledReRegisterButton>
         </div>
@@ -80,7 +86,7 @@ export const getRows = (rows, state, props) => {
               reRegisterP44(row.id, state, props)
             }}
             loading={props.reRegisterP44Pending && state.reRegisterCompanyId === row.id}
-            disabled={state.reRegisterCompanyId === row.id}>
+            disabled={state.reRegisterCompanyId === row.id || isBusinessDevelopmentRepresentativeOnly}>
             <RefreshCw size={18} style={{ color: '#333' }} />
           </StyledReRegisterBlackButton>
         </div>

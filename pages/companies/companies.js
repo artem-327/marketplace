@@ -8,7 +8,8 @@ import { injectIntl } from 'react-intl'
 
 class Index extends Component {
   componentDidMount() {
-    if (!this.props.auth?.identity?.isAdmin) this.props.displayErrorForbidden()
+    if (!(this.props.auth?.identity?.isAdmin || this.props.auth?.identity?.isBusinessDevelopmentRepresentative))
+      this.props.displayErrorForbidden()
   }
 
   render() {
@@ -19,7 +20,7 @@ class Index extends Component {
 
     return (
       <Layout title={formatMessage({ id: 'title.companies.companies', defaultMessage: 'Companies' })}>
-        {!auth?.identity?.isAdmin
+        {!(auth?.identity?.isAdmin || auth?.identity?.isBusinessDevelopmentRepresentative)
           ? (null)
           : (<Companies currentTab={'companies'} />)
         }
