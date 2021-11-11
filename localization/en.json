@@ -3242,7 +3242,7 @@
   "wantedBoard.editModalHeader": "Edit Wanted",
   "wantedBoard.AddWantedButton": "Add Wanted",
   "wantedBoard.myPostIndexProductName": "Product Name",
-  "wantedBoard.myPostEnterProductName": "Enter a requested product name",
+  "wantedBoard.myPostEnterProductName": "Enter requested product name",
   "wantedBoard.myPostIndexQuantity": "Quantity Needed",
   "wantedBoard.myPostEnterQuantity": "0",
   "wantedBoard.myPostUnit": "Unit",

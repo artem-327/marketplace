@@ -94,9 +94,9 @@ const RespondModal = props => {
       ? createdProductOffer.companyProduct.intProductName
       : popupValues.rawData.productSearchPattern
 
-    setSearchInput(productSearchPattern)
+    setSearchInput('')
     const filter = {
-      searchInput: productSearchPattern
+      searchInput: ''
     }
     datagrid.setSearch(filter, true, 'modalFilters')
     const { rows } = datagrid
