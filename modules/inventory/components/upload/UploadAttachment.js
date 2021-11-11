@@ -61,7 +61,7 @@ const UploadAttachment = props => {
   return (
     <>
       {renderDuplicateFilesModal(props, state, setState)}
-      <DivUpload className={'uploadAttachment ' + (hasFile ? ' has-file' : '') + (noWrapperStyles ? ' no-styles' : '')}>
+      <DivUpload style={props.style ? props.style : {}} className={'uploadAttachment ' + (hasFile ? ' has-file' : '') + (noWrapperStyles ? ' no-styles' : '')}>
         {props.header}
         {disabled ? (
           <span className='file-space'>
@@ -161,7 +161,8 @@ UploadAttachment.propTypes = {
   acceptFiles: PropTypes.string,
   listDocumentTypes: PropTypes.array,
   noWrapperStyles: PropTypes.bool,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  style: PropTypes.object
 }
 
 UploadAttachment.defaultProps = {
