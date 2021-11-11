@@ -168,7 +168,7 @@ const RespondModal = props => {
   }
 
   const submitOffers = async () => {
-    if (submitOffer.productOffers.length) {
+    if (submitOffer.wantedBoardRequest) {
       setSubmitting(true)
       try {
         datagrid.setLoading(true)
@@ -273,7 +273,6 @@ const RespondModal = props => {
                           <SubmitButton
                             loading={purchaseRequestPending || updatingDatagrid || submitting}
                             primary
-                            disabled={!submitOffer.productOffers.length || submitting}
                             type='submit'
                             onClick={() => submitOffers()}
                           >
