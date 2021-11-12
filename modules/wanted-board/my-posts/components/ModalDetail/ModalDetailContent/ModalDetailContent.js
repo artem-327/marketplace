@@ -61,7 +61,7 @@ const ModalDetailContent = props => {
         searchManufacturers,
         searchedManufacturers,
         searchedManufacturersLoading,
-        popupValues
+        popupValues,
     } = props
     const { values, setFieldValue } = formikProps
 
@@ -106,7 +106,7 @@ const ModalDetailContent = props => {
             }
         }
         init()
-        setFieldValue('deliveryProvince', '')
+        !popupValues && setFieldValue('deliveryProvince', '')
     }, []) 
 
     const fetchProvinces = async (countryId, hasProvinces) => {
@@ -488,7 +488,7 @@ ModalDetailContent.propTypes = {
     formikProps: PropTypes.object,
     searchManufacturers: PropTypes.func,
     searchedManufacturers: PropTypes.array,
-    searchedManufacturersLoading: PropTypes.bool
+    searchedManufacturersLoading: PropTypes.bool,
 }
 
 ModalDetailContent.defaultProps = {
