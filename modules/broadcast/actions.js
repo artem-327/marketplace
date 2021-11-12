@@ -4,10 +4,22 @@ import { currency } from '../../constants/index'
 import { getSafe } from '../../utils/functions'
 import { SETTINGS } from '../auth/constants'
 
+const checkRuleSavedInTree = data => {
+  if (data && (data.priceAddition || data.priceMultiplier)) {
+    return true
+  } else if (data.elements) {
+    return data.elements.some(el => checkRuleSavedInTree(el))
+  }
+  return false
+}
+
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer, settings = null) => {
   const data = await api.loadRules(offer.id)
 
-  const companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+  let companySharedListingDefaultMarkup = null
+  if (!checkRuleSavedInTree(data?.broadcastTree)) {
+    companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+  }
 
   //setup Markup default value in a root if there doesn't exist any value in treeData
   if (
@@ -41,7 +53,10 @@ export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', as
     data = await api.loadGeneralRules()
   }
 
-  const companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+  let companySharedListingDefaultMarkup = null
+  if (!checkRuleSavedInTree(data)) {
+    companySharedListingDefaultMarkup = settings?.find(s => s.key === SETTINGS.COMPANY_SHARED_LISTING_DEFAULT_MARKUP)
+  }
 
   //setup Markup default value in a root if there doesn't exist any value in treeData
   if (
