@@ -88,6 +88,9 @@ export const errorMessages = {
   exactLength: len => (
     <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{ len }} />
   ),
+  exactTinLength: len => (
+    <FormattedMessage id='validation.exactTinLength' defaultMessage={`Must be ${len} characters long and numbers`} values={{ len }} />
+  ),
   unique: (name = '') => (
     <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{ name }} />
   ),
