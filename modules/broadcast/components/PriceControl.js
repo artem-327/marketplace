@@ -232,6 +232,11 @@ export default class PriceControl extends Component {
           min={hideFobPrice ? null : this.calculateMinimum(type)}
           value={value}
           step={type === 'multiplier' ? 0.1 : 0.001}
+          onKeyPress={(e) => {
+            if (!['0','1','2','3','4','5','6','7','8','9', '-', '.'].includes(e.key.toString()) || e.key === '-' && e.target.value.includes('-')) {
+              e.preventDefault()
+            }
+          }}
           onClick={e => {
             e.stopPropagation()
           }}
