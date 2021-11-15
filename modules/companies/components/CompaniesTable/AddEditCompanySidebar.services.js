@@ -48,7 +48,7 @@ export const formValidationNew = () =>
         .trim()
         .min(3, errorMessages.minLength(3))
         .max(200, errorMessages.maxLength(200))
-        .required(<FormattedMessage id='validation.companyRegalNameRequired' defaultMessage='Required' />),
+        .required(<FormattedMessage id='validation.companyLegalNameRequired' defaultMessage='Legal company name is a required field' />),
 
       businessType: businessValidationSchema(),
       tinType: Yup.string()

@@ -1991,7 +1991,7 @@
   "createMenu.addUser": "Add User",
   "createMenu.addWarehouse": "Add Warehouse",
   "validation.required": "Required",
-  "validation.companyRegalNameRequired": "Legal company name is a required field",
+  "validation.companyLegalNameRequired": "Legal company name is a required field",
   "validation.dateInFuture": "Date must be in future",
   "validation.dateInFutureDays": "Date must be at least {days} days in future",
   "validation.dateInPast": "Date must be in past",
