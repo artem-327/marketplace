@@ -135,10 +135,10 @@ export function login(username, password, session = null, option = null, code = 
             urlPage = '/settings/company-details'
           }
           if (isAdmin) urlPage = '/dashboard'
-          if (identity && identity.roles.find(role => role.role === 'OPERATOR')) {
+          if (!isAdmin && identity && identity.roles.find(role => role.role === 'OPERATOR')) {
             urlPage = '/operations/shipping-quotes'
           }
-          if (isOrderOperator) {
+          if (!isAdmin && isOrderOperator) {
             urlPage = '/operations/orders'
           }
 
