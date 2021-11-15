@@ -48,7 +48,7 @@ export const formValidationNew = () =>
         .trim()
         .min(3, errorMessages.minLength(3))
         .max(200, errorMessages.maxLength(200))
-        .required(),
+        .required(<FormattedMessage id='validation.companyRegalNameRequired' defaultMessage='Required' />),
 
       businessType: businessValidationSchema(),
       tinType: Yup.string()
@@ -59,7 +59,7 @@ export const formValidationNew = () =>
         }),
       tin: Yup.string()
         .trim()
-        .matches(/^\d{9}$/, errorMessages.exactLength(9)),
+        .matches(/^\d{9}$/, errorMessages.exactTinLength(9)),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
 
