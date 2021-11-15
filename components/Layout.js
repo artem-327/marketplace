@@ -296,7 +296,15 @@ class Layout extends Component {
       currentModule
     } = this.props
 
-    const { isAdmin, isCompanyAdmin, isMerchant, isProductCatalogAdmin, isProductOfferManager, isUserAdmin } = identity
+    const {
+      isAdmin,
+      isCompanyAdmin,
+      isMerchant,
+      isProductCatalogAdmin,
+      isProductOfferManager,
+      isUserAdmin,
+      isBusinessDevelopmentRepresentative
+    } = identity
 
     let icon = Icon && (
       <svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'>
@@ -433,7 +441,7 @@ class Layout extends Component {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                {!isAdmin && !isOperator && !isOrderOperator && (
+                {!isAdmin && !isOperator && !isOrderOperator && !isBusinessDevelopmentRepresentative && (
                   <>
                     <Menu.Item
                       onClick={() => Router.push('/cart')}

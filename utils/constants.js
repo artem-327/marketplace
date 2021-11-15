@@ -16,7 +16,8 @@ export const ROLES_ENUM = [
   { role: 'GUEST_COMPANY_ADMIN', name: 'Guest Company Admin', id: 67, propertyName: 'isClientCompanyAdmin' },
   { role: 'GUEST_COMPANY_MANAGER', name: 'Guest Company Manager', id: 36, propertyName: 'isClientCompanyManager' },
   { role: 'ORDER_OPERATOR', name: 'Order Operator', id: 37, propertyName: 'isOrderOperator' },
-  { role: 'OPERATOR', name: 'Operator', id: 34, propertyName: 'isOperator' }
+  { role: 'OPERATOR', name: 'Operator', id: 34, propertyName: 'isOperator' },
+  { role: 'BUSINESS_DEVELOPMENT_REPRESENTATIVE', name: 'Business Development Representative', id: 100, propertyName: 'isBusinessDevelopmentRepresentative' }
 ]
 
 /**

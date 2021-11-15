@@ -272,6 +272,8 @@ class Navigation extends Component {
       isProductCatalogAdmin,
       isProductOfferManager,
       isUserAdmin,
+      isBusinessDevelopmentRepresentative,
+      allUserRoles,
       auth,
       takeover,
       intl: { formatMessage },
@@ -345,7 +347,7 @@ class Navigation extends Component {
 
     return (
       <div className='flex-wrapper'>
-        {(!isAdmin && !isOperator && !isOrderOperator) || takeover ? (
+        {(!isAdmin && !isOperator && !isOrderOperator && !isBusinessDevelopmentRepresentative) || takeover ? (
           <>
             <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
               <>
@@ -742,14 +744,22 @@ class Navigation extends Component {
           </>
         ) : (
           <>
-            {isAdmin && (
+
+
+
+
+
+
+            {(isAdmin || isBusinessDevelopmentRepresentative) && (
               <>
-                <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
-                  <>
-                    <Home size={22} />
-                    {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
-                  </>
-                </MenuLink>
+                {isAdmin && (
+                  <MenuLink to='/dashboard' dataTest='navigation_menu_admin_dashboard'>
+                    <>
+                      <Home size={22} />
+                      {formatMessage({ id: 'navigation.dashboard', defaultMessage: 'Dashboard' })}
+                    </>
+                  </MenuLink>
+                )}
                 <DropdownItem
                   icon={<Briefcase size={22} />}
                   text={
@@ -766,7 +776,7 @@ class Navigation extends Component {
                   data-test='navigation_menu_companies_drpdn'>
                   <Dropdown.Menu data-test='navigation_menu_companies_menu'>
                     <PerfectScrollbar>
-                      {companiesTabsNames.map((tab, i) => (
+                      {(isAdmin ? companiesTabsNames : [companiesTabsNames[0]]).map((tab, i) => (
                         <Dropdown.Item
                           key={tab.id}
                           as={MenuLink}
@@ -778,76 +788,79 @@ class Navigation extends Component {
                     </PerfectScrollbar>
                   </Dropdown.Menu>
                 </DropdownItem>
-
-                <DropdownItem
-                  icon={<Package size={22} />}
-                  text={
-                    <>
-                      <FormattedMessage id='navigation.products' defaultMessage='Products' />
-                      {products ? <ChevronUp /> : <ChevronDown />}
-                    </>
-                  }
-                  className={products ? 'opened' : null}
-                  opened={products}
-                  onClick={() => this.toggleOpened('products', '/products/cas-products')}
-                  refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-                  refId={'products'}
-                  data-test='navigation_menu_products_drpdn'>
-                  <Dropdown.Menu data-test='navigation_menu_products_menu'>
-                    <PerfectScrollbar>
-                      {productsTabsNames.map((tab, i) => (
-                        <Dropdown.Item
-                          key={tab.id}
-                          as={MenuLink}
-                          to={`/products/${tab.type}`}
-                          dataTest={`navigation_products_${tab.type}_drpdn`}>
-                          {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
-                        </Dropdown.Item>
-                      ))}
-                    </PerfectScrollbar>
-                  </Dropdown.Menu>
-                </DropdownItem>
-                <MenuLink to='/document-types' dataTest='navigation_menu_admin_document-types'>
+                {isAdmin && (
                   <>
-                    <FileText size={22} />
-                    {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
-                  </>
-                </MenuLink>
-                <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market_segments'>
-                  <>
-                    <Disc size={22} />
-                    {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
-                  </>
-                </MenuLink>
+                    <DropdownItem
+                      icon={<Package size={22} />}
+                      text={
+                        <>
+                          <FormattedMessage id='navigation.products' defaultMessage='Products' />
+                          {products ? <ChevronUp /> : <ChevronDown />}
+                        </>
+                      }
+                      className={products ? 'opened' : null}
+                      opened={products}
+                      onClick={() => this.toggleOpened('products', '/products/cas-products')}
+                      refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                      refId={'products'}
+                      data-test='navigation_menu_products_drpdn'>
+                      <Dropdown.Menu data-test='navigation_menu_products_menu'>
+                        <PerfectScrollbar>
+                          {productsTabsNames.map((tab, i) => (
+                            <Dropdown.Item
+                              key={tab.id}
+                              as={MenuLink}
+                              to={`/products/${tab.type}`}
+                              dataTest={`navigation_products_${tab.type}_drpdn`}>
+                              {formatMessage({ id: `navigation.${tab.type}`, defaultMessage: `${tab.name}` })}
+                            </Dropdown.Item>
+                          ))}
+                        </PerfectScrollbar>
+                      </Dropdown.Menu>
+                    </DropdownItem>
+                    <MenuLink to='/document-types' dataTest='navigation_menu_admin_document-types'>
+                      <>
+                        <FileText size={22} />
+                        {formatMessage({ id: 'navigation.documentTypes', defaultMessage: 'Document Types' })}
+                      </>
+                    </MenuLink>
+                    <MenuLink to='/market-segments' dataTest='navigation_menu_admin_market_segments'>
+                      <>
+                        <Disc size={22} />
+                        {formatMessage({ id: 'navigation.marketSegments', defaultMessage: 'Market Segments' })}
+                      </>
+                    </MenuLink>
 
-                <DropdownItem
-                  icon={<Settings size={22} />}
-                  text={
-                    <>
-                      <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings' />
-                      {admin ? <ChevronUp /> : <ChevronDown />}
-                    </>
-                  }
-                  className={admin ? 'opened' : null}
-                  opened={admin.toString()}
-                  onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
-                  refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-                  refId={'admin'}
-                  data-test='navigation_menu_admin_settings_drpdn'>
-                  <Dropdown.Menu data-test='navigation_menu_admin_settings_menu'>
-                    <PerfectScrollbar>
-                      {adminDefaultTabs.map((tab, i) => (
-                        <Dropdown.Item
-                          key={tab.id}
-                          as={MenuLink}
-                          to={`/admin/${tab.type}`}
-                          dataTest={`navigation_admin_settings_${tab.type}_drpdn`}>
-                          {formatMessage({ id: `navigation.admin.${tab.type}`, defaultMessage: `${tab.name}` })}
-                        </Dropdown.Item>
-                      ))}
-                    </PerfectScrollbar>
-                  </Dropdown.Menu>
-                </DropdownItem>
+                    <DropdownItem
+                      icon={<Settings size={22} />}
+                      text={
+                        <>
+                          <FormattedMessage id='navigation.adminSettings' defaultMessage='Admin Settings' />
+                          {admin ? <ChevronUp /> : <ChevronDown />}
+                        </>
+                      }
+                      className={admin ? 'opened' : null}
+                      opened={admin.toString()}
+                      onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
+                      refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                      refId={'admin'}
+                      data-test='navigation_menu_admin_settings_drpdn'>
+                      <Dropdown.Menu data-test='navigation_menu_admin_settings_menu'>
+                        <PerfectScrollbar>
+                          {adminDefaultTabs.map((tab, i) => (
+                            <Dropdown.Item
+                              key={tab.id}
+                              as={MenuLink}
+                              to={`/admin/${tab.type}`}
+                              dataTest={`navigation_admin_settings_${tab.type}_drpdn`}>
+                              {formatMessage({ id: `navigation.admin.${tab.type}`, defaultMessage: `${tab.name}` })}
+                            </Dropdown.Item>
+                          ))}
+                        </PerfectScrollbar>
+                      </Dropdown.Menu>
+                    </DropdownItem>
+                  </>
+                )}
               </>
             )}
             {(isAdmin || isOperator || isOrderOperator) && (
@@ -926,59 +939,61 @@ class Navigation extends Component {
             )}
           </>
         )}
-        <DropdownItem
-          icon={<Bell size={22} />}
-          text={
-            <>
-              <FormattedMessage id='navigation.alerts' defaultMessage='Notifications' />
-              {alerts ? <ChevronUp /> : <ChevronDown />}
-            </>
-          }
-          className={alerts ? 'opened' : null}
-          open={alerts.toString()}
-          onClick={(data, e) => {
-            this.toggleOpened('alerts', '/alerts')
-          }}
-          refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-          refId={'alerts'}
-          data-test='navigation_menu_alerts_drpdn'>
-          <Dropdown.Menu data-test='navigation_menu_alerts_menu'>
-            <PerfectScrollbar>
-              <Dropdown.Item
-                key={0}
-                as={Menu.Item}
-                active={alertTab === null}
-                onClick={e => {
-                  e.stopPropagation()
-                  this.props.switchAlertsCategory(null)
-                }}
-                dataTest={'navigation_alerts_all_drpdn'}>
-                {formatMessage({ id: `navigation.alerts.allNotifications`, defaultMessage: 'All Notifications' })}
-              </Dropdown.Item>
-              {this.props.alertsCats.map((tab, i) => {
-                let categoryConstant = tab.category.replaceAll('_', '')
-                categoryConstant = categoryConstant.charAt(0).toLowerCase() + categoryConstant.slice(1)
-                return (
-                  <Dropdown.Item
-                    key={i + 1}
-                    as={Menu.Item}
-                    active={alertTab === tab.category}
-                    onClick={e => {
-                      e.stopPropagation()
-                      this.props.switchAlertsCategory(tab.category)
-                    }}
-                    dataTest={`navigation_alerts_${tab.category}_drpdn`}>
-                    {tab.newMessages ? <NavCircle circular>{tab.newMessages}</NavCircle> : null}
-                    {formatMessage({
-                      id: `navigation.alerts.${categoryConstant}`,
-                      defaultMessage: `${tab.category.replace(/_/g, ' ')}`
-                    })}
-                  </Dropdown.Item>
-                )
-              })}
-            </PerfectScrollbar>
-          </Dropdown.Menu>
-        </DropdownItem>
+        {allUserRoles.length > 1 && !isBusinessDevelopmentRepresentative && (
+          <DropdownItem
+            icon={<Bell size={22} />}
+            text={
+              <>
+                <FormattedMessage id='navigation.alerts' defaultMessage='Notifications' />
+                {alerts ? <ChevronUp /> : <ChevronDown />}
+              </>
+            }
+            className={alerts ? 'opened' : null}
+            open={alerts.toString()}
+            onClick={(data, e) => {
+              this.toggleOpened('alerts', '/alerts')
+            }}
+            refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+            refId={'alerts'}
+            data-test='navigation_menu_alerts_drpdn'>
+            <Dropdown.Menu data-test='navigation_menu_alerts_menu'>
+              <PerfectScrollbar>
+                <Dropdown.Item
+                  key={0}
+                  as={Menu.Item}
+                  active={alertTab === null}
+                  onClick={e => {
+                    e.stopPropagation()
+                    this.props.switchAlertsCategory(null)
+                  }}
+                  dataTest={'navigation_alerts_all_drpdn'}>
+                  {formatMessage({ id: `navigation.alerts.allNotifications`, defaultMessage: 'All Notifications' })}
+                </Dropdown.Item>
+                {this.props.alertsCats.map((tab, i) => {
+                  let categoryConstant = tab.category.replaceAll('_', '')
+                  categoryConstant = categoryConstant.charAt(0).toLowerCase() + categoryConstant.slice(1)
+                  return (
+                    <Dropdown.Item
+                      key={i + 1}
+                      as={Menu.Item}
+                      active={alertTab === tab.category}
+                      onClick={e => {
+                        e.stopPropagation()
+                        this.props.switchAlertsCategory(tab.category)
+                      }}
+                      dataTest={`navigation_alerts_${tab.category}_drpdn`}>
+                      {tab.newMessages ? <NavCircle circular>{tab.newMessages}</NavCircle> : null}
+                      {formatMessage({
+                        id: `navigation.alerts.${categoryConstant}`,
+                        defaultMessage: `${tab.category.replace(/_/g, ' ')}`
+                      })}
+                    </Dropdown.Item>
+                  )
+                })}
+              </PerfectScrollbar>
+            </Dropdown.Menu>
+          </DropdownItem>
+        )}
       </div>
     )
   }
@@ -1001,7 +1016,9 @@ export default withAuth(
         isOrderView: store?.auth?.identity?.isOrderView,
         isProductCatalogAdmin: store?.auth?.identity?.isProductCatalogAdmin,
         isProductOfferManager: store?.auth?.identity?.isProductOfferManager,
+        isBusinessDevelopmentRepresentative: store?.auth?.identity?.isBusinessDevelopmentRepresentative,
         isUserAdmin: store?.auth?.identity?.isUserAdmin,
+        allUserRoles: getSafe(() => store.auth.identity.roles, []),
         collapsedMenu: store?.layout?.collapsedMenu,
         companiesTabsNames: store?.companiesAdmin?.tabsNames,
         productsTabsNames: store?.productsAdmin?.tabsNames,

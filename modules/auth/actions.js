@@ -100,6 +100,7 @@ export function login(username, password, session = null, option = null, code = 
           const isProductCatalogAdmin = identity.roles.map(r => r.role).indexOf('PRODUCT_CATALOG_ADMIN') > -1
           const isProductOfferManager = identity.roles.map(r => r.role).indexOf('PRODUCT_OFFER_MANAGER') > -1
           const isUserAdmin = identity.roles.map(r => r.role).indexOf('USER_ADMIN') > -1
+          const isBusinessDevelopmentRepresentative = identity.roles.map(r => r.role).indexOf('BUSINESS_DEVELOPMENT_REPRESENTATIVE') > -1
 
           let accessRights = {}
 
@@ -134,10 +135,10 @@ export function login(username, password, session = null, option = null, code = 
             urlPage = '/settings/company-details'
           }
           if (isAdmin) urlPage = '/dashboard'
-          if (identity && identity.roles.find(role => role.role === 'OPERATOR')) {
+          if (!isAdmin && identity && identity.roles.find(role => role.role === 'OPERATOR')) {
             urlPage = '/operations/shipping-quotes'
           }
-          if (isOrderOperator) {
+          if (!isAdmin && isOrderOperator) {
             urlPage = '/operations/orders'
           }
 
@@ -151,6 +152,10 @@ export function login(username, password, session = null, option = null, code = 
             (isOrderProcessing || isOrderView)
           ) {
             urlPage = '/orders/sales'
+          }
+
+          if (isBusinessDevelopmentRepresentative && identity.roles.length === 1) {
+            urlPage = '/companies/companies'
           }
 
           Router.push(urlPage)
