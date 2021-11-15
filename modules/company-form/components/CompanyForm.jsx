@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { FormGroup, FormField, Popup, Image, Dropdown, Grid, GridRow, GridColumn, Button } from 'semantic-ui-react'
+import { FormGroup, FormField, Popup, Image, Dropdown, Grid,
+  GridRow, GridColumn, Button, Checkbox as SemenCheckbox } from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown as FixedDropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
@@ -431,36 +432,36 @@ class CompanyForm extends Component {
           </FormField>
         </FormGroup>
         <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
-          <FormField className='upload-input'>
-            <label htmlFor='field_dropdown_associations'>
-              <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
-              <Required />
-            </label>
-            <Dropdown
-              options={
-                data && data.length
-                  ? data.map(type => ({
-                      text: type.name,
-                      value: type.id,
-                      key: type.id
-                    }))
-                  : []
-              }
-              clearable
-              loading={loading}
-              selection
-              value={this.state.businessType.id}
-              onChange={(e, data) => {
-                e.preventDefault()
-                this.setState({
-                  businessType: { id: data.value }
-                })
-                setFieldValue('businessType.id', data.value)
-              }}
-              name='businessType.id'
-              data-test='company_form_businessType_drpdn'
-            />
-          </FormField>
+          <FixedDropdown
+            label={
+              <label>
+                <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
+                <Required />
+              </label>
+            }
+            options={
+              data && data.length
+                ? data.map(type => ({
+                    text: type.name,
+                    value: type.id,
+                    key: type.id
+                  }))
+                : []
+            }
+            clearable
+            loading={loading}
+            selection
+            value={this.state.businessType.id}
+            onChange={(e, data) => {
+              e.preventDefault()
+              this.setState({
+                businessType: { id: data.value }
+              })
+              setFieldValue('businessType.id', data.value)
+            }}
+            name='businessType.id'
+            data-test='company_form_businessType_drpdn'
+          />
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
         </FormGroup>
 
@@ -619,13 +620,15 @@ class CompanyForm extends Component {
               data-test='company_form_enabled_chckb'
             />
           )}
-          <Checkbox
+          <SemenCheckbox
             label={formatMessage({
               id: 'company.purchaseHazmatEligible ',
               defaultMessage: 'Purchase Hazardous Materials'
             })}
             name='purchaseHazmatEligible'
             data-test='company_form_purchaseHazmatEligible_chckb'
+            defaultChecked
+            style={{marginLeft: 7}}
           />
         </FormGroup>
       </>

@@ -270,6 +270,14 @@ export const addressValidationSchema = () => {
   )
 }
 
+export const businessValidationSchema = () => {
+  return Yup.lazy(() =>
+    Yup.object().shape({
+      id: Yup.string().required(errorMessages.requiredMessage)
+    })
+  )
+}
+
 export const dwollaControllerValidation = fullSsnInput =>
   Yup.object().shape({
     address: addressValidationSchema(),

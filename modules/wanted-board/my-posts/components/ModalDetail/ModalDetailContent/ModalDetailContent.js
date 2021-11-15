@@ -61,7 +61,7 @@ const ModalDetailContent = props => {
         searchManufacturers,
         searchedManufacturers,
         searchedManufacturersLoading,
-        popupValues
+        popupValues,
     } = props
     const { values, setFieldValue } = formikProps
 
@@ -106,6 +106,7 @@ const ModalDetailContent = props => {
             }
         }
         init()
+        !popupValues && setFieldValue('deliveryProvince', '')
     }, []) 
 
     const fetchProvinces = async (countryId, hasProvinces) => {
@@ -216,30 +217,30 @@ const ModalDetailContent = props => {
                             />
                         </GridColumn>
                         <GridColumn width={8}>
-                        <Dropdown
-                            label={
-                                <>
-                                    <FormattedMessage id='global.myPostIndexStateFilter' defaultMessage='Delivery State/Province' />
-                                    {provinceRequired && (<Required />)}
-                                </>
-                            }
-                            name="deliveryProvince"
-                            options={state.provinces.map(province => ({
-                                key: province.id,
-                                text: province.name,
-                                value: province.id
-                            }))}
-                            inputProps={{
-                                onFocus: e => (e.target.autocomplete = null),
-                                'data-test': 'wanted_board_sidebar_delivery_province_drpdn',
-                                search: true,
-                                disabled: !state.hasProvinces,
-                                loading: state.provincesAreFetching,
-                                placeholder: formatMessage({
-                                    id: 'global.address.selectStateProvince',
-                                    defaultMessage: 'Select State/Province'
-                                })
-                            }}
+                            <Dropdown
+                                label={
+                                    <>
+                                        <FormattedMessage id='global.myPostIndexStateFilter' defaultMessage='Delivery State/Province' />
+                                        {provinceRequired && (<Required />)}
+                                    </>
+                                }
+                                name="deliveryProvince"
+                                options={state.provinces.map(province => ({
+                                    key: province.id,
+                                    text: province.name,
+                                    value: province.id
+                                }))}
+                                inputProps={{
+                                    onFocus: e => (e.target.autocomplete = null),
+                                    'data-test': 'wanted_board_sidebar_delivery_province_drpdn',
+                                    search: true,
+                                    disabled: !state.hasProvinces,
+                                    loading: state.provincesAreFetching,
+                                    placeholder: formatMessage({
+                                        id: 'global.address.selectStateProvince',
+                                        defaultMessage: 'Select State/Province'
+                                    })
+                                }}
                             />
                         </GridColumn>
                     </GridRow>
@@ -487,7 +488,7 @@ ModalDetailContent.propTypes = {
     formikProps: PropTypes.object,
     searchManufacturers: PropTypes.func,
     searchedManufacturers: PropTypes.array,
-    searchedManufacturersLoading: PropTypes.bool
+    searchedManufacturersLoading: PropTypes.bool,
 }
 
 ModalDetailContent.defaultProps = {

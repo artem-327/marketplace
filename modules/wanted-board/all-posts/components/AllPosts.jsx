@@ -111,32 +111,32 @@ const AllPosts = props => {
     const { intl } = props
     let { formatMessage } = intl
     return [
-      {
-        text: formatMessage({
-          id: 'wantedBoard.info',
-          defaultMessage: 'Info'
-        }),
-        callback: async row => {
-          try {
-            props.openInfoModal(row)
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      },
-      {
-        text: formatMessage({
-          id: 'wantedBoard.respond',
-          defaultMessage: 'Respond'
-        }),
-        callback: async row => {
-          try {
-            props.openConfirmModal(row)
-          } catch (e) {
-            console.error(e)
-          }
-        }
-      }
+      // {
+      //   text: formatMessage({
+      //     id: 'wantedBoard.info',
+      //     defaultMessage: 'Info'
+      //   }),
+      //   callback: async row => {
+      //     try {
+      //       props.openInfoModal(row)
+      //     } catch (e) {
+      //       console.error(e)
+      //     }
+      //   }
+      // },
+      // {
+      //   text: formatMessage({
+      //     id: 'wantedBoard.respond',
+      //     defaultMessage: 'Respond'
+      //   }),
+      //   callback: async row => {
+      //     try {
+      //       props.openConfirmModal(row)
+      //     } catch (e) {
+      //       console.error(e)
+      //     }
+      //   }
+      // }
     ]
   }
 
@@ -162,7 +162,7 @@ const AllPosts = props => {
         onClose={() => setState({ ...state, expandedRowId: null })}
         onRespond={() => props.openConfirmModal(row)}
       />
-      )
+    )
   }
 
   const renderContent = () => {

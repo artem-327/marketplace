@@ -146,7 +146,11 @@ const CertificateOfInsurance = props => {
                                     }
                                 }}
                             </ErrorMessage>
-                            {formikProps?.error?.certificateOfInsurance && <p style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }}>Please upload only PDFs</p>}
+                            {formikProps?.error?.certificateOfInsurance &&
+                                <p style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }}>
+                                    <FormattedMessage id='onboarding.please.upload.only.pdfs' />
+                                </p>
+                            }
                             <ErrorMessage component='p' name='certificateOfInsurance.file' style={{ color: '#9f3a38', margin: '.5rem 0 0 0' }} />
                         </GridColumn>
                         <GridColumn computer={4} tablet={4} mobile={16}>

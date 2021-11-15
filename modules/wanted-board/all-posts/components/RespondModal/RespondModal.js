@@ -94,9 +94,9 @@ const RespondModal = props => {
       ? createdProductOffer.companyProduct.intProductName
       : popupValues.rawData.productSearchPattern
 
-    setSearchInput(productSearchPattern)
+    setSearchInput('')
     const filter = {
-      searchInput: productSearchPattern
+      searchInput: ''
     }
     datagrid.setSearch(filter, true, 'modalFilters')
     const { rows } = datagrid
@@ -168,7 +168,7 @@ const RespondModal = props => {
   }
 
   const submitOffers = async () => {
-    if (submitOffer.productOffers.length) {
+    if (submitOffer.wantedBoardRequest) {
       setSubmitting(true)
       try {
         datagrid.setLoading(true)
@@ -179,6 +179,7 @@ const RespondModal = props => {
           productOffers: []
         })
         datagrid.loadData()
+        closeRespondModal()
       } catch (e) {
         console.error(e)
       } finally {
@@ -272,7 +273,6 @@ const RespondModal = props => {
                           <SubmitButton
                             loading={purchaseRequestPending || updatingDatagrid || submitting}
                             primary
-                            disabled={!submitOffer.productOffers.length || submitting}
                             type='submit'
                             onClick={() => submitOffers()}
                           >

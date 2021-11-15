@@ -134,7 +134,7 @@ const FormRectangle = props => {
         if (fileType && fileType !== 'application/pdf') {
           formikProps?.resetForm()
           formikProps?.setError({
-            'certificateOfInsurance': 'Please upoad only PDFs'
+            'certificateOfInsurance': 'Please upload only PDFs'
           })
           return
         }
