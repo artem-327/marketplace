@@ -2,12 +2,13 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
-import { Dimmer, Loader, Grid, GridRow, GridColumn, Form, FormGroup } from 'semantic-ui-react'
+import { Dimmer, Loader, Grid, GridRow, GridColumn, Form, FormGroup, Image } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Person } from '@material-ui/icons'
 import get from 'lodash/get'
 import { Formik } from 'formik'
 import { ChevronDown } from 'react-feather'
+import moment from 'moment'
 
 //Actions
 import {
@@ -44,11 +45,23 @@ import {
   switchUser,
   generateCheckboxes
 } from './UserEditSidebar.services'
+import { getLocaleDateFormat } from '../../../../../components/date-format'
 //Styles
 import { DivTitle } from '../../Locations/Branches/BranchesSidebar/BranchesSidebar.styles'
 
 import { CustomHighSegment } from '../../LogisticsTable/LogisticsSidebar/LogisticsSidebar.styles'
-import { GridColumnWError, DivNotify, GridRowRoles, DivHeaderCustom, DivLabel } from './UserEditSidebar.styles'
+import {
+  GridColumnWError,
+  DivNotify,
+  GridRowRoles,
+  DivHeaderCustom,
+  DivLabel,
+  DivSectionSign,
+  DivSignImageColumn,
+  DivSectionSignColumn,
+  DivSectionSignHeader,
+  DivSectionSignDescription
+} from './UserEditSidebar.styles'
 import {
   SidebarFlex,
   DivFlexContent,
@@ -470,6 +483,37 @@ const UserEditSidebar = props => {
                         }}
                       />
                     </FormGroup>
+                    {!!props.regulatoryDeaListSignedDate && (
+                      <FormGroup>
+                        <DivSectionSign>
+                          {!!sidebarValues?.regulatoryDeaListSignatureImage && (
+                            <DivSignImageColumn>
+                              <Image
+                                verticalAlign='middle'
+                                style={{ maxHeight: '40px', maxWidth: '150px' }}
+                                src={sidebarValues.regulatoryDeaListSignatureImage}
+                              />
+                            </DivSignImageColumn>
+                          )}
+                          <DivSectionSignColumn>
+                            <DivSectionSignHeader>
+                              <FormattedMessage id='settings.user.signedDate' defaultMessage='Signed Date' />
+                            </DivSectionSignHeader>
+                            <DivSectionSignDescription>
+                              {props.regulatoryDeaListSignedDate}
+                            </DivSectionSignDescription>
+                          </DivSectionSignColumn>
+                          <DivSectionSignColumn>
+                            <DivSectionSignHeader>
+                              <FormattedMessage id='settings.user.expDate' defaultMessage='Exp. Date' />
+                            </DivSectionSignHeader>
+                            <DivSectionSignDescription>
+                              {props.regulatoryDeaListSignedDateExp}
+                            </DivSectionSignDescription>
+                          </DivSectionSignColumn>
+                        </DivSectionSign>
+                      </FormGroup>
+                    )}
                     <DivNotify>
                       {!sidebarValues?.regulatoryDeaListAuthorized && values.regulatoryDeaListAuthorized && (
                         <FormattedMessage
@@ -511,6 +555,37 @@ const UserEditSidebar = props => {
                         }}
                       />
                     </FormGroup>
+                    {!!props.regulatoryDhsCoiSignedDate && (
+                      <FormGroup>
+                        <DivSectionSign>
+                          {!!sidebarValues?.regulatoryDhsCoiSignatureImage && (
+                            <DivSignImageColumn>
+                              <Image
+                                verticalAlign='middle'
+                                style={{ maxHeight: '40px', maxWidth: '150px' }}
+                                src={sidebarValues.regulatoryDhsCoiSignatureImage}
+                              />
+                            </DivSignImageColumn>
+                          )}
+                          <DivSectionSignColumn>
+                            <DivSectionSignHeader>
+                              <FormattedMessage id='settings.user.signedDate' defaultMessage='Signed Date' />
+                            </DivSectionSignHeader>
+                            <DivSectionSignDescription>
+                              {props.regulatoryDhsCoiSignedDate}
+                            </DivSectionSignDescription>
+                          </DivSectionSignColumn>
+                          <DivSectionSignColumn>
+                            <DivSectionSignHeader>
+                              <FormattedMessage id='settings.user.expDate' defaultMessage='Exp. Date' />
+                            </DivSectionSignHeader>
+                            <DivSectionSignDescription>
+                              {props.regulatoryDhsCoiSignedDateExp}
+                            </DivSectionSignDescription>
+                          </DivSectionSignColumn>
+                        </DivSectionSign>
+                      </FormGroup>
+                    )}
                     <DivNotify>
                       {!sidebarValues?.regulatoryDhsCoiAuthorized && values.regulatoryDhsCoiAuthorized && (
                         <FormattedMessage
@@ -602,6 +677,18 @@ const mapStateToProps = state => {
     userRolesLoading: globalData.companyUserRolesLoading,
     userSettings: settings?.userSettings,
     sidebarValues: settings?.sidebarValues,
+    regulatoryDeaListSignedDate: settings?.sidebarValues?.regulatoryDeaListSignedDate &&
+      moment(settings.sidebarValues.regulatoryDeaListSignedDate).format(getLocaleDateFormat()),
+    regulatoryDeaListSignedDateExp: settings?.sidebarValues?.regulatoryDeaListSignedDate &&
+      moment(settings.sidebarValues.regulatoryDeaListSignedDate)
+        .add(1, 'years')
+        .format(getLocaleDateFormat()),
+    regulatoryDhsCoiSignedDate: settings?.sidebarValues?.regulatoryDhsCoiSignedDate &&
+      moment(settings.sidebarValues.regulatoryDhsCoiSignedDate).format(getLocaleDateFormat()),
+    regulatoryDhsCoiSignedDateExp: settings?.sidebarValues?.regulatoryDhsCoiSignedDate &&
+      moment(settings.sidebarValues.regulatoryDhsCoiSignedDate)
+        .add(1, 'years')
+        .format(getLocaleDateFormat()),
     searchedSellMarketSegments: getSafe(() => companiesAdmin.searchedSellMarketSegments, []).map(d => ({
       key: d.id,
       text: d.name,
