@@ -587,7 +587,7 @@ class AddCart extends Component {
             {/* <GridRow>
               <GridColumn computer={6}>
                 Attachments:
-          </GridColumn>
+              </GridColumn>
 
               <GridColumn computer={10}>
                 {attachments}
@@ -624,7 +624,7 @@ class AddCart extends Component {
                   {text => <label>{text}</label>}
                 </FormattedMessage>
                 <Dropdown
-                  disabled
+                  // disabled
                   fluid
                   icon={<ChevronDown />}
                   text={dropdownOptions.find(el => el.value.price === this.props.sidebar.pricing.price).text}>
