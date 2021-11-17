@@ -261,5 +261,7 @@ export const submitCompany = async (values, actions, state, props) => {
   } catch (err) {
     actions.setSubmitting(false)
     console.error(err)
+  } finally {
+    if (values.businessType) values.businessType = { id: values.businessType }
   }
 }
