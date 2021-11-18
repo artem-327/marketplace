@@ -28,13 +28,18 @@ const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
   .transform(value => (isNaN(value) ? null : value))
   .typeError(errorMessages.mustBeNumber)
 
+const integerAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+  .integer(errorMessages.integer)
+  .typeError(errorMessages.mustBeNumber)
+
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString),
-  INTEGER: numberAllowEmptyString,
+  INTEGER: integerAllowEmptyString,
   NUMBER: numberAllowEmptyString,
   FLOAT: numberAllowEmptyString,
   LARGE_TEXT: Yup.string(errorMessages.invalidString),
-  TEXT: Yup.string(errorMessages.invalidString)
+  TEXT: Yup.string(errorMessages.invalidString),
+  BASE64_FILE: Yup.string(errorMessages.invalidString)
 }
 
 const defaultDataType = 'STRING'
