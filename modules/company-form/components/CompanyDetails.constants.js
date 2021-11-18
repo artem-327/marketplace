@@ -8,7 +8,7 @@ export const INITIAL_VALUES = {
   naicsCode: '',
   name: '',
   phone: '',
-  companyPhone: '',
+  // ! ! companyPhone: '', removed?
   socialFacebook: '',
   socialInstagram: '',
   socialLinkedin: '',

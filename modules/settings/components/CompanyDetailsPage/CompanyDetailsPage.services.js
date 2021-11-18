@@ -40,6 +40,8 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
 
     // Primary User endpoint data
     const userData = company.primaryUser
+
+    /* // ! ! removed???
     let requestBodyUser = {
       additionalBranches: getSafe(() => userData.additionalBranches, []).map(el => el.id),
       buyMarketSegments: getSafe(() => userData.buyMarketSegments, []).map(el => el.id),
@@ -56,6 +58,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
       sellMarketSegments: getSafe(() => userData.sellMarketSegments, []).map(el => el.id)
     }
     removeEmpty(requestBodyUser)
+    */
 
     // Primary Branch endpoint data
     const branchData = company.primaryBranch
@@ -90,7 +93,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
     await updateCompanyDetails(values.id, {
       company: requestBodyCompany,
       branch: requestBodyBranch,
-      user: requestBodyUser
+      // ! ! user: requestBodyUser removed???
     })
 
     if (shouldUpdateLogo) {

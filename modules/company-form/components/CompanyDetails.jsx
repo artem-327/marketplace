@@ -106,6 +106,35 @@ const CompanyDetails = props => {
         </GridColumn>
         <GridColumn width={11}>
           <GridStyled>
+            <GridColumn width={16}>
+              <Input
+                label={
+                  <>
+                    <FormattedMessage
+                      id='company.dbaNameIfApplicable'
+                      defaultMessage={`DBA Name ${formatMessage({
+                        id: 'company.ifApplicable',
+                        defaultMessage: '(if applicable)'
+                      })}`}
+                      values={{
+                        ifApplicable: (
+                          <SpanGreyHeader>
+                            {formatMessage({ id: 'company.ifApplicable', defaultMessage: '(if applicable)' })}
+                          </SpanGreyHeader>
+                        )
+                      }}
+                    />
+                  </>
+                }
+                name='dba'
+                inputProps={{
+                  placeholder: formatMessage({
+                    id: 'company.businessName',
+                    defaultMessage: 'Business Name'
+                  })
+                }}
+              />
+            </GridColumn>
             <GridRow>
               <GridColumn width={16}>
                 <TextArea
@@ -164,74 +193,6 @@ const CompanyDetails = props => {
       </GridRow>
 
       <GridRowSectionDescription>
-        <FormattedMessage id='company.dbaName' defaultMessage='DBA Name and Phone Number' />
-      </GridRowSectionDescription>
-      <GridRow>
-        <GridColumn width={8}>
-          <Input
-            label={
-              <>
-                <FormattedMessage
-                  id='company.dbaNameIfApplicable'
-                  defaultMessage={`DBA Name ${formatMessage({
-                    id: 'company.ifApplicable',
-                    defaultMessage: '(if applicable)'
-                  })}`}
-                  values={{
-                    ifApplicable: (
-                      <SpanGreyHeader>
-                        {formatMessage({ id: 'company.ifApplicable', defaultMessage: '(if applicable)' })}
-                      </SpanGreyHeader>
-                    )
-                  }}
-                />
-              </>
-            }
-            name='dba'
-            inputProps={{
-              placeholder: formatMessage({
-                id: 'company.businessName',
-                defaultMessage: 'Business Name'
-              })
-            }}
-          />
-        </GridColumn>
-        <GridColumn width={8}>
-          <PhoneNumber
-            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-            name='companyPhone'
-            values={values}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
-            errors={errors}
-            touched={touched}
-            isSubmitting={isSubmitting}
-            clearable
-          />
-        </GridColumn>
-      </GridRow>
-
-      <GridRowSectionDescription>
-        <FormattedMessage id='company.websiteAndSocialMedia' defaultMessage='Website and Social Media' />
-      </GridRowSectionDescription>
-      {['website', 'socialLinkedin', 'socialFacebook', 'socialTwitter', 'socialInstagram'].map(el => (
-        <GridRow>
-          <GridColumn width={16}>
-            <Input
-              label={<FormattedMessage id={`company.${el}`} defaultMessage={el} />}
-              name={el}
-              inputProps={{
-                placeholder: formatMessage({
-                  id: `company.enter.${el}Url`,
-                  defaultMessage: `Enter ${el} URL`
-                })
-              }}
-            />
-          </GridColumn>
-        </GridRow>
-      ))}
-
-      <GridRowSectionDescription>
         <FormattedMessage id='company.businessContact' defaultMessage='Business Contact' />
       </GridRowSectionDescription>
       <GridRow>
@@ -263,6 +224,26 @@ const CompanyDetails = props => {
           />
         </GridColumn>
       </GridRow>
+
+      <GridRowSectionDescription>
+        <FormattedMessage id='company.websiteAndSocialMedia' defaultMessage='Website and Social Media' />
+      </GridRowSectionDescription>
+      {['website', 'socialLinkedin', 'socialFacebook', 'socialTwitter', 'socialInstagram'].map(el => (
+        <GridRow>
+          <GridColumn width={16}>
+            <Input
+              label={<FormattedMessage id={`company.${el}`} defaultMessage={el} />}
+              name={el}
+              inputProps={{
+                placeholder: formatMessage({
+                  id: `company.enter.${el}Url`,
+                  defaultMessage: `Enter ${el} URL`
+                })
+              }}
+            />
+          </GridColumn>
+        </GridRow>
+      ))}
 
       <GridRowSectionDescription>
         <FormattedMessage id='company.businessType' defaultMessage='Business Type' />
