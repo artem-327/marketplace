@@ -2029,7 +2029,7 @@
   "validation.oneUppercaseChar": "At least one uppercase char.",
   "validation.oneSpecialChar": "At least one number or special char (@,!,#, etc).",
   "validation.exactLength": "Must be {len} characters long",
-  "validation.exactTinLength": "Must be {len} characters long and numbers",
+  "validation.exactTinLength": "Must be {len} characters long. Numbers only.",
   "validation.unique": "{name} has to be unique",
   "validation.minUpToMax": "Min value should be less or equal to Max value",
   "validation.maxAtLeastMin": "Max value should be greater or equal to Min value",

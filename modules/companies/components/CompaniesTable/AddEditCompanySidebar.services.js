@@ -59,7 +59,7 @@ export const formValidationNew = () =>
         }),
       tin: Yup.string()
         .trim()
-        .matches(/^\d{9}$/, errorMessages.exactTinLength(9)),
+        .matches(/^\d{9}$/, { message: errorMessages.exactTinLength(9) }),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
 
