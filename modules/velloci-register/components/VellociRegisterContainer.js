@@ -94,8 +94,8 @@ const makeMapStateToProps = () => {
         },
         controlPerson: {
           isControlPerson: false,
-          isBeneficialOwner: '',
-          isNotBeneficialOwner: '',
+          isBeneficialOwner: true,
+          isNotBeneficialOwner: false,
           firstName: '',
           lastName: '',
           email: '',
