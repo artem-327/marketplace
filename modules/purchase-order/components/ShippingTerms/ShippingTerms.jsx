@@ -51,7 +51,9 @@ const ShippingTerms = props => {
     warehousesFetching,
     isFetching,
     isOpenModal,
-    setIsOpenAddAddress
+    setIsOpenAddAddress,
+    warehouses,
+    deliveryAddresses,
   } = props
 
   // This useEffect is used similar as componentDidUpdate
@@ -67,9 +69,8 @@ const ShippingTerms = props => {
   }, [isExpanded])
 
   const addressOptions = getAddressOptions(
-    warehouseAddressSwitch === 'warehouses' ? props.warehouses : props.deliveryAddresses
+    warehouseAddressSwitch === 'warehouses' ? warehouses : deliveryAddresses
   )
-
   return (
     <RowComponent
       {...props}
@@ -103,7 +104,7 @@ const ShippingTerms = props => {
                 </Dimmer>
                 <PerfectScrollbar className='ui grid'>
                   {addressOptions.map((item, index) => {
-                    const disabled = !item.isBroadcasted
+                    const disabled = !item.fullAddress?.enabled
                     return (
                       <GridRowExpandedSelectionRow
                         key={index}
@@ -140,8 +141,8 @@ const ShippingTerms = props => {
                             }
                             content={
                               <FormattedMessage
-                                id='checkout.shipping.disabledPopupDescription'
-                                defaultMessage='A product in this order is not able to be shipped to this location due to regional restrictions set by the vendor. Please select a different address.'
+                                id='default.default'
+                                defaultMessage={item.fullAddress?.disabledReason}
                               />
                             }
                           />
