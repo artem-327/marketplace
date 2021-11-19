@@ -98,3 +98,32 @@ export const DivHeaderCustom = styled(DivHeader)`
 export const DivLabel = styled.div`
   margin-bottom: 5px !important;
 `
+
+export const DivSectionSign = styled.div`
+  display: flex;
+  flex-flow: row;
+  height: 60px;
+  margin: 5px 7px;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: solid 1px #dee2e6;
+  background-color: #f5f7fa;
+`
+export const DivSignImageColumn = styled.div`
+  margin: auto 39px auto 0;
+`
+
+export const DivSectionSignColumn = styled.div`
+  margin: 0 11px;
+`
+
+export const DivSectionSignHeader = styled.div`
+  color: #848893;
+  font-size: 12px;
+  white-space: nowrap;
+`
+
+export const DivSectionSignDescription = styled.div`
+  font-size: 14px;
+  color: #20273a;
+`

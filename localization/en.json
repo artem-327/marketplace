@@ -2447,6 +2447,8 @@
   "settings.user.regulatoryDhsCoiAuthorized": "Authorized to purchase DHS Chemicals of Interest",
   "settings.user.regulatoryHazmatAuthorized": "Authorized to purchase Hazardous Chemicals",
   "settings.user.regulatoryDeaListAuthorized": "Authorized to purchase DEA Regulated List I and II Substances",
+  "settings.user.signedDate": "Signed Date",
+  "settings.user.expDate": "Exp. Date",
   "settings.editAlternativeNames": "Edit Alternative Names",
   "settings.editRoles": "Edit Roles",
   "settings.dwollaOnlyForUSA": "Dwolla is only supported for companies located in USA.",
