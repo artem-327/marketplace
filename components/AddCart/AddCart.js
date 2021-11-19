@@ -628,7 +628,7 @@ class AddCart extends Component {
                   fluid
                   icon={<ChevronDown />}
                   text={dropdownOptions.find(el => el.value.price === this.props.sidebar.pricing.price).text}>
-                  <Dropdown.Menu>
+                  <Dropdown.Menu style={{width: '100%'}}>
                     {dropdownOptions.map((el, i) => (
                       <Dropdown.Item
                         key={i}
