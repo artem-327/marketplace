@@ -6,6 +6,7 @@ export const INITIAL_FORM_VALUES = {
   name: '',
   enabled: false,
   phone: '',
+  email: '',
   purchaseHazmatEligible: false,
   businessType: {
     id: ''

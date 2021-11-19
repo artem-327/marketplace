@@ -4,7 +4,7 @@ import { getCompanyRequestObject } from '../../services'
 
 const getNaicsCode = state => state?.auth?.identity?.company?.naicsCategory?.naicsId
 const getPhoneNumber = state => state?.auth?.identity?.company?.phone
-const getEmail = state => state?.auth?.identity?.email
+const getEmail = state => state?.auth?.identity?.company?.email
 const getUrl = state => state?.auth?.identity?.company?.website
 const getStreetAddress = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.streetAddress
 const getCity = state => state?.auth?.identity?.company?.primaryBranch?.deliveryAddress?.address?.city

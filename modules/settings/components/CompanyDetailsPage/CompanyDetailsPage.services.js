@@ -10,6 +10,8 @@ export const getInitialFormValues = values => {
   const hasProvinces = getSafe(() => values.primaryBranch.deliveryAddress.address.country.hasProvinces, false)
   const zip = getSafe(() => values.primaryBranch.deliveryAddress.address.zip.zip, '')
 
+  console.log('!!!!!!!!!! getInitialFormValues values', values)
+
   return {
     ...INITIAL_VALUES,
     ...values,
@@ -22,10 +24,7 @@ export const getInitialFormValues = values => {
       country: countryId ? JSON.stringify({ countryId, hasProvinces }) : '',
       zip
     },
-    email: getSafe(() => values.primaryUser.email, ''),
-    phone: getSafe(() => values.primaryUser.phone, ''),
     naicsCode: values?.naicsCategory?.naicsId,
-    companyPhone: getSafe(() => values.phone, '')
   }
 }
 
@@ -34,31 +33,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
   const { companyLogo, shouldUpdateLogo } = state
 
   try {
-    let newCompanyObj = { ...values, phone: values.companyPhone }
-    // Company request object
-    let requestBodyCompany = getCompanyRequestObject(company, newCompanyObj)
-
-    // Primary User endpoint data
-    const userData = company.primaryUser
-
-    /* // ! ! removed???
-    let requestBodyUser = {
-      additionalBranches: getSafe(() => userData.additionalBranches, []).map(el => el.id),
-      buyMarketSegments: getSafe(() => userData.buyMarketSegments, []).map(el => el.id),
-      email: values.email,
-      homeBranch: getSafe(() => userData.homeBranch.id, null),
-      jobTitle: getSafe(() => userData.jobTitle, null),
-      name: getSafe(() => userData.name, null),
-      phone: values.phone,
-      preferredCurrency: getSafe(() => userData.preferredCurrency.id, null),
-      regulatoryDeaListAuthorized: getSafe(() => userData.regulatoryDeaListAuthorized, false),
-      regulatoryDhsCoiAuthorized: getSafe(() => userData.regulatoryDhsCoiAuthorized, false),
-      regulatoryHazmatAuthorized: getSafe(() => userData.regulatoryHazmatAuthorized, false),
-      roles: getSafe(() => userData.roles, []).map(el => el.id),
-      sellMarketSegments: getSafe(() => userData.sellMarketSegments, []).map(el => el.id)
-    }
-    removeEmpty(requestBodyUser)
-    */
+    let requestBodyCompany = getCompanyRequestObject(company, values)
 
     // Primary Branch endpoint data
     const branchData = company.primaryBranch
@@ -92,8 +67,7 @@ export const handleSubmit = async (values, { setSubmitting }, props, state) => {
 
     await updateCompanyDetails(values.id, {
       company: requestBodyCompany,
-      branch: requestBodyBranch,
-      // ! ! user: requestBodyUser removed???
+      branch: requestBodyBranch
     })
 
     if (shouldUpdateLogo) {

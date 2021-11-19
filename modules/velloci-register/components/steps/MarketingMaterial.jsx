@@ -218,7 +218,7 @@ const MarketingMaterial = props => {
                                                         <Required />
                                                     </>
                                                 }
-                                                name='companyPhone'
+                                                name='phoneNumber'
                                                 values={values}
                                                 setFieldValue={setFieldValue}
                                                 setFieldTouched={setFieldTouched}
