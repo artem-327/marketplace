@@ -11,13 +11,15 @@ context("Shipping quotes CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("loading")
         cy.intercept("POST", "/prodex/api/shipment/manual-quotes/datagrid*").as("quotesLoad")
 
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
+        cy.get('.flex-wrapper > :nth-child(7)').click()
 
+        cy.waitForUI()
         cy.get('[data-test=navigation_operations_shipping-quotes_drpdn]').click()
 
         cy.wait("@quotesLoad")

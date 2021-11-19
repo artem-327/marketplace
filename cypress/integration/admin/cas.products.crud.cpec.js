@@ -12,7 +12,7 @@ context("CAS products CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("loading")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("loading")
         cy.intercept("POST", "/prodex/api/cas-products/datagrid*").as("CASloading")
 
         cy.FElogin(adminJSON.email, adminJSON.password)

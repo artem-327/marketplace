@@ -11,7 +11,7 @@ context("Companies CRUD", () => {
     })
 
     beforeEach(function () {
-        cy.intercept("POST", "/prodex/api/admin/orders/datagrid*").as("dashboardload")
+        cy.intercept("GET", "/prodex/api/dashboard*").as("dashboardload")
         cy.intercept("POST", "/prodex/api/companies/datagrid*").as("companiesLoad")
         cy.intercept("POST", "/prodex/api/companies").as("companyCreate")
         cy.intercept("PATCH", "/prodex/api/companies/admin/id/**").as("companyUpdate")

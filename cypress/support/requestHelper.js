@@ -742,14 +742,14 @@ Cypress.Commands.add("refreshToken", (token) => {
     })
 })
 
-Cypress.Commands.add("createPurchaseRequest", (token) => {
+Cypress.Commands.add("createPurchaseRequest", (token, searchPattern) => {
     cy.request({
         method: 'POST',
-        url: '/prodex/api/purchase-requests',
+        url: '/prodex/api/wanted-board',
         headers: {
             authorization: "Bearer " + token
         },
-        body: { quantity: "5", unit: 8, element: { productGroup: 31 } }
+        body: { quantity: "5", unit: 8, productSearchPattern: searchPattern, deliveryCountry: 1, deliveryProvince: 5}
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id
