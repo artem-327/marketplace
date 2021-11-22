@@ -38,7 +38,7 @@ context("Companies CRUD", () => {
 
         cy.selectFromList("div[id='field_dropdown_type']", "Regular")
         cy.enterText("#field_input_name", "Test Company 222")
-        cy.selectFromList("div[data-test='company_form_businessType_drpdn']", "Corporation")
+        cy.selectFromList("div[id='field_dropdown_businessType.id']", "Corporation")
         cy.enterText("#field_input_website", "https://blue.io/")
         cy.enterText("#field_input_dba", "Test Co")
         cy.selectFromDropdown("div[name='naicsCode']", "Chemical and Allied Products Merchant Wholesalers")

@@ -47,6 +47,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.wait("@createRequest").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })
+        cy.waitForUI()
     })
 
     it("Update purchase request", () => {
@@ -92,7 +93,7 @@ context("Wanted Board Purchase Request CRUD", () => {
         cy.get('[data-test=wanted_board_sidebar_submit_btn]').click({force: true})
 
         cy.get(".error")
-            .should("have.length", 3)
+            .should("have.length", 4)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)/i)
         })

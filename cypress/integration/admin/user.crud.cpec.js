@@ -141,7 +141,7 @@ context("Prodex Admin User CRUD", () => {
         cy.get('[data-test=admin_users_popup_submit_btn]').click()
 
         cy.get(".error")
-            .should("have.length", 8)
+            .should("have.length", 9)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(At least one role should be selected)/i)
         })

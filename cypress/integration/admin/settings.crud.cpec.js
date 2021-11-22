@@ -28,6 +28,8 @@ context("Admin Settings RUD", () => {
         cy.contains("Other Settings")
         cy.get("input[id='field_input_admin\.OTHER_SETTINGS\.APP_OPERATIONS_EMAIL_ADDRESS\.value\.visible']").clear()
             .type("tomas-artio@email.cz")
+        cy.get("input[id='field_input_admin\.OTHER_SETTINGS\.USER_ORDER_PURCHASE_LIMIT\.value\.visible']").clear()
+            .type(Math.floor(new Date() / 1000))
         cy.get("button[class='ui primary button']").click({force: true})
         cy.wait('@settingsSaving').then(({ request, response }) => {
             expect(response.statusCode).to.eq(200)

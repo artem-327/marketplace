@@ -75,7 +75,7 @@ context("Prodex Customers CRUD", () => {
         cy.get("input[id='field_input_billToAddress.contactName']")
             .should("have.value", "Marie Currie")
 
-        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+        cy.get('[data-test=phone-number-input]')
             .should("have.value", "123 456 7895")
 
         cy.get("input[id='field_input_billToAddress.contactEmail']")
@@ -95,7 +95,7 @@ context("Prodex Customers CRUD", () => {
         cy.get("#field_input_contactName")
             .should("have.value", "James Newman")
 
-        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+        cy.get('[data-test=phone-number-input]')
             .should("have.value", "123 456 7895")
 
         cy.get("#field_input_contactEmail")
@@ -161,7 +161,7 @@ context("Prodex Customers CRUD", () => {
         cy.get("#field_input_contactName")
             .should("have.value", "James Newman")
 
-        cy.get('.PhoneNumber__StyledInputMask-smr14b-1')
+        cy.get('[data-test=phone-number-input]')
             .should("have.value", "123 456 7895")
 
         cy.get("#field_input_contactEmail")
