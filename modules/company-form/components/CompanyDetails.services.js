@@ -20,7 +20,6 @@ export const validationSchema = Yup.object().shape({
   socialTwitter: tagValidate(),
   socialInstagram: tagValidate(),
   phone: phoneValidation(10),
-  //! ! companyPhone: phoneValidation(10), removed??
   address: addressValidationSchema(),
   email: Yup.string().trim().email(errorMessages.invalidEmail).required(),
   tagline: Yup.string().trim().max(100, errorMessages.maxLength(100))

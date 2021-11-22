@@ -62,6 +62,7 @@ export const formValidationNew = () =>
         .matches(/^\d{9}$/, { message: errorMessages.exactTinLength(9) }),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
+      email: Yup.string().trim().email(errorMessages.invalidEmail),
 
       mailingBranch: Yup.lazy(() => {
         if (mailingBranchRequired)

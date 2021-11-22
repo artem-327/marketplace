@@ -207,7 +207,7 @@ function BusinessInfo({
       <GridRow columns={2}>
         <ColumnCustom className="m-padding" computer={8} tablet={8} mobile={16}>
           <PhoneNumber
-            name='businessInfo.phoneNumber'
+            name='businessInfo.phone'
             values={formikProps.values}
             label={
               <>

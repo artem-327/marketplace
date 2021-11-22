@@ -94,7 +94,7 @@ export const verifyPersonalInformation = {
 
 export const initialValues = {
   businessInfo: {
-    phoneNumber: '',
+    phone: '',
     email: '',
     url: '',
     address: {

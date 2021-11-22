@@ -10,8 +10,6 @@ export const getInitialFormValues = values => {
   const hasProvinces = getSafe(() => values.primaryBranch.deliveryAddress.address.country.hasProvinces, false)
   const zip = getSafe(() => values.primaryBranch.deliveryAddress.address.zip.zip, '')
 
-  console.log('!!!!!!!!!! getInitialFormValues values', values)
-
   return {
     ...INITIAL_VALUES,
     ...values,
