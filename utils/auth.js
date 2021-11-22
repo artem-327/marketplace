@@ -48,6 +48,8 @@ export async function authorize(username, password, session = null, option = nul
   const result = await fp.get()
   const visitorId = result.visitorId
 
+  console.log('!!!!!!!!!! FingerprintJS result', result)
+
   const { data } = await api.post(
     '/prodex/oauth/token',
     session
