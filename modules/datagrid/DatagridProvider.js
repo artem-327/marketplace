@@ -43,7 +43,8 @@ class DatagridProvider extends Component {
       url: pt.string.isRequired,
       method: pt.oneOf(['POST', 'GET'])
     }).isRequired,
-    autoRefresh: pt.bool
+    autoRefresh: pt.bool,
+    defaultSort: pt.string
   }
 
   constructor(props) {
@@ -278,6 +279,7 @@ class DatagridProvider extends Component {
         ready: true,
         loading: true,
         datagridParams: {
+          sortPath: this.props.defaultSort ? this.props.defaultSort : null,
           ...s.datagridParams,
           ...params
         },

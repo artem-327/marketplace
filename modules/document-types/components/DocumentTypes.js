@@ -36,7 +36,7 @@ class DocumentTypes extends Component {
       return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
   
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad>
+      <DatagridProvider apiConfig={this.getApiConfig()} preserveFilters skipInitLoad defaultSort='DocumentType.name'>
         <Container fluid className='flex stretched'>
           <div style={{ padding: '20px 30px' }}>
             <TableHandlers />
