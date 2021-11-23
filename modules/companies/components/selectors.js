@@ -72,7 +72,8 @@ const getEditedId = state => state.companiesAdmin.editedId
 const getIsOpenSidebar = state => state.companiesAdmin.isOpenSidebar
 const getCompanyListDataRequest = state => state.companiesAdmin.companyListDataRequest
 const getReRegisterP44Pending = state => state.companiesAdmin.reRegisterP44Pending
-const isBusinessDevelopmentRepresentativeOnly = state =>
+const getIsAdmin = state => getSafe(() => state.auth.identity.isAdmin, false)
+const getIsBusinessDevelopmentRepresentativeOnly = state =>
   getSafe(() => state.auth.identity.isBusinessDevelopmentRepresentative, false) &&
   getSafe(() => state.auth.identity.roles, []).length === 1
 
@@ -82,5 +83,6 @@ export const makeGetEditedId = () => createSelector([getEditedId], editedId => e
 export const makeIsOpenSidebar = () => createSelector([getIsOpenSidebar], adminRoles => adminRoles)
 export const makeCompanyListDataRequest = () => createSelector([getCompanyListDataRequest], adminRoles => adminRoles)
 export const makeReRegisterP44Pending = () => createSelector([getReRegisterP44Pending], adminRoles => adminRoles)
-export const makeIsBusinessDevelopmentRepresentativeOnly = () =>
-  createSelector([isBusinessDevelopmentRepresentativeOnly], data => data)
+export const makeGetIsAdmin = () => createSelector([getIsAdmin], data => data)
+export const makeGetIsBusinessDevelopmentRepresentativeOnly = () =>
+  createSelector([getIsBusinessDevelopmentRepresentativeOnly], data => data)

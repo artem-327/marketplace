@@ -44,7 +44,8 @@ import {
   makeIsOpenSidebar,
   makeCompanyListDataRequest,
   makeReRegisterP44Pending,
-  makeIsBusinessDevelopmentRepresentativeOnly
+  makeGetIsAdmin,
+  makeGetIsBusinessDevelopmentRepresentativeOnly
 } from '../selectors'
 
 const makeMapStateToProps = () => {
@@ -53,7 +54,8 @@ const makeMapStateToProps = () => {
   const getIsOpenSidebar = makeIsOpenSidebar()
   const getCompanyListDataRequest = makeCompanyListDataRequest()
   const getReRegisterP44Pending = makeReRegisterP44Pending()
-  const getIsBusinessDevelopmentRepresentativeOnly = makeIsBusinessDevelopmentRepresentativeOnly()
+  const getIsAdmin = makeGetIsAdmin()
+  const getIsBusinessDevelopmentRepresentativeOnly = makeGetIsBusinessDevelopmentRepresentativeOnly()
 
   const mapStateToProps = (state, props) => {
     return {
@@ -62,6 +64,7 @@ const makeMapStateToProps = () => {
       isOpenSidebar: getIsOpenSidebar(state),
       companyListDataRequest: getCompanyListDataRequest(state),
       reRegisterP44Pending: getReRegisterP44Pending(state),
+      isAdmin: getIsAdmin(state),
       isBusinessDevelopmentRepresentativeOnly: getIsBusinessDevelopmentRepresentativeOnly(state)
     }
   }

@@ -744,12 +744,6 @@ class Navigation extends Component {
           </>
         ) : (
           <>
-
-
-
-
-
-
             {(isAdmin || isBusinessDevelopmentRepresentative) && (
               <>
                 {isAdmin && (
@@ -939,7 +933,7 @@ class Navigation extends Component {
             )}
           </>
         )}
-        {allUserRoles.length > 1 && !isBusinessDevelopmentRepresentative && (
+        {!(allUserRoles.length === 1 && isBusinessDevelopmentRepresentative) && (
           <DropdownItem
             icon={<Bell size={22} />}
             text={
