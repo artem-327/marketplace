@@ -46,7 +46,7 @@ const validationSchema = Yup.object().shape({
     socialFacebook: websiteValidationNotRequired(),
     socialTwitter: tagValidate(),
     socialInstagram: tagValidate(),
-    companyPhone: phoneValidation(10).required(errorMessages.requiredMessage),
+    phone: phoneValidation(10).required(errorMessages.requiredMessage),
     email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.required),
     tagline: Yup.string().trim().max(100, errorMessages.maxLength(100))
 })
@@ -218,7 +218,7 @@ const MarketingMaterial = props => {
                                                         <Required />
                                                     </>
                                                 }
-                                                name='companyPhone'
+                                                name='phone'
                                                 values={values}
                                                 setFieldValue={setFieldValue}
                                                 setFieldTouched={setFieldTouched}

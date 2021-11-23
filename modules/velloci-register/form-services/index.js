@@ -36,7 +36,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
     return Yup.object().shape({
       businessInfo: Yup.lazy(() => {
         return Yup.object().shape({
-          phoneNumber: phoneValidation(10).required(requiredMessage),
+          phone: phoneValidation(10).required(requiredMessage),
           email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
           url: websiteValidationNotRequired(),
           address: addressValidationSchema(),
@@ -226,7 +226,7 @@ export const getBody = (values, beneficialOwnersNotified) => {
     provinceId: getSafe(() => businessInfo.address.province, ''),
     legalZipCode: getSafe(() => businessInfo.address.zip, ''),
     naicsCode: getSafe(() => businessInfo.naicsCode, ''),
-    phone: getSafe(() => businessInfo.phoneNumber.substring(1), ''),
+    phone: getSafe(() => businessInfo.phone.substring(1), ''),
     companyType: getSafe(() => businessInfo.companyType, ''),
     applicableMarkets: getSafe(() => businessInfo.markets, ''),
     tinNumber: getSafe(() => tinNumber, ''),

@@ -82,6 +82,7 @@ export const getCompanyRequestObject = (companyObj, newCompanyObj) => {
     naicsCode: newCompanyObj?.naicsCode ?? companyObj?.naicsCode,
     name: newCompanyObj?.name ?? companyObj?.name,
     phone: newCompanyObj?.phone ?? companyObj?.phone,
+    email: newCompanyObj?.email ?? companyObj?.email,
     socialFacebook: newCompanyObj?.socialFacebook ?? companyObj?.socialFacebook,
     socialInstagram: newCompanyObj?.socialInstagram ?? companyObj?.socialInstagram,
     socialLinkedin: newCompanyObj?.socialLinkedin ?? companyObj?.socialLinkedin,

@@ -62,6 +62,7 @@ export const formValidationNew = () =>
         .matches(/^\d{9}$/, { message: errorMessages.exactTinLength(9) }),
       website: websiteValidationNotRequired(),
       phone: phoneValidation(10),
+      email: Yup.string().trim().email(errorMessages.invalidEmail),
 
       mailingBranch: Yup.lazy(() => {
         if (mailingBranchRequired)
@@ -189,6 +190,7 @@ export const submitCompany = async (values, actions, state, props) => {
         industryType: getSafe(() => values.industryType, ''),
         name: getSafe(() => values.name, ''),
         phone: getSafe(() => values.phone, ''),
+        email: getSafe(() => values.email, ''),
         purchaseHazmatEligible: getSafe(() => values.purchaseHazmatEligible, false),
         socialFacebook: getSafe(() => values.socialFacebook, ''),
         socialInstagram: getSafe(() => values.socialInstagram, ''),
@@ -197,6 +199,7 @@ export const submitCompany = async (values, actions, state, props) => {
         tagline: getSafe(() => values.tagline, ''),
         tin: getSafe(() => values.tin, ''),
         tinType: getSafe(() => values.tinType, ''),
+        type: getSafe(() => values.type, ''),
         website: getSafe(() => values.website, '')
       }
       if (values.type) newValues['type'] = values.type

@@ -105,7 +105,7 @@ class RegisterBeneficialOwner extends Component {
         ownershipPercentage: val.businessOwnershipPercentage
           ? parseInt(getSafe(() => val.businessOwnershipPercentage, 0))
           : 0,
-        phone: getSafe(() => val.phoneNumber.substring(1), ''),
+        phone: getSafe(() => val.phone.substring(1), ''),
         provinceId: getSafe(() => val.address.province, ''),
         zipCode: getSafe(() => val.address.zip, ''),
         ssn: getSafe(() => val.socialSecurityNumber, ''),

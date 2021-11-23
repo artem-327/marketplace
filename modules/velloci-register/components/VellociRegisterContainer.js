@@ -65,7 +65,7 @@ const makeMapStateToProps = () => {
       initialValues: {
         ...getInitialValues(initialValues),
         businessInfo: {
-          phoneNumber: getPhoneNumber(state),
+          phone: getPhoneNumber(state),
           email: getEmail(state),
           url: getUrl(state),
           address: {

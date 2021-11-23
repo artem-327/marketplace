@@ -568,17 +568,7 @@ class CompanyForm extends Component {
         </FormGroup>
 
         <FormGroup widths='equal'>
-          <PhoneNumber
-            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
-            name='phone'
-            values={values}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
-            errors={errors}
-            touched={touched}
-            isSubmitting={isSubmitting}
-            clearable
-          />
+          <div />
           <FormField className='upload-input'>
             <label htmlFor='field_dropdown_associations'>
               <FormattedMessage id='company.associationMembership' defaultMessage='Association Membership' />
@@ -587,10 +577,10 @@ class CompanyForm extends Component {
               options={
                 associations && associations.length
                   ? associations.map(assoc => ({
-                      text: assoc.name,
-                      value: assoc.id,
-                      key: assoc.id
-                    }))
+                    text: assoc.name,
+                    value: assoc.id,
+                    key: assoc.id
+                  }))
                   : []
               }
               clearable
@@ -610,6 +600,24 @@ class CompanyForm extends Component {
               data-test='company_form_association_drpdn'
             />
           </FormField>
+        </FormGroup>
+
+        <FormGroup widths='equal' data-test='company_form_phone_email_drpdn'>
+          <PhoneNumber
+            label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+            name='phone'
+            values={values}
+            setFieldValue={setFieldValue}
+            setFieldTouched={setFieldTouched}
+            errors={errors}
+            touched={touched}
+            isSubmitting={isSubmitting}
+            clearable
+          />
+          <Input
+            label={<FormattedMessage id='global.email' defaultMessage='Email' />}
+            name='email'
+          />
         </FormGroup>
 
         <FormGroup widths='equal'>
