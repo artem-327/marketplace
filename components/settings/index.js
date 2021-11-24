@@ -14,7 +14,8 @@ import {
   GridRow,
   GridColumn,
   Dimmer,
-  Loader
+  Loader,
+  Checkbox as SemanticCheckbox
 } from 'semantic-ui-react'
 import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
@@ -151,6 +152,11 @@ const PScroll = styled(PerfectScrollbar)`
     }
   }
 `
+
+const DivToggleHeader = styled.div`
+  font-size: 16px;
+  margin-bottom: 5px;
+`
 /**
  * @category Settings - Settings
  * @component
@@ -162,7 +168,8 @@ class Settings extends Component {
     validationSchema: null,
     loading: true,
     clickedButton: null,
-    fetching: true
+    fetching: true,
+    showReadOnly: false
   }
 
   async componentDidMount() {
@@ -197,7 +204,7 @@ class Settings extends Component {
     }
   }
 
-  parseData = systemSettings => {
+  parseData = (systemSettings) => {
     let validationSchema = {}
     let { role } = this.props
 
@@ -317,7 +324,7 @@ class Settings extends Component {
       isCompanyAdmin,
       isUserAdmin
     } = this.props
-    let { loading, systemSettings } = this.state
+    let { loading, systemSettings, showReadOnly } = this.state
     let initialValues = this.parseInitialValues(systemSettings)
 
     let getMarkup = () => (
@@ -341,8 +348,25 @@ class Settings extends Component {
                 <Loader />
               </Dimmer>
               <FixyWrapper>
+                {asModal && (
+                  <>
+                    <DivToggleHeader>
+                      <FormattedMessage
+                        id='settings.system.showReadOnly'
+                        defaultMessage='Show read-only settings'
+                      />
+                    </DivToggleHeader>
+                    <SemanticCheckbox
+                      toggle={true}
+                      defaultChecked={showReadOnly}
+                      onChange={() => this.setState({ showReadOnly: !showReadOnly })}
+                      data-test='settings_show_read_only_toggle'
+                    />
+                  </>
+                )}
                 {systemSettings && systemSettings.length
                   ? systemSettings.map(group => {
+                    if (asModal && !showReadOnly && !group.settings.some(el => el.changeable)) return null
                     return (
                       <>
                         <StyledHeader as='h2' className='ui medium header'>
@@ -352,6 +376,7 @@ class Settings extends Component {
                           <PScroll>
                             <>
                               {group.settings.map(el => {
+                                if (asModal && !(showReadOnly || el.changeable)) return null
                                 return (
                                   <>
                                     <Grid>
@@ -371,24 +396,37 @@ class Settings extends Component {
                                         <CustomPaddedColumn width={5} floated='right' textAlign='right'>
                                           {this.props.role !== 'admin' && (
                                             <>
-                                              <Checkbox
-                                                inputProps={{
-                                                  disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
-                                                  onChange: e => e.stopPropagation(),
-                                                  onClick: e => e.stopPropagation()
-                                                }}
-                                                label={formatMessage({
-                                                  id: 'global.override',
-                                                  defaultMessage: 'Override'
-                                                })}
-                                                name={`${role}.${group.code}.${el.code}.edit`}
+                                              <Popup
+                                                position='top right'
+                                                disabled={!asModal || el.changeable}
+                                                trigger={
+                                                  <div>
+                                                    <Checkbox
+                                                      inputProps={{
+                                                        disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
+                                                        onChange: e => e.stopPropagation(),
+                                                        onClick: e => e.stopPropagation()
+                                                      }}
+                                                      label={formatMessage({
+                                                        id: 'global.override',
+                                                        defaultMessage: 'Override'
+                                                      })}
+                                                      name={`${role}.${group.code}.${el.code}.edit`}
+                                                    />
+                                                  </div>
+                                                }
+                                                content={
+                                                  <FormattedMessage
+                                                    id='settings.system.canBeChangedAtTradePass'
+                                                    defaultMessage='This setting can only be set by Company Admin within My TradePass Settings.'
+                                                  />
+                                                }
                                               />
                                             </>
                                           )}
                                         </CustomPaddedColumn>
                                       </BottomMargedRow>
                                     </Grid>
-
                                     {cloneElement(
                                       typeToComponent(el.type, {
                                         props: {

@@ -2431,6 +2431,8 @@
   "settings.product.unmapped": "This product is not mapped and will not show on the Marketplace.",
   "settings.associatedCompanyGenericProduct": "What is the Company Generic Product that you would like to map to?",
   "settings.system.allDisabled": "There is nothing to save as none of the values can be changed.",
+  "settings.system.canBeChangedAtTradePass": "This setting can only be set by Company Admin within My TradePass Settings.",
+  "settings.system.showReadOnly": "Show read-only settings",
   "settings.onlyLastFourNumbers": "Enter only last four digits",
   "settings.user.enabled": "User enabled",
   "settings.systemSettings": "System Settings",
