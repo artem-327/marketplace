@@ -9,13 +9,12 @@ import { SegmentGroupHeader, GridColumnDetail, GridRowBottomSegment } from '../D
  * @component
  */
 const BottomSegmentData = props => {
-  console.log(props);
   return (
     <GridRowBottomSegment>
       <GridColumnDetail>
         <SegmentGroupHeader horizontal $noneBorder>
           {Object.keys(props).map((key, i) => {
-            return <ColumnSegment key={i} data={props[key]} titleId={key} blueValue={key === 'verifiedData'} />
+            return <ColumnSegment key={i} document={key === 'verifiedData' ? props[key]['document'] : null} data={props[key]} titleId={key} blueValue={key === 'verifiedData'} />
           })}
         </SegmentGroupHeader>
       </GridColumnDetail>
