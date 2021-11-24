@@ -8,7 +8,7 @@ import { DivTitleBottomSegment, DivValue, GridColumnDetail, SegmentBottom } from
  * @component
  */
 const ColumnSegment = ({ data, titleId, blueValue }) => (
-  <SegmentBottom textAlign='left'>
+  <SegmentBottom textAlign='left' style={{marginTop: 0}}>
     <Grid.Row>
       <GridColumnDetail>
         <DivTitleBottomSegment>
@@ -30,7 +30,7 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
         const docName = docNameTemp.join(' ')
 
         let value = data[key]
-        if(blueValue) {
+        if (blueValue) {
           let valueTemp = value.toLowerCase()
           valueTemp = valueTemp.split('_')
           valueTemp.map((t, i) => {
@@ -54,7 +54,7 @@ const ColumnSegment = ({ data, titleId, blueValue }) => (
           </Grid.Row>
         )
       })
-    :
+      :
       <Grid.Row data-test='component-column-segment-row'>
         <GridColumnDetail>
           <FormattedMessage
