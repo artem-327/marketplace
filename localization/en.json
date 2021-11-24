@@ -3609,6 +3609,7 @@
   "sharedListings.detailRow.tradePass": "TradePass",
   "detailRow.pricing.bag": "{titleNumbers} bag",
   "detailRow.pricing.markup": "Markup",
+  "detailRow.pricing.defaultSharedListingsMarkup": "Note: When no mark-up is set, default  company mark-up of {value} % will be applied.",
   "sharedListings.detailRow.enterMarkup": "Enter Markup",
   "sharedListings.detailRow.tabInfo": "Info",
   "sharedListings.detailRow.purchaseInfo": "Purchase Info",
