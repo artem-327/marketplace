@@ -69,9 +69,9 @@ export default class PriceControl extends Component {
       }
     } else {
       if (type === 'addition') {
-        values = { priceAddition: value === '' ? value : Number(value), priceMultiplier: 0 }
+        values = { priceAddition: value === '' ? null : Number(value), priceMultiplier: null }
       } else {
-        values = { priceMultiplier: value === '' ? value : Number(value), priceAddition: 0 }
+        values = { priceMultiplier: value === '' ? null : Number(value), priceAddition: null }
       }
     }
 
