@@ -24,9 +24,9 @@ import {
 } from './DeliveryDatePopup.styles'
 
 const DeliveryDatePopup = props => {
-  const { onClose, onSubmit, manualShipmentPending } = props
+  const { onClose, onSubmit, manualShipmentPending, cart } = props
 
-  const minDate = moment().add(2, 'days')
+  const minDate = moment().add( cart.maxLeadTimeDays || 2, 'days')
 
   return (
     <Formik
@@ -64,7 +64,7 @@ const DeliveryDatePopup = props => {
                       fluid: true,
                       initialDate: minDate,
                       minDate,
-                      clearable: true,
+                      clearable: true
                     }}
                   />
                 </DivContent>
