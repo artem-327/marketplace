@@ -95,6 +95,7 @@ class Table extends Component {
           loading={datagrid.loading || loading}
           columns={this.state.columns}
           rows={this.getRows(rows)}
+          defaultSorting={{ columnName: 'name', sortPath: 'DocumentType.name', direction: 'asc' }}
         />
       </div>
     )
