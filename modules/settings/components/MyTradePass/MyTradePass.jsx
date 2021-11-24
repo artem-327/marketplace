@@ -217,8 +217,8 @@ function mapStateToProps({ settings }) {
         } else if(key === 'insurance_general_liability') {
           data[key] = businessDocuments[key].status
         } else if(key === 'formation_w9') {
-          data[key] = businessDocuments[key].status
           data['document'] = businessDocuments[key]
+          data[key] = businessDocuments[key].status
         }
       })
     }

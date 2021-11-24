@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Grid, Button } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { downloadAttachment } from '~/modules/inventory/actions'
+import { Download } from 'react-feather'
 import { getMimeType } from '../../../../../utils/functions'
 //Styles
 import { DivTitleBottomSegment, DivValue, GridColumnDetail, SegmentBottom } from '../DetailRow.style'
@@ -60,7 +61,34 @@ const ColumnSegment = ({ data, titleId, blueValue, documents, downloadAttachment
 
       {Object.keys(data).length ?
         Object.keys(data).map((key, i) => {
-          if (key !== 'document') {
+          if (key === 'document' && documents) {
+            return (
+              <Grid.Row key={i} data-test='component-column-segment-row'>
+                <GridColumnDetail>
+                  <DivValue
+                    $minHeight='19px'
+                    fontSize='14px'
+                    $color='#00c7f9'
+                    lineHeight='1.42857'
+                    data-test='component-column-segment-value'
+                  >
+                    <Button
+                      style={{
+                        color: '#00c7f9', fontWeight: 'bold',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                      onClick={() => onDownloadAttachment(documents.document_public_id, documents.attachmentId)}>
+                      <FormattedMessage id="myNetworks.detailRow.w9download" defaultMessage="W-9 Download" />
+                      <Download />
+                    </Button>
+                  </DivValue>
+                </GridColumnDetail>
+              </Grid.Row>
+            )
+          } else if (key !== 'document') {
             let docNameTemp = key.split('_')
             docNameTemp.map((t, i) => {
               docNameTemp[i] = t.charAt(0).toUpperCase() + t.slice(1);
@@ -91,16 +119,6 @@ const ColumnSegment = ({ data, titleId, blueValue, documents, downloadAttachment
                 </GridColumnDetail>
               </Grid.Row>
             )
-          } else if (documents) {
-            return (
-              <Grid.Row key={i} data-test='component-column-segment-row'>
-                <GridColumnDetail>
-                  <Button size="small" onClick={() => onDownloadAttachment(documents.document_public_id, documents.attachmentId)}>
-                    <FormattedMessage id="myNetworks.detailRow.w9download" defaultMessage="W-9 Download" />
-                  </Button>
-                </GridColumnDetail>
-              </Grid.Row>
-            )
           }
         })
         :
@@ -115,7 +133,7 @@ const ColumnSegment = ({ data, titleId, blueValue, documents, downloadAttachment
         </Grid.Row>
       }
 
-    </SegmentBottom>
+    </SegmentBottom >
   )
 }
 
