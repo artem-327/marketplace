@@ -28,6 +28,8 @@ const ListingDetail = props => {
         values={values.header}
         onChange={data => onChange({ ...values, header: data })}
         datagrid={datagrid}
+        companyType={props.companyType}
+        defaultMarkup={props.defaultMarkup}
       />
       <Tabs
         row={row}
