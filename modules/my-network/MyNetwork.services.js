@@ -134,13 +134,17 @@ export const getRowDetail = (row, detailRow) => {
   let r = typeof row?.connectionId !== 'undefined' && detailRow?.connectionId === row?.connectionId ? detailRow : row
   let address = r?.connectedCompany?.primaryAddress
   const comma = address?.streetAddress || address?.city ? ', ' : ''
-  const getVerifiedData = (businessDocuments) => {
+  const getVerifiedData = (connectedCompany, status) => {
+    const { businessDocuments } = connectedCompany;
     let data = {}
     if(businessDocuments) {
       Object.keys(businessDocuments).map((key, i) => {
         if(key === 'formation_articles_of_incorporation') {
           data[key] = businessDocuments[key].status
         } else if(key === 'insurance_general_liability') {
+          data[key] = businessDocuments[key].status
+        } else if(key === 'formation_w9' && status === 'CONNECTED') {
+          data['document'] = businessDocuments[key]
           data[key] = businessDocuments[key].status
         }
       })
@@ -202,6 +206,6 @@ export const getRowDetail = (row, detailRow) => {
       twitterHandle: r?.connectedCompany?.socialTwitter,
       tradePassConnection: r?.connectedCompany?.connectionsCount || 0
     },
-    verifiedData: getVerifiedData(r?.connectedCompany?.businessDocuments)
+    verifiedData: getVerifiedData(r?.connectedCompany, r?.status)
   }
 }
