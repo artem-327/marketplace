@@ -17,6 +17,7 @@ import {
     makeGetActionNeeded,
     makeGetSellEligible
 } from '../../selectors'
+import { makeGetIsCompanyAdmin } from '../../../auth/selectors'
 
 const makeMapStateToProps = () => {
     const getOrderStatus = makeGetOrderStatus()
@@ -33,6 +34,7 @@ const makeMapStateToProps = () => {
     const getOpenedPopup = makeGetOpenedPopup()
     const getActionNeeded = makeGetActionNeeded()
     const getSellEligible = makeGetSellEligible()
+    const getIsCompanyAdmin = makeGetIsCompanyAdmin()
 
     const mapStateToProps = (state, ownProps) => {
         return {
@@ -52,7 +54,8 @@ const makeMapStateToProps = () => {
             orderCreditHistoryOpen: getOrderCreditHistoryOpen(state),
             openedPopup: getOpenedPopup(state),
             actionNeeded: getActionNeeded(state),
-            sellEligible: getSellEligible(state)
+            sellEligible: getSellEligible(state),
+            isCompanyAdmin: getIsCompanyAdmin(state)
         }
     }
     return mapStateToProps
