@@ -17,7 +17,12 @@ import {
   DivSimpleColumn
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
-import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
+import {
+  SegmentGroupHeader,
+  GridColumnDetail,
+  DivPricingHeaderRow,
+  DivPricingHeader
+} from '../../../../my-network/components/DetailRow/DetailRow.style'
 // Services
 import { submitHandler } from './Header.services'
 import { getSafe } from '../../../../../utils/functions'
@@ -120,18 +125,22 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
-            <GridColumnDetail width={3} $colorText='#404040'>
-              <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
-            </GridColumnDetail>
-            {companyType === 'BROKER' && (
-              <GridColumnDetail width={13} $colorText='#f16844' textAlign='right'>
-                <FormattedMessage
-                  id='detailRow.pricing.defaultSharedListingsMarkup'
-                  defaultMessage={`Note: When no mark-up is set, default  company mark-up of ${defaultMarkup} % will be applied.`}
-                  values={{ value: defaultMarkup }}
-                />
-              </GridColumnDetail>
-            )}
+            <Grid.Column width={16}>
+              <DivPricingHeaderRow>
+                <DivPricingHeader $colorText='#404040'>
+                  <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
+                </DivPricingHeader>
+                {companyType === 'BROKER' && (
+                  <DivPricingHeader $colorText='#f16844'>
+                    <FormattedMessage
+                      id='detailRow.pricing.defaultSharedListingsMarkup'
+                      defaultMessage={`Note: When no mark-up is set, default  company mark-up of ${defaultMarkup} % will be applied.`}
+                      values={{ value: defaultMarkup }}
+                    />
+                  </DivPricingHeader>
+                )}
+                </DivPricingHeaderRow>
+            </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <GridColumnDetail width={8}>
