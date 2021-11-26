@@ -628,14 +628,13 @@ class CompanyForm extends Component {
               data-test='company_form_enabled_chckb'
             />
           )}
-          <SemenCheckbox
+          <Checkbox
             label={formatMessage({
               id: 'company.purchaseHazmatEligible ',
               defaultMessage: 'Purchase Hazardous Materials'
             })}
             name='purchaseHazmatEligible'
             data-test='company_form_purchaseHazmatEligible_chckb'
-            defaultChecked
             style={{marginLeft: 7}}
           />
         </FormGroup>
