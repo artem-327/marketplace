@@ -39,13 +39,8 @@ const filterAttachments = (a, type) => {
  */
 export const getRows = datagrid => datagrid?.rows?.map(r => {
     const isCancelable =
-        r.orderStatus === 4 /* Draft */ ||
-        r.orderStatus === 1 /* Pending */ ||
-        (r.orderStatus === 2 /* Confirmed */ &&
-            r.reviewStatus === 0 &&
-            r.creditReviewStatus === 0 &&
-            r.paymentStatus === 0 &&
-            (r.shippingStatus === 0 || r.shippingStatus === 1)) /* Not shipped */
+        // Pending, Confirmed, Draft        Empty,Not shipped
+        [1,2,4].includes(r.orderStatus) && [0,1].includes(r.shippingStatus)
     return {
         id: r.id,
         clsName: 'tree-table root-row',
@@ -637,7 +632,7 @@ const getActions = (props, state, setState) => {
             id: 'order.cancelOrder',
             defaultMessage: 'Cancel Order'
         }),
-        hidden: row => !row.isCancelable,
+        disabled: row => !row.isCancelable,
         callback: row => cancelOrder(row.id, props)
     }
     ]
