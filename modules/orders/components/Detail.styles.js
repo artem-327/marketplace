@@ -179,6 +179,19 @@ svg {
 }
 `
 
+export const DeliveryPhoneTitle = styled.div`
+font-size: 14.5px !important;
+color: #20273a !important;
+line-height: 1.9285714;
+text-align: center;
+background-color: #edeef2 !important;
+border: 1px solid #dee2e6 !important;
+color: #848893 !important;
+padding: 8px !important;
+border-radius: 3px;
+margin-top: 20px !important;
+`
+
 export const Chevron = styled(ChevronDown)`
 width: 20px;
 height: 20px;
