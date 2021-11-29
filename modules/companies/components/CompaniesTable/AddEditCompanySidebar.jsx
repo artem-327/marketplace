@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Form, FormGroup, Divider, Accordion, Icon, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
@@ -11,24 +11,26 @@ import { validationSchema } from '../../../company-form/constants'
 import { CompanyForm } from '../../../company-form/'
 import { AddressForm } from '../../../address-form/'
 import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
+import { addAttachment, downloadAttachment, removeAttachment } from '../../../inventory/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '../../../company-form/actions'
 import { PhoneNumber } from '../../../phoneNumber'
 import { Required } from '../../../../components/constants/layout'
 import { withDatagrid } from '../../../datagrid'
 import { FlexSidebar, FlexContent, HighSegment } from './AddEditCompanySidebar.styles'
 import ErrorFocus from '../../../../components/error-focus'
-
 // Services
 import {
   getInitialFormValues,
   formValidationNew,
   handleAccordionChange,
   removeLogo,
+  removeDoc,
   selectLogo,
+  selectDoc,
   submitCompany
 } from './AddEditCompanySidebar.services'
 import { getSafe, deepSearch } from '../../../../utils/functions'
-
+import { getCompany } from '../../../../modules/admin/actions'
 // debug purposes only
 // import JSONPretty from 'react-json-pretty'
 
@@ -52,15 +54,21 @@ const AddEditCompanySidebar = props => {
     mailingAddress: false
   })
   const [companyLogo, setCompanyLogo] = useState(null)
+  const [companyDoc, setCompanyDoc] = useState(null)
   const [shouldUpdateLogo, setShouldUpdateLogo] = useState(false)
+  const [shouldUpdateDoc, setShouldUpdateDoc] = useState(false)
 
   const state = {
     accordionActive,
     setAccordionActive,
     companyLogo,
+    companyDoc,
     setCompanyLogo,
+    setCompanyDoc,
     shouldUpdateLogo,
-    setShouldUpdateLogo
+    shouldUpdateDoc,
+    setShouldUpdateLogo,
+    setShouldUpdateDoc,
   }
 
   const { closePopup, popupValues, intl, naicsCodes, getNaicsCodes } = props
@@ -115,8 +123,11 @@ const AddEditCompanySidebar = props => {
                   <CompanyForm
                     admin={true}
                     selectLogo={(logo, isNew) => selectLogo(logo, isNew, state)}
+                    selectDoc={(doc, isNew) => selectDoc(doc, isNew, state)}
                     removeLogo={() => removeLogo(state)}
+                    removeDoc={() => removeDoc(state)}
                     companyLogo={companyLogo}
+                    companyDoc={companyDoc}
                     values={values}
                     setFieldValue={setFieldValue}
                     setFieldTouched={setFieldTouched}
@@ -125,9 +136,12 @@ const AddEditCompanySidebar = props => {
                     isSubmitting={isSubmitting}
                     companyId={popupValues ? popupValues.id : null}
                     hasLogo={popupValues ? popupValues.hasLogo : false}
+                    w9AttachmentId={popupValues ? popupValues.w9AttachmentId : null}
+                    hasDoc={popupValues ? popupValues.hasDoc : false}
                     enableCheckbox={!!popupValues}
                     naicsCodes={naicsCodes}
                     getNaicsCodes={getNaicsCodes}
+                    getCompany={props.getCompany}
                   />
                   {!popupValues && (
                     <>
@@ -397,9 +411,11 @@ const mapDispatchToProps = {
   getZipCodes,
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
+  addAttachment,
   postCompanyLogo,
   deleteCompanyLogo,
-  getNaicsCodes
+  getNaicsCodes,
+  getCompany
 }
 
 const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {

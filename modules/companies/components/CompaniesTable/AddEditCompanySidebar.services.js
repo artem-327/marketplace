@@ -138,6 +138,11 @@ export const selectLogo = (logo, isNew = true, state) => {
   state.setShouldUpdateLogo(isNew)
 }
 
+export const selectDoc = (doc, isNew = true, state) => {
+  state.setCompanyDoc(doc)
+  state.setShouldUpdateDoc(isNew)
+}
+
 /**
  * Handles removing logo action
  * @category Companies/Companies
@@ -148,6 +153,11 @@ export const selectLogo = (logo, isNew = true, state) => {
 export const removeLogo = state => {
   state.setCompanyLogo(null)
   state.setShouldUpdateLogo(true)
+}
+
+export const removeDoc = state => {
+  state.setCompanyDoc(null)
+  state.setShouldUpdateDoc(true)
 }
 
 /**
@@ -166,10 +176,13 @@ export const submitCompany = async (values, actions, state, props) => {
     popupValues,
     updateCompany,
     createCompany,
+    addAttachment,
     postCompanyLogo,
     deleteCompanyLogo,
     datagrid
   } = props
+
+  const { companyLogo, companyDoc, shouldUpdateLogo, shouldUpdateDoc } = state
 
   try {
     if (popupValues) {
@@ -206,11 +219,14 @@ export const submitCompany = async (values, actions, state, props) => {
       removeEmpty(newValues)
 
       const {value} = await updateCompany(popupValues.id, newValues)
-      if (state.shouldUpdateLogo) {
-        if (state.companyLogo) await postCompanyLogo(value.id, state.companyLogo)
+      if (shouldUpdateLogo) {
+        if (companyLogo) await postCompanyLogo(value.id, companyLogo)
         else await deleteCompanyLogo(popupValues.id)
       }
-      datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!state.companyLogo }))
+      if (shouldUpdateDoc) {
+        if (companyDoc) await await addAttachment(companyDoc, 20, { isTemporary: false, ownerCompanyId: popupValues.id })
+      }
+      datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       actions.setSubmitting(false)
       closePopup()
     } else {
@@ -244,16 +260,17 @@ export const submitCompany = async (values, actions, state, props) => {
       delete payload.enabled
       if (!payload.businessType) delete payload.businessType
       removeEmpty(payload)
-      if (state.companyLogo) {
+      if (companyLogo || companyDoc) {
         let reader = new FileReader()
         reader.onload = async function () {
           const {value} = await createCompany(payload)
-          await postCompanyLogo(value.id, state.companyLogo)
+          companyLogo && await postCompanyLogo(value.id, companyLogo)
+          companyDoc && await addAttachment(companyDoc, 20, { isTemporary: false, ownerCompanyId: value.id })
           datagrid.loadData()
           actions.setSubmitting(false)
           closePopup()
         }
-        reader.readAsBinaryString(state.companyLogo)
+        companyLogo && reader.readAsBinaryString(companyLogo)
       } else {
         await createCompany(payload)
         datagrid.loadData()

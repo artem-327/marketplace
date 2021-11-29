@@ -1,4 +1,3 @@
-import { connect } from 'react-redux'
 import { Component } from 'react'
 import {
   FormGroup, FormField, Popup, Image, Dropdown, Grid,
@@ -10,7 +9,6 @@ import UploadAttachment from '~/modules/inventory/components/upload/UploadAttach
 import { withToastManager } from 'react-toast-notifications'
 
 import { generateToastMarkup } from '~/utils/functions'
-import { addAttachment } from '~/modules/admin/actions'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { getSafe, getMimeType } from '../../../utils/functions'
@@ -146,6 +144,7 @@ class CompanyForm extends Component {
   }
   async componentDidMount() {
     this.loadCompanyLogo()
+    this.loadCompanyDoc()
     try {
       if (!getSafe(() => this.props.data.length, false)) this.props.getBusinessTypes()
       if (!getSafe(() => this.props.associations.length, false))
@@ -172,6 +171,19 @@ class CompanyForm extends Component {
     }
   }
 
+  loadCompanyDoc = async () => {
+    if (this.props.companyId) {
+      const company = await this.props.getCompany(this.props.companyId);
+      console.log(company);
+    }
+    if (this.props.w9AttachmentId && this.props.selectDoc && this.props.getCompanyDocument) {
+      
+      const companyDoc = await this.props.getCompanyDocument(this.props.w9AttachmentId);
+
+      if (companyDoc.value.data.size) this.props.selectDoc(companyDoc.value.data, false)
+    }
+  }
+
   getCompanyLogo = () => {
     if (this.props.companyLogo) {
       const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
@@ -184,12 +196,9 @@ class CompanyForm extends Component {
   }
 
   getCompanyDocument = () => {
-    const { w9document } = this.state
-    if (w9document) {
-      // const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
-      // let fileURL = URL.createObjectURL(file)
-
-      return <span> {w9document.name} </span>
+    if (this.props.companyDoc) {
+      const file = new Blob([this.props.companyDoc], { type: this.props.companyDoc.type })
+      return <span> {this.props.companyDoc.name} </span>
     }
 
     return null
@@ -217,7 +226,7 @@ class CompanyForm extends Component {
 
   selectDocument = file => {
     if (getMimeType(file.name)) {
-      this.setState({ w9document: file });
+      this.props.selectDoc(file)
     } else {
       this.props.toastManager.add(
         generateToastMarkup(
@@ -240,7 +249,7 @@ class CompanyForm extends Component {
   }
 
   removeDocument = () => {
-    this.setState({ w9document: null })
+    this.props.removeDoc()
   }
 
   renderCompanyFields = () => {
@@ -790,7 +799,7 @@ class CompanyForm extends Component {
   renderW9document = () => {
     let { selectDocument, removeDocument } = this
 
-    const hasDoc = !!this.state.w9document
+    const hasDoc = !!this.props.companyDoc
     const isAdmin = !!this.props.admin
 
     return (
@@ -818,10 +827,9 @@ class CompanyForm extends Component {
             <GridRow>
               <GridColumn>
                 <UploadAttachment
-                  // addAttachment={this.props.addAttachment}
                   acceptFiles='.PDF'
                   {...this.props}
-                  attachments={this.state.w9document ? [this.state.w9document] : []}
+                  attachments={this.props.companyDoc ? [this.props.companyDoc] : []}
                   name={`companyW9Document`}
                   filesLimit={1}
                   fileMaxSize={20}
@@ -902,4 +910,4 @@ class CompanyForm extends Component {
   }
 }
 
-export default withToastManager(connect(null, { addAttachment })(injectIntl(CompanyForm)))
+export default withToastManager(injectIntl(CompanyForm))
