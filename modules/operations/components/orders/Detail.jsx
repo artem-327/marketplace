@@ -29,7 +29,8 @@ import {
   GridDataColumnTrackingID,
   StyledModal,
   TopRow,
-  StyledHeader
+  StyledHeader,
+  ButtonCancel
 } from '../../styles'
 // Services
 import { getSafe } from '../../../../utils/functions'
@@ -39,7 +40,8 @@ import {
   handleClick,
   getRows,
   openRelatedPopup,
-  getRelatedDocumentsContent
+  getRelatedDocumentsContent,
+  confirmCancelOrder
 } from './Detail.services'
 
 
@@ -76,7 +78,8 @@ const Detail = props => {
     resolveDisputeReject,
     resolveDisputeCredit,
     resolveDisputeAccept,
-    downloadDisputeAttachment
+    downloadDisputeAttachment,
+    isCancelable
   } = props
 
   const { activeIndexes, documentsPopupProduct } = state
@@ -161,6 +164,15 @@ const Detail = props => {
                     <DownloadCloud />
                     <FormattedMessage id='global.download' defaultMessage='Download' />
                   </a>
+                  {isCancelable && (
+                    <ButtonCancel
+                      basic
+                      onClick={() => confirmCancelOrder(props)}
+                      data-test='orders_detail_cancel_order_button'
+                    >
+                      <FormattedMessage id='order.detail.cancelOrder' defaultMessage='Cancel Order' />
+                    </ButtonCancel>
+                  )}
                 </div>
               </Grid.Column>
               <Grid.Column width={12}>
@@ -834,6 +846,7 @@ Detail.propTypes = {
   isDetailFetching: PropTypes.bool,
   isOpenPopup: PropTypes.bool,
   loading: PropTypes.bool,
+  isCancelable: PropTypes.bool,
   closePopup: PropTypes.func,
   openPopup: PropTypes.func,
   resolveDisputeReject: PropTypes.func,
@@ -852,6 +865,7 @@ Detail.defaultValues = {
   isDetailFetching: false,
   isOpenPopup: false,
   loading: false,
+  isCancelable: false,
   closePopup: () => {},
   openPopup: () => {},
   resolveDisputeReject: () => {},
