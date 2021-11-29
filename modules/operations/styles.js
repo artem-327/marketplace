@@ -12,7 +12,8 @@ import {
     Dropdown,
     Form,
     Accordion,
-    Table
+    Table,
+    Button
 } from 'semantic-ui-react'
 import { ChevronDown } from 'react-feather'
 
@@ -769,5 +770,14 @@ export const RowDropdownIcon = styled.div`
   .settings_bankaccounts & {
     margin-left: -6px;
     margin-right: 0;
+  }
+`
+
+export const ButtonCancel = styled(Button)`
+  &.ui.button {
+    max-height: 32px;
+    height: 32px;
+    margin-left: 10px;
+    padding: 5px 25px !important;
   }
 `

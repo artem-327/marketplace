@@ -17,13 +17,18 @@ const makeMapStateToProps = () => {
   const getLoading = makeGetLoading()
 
   const mapStateToProps = (state, ownProps) => {
+    const isCancelable =
+      !!state?.operations?.orderDetailData &&
+      [1,2,4].includes(state.operations.orderDetailData.orderStatus) && // Pending, Confirmed, Draft
+      [0,1].includes(state.operations.orderDetailData.shippingStatus)   // Empty,Not shipped
     return {
       order: prepareDetail(state?.operations?.orderDetailData),
       echoSupportPhone: getEchoSupportPhone(state),
       isPaymentCancellable: getIsPaymentCancellable(state),
       action: actionRequired(state?.operations?.orderDetailData),
       isOpenPopup: getIsOpenPopup(state),
-      loading: getLoading(state)
+      loading: getLoading(state),
+      isCancelable
     }
   }
   return mapStateToProps

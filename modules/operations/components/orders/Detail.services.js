@@ -3,6 +3,7 @@ import { Button, Icon } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 // Components
 import ProdexGrid from '../../../../components/table'
+import confirm from '../../../../components/Confirmable/confirm'
 // Services
 import { getLocaleDateFormat } from '../../../../components/date-format'
 import { getSafe, getFormattedAddress, getMimeType } from '../../../../utils/functions'
@@ -446,4 +447,44 @@ export const getRelatedDocumentsContent = (props, state) => {
       rows={rowsDocuments}
     />
   )
+}
+
+/**
+ * Cancel Order confirmation + endpoint call
+ * @category Operations
+ * @services
+ */
+export const confirmCancelOrder = async props => {
+  const { intl: { formatMessage }, order } = props
+  confirm(
+    formatMessage({
+      id: 'order.detail.cancelOrder',
+      defaultMessage: 'Cancel Order'
+    }),
+    formatMessage({
+      id: 'order.detail.cancelOrderDescription',
+      defaultMessage: 'Cancelling an order is irreversible. Please ensure that this decision is final.'
+    }),
+    {
+      cancelText: formatMessage({
+        id: 'order.detail.confirmBack',
+        defaultMessage: 'Back'
+      }),
+      proceedText: formatMessage({
+        id: 'order.detail.confirmConfirm',
+        defaultMessage: 'Confirm'
+      })
+    }
+  ).then(
+      async () => {
+        // Confirm
+        try {
+          const { value } = await props.cancelOrder(order.id)
+          await props.openOrderDetail(value.data)
+        } catch (err) {
+          console.error(err)
+        }
+      },
+      () => {}
+    )
 }
