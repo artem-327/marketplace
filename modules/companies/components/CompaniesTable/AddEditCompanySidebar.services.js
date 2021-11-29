@@ -14,6 +14,7 @@ import {
   websiteValidationNotRequired,
   businessValidationSchema,
 } from '../../../../constants/yupValidation'
+import api from '../../../../api'
 
 /**
  * Gets popup or initial values for form.
@@ -171,6 +172,25 @@ export const removeDoc = state => {
  * @return {none}
  */
 export const submitCompany = async (values, actions, state, props) => {
+  const response = await api.request({
+    url: '/prodex/api/document-types/datagrid',
+    method: 'POST',
+    data: {
+      "filters": [
+        {
+          "operator": "LIKE",
+          "path": "DocumentType.name",
+          "values": [
+            "Form W-9"
+          ]
+        }
+      ],
+      "pageNumber": 0,
+      "pageSize": 1,
+      "sortDirection": "ASC",
+    }
+  });
+  const type = response.data.length !== 0 ? response.data[0].id : 20
   const {
     closePopup,
     popupValues,
@@ -218,13 +238,13 @@ export const submitCompany = async (values, actions, state, props) => {
       if (values.type) newValues['type'] = values.type
       removeEmpty(newValues)
 
-      const {value} = await updateCompany(popupValues.id, newValues)
+      const { value } = await updateCompany(popupValues.id, newValues)
       if (shouldUpdateLogo) {
         if (companyLogo) await postCompanyLogo(value.id, companyLogo)
         else await deleteCompanyLogo(popupValues.id)
       }
       if (shouldUpdateDoc) {
-        if (companyDoc) await addW9Attachment(companyDoc, 203, { isTemporary: false, ownerCompanyId: popupValues.id })
+        if (companyDoc) await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id })
       }
       datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       actions.setSubmitting(false)
@@ -263,9 +283,9 @@ export const submitCompany = async (values, actions, state, props) => {
       if (companyLogo || companyDoc) {
         // let reader = new FileReader()
         // reader.onload = async function () {
-        const {value} = await createCompany(payload)
+        const { value } = await createCompany(payload)
         companyLogo && await postCompanyLogo(value.id, companyLogo)
-        companyDoc && await addW9Attachment(companyDoc, 203, { isTemporary: false, ownerCompanyId: value.id })
+        companyDoc && await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: value.id })
         datagrid.loadData()
         actions.setSubmitting(false)
         closePopup()
