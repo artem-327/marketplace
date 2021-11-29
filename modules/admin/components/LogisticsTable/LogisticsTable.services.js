@@ -1,6 +1,8 @@
 import { FormattedMessage } from 'react-intl'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
+import { FormattedPhone } from '../../../../components/formatted-messages/'
+import { getSafe } from '../../../../utils/functions'
 // Services
 import confirm from '../../../../components/Confirmable/confirm'
 
@@ -18,7 +20,8 @@ export const makeRows = datagrid => datagrid.rows.map(row => {
             <FormattedMessage id='global.yes' defaultMessage='Yes' />
         ) : (
             <FormattedMessage id='global.no' defaultMessage='No' />
-        )
+        ),
+        phone: <FormattedPhone value={getSafe(() => row.phone, '')} />
     }
 })
 
@@ -56,6 +59,13 @@ export const columns = [
     name: 'email',
     title: (
       <FormattedMessage id='global.email' defaultMessage='Email' />
+    ),
+    width: 200
+  },
+  {
+    name: 'phone',
+    title: (
+      <FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' />
     ),
     width: 200
   }

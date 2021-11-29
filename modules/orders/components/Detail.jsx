@@ -1031,7 +1031,7 @@ const Detail = props => {
                         <GridDataColumn width={keyColumn} className='key'>
                           <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                         </GridDataColumn>
-                        <GridDataColumn width={valColumn}>{order.shipToPhone}</GridDataColumn>
+                        <GridDataColumn width={valColumn}><FormattedPhone value={order.shipToPhone} /></GridDataColumn>
                         <GridDataColumn width={keyColumn} className='key'>
                           <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                         </GridDataColumn>
@@ -1116,7 +1116,13 @@ const Detail = props => {
                 </Grid>
                 {order?.shippingLogisticsProviderPhone && (
                   <DeliveryPhoneTitle>
-                    If you require additional support for this order please contact our logistics partner directly at {order.shippingLogisticsProviderPhone}
+                    <FormattedMessage
+                      id='order.detail.additionalSupportDescription'
+                      defaultMessage={`If you require additional support for this order please contact our logistics partner directly at ${order.shippingLogisticsProviderPhone}`}
+                      values={{
+                        shippingLogisticsProviderPhone: <FormattedPhone value={order.shippingLogisticsProviderPhone} />
+                      }}
+                    />
                   </DeliveryPhoneTitle>)}
               </AccordionContent>
 
