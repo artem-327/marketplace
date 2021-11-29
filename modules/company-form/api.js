@@ -7,7 +7,7 @@ export const getIndustryTypes = () => api.get('/prodex/api/companies/industry-ty
 export const getCompanyLogo = companyId =>
   api.get(`/prodex/api/companies/id/${companyId}/logo`, { responseType: 'blob' })
 export const getCompanyDocument = attachmentId =>
-  api.get(`/prodex/api/attachments/id/${attachmentId}/thumbnail`, { responseType: 'blob' })
+  api.get(`/prodex/api/attachments/${attachmentId}`)
 export const postCompanyLogo = (companyId, companyLogo) => {
   const formData = new FormData()
   formData.append('logo', companyLogo)

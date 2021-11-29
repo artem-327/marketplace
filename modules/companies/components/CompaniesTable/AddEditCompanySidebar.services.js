@@ -176,7 +176,7 @@ export const submitCompany = async (values, actions, state, props) => {
     popupValues,
     updateCompany,
     createCompany,
-    addAttachment,
+    addW9Attachment,
     postCompanyLogo,
     deleteCompanyLogo,
     datagrid
@@ -224,7 +224,7 @@ export const submitCompany = async (values, actions, state, props) => {
         else await deleteCompanyLogo(popupValues.id)
       }
       if (shouldUpdateDoc) {
-        if (companyDoc) await await addAttachment(companyDoc, 20, { isTemporary: false, ownerCompanyId: popupValues.id })
+        if (companyDoc) await addW9Attachment(companyDoc, 203, { isTemporary: false, ownerCompanyId: popupValues.id })
       }
       datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       actions.setSubmitting(false)
@@ -261,16 +261,16 @@ export const submitCompany = async (values, actions, state, props) => {
       if (!payload.businessType) delete payload.businessType
       removeEmpty(payload)
       if (companyLogo || companyDoc) {
-        let reader = new FileReader()
-        reader.onload = async function () {
-          const {value} = await createCompany(payload)
-          companyLogo && await postCompanyLogo(value.id, companyLogo)
-          companyDoc && await addAttachment(companyDoc, 20, { isTemporary: false, ownerCompanyId: value.id })
-          datagrid.loadData()
-          actions.setSubmitting(false)
-          closePopup()
-        }
-        companyLogo && reader.readAsBinaryString(companyLogo)
+        // let reader = new FileReader()
+        // reader.onload = async function () {
+        const {value} = await createCompany(payload)
+        companyLogo && await postCompanyLogo(value.id, companyLogo)
+        companyDoc && await addW9Attachment(companyDoc, 203, { isTemporary: false, ownerCompanyId: value.id })
+        datagrid.loadData()
+        actions.setSubmitting(false)
+        closePopup()
+        // }
+        // companyLogo && reader.readAsBinaryString(companyLogo)
       } else {
         await createCompany(payload)
         datagrid.loadData()

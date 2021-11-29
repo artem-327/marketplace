@@ -140,7 +140,6 @@ class CompanyForm extends Component {
       id: ''
     },
     naicsCode: null,
-    w9document: null,
   }
   async componentDidMount() {
     this.loadCompanyLogo()
@@ -172,12 +171,7 @@ class CompanyForm extends Component {
   }
 
   loadCompanyDoc = async () => {
-    // if (this.props.companyId) {
-    //   const company = await this.props.getCompany(this.props.companyId);
-    //   console.log(company.value.w9AttachmentId);
-    // }
     if (this.props.w9AttachmentId && this.props.selectDoc && this.props.getCompanyDocument) {
-
       const companyDoc = await this.props.getCompanyDocument(this.props.w9AttachmentId);
 
       if (companyDoc.value.data.size) this.props.selectDoc(companyDoc.value.data, false)

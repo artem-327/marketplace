@@ -11,7 +11,7 @@ import { validationSchema } from '../../../company-form/constants'
 import { CompanyForm } from '../../../company-form/'
 import { AddressForm } from '../../../address-form/'
 import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
-import { addAttachment, downloadAttachment, removeAttachment } from '../../../inventory/actions'
+import { addAttachment, downloadAttachment, removeAttachment, addW9Attachment } from '../../../inventory/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '../../../company-form/actions'
 import { PhoneNumber } from '../../../phoneNumber'
 import { Required } from '../../../../components/constants/layout'
@@ -30,7 +30,6 @@ import {
   submitCompany
 } from './AddEditCompanySidebar.services'
 import { getSafe, deepSearch } from '../../../../utils/functions'
-import { getCompany } from '../../../../modules/admin/actions'
 // debug purposes only
 // import JSONPretty from 'react-json-pretty'
 
@@ -141,7 +140,6 @@ const AddEditCompanySidebar = props => {
                     enableCheckbox={!!popupValues}
                     naicsCodes={naicsCodes}
                     getNaicsCodes={getNaicsCodes}
-                    getCompany={props.getCompany}
                   />
                   {!popupValues && (
                     <>
@@ -412,10 +410,10 @@ const mapDispatchToProps = {
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   addAttachment,
+  addW9Attachment,
   postCompanyLogo,
   deleteCompanyLogo,
   getNaicsCodes,
-  getCompany
 }
 
 const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {
