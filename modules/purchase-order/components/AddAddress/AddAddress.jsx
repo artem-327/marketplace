@@ -234,8 +234,8 @@ AddAddress.defaultProps = {
   setIsOpenAddAddress: () => {}
 }
 
-function mapStateToProps(store) {
-  return {}
-}
+// function mapStateToProps(store) {
+//   return {}
+// }
 
-export default injectIntl(connect(mapStateToProps, {})(AddAddress))
+export default injectIntl(AddAddress)
