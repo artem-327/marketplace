@@ -416,14 +416,17 @@ const mapDispatchToProps = {
   getNaicsCodes,
 }
 
-const mapStateToProps = ({ companiesAdmin, zip, vellociRegister }) => {
+const mapStateToProps = (state) => {
+  const { companiesAdmin, zip, vellociRegister, globalData } = state;
+  const { documentTypes } = globalData;
   const popupValues = companiesAdmin.popupValues
   return {
     ...companiesAdmin,
     popupValues,
     zip,
     naicsCodes: vellociRegister?.naicsCodes,
-    naicsCode: companiesAdmin?.naicsCategory?.naicsId
+    naicsCode: companiesAdmin?.naicsCategory?.naicsId,
+    documentTypes,
   }
 }
 

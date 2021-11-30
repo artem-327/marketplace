@@ -14,7 +14,6 @@ import {
   websiteValidationNotRequired,
   businessValidationSchema,
 } from '../../../../constants/yupValidation'
-import api from '../../../../api'
 
 /**
  * Gets popup or initial values for form.
@@ -172,25 +171,10 @@ export const removeDoc = state => {
  * @return {none}
  */
 export const submitCompany = async (values, actions, state, props) => {
-  const response = await api.request({
-    url: '/prodex/api/document-types/datagrid',
-    method: 'POST',
-    data: {
-      "filters": [
-        {
-          "operator": "LIKE",
-          "path": "DocumentType.name",
-          "values": [
-            "Form W-9"
-          ]
-        }
-      ],
-      "pageNumber": 0,
-      "pageSize": 1,
-      "sortDirection": "ASC",
-    }
-  });
-  const type = response.data.length !== 0 ? response.data[0].id : 20
+  const { documentTypes } = props;
+  let type = documentTypes.filter((documentType) => { return documentType.name === 'Form W-9' });
+  (type.length !== 0) ? type = type[0]?.id : 20;
+
   const {
     closePopup,
     popupValues,
