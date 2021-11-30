@@ -229,10 +229,8 @@ export const submitCompany = async (values, actions, state, props) => {
         else await deleteCompanyLogo(popupValues.id)
       }
       if (shouldUpdateDoc) {
-        if (companyDoc) {
-          popupValues.w9AttachmentId && await removeAttachment(popupValues.w9AttachmentId);
-          await addAttachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id, force: true });
-        } 
+        popupValues.w9AttachmentId && await removeAttachment(popupValues.w9AttachmentId);
+        if (companyDoc) await addAttachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id, force: true });
       }
       datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       actions.setSubmitting(false)
