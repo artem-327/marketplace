@@ -180,7 +180,8 @@ export const submitCompany = async (values, actions, state, props) => {
     popupValues,
     updateCompany,
     createCompany,
-    addW9Attachment,
+    addAttachment,
+    removeAttachment,
     postCompanyLogo,
     deleteCompanyLogo,
     datagrid
@@ -228,7 +229,10 @@ export const submitCompany = async (values, actions, state, props) => {
         else await deleteCompanyLogo(popupValues.id)
       }
       if (shouldUpdateDoc) {
-        if (companyDoc) await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id })
+        if (companyDoc) {
+          popupValues.w9AttachmentId && await removeAttachment(popupValues.w9AttachmentId);
+          await addAttachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id, force: true });
+        } 
       }
       datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       actions.setSubmitting(false)
@@ -269,7 +273,7 @@ export const submitCompany = async (values, actions, state, props) => {
         // reader.onload = async function () {
         const { value } = await createCompany(payload)
         companyLogo && await postCompanyLogo(value.id, companyLogo)
-        companyDoc && await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: value.id })
+        companyDoc && await addAttachment(companyDoc, type, { isTemporary: false, ownerCompanyId: value.id, force: true })
         datagrid.loadData()
         actions.setSubmitting(false)
         closePopup()

@@ -11,7 +11,7 @@ import { validationSchema } from '../../../company-form/constants'
 import { CompanyForm } from '../../../company-form/'
 import { AddressForm } from '../../../address-form/'
 import { addZip, getZipCodes } from '../../../zip-dropdown/actions'
-import { addAttachment, downloadAttachment, removeAttachment, addW9Attachment } from '../../../inventory/actions'
+import { removeAttachment, addAttachment } from '../../../inventory/actions'
 import { postCompanyLogo, deleteCompanyLogo } from '../../../company-form/actions'
 import { PhoneNumber } from '../../../phoneNumber'
 import { Required } from '../../../../components/constants/layout'
@@ -410,7 +410,7 @@ const mapDispatchToProps = {
   getAddressSearchPrimaryBranch,
   getAddressSearchMailingBranch,
   addAttachment,
-  addW9Attachment,
+  removeAttachment,
   postCompanyLogo,
   deleteCompanyLogo,
   getNaicsCodes,
