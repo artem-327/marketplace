@@ -30,6 +30,7 @@ import {
   downloadPdf,
   searchCompanyGenericProduct
 } from './actions'
+import { unlinkAttachmentToOrder } from "../orders/actions"
 
 
 const initialState = {
@@ -163,15 +164,33 @@ export default typeToReducer(
         loading: false
       }
     },
+    [unlinkAttachmentToOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: true
+      }
+    },
+    [unlinkAttachmentToOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    },
+    [unlinkAttachmentToOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    },
     [searchCompany.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedCompaniesLoading: true
       }
     },
     [searchCompany.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedCompaniesLoading: false
       }
     },
@@ -203,19 +222,19 @@ export default typeToReducer(
     },
     [cancelOrder.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: true
       }
     },
     [cancelOrder.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: false
       }
     },
     [cancelOrder.fulfilled]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: false
       }
     },
@@ -306,13 +325,13 @@ export default typeToReducer(
     },
     [searchManualQuoteRequest.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedManQuotRequestsLoading: true
       }
     },
     [searchManualQuoteRequest.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedManQuotRequestsLoading: false
       }
     },
