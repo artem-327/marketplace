@@ -13,7 +13,8 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (store, { datagrid }) => {
     return {
       ...store.marketplace,
-      rows: datagrid?.rows
+      rows: datagrid?.rows,
+      isBroker: store.auth?.identity?.company?.type === 'BROKER'
     }
   }
   return mapStateToProps

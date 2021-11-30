@@ -37,6 +37,7 @@ export const getInitialFormValues = props => {
     message: '',
     pkgAmount: '',
     pricePerUOM: '',
+    sellerId: popupValues.sellerId,
     productOffer: popupValues.id
   }
 }
@@ -52,6 +53,7 @@ export const submitOffer = async ({ values, setSubmitting }, props) => {
     pkgAmount: parseInt(values.pkgAmount),
     productOffer: values.productOffer,
     pricePerUOM: parseFloat(values.pricePerUOM),
+    sellerId: values.sellerId,
     message: values.message
   }
   removeEmpty(body)

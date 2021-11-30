@@ -539,7 +539,7 @@ const getActions = (row, props, state, setState) => {
   /* DT-293 temporary disabled rowActions.push(buttonRequestHold) */
   rowActions.push(buttonInfo)
   rowActions.push(buttonBuy)
-  !row?.brokeredOffer && row?.acceptBids && rowActions.push(buttonMakeAnOffer)
+  row?.acceptBids && rowActions.push(buttonMakeAnOffer)
 
   return rowActions
 }

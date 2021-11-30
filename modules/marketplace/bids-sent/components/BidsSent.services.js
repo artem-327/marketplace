@@ -156,11 +156,14 @@ const getActions = (row, state, props) => {
     deleteOffer,
     acceptOffer,
     rejectOffer,
-    datagrid
+    datagrid,
+    isBroker
   } = props
   const { expandedRowIds } = state
   const rowActions = []
   const { cfHistoryLastStatus, cfHistoryLastType } = row
+
+  if (row.brokered && isBroker) return []
 
   const buttonPurchase = {
     text: formatMessage({

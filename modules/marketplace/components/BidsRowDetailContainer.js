@@ -28,7 +28,8 @@ const makeMapStateToProps = () => {
             listFobPriceUnit: priceUnit ? `/${priceUnit}` : '',
             packagingType: getSafe(() => companyProduct.packagingType.name, ''),
             packagingUnit: getSafe(() => companyProduct.packagingUnit.nameAbbreviation, ''),
-            packagingSize: getSafe(() => companyProduct.packagingSize, 1)
+            packagingSize: getSafe(() => companyProduct.packagingSize, 1),
+            isBroker: getSafe(() => store.auth?.identity?.company?.type, '') === 'BROKER'
         }
     }
     return mapStateToProps
