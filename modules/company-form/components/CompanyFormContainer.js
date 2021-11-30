@@ -7,9 +7,13 @@ function mapStateToProps(state, props) {
   return {
     ...state.businessTypes,
     companyId: props.companyId,
+    w9AttachmentId: props.w9AttachmentId,
     selectLogo: props.selectLogo,
+    selectDoc: props.selectDoc,
     companyLogo: props.companyLogo,
+    companyDoc: props.companyDoc,
     hasLogo: props.hasLogo,
+    hasDoc: props.hasDoc,
     associations: getSafe(() => state.businessTypes.associations, [])
   }
 }

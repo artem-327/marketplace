@@ -10,6 +10,7 @@ import ProdexTable from '../../../../components/table'
 // Actions
 import * as Actions from '../../actions'
 import { reviewRequest } from '../../../admin/actions'
+import { removeAttachment } from '../../../inventory/actions'
 
 // Constants
 import { COLUMNS } from './Table.constants'
@@ -71,4 +72,4 @@ const makeMapStateToProps = () => {
   return mapStateToProps
 }
 
-export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest, removeAttachment })(injectIntl(CompaniesTable)))

@@ -6,6 +6,8 @@ export const getIndustryTypes = () => api.get('/prodex/api/companies/industry-ty
 
 export const getCompanyLogo = companyId =>
   api.get(`/prodex/api/companies/id/${companyId}/logo`, { responseType: 'blob' })
+export const getCompanyDocument = attachmentId =>
+  api.get(`/prodex/api/attachments/${attachmentId}`)
 export const postCompanyLogo = (companyId, companyLogo) => {
   const formData = new FormData()
   formData.append('logo', companyLogo)
@@ -24,4 +26,4 @@ export const getAssociations = dataGrid =>
   api.post(`/prodex/api/associations/datagrid/`, dataGrid).then(response => response.data)
 
 export const getDocsDatagridFilter = filter =>
-    api.post('/prodex/api/attachments/datagrid', filter).then(response => response.data)
+  api.post('/prodex/api/attachments/datagrid', filter).then(response => response.data)
