@@ -167,7 +167,6 @@ export const removeAttachmentLink = createAsyncAction('INVENTORY_REMOVE_ATTACHME
 export const removeAttachment = createAsyncAction('INVENTORY_REMOVE_ATTACHMENT', async (aId) => {
   const data = await api.removeAttachment(aId)
   Datagrid.removeRow(aId)
-  Datagrid && Datagrid.loadData()
   return data
 })
 export const searchManufacturers = createAsyncAction('INVENTORY_SEARCH_MANUFACTURERS', async (text, limit = false) => {
