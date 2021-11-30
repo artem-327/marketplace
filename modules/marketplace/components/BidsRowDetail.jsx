@@ -66,8 +66,11 @@ const BidsRowDetail = props => {
     seller,
     openPopup,
     regulatoryDeaListAuthorized,
-    regulatoryDhsCoiAuthorized
+    regulatoryDhsCoiAuthorized,
+    isBroker
   } = props
+
+  const { brokered } = popupValues
 
   // Similar to call componentDidMount:
   useEffect(() => {
@@ -194,7 +197,7 @@ const BidsRowDetail = props => {
                                     <IconWrapper>{UserIcon}</IconWrapper>
                                     <StyledName style={{ marginLeft: '10px', paddingTop: '2px' }}>
                                       <div className='name'>{r.createdBy.name}</div>
-                                      <div className='company'>{r.createdBy.company.cfDisplayName}</div>
+                                      <div className='company'>{r.createdBy.company?.cfDisplayName}</div>
                                     </StyledName>
                                   </NameWrapper>
                                 </GridColumn>
@@ -254,38 +257,41 @@ const BidsRowDetail = props => {
                                       ])}
                                     </GridColumn>
                                   </GridRow>
-                                  <GridRow>
-                                    <GridColumn>
-                                      <StyledRectangle className='dark-grey'>
-                                        <div className='header'>
-                                          {seller ? (
-                                            index & 1 ? (
+
+                                  {!brokered && (
+                                    <GridRow>
+                                      <GridColumn>
+                                        <StyledRectangle className='dark-grey'>
+                                          <div className='header'>
+                                            {seller ? (
+                                              index & 1 ? (
+                                                <FormattedMessage
+                                                  id='marketplace.messageToBuyer'
+                                                  defaultMessage='Message'
+                                                />
+                                              ) : (
+                                                <FormattedMessage
+                                                  id='marketplace.messageFromBuyer'
+                                                  defaultMessage='Message'
+                                                />
+                                              )
+                                            ) : index & 1 ? (
                                               <FormattedMessage
-                                                id='marketplace.messageToBuyer'
+                                                id='marketplace.messageFromSeller'
                                                 defaultMessage='Message'
                                               />
                                             ) : (
                                               <FormattedMessage
-                                                id='marketplace.messageFromBuyer'
+                                                id='marketplace.messageToSeller'
                                                 defaultMessage='Message'
                                               />
-                                            )
-                                          ) : index & 1 ? (
-                                            <FormattedMessage
-                                              id='marketplace.messageFromSeller'
-                                              defaultMessage='Message'
-                                            />
-                                          ) : (
-                                            <FormattedMessage
-                                              id='marketplace.messageToSeller'
-                                              defaultMessage='Message'
-                                            />
-                                          )}
-                                        </div>
-                                        <div className='message'>{r.message}</div>
-                                      </StyledRectangle>
-                                    </GridColumn>
-                                  </GridRow>
+                                            )}
+                                          </div>
+                                          <div className='message'>{r.message}</div>
+                                        </StyledRectangle>
+                                      </GridColumn>
+                                    </GridRow>
+                                  )}
                                 </>
                               )}
                             </HistoryDetailGrid>
@@ -378,40 +384,42 @@ const BidsRowDetail = props => {
                           </GridColumn>
                         </GridRow>
 
-                        <GridRow style={{ padding: `7.5px 10px ${showBidSummary ? '20px' : '7.5px'} 10px` }}>
-                          <GridColumn>
-                            <StyledRectangle className='dark-grey'>
-                              <div className='header'>
-                                {seller ? (
-                                  showAcceptRejectCounterSection ? (
+                        {!popupValues.brokered && (
+                          <GridRow style={{ padding: `7.5px 10px ${showBidSummary ? '20px' : '7.5px'} 10px` }}>
+                            <GridColumn>
+                              <StyledRectangle className='dark-grey'>
+                                <div className='header'>
+                                  {seller ? (
+                                    showAcceptRejectCounterSection ? (
+                                      <FormattedMessage
+                                        id='marketplace.messageFromBuyer'
+                                        defaultMessage='Message from Buyer'
+                                      />
+                                    ) : (
+                                      <FormattedMessage
+                                        id='marketplace.messageToBuyer'
+                                        defaultMessage='Message to Buyer'
+                                      />
+                                    )
+                                  ) : showAcceptRejectCounterSection ? (
                                     <FormattedMessage
-                                      id='marketplace.messageFromBuyer'
-                                      defaultMessage='Message from Buyer'
+                                      id='marketplace.messageFromSeller'
+                                      defaultMessage='Message from Seller'
                                     />
                                   ) : (
                                     <FormattedMessage
-                                      id='marketplace.messageToBuyer'
-                                      defaultMessage='Message to Buyer'
+                                      id='marketplace.messageToSeller'
+                                      defaultMessage='Message to Seller'
                                     />
-                                  )
-                                ) : showAcceptRejectCounterSection ? (
-                                  <FormattedMessage
-                                    id='marketplace.messageFromSeller'
-                                    defaultMessage='Message from Seller'
-                                  />
-                                ) : (
-                                  <FormattedMessage
-                                    id='marketplace.messageToSeller'
-                                    defaultMessage='Message to Seller'
-                                  />
-                                )}
-                              </div>
-                              <div className='message'>{lastHistory.message}</div>
-                            </StyledRectangle>
-                          </GridColumn>
-                        </GridRow>
+                                  )}
+                                </div>
+                                <div className='message'>{lastHistory.message}</div>
+                              </StyledRectangle>
+                            </GridColumn>
+                          </GridRow>
+                        )}
 
-                        {showAcceptRejectCounterSection && !!productOffer && (
+                        {!(isBroker && brokered) && showAcceptRejectCounterSection && !!productOffer && (
                           <>
                             <GridRow style={{ padding: '7.5px 10px' }}>
                               <GridColumn width={5}>
@@ -506,37 +514,39 @@ const BidsRowDetail = props => {
                                   label={formatMessage({ id: 'marketplace.reject', defaultMessage: 'Reject' })}
                                 />
                               </GridColumn>
-                              <GridColumn width={12}>
-                                  <TextArea
-                                    name='message'
-                                    label={
-                                      <DivMessageInputHeader>
-                                        {seller ? (
-                                          <FormattedMessage
-                                            id='marketplace.messageToBuyer'
-                                            defaultMessage='Message to Buyer'
-                                          />
-                                        ) : (
-                                          <FormattedMessage
-                                            id='marketplace.messageToSeller'
-                                            defaultMessage='Message to Seller'
-                                          />
-                                        )}
-                                        <DivSmallText>
-                                          <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
-                                        </DivSmallText>
-                                      </DivMessageInputHeader>
-                                    }
-                                    inputProps={{
-                                      'data-test': 'wanted_board_sidebar_specialNotes_inp',
-                                      placeholder: formatMessage({
-                                        id: 'marketplace.enterMessage',
-                                        defaultMessage: 'Enter Message...'
-                                      }),
-                                      disabled: disabledInputPrice
-                                    }}
-                                  />
-                              </GridColumn>
+                              {!brokered && (
+                                <GridColumn width={12}>
+                                    <TextArea
+                                      name='message'
+                                      label={
+                                        <DivMessageInputHeader>
+                                          {seller ? (
+                                            <FormattedMessage
+                                              id='marketplace.messageToBuyer'
+                                              defaultMessage='Message to Buyer'
+                                            />
+                                          ) : (
+                                            <FormattedMessage
+                                              id='marketplace.messageToSeller'
+                                              defaultMessage='Message to Seller'
+                                            />
+                                          )}
+                                          <DivSmallText>
+                                            <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
+                                          </DivSmallText>
+                                        </DivMessageInputHeader>
+                                      }
+                                      inputProps={{
+                                        'data-test': 'wanted_board_sidebar_specialNotes_inp',
+                                        placeholder: formatMessage({
+                                          id: 'marketplace.enterMessage',
+                                          defaultMessage: 'Enter Message...'
+                                        }),
+                                        disabled: disabledInputPrice
+                                      }}
+                                    />
+                                </GridColumn>
+                              )}
                             </GridRow>
                           </>
                         )}
@@ -598,7 +608,7 @@ const BidsRowDetail = props => {
                           {formatMessage({ id: 'marketplace.close', defaultMessage: 'Close' })}
                         </Button>
                       )}
-                      {showAcceptRejectCounterSection && (
+                      {!(isBroker && brokered) && showAcceptRejectCounterSection && (
                         <Button.Submit
                           disabled={radioState === ''}
                           className='light'
