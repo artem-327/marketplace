@@ -62,6 +62,7 @@ const ColumnSegment = ({ data, titleId, blueValue, documents, downloadAttachment
       {Object.keys(data).length ?
         Object.keys(data).map((key, i) => {
           if (key === 'document' && documents) {
+            documents = documents['document'];
             return (
               <Grid.Row key={i} data-test='component-column-segment-row'>
                 <GridColumnDetail>
