@@ -590,7 +590,9 @@ const BidsRowDetail = props => {
                                     type='button'
                                     onClick={() => openPopup({
                                       ...popupValues.productOffer,
-                                      pricingTiers: [{ quantityFrom: 1, pricePerUOM: popupValues.originalPricePerUOM }]
+                                      pricingTiers: [{ quantityFrom: 1, pricePerUOM: popupValues.originalPricePerUOM }],
+                                      sellerId: popupValues.seller?.id,
+                                      brokeredOffer: popupValues.brokered
                                     })}
                                     data-test='marketplace_bids_row_detail_checkout_btn'>
                                     {formatMessage({ id: 'marketplace.bid', defaultMessage: 'Bid' })}
