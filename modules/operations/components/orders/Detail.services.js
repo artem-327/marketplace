@@ -454,7 +454,7 @@ export const getRelatedDocumentsContent = (props, state) => {
  * @category Operations
  * @services
  */
-export const confirmCancelOrder = async props => {
+export const confirmCancelOrder = async (props, state, setState) => {
   const { intl: { formatMessage }, order } = props
   confirm(
     formatMessage({
@@ -479,9 +479,12 @@ export const confirmCancelOrder = async props => {
       async () => {
         // Confirm
         try {
+          setState({ ...state, activeDimmer: true })
           const { value } = await props.cancelOrder(order.id)
           await props.openOrderDetail(value.data)
+          setState({ ...state, activeDimmer: false })
         } catch (err) {
+          setState({ ...state, activeDimmer: false })
           console.error(err)
         }
       },
