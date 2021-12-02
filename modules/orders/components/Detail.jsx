@@ -65,7 +65,8 @@ import {
   CustomA,
   TopRow,
   StyledModal,
-  StyledHeader
+  StyledHeader,
+  DeliveryPhoneTitle
 } from './Detail.styles'
 // Services
 import confirm from '../../../components/Confirmable/confirm'
@@ -119,7 +120,7 @@ const Detail = props => {
       props.router.query.type === 'sales' ? props.getSaleOrder(props.router.query.id) : props.getPurchaseOrder(props.router.query.id)
 
       if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
-      
+
       setShippingTrackingCode(getSafe(() => props.order.shippingTrackingCode, ''))
       setReturnShippingTrackingCode(getSafe(() => props.order.returnShippingTrackingCode, ''))
       setChangedTypeOrder(false)
@@ -185,7 +186,7 @@ const Detail = props => {
     closePopup,
     appInfo
   } = props
-  
+
   let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
   let oppositeOrderType = ordersType === 'Sales' ? 'purchase' : 'sales'
   let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
@@ -281,14 +282,14 @@ const Detail = props => {
                         as='span'
                         className={
                           order.orderStatus === 'Discarded' ||
-                          order.orderStatus === 'Rejected' ||
-                          order.orderStatus === 'Cancelled'
+                            order.orderStatus === 'Rejected' ||
+                            order.orderStatus === 'Cancelled'
                             ? 'red'
                             : order.orderStatus === 'Confirmed'
-                            ? 'green'
-                            : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
-                            ? null // could be blue
-                            : null
+                              ? 'green'
+                              : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.orderStatus}
                       </List.Description>
@@ -305,10 +306,10 @@ const Detail = props => {
                           order.shippingStatus === 'Delivered'
                             ? 'green'
                             : order.shippingStatus === 'Returned'
-                            ? 'red'
-                            : order.shippingStatus === 'In Transit'
-                            ? null // could be blue
-                            : null
+                              ? 'red'
+                              : order.shippingStatus === 'In Transit'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.shippingStatus}
                       </List.Description>
@@ -325,10 +326,10 @@ const Detail = props => {
                           order.reviewStatus === 'Accepted'
                             ? 'green'
                             : order.reviewStatus === 'Rejected'
-                            ? 'red'
-                            : order.reviewStatus === 'Pending'
-                            ? null // could be blue
-                            : null
+                              ? 'red'
+                              : order.reviewStatus === 'Pending'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.reviewStatus}
                       </List.Description>
@@ -347,10 +348,10 @@ const Detail = props => {
                             order.creditStatus === 'Accepted'
                               ? 'green'
                               : order.creditStatus === 'Rejected'
-                              ? 'red'
-                              : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
-                              ? null // could be blue
-                              : null
+                                ? 'red'
+                                : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
+                                  ? null // could be blue
+                                  : null
                           }>
                           {order.creditStatus}
                         </List.Description>
@@ -369,10 +370,10 @@ const Detail = props => {
                             order.returnStatus === 'Delivered'
                               ? 'green'
                               : order.returnStatus === 'Not Shipped'
-                              ? 'red'
-                              : order.returnStatus === 'In Transit'
-                              ? null // could be blue
-                              : null
+                                ? 'red'
+                                : order.returnStatus === 'In Transit'
+                                  ? null // could be blue
+                                  : null
                           }>
                           {order.returnStatus}
                         </List.Description>
@@ -390,16 +391,16 @@ const Detail = props => {
                           order.paymentStatus === 'Failed' || order.paymentStatus === 'Canceled'
                             ? 'red'
                             : order.paymentStatus === 'Paid'
-                            ? 'green'
-                            : order.paymentStatus === 'Pending' ||
-                              order.paymentStatus === 'Refunded' ||
-                              order.paymentStatus === 'Initiated'
-                            ? null // could be blue
-                            : null
+                              ? 'green'
+                              : order.paymentStatus === 'Pending' ||
+                                order.paymentStatus === 'Refunded' ||
+                                order.paymentStatus === 'Initiated'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.orderType === 'Purchase' &&
-                        order.paymentStatus === 'Pending' &&
-                        isPaymentCancellable ? (
+                          order.paymentStatus === 'Pending' &&
+                          isPaymentCancellable ? (
                           <Popup
                             content={
                               <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />
@@ -718,7 +719,7 @@ const Detail = props => {
                   </GridRow>
                   <GridRow>
                     <GridColumn style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
-                      <ProdexGrid 
+                      <ProdexGrid
                         displayRowActionsOverBorder
                         removeFlexClass={true}
                         loading={loadingRelatedDocuments}
@@ -1030,7 +1031,7 @@ const Detail = props => {
                         <GridDataColumn width={keyColumn} className='key'>
                           <FormattedMessage id='order.contactNumber' defaultMessage='Contact Number' />
                         </GridDataColumn>
-                        <GridDataColumn width={valColumn}>{order.shipToPhone}</GridDataColumn>
+                        <GridDataColumn width={valColumn}><FormattedPhone value={order.shipToPhone} /></GridDataColumn>
                         <GridDataColumn width={keyColumn} className='key'>
                           <FormattedMessage id='order.contactEmail' defaultMessage='Contact E-Mail' />
                         </GridDataColumn>
@@ -1113,6 +1114,16 @@ const Detail = props => {
                     </GridColumn>
                   </GridRow>
                 </Grid>
+                {order?.shippingLogisticsProviderPhone && (
+                  <DeliveryPhoneTitle>
+                    <FormattedMessage
+                      id='order.detail.additionalSupportDescription'
+                      defaultMessage={`If you require additional support for this order please contact our logistics partner directly at ${order.shippingLogisticsProviderPhone}`}
+                      values={{
+                        shippingLogisticsProviderPhone: <FormattedPhone value={order.shippingLogisticsProviderPhone} />
+                      }}
+                    />
+                  </DeliveryPhoneTitle>)}
               </AccordionContent>
 
               <AccordionTitle
@@ -1232,7 +1243,7 @@ const Detail = props => {
 }
 
 Detail.propTypes = {
-  router: PropTypes.object, 
+  router: PropTypes.object,
   order: PropTypes.object,
   toastManager: PropTypes.object,
   intl: PropTypes.object,
@@ -1257,26 +1268,26 @@ Detail.propTypes = {
   openedDisputedRequest: PropTypes.bool,
   isSending: PropTypes.bool,
   echoSupportPhone: PropTypes.array,
-  listDocumentTypes: PropTypes.array, 
+  listDocumentTypes: PropTypes.array,
   cancelPayment: PropTypes.func,
   editTrackingCode: PropTypes.func,
   editReturnTrackingCode: PropTypes.func,
   orderResolutionAccept: PropTypes.func,
   orderResolutionReopen: PropTypes.func,
   closePopup: PropTypes.func,
-  linkAttachmentToOrder: PropTypes.func, 
+  linkAttachmentToOrder: PropTypes.func,
   getPurchaseOrder: PropTypes.func,
   unlinkAttachmentToOrder: PropTypes.func,
   downloadAttachment: PropTypes.func,
   getSaleOrder: PropTypes.func,
-  loadDetail: PropTypes.func, 
-  getDocumentTypes: PropTypes.func, 
+  loadDetail: PropTypes.func,
+  getDocumentTypes: PropTypes.func,
   clearOrderDetail: PropTypes.func,
   linkAttachmentToOrderItem: PropTypes.func
 }
 
 Detail.defaultValues = {
-  router: {}, 
+  router: {},
   order: {},
   toastManager: {},
   intl: {},
@@ -1301,22 +1312,22 @@ Detail.defaultValues = {
   openedDisputedRequest: false,
   isSending: false,
   echoSupportPhone: [],
-  listDocumentTypes: [], 
-  cancelPayment: () => {},
-  editTrackingCode: () => {},
-  editReturnTrackingCode: () => {},
-  orderResolutionAccept: () => {},
-  orderResolutionReopen: () => {},
-  closePopup: () => {},
-  linkAttachmentToOrder: () => {}, 
-  getPurchaseOrder: () => {},
-  unlinkAttachmentToOrder: () => {},
-  downloadAttachment: () => {},
-  getSaleOrder: () => {},
-  loadDetail: () => {}, 
-  getDocumentTypes: () => {}, 
-  clearOrderDetail: () => {},
-  linkAttachmentToOrderItem: () => {}
+  listDocumentTypes: [],
+  cancelPayment: () => { },
+  editTrackingCode: () => { },
+  editReturnTrackingCode: () => { },
+  orderResolutionAccept: () => { },
+  orderResolutionReopen: () => { },
+  closePopup: () => { },
+  linkAttachmentToOrder: () => { },
+  getPurchaseOrder: () => { },
+  unlinkAttachmentToOrder: () => { },
+  downloadAttachment: () => { },
+  getSaleOrder: () => { },
+  loadDetail: () => { },
+  getDocumentTypes: () => { },
+  clearOrderDetail: () => { },
+  linkAttachmentToOrderItem: () => { }
 }
 
 export default injectIntl(withToastManager(Detail))

@@ -12,7 +12,8 @@ import {
     Dropdown,
     Form,
     Accordion,
-    Table
+    Table,
+    Button
 } from 'semantic-ui-react'
 import { ChevronDown } from 'react-feather'
 
@@ -380,12 +381,30 @@ export const OrderSegment = styled(Segment)`
   margin-left: 32px !important;
   margin-bottom: 30px !important;
 
-  > .grid {
+  > .ui.grid {
     padding: 0;
 
     > .row {
       padding-top: 0 !important;
       padding-bottom: 0 !important;
+    }
+    
+    div.row-flex {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      
+      > div.column {
+        width: auto !important;
+        
+        &:first-child {
+          flex-shrink: 1;
+        }
+        
+        &:last-child {
+          flex-grow: 1;
+        }
+      }
     }
 
     > .column,
@@ -393,10 +412,14 @@ export const OrderSegment = styled(Segment)`
       padding: 20px !important;
     }
   }
+  
+  .header-top {
+    margin-left: -10px;
+  }
 
   h1.header {
     height: 17px;
-    margin: 0 0 10px;
+    margin: 0 0 0.5rem 10px !important;
     padding: 0;
     font-size: 14px !important;
     font-weight: 700 !important;
@@ -406,6 +429,7 @@ export const OrderSegment = styled(Segment)`
     ~ a {
       display: inline-block;
       height: 32px;
+      margin: 0 0 5px 10px;
       border: 1px solid #2599d5;
       border-radius: 3px;
       padding: 5px 14px;
@@ -769,5 +793,14 @@ export const RowDropdownIcon = styled.div`
   .settings_bankaccounts & {
     margin-left: -6px;
     margin-right: 0;
+  }
+`
+
+export const ButtonCancel = styled(Button)`
+  &.ui.button {
+    max-height: 32px;
+    height: 32px;
+    margin-left: 10px;
+    padding: 5px 25px !important;
   }
 `

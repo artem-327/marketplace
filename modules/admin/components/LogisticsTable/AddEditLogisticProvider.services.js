@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 // Services
-import { errorMessages, multipleEmails } from '../../../../constants/yupValidation'
+import { errorMessages, multipleEmails, phoneValidation } from '../../../../constants/yupValidation'
 
 const initialValuesAdd = {
     providerIdentifier: '',
@@ -9,7 +9,8 @@ const initialValuesAdd = {
     identifierValue: '',
     note: '',
     reinvoice: false,
-    email: ''
+    email: '',
+    phone: '',
 }
 
 /**
@@ -23,6 +24,7 @@ export const getInitialValues = popupValues => {
         ...initialValuesAdd,
         note: popupValues.note || '',
         email: popupValues.email || '',
+        phone: popupValues.phone || '',
         reinvoice: popupValues.reinvoice,
         providerIdentifierName: `${popupValues.name} (${popupValues.identifierValue})`
         }
@@ -37,12 +39,14 @@ export const getInitialValues = popupValues => {
 export const getValidationSchema = popupValues => {
     if (popupValues) {
         return Yup.object().shape({
-            email: multipleEmails()
+            email: multipleEmails(),
+            phone: phoneValidation(10)
         })
     } else {
         return Yup.object().shape({
             providerIdentifier: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
-            email: multipleEmails()
+            email: multipleEmails(),
+            phone: phoneValidation(10)
         })
     }
 }

@@ -10,6 +10,7 @@ import ProdexTable from '../../../../components/table'
 // Actions
 import * as Actions from '../../actions'
 import { reviewRequest } from '../../../admin/actions'
+import { removeAttachment } from '../../../inventory/actions'
 
 // Constants
 import { COLUMNS } from './Table.constants'
@@ -44,7 +45,8 @@ import {
   makeIsOpenSidebar,
   makeCompanyListDataRequest,
   makeReRegisterP44Pending,
-  makeIsBusinessDevelopmentRepresentativeOnly
+  makeGetIsAdmin,
+  makeGetIsBusinessDevelopmentRepresentativeOnly
 } from '../selectors'
 
 const makeMapStateToProps = () => {
@@ -53,7 +55,8 @@ const makeMapStateToProps = () => {
   const getIsOpenSidebar = makeIsOpenSidebar()
   const getCompanyListDataRequest = makeCompanyListDataRequest()
   const getReRegisterP44Pending = makeReRegisterP44Pending()
-  const getIsBusinessDevelopmentRepresentativeOnly = makeIsBusinessDevelopmentRepresentativeOnly()
+  const getIsAdmin = makeGetIsAdmin()
+  const getIsBusinessDevelopmentRepresentativeOnly = makeGetIsBusinessDevelopmentRepresentativeOnly()
 
   const mapStateToProps = (state, props) => {
     return {
@@ -62,10 +65,11 @@ const makeMapStateToProps = () => {
       isOpenSidebar: getIsOpenSidebar(state),
       companyListDataRequest: getCompanyListDataRequest(state),
       reRegisterP44Pending: getReRegisterP44Pending(state),
+      isAdmin: getIsAdmin(state),
       isBusinessDevelopmentRepresentativeOnly: getIsBusinessDevelopmentRepresentativeOnly(state)
     }
   }
   return mapStateToProps
 }
 
-export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest })(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest, removeAttachment })(injectIntl(CompaniesTable)))

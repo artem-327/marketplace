@@ -2,16 +2,16 @@ import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
-import { findByTestAttr, checkProps } from '../../../../../test/testUtils'
+import { findByTestAttr, checkProps } from '../../../../../../test/testUtils'
 //Components
-import BottomSegments from './BottomSegments'
+import Tabs from './Tabs'
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  legalData: null,
-  marketingData: null,
-  verifiedData: null
+  row: {},
+  activeTab: null,
+  setActiveTab: () => { }
 }
 
 /**
@@ -21,18 +21,18 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<BottomSegments {...setupProps} />)
+  return shallow(<Tabs {...setupProps} />)
 }
 
 /**
- * @test { BottomSegments }
+ * @test { Tabs }
  */
-describe('`BottomSegments` render component', () => {
+describe('`Tabs` render component', () => {
   test('does not throw warning with expected props', () => {
-    checkProps(BottomSegments, defaultProps)
+    checkProps(Tabs, defaultProps)
   })
 
-  test('renders BottomSegments component to be there', () => {
+  test('renders Tabs component to be there', () => {
     const wrapper = setup()
     expect(wrapper.exists()).toBe(true)
   })

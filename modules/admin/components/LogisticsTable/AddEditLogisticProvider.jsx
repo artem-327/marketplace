@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Modal, FormField, Grid, GridRow, GridColumn, Popup, Icon } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown, Checkbox, TextArea } from 'formik-semantic-ui-fixed-validation'
+import { PhoneNumber } from '../../../phoneNumber'
 import PropTypes from 'prop-types'
 // Services
 import { removeEmpty } from '../../../../utils/functions'
@@ -65,6 +66,7 @@ const AddEditLogisticProvider = props => {
                 const payload = {
                   note: values.note,
                   email: values.email,
+                  phone: values.phone,
                   reinvoice: values.reinvoice
                 }
                 removeEmpty(payload)
@@ -77,6 +79,7 @@ const AddEditLogisticProvider = props => {
                   identifierValue: parsed.value,
                   note: values.note,
                   email: values.email,
+                  phone: values.phone,
                   reinvoice: values.reinvoice
                 }
                 removeEmpty(payload)
@@ -89,12 +92,12 @@ const AddEditLogisticProvider = props => {
               setSubmitting(false)
             }
           }}
-          render={props => {
-            submitForm = props.submitForm
+          render={formikProps => {
+            submitForm = formikProps.submitForm
             return (
               <Grid>
                 <GridRow>
-                  <GridColumn width={7}>
+                  <GridColumn width={8}>
                     {popupValues ? (
                       <Input
                         name='providerIdentifierName'
@@ -136,7 +139,7 @@ const AddEditLogisticProvider = props => {
                     )}
                   </GridColumn>
 
-                  <GridColumnEmail width={6}>
+                  <GridColumnEmail width={8}>
                     <Input
                       type='text'
                       label={
@@ -163,8 +166,10 @@ const AddEditLogisticProvider = props => {
                     />
                     {labelMultipleEmail}
                   </GridColumnEmail>
+                </GridRow>
 
-                  <GridColumn width={3}>
+                <GridRow>
+                  <GridColumn width={8}>
                     <FormField style={{ marginTop: '32px', marginLeft: '30px' }}>
                       <Checkbox
                         style={{ marginTop: '20px' }}
@@ -176,6 +181,20 @@ const AddEditLogisticProvider = props => {
                         inputProps={{ 'data-test': 'admin_logistics_provider_reinvoice_chckb' }}
                       />
                     </FormField>
+                  </GridColumn>
+                  <GridColumn width={8}>
+                    <PhoneNumber
+                      name='phone'
+                      values={formikProps.values}
+                      label={<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                      setFieldValue={formikProps.setFieldValue}
+                      setFieldTouched={formikProps.setFieldTouched}
+                      errors={formikProps.errors}
+                      touched={formikProps.touched}
+                      isSubmitting={formikProps.isSubmitting}
+                      placeholder={formatMessage({ id: 'global.phonePlaceholder', defaultMessage: '000 000 0000' })}
+                      clearable={true}
+                    />
                   </GridColumn>
                 </GridRow>
 

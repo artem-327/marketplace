@@ -63,6 +63,8 @@ const SharedListings = props => {
         values={values}
         onChange={data => setValues(data)}
         datagrid={props.datagrid}
+        companyType={props.companyType}
+        defaultMarkup={props.defaultMarkup}
       />)
   }
 

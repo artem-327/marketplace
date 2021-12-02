@@ -10,6 +10,7 @@ import {
   addressValidationSchema,
   einValidation,
   websiteValidationNotRequired,
+  phoneValidation,
   dateValidation
 } from '~/constants/yupValidation'
 import FormRectangle from './FormRectangle'
@@ -54,7 +55,8 @@ class RegisterBeneficialOwner extends Component {
               firstName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
               lastName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
               email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
-              phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+              // phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
+              phoneNumber: phoneValidation(10),
               dateOfBirth: Yup.string()
                 .test('min-age', errorMessages.aboveAge(18), val => moment().diff(getStringISODate(val), 'years') >= 18)
                 .concat(dateValidation(true)),
@@ -105,7 +107,7 @@ class RegisterBeneficialOwner extends Component {
         ownershipPercentage: val.businessOwnershipPercentage
           ? parseInt(getSafe(() => val.businessOwnershipPercentage, 0))
           : 0,
-        phone: getSafe(() => val.phone.substring(1), ''),
+        phone: getSafe(() => val.phoneNumber.substring(1), ''),
         provinceId: getSafe(() => val.address.province, ''),
         zipCode: getSafe(() => val.address.zip, ''),
         ssn: getSafe(() => val.socialSecurityNumber, ''),

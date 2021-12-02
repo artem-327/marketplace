@@ -1,6 +1,8 @@
 import { Component } from 'react'
-import { FormGroup, FormField, Popup, Image, Dropdown, Grid,
-  GridRow, GridColumn, Button, Checkbox as SemenCheckbox } from 'semantic-ui-react'
+import {
+  FormGroup, FormField, Popup, Image, Dropdown, Grid,
+  GridRow, GridColumn, Button
+} from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown as FixedDropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
@@ -11,7 +13,7 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { getSafe, getMimeType } from '../../../utils/functions'
 import styled from 'styled-components'
-import { Trash, UploadCloud, Image as ImageIcon } from 'react-feather'
+import { Trash, UploadCloud, Image as ImageIcon, FileText } from 'react-feather'
 
 const LogoWrapper = styled.div`
   border-radius: 3px;
@@ -91,6 +93,14 @@ const StyledImageIcon = styled(ImageIcon)`
   margin: 30px;
 `
 
+const StyledDocumentIcon = styled(FileText)`
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  color: #dee2e6;
+  margin: 30px;
+`
+
 const ButtonsRow = styled(GridRow)`
   .button {
     min-width: 100% !important;
@@ -129,10 +139,11 @@ class CompanyForm extends Component {
     businessType: {
       id: ''
     },
-    naicsCode: null
+    naicsCode: null,
   }
   async componentDidMount() {
     this.loadCompanyLogo()
+    this.loadCompanyDoc()
     try {
       if (!getSafe(() => this.props.data.length, false)) this.props.getBusinessTypes()
       if (!getSafe(() => this.props.associations.length, false))
@@ -159,12 +170,29 @@ class CompanyForm extends Component {
     }
   }
 
+  loadCompanyDoc = async () => {
+    if (this.props.w9AttachmentId && this.props.selectDoc && this.props.getCompanyDocument) {
+      const companyDoc = await this.props.getCompanyDocument(this.props.w9AttachmentId);
+
+      if (companyDoc.value.data.size) this.props.selectDoc(companyDoc.value.data, false)
+    }
+  }
+
   getCompanyLogo = () => {
     if (this.props.companyLogo) {
       const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
       let fileURL = URL.createObjectURL(file)
 
       return <Image src={fileURL} size='small' />
+    }
+
+    return null
+  }
+
+  getCompanyDocument = () => {
+    if (this.props.companyDoc) {
+      const file = new Blob([this.props.companyDoc], { type: this.props.companyDoc.type })
+      return <span> {this.props.companyDoc.name} </span>
     }
 
     return null
@@ -190,8 +218,32 @@ class CompanyForm extends Component {
     }
   }
 
+  selectDocument = file => {
+    if (getMimeType(file.name)) {
+      this.props.selectDoc(file)
+    } else {
+      this.props.toastManager.add(
+        generateToastMarkup(
+          <FormattedMessage id='errors.notImage.header' defaultMessage='File not Uploaded' />,
+          <FormattedMessage
+            id='errors.notImage.content'
+            defaultMessage={`File ${file.name} you are uploading is not in the desired format. Please select a picture in format: (gif, jpg, png, svg)`}
+            values={{ name: file.name }}
+          />
+        ),
+        {
+          appearance: 'error'
+        }
+      )
+    }
+  }
+
   removeLogo = () => {
     this.props.removeLogo()
+  }
+
+  removeDocument = () => {
+    this.props.removeDoc()
   }
 
   renderCompanyFields = () => {
@@ -233,10 +285,10 @@ class CompanyForm extends Component {
               options={
                 data && data.length
                   ? data.map(type => ({
-                      text: type.name,
-                      value: type.id,
-                      key: type.id
-                    }))
+                    text: type.name,
+                    value: type.id,
+                    key: type.id
+                  }))
                   : []
               }
               clearable
@@ -361,10 +413,10 @@ class CompanyForm extends Component {
                   options={
                     associations && associations.length
                       ? associations.map(assoc => ({
-                          text: assoc.name,
-                          value: assoc.id,
-                          key: assoc.id
-                        }))
+                        text: assoc.name,
+                        value: assoc.id,
+                        key: assoc.id
+                      }))
                       : []
                   }
                   clearable
@@ -442,10 +494,10 @@ class CompanyForm extends Component {
             options={
               data && data.length
                 ? data.map(type => ({
-                    text: type.name,
-                    value: type.id,
-                    key: type.id
-                  }))
+                  text: type.name,
+                  value: type.id,
+                  key: type.id
+                }))
                 : []
             }
             clearable
@@ -628,15 +680,14 @@ class CompanyForm extends Component {
               data-test='company_form_enabled_chckb'
             />
           )}
-          <SemenCheckbox
+          <Checkbox
             label={formatMessage({
               id: 'company.purchaseHazmatEligible ',
               defaultMessage: 'Purchase Hazardous Materials'
             })}
             name='purchaseHazmatEligible'
             data-test='company_form_purchaseHazmatEligible_chckb'
-            defaultChecked
-            style={{marginLeft: 7}}
+            style={{ marginLeft: 7 }}
           />
         </FormGroup>
       </>
@@ -739,12 +790,105 @@ class CompanyForm extends Component {
     )
   }
 
+  renderW9document = () => {
+    let { selectDocument, removeDocument } = this
+
+    const hasDoc = !!this.props.companyDoc
+    const isAdmin = !!this.props.admin
+
+    return (
+      <div style={{ marginTop: 10 }}>
+        <div style={{ marginBottom: 4 }}>
+          <label style={{ color: '#20273a' }}>
+            <FormattedMessage id='global.companyW9document' defaultMessage='W-9 Document' />
+          </label>
+        </div>
+        <LogoWrapper>
+          <Grid className={isAdmin ? 'admin' : ''}>
+            {!isAdmin && (
+              <GridRow>
+                <GridColumn style={{ textAlign: 'center' }}>
+                  <label style={{ color: '#848893', fontSize: '12px' }}>
+                    <FormattedMessage
+                      id='company.logoDescription'
+                      defaultMessage='This is how your logo looks on the Web Portal'
+                    />
+                  </label>
+                </GridColumn>
+              </GridRow>
+            )}
+
+            <GridRow>
+              <GridColumn>
+                <UploadAttachment
+                  acceptFiles='.PDF'
+                  {...this.props}
+                  attachments={this.props.companyDoc ? [this.props.companyDoc] : []}
+                  name={`companyW9Document`}
+                  filesLimit={1}
+                  fileMaxSize={20}
+                  onChange={files => (files.length ? selectDocument(files[0]) : null)}
+                  removeAttachment={removeDocument}
+                  hideAttachments
+                  emptyContent={<StyledDocumentIcon />}
+                  uploadedContent={this.getCompanyDocument()}
+                  saveComponentRef={ref => (this.docComponentRef = ref)}
+                />
+              </GridColumn>
+            </GridRow>
+
+            <ButtonsRow>
+              <GridColumn width={8}>
+                <Button className='delete' disabled={!hasDoc} type='button' fluid onClick={() => removeDocument()}>
+                  <Trash />
+                  <FormattedMessage id='company.logoButtonDelete' defaultMessage='Delete'>
+                    {text => text}
+                  </FormattedMessage>
+                </Button>
+              </GridColumn>
+              <GridColumn width={8}>
+                <Button
+                  type='button'
+                  fluid
+                  onClick={() => {
+                    if (this.docComponentRef) this.docComponentRef.open()
+                  }}>
+                  <UploadCloud />
+                  {hasDoc ? (
+                    <FormattedMessage id='company.logoButtonChange' defaultMessage='Change' />
+                  ) : (
+                    <FormattedMessage id='company.logoButtonUpload' defaultMessage='Upload' />
+                  )}
+                </Button>
+              </GridColumn>
+            </ButtonsRow>
+          </Grid>
+          <div className='logo-hint'>
+            <label>
+              <FormattedMessage
+                id='company.DocHintRow1'
+                defaultMessage='Maximum file size is 20MB'
+              />
+            </label>
+            {/* <label>
+              <FormattedMessage
+                id='company.logoHintRow2'
+                defaultMessage='Use the logo color that matches with dark backgrounds'
+              />
+            </label> */}
+          </div>
+        </LogoWrapper>
+      </div>
+    )
+  }
+
   render() {
     if (this.props.admin) {
       return (
         <>
           {this.renderAdminFields()}
           {this.renderLogo()}
+          {this.renderW9document()}
         </>
       )
     } else {

@@ -155,3 +155,17 @@ export const DivTradePassLogo = styled.div`
   margin-top: -30px;
   padding-right: 20px;
 `
+
+export const DivPricingHeaderRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 12px;
+  margin: 0 -10px;
+`
+
+export const DivPricingHeader = styled.div`
+  padding: 0 5px;
+  ${({ $colorText }) => ($colorText ? `color: ${$colorText} !important;` : null)}
+`

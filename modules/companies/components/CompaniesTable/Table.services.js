@@ -20,7 +20,8 @@ import { StyledReRegisterButton, StyledReRegisterBlackButton } from './Table.sty
  * @returns {array}
  */
 export const getRows = (rows, state, props) => {
-  const { isBusinessDevelopmentRepresentativeOnly } = props
+  const { isAdmin, isBusinessDevelopmentRepresentativeOnly } = props
+
 
   return rows.map(row => {
     return {
@@ -30,7 +31,7 @@ export const getRows = (rows, state, props) => {
         <ActionCell
           row={row}
           content={row.companyName}
-          {...(!isBusinessDevelopmentRepresentativeOnly && {
+          {...(isAdmin && {
             getActions: () => getActions(props),
             onContentClick: () => props.openEditCompany(row.id, row.rawData)
           })}
@@ -50,7 +51,7 @@ export const getRows = (rows, state, props) => {
           toggle={true}
           disabled={isBusinessDevelopmentRepresentativeOnly}
           defaultChecked={row.reviewRequested}
-          onClick={() => !isBusinessDevelopmentRepresentativeOnly && props.reviewRequest(row, props.datagrid)}
+          onClick={() => isAdmin && props.reviewRequest(row, props.datagrid)}
           data-test={`admin_company_table_${row.id}_chckb`}
         />
       ),
@@ -60,7 +61,7 @@ export const getRows = (rows, state, props) => {
           toggle={true}
           defaultChecked={row.enabled}
           disabled={isBusinessDevelopmentRepresentativeOnly}
-          onClick={() => !isBusinessDevelopmentRepresentativeOnly && handleEnabled(row.rawData, props)}
+          onClick={() => isAdmin && handleEnabled(row.rawData, props)}
           data-test={`admin_company_table_enable_${row.id}_chckb`}
         />
       ),
@@ -139,7 +140,7 @@ const reRegisterP44 = async (id, state, props) => {
  * @returns {array}
  */
 const getActions = props => {
-  const { datagrid, openEditCompany, deleteCompany, takeOverCompany, resendWelcomeEmail, intl } = props
+  const { datagrid, openEditCompany, deleteCompany, removeAttachment, takeOverCompany, resendWelcomeEmail, intl } = props
 
   const { formatMessage } = intl
   return [
@@ -161,7 +162,8 @@ const getActions = props => {
           )
         ).then(async () => {
           try {
-            await deleteCompany(row.id)
+            row.w9AttachmentId && await removeAttachment(row.w9AttachmentId);
+            await deleteCompany(row.id);
             datagrid.removeRow(row.id)
           } catch (err) {
             console.error(err)

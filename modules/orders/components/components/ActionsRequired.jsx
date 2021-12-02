@@ -30,6 +30,7 @@ const ActionsRequired = props => {
     openReinitiateTransfer,
     openPopupName,
     isSending,
+    isCompanyAdmin,
     openedPopup,
     sellEligible,
     actionNeeded,
@@ -153,14 +154,16 @@ const ActionsRequired = props => {
         <>
           {orderStatus === 4 // Draft
             ? renderSegment(null, 11, null, 'order.detail.status.draft', [
-                {
-                  buttonType: 'primary',
-                  onClick: () => approveOrder(props),
-                  dataTest: 'orders_detail_approve_btn',
-                  text: 'global.approve',
-                  loading: isSending === 1,
-                  disabled: isSending && isSending !== 1
-                },
+              isCompanyAdmin
+                ? {
+                    buttonType: 'primary',
+                    onClick: () => approveOrder(props),
+                    dataTest: 'orders_detail_approve_btn',
+                    text: 'global.approve',
+                    loading: isSending === 1,
+                    disabled: isSending && isSending !== 1
+                  }
+                : null,
                 {
                   buttonType: 'danger',
                   className: 'outline',

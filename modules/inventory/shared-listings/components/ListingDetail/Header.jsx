@@ -17,7 +17,12 @@ import {
   DivSimpleColumn
 } from './ListingDetail.styles'
 import { StyledGrid, TableSegment, StyledList } from '../../../../../components/detail-row/styles'
-import { SegmentGroupHeader, GridColumnDetail } from '../../../../my-network/components/DetailRow/DetailRow.style'
+import {
+  SegmentGroupHeader,
+  GridColumnDetail,
+  DivPricingHeaderRow,
+  DivPricingHeader
+} from '../../../../my-network/components/DetailRow/DetailRow.style'
 // Services
 import { submitHandler } from './Header.services'
 import { getSafe } from '../../../../../utils/functions'
@@ -28,7 +33,7 @@ import { getSafe } from '../../../../../utils/functions'
  * @component
  */
 const Header = props => {
-  const { row, values, onChange, loadingMarkup } = props
+  const { row, values, onChange, loadingMarkup, companyType, defaultMarkup } = props
   const ref = useRef(null)
 
   useEffect(() => {
@@ -120,9 +125,22 @@ const Header = props => {
             </GridColumnDetail>
           </Grid.Row>
           <Grid.Row>
-            <GridColumnDetail width={8} $colorText='#404040'>
-              <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
-            </GridColumnDetail>
+            <Grid.Column width={16}>
+              <DivPricingHeaderRow>
+                <DivPricingHeader $colorText='#404040'>
+                  <FormattedMessage id='detailRow.pricing.markup' defaultMessage='Markup' />
+                </DivPricingHeader>
+                {companyType === 'BROKER' && (
+                  <DivPricingHeader $colorText='#f16844'>
+                    <FormattedMessage
+                      id='detailRow.pricing.defaultSharedListingsMarkup'
+                      defaultMessage={`Note: When no mark-up is set, default  company mark-up of ${defaultMarkup} % will be applied.`}
+                      values={{ value: defaultMarkup }}
+                    />
+                  </DivPricingHeader>
+                )}
+                </DivPricingHeaderRow>
+            </Grid.Column>
           </Grid.Row>
           <Grid.Row>
             <GridColumnDetail width={8}>
@@ -174,7 +192,9 @@ Header.propTypes = {
   getSharedProductOffer: PropTypes.func,
   row: PropTypes.object,
   values: PropTypes.object,
-  datagrid: PropTypes.object
+  datagrid: PropTypes.object,
+  companyType: PropTypes.string,
+  defaultMarkup: PropTypes.string
 }
 
 Header.defaultProps = {
@@ -184,7 +204,9 @@ Header.defaultProps = {
   getSharedProductOffer: () => {},
   row: {},
   values: {},
-  datagrid: {}
+  datagrid: {},
+  companyType: '',
+  defaultMarkup: '0'
 }
 
 export default Header
