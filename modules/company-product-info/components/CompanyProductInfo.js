@@ -92,6 +92,7 @@ export const FlexContent = styled.div`
 `
 
 const WiderSidebar = styled(FlexSidebar)`
+  z-index: 600 !important;
   min-width: 630px !important;
 
   .grid > .row > .column.top.aligned {
