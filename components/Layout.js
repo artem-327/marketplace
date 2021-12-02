@@ -441,7 +441,7 @@ class Layout extends Component {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-                {!isAdmin && !isOperator && !isOrderOperator && !isBusinessDevelopmentRepresentative && (
+                {(takeover || !isAdmin && !isOperator && !isOrderOperator && !isBusinessDevelopmentRepresentative) && (
                   <>
                     <Menu.Item
                       onClick={() => Router.push('/cart')}
@@ -465,14 +465,14 @@ class Layout extends Component {
                         </Menu.Item>
                       )
                     }
-                    {(isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager || isUserAdmin) && (
+                    {(takeover || isCompanyAdmin || isMerchant || isProductCatalogAdmin || isProductOfferManager || isUserAdmin) && (
                       <Menu.Item>
                         <CreateMenu />
                       </Menu.Item>
                     )}
                   </>
                 )}
-                {(isAdmin || isOperator || isOrderOperator) && (
+                {(isAdmin || isOperator || isOrderOperator) && !takeover && (
                   <Menu.Item
                     onClick={() => Router.push('/alerts')}
                     data-test='navigation_notifications'
