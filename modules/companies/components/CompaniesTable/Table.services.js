@@ -140,7 +140,7 @@ const reRegisterP44 = async (id, state, props) => {
  * @returns {array}
  */
 const getActions = props => {
-  const { datagrid, openEditCompany, deleteCompany, takeOverCompany, resendWelcomeEmail, intl } = props
+  const { datagrid, openEditCompany, deleteCompany, removeAttachment, takeOverCompany, resendWelcomeEmail, intl } = props
 
   const { formatMessage } = intl
   return [
@@ -162,7 +162,8 @@ const getActions = props => {
           )
         ).then(async () => {
           try {
-            await deleteCompany(row.id)
+            row.w9AttachmentId && await removeAttachment(row.w9AttachmentId);
+            await deleteCompany(row.id);
             datagrid.removeRow(row.id)
           } catch (err) {
             console.error(err)

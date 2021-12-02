@@ -191,26 +191,28 @@ const MakeOfferPopup = props => {
                       </GridColumn>
                     </GridRow>
 
-                    <GridRow>
-                      <GridColumn>
-                          <TextArea
-                            name='message'
-                            label={
-                              <FormattedMessage id='marketplace.messageToSeller' defaultMessage='Message to Seller' />
-                            }
-                            inputProps={{
-                              'data-test': 'wanted_board_sidebar_specialNotes_inp',
-                              placeholder: formatMessage({
-                                id: 'marketplace.enterMessage',
-                                defaultMessage: 'Enter Message...'
-                              })
-                            }}
-                          />
-                        <DivSmallText style={{ marginTop: '-14px' }}>
-                          <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
-                        </DivSmallText>
-                      </GridColumn>
-                    </GridRow>
+                    {!popupValues.brokeredOffer && (
+                      <GridRow>
+                        <GridColumn>
+                            <TextArea
+                              name='message'
+                              label={
+                                <FormattedMessage id='marketplace.messageToSeller' defaultMessage='Message to Seller' />
+                              }
+                              inputProps={{
+                                'data-test': 'wanted_board_sidebar_specialNotes_inp',
+                                placeholder: formatMessage({
+                                  id: 'marketplace.enterMessage',
+                                  defaultMessage: 'Enter Message...'
+                                })
+                              }}
+                            />
+                          <DivSmallText style={{ marginTop: '-14px' }}>
+                            <FormattedMessage id='marketplace.optional' defaultMessage='Optional' />
+                          </DivSmallText>
+                        </GridColumn>
+                      </GridRow>
+                    )}
 
                     <GridRow>
                       <GridColumn>

@@ -11,6 +11,10 @@ export const addAttachment = createAsyncAction('INVENTORY_ADD_ATTACHMENT', async
   Datagrid && Datagrid.loadData()
   return data
 })
+export const addW9Attachment = createAsyncAction('INVENTORY_ADD_ATTACHMENT', async (attachment, type, additionalParams = {}) => {
+  const data = await api.addAttachment(attachment, type, additionalParams)
+  return data
+})
 export const updateAttachment = createAsyncAction('INVENTORY_UPDATE_ATTACHMENT', async (id, payload) => {
   const data = await api.updateAttachment(id, payload)
   Datagrid.loadData()

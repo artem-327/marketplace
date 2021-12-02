@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { withToastManager } from 'react-toast-notifications'
-import { Grid, Segment, Accordion, Table, List, Button, Divider, Header, GridRow, Modal } from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Button, Divider, Header, GridRow, Modal, Dimmer, Loader } from 'semantic-ui-react'
 import { DownloadCloud, ArrowLeft, Info } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import { injectIntl, FormattedNumber } from 'react-intl'
@@ -53,6 +53,7 @@ import {
 const Detail = props => {
   const [state, setState] = useState({
     activeIndexes: [true, true, true, false, false, false, false, false],
+    activeDimmer: false,
     replaceRow: '',
     toggleTrackingID: false,
     shippingTrackingCode: '',
@@ -82,7 +83,7 @@ const Detail = props => {
     isCancelable
   } = props
 
-  const { activeIndexes, documentsPopupProduct } = state
+  const { activeIndexes, activeDimmer, documentsPopupProduct } = state
   let ordersType = 'Sales'
 
   const keyColumn = 5
@@ -90,6 +91,9 @@ const Detail = props => {
 
   return (
     <div id='page' className='auto-scrolling'>
+      <Dimmer active={activeDimmer} inverted style={{background: 'rgba(255, 255, 255, 0.85)'}}>
+        <Loader />
+      </Dimmer>
       <ModalResolveDispute
         orderId={order?.id}
         disputeReasonComment={order?.disputeReasonComment}
@@ -142,7 +146,7 @@ const Detail = props => {
         </TopRow>
         <OrderSegment>
           <Grid verticalAlign='middle'>
-            <GridRow>
+            <GridRow className='row-flex'>
               <Grid.Column width={4}>
                 <div className='header-top clean left detail-align'>
                   <Header
@@ -167,7 +171,7 @@ const Detail = props => {
                   {isCancelable && (
                     <ButtonCancel
                       basic
-                      onClick={() => confirmCancelOrder(props)}
+                      onClick={() => confirmCancelOrder(props, state, setState)}
                       data-test='orders_detail_cancel_order_button'
                     >
                       <FormattedMessage id='order.detail.cancelOrder' defaultMessage='Cancel Order' />
