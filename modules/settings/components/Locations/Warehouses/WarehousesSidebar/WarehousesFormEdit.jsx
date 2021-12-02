@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import { Header, FormGroup, Image, Radio } from 'semantic-ui-react'
-import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Header, FormGroup, Image, Checkbox as SemenCheckbox } from 'semantic-ui-react'
+import { Input, Checkbox, TextArea, Dropdown, Radio } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 //Components
@@ -77,14 +77,14 @@ const WarehousesFormEdit = ({
           }}
         />
       </FormGroup>
-      <FormGroup widths='equal' style={{marginLeft: 'auto'}}>
-        <Radio
-          toggle
+      <FormGroup widths='equal'>
+        <Checkbox
+          // toggle
           label={formatMessage({
             id: 'settings.warehouses.public',
             defaultMessage: 'Public Warehouse'
           })}
-          name='deliveryAddress.public'
+          name='public'
         />
       </FormGroup>
       <AddressForm

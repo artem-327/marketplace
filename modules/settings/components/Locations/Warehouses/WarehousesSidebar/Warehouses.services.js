@@ -46,6 +46,7 @@ export const getInitialFormValues = sidebarValues => {
   const initialValues = {
     //name: r.name,
     taxId: getSafe(() => sidebarValues.taxId, ''),
+    public: getSafe(() => sidebarValues.public, false),
     deaListReceive: getSafe(() => sidebarValues.deaListReceive, false),
     deaListReceiveFlag: getSafe(() => sidebarValues.deaListReceive, false) || getSafe(() => sidebarValues.deaListReceiveVerify, false),
     deaListCertificateFile: getSafe(() => sidebarValues.deaListCertificateFile.name, null),
@@ -130,9 +131,10 @@ export const submitHandler = async (values, helpers) => {
       }
     },
     taxId: values.taxId,
+    public: values.public,
     warehouse: !values.alsoCreate
   }
-  removeEmpty(requestData)
+  removeEmpty(requestData);
 
   try {
     if (sidebarValues) {
