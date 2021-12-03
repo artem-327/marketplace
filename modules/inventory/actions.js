@@ -203,6 +203,7 @@ export const handleProductCatalogUnmappedValue = createAction('HANDLE_PRODUCT_CA
 export const openPopup = createAction('INVENTORY_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('INVENTORY_CLOSE_POPUP', (rows = null) => rows)
 export const resetForm = createAction('INVENTORY_RESET_FORM', initValues => ({data: {...initValues}}))
+export const openPopupPreFilledProduct = createAction('INVENTORY_OPEN_POPUP_PRE_FILLED_PRODUCT', product => product)
 export const changeBroadcast = createAction('CHANGE_BROADCAST', broadcastOption => broadcastOption)
 export const setActiveTab = createAction('SET_ACTIVE_TAB', tab => tab)
 export const triggerPriceBookModal = createAction('TRIGGER_PRICE_BOOK_MODAL', (isOpen, rowPriceBook) => ({ isOpen, rowPriceBook }))
