@@ -247,6 +247,8 @@ export default {
     api
       .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`)
       .then(response => response.data),
+  getCompanyGenericProductById: id =>
+    api.get(`/prodex/api/company-generic-products/id/${id}`).then(response => response.data),
   getNmfcNumbersByString: pattern =>
     api
       .get(`/prodex/api/nmfc-numbers/search?limit=5&pattern=${encodeURIComponent(pattern)}`)

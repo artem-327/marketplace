@@ -1304,6 +1304,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_GET_COMPANY_GENERIC_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        companyGenericProduct: [payload],
+        companyGenericProductFetching: false
+      }
+    }
+
     case AT.SEARCH_NMFC_NUMBERS_PENDING:
     case AT.GET_NMFC_NUMBERS_PENDING: {
       return {
