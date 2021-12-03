@@ -2586,6 +2586,7 @@
   "settings.tables.documents.buttonAdd": "Add Document",
   "settings.branches.enterBranch": "Enter Branch Name",
   "settings.warehouses.enterWarehouseName": "Enter Warehouse Name",
+  "settings.warehouses.public": "Public Warehouse",
   "settings.warehouses.enterContactName": "Enter Contact Name",
   "settings.warehouses.enterEmailAddress": "Enter Email Address",
   "settings.warehouses.enterTaxId": "Enter Tax ID",

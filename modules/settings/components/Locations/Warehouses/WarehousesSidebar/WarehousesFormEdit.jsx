@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import { Header, FormGroup, Image } from 'semantic-ui-react'
-import { Input, Checkbox, TextArea, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Header, FormGroup, Image, Checkbox as SemenCheckbox } from 'semantic-ui-react'
+import { Input, Checkbox, TextArea, Dropdown, Radio } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
 //Components
@@ -77,7 +77,16 @@ const WarehousesFormEdit = ({
           }}
         />
       </FormGroup>
-
+      <FormGroup widths='equal'>
+        <Checkbox
+          // toggle
+          label={formatMessage({
+            id: 'settings.warehouses.public',
+            defaultMessage: 'Public Warehouse'
+          })}
+          name='public'
+        />
+      </FormGroup>
       <AddressForm
         prefix={'deliveryAddress'}
         noBorder
@@ -94,7 +103,6 @@ const WarehousesFormEdit = ({
           }
         ]}
       />
-
       <DivHeader>
         <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
       </DivHeader>
@@ -388,8 +396,8 @@ WarehousesFormEdit.defaultProps = {
   intl: {},
   formikProps: {},
   sidebarValues: null,
-  addAttachment: () => {},
-  loadFile: () => {}
+  addAttachment: () => { },
+  loadFile: () => { }
 }
 
 export default withToastManager(WarehousesFormEdit)
