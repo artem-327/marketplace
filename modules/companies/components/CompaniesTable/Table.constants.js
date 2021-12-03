@@ -26,15 +26,15 @@ export const COLUMNS = [
     width: 220,
     sortPath: 'Company.dba'
   },
-  {
-    name: 'p44CompanyId',
-    title: (
-      <FormattedMessage id='global.p44CompanyId' defaultMessage='P44 Company ID'>
-        {text => text}
-      </FormattedMessage>
-    ),
-    width: 210
-  },
+  // {
+  //   name: 'p44CompanyId',
+  //   title: (
+  //     <FormattedMessage id='global.p44CompanyId' defaultMessage='P44 Company ID'>
+  //       {text => text}
+  //     </FormattedMessage>
+  //   ),
+  //   width: 210
+  // },
   {
     name: 'associations',
     title: (
