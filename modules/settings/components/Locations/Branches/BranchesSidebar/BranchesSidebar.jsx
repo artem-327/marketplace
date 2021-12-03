@@ -94,7 +94,12 @@ const BranchSidebar = props => {
               </div>
               <DivFlexContent style={{ padding: '16px' }}>
                 <SegmentCustomContent basic>
-                  <BranchesForm intl={props.intl} formikProps={formikProps} sidebarValues={props.sidebarValues} />
+                  <BranchesForm
+                    intl={props.intl}
+                    formikProps={formikProps}
+                    sidebarValues={props.sidebarValues}
+                    disableCountryProvince={!!props.sidebarValues}
+                  />
                 </SegmentCustomContent>
               </DivFlexContent>
               <DivBottomSidebar>

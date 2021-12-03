@@ -288,6 +288,10 @@ export function getFormattedPhone(phoneNumber, countries) {
       return phoneNumber.substring(0, phoneCodeLength) === country.phoneCode
     }
   })
-  let formattedNumber = phoneNumber.substring(foundCode.phoneCode.length + (phoneNumber[0] === '+' ? 1 : 0))
-  return `+${foundCode.phoneCode} ${formattedNumber.replace(/^(.{3})(.{3})(.*)$/, '$1 $2 $3').trim()}`
+  if (foundCode) {
+    let formattedNumber = phoneNumber.substring(foundCode.phoneCode.length + (phoneNumber[0] === '+' ? 1 : 0))
+    return `+${foundCode.phoneCode} ${formattedNumber.replace(/^(.{3})(.{3})(.*)$/, '$1 $2 $3').trim()}`
+  } else {
+    return phoneNumber.replace(/^(.{3})(.{3})(.*)$/, '$1 $2 $3').trim()
+  }
 }
