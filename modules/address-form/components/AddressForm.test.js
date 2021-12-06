@@ -49,7 +49,11 @@ const defaultProps = {
   required: false,
   searchEnabled: true,
   customHeader: '',
-  backgroundColor: '#f8f9fb !important'
+  backgroundColor: '#f8f9fb !important',
+  disableCountry: false,
+  disableProvince: false,
+  countryHint: null,
+  provinceHint: null
 }
 
 describe('`Addres Form` render component', () => {

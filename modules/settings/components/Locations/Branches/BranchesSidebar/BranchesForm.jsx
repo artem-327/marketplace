@@ -20,7 +20,7 @@ const customHeader = (
  * @category Settings - Locations - Branches
  * @component
  */
-const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
+const BranchesForm = ({ intl, formikProps, sidebarValues, disableCountryProvince }) => {
   const { formatMessage } = intl
   const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
 
@@ -61,6 +61,26 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
             text: values.deliveryAddress.address.zip
           }
         ]}
+        disableCountry={disableCountryProvince}
+        disableProvince={disableCountryProvince}
+        countryHint={disableCountryProvince
+          ? (
+            <FormattedMessage
+              id='settings.stateAndCountryHint'
+              defaultMessage='State and Country values cannot be changed for existing branch.'
+            />
+            )
+          : null
+        }
+        provinceHint={disableCountryProvince
+          ? (
+            <FormattedMessage
+              id='settings.stateAndCountryHint'
+              defaultMessage='State and Country values cannot be changed for existing branch.'
+            />
+          )
+          : null
+        }
       />
       <DivHeader>
         <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
@@ -141,13 +161,15 @@ const BranchesForm = ({ intl, formikProps, sidebarValues }) => {
 BranchesForm.propTypes = {
   intl: PropTypes.object,
   formikProps: PropTypes.object,
-  sidebarValues: PropTypes.object
+  sidebarValues: PropTypes.object,
+  disableCountryProvince: PropTypes.bool
 }
 
 BranchesForm.defaultProps = {
   intl: {},
   formikProps: {},
-  sidebarValues: null
+  sidebarValues: null,
+  disableCountryProvince: false
 }
 
 export default BranchesForm

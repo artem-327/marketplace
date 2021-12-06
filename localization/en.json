@@ -2476,6 +2476,7 @@
   "settings.alsoCreateAsBranch": "Also create as Branch",
   "settings.alsoCreateAsPickUpLocation": "Also create as Warehouse",
   "settings.branchName": "Branch Name",
+  "settings.stateAndCountryHint": "State and Country values cannot be changed for existing branch.",
   "settings.accountNumber": "Account Number",
   "settings.accountType": "Account Type",
   "settings.bankName": "Bank Name",

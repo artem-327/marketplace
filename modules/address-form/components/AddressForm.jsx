@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField, Segment } from 'semantic-ui-react'
+import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField, Segment, Icon } from 'semantic-ui-react'
 
 import { ZipDropdown } from '~/modules/zip-dropdown'
-import { func, string, shape, array, bool, object, oneOfType, node } from 'prop-types'
+import { func, string, shape, array, bool, object, oneOfType, node, any } from 'prop-types'
 
 import styled from 'styled-components'
 
@@ -19,6 +19,7 @@ const DatalistGroup = styled(FormGroup)`
   }
 `
 
+
 const CustomSegment = styled(Segment)`
   background-color: ${({ backgroundColor }) => backgroundColor};
   ${({ noBorder }) =>
@@ -30,6 +31,10 @@ const CustomSegment = styled(Segment)`
     padding: 0px !important;
   `
       : ''};
+`
+
+const InfoIconStyled = styled(Icon)`
+  margin: 0 0 0 5px !important;
 `
 
 class AddressForm extends Component {
@@ -231,7 +236,11 @@ class AddressForm extends Component {
       intl: { formatMessage },
       customHeader,
       backgroundColor,
-      noBorder
+      noBorder,
+      disableCountry,
+      disableProvince,
+      countryHint,
+      provinceHint
     } = this.props
 
     let fields = this.asignPrefix()
@@ -287,6 +296,12 @@ class AddressForm extends Component {
                   trigger={
                     <label>
                       <FormattedMessage id='global.country' defaultMessage='Country' />
+                      {countryHint && (
+                        <Popup
+                          trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
+                          content={countryHint}
+                        />
+                      )}
                       {required && <Required />}
                     </label>
                   }
@@ -311,7 +326,8 @@ class AddressForm extends Component {
                   setFieldValue(fields[this.props.province.name], '')
                 },
                 placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
-                ...additionalCountryInputProps
+                ...additionalCountryInputProps,
+                disabled: additionalCountryInputProps.disabled || disableCountry
               }}
             />
 
@@ -319,6 +335,12 @@ class AddressForm extends Component {
               label={
                 <>
                   <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
+                  {provinceHint && (
+                    <Popup
+                      trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
+                      content={provinceHint}
+                    />
+                  )}
                   {required && hasProvinces && <Required />}
                 </>
               }
@@ -332,7 +354,7 @@ class AddressForm extends Component {
                 onFocus: e => (e.target.autocomplete = null),
                 'data-test': `${prefix}-state-province`,
                 search: true,
-                disabled: !this.state.hasProvinces,
+                disabled: !this.state.hasProvinces || disableProvince,
                 loading: provincesAreFetching,
                 onChange: this.handleChange,
                 placeholder: formatMessage({
@@ -415,7 +437,11 @@ AddressForm.propTypes = {
   required: bool,
   searchEnabled: bool,
   customHeader: oneOfType([string, node]),
-  backgroundColor: string
+  backgroundColor: string,
+  disableCountry: bool,
+  disableProvince: bool,
+  countryHint: any,
+  provinceHint: any
 }
 
 AddressForm.defaultProps = {
@@ -455,7 +481,11 @@ AddressForm.defaultProps = {
   required: false,
   searchEnabled: true,
   customHeader: '',
-  backgroundColor: '#f8f9fb !important'
+  backgroundColor: '#f8f9fb !important',
+  disableCountry: false,
+  disableProvince: false,
+  countryHint: null,
+  provinceHint: null
 }
 
 export default injectIntl(AddressForm)
