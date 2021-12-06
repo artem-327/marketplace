@@ -32,7 +32,6 @@ const AddEditDocumentType = props => {
     intl: { formatMessage },
   } = props
 
-  // ! ! ? const prevVariable = usePrevious(props.variable)
   const [selectedGroupOption, setSelectedGroupOption] = useState(null)
 
   useEffect(() => {
@@ -53,28 +52,12 @@ const AddEditDocumentType = props => {
 
   }, [/* variableName */])
 
-
-
-
-  console.log('!!!!!!!!!! aaaaa documentGroups', documentGroups)
-  console.log('!!!!!!!!!! aaaaa selectedGroupOption', selectedGroupOption)
-
   let allGroups = []
   if (selectedGroupOption) {
     allGroups = uniqueArrayByKey(documentGroups.concat([selectedGroupOption]), 'key')
   } else {
     allGroups = documentGroups
   }
-
-/*uniqueArrayByKey(state.searchedCasProducts.concat(payload), 'id')
-    .map(c => ({
-      text: c.name,
-      value: c.id,
-      key: c.id
-    }))
-  */
-
-  //console.log('!!!!!!!!!! aaaaa allGroups', allGroups)
 
   return (
     <Modal closeIcon onClose={() => closePopup()} open centered={false}>
@@ -98,8 +81,6 @@ const AddEditDocumentType = props => {
               group: values.group
             }
             removeEmpty(data)
-
-            console.log('!!!!!!!!!! onSubmit data', data)
 
             try {
               if (popupValues) {

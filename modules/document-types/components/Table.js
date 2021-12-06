@@ -67,7 +67,6 @@ class Table extends Component {
             try {
               await deleteDocumentType(row.id)
               datagrid.removeRow(row.id)
-              // ! ! ???getDocumentTypes()
             } catch (e) {
               console.error(e)
             }
