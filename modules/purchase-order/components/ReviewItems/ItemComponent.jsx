@@ -53,9 +53,18 @@ const ItemComponent = props => {
   const pkgAmount = item.pkgAmount
   const quantity = parseInt(value)
 
-  const pricePerUOM = isNaN(quantity)
-    ? getPrice(pkgAmount, item.productOffer.pricingTiers)
-    : getPrice(quantity, item.productOffer.pricingTiers)
+  const pricePerUOM =
+    item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
+    item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
+    item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
+      ? (
+        item.cfPricePerUOM
+      )
+      : (
+        isNaN(quantity)
+          ? getPrice(pkgAmount, item.productOffer.pricingTiers)
+          : getPrice(quantity, item.productOffer.pricingTiers)
+      )
 
   let allOptions = value ? OPTIONS_QUANTITY.concat([{ key: value, text: value.toString(), value }]) : OPTIONS_QUANTITY
   allOptions = uniqueArrayByKey(allOptions, 'text')
