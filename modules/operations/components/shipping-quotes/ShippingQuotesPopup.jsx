@@ -171,13 +171,25 @@ const ShippingQuotesPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
+                  <Input
+                    type='text'
+                    label={
+                      <FormattedMessage id='operations.requestId' defaultMessage='Request Id' />
+                    }
+                    name='shippingQuoteRequestId'
+                    fieldProps={{ width: 8 }}
+                    inputProps={{
+                      disabled: true
+                    }}
+                  />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_shipping_quote_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </Button.Reset>
                   <Button.Submit data-test='operations_shipping_quote_submit_btn'>
-                    <FormattedMessage id='global.save' defaultMessage='Save' />
+                    {/* <FormattedMessage id='global.save' defaultMessage='Save' /> */}
+                    <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' />
                   </Button.Submit>
                 </div>
                 <ErrorFocus />
@@ -211,9 +223,9 @@ ShippingQuotesPopup.defaultProps = {
   datagrid: {},
   searchedManQuotRequests: [],
   toastManager: null,
-  createShippingQuote: () => {},
-  closePopup: () => {},
-  searchManualQuoteRequest: () => {}
+  createShippingQuote: () => { },
+  closePopup: () => { },
+  searchManualQuoteRequest: () => { }
 }
 
 export default injectIntl(withToastManager(ShippingQuotesPopup))
