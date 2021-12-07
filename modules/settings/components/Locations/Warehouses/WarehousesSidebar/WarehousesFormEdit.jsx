@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Header, FormGroup, Image, Checkbox as SemenCheckbox } from 'semantic-ui-react'
 import { Input, Checkbox, TextArea, Dropdown, Radio } from 'formik-semantic-ui-fixed-validation'
@@ -53,10 +54,16 @@ const WarehousesFormEdit = ({
   listDocumentTypes,
   toastManager
 }) => {
-  const { formatMessage } = intl
   const { setFieldValue, values, setFieldTouched, errors, touched, isSubmitting } = formikProps
+  const [publicWarehouse, setPublicWarehouse] = useState(values?.public)
+  
+  const { formatMessage } = intl
   const deaDocumentType = 17
   const fileMaxSize = 20
+  
+  const handlePublicWarehouseChange = (e) => {
+    setPublicWarehouse(e.target.checked);
+  }
   return (
     <>
       <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
@@ -85,6 +92,13 @@ const WarehousesFormEdit = ({
             defaultMessage: 'Public Warehouse'
           })}
           name='public'
+          inputProps={{
+            placeholder: formatMessage({
+              id: 'settings.warehouses.enterWarehouseName',
+              defaultMessage: 'Enter Warehouse Name'
+            }),
+            onChange: handlePublicWarehouseChange
+          }}
         />
       </FormGroup>
       <AddressForm
@@ -104,7 +118,11 @@ const WarehousesFormEdit = ({
         ]}
       />
       <DivHeader>
-        <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
+        {publicWarehouse ? (
+          <FormattedMessage id='settings.representativeInfo' defaultMessage='Public Warehouse Representative Info' />
+        ) : (
+          <FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' />
+        )}
       </DivHeader>
       <SegmentCustom>
         <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
@@ -112,7 +130,8 @@ const WarehousesFormEdit = ({
             type='text'
             label={
               <>
-                {formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
+                {(publicWarehouse) ? formatMessage({ id: 'global.representativeName', defaultMessage: 'Representative Name' }) :
+                formatMessage({ id: 'global.contactName', defaultMessage: 'Contact Name' })}
                 <Required />
               </>
             }
@@ -133,7 +152,8 @@ const WarehousesFormEdit = ({
             values={values}
             label={
               <>
-                {<FormattedMessage id='global.phone' defaultMessage='Phone' />}
+                {(publicWarehouse) ? <FormattedMessage id='settings.representativePhone' defaultMessage='Warehouse Representative Phone Number' /> : 
+                <FormattedMessage id='global.phone' defaultMessage='Phone' />}
                 <Required />
               </>
             }
@@ -147,7 +167,8 @@ const WarehousesFormEdit = ({
             type='text'
             label={
               <>
-                {formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
+                {(publicWarehouse) ? formatMessage({ id: 'settings.representativeEmail', defaultMessage: 'Warehouse Representative Email Address' }) :
+                formatMessage({ id: 'global.contactEmail', defaultMessage: 'Contact Email' })}
                 <Required />
               </>
             }
