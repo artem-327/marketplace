@@ -2371,6 +2371,7 @@
   "operations.addShippingQuote": "Add Shipping Quote",
   "operations.editShippingQuote": "Edit Shipping Quote",
   "operations.carrierName": "Carrier Name",
+  "operations.requestId": "Request Id",
   "operations.relatedOrder": "Related order",
   "operations.bol": "BOL",
   "operations.generateBOL": "Generate BOL",
