@@ -1,3 +1,4 @@
+import { connect } from 'react-redux'
 import { Fragment, useState } from 'react'
 import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -6,6 +7,7 @@ import ProdexTable from '../../../../components/table'
 import RowDetail from './RowDetail'
 // Services
 import { columns, getRows } from './ShippingQuoteRequestsTable.services'
+import ShippingQuotesPopup from '../shipping-quotes/ShippingQuotesPopupContainer'
 
 /**
  * ShippingQuoteRequestsTable Component
@@ -15,7 +17,7 @@ import { columns, getRows } from './ShippingQuoteRequestsTable.services'
 const ShippingQuoteRequestsTable = props => {
   const [expandedRowIds, setExpandedRowIds] = useState([])
 
-  const { intl, datagrid } = props
+  const { intl, datagrid, isOpenPopupOperations } = props
 
   return (
     <Fragment>
@@ -54,6 +56,7 @@ const ShippingQuoteRequestsTable = props => {
           estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
           defaultSorting={{ columnName: 'time', sortPath: 'Message.createdAt', direction: 'DESC' }}
         />
+        {isOpenPopupOperations && <ShippingQuotesPopup updateDatagrid={false} />}
       </div>
     </Fragment>
   )
@@ -61,14 +64,18 @@ const ShippingQuoteRequestsTable = props => {
 
 ShippingQuoteRequestsTable.propTypes = {
   rows: PropTypes.array,
-  intl: PropTypes.object, 
+  intl: PropTypes.object,
   datagrid: PropTypes.object
 }
 
 ShippingQuoteRequestsTable.defaultValues = {
   rows: [],
-  intl: {}, 
+  intl: {},
   datagrid: {}
 }
 
-export default injectIntl(ShippingQuoteRequestsTable)
+const mapStateToProps = ({ operations }) => ({
+  isOpenPopupOperations: operations.isOpenPopup,
+})
+
+export default connect(mapStateToProps, {})(injectIntl(ShippingQuoteRequestsTable))
