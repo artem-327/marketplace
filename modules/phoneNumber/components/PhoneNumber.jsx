@@ -80,12 +80,14 @@ export default class PhoneNumber extends Component {
   state = {
     phoneCountryCode: '',
     phoneNumber: '',
-    phoneFull: ''
+    phoneFull: '',
+    label: 'Phone',
   }
 
   componentDidMount = async () => {
-    const { defaultCountryCode, maxPhoneNumberLength } = this.props
+    const { defaultCountryCode, maxPhoneNumberLength, label } = this.props
 
+    if (label) this.setState({label})
     if (!this.props.phoneCountryCodes.length && !this.props.phoneCountryCodesLoading) await this.props.getCountries()
 
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
@@ -103,6 +105,7 @@ export default class PhoneNumber extends Component {
   componentDidUpdate(prevProps, nextProps, snapshot) {
     let phone = get(this.props.values, this.props.name, '').replace('+', '')
 
+    if (this.props.label) this.setState({label: this.props.label})
     if (phone !== this.state.phoneFull) {
       phone = splitPhoneNumber(phone, this.props.phoneCountryCodes, this.props.maxPhoneNumberLength)
 
@@ -120,7 +123,8 @@ export default class PhoneNumber extends Component {
 
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     return (
-      this.state.phoneFull !== nextState.phoneFull ||
+      this.state.label !== nextProps.label ||
+      this.state.label !== nextState.label ||
       this.state.phoneCountryCode !== nextState.phoneCountryCode ||
       this.state.phoneNumber !== nextState.phoneNumber ||
       get(this.props.values, this.props.name, '') !== get(nextProps.values, nextProps.name, '') ||
