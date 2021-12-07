@@ -104,6 +104,7 @@
   "admin.addDocumentType": "Add Document Type",
   "admin.editDocumentType": "Edit Document Type",
   "admin.searchDocumentGroup": "Search document group",
+  "admin.internal": "Internal",
   "admin.associations": "Associations",
   "admin.MarketSegment": "Document Segment",
   "admin.addMarketSegment": "Add Market Segment",

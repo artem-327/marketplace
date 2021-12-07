@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Modal, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 // Components
@@ -12,7 +12,7 @@ import { Required } from '../../../components/constants/layout'
 import ErrorFocus from '../../../components/error-focus'
 
 // Services
-import { getSafe, removeEmpty } from '../../../utils/functions'
+import { removeEmpty } from '../../../utils/functions'
 import { closePopup, editDocumentType, addDocumentType, getDocumentTypeGroupsByName } from '../actions'
 import { withDatagrid } from '../../datagrid'
 import { uniqueArrayByKey } from '../../../utils/functions'
@@ -45,13 +45,6 @@ const AddEditDocumentType = props => {
     }
   }, [])
 
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
   let allGroups = []
   if (selectedGroupOption) {
     allGroups = uniqueArrayByKey(documentGroups.concat([selectedGroupOption]), 'key')
@@ -71,14 +64,16 @@ const AddEditDocumentType = props => {
         <Form
           initialValues={{
             name: popupValues ? popupValues.name : '',
-            group: popupValues?.group ? popupValues.group.id : ''
+            group: popupValues?.group ? popupValues.group.id : '',
+            internal: popupValues?.internal
           }}
           validationSchema={formValidation}
           onReset={closePopup}
           onSubmit={async (values, { setSubmitting }) => {
             let data = {
               name: values.name.trim(),
-              group: values.group
+              group: values.group,
+              internal: values.internal
             }
             removeEmpty(data)
 
@@ -121,11 +116,22 @@ const AddEditDocumentType = props => {
                 search: true,
                 selection: true,
                 clearable: true,
+                onChange: (e, { value }) => {
+                  const selectedOption = allGroups.find(item => item.key === value)
+                  setSelectedGroupOption(selectedOption)
+                },
                 onSearchChange: (e, { searchQuery }) => {
                   searchQuery.length > 0 && props.getDocumentTypeGroupsByName(searchQuery)
                 },
                 'data-test': 'admin_edit_document_type_document_group_dropdown'
               }}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Checkbox
+              label={formatMessage({ id: 'admin.internal', defaultMessage: 'Internal' })}
+              name='internal'
+              inputProps={{ 'data-test': 'admin_edit_document_type_internal_checkbox' }}
             />
           </FormGroup>
 
