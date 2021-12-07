@@ -69,7 +69,7 @@ const RowDetail = props => {
               {row.info.items.map(item => {
                 return (
                   <StyledList divided relaxed horizontal size='large'>
-                    <List.Item>
+                    <List.Item style={{width: 100}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.product' defaultMessage='Product' />
@@ -78,7 +78,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{width: 90}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
@@ -89,7 +89,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
@@ -98,7 +98,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
@@ -107,7 +107,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.palletCount' defaultMessage='Pallet Count' />
@@ -116,7 +116,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
@@ -130,7 +130,7 @@ const RowDetail = props => {
                         </List.Description>
                       </List.Content>
                     </List.Item>
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
@@ -144,7 +144,7 @@ const RowDetail = props => {
                         </List.Description>
                       </List.Content>
                     </List.Item>
-                    <List.Item>
+                    <List.Item style={{width: 80}}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
