@@ -24,7 +24,7 @@ const DeaPopup = props => {
 
   const deaType = deaListIIType ? 'II' : 'I'
   const requirements =
-    <LinkLabel href='https://www.deadiversion.usdoj.gov/21cfr/cfr/1301/1301_72.htm' target='_blank'>
+    <LinkLabel href='https://www.deadiversion.usdoj.gov/drugreg/index.html#3' target='_blank'>
       <FormattedMessage id='marketplace.requirements' defaultMessage='requirements' />
     </LinkLabel>
 
