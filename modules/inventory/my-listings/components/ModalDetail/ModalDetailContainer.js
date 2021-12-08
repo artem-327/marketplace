@@ -9,7 +9,6 @@ import {
   getAutocompleteData,
   getWarehouses,
   addProductOffer,
-  searchOrigins,
   searchManufacturers,
   addAttachment,
   loadFile,
@@ -42,7 +41,6 @@ import {
   makeGetDetailValues,
   makeGetSearchedManufacturers,
   makeGetSearchedManufacturersLoading,
-  makeGetSearchedOrigins,
   makeGetSearchedProducts,
   makeGetSearchedProductsLoading,
   makeGetWarehousesList,
@@ -73,7 +71,6 @@ const mapDispatchToProps = {
   getWarehouses,
   getCountries,
   searchManufacturers,
-  searchOrigins,
   openBroadcast,
   addAttachment,
   loadFile,
@@ -102,7 +99,6 @@ const makeMapStateToProps = () => {
   const getDetailValues = makeGetDetailValues()
   const getSearchedManufacturers = makeGetSearchedManufacturers()
   const getSearchedManufacturersLoading = makeGetSearchedManufacturersLoading()
-  const getSearchedOrigins = makeGetSearchedOrigins()
   const getSearchedProducts = makeGetSearchedProducts()
   const getSearchedProductsLoading = makeGetSearchedProductsLoading()
   const getWarehousesList = makeGetWarehousesList()
@@ -128,7 +124,6 @@ const makeMapStateToProps = () => {
     detailValues: getDetailValues(store),
     searchedManufacturers: getSearchedManufacturers(store),
     searchedManufacturersLoading: getSearchedManufacturersLoading(store),
-    searchedOrigins: getSearchedOrigins(store),
     searchedProducts: getSearchedProducts(store),
     searchedProductsLoading: getSearchedProductsLoading(store),
     warehousesList: getWarehousesList(store),
