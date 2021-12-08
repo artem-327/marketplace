@@ -290,5 +290,6 @@ export const submitCompany = async (values, actions, state, props) => {
     console.error(err)
   } finally {
     if (values.businessType) values.businessType = { id: values.businessType }
+    closePopup()
   }
 }
