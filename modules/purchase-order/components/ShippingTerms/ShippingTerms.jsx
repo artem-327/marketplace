@@ -130,8 +130,21 @@ const ShippingTerms = props => {
                                     disabled={disabled}
                                     size={18}
                                     onClick={() => {
+                                      let fullAddress = {};
                                       if (!disabled) {
-                                        setAddAddressValues(item)
+                                        for (const key in item.fullAddress) {
+                                          if (Object.hasOwnProperty.call(item.fullAddress, key)) {
+                                            const element = item.fullAddress[key];
+                                            if(key!=='enabled') {
+                                              fullAddress[key] = element;
+                                            }
+                                          }
+                                        }
+                                        let newItem = {
+                                          ...item,
+                                          fullAddress,
+                                        }
+                                        setAddAddressValues(newItem)
                                         setIsOpenAddAddress(true)
                                       }
                                     }}
