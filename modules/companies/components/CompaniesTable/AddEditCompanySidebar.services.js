@@ -271,11 +271,13 @@ export const submitCompany = async (values, actions, state, props) => {
         // let reader = new FileReader()
         // reader.onload = async function () {
         const { value } = await createCompany(payload)
+        setTimeout(() => {
+          closePopup()
+        }, 2000);
         companyLogo && await postCompanyLogo(value.id, companyLogo)
         companyDoc && await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: value.id, force: true })
         datagrid.loadData()
         actions.setSubmitting(false)
-        closePopup()
         // }
         // companyLogo && reader.readAsBinaryString(companyLogo)
       } else {
@@ -290,6 +292,5 @@ export const submitCompany = async (values, actions, state, props) => {
     console.error(err)
   } finally {
     if (values.businessType) values.businessType = { id: values.businessType }
-    closePopup()
   }
 }
