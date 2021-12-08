@@ -3,6 +3,7 @@ import * as AT from './action-types'
 export const initialState = {
   data: [],
   companyLogo: null,
+  companyLogoLoading: false,
   loading: false,
   associations: [],
   industryTypesLoading: false,
@@ -42,10 +43,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_COMPANY_LOGO_PENDING: {
+      return {
+        ...state,
+        companyLogoLoading: true
+      }
+    }
+    case AT.GET_COMPANY_LOGO_REJECTED: {
+      return {
+        ...state,
+        companyLogoLoading: false
+      }
+    }
     case AT.GET_COMPANY_LOGO_FULFILLED: {
       return {
         ...state,
-        companyLogo: payload.data.size ? payload.data : null
+        companyLogo: payload.data.size ? payload.data : null,
+        companyLogoLoading: false
       }
     }
 

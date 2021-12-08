@@ -9,7 +9,8 @@ import Logo from '../../../../assets/images/blue-pallet/logo.png'
 
 //Services
 import { getSafe } from '../../../../utils/functions'
-import { loadCompanyLogo, getCompanyLogo } from './HeaderRow.services'
+import { loadCompanyLogo, returnCompanyLogo } from './HeaderRow.services'
+import { getCompanyLogo } from '../../../company-form/actions'
 
 // Styles
 import {
@@ -34,7 +35,8 @@ const HeaderRow = props => {
 
   // Similar to call componentDidMount:
   useEffect(() => {
-    if (hasLogo && getSafe(() => props.useCompanyLogo.value === 'TRUE', false)) loadCompanyLogo(props)
+    if (hasLogo && getSafe(() => props.useCompanyLogo.value, 'false').toLowerCase() === 'true')
+      loadCompanyLogo(props)
   }, []) // If [] is empty then is similar as componentDidMount.
 
   return (
@@ -45,7 +47,12 @@ const HeaderRow = props => {
           trigger={
             <DivImageWrapper>
               <LogoImage
-                src={hasLogo && getSafe(() => useCompanyLogo.value === 'TRUE', false) ? getCompanyLogo(props) : Logo}
+                src={
+                  hasLogo &&
+                  getSafe(() => useCompanyLogo.value, 'false').toLowerCase() === 'true'
+                    ? returnCompanyLogo(props)
+                    : Logo
+                }
               />
             </DivImageWrapper>
           }
@@ -117,7 +124,9 @@ HeaderRow.defaultProps = {
 function mapStateToProps(store) {
   return {
     hasLogo: getSafe(() => store.auth.identity.company.hasLogo, false),
+    companyId: getSafe(() => store.auth.identity.company.id),
     companyLogo: getSafe(() => store.businessTypes.companyLogo, null),
+    companyLogoLoading: getSafe(() => store.businessTypes.companyLogoLoading, false),
     useCompanyLogo: getSafe(() => store.auth.identity.settings.find(set => set.key === 'COMPANY_USE_OWN_LOGO'), false)
   }
 }
