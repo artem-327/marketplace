@@ -4,6 +4,7 @@ import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Container, Button, Input } from 'semantic-ui-react'
 import { injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
+import Router from 'next/router'
 // Components
 import ProdexTable from '../../../../components/table'
 import ProductPopup from './ProductPopupContainer'
@@ -12,6 +13,7 @@ import ColumnSettingButton from '../../../../components/table/ColumnSettingButto
 import Tutorial from '../../../tutorial/Tutorial'
 // Services
 import { columns, handleFiltersValue, handleFilterChangeInputSearch, handleFilterChangeMappedUnmapped, getRows } from './MyProducts.services'
+import { getSafe } from '../../../../utils/functions'
 // Styles
 import { CustomRowDiv } from '../../styles'
 import { DropdownStyled } from './MyProducts.styles'
@@ -32,7 +34,7 @@ const MyProducts = props => {
     }
   })
 
-  useEffect(() => {
+  useEffect(async () => {
     const { myProductsFilters } = props
 
     if (myProductsFilters) {
@@ -48,6 +50,18 @@ const MyProducts = props => {
         props.datagrid.clear()
         handleFiltersValue(filter, props)
       }
+    }
+
+    const productId = getSafe(() => Router.router.query.id, '')
+
+    if (productId && !isNaN(parseInt(productId))) {
+      let genericProduct
+      try {
+        genericProduct = await props.getCompanyGenericProductById(parseInt(productId)).then(response => response.value)
+      } catch (e) {
+        console.error(e)
+      }
+      props.openPopupPreFilledProduct(genericProduct ? { initGenericProductId: genericProduct.id } : null)
     }
   }, [])
 

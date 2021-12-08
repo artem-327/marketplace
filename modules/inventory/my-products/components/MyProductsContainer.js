@@ -5,7 +5,12 @@ import MyProducts from './MyProducts'
 import { withDatagrid } from '../../../datagrid'
 // Actions
 import * as Actions from '../../../settings/actions'
-import { openPopup, handleProductCatalogUnmappedValue, handleVariableSave } from '../../actions'
+import {
+    openPopup,
+    openPopupPreFilledProduct,
+    handleProductCatalogUnmappedValue,
+    handleVariableSave
+} from '../../actions'
 // Services
 import { getSafe } from '../../../../utils/functions'
 import { getMappedRows } from './MyProducts.services'
@@ -41,6 +46,7 @@ export default withDatagrid(
     connect(makeMapStateToProps, {
     ...Actions,
     openPopup,
+    openPopupPreFilledProduct,
     handleProductCatalogUnmappedValue,
     handleVariableSave
     })(MyProducts)

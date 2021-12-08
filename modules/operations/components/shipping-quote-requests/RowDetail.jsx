@@ -1,5 +1,7 @@
+import { connect } from 'react-redux'
 import { FormattedMessage } from 'react-intl'
-import { Grid, GridRow, GridColumn, List } from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, List, Button } from 'semantic-ui-react'
+import { ArrowRight } from 'react-feather'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 // Services
@@ -15,7 +17,9 @@ import {
   AddressGrid,
   SpanIdValue
 } from '../../styles'
-import {GridRowMargin} from "../../../alerts/components/DetailMessages/ShippingQuoteRequest.styles";
+import { GridRowMargin } from "../../../alerts/components/DetailMessages/ShippingQuoteRequest.styles";
+
+import { openPopup as openPopupOperations } from '../../../operations/actions'
 
 /**
  * RowDetail Component
@@ -57,7 +61,7 @@ const RowDetail = props => {
     )
   }
 
-  const { row } = props
+  const { row, openPopupOperations } = props
   const preferredDeliveryDate = getSafe(() => row.info.preferredDeliveryDate, false)
 
   return (
@@ -69,7 +73,7 @@ const RowDetail = props => {
               {row.info.items.map(item => {
                 return (
                   <StyledList divided relaxed horizontal size='large'>
-                    <List.Item>
+                    <List.Item style={{ width: 100 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.product' defaultMessage='Product' />
@@ -78,7 +82,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{ width: 90 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.grossWeight' defaultMessage='Gross Weight' />
@@ -89,7 +93,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.nmfc' defaultMessage='NMFC' />
@@ -98,7 +102,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.freightClass' defaultMessage='Freight Class' />
@@ -107,7 +111,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.palletCount' defaultMessage='Pallet Count' />
@@ -116,7 +120,7 @@ const RowDetail = props => {
                       </List.Content>
                     </List.Item>
 
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.hazardous' defaultMessage='Hazardous' />
@@ -130,7 +134,7 @@ const RowDetail = props => {
                         </List.Description>
                       </List.Content>
                     </List.Item>
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.stackable' defaultMessage='Stackable' />
@@ -144,7 +148,7 @@ const RowDetail = props => {
                         </List.Description>
                       </List.Content>
                     </List.Item>
-                    <List.Item>
+                    <List.Item style={{ width: 80 }}>
                       <List.Content>
                         <List.Header as='label'>
                           <FormattedMessage id='alerts.freezeProtect' defaultMessage='Freeze Protect' />
@@ -196,6 +200,18 @@ const RowDetail = props => {
         <div className='right-buttons'>
           <Grid>
             <GridRow>
+              <GridColumn>
+                <div style={{ float: 'right' }}>
+                  <Button style={{ marginRight: '0' }} onClick={() => openPopupOperations(row)}>
+                    <FormattedMessage id='alerts.addShippingQuote' defaultMessage='Add Shipping Quote'>
+                      {text => text}
+                    </FormattedMessage>
+                    <ArrowRight size='18' style={{ marginLeft: '12px' }} />
+                  </Button>
+                </div>
+              </GridColumn>
+            </GridRow>
+            <GridRow>
               <GridColumn width={16}>
                 <div style={{ float: 'right' }}>
                   <FormattedMessage id='alerts.shippingQuoteIdColon' defaultMessage='Shipping Quote ID:' />
@@ -230,4 +246,4 @@ RowDetail.defaultValues = {
   rows: []
 }
 
-export default RowDetail
+export default connect(null, { openPopupOperations })(RowDetail)
