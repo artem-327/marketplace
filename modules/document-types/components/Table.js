@@ -4,7 +4,7 @@ import { injectIntl } from 'react-intl'
 import confirm from '~/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import ActionCell from '~/components/table/ActionCell'
-import { openEditPopup, closeConfirmPopup, deleteConfirmation } from '../actions'
+import { openPopup, deleteDocumentType } from '../actions'
 import { getDocumentTypes } from '../../global-data/actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { FormattedMessage } from 'react-intl'
@@ -24,19 +24,28 @@ class Table extends Component {
           ),
           sortPath: 'DocumentType.name',
           allowReordering: false
+        },
+        {
+          name: 'group',
+          title: (
+            <FormattedMessage id='global.documentTypeGroup' defaultMessage='Document Type Group'>
+              {text => text}
+            </FormattedMessage>
+          ),
+          sortPath: 'DocumentType.group.name'
         }
       ]
     }
   }
 
   getActions = () => {
-    const { intl, openEditPopup, deleteConfirmation, datagrid, getDocumentTypes } = this.props
+    const { intl, openPopup, deleteDocumentType, datagrid, getDocumentTypes } = this.props
 
     const { formatMessage } = intl
     return [
       {
         text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openEditPopup(row),
+        callback: row => openPopup(row),
         hidden: row => !row.editable
       },
       {
@@ -56,9 +65,8 @@ class Table extends Component {
             )
           ).then(async () => {
             try {
-              await deleteConfirmation(row.id)
+              await deleteDocumentType(row.id)
               datagrid.removeRow(row.id)
-              getDocumentTypes()
             } catch (e) {
               console.error(e)
             }
@@ -76,9 +84,10 @@ class Table extends Component {
             row={row}
             getActions={this.getActions}
             content={row.name}
-            onContentClick={row.editable ? () => this.props.openEditPopup(row) : null}
+            onContentClick={row.editable ? () => this.props.openPopup(row) : null}
           />
-        )
+        ),
+        group: row.group?.name
       }
     })
   }
@@ -104,9 +113,8 @@ class Table extends Component {
 
 const mapDispatchToProps = {
   getDocumentTypes,
-  openEditPopup,
-  closeConfirmPopup,
-  deleteConfirmation
+  openPopup,
+  deleteDocumentType
 }
 
 const mapStateToProps = (state, { datagrid }) => {

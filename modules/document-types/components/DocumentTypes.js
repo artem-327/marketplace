@@ -6,8 +6,8 @@ import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
 import { getSafe } from '~/utils/functions'
 import TableHandlers from './TableHandlers'
 import Table from './Table'
-import EditPopup1Parameter from './EditPopup1Parameter'
-import AddNewPopup1Parameter from './AddNewPopup1Parameter'
+import AddEditPopup from './AddEditPopup'
+
 import * as Actions from '../actions'
 // Constants
 import { GA_TRACK_QUERY } from '../../../constants'
@@ -18,8 +18,8 @@ class DocumentTypes extends Component {
   }
 
   componentWillUnmount() {
-    const { currentEditForm, currentAddForm, closeAddPopup } = this.props
-    if (currentEditForm || currentAddForm) closeAddPopup()
+    const { isOpenPopup, closePopup } = this.props
+    if (isOpenPopup) closePopup()
   }
 
   getApiConfig = () => ({
@@ -42,8 +42,7 @@ class DocumentTypes extends Component {
             <TableHandlers />
           </div>
           <div style={{ padding: '0 30px 20px 30px' }} className='flex stretched'>
-            {this.props.currentEditForm && <EditPopup1Parameter />}
-            {this.props.currentAddForm && <AddNewPopup1Parameter />}
+            {this.props.isOpenPopup && <AddEditPopup />}
             <Table />
           </div>
         </Container>
@@ -53,8 +52,7 @@ class DocumentTypes extends Component {
 }
 
 const mapStateToProps = state => ({
-  currentEditForm: state.documentTypes.currentEditForm,
-  currentAddForm: state.documentTypes.currentAddForm,
+  isOpenPopup: state.documentTypes.isOpenPopup,
   auth: state.auth
 })
 

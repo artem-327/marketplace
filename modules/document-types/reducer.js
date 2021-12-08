@@ -1,20 +1,14 @@
 import * as AT from './action-types'
 
 export const initialState = {
-  deleteRowById: null,
-  confirmMessage: null,
-  currentEditForm: null,
-  currentAddForm: null,
-  currentEdit2Form: null,
-  currentAddDwolla: null,
-  editPopupBoolean: false,
   popupValues: null,
+  isOpenPopup: false,
   filterValue: '',
   loading: false,
-  casProductsRows: [],
-  companiesRows: [],
   currentTab: { name: 'Document Types', id: 9, type: 'document-types' },
-  tableHandlersFilters: null
+  tableHandlersFilters: null,
+  documentGroupsLoading: false,
+  documentGroups: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -24,76 +18,21 @@ export default function reducer(state = initialState, action) {
     case AT.DOCUMENT_TYPES_OPEN_POPUP: {
       return {
         ...state,
-        editTrig: !state.editTrig,
-        popupValues: payload.data,
-
-        //[payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
-
-        ...(payload.data
-          ? {
-              currentAddForm: null,
-              currentEditForm: state.currentTab
-            }
-          : {
-              currentAddForm: state.currentTab,
-              currentEditForm: null
-            }),
-        currentEdit2Form: null,
-        currentAddDwolla: null
-      }
-    }
-    case AT.DOCUMENT_TYPES_OPEN_EDIT_POPUP: {
-      return {
-        ...state,
-        currentEditForm: state.currentTab,
-        currentAddForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null,
-        editPopupBoolean: state.editPopupBoolean === false ? true : false,
-        popupValues: payload
-      }
-    }
-    case AT.DOCUMENT_TYPES_CLOSE_CONFIRM_POPUP: {
-      return {
-        ...state,
-        deleteRowById: null,
-        confirmMessage: null
-      }
-    }
-    case AT.DOCUMENT_TYPES_CLOSE_ADD_POPUP: {
-      return {
-        ...state,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
-      }
-    }
-    case AT.DOCUMENT_TYPES_CLOSE_EDIT_POPUP: {
-      return {
-        ...state,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
-      }
-    }
-    case AT.DOCUMENT_TYPES_HANDLE_FILTERS_VALUE: {
-      return {
-        ...state,
-        filterValue: payload,
-        casProductsRows: [],
-        companiesRows: []
+        popupValues: payload,
+        isOpenPopup: true
       }
     }
     case AT.DOCUMENT_TYPES_CLOSE_POPUP: {
       return {
         ...state,
+        isOpenPopup: false,
         popupValues: null,
-        currentAddForm: null,
-        currentEditForm: null,
-        currentEdit2Form: null,
-        currentAddDwolla: null
+      }
+    }
+    case AT.DOCUMENT_TYPES_HANDLE_FILTERS_VALUE: {
+      return {
+        ...state,
+        filterValue: payload
       }
     }
     case AT.DOCUMENT_TYPES_HANDLE_VARIABLE_CHANGE: {
@@ -114,6 +53,31 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.DOCUMENT_TYPES_GET_DOCUMENT_GROUPS_BY_NAME_PENDING: {
+      return {
+        ...state,
+        documentGroupsLoading: true
+      }
+    }
+    case AT.DOCUMENT_TYPES_GET_DOCUMENT_GROUPS_BY_NAME_FULFILLED: {
+      return {
+        ...state,
+        documentGroupsLoading: false,
+        documentGroups: payload.map(data => ({
+          text: data.name,
+          value: data.id,
+          key: data.id
+        }))
+      }
+    }
+
+    case AT.DOCUMENT_TYPES_GET_DOCUMENT_GROUPS_BY_NAME_REJECTED: {
+      return {
+        ...state,
+        documentGroupsLoading: false
       }
     }
 
