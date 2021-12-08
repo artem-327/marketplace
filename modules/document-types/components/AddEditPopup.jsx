@@ -36,11 +36,11 @@ const AddEditDocumentType = props => {
 
   useEffect(() => {
     const { popupValues } = props
-    if (popupValues?.groups) {
+    if (popupValues?.group) {
       setSelectedGroupOption({
-        text: popupValues.groups.name,
-        value: popupValues.groups.id,
-        key: popupValues.groups.id
+        text: popupValues.group.name,
+        value: popupValues.group.id,
+        key: popupValues.group.id
       })
     }
   }, [])
