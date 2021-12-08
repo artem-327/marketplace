@@ -40,6 +40,7 @@ import {
   openPopup,
   closePopup,
   resetForm,
+  openPopupPreFilledProduct,
   changeBroadcast,
   setActiveTab,
   triggerPriceBookModal
@@ -63,6 +64,7 @@ export const initialState = {
   autocompleteData: [],
   autocompleteDataLoading: false,
   popupValues: null,
+  initGenericProductId: null,
   isOpenPopup: false,
   editTrig: false,
   isModalDetailOpen: false,
@@ -434,7 +436,18 @@ export default typeToReducer(
         ...state,
         isOpenPopup: false,
         popupValues: null,
+        initGenericProductId: null,
         editedId: null
+      }
+    },
+    [openPopupPreFilledProduct]: (state, action) => {
+      return {
+        ...state,
+        isOpenPopup: true,
+        editTrig: !state.editTrig,
+        popupValues: null,
+        editedId: null,
+        initGenericProductId: action.payload ? action.payload.initGenericProductId : null
       }
     },
     [resetForm]: (state, action) => {

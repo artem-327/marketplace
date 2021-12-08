@@ -39,7 +39,8 @@ import {
   makeGetProductDataLoading,
   makeGetNmfcNumbersFetching,
   makeGetNmfcNumbersFiltered,
-  makeGetSettingsMap
+  makeGetSettingsMap,
+  makeGetInitGenericProductId
 } from '../../selectors'
 
 import {
@@ -92,6 +93,7 @@ const makeMapStateToProps = () => {
   const getNmfcNumbersFetching = makeGetNmfcNumbersFetching()
   const getNmfcNumbersFiltered = makeGetNmfcNumbersFiltered()
   const getSettingsMap = makeGetSettingsMap()
+  const getInitGenericProductId = makeGetInitGenericProductId()
 
   const mapStateToProps = state => {
     const settingsMap = getSettingsMap(state)
@@ -118,7 +120,8 @@ const makeMapStateToProps = () => {
       palletLengthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.length), ''),
       palletWidthInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.width), ''),
       palletHeightInitFromSettings: getSafe(() => settingsMap.get(palletDimensions.height), ''),
-      palletWeightUnitInitFromSettings: 7 // 7 = pounds, lb
+      palletWeightUnitInitFromSettings: 7, // 7 = pounds, lb
+      initGenericProductId: getInitGenericProductId(state)
     }
   }
   return mapStateToProps

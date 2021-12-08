@@ -1098,6 +1098,11 @@ export const searchCompanyGenericProduct = (searchQuery, limit = 30) => ({
   payload: api.searchCompanyGenericProduct(searchQuery, limit)
 })
 
+export const getCompanyGenericProductById = id => ({
+  type: AT.SETTINGS_GET_COMPANY_GENERIC_PRODUCT,
+  payload: api.getCompanyGenericProductById(id)
+})
+
 export const getNmfcNumbersByString = value => ({
   type: AT.SEARCH_NMFC_NUMBERS,
   payload: api.getNmfcNumbersByString(value)
