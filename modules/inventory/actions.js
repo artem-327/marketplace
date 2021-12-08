@@ -208,9 +208,3 @@ export const changeBroadcast = createAction('CHANGE_BROADCAST', broadcastOption 
 export const setActiveTab = createAction('SET_ACTIVE_TAB', tab => tab)
 export const triggerPriceBookModal = createAction('TRIGGER_PRICE_BOOK_MODAL', (isOpen, rowPriceBook) => ({ isOpen, rowPriceBook }))
 export const getProductOffer = createAction('INVENTORY_GET_PRODUCT_OFFER', data => ({data}))
-export const searchOrigins = createAction('INVENTORY_SEARCH_ORIGINS', (countries, text, limit = false) => {
-  const data = countries.filter(c => c?.text?.includes(text))
-  return {
-    data: limit ? data.slice(0, limit) : data.slice(0, 30)
-  }
-})

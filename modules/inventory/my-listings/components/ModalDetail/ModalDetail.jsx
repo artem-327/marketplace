@@ -179,8 +179,6 @@ const ModalDetail = props => {
     productGradesDropdown,
     loading,
     detailValues,
-    searchedOrigins,
-    searchOrigins,
     warehousesList,
     documentTypesDropdown,
     intl: { formatMessage },
@@ -907,7 +905,7 @@ const ModalDetail = props => {
                                             </FormattedMessage>
                                             <Dropdown
                                               name='edit.origin'
-                                              options={searchedOrigins}
+                                              options={countriesDropdown}
                                               inputProps={{
                                                 onChange: () => onChange(state, setState),
                                                 'data-test': 'new_inventory_origin_drpdn',
@@ -918,10 +916,6 @@ const ModalDetail = props => {
                                                 selection: true,
                                                 clearable: true,
                                                 disabled: detailValues && detailValues.grouped,
-                                                onSearchChange: debounce(
-                                                  (e, { searchQuery }) => searchOrigins(countriesDropdown, searchQuery),
-                                                  250
-                                                ),
                                                 placeholder: (
                                                   <FormattedMessage
                                                     id='addInventory.selectCountry'
@@ -1589,7 +1583,6 @@ ModalDetail.propTypes = {
   tdsTemplatesLoading: PropTypes.bool,
   productFormsDropdown: PropTypes.array,
   productGradesDropdown: PropTypes.array,
-  searchedOrigins: PropTypes.array,
   warehousesList: PropTypes.array,
   documentTypesDropdown: PropTypes.array,
   broadcastTemplates: PropTypes.array,
@@ -1606,7 +1599,6 @@ ModalDetail.propTypes = {
   getProductForms: PropTypes.func,
   getProductGrades: PropTypes.func,
   getWarehouses: PropTypes.func,
-  searchOrigins: PropTypes.func,
   closeModalDetail: PropTypes.func,
   deleteTdsTemplate: PropTypes.func,
   getTdsTemplates: PropTypes.func,
@@ -1630,7 +1622,6 @@ ModalDetail.defaultProps = {
   tdsTemplatesLoading: false,
   productFormsDropdown: [],
   productGradesDropdown: [],
-  searchedOrigins: [],
   warehousesList: [],
   documentTypesDropdown: [],
   broadcastTemplates: [],
@@ -1647,7 +1638,6 @@ ModalDetail.defaultProps = {
   getProductForms: () => {},
   getProductGrades: () => {},
   getWarehouses: () => {},
-  searchOrigins: () => {},
   closeModalDetail: () => {},
   deleteTdsTemplate: () => {},
   getTdsTemplates: () => {},

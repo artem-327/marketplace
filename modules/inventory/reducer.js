@@ -20,7 +20,6 @@ import {
   removeAttachmentLink,
   removeAttachment,
   searchManufacturers,
-  searchOrigins,
   getAutocompleteData,
   groupOffers,
   removeAttachmentLinkProductOffer,
@@ -52,7 +51,6 @@ export const initialState = {
   poCreated: false,
   searchedManufacturers: [],
   searchedManufacturersLoading: false,
-  searchedOrigins: [],
   myProductOffers: [],
   myProductOffersPageLoaded: -1,
   searchedProducts: [],
@@ -491,13 +489,7 @@ export default typeToReducer(
         detailValues: action?.payload?.data,
         editedId: action?.payload?.data?.id
       }
-    },
-    [searchOrigins]: (state, action) => {
-      return {
-        ...state,
-        searchedOrigins: action.payload.data
-      }
-    },
+    }
   },
   initialState
 )

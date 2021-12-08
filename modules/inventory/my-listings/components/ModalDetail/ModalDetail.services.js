@@ -241,7 +241,7 @@ const getEditValues = detailValues => {
           ? moment(detailValues.lotManufacturedDate).format(getLocaleDateFormat())
           : '',
       minimum: getSafe(() => detailValues.minPkg, 1),
-      origin: getSafe(() => detailValues.origin.id, null),
+      origin: getSafe(() => detailValues.rawData.origin.id, null),
       pkgAvailable: getSafe(() => detailValues.pkgAvailable, ''),
       product: getSafe(() => detailValues.companyProduct.id, null),
       productCondition: getSafe(() => detailValues.condition.id, null),
@@ -288,11 +288,6 @@ export const loadProductOffer = async (shouldSwitchTab, props, state, setState, 
     switchTab(props, state, setState, props.modalActiveTab, data)
   }
 
-  props.searchOrigins(
-    props.countriesDropdown,
-    getSafe(() => data.origin.name, ''),
-    30
-  )
   if (data?.companyProduct) {
     searchProducts(data.companyProduct.intProductName, props)
   }
