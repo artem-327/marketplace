@@ -55,5 +55,6 @@ export const LINK_TRANSLATE_TABLE = {
   '/pending-branch-certificates': '/warehouse-credentials/pending',
   '/credentials-branch-certificates': '/warehouse-credentials/certified',
   '/own-wanted-board-requests': '/wanted-board/my-posts',
-  '/public-wanted-board-requests': '/wanted-board/all-posts'
+  '/public-wanted-board-requests': '/wanted-board/all-posts',
+  '/company-products': '/inventory/my-products'
 }

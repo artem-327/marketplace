@@ -148,12 +148,13 @@ export const getInitialFormValues = props => {
     palletHeightInitFromSettings,
     palletWidthInitFromSettings,
     palletLengthInitFromSettings,
-    palletWeightUnitInitFromSettings
+    palletWeightUnitInitFromSettings,
+    initGenericProductId
   } = props
 
   if (!popupValues) {
     return {
-      companyGenericProduct: null,
+      companyGenericProduct: initGenericProductId ? initGenericProductId : null,
       freezeProtect: false,
       freightClass: '',
       hazardous: false,
