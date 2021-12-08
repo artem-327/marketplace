@@ -7,7 +7,11 @@ import Logo from '~/assets/images/nav/logo-echo.svg'
  * @return none
  */
 export const loadCompanyLogo = async props => {
-  if (props.hasLogo && getSafe(() => props.useCompanyLogo.value === 'true', false) && props.getCompanyLogo) {
+  if (
+    props.hasLogo &&
+    getSafe(() => props.useCompanyLogo.value, 'false').toLowerCase() === 'true'
+    && props.getCompanyLogo
+  ) {
     await props.getCompanyLogo(props.companyId)
   }
 }
@@ -15,10 +19,10 @@ export const loadCompanyLogo = async props => {
  * @param {object} props - {companyLogo}
  * @return {object} - Logo
  */
-export const getCompanyLogo = props => {
+export const returnCompanyLogo = props => {
   if (props.companyLogo) {
     const file = new Blob([props.companyLogo], { type: props.companyLogo.type })
     return URL.createObjectURL(file)
   }
-  return Logo
+  return props.companyLogoLoading ? null : Logo
 }
