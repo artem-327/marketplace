@@ -8,13 +8,20 @@ import { downloadPdf, downloadDisputeAttachment } from '../../../orders/actions'
 // Services
 import { actionRequired, prepareDetail } from './Detail.services'
 // Selectors
-import { makeGetEchoSupportPhone, makeGetIsPaymentCancellable, makeGetIsOpenPopup, makeGetLoading } from '../../selectors'
+import {
+  makeGetEchoSupportPhone,
+  makeGetIsPaymentCancellable,
+  makeGetIsOpenPopup,
+  makeGetLoading,
+  makeGetOrderByIdLoading
+} from '../../selectors'
 
 const makeMapStateToProps = () => {
   const getEchoSupportPhone = makeGetEchoSupportPhone()
   const getIsPaymentCancellable = makeGetIsPaymentCancellable()
   const getIsOpenPopup = makeGetIsOpenPopup()
   const getLoading = makeGetLoading()
+  const getOrderByIdLoading = makeGetOrderByIdLoading()
 
   const mapStateToProps = (state, ownProps) => {
     const isCancelable =
@@ -28,7 +35,8 @@ const makeMapStateToProps = () => {
       action: actionRequired(state?.operations?.orderDetailData),
       isOpenPopup: getIsOpenPopup(state),
       loading: getLoading(state),
-      isCancelable
+      orderByIdLoading: getOrderByIdLoading(state),
+      isCancelable,
     }
   }
   return mapStateToProps

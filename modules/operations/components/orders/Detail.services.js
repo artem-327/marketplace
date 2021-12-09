@@ -35,6 +35,8 @@ const getReturnAddress = (data) => {
     return returnAddr
 }
 
+
+
 /**
  * prepare Detail function used in DetailContainer
  * @category Operations
@@ -52,7 +54,9 @@ export const prepareDetail = (data, type = 'sales') => {
   
     return {
       ...data,
+      rawData: data,
       companyEin: data.buyerCompanyTin ? data.buyerCompanyTin : 'N/A',
+      sellerCompanyEin: data.sellerCompanyTin ? data.sellerCompanyTin : 'N/A',
       acceptanceDate:
         typeof data.acceptanceDate !== 'undefined' ? moment(data.acceptanceDate).toDate().toLocaleString() : 'N/A',
       amount: (
@@ -84,6 +88,15 @@ export const prepareDetail = (data, type = 'sales') => {
           style='currency'
           currency={currency}
           value={data.shippingPrice ? data.shippingPrice : 0}
+        />
+      ),
+      transactionFeeFormatted: (
+        <FormattedNumber
+          minimumFractionDigits={2}
+          maximumFractionDigits={2}
+          style='currency'
+          currency={currency}
+          value={data.transactionFee ? data.transactionFee : 0}
         />
       ),
       grossProfit: (
@@ -242,6 +255,14 @@ export const prepareDetail = (data, type = 'sales') => {
             data.sellerCompanyAddressZip +
             ' ' +
             data.sellerCompanyAddressCountry,
+      sellerAddress:
+        data.sellerCompanyAddressStreet +
+        ', ' +
+        data.sellerCompanyAddressCity +
+        ', ' +
+        data.sellerCompanyAddressZip +
+        ' ' +
+        data.sellerCompanyAddressCountry,
       paymentEmail: type === 'sales' ? data.buyerCompanyContactEmail : data.sellerCompanyContactEmail,
       paymentName: type === 'sales' ? data.buyerCompanyName : data.sellerCompanyName,
       paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
@@ -319,6 +340,20 @@ export const downloadOrder = async (props) => {
   element.click()
 }
 
+/**
+ * Get Order by ID
+ * @category Operations
+ * @services
+ */
+export const getOrder = async (id, props) => {
+  try {
+    const { value } = await props.getOrderById(id)
+    if (value?.length) return value[0]
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
 /**
  * handle Click function used in Detail Component
  * @category Operations

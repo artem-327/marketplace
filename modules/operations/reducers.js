@@ -25,7 +25,8 @@ import {
   resolveDisputeReject,
   generateBOL,
   openGenBOLPopup,
-  closeGenBOLPopup
+  closeGenBOLPopup,
+  getOrderById
 } from './actions'
 
 
@@ -34,6 +35,7 @@ const initialState = {
   isOpenPopup: false,
   isOpenGenBOLPopup: false,
   rowBOL: null,
+  orderByIdLoading: false,
   loading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
@@ -384,6 +386,24 @@ export default typeToReducer(
         ...state,
         isOpenGenBOLPopup: false,
         rowBOL: null
+      }
+    },
+    [getOrderById.pending]: (state, action) => {
+      return {
+        ...state,
+        orderByIdLoading: true
+      }
+    },
+    [getOrderById.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderByIdLoading: false
+      }
+    },
+    [getOrderById.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderByIdLoading: false
       }
     },
   },
