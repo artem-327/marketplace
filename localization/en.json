@@ -2708,6 +2708,7 @@
   "onboarding.setup.indicator.business.verification": "Business Verification",
   "onboarding.setup.indicator.agreements.and.terms": "Agreements & Terms",
   "onboarding.setup.indicator.ein.documents": "EIN Document SS-4",
+  "onboarding.business.information.country.incorporated": "In what country was your business incorporated in?",
   "onboarding.setup.indicator.business.information": "Business Information",
   "onboarding.setup.indicator.industry.type": "Industry Type",
   "onboarding.setup.indicator.ownership.verification": "Ownership Verification",

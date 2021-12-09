@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { Checkbox, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -45,7 +46,21 @@ const DivRectangleBusinessType = styled.div`
   padding: 1rem 1rem 0 1rem;
 `
 
-function ControlPerson({ formikProps, intl: { formatMessage } }) {
+function ControlPerson({ countries, formikProps, intl: { formatMessage } }) {
+  const allCountries = countries?.action?.payload
+  const stringifiedAddress = formikProps?.values?.controlPerson?.address?.country ?? null
+  const countryId = stringifiedAddress ? JSON.parse(formikProps?.values?.controlPerson?.address?.country)?.countryId : 1
+  const country = allCountries?.filter(c => {
+    return c.id === countryId
+  })
+  const alpha = country?.[0]?.alpha2
+
+  console.log('!!! ControlPerson alpha: ', alpha)
+
+  useEffect(() => {
+    formikProps.setFieldValue('controlPerson.country', alpha)
+  }, [alpha])
+
   return (
     <>
       <GridControlPerson>

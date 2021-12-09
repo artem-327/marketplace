@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Grid, GridColumn, GridRow, Icon, Popup } from 'semantic-ui-react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -46,6 +47,7 @@ const GridRowTitle = styled.div`
 
 function PersonalInformation({
   countBeneficialOwners,
+  countries,
   formikProps,
   intl: { formatMessage },
   numberBeneficialOwners,
@@ -55,7 +57,21 @@ function PersonalInformation({
   const { values } = formikProps;
 
   let forms = []
+
+  const allCountries = countries?.action?.payload
+
   for (let i = 0; i <= numberBeneficialOwners; i++) {
+    const stringifiedAddress = formikProps?.values?.verifyPersonalInformation[i]?.address?.country ?? null
+    const countryId = stringifiedAddress ? JSON.parse(formikProps?.values?.verifyPersonalInformation[i]?.address?.country)?.countryId : 1
+    const country = allCountries?.filter(c => {
+      return c.id === countryId
+    })
+    const alpha = country?.[0]?.alpha2
+
+    useEffect(() => {
+      formikProps.setFieldValue(`verifyPersonalInformation[${i}].country`, alpha)
+    }, [alpha])
+
     forms.push(
       <GridPersonalInformation
         className="verify-personal-information"
@@ -208,7 +224,7 @@ function PersonalInformation({
               displayHeader={false}
               required={true}
               searchEnabled={!registerBeneficialOwner}
-              additionalCountryInputProps={{ disabled: true }}
+              // additionalCountryInputProps={{ disabled: true }}
               setFieldValue={formikProps.setFieldValue}>
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
                 <CustomDivTitle>

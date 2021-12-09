@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import moment from 'moment'
 //Components
 import {
+  brnValidation,
   nameValidation,
   errorMessages,
   addressValidationSchema,
@@ -35,6 +36,9 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
 
     return Yup.object().shape({
       businessInfo: Yup.lazy(() => {
+        const { address, country, isEin, isSsn } = values?.businessInfo
+        const provinceId = address?.province
+
         return Yup.object().shape({
           phone: phoneValidation(10).required(requiredMessage),
           email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
@@ -47,14 +51,16 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
             .min(3, errorMessages.minLength(3))
             .max(200, errorMessages.maxLength(200))
             .required(requiredMessage),
-          ein: values.businessInfo.isEin ? einValidation() : null,
-          ssn: values.businessInfo.isEin ? null : ssnValidation(),
+          brn: country !== '' && country !== 'US' ? brnValidation(country, provinceId) : null,
+          ein: country !== '' && country === 'US' && isEin ? einValidation() : null,
+          ssn: country !== '' && country === 'US' && isSsn ? ssnValidation() : null,
           naicsCode: Yup.number()
             .typeError(errorMessages.requiredMessage)
             .required(errorMessages.requiredMessage)
             .positive(errorMessages.positive),
           companyType: Yup.string().required(errorMessages.requiredMessage),
-          markets: Yup.array().of(Yup.string()).min(1, 'Please select at least 1').max(3, 'Please select only up to 3')
+          markets: Yup.array().of(Yup.string()).min(1, 'Please select at least 1').max(3, 'Please select only up to 3'),
+          country: Yup.string().required(errorMessages.requiredMessage)
         })
       }),
       controlPerson: Yup.lazy(() => {
@@ -163,7 +169,8 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
  */
 export const getBody = (values, beneficialOwnersNotified) => {
   const { controlPerson, businessInfo, ownerInformation, verifyPersonalInformation } = values
-  const tinNumber = getSafe(() => businessInfo.isEin, false) ? businessInfo.ein : businessInfo.ssn.replaceAll('-', '')
+  const tinNumber = getSafe(() => businessInfo?.isEin, false) ? businessInfo?.ein : businessInfo?.ssn?.replaceAll('-', '')
+  const brn = getSafe(() => businessInfo?.brn)
 
   /**
    * BeneficialOwners payload should be null
@@ -190,7 +197,8 @@ export const getBody = (values, beneficialOwnersNotified) => {
           provinceId: getSafe(() => val.address.province, ''),
           zipCode: getSafe(() => val.address.zip, ''),
           ssn: getSafe(() => val.socialSecurityNumber.replaceAll('-', ''), ''),
-          email: getSafe(() => val.email, '')
+          email: getSafe(() => val.email, ''),
+          country: getSafe(() => val.country, '')
         }
         return getObjectWithoutEmptyElements(obj)
       })
@@ -213,7 +221,8 @@ export const getBody = (values, beneficialOwnersNotified) => {
         provinceId: getSafe(() => controlPerson.address.province, ''),
         zipCode: getSafe(() => controlPerson.address.zip, ''),
         ssn: getSafe(() => controlPerson.socialSecurityNumber.replaceAll('-', ''), ''),
-        email: getSafe(() => controlPerson.email, '')
+        email: getSafe(() => controlPerson.email, ''),
+        country: getSafe(() => controlPerson.country, '')
       } : null
 
   const result = {
@@ -232,7 +241,9 @@ export const getBody = (values, beneficialOwnersNotified) => {
     tinNumber: getSafe(() => tinNumber, ''),
     controller,
     beneficialOwners,
-    website: getSafe(() => businessInfo.url, '')
+    website: getSafe(() => businessInfo.url, ''),
+    country: getSafe(() => businessInfo.country, ''),
+    brn: getSafe(() => businessInfo.brn, brn)
   }
 
   return getObjectWithoutEmptyElements(result)

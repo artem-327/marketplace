@@ -114,9 +114,10 @@ export const initialValues = {
     isSsn: false,
     ein: '',
     ssn: '',
-    isEstablishedUs: true,
     tinNumber: '',
-    naicsCode: ''
+    naicsCode: '',
+    country: '',
+    brn: ''
   },
   certificateOfInsurance: {
     file: [],
@@ -131,7 +132,8 @@ export const initialValues = {
     firstName: '',
     lastName: '',
     isBeneficialOwner: false,
-    isNotBeneficialOwner: false
+    isNotBeneficialOwner: false,
+    country: ''
   },
   ownerInformation: {
     isOtherBeneficialOwner: false,

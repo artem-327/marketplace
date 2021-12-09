@@ -77,10 +77,46 @@ function BusinessInfo({
   businessTypes,
   naicsCodes,
   enumsBusinessMarkets,
-  enumsBusinessTypes
+  enumsBusinessTypes,
+  countries
 }) {
+  const domesticBusiness = formikProps?.values?.businessInfo?.country === 'US',
+        intlBusiness     = formikProps?.values?.businessInfo?.country !== 'US' && formikProps?.values?.businessInfo?.country !== ''
+
   return (
     <GridBusinessInfo className="business-info">
+      <GridRow>
+        <GridColumn>
+          <Dropdown
+            options={countries?.action?.payload?.length > 0 ? countries?.action?.payload?.map(country => ({
+              key: country?.id,
+              text: country?.name,
+              // value: JSON.stringify({ countryId: country?.id, hasProvinces: country?.hasProvinces })
+              value: country?.alpha2
+            })) : []}
+            fieldProps={{
+              'data-test': 'business-info-country-dropdown'
+            }}
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'velloci.businessInfo.kindBusiness.placeholder',
+                defaultMessage: 'Pick one'
+              }),
+              search: true,
+              selection: true,
+            }}
+            name='businessInfo.country'
+            label={
+              <>
+                {formatMessage({
+                  id: 'onboarding.business.information.country.incorporated'
+                })}
+                {<Required />}
+              </>
+            }
+          />
+        </GridColumn>
+      </GridRow>
       <GridRow>
         <GridColumn>
           <DivRectangleBusinessType>
@@ -138,68 +174,85 @@ function BusinessInfo({
                   />
                 </Grid.Column>
               </Grid.Row>
-              <TinLabelRow>
-                <Grid.Column>
-                  <>
-                    <FormattedMessage id='velloci.businessInfo.tax' defaultMessage='Tax Identification Number' />
-                    <Required /> 
-                  </>
-                </Grid.Column>
-              </TinLabelRow>
-              <Grid.Row columns={2} className="no-padding" style={{ padding: '0 0 0 0 !important' }}>
-                <Grid.Column width={8}>
-                  <ButtonOrCustom widths={8}>
-                    <Button
-                      onClick={e => {
-                        formikProps.setFieldValue('businessInfo.isEin', true)
-                        formikProps.setFieldValue('businessInfo.isSsn', false)
+              {domesticBusiness &&
+                <TinLabelRow>
+                  <Grid.Column>
+                    <>
+                      <FormattedMessage id='velloci.businessInfo.tax' defaultMessage='Tax Identification Number' />
+                      <Required /> 
+                    </>
+                  </Grid.Column>
+                </TinLabelRow>
+              }
+              {domesticBusiness &&
+                <Grid.Row columns={2} style={{ padding: '0 0 1rem 0 !important' }}>
+                  <Grid.Column width={8}>
+                    <ButtonOrCustom widths={8}>
+                      <Button
+                        onClick={e => {
+                          formikProps.setFieldValue('businessInfo.isEin', true)
+                          formikProps.setFieldValue('businessInfo.isSsn', false)
+                        }}
+                        active={formikProps.values.businessInfo.isEin}
+                        data-test='settings_velloci_registration_control_person_ein_btn'>
+                        <FormattedMessage id='velloci.businessInfo.ein' defaultMessage='EIN' />
+                      </Button>
+                      <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                      <Button
+                        onClick={e => {
+                          formikProps.setFieldValue('businessInfo.isEin', false)
+                          formikProps.setFieldValue('businessInfo.isSsn', true)
+                        }}
+                        active={formikProps.values.businessInfo.isSsn}
+                        data-test='settings_velloci_registration_control_person_ssn_btn'>
+                        <FormattedMessage id='velloci.businessInfo.ssn' defaultMessage='SSN' />
+                      </Button>
+                    </ButtonOrCustom>
+                  </Grid.Column>
+                  <Grid.Column className="m-t-padding" computer={8} tablet={8} mobile={16}>
+                    <Input
+                      name={formikProps.values.businessInfo.isEin ? 'businessInfo.ein' : 'businessInfo.ssn'}
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: `velloci.businessInfo.${
+                            formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
+                          }.placeholder`,
+                          defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
+                        }),
+                        type: 'text',
+                        'data-test': `business-info-tin-${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'}`
                       }}
-                      active={formikProps.values.businessInfo.isEin}
-                      data-test='settings_velloci_registration_control_person_ein_btn'>
-                      <FormattedMessage id='velloci.businessInfo.ein' defaultMessage='EIN' />
-                    </Button>
-                    <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                    <Button
-                      onClick={e => {
-                        formikProps.setFieldValue('businessInfo.isEin', false)
-                        formikProps.setFieldValue('businessInfo.isSsn', true)
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              }
+              {intlBusiness &&
+                <TinLabelRow>
+                  <Grid.Column>
+                    <>
+                      <FormattedMessage id='velloci.businessInfo.tax' defaultMessage='Business Registration Number' />
+                      <Required /> 
+                    </>
+                  </Grid.Column>
+                </TinLabelRow>
+              }
+              {intlBusiness &&
+                <Grid.Row columns={2} style={{ padding: '0 0 1rem 0 !important' }}>
+                  <Grid.Column width={8}>
+                    <Input
+                      name='businessInfo.brn'
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: 'velloci.businessInfo.tax',
+                          defaultMessage: 'Enter Business Registration Number'
+                        }),
+                        type: 'text',
+                        'data-test': 'business-info-brn'
                       }}
-                      active={formikProps.values.businessInfo.isSsn}
-                      data-test='settings_velloci_registration_control_person_ssn_btn'>
-                      <FormattedMessage id='velloci.businessInfo.ssn' defaultMessage='SSN' />
-                    </Button>
-                  </ButtonOrCustom>
-                </Grid.Column>
-                <Grid.Column className="m-t-padding" computer={8} tablet={8} mobile={16}>
-                  <Input
-                    name={formikProps.values.businessInfo.isEin ? 'businessInfo.ein' : 'businessInfo.ssn'}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: `velloci.businessInfo.${
-                          formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
-                        }.placeholder`,
-                        defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
-                      }),
-                      type: 'text',
-                      'data-test': `business-info-tin-${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'}`
-                    }}
-                  />
-                </Grid.Column>
-              </Grid.Row>
-              <PaddedRow>
-                <Checkbox
-                    inputProps={{
-                      'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
-                    }}
-                    name='businessInfo.isEstablishedUs'
-                  />
-                  <SpanEstablishedLabel>
-                    {formatMessage({
-                      id: 'velloci.businessInfo.establishedUs',
-                      defaultMessage: 'Established in the US?'
-                    })}
-                  </SpanEstablishedLabel>
-              </PaddedRow>
+                    />
+                  </Grid.Column>
+                </Grid.Row>
+              }
             </GridBusinessType>
           </DivRectangleBusinessType>
         </GridColumn>
@@ -278,7 +331,7 @@ function BusinessInfo({
             displayHeader={false}
             setFieldValue={formikProps.setFieldValue}
             required={true}
-            additionalCountryInputProps={{ disabled: true }}
+            // additionalCountryInputProps={{ disabled: true }}
           />
         </GridColumn>
       </GridRow>
@@ -378,14 +431,14 @@ function BusinessInfo({
               }
               name='businessInfo.markets'
               options={
-                enumsBusinessMarkets.data.map(option => ({
+                enumsBusinessMarkets?.data?.map(option => ({
                   text: option.name,
                   value: option.value,
                   key: option.value
                 }))
               }
               inputProps={{
-                loading: enumsBusinessMarkets.loading,
+                loading: enumsBusinessMarkets?.loading,
                 clearable: true,
                 multiple: true,
                 selection: true,

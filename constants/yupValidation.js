@@ -4,6 +4,7 @@ import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
 import { isValid } from 'ein-validator'
 import { getLocaleDateFormat, getStringISODate } from '~/components/date-format'
+import { brnValidationRules } from './brn'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -220,6 +221,47 @@ export const ssnValidation = () =>
   Yup.string()
     .test('ssn', errorMessages.invalidValueFormat('123-45-6789'), value => /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/.test(value))
     .required(errorMessages.requiredMessage)
+
+/**
+ * 
+ * @param {string} country
+ * @param {number} provinceId
+ * @returns Yup required string validated by a regex pattern based on selected country and province
+ */
+export const brnValidation = (country, provinceId = null) => {
+  const selectedCountry = brnValidationRules[country.toLowerCase()]
+  const selectedProvince = selectedCountry?.provinces[provinceId] ?? null
+  const validationMessage = selectedProvince?.message ?? null
+  let validations = []
+
+  // no validation exists in validation map, do not validate field but require it
+  if (!selectedCountry) {
+    return (
+      Yup.string()
+        .required(errorMessages.requiredMessage)
+    )
+  }
+
+  if (selectedProvince?.validations?.length) {
+    selectedProvince.validations.map(val => {
+      validations.push(val)
+    })
+  }
+
+  const validationPatterns = validations.map((rePattern, i) => {
+    return i < validations.length ? rePattern + "|" : rePattern
+  })
+
+  const stringPattern = "^(" + validationPatterns.join('') + ")$"
+
+  const re = new RegExp(stringPattern, "i")
+
+  return (
+    Yup.string()
+      .required(errorMessages.requiredMessage)
+      .matches(re, validationMessage)
+  )
+}
 
 export const nmfcValidation = () =>
   Yup.string(errorMessages.invalidString)

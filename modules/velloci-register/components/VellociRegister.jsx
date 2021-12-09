@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { connect } from 'react-redux'
 import { Grid, GridColumn, GridRow, Form } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import PropTypes from 'prop-types'
@@ -17,6 +18,7 @@ import { getValidationSchema, submitForm, handleSubmit } from '../form-services'
 import { switchPages } from './SwitchPages'
 import ErrorFocus from '../../../components/error-focus'
 import { getSafe } from '../../../utils/functions'
+import { getCountries } from '../../global-data/actions'
 //Constants
 import { titleIds, subtitleIds, verifyPersonalInformation } from '../constants'
 import { FormattedMessage } from 'react-intl'
@@ -33,6 +35,7 @@ let selfFormikProps = {} //TODO specify type
  * @component
  */
 const VellociRegister = props => {
+  const [countries, setCountries] = useState([])
   // Stores previos values for compating with current value
   const prevNumberBeneficialOwners = usePrevious(props.numberBeneficialOwners)
   // Similar to call componentDidMount:
@@ -76,6 +79,19 @@ const VellociRegister = props => {
     }
     // if [] has some variables, then is similar as componentDidUpdate:
   }, [props.numberBeneficialOwners, prevNumberBeneficialOwners])
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const countries = await props?.getCountries()
+        setCountries(countries)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    fetchCountries()
+  }, [])
 
   const { activeStep, finalStep, mainContainer, nextStep } = props;
   const beneficialOwnersNotified = props?.emailPopup?.beneficialOwnersNotified;
@@ -138,7 +154,7 @@ const VellociRegister = props => {
                         selfFormikProps={selfFormikProps}
                         updateCoiDocumentUploaded={props.coiDocumentUploaded}
                       >
-                        {switchPages({ ...props, formikProps })}
+                        {switchPages({ ...props, formikProps, countries })}
                       </FormRectangle>
                       <ErrorFocus />
                       {props.emailPopup.isOpen &&
@@ -238,4 +254,8 @@ VellociRegister.defaultProps = {
   updateCompany: () => {}
 }
 
-export default VellociRegister
+const mapDispatchToProps = {
+  getCountries
+}
+
+export default connect(null, mapDispatchToProps)(VellociRegister)
