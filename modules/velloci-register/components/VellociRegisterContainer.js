@@ -86,11 +86,12 @@ const makeMapStateToProps = () => {
           isSsn: false,
           ein: getEin(state),
           ssn: '',
-          isEstablishedUs: true,
           tinNumber: '',
           naicsCode: getNaicsCode(state),
           markets: [],
-          companyType: ''
+          companyType: '',
+          country: '',
+          brn: ''
         },
         controlPerson: {
           isControlPerson: false,
@@ -104,6 +105,7 @@ const makeMapStateToProps = () => {
           businessOwnershipPercentage: '',
           businessTitle: '',
           socialSecurityNumber: '',
+          country: '',
           address: {
             streetAddress: '',
             city: '',

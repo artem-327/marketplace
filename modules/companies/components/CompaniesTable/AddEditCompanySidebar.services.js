@@ -255,6 +255,10 @@ export const submitCompany = async (values, actions, state, props) => {
 
       if (values.businessType) values.businessType = values.businessType.id
 
+      if (values?.primaryBranch?.deliveryAddress?.address?.zip) {
+        values.primaryBranch.deliveryAddress.address.zip = values.primaryBranch.deliveryAddress.address.zip.replace(' ', '')
+      }
+
       let payload = cloneDeep(values)
       payload.primaryUser.email = payload.primaryUser.email.trim()
       payload.primaryBranch.deliveryAddress.contactEmail = payload.primaryBranch.deliveryAddress.contactEmail.trim()

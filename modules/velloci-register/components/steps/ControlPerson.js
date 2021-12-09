@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Grid, GridColumn, GridRow, FormField } from 'semantic-ui-react'
 // @ts-ignore
 import { Checkbox, Input } from 'formik-semantic-ui-fixed-validation'
@@ -25,8 +25,8 @@ import {
   CustomDivTitle
   // @ts-ignore
 } from '~/modules/cart/components/StyledComponents'
-
 import { StyledTextContainer } from '../styles'
+import IdNumberTooltip from '~/modules/velloci-register/components/IdNumberTooltip'
 
 const GridControlPerson = styled(Grid)`
   margin: 14px 16px !important;
@@ -63,11 +63,18 @@ const StyledInputMask = styled(InputMask)`
   };
 `
 
-function ControlPerson({ formikProps, intl: { formatMessage } }) {
-
+function ControlPerson({ countries, formikProps, intl: { formatMessage } }) {
   const { touched, isSubmitting, errors } = formikProps;
   const SSNError = (get(touched, 'controlPerson.socialSecurityNumber', null) || isSubmitting) && get(errors, 'controlPerson.socialSecurityNumber', null)
   const [SSN, setSSN] = useState('')
+
+  const allCountries = countries?.action?.payload
+  const stringifiedAddress = formikProps?.values?.controlPerson?.address?.country ?? null
+  const countryId = stringifiedAddress ? JSON.parse(formikProps?.values?.controlPerson?.address?.country)?.countryId : 1
+  const country = allCountries?.filter(c => {
+    return c.id === countryId
+  })
+  const alpha = country?.[0]?.alpha2
 
   const beforeMaskedStateChange = (e) => {
     const { setFieldValue, setFieldTouched } = formikProps;
@@ -76,6 +83,10 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
     setFieldValue('controlPerson.socialSecurityNumber', value)
     setFieldTouched('controlPerson.socialSecurityNumber', true, true)
   }
+
+  useEffect(() => {
+    formikProps.setFieldValue('controlPerson.country', alpha)
+  }, [alpha])
 
   return (
     <>
@@ -292,16 +303,18 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             />
           </GridColumn>
         </GridRow>
-        <GridRow>
-          <GridColumn>
+        <GridRow columns={2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
             <AddressForm
               prefix='controlPerson'
               values={formikProps.values}
               displayHeader={false}
               required={true}
               searchEnabled={true}
-              setFieldValue={formikProps.setFieldValue}>
-              <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
+              setFieldValue={formikProps.setFieldValue} />
+          </GridColumn>
+          <GridColumn computer={6} tablet={6} mobile={16}>
+            <Rectangle style={{ margin: '14px 0px 10px 0px' }}>
                 <CustomDivTitle>
                   <Info size={20} style={{ color: '#3bbef6' }} />
                   <CustomDivInTitle style={{ color: '#3bbef6' }}>
@@ -318,12 +331,11 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   />
                 </CustomDivContent>
               </Rectangle>
-            </AddressForm>
           </GridColumn>
         </GridRow>
         {formikProps?.values?.controlPerson?.isBeneficialOwner &&
           <GridRow>
-            <GridColumn>
+            <GridColumn computer={10} tablet={10} mobile={16}>
               <Input
                 name='controlPerson.businessOwnershipPercentage'
                 label={
@@ -351,8 +363,8 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             </GridColumn>
           </GridRow>
         }
-        <GridRow>
-          <GridColumn>
+        <GridRow columns={2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
             <Input
               name='controlPerson.businessTitle'
               label={
@@ -375,50 +387,58 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             />
           </GridColumn>
         </GridRow>
-        <GridRow>
-          <GridColumn>
-            {/* <Input
-              name='controlPerson.socialSecurityNumber'
-              label={
-                <>
+        <GridRow columns={alpha === 'US' ? 1 : 2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
+            {alpha === 'US' &&
+              <FormField error={!!SSNError}>
+                <label><>
                   {formatMessage({
                     id: 'velloci.personalInfo.socialSecurityNumber',
                     defaultMessage: 'Social Security Number'
                   })}
                   {<Required />}
-                </>
-              }
-              inputProps={{
-                placeholder: formatMessage({
-                  id: 'onboarding.ssn.placeholder',
-                  defaultMessage: 'xxx-xx-xxxx'
-                }),
-                type: 'text',
-                'data-test': 'control-person-ssn',
-              }}
-            /> */}
-            <FormField error={!!SSNError}>
-              <label><>
-                {formatMessage({
-                  id: 'velloci.personalInfo.socialSecurityNumber',
-                  defaultMessage: 'Social Security Number'
-                })}
-                {<Required />}
-              </></label>
-              <StyledInputMask
-                data-test='control-person-ssn'
-                name='controlPerson.socialSecurityNumber'
-                mask='999-99-9999'
-                type='text'
-                value={SSN}
-                placeholder={formatMessage({
-                  id: 'onboarding.ssn.placeholder',
-                  defaultMessage: 'xxx-xx-xxxx'
-                })}
-                onChange={beforeMaskedStateChange}
-              />
-              {!!SSNError && <span className='sui-error-message'>{SSNError}</span>}
-            </FormField>
+                </></label>
+                <StyledInputMask
+                  data-test='control-person-ssn'
+                  name='controlPerson.socialSecurityNumber'
+                  mask='999-99-9999'
+                  type='text'
+                  value={SSN}
+                  placeholder={formatMessage({
+                    id: 'onboarding.ssn.placeholder',
+                    defaultMessage: 'xxx-xx-xxxx'
+                  })}
+                  onChange={beforeMaskedStateChange}
+                />
+                {!!SSNError && <span className='sui-error-message'>{SSNError}</span>}
+              </FormField>
+            }
+            {alpha !== 'US' &&
+              <>
+                <Input
+                  name='controlPerson.socialSecurityNumber'
+                  isClearable={true}
+                  label={
+                    <>
+                      {formatMessage({
+                        id: 'velloci.personalInfo.idNumber',
+                        defaultMessage: 'ID Number'
+                      })}
+                      {<Required />}
+                    </>
+                  }
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'velloci.personalInfo.idNumber.placeholder',
+                      defaultMessage: 'xxxxxxxxx'
+                    }),
+                    type: 'text',
+                    'data-test': 'control-person-idnum'
+                  }}
+                />
+                <IdNumberTooltip />
+              </>
+            }
           </GridColumn>
         </GridRow>
       </GridControlPerson>

@@ -25,10 +25,11 @@ export const switchPages = props => {
         naicsCodes={props.naicsCodes}
         enumsBusinessMarkets={props.enumsBusinessMarkets}
         enumsBusinessTypes={props.enumsBusinessTypes}
+        countries={props?.countries}
       />
     }
     case 2: {
-      return <ControlPerson formikProps={props.formikProps} />
+      return <ControlPerson formikProps={props.formikProps} countries={props?.countries} />
     }
     case 3: {
       return <OwnerInformation
@@ -41,6 +42,7 @@ export const switchPages = props => {
       return (
         <PersonalInformation
           countBeneficialOwners={props.countBeneficialOwners}
+          countries={props?.countries}
           formikProps={props.formikProps}
           businessRoles={props.businessRoles}
           numberBeneficialOwners={props.numberBeneficialOwners}

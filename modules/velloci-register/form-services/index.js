@@ -2,6 +2,7 @@ import * as Yup from 'yup'
 import moment from 'moment'
 //Components
 import {
+  brnValidation,
   nameValidation,
   errorMessages,
   addressValidationSchema,
@@ -10,7 +11,8 @@ import {
   dateValidation,
   phoneValidation,
   coiValidation,
-  ssnValidation
+  ssnValidation,
+  intlIdValidation
 } from '~/constants/yupValidation'
 import Router from 'next/router'
 //Services
@@ -35,6 +37,9 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
 
     return Yup.object().shape({
       businessInfo: Yup.lazy(() => {
+        const { address, country, isEin, isSsn } = values?.businessInfo
+        const provinceId = address?.province
+
         return Yup.object().shape({
           phone: phoneValidation(10).required(requiredMessage),
           email: Yup.string(invalidEmail).trim().email(invalidEmail).required(requiredMessage),
@@ -47,17 +52,21 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
             .min(3, errorMessages.minLength(3))
             .max(200, errorMessages.maxLength(200))
             .required(requiredMessage),
-          ein: values.businessInfo.isEin ? einValidation() : null,
-          ssn: values.businessInfo.isEin ? null : ssnValidation(),
+          brn: country !== '' && country !== 'US' ? brnValidation(country, provinceId) : null,
+          ein: country !== '' && country === 'US' && isEin ? einValidation() : null,
+          ssn: country !== '' && country === 'US' && isSsn ? ssnValidation() : null,
           naicsCode: Yup.number()
             .typeError(errorMessages.requiredMessage)
             .required(errorMessages.requiredMessage)
             .positive(errorMessages.positive),
           companyType: Yup.string().required(errorMessages.requiredMessage),
-          markets: Yup.array().of(Yup.string()).min(1, 'Please select at least 1').max(3, 'Please select only up to 3')
+          markets: Yup.array().of(Yup.string()).min(1, 'Please select at least 1').max(3, 'Please select only up to 3'),
+          country: Yup.string().required(errorMessages.requiredMessage)
         })
       }),
       controlPerson: Yup.lazy(() => {
+        const alpha = values?.controlPerson?.country
+
         return Yup.object().shape({
           isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
           isBeneficialOwner: Yup.boolean().required().oneOf([true, false], errorMessages.requiredMessage),
@@ -74,7 +83,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
               .trim()
               .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
-          socialSecurityNumber: ssnValidation(),
+          socialSecurityNumber: alpha === 'US' ? ssnValidation() : intlIdValidation(5, 15),
           businessOwnershipPercentage: values?.controlPerson?.isBeneficialOwner ? 
               Yup.string()
                 .trim()
@@ -101,7 +110,9 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
       // if no other BOs or they have been notified, do not require form validation here
       verifyPersonalInformation: !values.ownerInformation.isOtherBeneficialOwner || beneficialOwnersNotified ? null : Yup.array().of(
         Yup.lazy(v => {
-          //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
+          const lastDomesticProvince = 42 // TODO: revisit if more US states are added to provinces table
+          const province = v?.address?.province
+
           const businessOwnershipPercentage = values.ownerInformation.isOtherBeneficialOwner
             ? {
                 businessOwnershipPercentage: Yup.string()
@@ -133,7 +144,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
               .trim()
               .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
-            socialSecurityNumber: ssnValidation(),
+            socialSecurityNumber: province <= lastDomesticProvince ? ssnValidation() : intlIdValidation(5, 15),
             ...businessOwnershipPercentage
           })
         })
@@ -163,7 +174,8 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
  */
 export const getBody = (values, beneficialOwnersNotified) => {
   const { controlPerson, businessInfo, ownerInformation, verifyPersonalInformation } = values
-  const tinNumber = getSafe(() => businessInfo.isEin, false) ? businessInfo.ein : businessInfo.ssn.replaceAll('-', '')
+  const tinNumber = getSafe(() => businessInfo?.isEin, false) ? businessInfo?.ein : businessInfo?.ssn?.replaceAll('-', '')
+  const brn = getSafe(() => businessInfo?.brn)
 
   /**
    * BeneficialOwners payload should be null
@@ -188,7 +200,7 @@ export const getBody = (values, beneficialOwnersNotified) => {
             : 0,
           phone: getSafe(() => val.phoneNumber.substring(1), ''),
           provinceId: getSafe(() => val.address.province, ''),
-          zipCode: getSafe(() => val.address.zip, ''),
+          zipCode: getSafe(() => val.address.zip.replace(' ', ''), ''),
           ssn: getSafe(() => val.socialSecurityNumber.replaceAll('-', ''), ''),
           email: getSafe(() => val.email, '')
         }
@@ -211,7 +223,7 @@ export const getBody = (values, beneficialOwnersNotified) => {
         middleName: getSafe(() => controlPerson.middleName, ''),
         phone: getSafe(() => controlPerson.phoneNumber.substring(1), ''),
         provinceId: getSafe(() => controlPerson.address.province, ''),
-        zipCode: getSafe(() => controlPerson.address.zip, ''),
+        zipCode: getSafe(() => controlPerson.address.zip.replace(' ', ''), ''),
         ssn: getSafe(() => controlPerson.socialSecurityNumber.replaceAll('-', ''), ''),
         email: getSafe(() => controlPerson.email, '')
       } : null
@@ -224,7 +236,7 @@ export const getBody = (values, beneficialOwnersNotified) => {
     legalCity: getSafe(() => businessInfo.address.city, ''),
     legalName: getSafe(() => businessInfo.legalBusinessName, ''),
     provinceId: getSafe(() => businessInfo.address.province, ''),
-    legalZipCode: getSafe(() => businessInfo.address.zip, ''),
+    legalZipCode: getSafe(() => businessInfo.address.zip.replace(' ', ''), ''),
     naicsCode: getSafe(() => businessInfo.naicsCode, ''),
     phone: getSafe(() => businessInfo.phone.substring(1), ''),
     companyType: getSafe(() => businessInfo.companyType, ''),
@@ -232,7 +244,8 @@ export const getBody = (values, beneficialOwnersNotified) => {
     tinNumber: getSafe(() => tinNumber, ''),
     controller,
     beneficialOwners,
-    website: getSafe(() => businessInfo.url, '')
+    website: getSafe(() => businessInfo.url, ''),
+    brn: getSafe(() => businessInfo.brn, brn)
   }
 
   return getObjectWithoutEmptyElements(result)

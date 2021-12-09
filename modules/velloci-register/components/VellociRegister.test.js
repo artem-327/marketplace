@@ -1,5 +1,7 @@
 import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
+import { Provider } from 'react-redux'
+import configureMockStore from 'redux-mock-store'
 
 // Utils
 import { findByTestAttr, checkProps } from '../../../test/testUtils'
@@ -43,6 +45,9 @@ const defaultProps = {
   updateCompany: () => { }
 }
 
+const mockStore = configureMockStore()
+const store = mockStore({})
+
 /**
  * Factory function to creaste a ShallowWrapper for the App component.
  * @function setup
@@ -50,7 +55,11 @@ const defaultProps = {
  */
 const setup = (props = {}) => {
   const setupProps = { ...defaultProps, props }
-  return shallow(<VellociRegister {...setupProps} />)
+  return shallow(
+    <Provider store={store}>
+      <VellociRegister {...setupProps} />
+    </Provider>
+  )
 }
 
 /**
