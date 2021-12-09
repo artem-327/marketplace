@@ -54,7 +54,7 @@ const ShippingQuotesPopup = props => {
       />
     )
   }))
-
+  console.log(popupValues);
   return (
     <Modal closeIcon onClose={() => closePopup()} open centered={false} size='small'>
       <Modal.Header>
@@ -171,7 +171,7 @@ const ShippingQuotesPopup = props => {
                     }}
                     fieldProps={{ width: 8 }}
                   />
-                  <Input
+                  {/* <Input
                     type='text'
                     label={
                       <FormattedMessage id='operations.requestId' defaultMessage='Request Id' />
@@ -181,15 +181,15 @@ const ShippingQuotesPopup = props => {
                     inputProps={{
                       disabled: true
                     }}
-                  />
+                  /> */}
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='operations_shipping_quote_reset_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </Button.Reset>
                   <Button.Submit data-test='operations_shipping_quote_submit_btn'>
-                    {/* <FormattedMessage id='global.save' defaultMessage='Save' /> */}
-                    <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' />
+                    <FormattedMessage id='global.save' defaultMessage='Save' />
+                    {/* <FormattedMessage id='settings.addShippingQuote' defaultMessage='Add Shipping Quote' /> */}
                   </Button.Submit>
                 </div>
                 <ErrorFocus />
