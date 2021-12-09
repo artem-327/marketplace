@@ -188,6 +188,7 @@ export const submitCompany = async (values, actions, state, props) => {
   } = props
 
   const { companyLogo, companyDoc, shouldUpdateLogo, shouldUpdateDoc } = state
+  let shouldClosePopup = false
 
   try {
     if (popupValues) {
@@ -224,6 +225,7 @@ export const submitCompany = async (values, actions, state, props) => {
       removeEmpty(newValues)
 
       const { value } = await updateCompany(popupValues.id, newValues)
+      shouldClosePopup = true
       if (shouldUpdateLogo) {
         if (companyLogo) await postCompanyLogo(value.id, companyLogo)
         else await deleteCompanyLogo(popupValues.id)
@@ -235,7 +237,6 @@ export const submitCompany = async (values, actions, state, props) => {
       datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       datagrid.loadData()
       actions.setSubmitting(false)
-      closePopup()
     } else {
       let branches = ['primaryBranch', 'mailingBranch']
 
@@ -271,11 +272,11 @@ export const submitCompany = async (values, actions, state, props) => {
         // let reader = new FileReader()
         // reader.onload = async function () {
         const { value } = await createCompany(payload)
+        shouldClosePopup = true
         companyLogo && await postCompanyLogo(value.id, companyLogo)
         companyDoc && await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: value.id, force: true })
         datagrid.loadData()
         actions.setSubmitting(false)
-        closePopup()
         // }
         // companyLogo && reader.readAsBinaryString(companyLogo)
       } else {
@@ -289,6 +290,7 @@ export const submitCompany = async (values, actions, state, props) => {
     actions.setSubmitting(false)
     console.error(err)
   } finally {
+    if (shouldClosePopup) closePopup()
     if (values.businessType) values.businessType = { id: values.businessType }
   }
 }
