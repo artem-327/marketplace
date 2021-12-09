@@ -84,3 +84,4 @@ export const resolveDisputeReject = createAsyncAction('RESOLVE_DISPUTE_REJECT', 
 export const generateBOL = createAsyncAction('SHIPPING_QUOTE_GENERATE_BOL', (id, carrierName, pickupDate) => api.generateBOL(id, carrierName, pickupDate))
 export const openGenBOLPopup = createAction('SHIPPING_QUOTE_OPEN_GEN_BOL_POPUP', row => row)
 export const closeGenBOLPopup = createAction('SHIPPING_QUOTE_CLOSE_GEN_BOL_POPUP')
+export const getOrderById = createAsyncAction('OPERATIONS_ORDERS_GET_ORDER', (orderId) => api.getOrderById(orderId))

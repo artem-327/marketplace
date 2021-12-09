@@ -11,6 +11,12 @@ export default {
       .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
       .then(response => response.data),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
+  getOrderById: orderId => api.post('/prodex/api/admin/orders/datagrid', {
+    orFilters: [],
+    filters: [{ operator: 'EQUALS', path: 'Order.id', values: [orderId] }],
+    pageSize: 50,
+    pageNumber: 0
+  }).then(response => response.data),
   getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   markRequestAsProcessed: id =>
     api.patch(`/prodex/api/company-generic-product-requests/${id}/processed`).then(response => response.data),

@@ -687,6 +687,7 @@ export const TopRow = styled.div`
     font-weight: 500;
     line-height: 1.43;
     padding: 9px 17px 11px 17px;
+    margin-right: 10px;
 
     > svg {
       width: 18px;

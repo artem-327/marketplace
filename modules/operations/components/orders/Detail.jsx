@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { withToastManager } from 'react-toast-notifications'
 import { Grid, Segment, Accordion, Table, List, Button, Divider, Header, GridRow, Modal, Dimmer, Loader } from 'semantic-ui-react'
-import { DownloadCloud, ArrowLeft, Info } from 'react-feather'
+import { DownloadCloud, ArrowLeft, Info, Link2 } from 'react-feather'
 import { FormattedMessage } from 'react-intl'
 import { injectIntl, FormattedNumber } from 'react-intl'
 import PropTypes from 'prop-types'
@@ -12,7 +12,7 @@ import BasicButton from '../../../../components/buttons/BasicButton'
 import Spinner from '../../../../components/Spinner/Spinner'
 import { FormattedPhone } from '../../../../components/formatted-messages/'
 import ProdexGrid from '../../../../components/table'
-import TransactionInfo from '../../../orders/components/components/TransactionInfo'
+import TransactionInfo from '../../../orders/components/components/TransactionInfoConatiner'
 // Constants
 import { currency } from '../../../../constants/index'
 // Styles
@@ -41,7 +41,8 @@ import {
   getRows,
   openRelatedPopup,
   getRelatedDocumentsContent,
-  confirmCancelOrder
+  confirmCancelOrder,
+  getOrder
 } from './Detail.services'
 
 
@@ -52,7 +53,7 @@ import {
  */
 const Detail = props => {
   const [state, setState] = useState({
-    activeIndexes: [true, true, true, false, false, false, false, false],
+    activeIndexes: [true, true, true, true, true, false, false, false, false, false, false],
     activeDimmer: false,
     replaceRow: '',
     toggleTrackingID: false,
@@ -75,6 +76,7 @@ const Detail = props => {
     closePopup,
     isOpenPopup,
     loading,
+    orderByIdLoading,
     openPopup,
     resolveDisputeReject,
     resolveDisputeCredit,
@@ -85,13 +87,14 @@ const Detail = props => {
 
   const { activeIndexes, activeDimmer, documentsPopupProduct } = state
   let ordersType = 'Sales'
+  const { counterOrderId } = order
 
   const keyColumn = 5
   const valColumn = 16 - keyColumn
 
   return (
     <div id='page' className='auto-scrolling'>
-      <Dimmer active={activeDimmer} inverted style={{background: 'rgba(255, 255, 255, 0.85)'}}>
+      <Dimmer active={activeDimmer || orderByIdLoading} inverted style={{background: 'rgba(255, 255, 255, 0.85)'}}>
         <Loader />
       </Dimmer>
       <ModalResolveDispute
@@ -126,23 +129,25 @@ const Detail = props => {
       )}
       <div className='scroll-area'>
         <TopRow>
-          <Link href='/operations/orders'>
+          <a
+            onClick={() => props.openOrderDetail(null)}
+            style={{ cursor: 'pointer' }}
+            data-test='orders_detail_back_btn'>
+            <ArrowLeft />
+            <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+          </a>
+          {counterOrderId ? (
             <a
-              onClick={() => props.openOrderDetail(null)}
+              onClick={async () => {
+                const order = await getOrder(counterOrderId, props)
+                if (order) props.openOrderDetail(order)
+              }}
               style={{ cursor: 'pointer' }}
-              data-test='orders_detail_back_btn'>
-              <ArrowLeft />
-              <FormattedMessage id='order.detail.backToOrders' defaultMessage='Back to Orders' />
+              data-test='orders_detail_view_linked_order_btn'>
+              <Link2 />
+              <FormattedMessage id='order.detail.viewLinkedOrder' defaultMessage='View Linked Order' />
             </a>
-          </Link>
-          <div className='field'>
-            <div>
-              <FormattedMessage id='order.detail.buyerCompanyEin' defaultMessage='Buyer Company EIN' />
-            </div>
-            <div>
-              <strong>{order.companyEin}</strong>
-            </div>
-          </div>
+          ) : null}
         </TopRow>
         <OrderSegment>
           <Grid verticalAlign='middle'>
@@ -344,7 +349,7 @@ const Detail = props => {
 
             <Divider hidden />
             <OrderAccordion
-              defaultActiveIndex={[0, 1]}
+              defaultActiveIndex={[0, 1, 2, 3]}
               styled
               fluid
               style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
@@ -354,9 +359,107 @@ const Detail = props => {
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_order_info'>
                 <Chevron />
-                <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
+                <FormattedMessage id='order.customer' defaultMessage='Customer' />
               </AccordionTitle>
               <Accordion.Content active={activeIndexes[0]}>
+                <Grid divided='horizontally'>
+                  <Grid.Row columns={2}>
+                    <Grid.Column>
+                      <GridData columns={2}>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.customerName' defaultMessage='Customer Name' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.paymentName}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.customerAddress' defaultMessage='Customer Address' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.paymentAddress}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.companyEin' defaultMessage='Company EIN' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.companyEin}</GridDataColumn>
+                      </GridData>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <GridData columns={2}>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.customerEmail' defaultMessage='Customer E-Mail' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.paymentEmail}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.customerContact' defaultMessage='Customer Contact' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.paymentContact}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.customerPhone' defaultMessage='Customer Phone' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>
+                          <FormattedPhone value={order.paymentPhone} />
+                        </GridDataColumn>
+                      </GridData>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Accordion.Content>
+
+              <AccordionTitle
+                active={activeIndexes[1]}
+                index={1}
+                onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
+                data-test='orders_detail_order_seller'>
+                <Chevron />
+                <FormattedMessage id='order.seller' defaultMessage='Seller' />
+              </AccordionTitle>
+              <Accordion.Content active={activeIndexes[1]}>
+                <Grid divided='horizontally'>
+                  <Grid.Row columns={2}>
+                    <Grid.Column>
+                      <GridData columns={2}>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.sellerName' defaultMessage='Seller Name' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.sellerCompanyName}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.sellerAddress' defaultMessage='Seller Address' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.sellerAddress}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.companyEin' defaultMessage='Company EIN' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.sellerCompanyEin}</GridDataColumn>
+                      </GridData>
+                    </Grid.Column>
+                    <Grid.Column>
+                      <GridData columns={2}>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.sellerEmail' defaultMessage='Seller E-Mail' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.sellerCompanyContactEmail}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.sellerContact' defaultMessage='Seller Contact' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>{order.sellerCompanyContactName}</GridDataColumn>
+                        <GridDataColumn width={keyColumn} className='key'>
+                          <FormattedMessage id='order.detail.sellerPhone' defaultMessage='Seller Phone' />
+                        </GridDataColumn>
+                        <GridDataColumn width={valColumn}>
+                          <FormattedPhone value={order.sellerCompanyContactPhone} />
+                        </GridDataColumn>
+                      </GridData>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Accordion.Content>
+
+              <AccordionTitle
+                active={activeIndexes[2]}
+                index={2}
+                onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
+                data-test='orders_detail_order_info'>
+                <Chevron />
+                <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
+              </AccordionTitle>
+              <Accordion.Content active={activeIndexes[2]}>
                 <Grid divided='horizontally'>
                   <Grid.Row>
                     <Grid.Column width={6}>
@@ -384,75 +487,41 @@ const Detail = props => {
                     <Grid.Column width={4} floated='right'>
                       <GridData>
                         <GridDataColumn style={{ paddingTop: '0 !important', paddingBottom: '0 !important' }}>
-                          {ordersType === 'Sales' ? (
-                            <>
-                              <StyledTable basic='very' collapsing singleLine className='order-total'>
-                                <Table.Header>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>{order.subtotal}</Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Header>
-                                <Table.Body>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.echoFee}</Table.Cell>
-                                  </TableRowData>
-                                </Table.Body>
-                                <Table.Footer>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <FormattedMessage id='order.total' defaultMessage='Total' />
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>
-                                      <strong>{order.total}</strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Footer>
-                              </StyledTable>
-                            </>
-                          ) : (
-                            <>
-                              <StyledTable basic='very' collapsing singleLine className='order-total'>
-                                <Table.Header>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <FormattedMessage id='order.subtotal' defaultMessage='Subtotal' />
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>{order.subtotal}</Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Header>
-                                <Table.Body>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
-                                  </TableRowData>
-                                  <TableRowData>
-                                    <Table.Cell>
-                                      <FormattedMessage id='order.tax' defaultMessage='Tax' />
-                                    </Table.Cell>
-                                    <Table.Cell textAlign='right'>{'$0'}</Table.Cell>
-                                  </TableRowData>
-                                </Table.Body>
-                                <Table.Footer>
-                                  <TableRowData>
-                                    <Table.HeaderCell>
-                                      <FormattedMessage id='order.total' defaultMessage='Total' />
-                                    </Table.HeaderCell>
-                                    <Table.HeaderCell textAlign='right'>
-                                      <strong>{order.total}</strong>
-                                    </Table.HeaderCell>
-                                  </TableRowData>
-                                </Table.Footer>
-                              </StyledTable>
-                            </>
-                          )}
+                          <StyledTable basic='very' collapsing singleLine className='order-total'>
+                            <Table.Header>
+                              <TableRowData>
+                                <Table.HeaderCell>
+                                  <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />
+                                </Table.HeaderCell>
+                                <Table.HeaderCell textAlign='right'>{order.subtotal}</Table.HeaderCell>
+                              </TableRowData>
+                            </Table.Header>
+                            <Table.Body>
+                              <TableRowData>
+                                <Table.HeaderCell>
+                                  <FormattedMessage id='order.total' defaultMessage='Total' />
+                                </Table.HeaderCell>
+                                <Table.HeaderCell textAlign='right'>
+                                  <strong>{order.total}</strong>
+                                </Table.HeaderCell>
+                              </TableRowData>
+                            </Table.Body>
+                            <divider/>
+                            <Table.Footer>
+                              <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.transactionFeeFormatted}</Table.Cell>
+                              </TableRowData>
+                              <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
+                              </TableRowData>
+                            </Table.Footer>
+                          </StyledTable>
                         </GridDataColumn>
                       </GridData>
                     </Grid.Column>
@@ -461,14 +530,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[1]}
-                index={1}
+                active={activeIndexes[3]}
+                index={3}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[1]}>
+              <Accordion.Content active={activeIndexes[3]}>
                 <Grid>
                   <Grid.Row>
                     <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
@@ -486,14 +555,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[2]}
-                index={2}
+                active={activeIndexes[4]}
+                index={4}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[2]}>
+              <Accordion.Content active={activeIndexes[4]}>
                 <div className='table-responsive'>
                   <Table>
                     <Table.Header>
@@ -578,14 +647,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[3]}
-                index={3}
+                active={activeIndexes[5]}
+                index={5}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_pickup_info'>
                 <Chevron />
                 <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[3]}>
+              <Accordion.Content active={activeIndexes[5]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -619,14 +688,14 @@ const Detail = props => {
               {order.reviewStatus === 'Rejected' && (
                 <>
                   <AccordionTitle
-                    active={activeIndexes[4]}
-                    index={4}
+                    active={activeIndexes[6]}
+                    index={6}
                     onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                     data-test='orders_detail_return_shipping'>
                     <Chevron />
                     <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                   </AccordionTitle>
-                  <Accordion.Content active={activeIndexes[4]}>
+                  <Accordion.Content active={activeIndexes[6]}>
                     <Grid divided='horizontally'>
                       <Grid.Row columns={2}>
                         <Grid.Column>
@@ -682,14 +751,14 @@ const Detail = props => {
               )}
 
               <AccordionTitle
-                active={activeIndexes[5]}
-                index={5}
+                active={activeIndexes[7]}
+                index={7}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_shipping'>
                 <Chevron />
                 <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[5]}>
+              <Accordion.Content active={activeIndexes[7]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -751,14 +820,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[6]}
-                index={6}
+                active={activeIndexes[8]}
+                index={8}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_payment'>
                 <Chevron />
                 <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[6]}>
+              <Accordion.Content active={activeIndexes[8]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -823,14 +892,14 @@ const Detail = props => {
                 </Grid>
               </Accordion.Content>
               <AccordionTitle
-                active={activeIndexes[7]}
-                index={7}
+                active={activeIndexes[9]}
+                index={9}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_notes'>
                 <Chevron />
                 <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[7]}>
+              <Accordion.Content active={activeIndexes[9]}>
                 <Grid.Row>
                   <Grid.Column>{getSafe(() => props.order.note, '')}</Grid.Column>
                 </Grid.Row>
