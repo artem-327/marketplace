@@ -76,6 +76,7 @@ const getAllocated = state => getSafe(() => state.orders.groupedProductOffers, [
     if (!Array.isArray(offer)) return
     return offer.reduce((total, pkg) => total + pkg.pkgAllocated)
 })
+const getIsDetailFetching = state => state?.orders?.isDetailFetching
 
 export const makeGetEchoSupportPhone = () => createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)
 export const makeGetIsPaymentCancellable = () => createSelector([getIsPaymentCancellable], isPaymentCancellable => isPaymentCancellable)
@@ -134,3 +135,4 @@ export const makeGetLoadingGroupedProductOffer = () => createSelector([getLoadin
 export const makeGetGroupedProductOffers = () => createSelector([getGroupedProductOffers], groupedProductOffers => groupedProductOffers)
 export const makeGetAvailable = () => createSelector([getAvailable], available => available)
 export const makeGetAllocated = () => createSelector([getAllocated], allocated => allocated)
+export const makeGetIsDetailFetching = () => createSelector([getIsDetailFetching], data => data)
