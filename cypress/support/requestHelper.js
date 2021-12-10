@@ -756,14 +756,14 @@ Cypress.Commands.add("createPurchaseRequest", (token, searchPattern) => {
     })
 })
 
-Cypress.Commands.add("createBid", (token, marketplaceId) => {
+Cypress.Commands.add("createBid", (token, marketplaceId, sellerId) => {
     cy.request({
         method: 'POST',
         url: '/prodex/api/product-offer-bids',
         headers: {
             authorization: "Bearer " + token
         },
-        body: { pkgAmount: 1, pricePerUOM: 1, productOffer: marketplaceId }
+        body: { pkgAmount: 1, pricePerUOM: 1, productOffer: marketplaceId, sellerId: sellerId }
     }).then((response) => {
         expect(response.status).to.eq(201)
         return response.body.id

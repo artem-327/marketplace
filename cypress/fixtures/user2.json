@@ -1,4 +1,5 @@
 {
   "email": "automation@echoinvest.cz",
-  "password" : "echopass123"
+  "password" : "echopass123",
+  "companyId": 581
 }

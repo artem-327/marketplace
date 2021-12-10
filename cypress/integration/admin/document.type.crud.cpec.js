@@ -32,7 +32,7 @@ context("Document Types CRUD", () => {
         })
         cy.get('[data-test=admin_table_add_btn]').click()
 
-        cy.enterText("#field_input_val0", "TYPE")
+        cy.enterText("#field_input_name", "TYPE")
         cy.clickSave()
 
         cy.searchInList("TYPE")
@@ -44,14 +44,14 @@ context("Document Types CRUD", () => {
             })
         })
 
-        cy.get("#field_input_val0").should("have.value", "TYPE")
+        cy.get("#field_input_name").should("have.value", "TYPE")
     })
 
     it("Edits a document", () => {
         cy.searchInList("TYPE")
         cy.openElement(typeId, 0)
 
-        cy.get("#field_input_val0")
+        cy.get("#field_input_name")
             .clear()
             .type("TYPE2")
             .should("have.value", "TYPE2")
@@ -60,7 +60,7 @@ context("Document Types CRUD", () => {
 
         cy.openElement(typeId, 0)
 
-        cy.get("#field_input_val0").should("have.value", "TYPE2")
+        cy.get("#field_input_name").should("have.value", "TYPE2")
     })
 
     it("Checks error message", () => {

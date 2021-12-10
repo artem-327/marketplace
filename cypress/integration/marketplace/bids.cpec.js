@@ -5,6 +5,7 @@ context("Bids Tests", () => {
     let productName
     let bidId
     let productId
+    let sellerId = userJSON2.companyId
 
     beforeEach(function () {
         cy.viewport(2500, 3500)
@@ -38,6 +39,7 @@ context("Bids Tests", () => {
                         let idHelper = offer
 
                         offerId = idHelper
+
                     })
                 })
             })
@@ -104,7 +106,7 @@ context("Bids Tests", () => {
 
     it("Counter Incoming Bid", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.createBid(token, offerId).then(value => {
+            cy.createBid(token, offerId, sellerId).then(value => {
                 bidId = value
 
                 cy.waitForUI()
@@ -135,7 +137,7 @@ context("Bids Tests", () => {
 
     it("Delete Bid", () => {
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.createBid(token, offerId).then(value => {
+            cy.createBid(token, offerId, sellerId).then(value => {
                 bidId = value
 
                 cy.visit("/marketplace/bids-sent")
