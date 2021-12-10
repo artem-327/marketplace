@@ -142,8 +142,8 @@ class CompanyForm extends Component {
     naicsCode: null,
   }
   async componentDidMount() {
-    // this.loadCompanyLogo()
-    // this.loadCompanyDoc()
+    this.loadCompanyLogo()
+    this.loadCompanyDoc()
     try {
       if (!getSafe(() => this.props.data.length, false)) this.props.getBusinessTypes()
       if (!getSafe(() => this.props.associations.length, false))
@@ -163,8 +163,10 @@ class CompanyForm extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    this.loadCompanyLogo()
-    this.loadCompanyDoc()
+    if (this.props.companyId !== prevProps.companyId) {
+      this.loadCompanyLogo()
+      this.loadCompanyDoc()
+    }
   }
 
   loadCompanyLogo = async () => {
