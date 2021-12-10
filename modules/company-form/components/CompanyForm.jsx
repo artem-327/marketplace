@@ -175,6 +175,9 @@ class CompanyForm extends Component {
 
       if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data, false)
     }
+    if (!this.props.hasLogo && this.props.selectLogo && this.props.companyId) {
+      this.props.selectLogo(null, false)
+    }
   }
 
   loadCompanyDoc = async () => {
