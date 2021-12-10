@@ -559,6 +559,14 @@ const Detail = props => {
                           {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                         </GridDataColumn>
                         <GridDataColumn width={valColumn}>{order.id}</GridDataColumn>
+                        {order.releaseNo &&(
+                          <>
+                            <GridDataColumn width={keyColumn} className='key'>
+                              <FormattedMessage id='order.releaseNo' defaultMessage='Release NO.' />
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>{order.releaseNo}</GridDataColumn>
+                          </>
+                        )}
                         <GridDataColumn width={keyColumn} className='key'>
                           {ordersType.charAt(0)}
                           <FormattedMessage id='order.oDate' defaultMessage='O Date' />
