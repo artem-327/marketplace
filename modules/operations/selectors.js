@@ -19,6 +19,7 @@ const getSearchedCompaniesLoading = state => getSafe(() => state.operations.sear
 const getFilterValue = state => getSafe(() => state.operations.filterValue, '')
 const getLoading = state => getSafe(() => state.operations.loading, false)
 const getOrderByIdLoading = state => getSafe(() => state.operations.orderByIdLoading, false)
+const getDownloadPdfLoading = state => getSafe(() => state.operations.downloadPdfLoading, false)
 const getEchoSupportPhone = state => getSafe(() => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value, 'N/A')
 const getIsPaymentCancellable = state => getSafe(() => state.operations.orderDetailData.isPaymentCancellable, false)
 const getDatagridFilterUpdate = state => getSafe(() => state.orders.datagridFilterUpdate, false)
@@ -81,6 +82,9 @@ export const makeGetLoading = () => {
 }
 export const makeGetOrderByIdLoading = () => {
     return createSelector([getOrderByIdLoading], loading => loading)
+}
+export const makeGetDownloadPdfLoading = () => {
+    return createSelector([getDownloadPdfLoading], loading => loading)
 }
 export const makeGetEchoSupportPhone = () => {
     return createSelector([getEchoSupportPhone], echoSupportPhone => echoSupportPhone)

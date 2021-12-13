@@ -99,6 +99,16 @@ export const prepareDetail = (data, type = 'sales') => {
           value={data.transactionFee ? data.transactionFee : 0}
         />
       ),
+      brokerageFee:
+        data.brokerageFee ? (
+          <FormattedNumber
+            minimumFractionDigits={2}
+            maximumFractionDigits={2}
+            style='currency'
+            currency={currency}
+            value={data.brokerageFee}
+          />
+        ) : null,
       grossProfit: (
         <FormattedNumber
           minimumFractionDigits={2}
@@ -327,15 +337,14 @@ export const columnsRelatedOrdersDetailDocuments = [
  * @services
  */
 export const downloadOrder = async (props) => {
-  let endpointType = 'sale'
-  let pdf = await props.downloadPdf(endpointType, props.order.id)
+  let pdf = await props.downloadPdf(props.order.id)
 
   const element = document.createElement('a')
   const file = new Blob([pdf.value.data], { type: 'application/pdf' })
   let fileURL = URL.createObjectURL(file)
 
   element.href = fileURL
-  element.download = `${endpointType}-order-${props.order.id}.pdf`
+  element.download = `purchase-order-${props.order.id}.pdf`
   document.body.appendChild(element) // Required for this to work in FireFox
   element.click()
 }

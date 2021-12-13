@@ -26,7 +26,8 @@ import {
   generateBOL,
   openGenBOLPopup,
   closeGenBOLPopup,
-  getOrderById
+  getOrderById,
+  downloadPdf
 } from './actions'
 
 
@@ -48,7 +49,8 @@ const initialState = {
   orderAccountingDocumentsLoading: false,
   tableHandlersFilters: null,
   searchedManQuotRequests: [],
-  searchedManQuotRequestsLoading: false
+  searchedManQuotRequestsLoading: false,
+  downloadPdfLoading: false
 }
 
 export default typeToReducer(
@@ -404,6 +406,24 @@ export default typeToReducer(
       return {
         ...state,
         orderByIdLoading: false
+      }
+    },
+    [downloadPdf.pending]: (state, action) => {
+      return {
+        ...state,
+        downloadPdfLoading: true
+      }
+    },
+    [downloadPdf.rejected]: (state, action) => {
+      return {
+        ...state,
+        downloadPdfLoading: false
+      }
+    },
+    [downloadPdf.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        downloadPdfLoading: false
       }
     },
   },

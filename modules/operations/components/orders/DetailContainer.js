@@ -4,7 +4,7 @@ import Detail from './Detail'
 // Actions
 import * as Actions from '../../actions'
 import { downloadAttachment } from '../../../inventory/actions'
-import { downloadPdf, downloadDisputeAttachment } from '../../../orders/actions'
+import { downloadDisputeAttachment } from '../../../orders/actions'
 // Services
 import { actionRequired, prepareDetail } from './Detail.services'
 // Selectors
@@ -13,7 +13,8 @@ import {
   makeGetIsPaymentCancellable,
   makeGetIsOpenPopup,
   makeGetLoading,
-  makeGetOrderByIdLoading
+  makeGetOrderByIdLoading,
+  makeGetDownloadPdfLoading
 } from '../../selectors'
 
 const makeMapStateToProps = () => {
@@ -22,6 +23,7 @@ const makeMapStateToProps = () => {
   const getIsOpenPopup = makeGetIsOpenPopup()
   const getLoading = makeGetLoading()
   const getOrderByIdLoading = makeGetOrderByIdLoading()
+  const getDownloadPdfLoading = makeGetDownloadPdfLoading()
 
   const mapStateToProps = (state, ownProps) => {
     const isCancelable =
@@ -36,10 +38,11 @@ const makeMapStateToProps = () => {
       isOpenPopup: getIsOpenPopup(state),
       loading: getLoading(state),
       orderByIdLoading: getOrderByIdLoading(state),
+      downloadPdfLoading: getDownloadPdfLoading(state),
       isCancelable,
     }
   }
   return mapStateToProps
 }
 
-export default connect(makeMapStateToProps, { ...Actions, downloadAttachment, downloadPdf, downloadDisputeAttachment })(Detail)
+export default connect(makeMapStateToProps, { ...Actions, downloadAttachment, downloadDisputeAttachment })(Detail)
