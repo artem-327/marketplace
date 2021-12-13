@@ -4,7 +4,6 @@ import api from './api'
 // Services
 import { Datagrid } from '../datagrid'
 
-
 export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
 export const deleteShippingQuote = createAsyncAction('OPERATIONS_DELETE_SHIPPING_QUOTE', async (id) => {
@@ -85,3 +84,4 @@ export const generateBOL = createAsyncAction('SHIPPING_QUOTE_GENERATE_BOL', (id,
 export const openGenBOLPopup = createAction('SHIPPING_QUOTE_OPEN_GEN_BOL_POPUP', row => row)
 export const closeGenBOLPopup = createAction('SHIPPING_QUOTE_CLOSE_GEN_BOL_POPUP')
 export const getOrderById = createAsyncAction('OPERATIONS_ORDERS_GET_ORDER', (orderId) => api.getOrderById(orderId))
+export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', orderId => api.downloadPdf(orderId))

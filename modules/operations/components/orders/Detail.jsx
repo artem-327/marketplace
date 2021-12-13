@@ -77,6 +77,7 @@ const Detail = props => {
     isOpenPopup,
     loading,
     orderByIdLoading,
+    downloadPdfLoading,
     openPopup,
     resolveDisputeReject,
     resolveDisputeCredit,
@@ -170,6 +171,9 @@ const Detail = props => {
                     onClick={() => downloadOrder(props)}
                     style={{ fontSize: '1.14285714em', cursor: 'pointer' }}
                     data-test='orders_detail_download_order'>
+                    <Dimmer active={downloadPdfLoading} inverted style={{background: 'rgba(255, 255, 255, 0.85)'}}>
+                      <Loader />
+                    </Dimmer>
                     <DownloadCloud />
                     <FormattedMessage id='global.download' defaultMessage='Download' />
                   </a>
@@ -498,27 +502,35 @@ const Detail = props => {
                             </Table.Header>
                             <Table.Body>
                               <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.transactionFeeFormatted}</Table.Cell>
+                              </TableRowData>
+                              {order.brokerageFee && (
+                                <TableRowData>
+                                  <Table.Cell>
+                                    <FormattedMessage id='order.brokerageFee' defaultMessage='Brokerage Fee' />
+                                  </Table.Cell>
+                                  <Table.Cell textAlign='right'>{order.brokerageFee}</Table.Cell>
+                                </TableRowData>
+                              )}
+                              <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
+                              </TableRowData>
+                            </Table.Body>
+                            <divider/>
+                            <Table.Footer>
+                              <TableRowData>
                                 <Table.HeaderCell>
                                   <FormattedMessage id='order.total' defaultMessage='Total' />
                                 </Table.HeaderCell>
                                 <Table.HeaderCell textAlign='right'>
                                   <strong>{order.total}</strong>
                                 </Table.HeaderCell>
-                              </TableRowData>
-                            </Table.Body>
-                            <divider/>
-                            <Table.Footer>
-                              <TableRowData>
-                                <Table.Cell>
-                                  <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
-                                </Table.Cell>
-                                <Table.Cell textAlign='right'>{order.transactionFeeFormatted}</Table.Cell>
-                              </TableRowData>
-                              <TableRowData>
-                                <Table.Cell>
-                                  <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
-                                </Table.Cell>
-                                <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                               </TableRowData>
                             </Table.Footer>
                           </StyledTable>

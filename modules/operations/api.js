@@ -41,5 +41,9 @@ export default {
       .catch(e => console.error(e)),
   generateBOL: (id, carrierName, pickupDate) => 
     api
-      .post(`/prodex/api/shipment/manual-quotes/id/${id}/generate-bol`, {carrierName, pickupDate}).then(response => response.data)
+      .post(`/prodex/api/shipment/manual-quotes/id/${id}/generate-bol`, {carrierName, pickupDate}).then(response => response.data),
+  downloadPdf: orderId =>
+    api.get(`/prodex/api/purchase-orders/${orderId}/download-pdf`, {
+      responseType: 'blob'
+    }),
 }
