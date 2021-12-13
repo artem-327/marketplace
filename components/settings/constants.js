@@ -25,11 +25,12 @@ const supportedValidation = {
 }
 
 const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
-  .transform(value => (isNaN(value) ? null : value))
+  .transform(value => (isNaN(value) ? null : value)) // ! ! ??  nejak predelat - akceptuje "52."
   .typeError(errorMessages.mustBeNumber)
 
 const integerAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
   .integer(errorMessages.integer)
+  .transform(value => (isNaN(value) ? null : value))  // ! ! ??  nejak predelat "52."
   .typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {
@@ -51,7 +52,9 @@ export const getRole = accessRights => {
   return roles.user
 }
 
-export const typeToComponent = (type, options = {}) => {
+export const typeToComponent = (type, options = {}, props) => {
+  const { intl: { formatMessage } } = props
+  const inputProps = getSafe(() => options.inputProps, {})
   switch (type) {
     case 'NUMBER':
       return (
@@ -61,7 +64,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 1,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -73,7 +77,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 1,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -85,7 +90,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 0.001,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -94,7 +100,8 @@ export const typeToComponent = (type, options = {}) => {
         <TextArea
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {}),
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps,
             type: 'text'
           }}
         />
@@ -105,7 +112,8 @@ export const typeToComponent = (type, options = {}) => {
           {...getSafe(() => options.props, {})}
           inputProps={{
             type: 'text',
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -114,7 +122,8 @@ export const typeToComponent = (type, options = {}) => {
         <Dropdown
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.selectValue', defaultMessage: 'Select value' }),
+            ...inputProps
           }}
         />
       )
@@ -123,11 +132,11 @@ export const typeToComponent = (type, options = {}) => {
         <Dropdown
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.selectValue', defaultMessage: 'Select value' }),
+            ...inputProps
           }}
         />
       )
-
     case 'BOOL': {
       return (
         <Checkbox
@@ -135,18 +144,31 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             toggle: true,
             fitted: true,
-            ...getSafe(() => options.inputProps, {})
+            ...inputProps
           }}
         />
       )
     }
+    case 'BASE64_FILE':
+      return (
+        <Input
+          {...getSafe(() => options.props, {})}
+          inputProps={{
+            type: 'text',
+            placeholder: formatMessage({ id: 'settings.system.addPicture', defaultMessage: 'Add picture' }),
+            ...inputProps
+          }}
+        />
+      )
+
     default:
       return (
         <Input
           {...getSafe(() => options.props, {})}
           inputProps={{
             type: 'text',
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )

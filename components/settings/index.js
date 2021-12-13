@@ -22,7 +22,7 @@ import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 import { getSafe } from '../../utils/functions'
-import { typeToComponent, toYupSchema } from './constants'
+import { typeToComponent, toYupSchema, dataTypes } from './constants'
 
 import { triggerSystemSettingsModal } from '../../modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -219,12 +219,19 @@ class Settings extends Component {
               tmp[el.code] = Yup.object().shape({
                 value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
               })
+            } else {
+              tmp[el.code] = Yup.object().shape({
+                value: Yup.object().shape({ visible: dataTypes[el.type] })
+              })
             }
+          } else {
+            tmp[el.code] = Yup.object().shape({
+              value: Yup.object().shape({ visible: dataTypes[el.type] })
+            })
           }
         })
         if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
       })
-
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
@@ -444,7 +451,7 @@ class Settings extends Component {
                                               role !== 'admin'),
                                           ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
                                         }
-                                      }),
+                                      }, this.props),
                                       {
                                         name: `${role}.${group.code}.${el.code}.value.${
                                           el.type === 'BOOL' ? 'actual' : 'visible'
