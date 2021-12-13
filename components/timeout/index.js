@@ -64,15 +64,24 @@ export default class TimeoutWarning extends Component {
     this.setState({ loading: false })
   }
 
+  preSetIdleTimeout = (preTime) => {
+    if (preTime < 2147483647) {
+      this.timeoutInterval = setTimeout(this.handleIdle, preTime);
+      return;
+    }
+    setTimeout(() => {
+      this.preSetIdleTimeout((preTime - 2147483647))
+    }, 2147483647);
+  }
   setIdleTimeout = async () => {
     let settings = await api.getSettings('user')
     settings = settings[1].settings
-    let autoLogOutSettings = settings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")
+    let autoLogOutSettings = settings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")    
     let timeout = parseInt(autoLogOutSettings[0].value)
     let timediff = timeout * 60 * 1000 - WARNING_OFFSET
     if(timeout > 0) {
       this.setState({ timeout })
-      this.timeoutInterval = setTimeout(this.handleIdle, timediff)
+      this.preSetIdleTimeout(timediff)
     }
   }
 
