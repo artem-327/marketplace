@@ -30,7 +30,8 @@ import {
   makeGetIsThirdPartyConnectionException,
   makeGetIsSending,
   makeGetopenedDisputedRequest,
-  makeGetAppInfo
+  makeGetAppInfo,
+  makeGetIsDetailFetching
 } from '../selectors'
 
 import {
@@ -61,6 +62,7 @@ const makeMapStateToProps = () => {
   const getIsSending = makeGetIsSending()
   const getopenedDisputedRequest = makeGetopenedDisputedRequest()
   const getAppInfo = makeGetAppInfo()
+  const getIsDetailFetching = makeGetIsDetailFetching()
 
   const mapStateToProps = (state, ownProps) => {
     return {
@@ -87,7 +89,8 @@ const makeMapStateToProps = () => {
       isThirdPartyConnectionException: getIsThirdPartyConnectionException(state),
       isSending: getIsSending(state),
       openedDisputedRequest: getopenedDisputedRequest(state),
-      appInfo: getAppInfo(state)
+      appInfo: getAppInfo(state),
+      isDetailFetching: getIsDetailFetching(state)
     }
   }
   return mapStateToProps

@@ -2772,6 +2772,7 @@
   "order.return.pickupDate": "Preferred pick-up date:",
   "order.orderId": "Order ID",
   "order.globalStatus": "Status",
+  "order.releaseNo": "Release NO.",
   "order.date": "Order Date",
   "order.vendor": "Vendor",
   "order.productName": "Product Name",

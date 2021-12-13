@@ -102,38 +102,45 @@ const Detail = props => {
   const [orderItemId, setOrderItemId] = useState(null)
   const [changedTypeOrder, setChangedTypeOrder] = useState(false)
 
-  useEffect(() => {
-    props.router.query.type === 'sales' ? props.getSaleOrder(props.router.query.id) : props.getPurchaseOrder(props.router.query.id)
+  useEffect(async () => {
+    try {
+      if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
 
-    if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
+      const { value: { data } } = props.router.query.type === 'sales'
+        ? await props.getSaleOrder(props.router.query.id)
+        : await props.getPurchaseOrder(props.router.query.id)
 
-    setShippingTrackingCode(getSafe(() => props.order.shippingTrackingCode, ''))
-    setReturnShippingTrackingCode(getSafe(() => props.order.returnShippingTrackingCode, ''))
+      setAttachmentRows(getRows(data.attachments, props))
+      setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
+      setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
+    } catch (e) {
+      console.error(e)
+    }
 
     return () => {
       props.clearOrderDetail()
     }
   }, [])
 
-  useEffect(() => {
+  useEffect(async () => {
     if (changedTypeOrder) {
-      props.router.query.type === 'sales' ? props.getSaleOrder(props.router.query.id) : props.getPurchaseOrder(props.router.query.id)
+      try {
+        if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
 
-      if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
+        const { value: { data } } = props.router.query.type === 'sales'
+          ? await props.getSaleOrder(props.router.query.id)
+          : await props.getPurchaseOrder(props.router.query.id)
 
-      setShippingTrackingCode(getSafe(() => props.order.shippingTrackingCode, ''))
-      setReturnShippingTrackingCode(getSafe(() => props.order.returnShippingTrackingCode, ''))
-      setChangedTypeOrder(false)
+        setAttachmentRows(getRows(data.attachments, props))
+        setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
+        setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setChangedTypeOrder(false)
+      }
     }
   }, [changedTypeOrder])
-
-  useEffect(() => {
-    setShippingTrackingCode(props.order.shippingTrackingCode)
-  }, [getSafe(() => props.order.shippingTrackingCode, '')])
-
-  useEffect(() => {
-    setReturnShippingTrackingCode(props.order.returnShippingTrackingCode)
-  }, [getSafe(() => props.order.returnShippingTrackingCode, '')])
 
   useEffect(() => {
     let dataCells = document.querySelectorAll('.data-list dd')
@@ -143,13 +150,6 @@ const Detail = props => {
       } else {
         dataCells[i].className = ''
       }
-    }
-
-    if (
-      !getSafe(() => attachmentRows.length, false) &&
-      getSafe(() => props.order.attachments.length, false)
-    ) {
-      setAttachmentRows(getRows(props.order.attachments, props))
     }
   }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
 
@@ -559,6 +559,14 @@ const Detail = props => {
                           {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                         </GridDataColumn>
                         <GridDataColumn width={valColumn}>{order.id}</GridDataColumn>
+                        {order.releaseNo &&(
+                          <>
+                            <GridDataColumn width={keyColumn} className='key'>
+                              <FormattedMessage id='order.releaseNo' defaultMessage='Release NO.' />
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>{order.releaseNo}</GridDataColumn>
+                          </>
+                        )}
                         <GridDataColumn width={keyColumn} className='key'>
                           {ordersType.charAt(0)}
                           <FormattedMessage id='order.oDate' defaultMessage='O Date' />

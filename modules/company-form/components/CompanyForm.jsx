@@ -162,11 +162,21 @@ class CompanyForm extends Component {
     })
   }
 
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.companyId !== prevProps.companyId) {
+      this.loadCompanyLogo()
+      this.loadCompanyDoc()
+    }
+  }
+
   loadCompanyLogo = async () => {
     if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo && this.props.companyId) {
       const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
 
       if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data, false)
+    }
+    if (!this.props.hasLogo && this.props.selectLogo && this.props.companyId) {
+      this.props.selectLogo(null, false)
     }
   }
 

@@ -3,9 +3,9 @@ import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
 // import { filterTypes } from '../constants/filter'
-import { findByTestAttr, mountWithIntl, checkProps, storeFactory } from '../../../test/testUtils'
+import { findByTestAttr, mountWithIntl, checkProps, storeFactory } from '../../../../test/testUtils'
 //Components
-import Profile from './Profile'
+import AddLegalDocumentation from './AddLegalDocumentation'
 
 /**
  * @description Helper console.log view to see in each test what exactly is rendered in test.
@@ -15,16 +15,13 @@ import Profile from './Profile'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-  // Profile: () => { },
-  // closeProfilePopup: () => { },
-  // intl: {}
 }
 
-describe('`Profile` render component', () => {
+describe('`AddLegalDocumentation` render component', () => {
 
   test('does not throw warning with expected props', () => {
     //It checks components with default props.
-    // checkProps(Profile, defaultProps)
+    // checkProps(AddLegalDocumentation, defaultProps)
   })
 
 })
