@@ -232,7 +232,6 @@ class Settings extends Component {
         })
         if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
       })
-
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
@@ -388,8 +387,6 @@ class Settings extends Component {
                                 const componentName = `${role}.${group.code}.${el.code}.value.${
                                   el.type === 'BOOL' ? 'actual' : 'visible'
                                 }`
-                                //console.log('!!!!!!!!!! group.settings.map el', el)
-                                //console.log('!!!!!!!!!! aaaaa el', el)
                                 return (
                                   <>
                                     <Grid>
