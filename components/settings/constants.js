@@ -1,9 +1,11 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
-
+import get from 'lodash/get'
 import * as Yup from 'yup'
-
 import { errorMessages } from '~/constants/yupValidation'
 import { getSafe } from '~/utils/functions'
+import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
+
+import { DivLogoWrapper, ImageSearchStyled } from './settings.styles'
 
 export const roles = {
   admin: 'admin',
@@ -54,7 +56,7 @@ export const getRole = accessRights => {
   return roles.user
 }
 
-export const typeToComponent = (type, options = {}, props) => {
+export const typeToComponent = (type, options = {}, formikProps, componentName, props) => {
   const { intl: { formatMessage } } = props
   const inputProps = getSafe(() => options.inputProps, {})
   switch (type) {
@@ -139,6 +141,7 @@ export const typeToComponent = (type, options = {}, props) => {
           }}
         />
       )
+
     case 'BOOL': {
       return (
         <Checkbox
@@ -151,18 +154,52 @@ export const typeToComponent = (type, options = {}, props) => {
         />
       )
     }
-    case 'BASE64_FILE':
+    case 'BASE64_FILE': {
+      const { values, setFieldValue } = formikProps
+      const picture = get(values, componentName, '')
+
       return (
-        <Input
+        <UploadAttachment
           {...getSafe(() => options.props, {})}
-          inputProps={{
-            type: 'text',
-            placeholder: formatMessage({ id: 'settings.system.addPicture', defaultMessage: 'Add picture' }),
-            ...inputProps
+          {...getSafe(() => options.inputProps, {})}
+          acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+          name={componentName}
+          filesLimit={1}
+          fileMaxSize={2}
+          attachments={(picture && picture !== 'EMPTY_SETTING')
+            ? [{
+              id: componentName,
+              name: formatMessage({id: 'profile.avatarPicture', defaultMessage: 'Avatar Picture'})
+            }]
+            : []
+          }
+          onChange={file => {
+            try {
+              const reader = new FileReader()
+              reader.readAsDataURL(file[0])
+              reader.onloadend = function () {
+                const base64String = reader.result
+                // without additional data: Attributes.
+                const newBase64Pic = base64String.substr(base64String.indexOf(', ') + 1)
+                setFieldValue(componentName, newBase64Pic)
+              }
+            } catch (e) {
+              console.error(e)
+            }
           }}
+          removeAttachment={() => setFieldValue(componentName, 'EMPTY_SETTING')}
+          emptyContent={<DivLogoWrapper><ImageSearchStyled /></DivLogoWrapper>}
+          uploadedContent={
+            <div>
+              {(picture && picture !== 'EMPTY_SETTING') && (
+                <img src={picture}/>
+              )}
+            </div>
+          }
+
         />
       )
-
+    }
     default:
       return (
         <Input

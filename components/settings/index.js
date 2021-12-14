@@ -204,7 +204,7 @@ class Settings extends Component {
     }
   }
 
-  parseData = (systemSettings) => {
+  parseData = systemSettings => {
     let validationSchema = {}
     let { role } = this.props
 
@@ -232,6 +232,7 @@ class Settings extends Component {
         })
         if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
       })
+
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
@@ -384,6 +385,11 @@ class Settings extends Component {
                             <>
                               {group.settings.map(el => {
                                 if (asModal && !(showReadOnly || el.changeable)) return null
+                                const componentName = `${role}.${group.code}.${el.code}.value.${
+                                  el.type === 'BOOL' ? 'actual' : 'visible'
+                                }`
+                                //console.log('!!!!!!!!!! group.settings.map el', el)
+                                //console.log('!!!!!!!!!! aaaaa el', el)
                                 return (
                                   <>
                                     <Grid>
@@ -435,27 +441,31 @@ class Settings extends Component {
                                       </BottomMargedRow>
                                     </Grid>
                                     {cloneElement(
-                                      typeToComponent(el.type, {
-                                        props: {
-                                          ...getSafe(() => JSON.parse(el.frontendConfig).props),
-                                          options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
-                                            key: i,
-                                            value: opt.value,
-                                            text: opt.displayName
-                                          }))
+                                      typeToComponent(
+                                        el.type,
+                                          {
+                                          props: {
+                                            ...getSafe(() => JSON.parse(el.frontendConfig).props),
+                                            options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
+                                              key: i,
+                                              value: opt.value,
+                                              text: opt.displayName
+                                            }))
+                                          },
+                                          inputProps: {
+                                            disabled:
+                                              !el.changeable ||
+                                              (getSafe(() => !values[role][group.code][el.code].edit, false) &&
+                                                role !== 'admin'),
+                                            ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
+                                          }
                                         },
-                                        inputProps: {
-                                          disabled:
-                                            !el.changeable ||
-                                            (getSafe(() => !values[role][group.code][el.code].edit, false) &&
-                                              role !== 'admin'),
-                                          ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
-                                        }
-                                      }, this.props),
+                                        formikProps,
+                                        componentName,
+                                        this.props
+                                      ),
                                       {
-                                        name: `${role}.${group.code}.${el.code}.value.${
-                                          el.type === 'BOOL' ? 'actual' : 'visible'
-                                        }`
+                                        name: componentName
                                       }
                                     )}
                                   </>
