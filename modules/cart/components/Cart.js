@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Grid, GridColumn, Button } from 'semantic-ui-react'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import Router from 'next/router'
@@ -189,6 +190,24 @@ const Cart = props => {
       {getSafe(() => sidebar.id, false) ? <AddCart isEdit={true} buyEnabled={true} /> : null}
     </>
   )
+}
+
+Cart.propTypes = {
+  getCart: PropTypes.func,
+  cartIsFetching: PropTypes.bool,
+  intl: PropTypes.object,
+  cart: PropTypes.object,
+  sidebar: PropTypes.object
+}
+
+Cart.defaultProps = {
+  getCart: () => { },
+  cartIsFetching: false,
+  intl: {
+    formatMessage: () => {  }
+  },
+  cart: {},
+  sidebar: {},
 }
 
 export default Cart

@@ -9,6 +9,8 @@ import Alerts from './Alerts'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
+  isOpenPopupOperations: false,
+  getCategories: () => { }
 }
 
 /**
@@ -17,12 +19,17 @@ const defaultProps = {
  * @returns {ShallowWrapper}
  */
 
+// const setup = (props = {}) => {
+//   const setupProps = { ...defaultProps, props }
+//   return shallow(<Alerts {...setupProps} />)
+// }
+
 /**
  * @test { Alerts }
  */
 describe('`Alerts` render component', () => {
   test('does not throw warning with expected props', () => {
-    // checkProps(Alerts, defaultProps)
+    checkProps(Alerts, defaultProps)
   })
 
   // test('renders Alerts component to be there', () => {

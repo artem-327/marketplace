@@ -9,6 +9,13 @@ import CartItem from './CartItem'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
+  intl: '',
+  cart: {},
+  deleteCartItem: () => { },
+  item: {},
+  index: 0,
+  sidebarChanged: () => { },
+  getProductOffer: () => { },
 }
 
 /**
@@ -26,11 +33,11 @@ const setup = (props = {}) => {
  */
 describe('`CartItem` render component', () => {
   test('does not throw warning with expected props', () => {
-    // checkProps(CartItem, defaultProps)
+    checkProps(CartItem, defaultProps)
   })
 
-  // test('renders CartItem component to be there', () => {
-  //   const wrapper = setup()
-  //   expect(wrapper.exists()).toBe(true)
-  // })
+  test('renders CartItem component to be there', () => {
+    const wrapper = setup()
+    expect(wrapper.exists()).toBe(true)
+  })
 })

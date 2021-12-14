@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { withDatagrid } from '~/modules/datagrid'
 import { Formik } from 'formik'
 import moment from 'moment'
@@ -185,7 +186,7 @@ class WarehouseCredentialsPending extends Component {
 
     return (
       <Formik
-        onSubmit={async (values, actions) => {}}
+        onSubmit={async (values, actions) => { }}
         enableReinitialize
         initialValues={mergedValues}
         validationSchema={VALIDATION_SCHEME}>
@@ -618,6 +619,24 @@ const mapStateToProps = (state, { datagrid }) => {
         description: r.name
       }
     })
+  }
+}
+
+WarehouseCredentialsPending.propTypes = {
+  auth: PropTypes.object,
+  downloadAttachment: PropTypes.func,
+  datagrid: PropTypes.object,
+  rows: PropTypes.array,
+  intl: {},
+}
+
+WarehouseCredentialsPending.defaultProps = {
+  auth: {},
+  downloadAttachment: () => { },
+  datagrid: {},
+  rows: [],
+  intl: {
+    formatMessage: () => { }
   }
 }
 
