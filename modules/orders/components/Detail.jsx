@@ -562,7 +562,7 @@ const Detail = props => {
                         {order.releaseNo &&(
                           <>
                             <GridDataColumn width={keyColumn} className='key'>
-                              <FormattedMessage id='order.releaseNo' defaultMessage='Release NO.' />
+                              <FormattedMessage id='order.releaseNo' defaultMessage='Release No.' />
                             </GridDataColumn>
                             <GridDataColumn width={valColumn}>{order.releaseNo}</GridDataColumn>
                           </>
