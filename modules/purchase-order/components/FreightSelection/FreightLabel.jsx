@@ -77,9 +77,15 @@ const FreightLabel = props => {
   )
 }
 
-FreightLabel.propTypes = {}
+FreightLabel.propTypes = {
+  isOwn: PropTypes.bool,
+  onChange: PropTypes.func
+}
 
-FreightLabel.defaultProps = {}
+FreightLabel.defaultProps = {
+  isOwn: false,
+  onChange: () => { }
+}
 
 function mapStateToProps(store, props) {
   return {}

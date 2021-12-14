@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
 import { Modal, Dimmer, Loader, Input, Form, Radio } from 'semantic-ui-react'
-import { func, bool, string, number, array } from 'prop-types'
+import { func, bool, string, number, array, object } from 'prop-types'
 // Components
 import BasicButton from '../../../../components/buttons/BasicButton'
 //Styles
@@ -152,12 +152,7 @@ ModalResolveDispute.propTypes = {
   disputeAttachments: array,
   loading: bool,
   onClose: func,
-  actions: {
-    resolveDisputeAccept: func,
-    resolveDisputeCredit: func,
-    resolveDisputeReject: func,
-    downloadDisputeAttachment: func
-  }
+  actions: object
 }
 
 ModalResolveDispute.defaultValues = {
