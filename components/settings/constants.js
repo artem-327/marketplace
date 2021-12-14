@@ -24,13 +24,15 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
-const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
-  .transform(value => (isNaN(value) ? null : value)) // ! ! ??  nejak predelat - akceptuje "52."
+const numberAllowEmptyString = Yup.number()
+  .test('numbers', errorMessages.mustBeNumber, value => !value || !isNaN(value))
+  .transform(value => (isNaN(value) ? null : value))
   .typeError(errorMessages.mustBeNumber)
 
-const integerAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+const integerAllowEmptyString = Yup.number()
+  .test('numbers', errorMessages.mustBeNumber, value => !value || /^[0-9]*$/.test(value))
   .integer(errorMessages.integer)
-  .transform(value => (isNaN(value) ? null : value))  // ! ! ??  nejak predelat "52."
+  .transform(value => (isNaN(value) ? null : value))
   .typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {
