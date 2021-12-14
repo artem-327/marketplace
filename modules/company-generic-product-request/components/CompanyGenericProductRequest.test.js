@@ -1,4 +1,4 @@
-import Enzyme from 'enzyme'
+import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
@@ -11,6 +11,15 @@ import CompanyGenericProductRequest from './CompanyGenericProductRequest'
  * @description Helper console.log view to see in each test what exactly is rendered in test.
  * console.log(component.debug()) // see what is exactly rendered
  */
+/**
+ * Factory function to creaste a ShallowWrapper for the App component.
+ * @function setup
+ * @returns {ShallowWrapper}
+ */
+const setup = (props = {}) => {
+  const setupProps = { ...defaultProps, props }
+  return shallow(<CompanyGenericProductRequest {...setupProps} />)
+}
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
@@ -23,8 +32,12 @@ const defaultProps = {
 describe('`CompanyGenericProductRequest` render component', () => {
 
   test('does not throw warning with expected props', () => {
-    //It checks components with default props.
     checkProps(CompanyGenericProductRequest, defaultProps)
+  })
+
+  test('renders CompanyGenericProductRequest component to be there', () => {
+    const wrapper = setup()
+    expect(wrapper.exists()).toBe(true)
   })
 
 })
