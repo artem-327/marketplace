@@ -30,25 +30,10 @@ const defaultProps = {
 }
 
 /**
- * Factory function to creaste a ShallowWrapper for the App component.
- * @function setup
- * @returns {ShallowWrapper}
- */
-const setup = (props = {}) => {
-  const setupProps = { ...defaultProps, props }
-  return shallow(<Orders {...setupProps} />)
-}
-
-/**
  * @test { Orders }
  */
 describe('`Orders` render component', () => {
   test('does not throw warning with expected props', () => {
     checkProps(Orders, defaultProps)
-  })
-
-  test('renders Orders component to be there', () => {
-    const wrapper = setup()
-    expect(wrapper.exists()).toBe(true)
   })
 })

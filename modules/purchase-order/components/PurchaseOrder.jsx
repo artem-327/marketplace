@@ -25,14 +25,14 @@ import Shipping from './Shipping'
 import ShippingEdit from './ShippingEdit'
 import ShippingQuote from './ShippingQuote'
 import Payment from './Payment'
-import CartItemSummary from '~/components/summary/CartItemSummary'
-import Summary from '~/components/summary/Summary'
+import CartItemSummary from '../../../components/summary/CartItemSummary'
+import Summary from '../../../components/summary/Summary'
 import Spinner from '../../../components/Spinner/Spinner'
-import confirm from '~/components/Confirmable/confirm'
-import { generateToastMarkup, getSafe } from '~/utils/functions'
-import { currency } from '~/constants/index'
-import { errorMessages } from '~/constants/yupValidation'
-import FreightLabel from '~/components/freight'
+import confirm from '../../../components/Confirmable/confirm'
+import { generateToastMarkup, getSafe } from '../../../utils/functions'
+import { currency } from '../../../constants/index'
+import { errorMessages } from '../../../constants/yupValidation'
+import FreightLabel from '../../../components/freight'
 //Styled
 import {
   VerticalUnpaddedColumn,
@@ -46,7 +46,7 @@ import {
   CustomDivContent,
   CustomDivInTitle,
   CustomDivTitle
-} from '~/modules/cart/components/StyledComponents'
+} from '../../../modules/cart/components/StyledComponents'
 import '../styles/PurchaseOrder.scss'
 import styled from 'styled-components'
 
@@ -459,9 +459,9 @@ class PurchaseOrder extends Component {
                       </StyledRow>
 
                       {!cart.weightLimitExceed &&
-                      !cart.palletLimitExceed &&
-                      this.state.selectedAddress &&
-                      !isSetShippingQuoteId ? (
+                        !cart.palletLimitExceed &&
+                        this.state.selectedAddress &&
+                        !isSetShippingQuoteId ? (
                         <SemanticContainer className='flex stretched' style={{ maxHeight: '220px' }}>
                           <QuoteRow className='flex stretched'>
                             <ShippingQuote
@@ -759,4 +759,16 @@ PurchaseOrder.propTypes = {
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
   shippingQuotes: PropTypes.array
+}
+
+PurchaseOrder.defaultProps = {
+  cartItem: {},
+  deliveryAddresses: [],
+  dispatch: () => { },
+  getCart: () => { },
+  getDeliveryAddresses: () => { },
+  postPurchaseOrder: () => { },
+  deleteCart: () => { },
+  selectedAddressId: 0,
+  shippingQuotes: []
 }

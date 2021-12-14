@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 //Components
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
@@ -84,6 +85,28 @@ const Table = props => {
       />
     </div>
   )
+}
+
+Table.propTypes = {
+  loadingDatagrid: PropTypes.bool,
+  rows: PropTypes.array,
+  connectionsStatuses: PropTypes.func,
+  getConnection: PropTypes.func,
+  loadingDetailRow: PropTypes.bool,
+  showBluePallet: PropTypes.func,
+  query: PropTypes.object,
+  isCompanyAdmin: PropTypes.bool
+}
+
+Table.defaultValues = {
+  loadingDatagrid: false,
+  rows: [],
+  connectionsStatuses: () => { },
+  getConnection: () => { },
+  loadingDetailRow: false,
+  showBluePallet: () => { },
+  query: {},
+  isCompanyAdmin: false
 }
 
 export default Table

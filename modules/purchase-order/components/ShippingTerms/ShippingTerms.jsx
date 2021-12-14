@@ -135,7 +135,7 @@ const ShippingTerms = props => {
                                         for (const key in item.fullAddress) {
                                           if (Object.hasOwnProperty.call(item.fullAddress, key)) {
                                             const element = item.fullAddress[key];
-                                            if(key!=='enabled') {
+                                            if (key !== 'enabled') {
                                               fullAddress[key] = element;
                                             }
                                           }
@@ -221,9 +221,33 @@ const ShippingTerms = props => {
   )
 }
 
-ShippingTerms.propTypes = {}
+ShippingTerms.propTypes = {
+  isExpanded: PropTypes.bool,
+  allAccepted: PropTypes.bool,
+  sectionState: PropTypes.object,
+  onValueChange: PropTypes.func,
+  setSummaryButtonCaption: PropTypes.func,
+  value: PropTypes.object,
+  warehousesFetching: PropTypes.bool,
+  isFetching: PropTypes.bool,
+  isOpenModal: PropTypes.bool,
+  setIsOpenAddAddress: PropTypes.func,
+  deliveryAddresses: PropTypes.object
+}
 
-ShippingTerms.defaultProps = {}
+ShippingTerms.defaultProps = {
+  isExpanded: false,
+  allAccepted: false,
+  sectionState: {},
+  onValueChange: () => { },
+  setSummaryButtonCaption: () => { },
+  value: {},
+  warehousesFetching: false,
+  isFetching: false,
+  isOpenModal: false,
+  setIsOpenAddAddress: () => {},
+  deliveryAddresses: {}
+}
 
 function mapStateToProps(store, props) {
   return {}

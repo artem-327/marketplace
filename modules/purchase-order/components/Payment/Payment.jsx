@@ -153,9 +153,31 @@ const Payment = props => {
   )
 }
 
-Payment.propTypes = {}
+Payment.propTypes = {
+  isExpanded: PropTypes.bool,
+  allAccepted: PropTypes.bool,
+  sectionState: PropTypes.object,
+  onValueChange: PropTypes.func,
+  setSummaryButtonCaption: PropTypes.func,
+  value: PropTypes.object,
+  isThirdPartyConnectionException: PropTypes.bool,
+  getPayments: PropTypes.func,
+  isFetching: PropTypes.bool,
+  isHideInactiveAccounts: PropTypes.bool
+}
 
-Payment.defaultProps = {}
+Payment.defaultProps = {
+  isExpanded: false,
+  allAccepted: false,
+  sectionState: {},
+  onValueChange: () => { },
+  setSummaryButtonCaption: () => { },
+  value: {},
+  isThirdPartyConnectionException: false,
+  getPayments: () => { },
+  isFetching: false,
+  isHideInactiveAccounts: false
+}
 
 function mapStateToProps(store, props) {
   return {

@@ -55,8 +55,8 @@ const ItemComponent = props => {
 
   const pricePerUOM =
     item.cartItemType === CART_ITEM_TYPES.INVENTORY_HOLD ||
-    item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
-    item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
+      item.cartItemType === CART_ITEM_TYPES.PURCHASE_REQUEST_OFFER ||
+      item.cartItemType === CART_ITEM_TYPES.PRODUCT_OFFER_BID
       ? (
         item.cfPricePerUOM
       )
@@ -263,9 +263,21 @@ const ItemComponent = props => {
   )
 }
 
-ItemComponent.propTypes = {}
+ItemComponent.propTypes = {
+  onClickDelete: PropTypes.func,
+  onValueChange: PropTypes.func,
+  value: PropTypes.object,
+  index: PropTypes.number,
+  item: PropTypes.object
+}
 
-ItemComponent.defaultProps = {}
+ItemComponent.defaultProps = {
+  onClickDelete: () => { },
+  onValueChange: () => { },
+  value: {},
+  index: 0,
+  item: {}
+}
 
 function mapStateToProps(store, { item }) {
   return {

@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Router from 'next/router'
+import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Formik } from 'formik'
 import { Button, Modal, Dimmer, Loader } from 'semantic-ui-react'
@@ -26,7 +27,7 @@ import {
 const DeliveryDatePopup = props => {
   const { onClose, onSubmit, manualShipmentPending, cart } = props
 
-  const minDate = moment().add( cart.maxLeadTimeDays || 2, 'days')
+  const minDate = moment().add(cart.maxLeadTimeDays || 2, 'days')
 
   return (
     <Formik
@@ -98,6 +99,20 @@ const DeliveryDatePopup = props => {
       }}
     </Formik>
   )
+}
+
+DeliveryDatePopup.propTypes = {
+  onClose: PropTypes.func,
+  onSubmit: PropTypes.func,
+  manualShipmentPending: PropTypes.bool,
+  cart: PropTypes.object
+}
+
+DeliveryDatePopup.defaultProps = {
+  onClose: () => { },
+  onSubmit: () => { },
+  manualShipmentPending: false,
+  cart: {}
 }
 
 export default injectIntl(DeliveryDatePopup)

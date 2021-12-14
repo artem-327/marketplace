@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import Router from 'next/router'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import PropTypes from 'prop-types'
 import { Button, Modal } from 'semantic-ui-react'
 import { getSafe } from '~/utils/functions'
 import { Check } from 'react-feather'
@@ -71,6 +72,14 @@ const ConfirmationPopup = props => {
       </Modal.Content>
     </ModalStyled>
   )
+}
+
+ConfirmationPopup.propTypes = {
+  onClose: PropTypes.func
+}
+
+ConfirmationPopup.defaultProps = {
+  onClose: () => { }
 }
 
 export default injectIntl(ConfirmationPopup)
