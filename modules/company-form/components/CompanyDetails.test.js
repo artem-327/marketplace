@@ -11,15 +11,6 @@ import CompanyDetails from './CompanyDetails'
  * @description Helper console.log view to see in each test what exactly is rendered in test.
  * console.log(component.debug()) // see what is exactly rendered
  */
-/**
- * Factory function to creaste a ShallowWrapper for the App component.
- * @function setup
- * @returns {ShallowWrapper}
- */
-// const setup = (props = {}) => {
-//   const setupProps = { ...defaultProps, props }
-//   return shallow(<CompanyDetails {...setupProps} />)
-// }
 
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
@@ -31,13 +22,7 @@ const defaultProps = {
 }
 
 describe('`CompanyDetails` render component', () => {
-
   test('does not throw warning with expected props', () => {
     checkProps(CompanyDetails, defaultProps)
   })
-
-  // test('renders CompanyDetails component to be there', () => {
-  //   const wrapper = setup()
-  //   expect(wrapper.exists()).toBe(true)
-  // })
 })

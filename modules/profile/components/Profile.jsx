@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 //Components
 import MyProfile from './MyProfile'
 import ChangePassword from './ChangePassword'
@@ -43,6 +44,22 @@ const Profile = props => {
   }
 
   return renderContent()
+}
+
+Profile.propTypes = {
+  changePasswordPopup: PropTypes.bool,
+  closePopup: PropTypes.func,
+  openChangePasswordPopup: PropTypes.func,
+  popupValues: PropTypes.array,
+  closeChangePasswordPopup: PropTypes.func,
+}
+
+Profile.defaultProps = {
+  changePasswordPopup: false,
+  closePopup: () => { },
+  openChangePasswordPopup: () => { },
+  popupValues: [],
+  closeChangePasswordPopup: () => { },
 }
 
 export default Profile
