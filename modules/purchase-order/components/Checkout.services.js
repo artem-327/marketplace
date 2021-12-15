@@ -87,18 +87,23 @@ export const submitUpdateCartItem = async (props, state) => {
   const { cartItems, updateCartItem } = props
   const { sectionState, setSectionState, setOpenSection } = state
 
+  let updatedCart
+
   if (sectionState.review.value) {
     await sectionState.review.value.reduce(async (acc, val, index) => {
       await acc
       if (val.quantity !== cartItems[index].pkgAmount.toString()) {
         try {
-          await updateCartItem({ cartItemId: cartItems[index].id, pkgAmount: val.quantity })
+          const { value } = await updateCartItem({ cartItemId: cartItems[index].id, pkgAmount: val.quantity })
+          updatedCart = value
         } catch (e) {
           console.error(e)
         }
       }
     }, undefined)
   }
+
+  console.log('!!!!!!!!!! submitUpdateCartItem updatedCart', updatedCart)
   confirmSection(state)
 }
 
