@@ -2413,6 +2413,7 @@
   "operations.requestedBy": "Requested by",
   "operations.attachedDocuments": "Attached Documents",
   "operations.shippingRequest": "Shipping Request",
+  "operations.linkCompanyGenericProduct": "Link Company Generic Product",
   "confirm.delete.operations.tag.title": "Delete",
   "confirm.delete.operations.tag.content": "Do you really want to delete tag?",
   "orders.detail": "Detail",

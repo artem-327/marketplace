@@ -155,10 +155,10 @@ const columnsAttachments = [
 ]
 
 
-const markRequestAsProcessed = async (row, props) => {
+const markRequestAsProcessed = async (row, cgp_id, props) => {
   const { markRequestAsProcessed, datagrid } = props
   try {
-    const { value } = await markRequestAsProcessed(row.id)
+    const { value } = await markRequestAsProcessed(row.id, cgp_id)
     datagrid.updateRow(row.id, () => value)
   } catch (err) {
     console.error(err)
@@ -193,7 +193,7 @@ const deleteRequest = async (row, props) => {
 export const getRowss = (props, state, setState) => {
   return props.rows.map(row => ({
     ...row,
-    processed: <ActionCell row={row} getActions={() => getActions(props)} content={row.processed} />,
+    processed: <ActionCell row={row} getActions={() => getActions(props, state, setState)} content={row.processed} />,
     attachments:
       row.attachments && row.attachments.length ? (
         <a href='#' onClick={e => openAttachmentsPopup(e, row.attachments, state, setState)}>
@@ -205,14 +205,14 @@ export const getRowss = (props, state, setState) => {
   }))
 }
 
-const getActions = (props) => {
+const getActions = (props, state, setState) => {
   const { intl } = props
 
   const { formatMessage } = intl
   return [
     {
       text: formatMessage({ id: 'operations.markRequestAsProcessed', defaultMessage: 'Mark Request as Processed' }),
-      callback: row => markRequestAsProcessed(row, props),
+      callback: row => setState({ ...state, openLinkCGPPopupRow: row.rawData }),
       hidden: row => row.rawData.processed
     },
     {
