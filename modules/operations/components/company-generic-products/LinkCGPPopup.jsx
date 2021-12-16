@@ -31,7 +31,6 @@ import {
 
 
 const LinkCGPPopup = props => {
-  // ! ! ? const prevVariable = usePrevious(props.variable)
   const [initialValues, setInitialValues] = useState({ companyGenericProduct: '' })
 
   const {
@@ -43,13 +42,14 @@ const LinkCGPPopup = props => {
     intl: { formatMessage }
   } = props
 
-  // Similar to call componentDidMount:
   useEffect(async () => {
-    //
     try {
       const { value } = await props.searchCompanyGenericProduct(popupValues.productName)
-      if (value?.length === 1 && value[0].name === popupValues.productName) {
-        setInitialValues({ companyGenericProduct: value[0].id })
+      if (value?.length > 0 ) {
+        const preSelectedItem = value.find(item => item.name.toLowerCase() === popupValues.productName.toLowerCase())
+        if (preSelectedItem) {
+          setInitialValues({ companyGenericProduct: preSelectedItem.id })
+        }
       }
     } catch (e) {
       console.error(e)
@@ -67,7 +67,6 @@ const LinkCGPPopup = props => {
     >
       {formikProps => {
         let { setFieldValue, values, isSubmitting } = formikProps
-
         return (
           <CustomForm>
             <StyledModal size='small' closeIcon={false} onClose={() => onClose()} centered={true} open={true}>
@@ -96,14 +95,13 @@ const LinkCGPPopup = props => {
                         inputProps={{
                           fluid: true,
                           search: val => val,
-                          defaultSearchQuery: popupValues.productName,
+                          //defaultSearchQuery: popupValues.productName,
                           selection: true,
                           loading: searchCompanyGenericProductLoading,
                           onSearchChange: (_, { searchQuery }) => handleSearchChange(searchQuery, props),
-                          placeholder: formatMessage({
-                            id: 'productCatalog.typeToSearch',
-                            defaultMessage: 'Type to Search...'
-                          })
+                          placeholder: searchedCompanyGenericProducts?.length
+                            ? formatMessage({ id: 'productCatalog.typeToSearchOrSelect', defaultMessage: 'Type to Search or Select Similar Product' })
+                            : formatMessage({ id: 'productCatalog.typeToSearch', defaultMessage: 'Type to Search...' })
                         }}
                       />
                     </GridColumn>
@@ -126,6 +124,7 @@ const LinkCGPPopup = props => {
                   </FormattedMessage>
                 </Button.Submit>
               </Modal.Actions>
+              <ErrorFocus />
             </StyledModal>
           </CustomForm>
         )

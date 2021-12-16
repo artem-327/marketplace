@@ -2099,6 +2099,7 @@
   "productCatalog.selectFreightClass": "Select Freight Class",
   "productCatalog.selectProduct": "Select Product",
   "productCatalog.typeToSearch": "Type to Search...",
+  "productCatalog.typeToSearchOrSelect": "Type to Search or Select Similar Product",
   "productCatalog.chooseExistingDocument": "Choose Existing Document",
   "productCatalog.orUploadNewDocument": "Or Upload New Document",
   "notifications.systemSettingsUpdated.header": "System settings updated",
