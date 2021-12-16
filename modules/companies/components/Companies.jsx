@@ -1,5 +1,6 @@
 import { Container } from 'semantic-ui-react'
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { withDatagrid, DatagridProvider } from '../../datagrid'
 import TableHandlers from './TableHandlers'
 import { withAuth } from '../../../hocs'
@@ -42,10 +43,10 @@ const Companies = props => {
           setGaSearch(getSafe(() => v.searchInput, ''))
           return v && v.searchInput
             ? [
-                { operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`] },
-                { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.searchInput}%`] },
-                { operator: 'LIKE', path: 'Company.dba', values: [`%${v.searchInput}%`] }
-              ]
+              { operator: 'LIKE', path: 'Company.name', values: [`%${v.searchInput}%`] },
+              { operator: 'LIKE', path: 'Company.cfDisplayName', values: [`%${v.searchInput}%`] },
+              { operator: 'LIKE', path: 'Company.dba', values: [`%${v.searchInput}%`] }
+            ]
             : []
         }
       },
@@ -97,6 +98,18 @@ const Companies = props => {
       {isOpenSidebar && sidebars[currentTab]}
     </DatagridProvider>
   )
+}
+
+Companies.propTypes = {
+  isOpenSidebar: PropTypes.bool,
+  closePopup: PropTypes.func,
+  currentTab: PropTypes.number,
+}
+
+Companies.defaultProps = {
+  isOpenSidebar: false,
+  closePopup: () => { },
+  currentTab: 0,
 }
 
 const mapStateToProps = state => {

@@ -3,6 +3,7 @@ import {
   FormGroup, FormField, Popup, Image, Dropdown, Grid,
   GridRow, GridColumn, Button
 } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 import { Input, Checkbox, Dropdown as FixedDropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadAttachment from '~/modules/inventory/components/upload/UploadAttachment'
@@ -162,11 +163,21 @@ class CompanyForm extends Component {
     })
   }
 
+  async componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.props.companyId !== prevProps.companyId) {
+      this.loadCompanyLogo()
+      this.loadCompanyDoc()
+    }
+  }
+
   loadCompanyLogo = async () => {
     if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo && this.props.companyId) {
       const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
 
       if (companyLogo.value.data.size) this.props.selectLogo(companyLogo.value.data, false)
+    }
+    if (!this.props.hasLogo && this.props.selectLogo && this.props.companyId) {
+      this.props.selectLogo(null, false)
     }
   }
 
@@ -902,6 +913,33 @@ class CompanyForm extends Component {
       )
     }
   }
+}
+
+CompanyForm.propTypes = {
+  data: PropTypes.object,
+  associations: PropTypes.array,
+  values: PropTypes.object,
+  naicsCodes: PropTypes.object,
+  companyId: PropTypes.number,
+  getCompanyLogo: PropTypes.func,
+  selectLogo: PropTypes.func,
+  selectDoc: PropTypes.func,
+  removeLogo: PropTypes.func,
+  removeDoc: PropTypes.func,
+  hasLogo: PropTypes.bool,
+}
+
+CompanyForm.defaultProps = {
+  data: {},
+  associations: [],
+  values: {},
+  naicsCodes: {},
+  getCompanyLogo: () => { },
+  selectLogo: () => { },
+  selectDoc: () => { },
+  removeLogo: () => { },
+  removeDoc: () => { },
+  hasLogo: false,
 }
 
 export default withToastManager(injectIntl(CompanyForm))

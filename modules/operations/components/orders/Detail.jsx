@@ -77,6 +77,7 @@ const Detail = props => {
     isOpenPopup,
     loading,
     orderByIdLoading,
+    downloadPdfLoading,
     openPopup,
     resolveDisputeReject,
     resolveDisputeCredit,
@@ -94,7 +95,7 @@ const Detail = props => {
 
   return (
     <div id='page' className='auto-scrolling'>
-      <Dimmer active={activeDimmer || orderByIdLoading} inverted style={{background: 'rgba(255, 255, 255, 0.85)'}}>
+      <Dimmer active={activeDimmer || orderByIdLoading} inverted style={{ background: 'rgba(255, 255, 255, 0.85)' }}>
         <Loader />
       </Dimmer>
       <ModalResolveDispute
@@ -170,6 +171,9 @@ const Detail = props => {
                     onClick={() => downloadOrder(props)}
                     style={{ fontSize: '1.14285714em', cursor: 'pointer' }}
                     data-test='orders_detail_download_order'>
+                    <Dimmer active={downloadPdfLoading} inverted style={{ background: 'rgba(255, 255, 255, 0.85)' }}>
+                      <Loader />
+                    </Dimmer>
                     <DownloadCloud />
                     <FormattedMessage id='global.download' defaultMessage='Download' />
                   </a>
@@ -195,14 +199,14 @@ const Detail = props => {
                         as='span'
                         className={
                           order.orderStatus === 'Discarded' ||
-                          order.orderStatus === 'Rejected' ||
-                          order.orderStatus === 'Cancelled'
+                            order.orderStatus === 'Rejected' ||
+                            order.orderStatus === 'Cancelled'
                             ? 'red'
                             : order.orderStatus === 'Confirmed'
-                            ? 'green'
-                            : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
-                            ? null // could be blue
-                            : null
+                              ? 'green'
+                              : order.orderStatus === 'Pending' || order.orderStatus === 'Draft'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.orderStatus}
                       </List.Description>
@@ -219,10 +223,10 @@ const Detail = props => {
                           order.shippingStatus === 'Delivered'
                             ? 'green'
                             : order.shippingStatus === 'Returned'
-                            ? 'red'
-                            : order.shippingStatus === 'In Transit'
-                            ? null // could be blue
-                            : null
+                              ? 'red'
+                              : order.shippingStatus === 'In Transit'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.shippingStatus}
                       </List.Description>
@@ -239,10 +243,10 @@ const Detail = props => {
                           order.reviewStatus === 'Accepted'
                             ? 'green'
                             : order.reviewStatus === 'Rejected'
-                            ? 'red'
-                            : order.reviewStatus === 'Pending'
-                            ? null // could be blue
-                            : null
+                              ? 'red'
+                              : order.reviewStatus === 'Pending'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.reviewStatus}
                       </List.Description>
@@ -261,10 +265,10 @@ const Detail = props => {
                             order.creditStatus === 'Accepted'
                               ? 'green'
                               : order.creditStatus === 'Rejected'
-                              ? 'red'
-                              : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
-                              ? null // could be blue
-                              : null
+                                ? 'red'
+                                : order.creditStatus === 'Pending' || order.creditStatus === 'Counter Offer Pending'
+                                  ? null // could be blue
+                                  : null
                           }>
                           {order.creditStatus}
                         </List.Description>
@@ -283,10 +287,10 @@ const Detail = props => {
                             order.returnStatus === 'Delivered'
                               ? 'green'
                               : order.returnStatus === 'Not Shipped'
-                              ? 'red'
-                              : order.returnStatus === 'In Transit'
-                              ? null // could be blue
-                              : null
+                                ? 'red'
+                                : order.returnStatus === 'In Transit'
+                                  ? null // could be blue
+                                  : null
                           }>
                           {order.returnStatus}
                         </List.Description>
@@ -304,12 +308,12 @@ const Detail = props => {
                           order.paymentStatus === 'Failed' || order.paymentStatus === 'Canceled'
                             ? 'red'
                             : order.paymentStatus === 'Paid'
-                            ? 'green'
-                            : order.paymentStatus === 'Pending' ||
-                              order.paymentStatus === 'Refunded' ||
-                              order.paymentStatus === 'Initiated'
-                            ? null // could be blue
-                            : null
+                              ? 'green'
+                              : order.paymentStatus === 'Pending' ||
+                                order.paymentStatus === 'Refunded' ||
+                                order.paymentStatus === 'Initiated'
+                                ? null // could be blue
+                                : null
                         }>
                         {order.paymentStatus}
                       </List.Description>
@@ -468,6 +472,14 @@ const Detail = props => {
                           {ordersType} <FormattedMessage id='order' defaultMessage='Order' />
                         </GridDataColumn>
                         <GridDataColumn width={valColumn}>{order.id}</GridDataColumn>
+                        {order.releaseNo && (
+                          <>
+                            <GridDataColumn width={keyColumn} className='key'>
+                              <FormattedMessage id='order.releaseNo' defaultMessage='Release No.' />
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>{order.releaseNo}</GridDataColumn>
+                          </>
+                        )}
                         <GridDataColumn width={keyColumn} className='key'>
                           {ordersType.charAt(0)}
                           <FormattedMessage id='order.oDate' defaultMessage='O Date' />
@@ -498,27 +510,35 @@ const Detail = props => {
                             </Table.Header>
                             <Table.Body>
                               <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.transactionFeeFormatted}</Table.Cell>
+                              </TableRowData>
+                              {order.brokerageFee && (
+                                <TableRowData>
+                                  <Table.Cell>
+                                    <FormattedMessage id='order.brokerageFee' defaultMessage='Brokerage Fee' />
+                                  </Table.Cell>
+                                  <Table.Cell textAlign='right'>{order.brokerageFee}</Table.Cell>
+                                </TableRowData>
+                              )}
+                              <TableRowData>
+                                <Table.Cell>
+                                  <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
+                                </Table.Cell>
+                                <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
+                              </TableRowData>
+                            </Table.Body>
+                            <divider />
+                            <Table.Footer>
+                              <TableRowData>
                                 <Table.HeaderCell>
                                   <FormattedMessage id='order.total' defaultMessage='Total' />
                                 </Table.HeaderCell>
                                 <Table.HeaderCell textAlign='right'>
                                   <strong>{order.total}</strong>
                                 </Table.HeaderCell>
-                              </TableRowData>
-                            </Table.Body>
-                            <divider/>
-                            <Table.Footer>
-                              <TableRowData>
-                                <Table.Cell>
-                                  <FormattedMessage id='order.transactionFee' defaultMessage='Transaction Fee' />
-                                </Table.Cell>
-                                <Table.Cell textAlign='right'>{order.transactionFeeFormatted}</Table.Cell>
-                              </TableRowData>
-                              <TableRowData>
-                                <Table.Cell>
-                                  <FormattedMessage id='order.shippingCost' defaultMessage='Shipping Cost' />
-                                </Table.Cell>
-                                <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                               </TableRowData>
                             </Table.Footer>
                           </StyledTable>
@@ -939,15 +959,15 @@ Detail.defaultValues = {
   isOpenPopup: false,
   loading: false,
   isCancelable: false,
-  closePopup: () => {},
-  openPopup: () => {},
-  resolveDisputeReject: () => {},
-  resolveDisputeCredit: () => {},
-  resolveDisputeAccept: () => {},
-  downloadDisputeAttachment: () => {},
-  openOrderDetail: () => {},
-  downloadPdf: () => {},
-  downloadAttachment: () => {}  
+  closePopup: () => { },
+  openPopup: () => { },
+  resolveDisputeReject: () => { },
+  resolveDisputeCredit: () => { },
+  resolveDisputeAccept: () => { },
+  downloadDisputeAttachment: () => { },
+  openOrderDetail: () => { },
+  downloadPdf: () => { },
+  downloadAttachment: () => { }
 }
 
 export default injectIntl(withToastManager(Detail))

@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Form, FormGroup, Divider, Accordion, Icon, Loader, Dimmer } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -427,6 +428,20 @@ const mapStateToProps = (state) => {
     naicsCodes: vellociRegister?.naicsCodes,
     naicsCode: companiesAdmin?.naicsCategory?.naicsId,
     documentTypes,
+  }
+}
+
+AddEditCompanySidebar.propTypes = {
+  popupValues: PropTypes.array,
+  closePopup: PropTypes.func,
+  intl: PropTypes.object,
+}
+
+AddEditCompanySidebar.defaultProps = {
+  popupValues: [],
+  closePopup: () => { },
+  intl: {
+    formatMessage: () => { }
   }
 }
 
