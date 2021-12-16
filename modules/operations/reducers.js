@@ -27,7 +27,8 @@ import {
   openGenBOLPopup,
   closeGenBOLPopup,
   getOrderById,
-  downloadPdf
+  downloadPdf,
+  searchCompanyGenericProduct
 } from './actions'
 
 
@@ -38,6 +39,9 @@ const initialState = {
   rowBOL: null,
   orderByIdLoading: false,
   loading: false,
+  markRequestAsProcessedLoading: false,
+  searchedCompanyGenericProducts: [],
+  searchCompanyGenericProductLoading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   companyProductUnmappedOnly: 'ALL',
@@ -249,19 +253,19 @@ export default typeToReducer(
     [markRequestAsProcessed.pending]: (state, action) => {
       return {
         ...state,
-        loading: true
+        markRequestAsProcessedLoading: true
       }
     },
     [markRequestAsProcessed.rejected]: (state, action) => {
       return {
         ...state,
-        loading: false
+        markRequestAsProcessedLoading: false
       }
     },
     [markRequestAsProcessed.fulfilled]: (state, action) => {
       return {
         ...state,
-        loading: false
+        markRequestAsProcessedLoading: false
       }
     },
     [denyRequest.pending]: (state, action) => {
@@ -424,6 +428,29 @@ export default typeToReducer(
       return {
         ...state,
         downloadPdfLoading: false
+      }
+    },
+    [searchCompanyGenericProduct.pending]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: true
+      }
+    },
+    [searchCompanyGenericProduct.rejected]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: false
+      }
+    },
+    [searchCompanyGenericProduct.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: false,
+        searchedCompanyGenericProducts: action.payload.map(item => ({
+          key: item.id,
+          text: item.name,
+          value: item.id
+        }))
       }
     },
   },

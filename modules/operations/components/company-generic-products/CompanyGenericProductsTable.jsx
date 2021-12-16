@@ -4,6 +4,7 @@ import { Modal, Button } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 // Components
 import ProdexGrid from '../../../../components/table'
+import LinkCGPPopup from './LinkCGPPopup'
 // Styles
 import { StyledModal } from '../../styles'
 // Services
@@ -23,7 +24,8 @@ const CompanyGenericProductsTable = props => {
   const [state, setState] = useState({
     openAttachmentsPopup: false,
     attachments: [],
-    openModalAccounting: false
+    openModalAccounting: false,
+    openLinkCGPPopupRow: null
   })
 
   const { datagrid, filterValue, loading } = props
@@ -42,6 +44,12 @@ const CompanyGenericProductsTable = props => {
             </Button>
           </Modal.Actions>
         </StyledModal>
+      )}
+      {!!state.openLinkCGPPopupRow && (
+        <LinkCGPPopup
+          popupValues={state.openLinkCGPPopupRow}
+          onClose={() => setState({ ...state, openLinkCGPPopupRow: null })}
+        />
       )}
       <div className='flex stretched listings-wrapper'>
         <ProdexGrid
