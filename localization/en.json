@@ -2442,6 +2442,7 @@
   "settings.system.canBeChangedAtTradePass": "This setting can only be set by Company Admin within My TradePass Settings.",
   "settings.system.showReadOnly": "Show read-only settings",
   "settings.system.enterValue": "Enter value",
+  "settings.system.enterTime": "Enter time",
   "settings.system.selectValue": "Select value",
   "settings.system.addPicture": "Add picture",
   "settings.onlyLastFourNumbers": "Enter only last four digits",

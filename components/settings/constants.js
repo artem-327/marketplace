@@ -1,8 +1,8 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import get from 'lodash/get'
 import * as Yup from 'yup'
-import { errorMessages } from '~/constants/yupValidation'
-import { getSafe } from '~/utils/functions'
+import { errorMessages, validateTime } from '../../constants/yupValidation'
+import { getSafe } from '../../utils/functions'
 import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
 
 import { DivLogoWrapper, ImageSearchStyled } from './settings.styles'
@@ -38,12 +38,13 @@ const integerAllowEmptyString = Yup.number()
   .typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {
-  STRING: Yup.string(errorMessages.invalidString),
+  STRING: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
   INTEGER: integerAllowEmptyString,
   NUMBER: numberAllowEmptyString,
   FLOAT: numberAllowEmptyString,
-  LARGE_TEXT: Yup.string(errorMessages.invalidString),
-  TEXT: Yup.string(errorMessages.invalidString),
+  LARGE_TEXT: Yup.string(errorMessages.invalidString).trim().max(5000, errorMessages.maxLength(5000)),
+  TEXT: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
+  TIME: validateTime(),
   BASE64_FILE: Yup.string(errorMessages.invalidString)
 }
 
@@ -141,7 +142,6 @@ export const typeToComponent = (type, options = {}, formikProps, componentName, 
           }}
         />
       )
-
     case 'BOOL': {
       return (
         <Checkbox
@@ -154,6 +154,17 @@ export const typeToComponent = (type, options = {}, formikProps, componentName, 
         />
       )
     }
+    case 'TIME':
+      return (
+        <Input
+          {...getSafe(() => options.props, {})}
+          inputProps={{
+            type: 'text',
+            placeholder: formatMessage({ id: 'settings.system.enterTime', defaultMessage: 'Enter time' }),
+            ...inputProps
+          }}
+        />
+      )
     case 'BASE64_FILE': {
       const { values, setFieldValue } = formikProps
       const picture = get(values, componentName, '')
