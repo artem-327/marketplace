@@ -25,7 +25,7 @@ import {
 } from '../StyledComponents'
 
 // Services
-import { sidebarChanged, getProductOffer, deleteCartItem } from '../../../purchase-order/actions'
+import { sidebarChanged, getProductOffer, deleteCartItem, getCart } from '../../../purchase-order/actions'
 
 // Constants
 import { CART_ITEM_TYPES } from './CartItem.constants'
@@ -44,10 +44,20 @@ const CartItem = props => {
   const packagingSize = getSafe(() => item.productOffer.companyProduct.packagingSize, 0)
   const pkgAmount = getSafe(() => item.pkgAmount, 0)
 
-  const editCart = cartItem => {
+  const editCart = async cartItem => {
     let { id, pkgAmount } = cartItem
-    props.getProductOffer(cartItem?.productOffer?.id, cartItem?.productOffer?.sellerId, true)
-    props.sidebarChanged({ isOpen: true, id, pkgAmount })
+
+    try {
+      await props.getProductOffer(cartItem?.productOffer?.id, cartItem?.productOffer?.sellerId, true)
+      props.sidebarChanged({isOpen: true, id, pkgAmount})
+    } catch (e) {
+      console.error(e)
+      try {
+        props.getCart()
+      } catch {
+        console.error(e)
+      }
+    }
   }
 
   const editDisabled =
@@ -198,4 +208,6 @@ function mapStateToProps(store) {
   return {}
 }
 
-export default injectIntl(connect(mapStateToProps, { sidebarChanged, getProductOffer, deleteCartItem })(CartItem))
+export default injectIntl(connect(mapStateToProps, {
+  sidebarChanged, getProductOffer, deleteCartItem, getCart
+})(CartItem))
