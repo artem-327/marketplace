@@ -184,6 +184,26 @@ const CartItem = props => {
   )
 }
 
+CartItem.propTypes = {
+  intl: PropTypes.string,
+  cart: PropTypes.object,
+  deleteCartItem: PropTypes.func,
+  item: PropTypes.object,
+  index: PropTypes.number,
+  sidebarChanged: PropTypes.func,
+  getProductOffer: PropTypes.func,
+}
+
+CartItem.defaultProps = {
+  intl: '',
+  cart: {},
+  deleteCartItem: () => { },
+  item: {},
+  index: 0,
+  sidebarChanged: () => { },
+  getProductOffer: () => { },
+}
+
 function mapStateToProps(store) {
   return {}
 }
