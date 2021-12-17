@@ -235,7 +235,7 @@ class Settings extends Component {
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
-  handleSubmit = async (values, initialValues) => {
+  handleSubmit = async (values, initialValues, setSubmitting) => {
     // Original = false => value is inherited from above; no value is set at current level
     // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
     // Original = true => Value was set at current level or contains EMPTY_SETTING
@@ -291,6 +291,7 @@ class Settings extends Component {
       console.error(e)
     } finally {
       this.setState({ loading: false })
+      setSubmitting(false)
     }
   }
 
@@ -340,10 +341,10 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          this.handleSubmit(values, initialValues)
+          this.handleSubmit(values, initialValues, setSubmitting)
         }}
         render={formikProps => {
-          let { values, resetForm, isSubmitting } = formikProps
+          let { values, resetForm, isSubmitting, setFieldValue, setFieldTouched } = formikProps
           this.resetForm = resetForm
           let allDisabled =
             systemSettings &&
@@ -414,7 +415,12 @@ class Settings extends Component {
                                                     <Checkbox
                                                       inputProps={{
                                                         disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
-                                                        onChange: e => e.stopPropagation(),
+                                                        onChange: (e, { name, value }) => {
+                                                          e.stopPropagation()
+                                                          if (value === false) {
+                                                            //TODO setFieldValue(name, '') - set the default value here
+                                                          }
+                                                        },
                                                         onClick: e => e.stopPropagation()
                                                       }}
                                                       label={formatMessage({
