@@ -4,7 +4,7 @@ import Listings from './Listings'
 // Actions
 import { applyFilter } from '../../../filter/actions'
 import * as Actions from '../../actions'
-import { getProductOffer, sidebarChanged } from '../../../purchase-order/actions'
+import { getProductOffer, sidebarChanged, getCart } from '../../../purchase-order/actions'
 import { openPopup as openInfoPopup, closePopup } from '../../../company-product-info/actions'
 // Services
 import { getDatagridRows } from './Listings.services'
@@ -79,6 +79,7 @@ export default withDatagrid(
   connect(makeMapStateToProps, {
     ...Actions,
     sidebarChanged,
+    getCart,
     openInfoPopup,
     closePopup,
     getProductOffer,
