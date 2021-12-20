@@ -27,14 +27,15 @@ const supportedValidation = {
 }
 
 const numberAllowEmptyString = Yup.number()
-  .test('numbers', errorMessages.mustBeNumber, value => !value || !isNaN(value))
+  .test('numbers', errorMessages.mustBeNumber, value => (!value || !isNaN(value)))
   .transform(value => (isNaN(value) ? null : value))
   .typeError(errorMessages.mustBeNumber)
 
 const integerAllowEmptyString = Yup.number()
   .test('numbers', errorMessages.mustBeNumber, value => !value || /^[0-9]*$/.test(value))
-  .integer(errorMessages.integer)
   .transform(value => (isNaN(value) ? null : value))
+  .nullable()
+  .integer(errorMessages.integer)
   .typeError(errorMessages.mustBeNumber)
 
 export const dataTypes = {

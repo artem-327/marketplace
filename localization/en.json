@@ -2048,6 +2048,7 @@
   "validation.minOneRole": "At least one role should be selected",
   "validation.trailingSpaces": "Space was detected as leading or trailing character, please check enter password is correct",
   "validation.invalidTime": "Invalid time",
+  "validation.invalidTimeFormat": "Invalid format (HH:MM)",
   "validation.multipleEmails": "Divide by semicolon ; (user1@gmail.com;user2@gmail.com)",
   "validation.mustBeInHhMmFormat": "Time must be in HH:MM format",
   "password.change": "Change Password",

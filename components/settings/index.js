@@ -418,7 +418,7 @@ class Settings extends Component {
                                                         onChange: (e, { name, value }) => {
                                                           e.stopPropagation()
                                                           if (value === false) {
-                                                            //TODO setFieldValue(name, '') - set the default value here
+                                                            setFieldValue(componentName, '')
                                                           }
                                                         },
                                                         onClick: e => e.stopPropagation()
