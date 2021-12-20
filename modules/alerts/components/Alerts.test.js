@@ -19,11 +19,6 @@ const defaultProps = {
  * @returns {ShallowWrapper}
  */
 
-// const setup = (props = {}) => {
-//   const setupProps = { ...defaultProps, props }
-//   return shallow(<Alerts {...setupProps} />)
-// }
-
 /**
  * @test { Alerts }
  */
@@ -31,9 +26,4 @@ describe('`Alerts` render component', () => {
   test('does not throw warning with expected props', () => {
     checkProps(Alerts, defaultProps)
   })
-
-  // test('renders Alerts component to be there', () => {
-  //   const wrapper = setup()
-  //   expect(wrapper.exists()).toBe(true)
-  // })
 })

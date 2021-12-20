@@ -87,19 +87,45 @@ export const submitUpdateCartItem = async (props, state) => {
   const { cartItems, updateCartItem } = props
   const { sectionState, setSectionState, setOpenSection } = state
 
+  let updatedCart = null
+  let newState = state
+
   if (sectionState.review.value) {
     await sectionState.review.value.reduce(async (acc, val, index) => {
       await acc
       if (val.quantity !== cartItems[index].pkgAmount.toString()) {
         try {
-          await updateCartItem({ cartItemId: cartItems[index].id, pkgAmount: val.quantity })
+          const { value } = await updateCartItem({ cartItemId: cartItems[index].id, pkgAmount: val.quantity })
+          updatedCart = value
         } catch (e) {
           console.error(e)
         }
       }
     }, undefined)
   }
-  confirmSection(state)
+
+  if (updatedCart) {
+    if (updatedCart.cartItems?.length === 0) {
+      Router.push('/cart')
+    }
+    const initVal = updatedCart.cartItems.map(item => ({
+      id: item.id,
+      quantity: item.pkgAmount.toString(),
+      minPkg: item.productOffer.minPkg,
+      splitPkg: item.productOffer.splitPkg,
+      pkgAvailable: item.productOffer.pkgAvailable,
+      price: item.cfPriceSubtotal
+    }))
+
+    newState = {
+      ...state,
+      sectionState: {
+        ...sectionState,
+        review: { accepted: true, value: initVal }
+      }
+    }
+  }
+  confirmSection(newState)
 }
 
 export const getShippingQuotes = async (props, value) => {
