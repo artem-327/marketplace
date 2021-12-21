@@ -22,7 +22,7 @@ import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 
 import { getSafe } from '../../utils/functions'
-import { typeToComponent, toYupSchema } from './constants'
+import { typeToComponent, toYupSchema, dataTypes } from './constants'
 
 import { triggerSystemSettingsModal } from '../../modules/settings/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -204,7 +204,7 @@ class Settings extends Component {
     }
   }
 
-  parseData = (systemSettings) => {
+  parseData = systemSettings => {
     let validationSchema = {}
     let { role } = this.props
 
@@ -219,16 +219,23 @@ class Settings extends Component {
               tmp[el.code] = Yup.object().shape({
                 value: Yup.object().shape({ visible: toYupSchema(parsed.validation, el.type) })
               })
+            } else {
+              tmp[el.code] = Yup.object().shape({
+                value: Yup.object().shape({ visible: dataTypes[el.type] })
+              })
             }
+          } else {
+            tmp[el.code] = Yup.object().shape({
+              value: Yup.object().shape({ visible: dataTypes[el.type] })
+            })
           }
         })
         if (Object.keys(tmp).length > 0) validationSchema[group.code] = Yup.object().shape(tmp)
       })
-
     return { validationSchema: Yup.object({ [role]: Yup.object().shape(validationSchema) }), systemSettings }
   }
 
-  handleSubmit = async (values, initialValues) => {
+  handleSubmit = async (values, initialValues, setSubmitting) => {
     // Original = false => value is inherited from above; no value is set at current level
     // Globally, if !edit && !original then secretly send EMPTY_SETTING to BE
     // Original = true => Value was set at current level or contains EMPTY_SETTING
@@ -284,6 +291,7 @@ class Settings extends Component {
       console.error(e)
     } finally {
       this.setState({ loading: false })
+      setSubmitting(false)
     }
   }
 
@@ -333,10 +341,10 @@ class Settings extends Component {
         enableReinitialize
         validationSchema={this.state.validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          this.handleSubmit(values, initialValues)
+          this.handleSubmit(values, initialValues, setSubmitting)
         }}
         render={formikProps => {
-          let { values, resetForm, isSubmitting } = formikProps
+          let { values, resetForm, isSubmitting, setFieldValue, setFieldTouched } = formikProps
           this.resetForm = resetForm
           let allDisabled =
             systemSettings &&
@@ -377,6 +385,9 @@ class Settings extends Component {
                             <>
                               {group.settings.map(el => {
                                 if (asModal && !(showReadOnly || el.changeable)) return null
+                                const componentName = `${role}.${group.code}.${el.code}.value.${
+                                  el.type === 'BOOL' ? 'actual' : 'visible'
+                                }`
                                 return (
                                   <>
                                     <Grid>
@@ -404,7 +415,12 @@ class Settings extends Component {
                                                     <Checkbox
                                                       inputProps={{
                                                         disabled: !el.changeable && !isUserAdmin && !isCompanyAdmin,
-                                                        onChange: e => e.stopPropagation(),
+                                                        onChange: (e, { name, value }) => {
+                                                          e.stopPropagation()
+                                                          if (value === false) {
+                                                            setFieldValue(componentName, '')
+                                                          }
+                                                        },
                                                         onClick: e => e.stopPropagation()
                                                       }}
                                                       label={formatMessage({
@@ -428,27 +444,31 @@ class Settings extends Component {
                                       </BottomMargedRow>
                                     </Grid>
                                     {cloneElement(
-                                      typeToComponent(el.type, {
-                                        props: {
-                                          ...getSafe(() => JSON.parse(el.frontendConfig).props),
-                                          options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
-                                            key: i,
-                                            value: opt.value,
-                                            text: opt.displayName
-                                          }))
+                                      typeToComponent(
+                                        el.type,
+                                          {
+                                          props: {
+                                            ...getSafe(() => JSON.parse(el.frontendConfig).props),
+                                            options: getSafe(() => el.possibleValues, []).map((opt, i) => ({
+                                              key: i,
+                                              value: opt.value,
+                                              text: opt.displayName
+                                            }))
+                                          },
+                                          inputProps: {
+                                            disabled:
+                                              !el.changeable ||
+                                              (getSafe(() => !values[role][group.code][el.code].edit, false) &&
+                                                role !== 'admin'),
+                                            ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
+                                          }
                                         },
-                                        inputProps: {
-                                          disabled:
-                                            !el.changeable ||
-                                            (getSafe(() => !values[role][group.code][el.code].edit, false) &&
-                                              role !== 'admin'),
-                                          ...getSafe(() => JSON.parse(el.frontendConfig).inputProps, {})
-                                        }
-                                      }),
+                                        formikProps,
+                                        componentName,
+                                        this.props
+                                      ),
                                       {
-                                        name: `${role}.${group.code}.${el.code}.value.${
-                                          el.type === 'BOOL' ? 'actual' : 'visible'
-                                        }`
+                                        name: componentName
                                       }
                                     )}
                                   </>
