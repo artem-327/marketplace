@@ -47,6 +47,10 @@ const Header = props => {
   const priceColumns =
     priceColumnsLength > 4 ? row?.priceColumns?.slice(pricingTabIndex, pricingTabIndex + 4) : row?.priceColumns
 
+  const error =
+    isNaN(parseFloat(values.priceMultiplier)) ||
+    parseFloat(values.priceMultiplier) <= 0
+
   return (
     <SegmentGroupHeader horizontal $noneBorder>
       <SegmentDetailRow textAlign='left'>
@@ -157,7 +161,14 @@ const Header = props => {
                   onChange({ ...values, priceMultiplier: data.value })
                 }}
                 value={values?.priceMultiplier}
+                error={!!error}
               />
+              {!!error && (
+                <div className="sui-error-message">
+                  <FormattedMessage id='validation.mustBeNumber' defaultMessage='Must be a number' />
+                </div>)
+              }
+
             </GridColumnDetail>
             <GridColumnDetail width={8}>
               <BasicButton
@@ -167,10 +178,9 @@ const Header = props => {
                 fluid
                 disabled={
                   !values?.priceMultiplier ||
-                  isNaN(parseFloat(values.priceMultiplier)) ||
-                  parseFloat(values.priceMultiplier) <= 0 ||
                   !values.id ||
-                  loadingMarkup
+                  loadingMarkup ||
+                  error
                 }
                 loading={loadingMarkup}
                 onClick={() => submitHandler(values, props)}
