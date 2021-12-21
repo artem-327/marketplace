@@ -512,7 +512,8 @@ class _Table extends Component {
     isOpenColumnSettingModal: false,
     isBankTable: false,
     estimatedRowHeight: 0,
-    messages: null
+    messages: null,
+    noScrollEvent: false,
   }
 
   constructor(props) {
@@ -540,7 +541,7 @@ class _Table extends Component {
     this.loadColumnsSettings()
     let table = this.gridWrapper.querySelector('.table-responsive')
     if (table) {
-      table.addEventListener('scroll', this.handleScroll)
+      (!this.props.noScrollEvent) && table.addEventListener('scroll', this.handleScroll)
       this.props.displayRowActionsOverBorder && table.setAttribute('style', 'display: table')
     }
   }
@@ -606,7 +607,7 @@ class _Table extends Component {
         : newBottom + pageSize * bottoms
 
       //Call to DatagridProvider and there add bottoms to pageNumber
-      onScrollToEnd(bottoms)
+      (!this.props.noScrollEvent) && onScrollToEnd(bottoms)
 
       this.setState({
         pageSize: pageSize ? pageSize : scrollviewContentHeight,
@@ -620,7 +621,7 @@ class _Table extends Component {
       const top = newBottom > 1 ? newBottom + pageSize * (bottoms - 1) : newBottom
       const bottom = newBottom + pageSize * bottoms
       //Call to DatagridProvider and there add bottoms to pageNumber
-      onScrollOverNewEnd(bottoms)
+      (!this.props.noScrollEvent) && onScrollOverNewEnd(bottoms)
       this.setState({
         newTop: top,
         newBottom: bottom
@@ -632,7 +633,7 @@ class _Table extends Component {
       const bottom =
         tops < 1 ? newTop : newTop - pageSize * (tops - 1) > pageSize ? newTop - pageSize * (tops - 1) : pageSize
       //Call to DatagridProvider and there add tops to pageNumber
-      onScrollOverNewUp(tops * -1)
+      (!this.props.noScrollEvent) && onScrollOverNewUp(tops * -1)
       this.setState({
         newTop: top,
         newBottom: bottom
