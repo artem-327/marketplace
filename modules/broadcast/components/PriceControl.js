@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import _ from 'lodash'
 import { FormattedNumber } from 'react-intl'
 import { currency } from '~/constants/index'
-import { getSafe } from '~/utils/functions'
+import { getSafe, getFloatValue } from '~/utils/functions'
 
 export default class PriceControl extends Component {
   static propTypes = {
@@ -25,6 +25,9 @@ export default class PriceControl extends Component {
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
+
+    if (name === 'value' && isNaN(getFloatValue(value))) return
+
     const { associationFilter, filter, treeData, changeInModel } = this.props
 
     // helper writes values

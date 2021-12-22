@@ -1,5 +1,6 @@
 // Services
 import { removeEmpty } from '../../../../../utils/functions'
+import { getFloatValue } from '../../../../../utils/functions'
 
 /**
  * Submit Handler in ListingDetail Header
@@ -12,21 +13,26 @@ export const submitHandler = async (values, props) => {
   try {
     let body = {
       priceAddition: values.priceAddition,
-      priceMultiplier: parseFloat(values.priceMultiplier),
+      priceMultiplier: getFloatValue(values.priceMultiplier),
       priceOverride: values.priceOverride
     }
 
+    console.log('!!!!!!!!!! submitHandler values', values)
     removeEmpty(body, val => val === 0)
-    await updateMarkUp(values.id, body)
+    console.log('!!!!!!!!!! submitHandler body', body)
+
+    // ! ! await updateMarkUp(values.id, body)
   } catch (e) {
     console.error(e)
   }
 
   try {
+    /* // ! !
     const { value } = await getSharedProductOffer(values.id)
     if (value && value.length) {
       datagrid.updateRow(values.id, () => value[0])
     }
+    */
   } catch (e) {
     console.error(e)
   }

@@ -25,7 +25,7 @@ import {
 } from '../../../../my-network/components/DetailRow/DetailRow.style'
 // Services
 import { submitHandler } from './Header.services'
-import { getSafe } from '../../../../../utils/functions'
+import { getSafe, getFloatValue } from '../../../../../utils/functions'
 
 /**
  * Header Component
@@ -48,8 +48,12 @@ const Header = props => {
     priceColumnsLength > 4 ? row?.priceColumns?.slice(pricingTabIndex, pricingTabIndex + 4) : row?.priceColumns
 
   const error =
-    isNaN(parseFloat(values.priceMultiplier)) ||
-    parseFloat(values.priceMultiplier) <= 0
+    isNaN(getFloatValue(values?.priceMultiplier)) ||
+    // ! ! isNaN(parseFloat(values?.priceMultiplier)) ||
+    parseFloat(values?.priceMultiplier) <= 0
+
+  console.log('!!!!!!!!!! Header getFloatValue priceMultiplier', getFloatValue(values?.priceMultiplier))
+
 
   return (
     <SegmentGroupHeader horizontal $noneBorder>

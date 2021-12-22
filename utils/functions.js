@@ -295,3 +295,26 @@ export function getFormattedPhone(phoneNumber, countries) {
     return phoneNumber.replace(/^(.{3})(.{3})(.*)$/, '$1 $2 $3').trim()
   }
 }
+
+export const getFloatValue = value => {
+  if (value === '' ) return ''
+
+  if (typeof value === 'string') {
+    let valueFormatted = value.replace(' ', '').replace(',', '.')
+
+    console.log('!!!!!!!!!! getFloatValue /^[0-9]*$/.test(value)', /^[-+]?[0-9]*[.]?[0-9]+$/.test(value))
+
+    if (!(/^[-+]?[0-9]*[.]?[0-9]+$/.test(value))) return NaN
+
+    const commaCount = valueFormatted.match(/,/g)
+    const dotCount = valueFormatted.match(/./g)
+
+    console.log('!!!!!!!!!! getFloatValue valueFormatted', valueFormatted)
+    console.log('!!!!!!!!!! getFloatValue commaCount', commaCount)
+    console.log('!!!!!!!!!! getFloatValue dotCount', dotCount)
+    if (commaCount > 1 || dotCount > 1 || (commaCount && dotCount)) return NaN
+
+    return parseFloat(valueFormatted)
+  }
+  else return parseFloat(value)
+}
