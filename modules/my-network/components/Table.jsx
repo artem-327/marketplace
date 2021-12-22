@@ -58,6 +58,7 @@ const Table = props => {
   }
 
   const getRowDetail = ({ row }) => {
+    console.log(row);
     return (
       <DetailRow
         row={row}
@@ -82,6 +83,7 @@ const Table = props => {
         expandedRowIds={expandedRowIds}
         onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
         estimatedRowHeight={1000}
+        noScrollEvent={true}
       />
     </div>
   )
