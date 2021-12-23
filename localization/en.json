@@ -2833,6 +2833,8 @@
   "order.detail.echoSupportPhone": "{companyName} Support Phone",
   "order.detail.clickToEdit": "Click to edit",
   "order.detail.additionalSupportDescription": "If you require additional support for this order please contact our logistics partner directly at {shippingLogisticsProviderPhone}",
+  "order.detail.unlinkFromOrder": "Unlink from order",
+  "order.detail.cannotUnlinkThisDocument": "Cannot unlink this document",
   "order.actionRequired": "Action Required",
   "order.orderInfo": "Order Info",
   "order.customer": "Customer",
