@@ -66,13 +66,8 @@ const Detail = props => {
   })
 
   useEffect(() => {
-    if (
-        !getSafe(() => attachmentRows.length, false) &&
-        getSafe(() => props.order.attachments.length, false)
-    ) {
-      setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
-    }
-  }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
+    setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
+  }, [getSafe(() => props.order.id, 0)])
 
   useEffect(() => {
     setState({ ...state, shippingTrackingCode: props.order.shippingTrackingCode })
@@ -86,6 +81,7 @@ const Detail = props => {
     closePopup,
     isOpenPopup,
     loading,
+    loadingRelatedDocuments,
     orderByIdLoading,
     downloadPdfLoading,
     openPopup,
@@ -105,7 +101,10 @@ const Detail = props => {
 
   return (
     <div id='page' className='auto-scrolling'>
-      <Dimmer active={activeDimmer || orderByIdLoading} inverted style={{ background: 'rgba(255, 255, 255, 0.85)' }}>
+      <Dimmer
+        active={activeDimmer || orderByIdLoading || loadingRelatedDocuments}
+        inverted
+        style={{ background: 'rgba(255, 255, 255, 0.85)' }}>
         <Loader />
       </Dimmer>
       <ModalResolveDispute

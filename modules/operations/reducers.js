@@ -40,6 +40,7 @@ const initialState = {
   rowBOL: null,
   orderByIdLoading: false,
   loading: false,
+  loadingRelatedDocuments: false,
   markRequestAsProcessedLoading: false,
   searchedCompanyGenericProducts: [],
   searchCompanyGenericProductLoading: false,

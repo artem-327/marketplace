@@ -415,6 +415,7 @@ const extractFileName = contentDispositionValue => {
  * @services
  */
 export const getRows = (attachments, props, setAttachmentRows) => {
+  const { intl: { formatMessage } } = props
   if (attachments && attachments.length) {
     return attachments.map(row => {
       return {
@@ -440,7 +441,17 @@ export const getRows = (attachments, props, setAttachmentRows) => {
                   unlinkAttachmentFromOrder(row.id, props, setAttachmentRows)
                 }
               }}
-                 style={{marginLeft: '5px'}} title={row.canBeUnlinked ? 'Unlink from order' : 'Cannot unlink this document'}>
+                 style={{marginLeft: '5px'}}
+                 title={row.canBeUnlinked
+                   ? formatMessage({
+                       id: 'order.detail.unlinkFromOrder',
+                       defaultMessage: 'Unlink from order'
+                     })
+                   : formatMessage({
+                       id: 'order.detail.cannotUnlinkThisDocument',
+                       defaultMessage: 'Cannot unlink this document'
+                     })
+                 }>
                 <Icon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
               </a>
             </>
