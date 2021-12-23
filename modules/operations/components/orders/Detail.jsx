@@ -52,6 +52,7 @@ import {
  * @components
  */
 const Detail = props => {
+  const [attachmentRows, setAttachmentRows] = useState([])
   const [state, setState] = useState({
     activeIndexes: [true, true, true, true, true, false, false, false, false, false, false],
     activeDimmer: false,
@@ -63,6 +64,15 @@ const Detail = props => {
     documentsPopupProduct: '',
     submitting: false
   })
+
+  useEffect(() => {
+    if (
+        !getSafe(() => attachmentRows.length, false) &&
+        getSafe(() => props.order.attachments.length, false)
+    ) {
+      setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
+    }
+  }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
 
   useEffect(() => {
     setState({ ...state, shippingTrackingCode: props.order.shippingTrackingCode })
@@ -566,7 +576,7 @@ const Detail = props => {
                         removeFlexClass={true}
                         tableName='related_orders_detail_documents'
                         columns={columnsRelatedOrdersDetailDocuments}
-                        rows={getRows(order.attachments, props)}
+                        rows={attachmentRows}
                         hideCheckboxes
                       />
                     </Grid.Column>
@@ -948,8 +958,11 @@ Detail.propTypes = {
   downloadDisputeAttachment: PropTypes.func,
   openOrderDetail: PropTypes.func,
   downloadPdf: PropTypes.func,
-  downloadAttachment: PropTypes.func
+  downloadAttachment: PropTypes.func,
+  unlinkAttachmentToOrder: PropTypes.func,
+  getOrderById: PropTypes.func
 }
+
 
 Detail.defaultValues = {
   order: {},
@@ -967,7 +980,9 @@ Detail.defaultValues = {
   downloadDisputeAttachment: () => { },
   openOrderDetail: () => { },
   downloadPdf: () => { },
-  downloadAttachment: () => { }
+  downloadAttachment: () => { },
+  unlinkAttachmentToOrder: () => { },
+  getOrderById: () => { }
 }
 
 export default injectIntl(withToastManager(Detail))

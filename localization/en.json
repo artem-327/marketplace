@@ -588,6 +588,7 @@
   "global.confirm": "Confirm",
   "global.reject": "Reject",
   "global.accept": "Accept",
+  "global.actions": "Actions",
   "global.decline": "Decline",
   "global.echoTitle": "BluePallet",
   "global.description": "Description",
