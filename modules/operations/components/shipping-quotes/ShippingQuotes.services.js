@@ -7,6 +7,7 @@ import { Dropdown } from 'semantic-ui-react'
 import { File } from 'react-feather'
 // Components
 import ActionCell from '../../../../components/table/ActionCell'
+import DropdownFixedOptions from './DropdownFixedOptions'
 // Services
 import { errorMessages, dateValidation } from '../../../../constants/yupValidation'
 import confirm from '../../../../components/Confirmable/confirm'
@@ -15,7 +16,7 @@ import { getMimeType } from '../../../../utils/functions'
 // Constants
 import { currency } from '../../../../constants/index'
 // Styles
-import { RowDropdown, RowDropdownIcon } from '../../styles'
+import { RowDropdownIcon } from '../../styles'
 
 /**
  * get Rows function used in ShippingQuotesTableContainer
@@ -192,16 +193,20 @@ export const getRowss = (rows, props) => {
     return rows.map(row => {
         return {
             ...row,
-            bol: !!row.relatedOrderAttachments.length ? (
-              <RowDropdown
-                trigger={<RowDropdownIcon><File name='file' color='green' /></RowDropdownIcon>}>
-                  <Dropdown.Menu>
-                    {row.relatedOrderAttachments.map(att => (
-                      <Dropdown.Item key={att.id} onClick={() => downloadAttachmentBOL(att.name, att.id, props)}>{att.name}</Dropdown.Item>
-                    ))}
-                  </Dropdown.Menu>
-              </RowDropdown>
-            ) : null,
+            bol: !!row.relatedOrderAttachments.length
+              ? (<DropdownFixedOptions
+                trigger={<RowDropdownIcon><File name='file' color='green' /></RowDropdownIcon>}
+                options={
+                  row.relatedOrderAttachments.map(att => (
+                    <Dropdown.Item
+                      key={att.id}
+                      onClick={() => downloadAttachmentBOL(att.name, att.id, props)}>
+                      {att.name}
+                    </Dropdown.Item>
+                  ))
+                }
+              />)
+              : null,
             quoteId: <ActionCell row={row} getActions={() => getActions(row, props)} content={row.quoteId} />
         }
     })
