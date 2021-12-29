@@ -30,7 +30,19 @@ export const userFormValidation = () =>
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
       phone: phoneValidation(10),
       homeBranch: Yup.number().required(errorMessages.requiredMessage),
-      roles: Yup.array().min(1, errorMessages.minOneRole)
+      roles: Yup.array().min(1, errorMessages.minOneRole),
+      dailyPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable(),
+      orderPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable(),
+      monthlyPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable()
     })
   })
 
@@ -84,14 +96,14 @@ export const getInitialFormValues = sidebarValues => {
         regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
         regulatoryDhsCoiSignAskedDate: sidebarValues?.regulatoryDhsCoiSignAskedDate,
         regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
-        dailyPurchaseLimit: !isNaN(parseInt(sidebarValues?.dailyPurchaseLimit?.value))
-          ? parseInt(sidebarValues?.dailyPurchaseLimit?.value)
+        dailyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.dailyPurchaseLimit?.value))
+          ? parseFloat(sidebarValues?.dailyPurchaseLimit?.value)
           : null,
-        orderPurchaseLimit: !isNaN(parseInt(sidebarValues?.orderPurchaseLimit?.value))
-          ? parseInt(sidebarValues?.orderPurchaseLimit?.value)
+        orderPurchaseLimit: !isNaN(parseFloat(sidebarValues?.orderPurchaseLimit?.value))
+          ? parseFloat(sidebarValues?.orderPurchaseLimit?.value)
           : null,
-        monthlyPurchaseLimit: !isNaN(parseInt(sidebarValues?.monthlyPurchaseLimit?.value))
-          ? parseInt(sidebarValues?.monthlyPurchaseLimit?.value)
+        monthlyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.monthlyPurchaseLimit?.value))
+          ? parseFloat(sidebarValues?.monthlyPurchaseLimit?.value)
           : null
       }
     : {
@@ -305,9 +317,9 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
   const isSettingsPatch = userSettings?.dailyPurchaseLimit?.original || 
     userSettings?.monthlyPurchaseLimit?.original || 
     userSettings?.orderPurchaseLimit?.original || 
-    (userSettings?.dailyPurchaseLimit?.value != (typeof values?.dailyPurchaseLimit?.toString() === 'undefined' ? '' : values?.dailyPurchaseLimit?.toString())) || 
-    (userSettings?.monthlyPurchaseLimit?.value != (typeof values?.monthlyPurchaseLimit?.toString() === 'undefined' ? '' : values?.monthlyPurchaseLimit?.toString())) || 
-    (userSettings?.orderPurchaseLimit?.value != (typeof values?.orderPurchaseLimit?.toString() === 'undefined' ? '' : values?.orderPurchaseLimit?.toString()))
+    (userSettings?.dailyPurchaseLimit?.value !== (typeof values?.dailyPurchaseLimit?.toString() === 'undefined' ? '' : values?.dailyPurchaseLimit?.toString())) ||
+    (userSettings?.monthlyPurchaseLimit?.value !== (typeof values?.monthlyPurchaseLimit?.toString() === 'undefined' ? '' : values?.monthlyPurchaseLimit?.toString())) ||
+    (userSettings?.orderPurchaseLimit?.value !== (typeof values?.orderPurchaseLimit?.toString() === 'undefined' ? '' : values?.orderPurchaseLimit?.toString()))
 
   removeEmpty(data)
 
