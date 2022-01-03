@@ -46,16 +46,7 @@ nextApp
     
     app.use(cookieParser())
     app.use('/download', router)
-
-      app.use('/broadcast-calculations-threads', proxy({
-          target: process.env.REACT_APP_API_URL.replace('http', 'ws') || 'ws://127.0.0.1:8080', ws: true
-      }))
-
-      app.use('/broadcast-calculations-queue', proxy({
-          target: process.env.REACT_APP_API_URL.replace('http', 'ws') || 'ws://127.0.0.1:8080', ws: true
-      }))
-
-    app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true }))
+    app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true, ws: true }))
     app.use(nextApp.getRequestHandler()).listen(port, err => {
       if (err) throw err
       console.log('> Ready on http://localhost:' + port)
