@@ -1122,7 +1122,7 @@
   "import.minPkg": "Minimum PKGs",
   "import.origin": "Country of Origin",
   "import.pkgAvailable": "Available PKGs",
-  "import.pricingTiers": "Price Tiers",
+  "import.pricingTiers": "FOB Price",
   "import.splitPkg": "Split PKGs",
   "import.validityDate": "Offer Expiration Date",
   "import.warehouseName": "Warehouse",
