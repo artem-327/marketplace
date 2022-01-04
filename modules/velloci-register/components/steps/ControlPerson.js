@@ -15,8 +15,8 @@ import {
   CustomDivInTitle,
   CustomDivTitle
 } from '~/modules/cart/components/StyledComponents'
-
 import { StyledTextContainer } from '../styles'
+import IdNumberTooltip from '../IdNumberTooltip'
 
 const GridControlPerson = styled(Grid)`
   margin: 14px 16px !important;
@@ -46,6 +46,8 @@ const DivRectangleBusinessType = styled.div`
 `
 
 function ControlPerson({ formikProps, intl: { formatMessage } }) {
+  let countryId = (formikProps?.values?.controlPerson?.address?.country) ? JSON.parse(formikProps.values.controlPerson.address.country).countryId : 1;
+
   return (
     <>
       <GridControlPerson>
@@ -261,16 +263,18 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             />
           </GridColumn>
         </GridRow>
-        <GridRow>
-          <GridColumn>
-          <AddressForm
-            prefix='controlPerson'
-            values={formikProps.values}
-            displayHeader={false}
-            required={true}
-            searchEnabled={true}
-            setFieldValue={formikProps.setFieldValue}>
-              <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
+        <GridRow columns={2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
+            <AddressForm
+              prefix='controlPerson'
+              values={formikProps.values}
+              displayHeader={false}
+              required={true}
+              searchEnabled={true}
+              setFieldValue={formikProps.setFieldValue} />
+          </GridColumn>
+          <GridColumn computer={6} tablet={6} mobile={16}>
+            <Rectangle style={{ margin: '14px 0px 10px 0px' }}>
                 <CustomDivTitle>
                   <Info size={20} style={{ color: '#3bbef6' }} />
                   <CustomDivInTitle style={{ color: '#3bbef6' }}>
@@ -287,12 +291,11 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   />
                 </CustomDivContent>
               </Rectangle>
-            </AddressForm>
           </GridColumn>
         </GridRow>
         {formikProps?.values?.controlPerson?.isBeneficialOwner &&
           <GridRow>
-            <GridColumn>
+            <GridColumn computer={10} tablet={10} mobile={16}>
               <Input
                 name='controlPerson.businessOwnershipPercentage'
                 label={
@@ -320,8 +323,8 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             </GridColumn>
           </GridRow>
         }
-        <GridRow>
-          <GridColumn>
+        <GridRow columns={2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
             <Input
               name='controlPerson.businessTitle'
               label={
@@ -344,29 +347,48 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
             />
           </GridColumn>
         </GridRow>
-        <GridRow>
-          <GridColumn>
+        <GridRow columns={2}>
+          <GridColumn computer={10} tablet={10} mobile={16}>
             <Input
               name='controlPerson.socialSecurityNumber'
-              label={
+              isClearable={true}
+              label={(countryId === 1) ?
                 <>
                   {formatMessage({
                     id: 'velloci.personalInfo.socialSecurityNumber',
                     defaultMessage: 'Social Security Number'
                   })}
                   {<Required />}
+                </> :
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.idNumber',
+                    defaultMessage: 'ID Number'
+                  })}
+                  {<Required />}
                 </>
               }
-              inputProps={{
-                placeholder: formatMessage({
-                  id: 'onboarding.ssn.placeholder',
-                  defaultMessage: 'xxx-xx-xxxx'
-                }),
-                type: 'text',
-                'data-test': 'control-person-ssn'
-              }}
-            />
+              inputProps={(countryId === 1) ?
+                {
+                  placeholder: formatMessage({
+                    id: 'onboarding.ssn.placeholder',
+                    defaultMessage: 'xxx-xx-xxxx'
+                  }),
+                  type: 'text',
+                  'data-test': 'control-person-ssn'
+                } :
+                {
+                  placeholder: formatMessage({
+                    id: 'velloci.personalInfo.idNumber.placeholder',
+                    defaultMessage: 'xxxxxxxxx'
+                  }),
+                  type: 'text',
+                  'data-test': 'control-person-idnum'
+                }
+              }
+            /> 
           </GridColumn>
+          <IdNumberTooltip />
         </GridRow>
       </GridControlPerson>
     </>

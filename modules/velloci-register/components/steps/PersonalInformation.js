@@ -17,6 +17,7 @@ import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
 import { roles } from '../../../../components/settings/constants'
 import { AddOwnersButtonDiv } from '../styles'
+import IdNumberTooltip from '../IdNumberTooltip'
 
 const GridPersonalInformation = styled(Grid)`
   margin: 14px 16px !important;
@@ -53,9 +54,11 @@ function PersonalInformation({
   registerBeneficialOwner
 }) {
   const { values } = formikProps;
-
   let forms = []
+
   for (let i = 0; i <= numberBeneficialOwners; i++) {
+    let countryId = (values?.verifyPersonalInformation[i]?.address?.country) ? JSON.parse(values?.verifyPersonalInformation[i]?.address?.country).countryId : 1;
+
     forms.push(
       <GridPersonalInformation
         className="verify-personal-information"
@@ -208,7 +211,6 @@ function PersonalInformation({
               displayHeader={false}
               required={true}
               searchEnabled={!registerBeneficialOwner}
-              additionalCountryInputProps={{ disabled: true }}
               setFieldValue={formikProps.setFieldValue}>
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
                 <CustomDivTitle>
@@ -230,54 +232,8 @@ function PersonalInformation({
             </AddressForm>
           </GridColumn>
         </GridRow>
-        <GridRow columns={registerBeneficialOwner ? 2 : 3}>
-          <ColumnCustom className="m-b-padding" computer={8} tablet={8} mobile={16}>
-            <Input
-              name={`verifyPersonalInformation[${i}].businessTitle`}
-              label={
-                <>
-                  {formatMessage({
-                    id: 'velloci.personalInfo.businessTitle',
-                    defaultMessage: 'Business Title'
-                  })}
-                  {<Required />}
-                </>
-              }
-              inputProps={{
-                placeholder: formatMessage({
-                  id: 'velloci.personalInfo.businessTitle.placeholder',
-                  defaultMessage: 'Enter Business Title'
-                }),
-                type: 'text',
-                'data-test': `verify-personal-information-business-title-${i}`
-              }}
-            />
-          </ColumnCustom>
-          <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
-            <Input
-              name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
-              label={
-                <>
-                  {formatMessage({
-                    id: 'velloci.personalInfo.socialSecurityNumber',
-                    defaultMessage: 'Social Security Number'
-                  })}
-                  {<Required />}
-                </>
-              }
-              inputProps={{
-                placeholder: formatMessage({
-                  id: 'velloci.personalInfo.socialSecurityNumber.placeholder',
-                  defaultMessage: '123456789'
-                }),
-                type: 'text',
-                'data-test': `verify-personal-information-ssn-${i}`
-              }}
-            />
-          </ColumnCustom>
-        </GridRow>
         <GridRow>
-          <ColumnCustom computer={8} tablet={8} mobile={16}>
+          <ColumnCustom computer={10} tablet={10} mobile={16}>
             <Input
               name={`verifyPersonalInformation[${i}].businessOwnershipPercentage`}
               label={
@@ -303,6 +259,72 @@ function PersonalInformation({
               }}
             />
           </ColumnCustom>
+        </GridRow>
+        <GridRow columns={registerBeneficialOwner ? 2 : 3}>
+          <ColumnCustom className="m-b-padding" computer={10} tablet={10} mobile={16}>
+            <Input
+              name={`verifyPersonalInformation[${i}].businessTitle`}
+              label={
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.businessTitle',
+                    defaultMessage: 'Business Title'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={{
+                placeholder: formatMessage({
+                  id: 'velloci.personalInfo.businessTitle.placeholder',
+                  defaultMessage: 'Enter Business Title'
+                }),
+                type: 'text',
+                'data-test': `verify-personal-information-business-title-${i}`
+              }}
+            />
+          </ColumnCustom>
+        </GridRow>
+        <GridRow columns={2}>
+          <ColumnCustom className="m-t-padding" computer={10} tablet={10} mobile={16}>
+            <Input
+              name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
+              label={(countryId === 1) ?
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.socialSecurityNumber',
+                    defaultMessage: 'Social Security Number'
+                  })}
+                  {<Required />}
+                </> :
+                <>
+                  {formatMessage({
+                    id: 'velloci.personalInfo.idNumber',
+                    defaultMessage: 'ID Number'
+                  })}
+                  {<Required />}
+                </>
+              }
+              inputProps={(countryId === 1) ?
+                {
+                  placeholder: formatMessage({
+                    id: 'onboarding.ssn.placeholder',
+                    defaultMessage: 'xxx-xx-xxxx'
+                  }),
+                  type: 'text',
+                  'data-test': `verify-personal-information-ssn-${i}`
+                } :
+                {
+                  placeholder: formatMessage({
+                    id: 'velloci.personalInfo.idNumber.placeholder',
+                    defaultMessage: 'xxx-xxx-xxx'
+                  }),
+                  type: 'text',
+                  'data-test': `verify-personal-information-idnum-${i}`
+                }
+              }
+            />
+          </ColumnCustom>
+          <IdNumberTooltip />
         </GridRow>
         {values?.ownerInformation?.isOtherBeneficialOwner && (
           <GridRow>

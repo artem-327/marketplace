@@ -10,7 +10,8 @@ import {
   dateValidation,
   phoneValidation,
   coiValidation,
-  ssnValidation
+  ssnValidation,
+  canadaIdValidation
 } from '~/constants/yupValidation'
 import Router from 'next/router'
 //Services
@@ -58,6 +59,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
         })
       }),
       controlPerson: Yup.lazy(() => {
+        let countryId = (values?.controlPerson?.address?.country) && (JSON.parse(values?.controlPerson?.address?.country).countryId);
         return Yup.object().shape({
           isControlPerson: Yup.boolean().oneOf([true], errorMessages.requiredMessage),
           isBeneficialOwner: Yup.boolean().required().oneOf([true, false], errorMessages.requiredMessage),
@@ -74,7 +76,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
               .trim()
               .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
-          socialSecurityNumber: ssnValidation(),
+          socialSecurityNumber: (countryId === 1) ? ssnValidation() : canadaIdValidation(5, 15),
           businessOwnershipPercentage: values?.controlPerson?.isBeneficialOwner ? 
               Yup.string()
                 .trim()
@@ -102,6 +104,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
       verifyPersonalInformation: !values.ownerInformation.isOtherBeneficialOwner || beneficialOwnersNotified ? null : Yup.array().of(
         Yup.lazy(v => {
           //let isAnyValueFilled = deepSearch(v, (val, key) => val !== '' && key !== 'country')
+          let countryId = (v?.address?.country) && (JSON.parse(v?.address?.country).countryId);
           const businessOwnershipPercentage = values.ownerInformation.isOtherBeneficialOwner
             ? {
                 businessOwnershipPercentage: Yup.string()
@@ -133,7 +136,7 @@ export const getValidationSchema = (beneficialOwnersNotified = false) =>
               .trim()
               .min(2, errorMessages.minLength(2))
               .required(errorMessages.requiredMessage),
-            socialSecurityNumber: ssnValidation(),
+            socialSecurityNumber: (countryId === 1) ? ssnValidation() : canadaIdValidation(5, 15),
             ...businessOwnershipPercentage
           })
         })

@@ -436,3 +436,13 @@ export const coiValidation = () => (
     })
   ))
 )
+
+export const canadaIdValidation = (min, max) => (
+  Yup.lazy(() => Yup.string()
+    .trim()
+    .matches(/^[a-zA-Z0-9]*$/, 'Valid characters are A-Z a-z 0-9')
+    .min(min, `Please enter a miniumum of ${min} characters`)
+    .max(max, `Please enter a maximum of ${max} characters`)
+    .required(errorMessages.requiredMessage)
+  )
+)
