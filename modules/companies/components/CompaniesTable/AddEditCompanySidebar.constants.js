@@ -27,7 +27,9 @@ export const INITIAL_FORM_VALUES = {
   website: '',
   tagline: '',
   primaryUser: {
-    name: '',
+    name: 'aaaa',
+    lastName: '',
+    firstName: '',
     email: '',
     jobTitle: '',
     phone: ''
