@@ -26,10 +26,11 @@ RUN mv /root/.cache /home/appuser/.cache
 RUN mv /root/.npm /home/appuser/.npm
 
 # Since nodejs 15 When no WORKDIR is specified, npm install is executed in the root directory of the container
+USER appuser
+
 WORKDIR /home/appuser/
 RUN npm install cypress-mailosaur
 
-USER appuser
 ENV CYPRESS_CACHE_FOLDER=/home/appuser/.cache/Cypress
 # show user effective id and group - it should be non-zero
 # meaning the current user is not root
