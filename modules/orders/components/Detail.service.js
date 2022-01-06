@@ -342,16 +342,16 @@ export const attachDocumentsManager = async (newDocuments, props, replaceRow, se
     setOpenDocumentsPopup(false)
 
     if (replaceRow) {
-      await handleUnlink(replaceRow)
+      await handleUnlink(replaceRow, props, setAttachmentRows)
       setReplaceRow('')
     }
     const docArray = uniqueArrayByKey(newDocuments, 'id')
 
     try {
       if (docArray.length) {
-        await docArray.forEach(doc => {
-          linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
-        })
+        await Promise.all(docArray.map(async doc => {
+          await linkAttachmentToOrder({ attachmentId: doc.id, orderId: order.id })
+        }))
       }
       let response = {}
       if (getSafe(() => props.router.query.type, false) === 'sales') {

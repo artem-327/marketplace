@@ -110,7 +110,7 @@ const Detail = props => {
         ? await props.getSaleOrder(props.router.query.id)
         : await props.getPurchaseOrder(props.router.query.id)
 
-      setAttachmentRows(getRows(data.attachments, props))
+      setAttachmentRows(getRows(data.attachments, props, setAttachmentRows))
       setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
       setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
     } catch (e) {
@@ -131,7 +131,7 @@ const Detail = props => {
           ? await props.getSaleOrder(props.router.query.id)
           : await props.getPurchaseOrder(props.router.query.id)
 
-        setAttachmentRows(getRows(data.attachments, props))
+        setAttachmentRows(getRows(data.attachments, props, setAttachmentRows))
         setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
         setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
       } catch (e) {
