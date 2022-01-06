@@ -14,7 +14,6 @@ import { CustomDivAddDocument } from './Detail.styles'
 import { getSafe, getFormattedAddress, uniqueArrayByKey, getMimeType } from '../../../utils/functions'
 import { getLocaleDateFormat } from '../../../components/date-format'
 
-
 export const getOrder = (state, ownProps) => {
     
     const getReturnAddress = (data) => {
@@ -278,7 +277,7 @@ export const getOrder = (state, ownProps) => {
     return prepareDetail(state.orders.detail, ownProps.router.query.type)
 }
 
-export const getRows = (attachments, props) => {
+export const getRows = (attachments, props, setAttachmentRows) => {
     if (attachments && attachments.length) {
       return attachments.map(row => {
         return {
@@ -295,10 +294,20 @@ export const getRows = (attachments, props) => {
             ? getSafe(() => moment(row.issuedAt).format(getLocaleDateFormat()), 'N/A')
             : 'N/A',
           documentIssuer: getSafe(() => row.issuer, 'N/A'),
-          download: (
-            <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)}>
+          documentActions: (
+              <>
+            <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)} title={'Download'}>
               <Icon name='file' className='positive' />
             </a>
+            <a href='#' onClick={() => {
+                if (row.canBeUnlinked) {
+                    unlinkAttachmentFromOrder(row.id, props, setAttachmentRows)
+                }
+            }}
+               style={{marginLeft: '5px'}} title={row.canBeUnlinked ? 'Unlink from order' : 'Cannot unlink this document'}>
+              <Icon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
+            </a>
+              </>
           )
         }
       })
@@ -352,7 +361,7 @@ export const attachDocumentsManager = async (newDocuments, props, replaceRow, se
       }
 
       setIsOpenManager(false)
-      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props))
+      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props, setAttachmentRows))
     } catch (error) {
       console.error(error)
     }
@@ -378,7 +387,7 @@ export const handleUnlink = async (row, props, setAttachmentRows) => {
         response = await getPurchaseOrder(order.id)
       }
 
-      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props))
+      setAttachmentRows(getRows(getSafe(() => response.value.data.attachments, []), props, setAttachmentRows))
     } catch (err) {
       console.error(err)
     }
@@ -486,5 +495,19 @@ export const linkAttachment = async (files, orderItemId, props, openDocumentsAtt
     } catch (error) {
       console.error(error)
     } finally {
+    }
+}
+
+const unlinkAttachmentFromOrder = async (attachmentId, props, setAttachmentRows) => {
+    try {
+        const orderId = props.router.query.id
+        await props.unlinkAttachmentToOrder({ attachmentId, orderId })
+        const order = getSafe(() => props.router.query.type, false) === 'sales' ?
+            await props.getSaleOrder(orderId) :
+            await props.getPurchaseOrder(orderId)
+
+        setAttachmentRows(getRows(getSafe(() => order.value.data.attachments, []), props, setAttachmentRows))
+    } catch (error) {
+        console.error(error)
     }
 }

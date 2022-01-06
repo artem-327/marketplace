@@ -1,9 +1,10 @@
 import { Input, TextArea, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
-
+import get from 'lodash/get'
 import * as Yup from 'yup'
-
-import { errorMessages } from '~/constants/yupValidation'
-import { getSafe } from '~/utils/functions'
+import { errorMessages, validateTime } from '../../constants/yupValidation'
+import { getSafe } from '../../utils/functions'
+import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
+import { DivLogoDisabledComponent, DivLogoDisabledContent, DivLogoWrapper, ImageSearchStyled } from './settings.styles'
 
 export const roles = {
   admin: 'admin',
@@ -24,17 +25,30 @@ const supportedValidation = {
     value ? chain.concat(chain.required(errorMessages.requiredMessage)) : chain.concat(chain.nullable())
 }
 
-const numberAllowEmptyString = Yup.number(errorMessages.mustBeNumber)
+const numberAllowEmptyString = Yup.number()
+  .test('numbers', errorMessages.mustBeNumber, value => (!value || !isNaN(value)))
   .transform(value => (isNaN(value) ? null : value))
+  .nullable()
   .typeError(errorMessages.mustBeNumber)
+  .min(0, errorMessages.minimum(0))
+
+const integerAllowEmptyString = Yup.number()
+  .test('numbers', errorMessages.mustBeNumber, value => !value || /^[0-9]*$/.test(value))
+  .transform(value => (isNaN(value) ? null : value))
+  .nullable()
+  .integer(errorMessages.integer)
+  .typeError(errorMessages.mustBeNumber)
+  .min(0, errorMessages.minimum(0))
 
 export const dataTypes = {
-  STRING: Yup.string(errorMessages.invalidString),
-  INTEGER: numberAllowEmptyString,
+  STRING: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
+  INTEGER: integerAllowEmptyString,
   NUMBER: numberAllowEmptyString,
   FLOAT: numberAllowEmptyString,
-  LARGE_TEXT: Yup.string(errorMessages.invalidString),
-  TEXT: Yup.string(errorMessages.invalidString)
+  LARGE_TEXT: Yup.string(errorMessages.invalidString).trim().max(5000, errorMessages.maxLength(5000)),
+  TEXT: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
+  TIME: validateTime(),
+  BASE64_FILE: Yup.string(errorMessages.invalidString)
 }
 
 const defaultDataType = 'STRING'
@@ -46,7 +60,11 @@ export const getRole = accessRights => {
   return roles.user
 }
 
-export const typeToComponent = (type, options = {}) => {
+export const typeToComponent = (type, options = {}, formikProps, componentName, props) => {
+  const { intl: { formatMessage } } = props
+  const inputProps = getSafe(() => options.inputProps, {})
+  const disabled = inputProps?.disabled
+
   switch (type) {
     case 'NUMBER':
       return (
@@ -56,7 +74,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 1,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -68,7 +87,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 1,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -80,7 +100,8 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             type: 'number',
             step: 0.001,
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -89,7 +110,8 @@ export const typeToComponent = (type, options = {}) => {
         <TextArea
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {}),
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps,
             type: 'text'
           }}
         />
@@ -100,7 +122,8 @@ export const typeToComponent = (type, options = {}) => {
           {...getSafe(() => options.props, {})}
           inputProps={{
             type: 'text',
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )
@@ -109,7 +132,8 @@ export const typeToComponent = (type, options = {}) => {
         <Dropdown
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.selectValue', defaultMessage: 'Select value' }),
+            ...inputProps
           }}
         />
       )
@@ -118,11 +142,11 @@ export const typeToComponent = (type, options = {}) => {
         <Dropdown
           {...getSafe(() => options.props, {})}
           inputProps={{
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.selectValue', defaultMessage: 'Select value' }),
+            ...inputProps
           }}
         />
       )
-
     case 'BOOL': {
       return (
         <Checkbox
@@ -130,9 +154,80 @@ export const typeToComponent = (type, options = {}) => {
           inputProps={{
             toggle: true,
             fitted: true,
-            ...getSafe(() => options.inputProps, {})
+            ...inputProps
           }}
         />
+      )
+    }
+    case 'TIME':
+      return (
+        <Input
+          {...getSafe(() => options.props, {})}
+          inputProps={{
+            type: 'text',
+            placeholder: formatMessage({ id: 'settings.system.enterTime', defaultMessage: 'Enter time' }),
+            ...inputProps
+          }}
+        />
+      )
+    case 'BASE64_FILE': {
+      const { values, setFieldValue } = formikProps
+      const picture = get(values, componentName, '')
+
+      return (
+        disabled
+          ? (
+            <DivLogoDisabledComponent>
+              <DivLogoDisabledContent>
+                <DivLogoWrapper>
+                  {(picture && picture !== 'EMPTY_SETTING')
+                    ? (<img src={picture}/>)
+                    : (<ImageSearchStyled />)
+                  }
+                </DivLogoWrapper>
+              </DivLogoDisabledContent>
+            </DivLogoDisabledComponent>
+          ) : (
+          <UploadAttachment
+            {...getSafe(() => options.props, {})}
+            {...getSafe(() => options.inputProps, {})}
+            acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+            name={componentName}
+            filesLimit={1}
+            fileMaxSize={2}
+            attachments={(picture && picture !== 'EMPTY_SETTING')
+              ? [{
+                id: componentName,
+                name: formatMessage({id: 'profile.avatarPicture', defaultMessage: 'Avatar Picture'})
+              }]
+              : []
+            }
+            onChange={file => {
+              try {
+                const reader = new FileReader()
+                reader.readAsDataURL(file[0])
+                reader.onloadend = function () {
+                  const base64String = reader.result
+                  // without additional data: Attributes.
+                  const newBase64Pic = base64String.substr(base64String.indexOf(', ') + 1)
+                  setFieldValue(componentName, newBase64Pic)
+                }
+              } catch (e) {
+                console.error(e)
+              }
+            }}
+            removeAttachment={() => setFieldValue(componentName, 'EMPTY_SETTING')}
+            emptyContent={<DivLogoWrapper><ImageSearchStyled /></DivLogoWrapper>}
+            uploadedContent={
+              <div>
+                {(picture && picture !== 'EMPTY_SETTING') && (
+                  <img src={picture}/>
+                )}
+              </div>
+            }
+
+          />
+        )
       )
     }
     default:
@@ -141,7 +236,8 @@ export const typeToComponent = (type, options = {}) => {
           {...getSafe(() => options.props, {})}
           inputProps={{
             type: 'text',
-            ...getSafe(() => options.inputProps, {})
+            placeholder: formatMessage({ id: 'settings.system.enterValue', defaultMessage: 'Enter value' }),
+            ...inputProps
           }}
         />
       )

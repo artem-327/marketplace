@@ -166,6 +166,7 @@ export const errorMessages = {
   ),
   passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
   invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />,
+  invalidTimeFormat: <FormattedMessage id='validation.invalidTimeFormat' defaultMessage='Invalid time format (HH:MM)' />,
   invalidHashtag: <FormattedMessage id='validation.invalidHashtag' defaultMessage='Invalid hashtag' />,
   mustBeInHhMmFormat: (
     <FormattedMessage id='validation.mustBeInHhMmFormat' defaultMessage='Time must be in HH:MM format' />
@@ -390,8 +391,11 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
 export const validateTime = () =>
   Yup.string()
     .trim()
+    .test('t', errorMessages.invalidTimeFormat, t => {
+      return !t || !!/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(t)
+    })
     .test('time', errorMessages.invalidTime, t => {
-      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t
+      return !t || moment(t, ['HH:mm']).isValid()
     })
 
 export const multipleEmails = () =>

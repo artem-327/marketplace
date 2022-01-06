@@ -322,9 +322,9 @@ export const columnsRelatedOrdersDetailDocuments = [
     width: 150
   },
   {
-    name: 'download',
+    name: 'documentActions',
     title: (
-      <FormattedMessage id='global.download' defaultMessage='Download' />
+      <FormattedMessage id='global.actions' defaultMessage='Actions' />
     ),
     width: 150,
     align: 'center'
@@ -414,7 +414,8 @@ const extractFileName = contentDispositionValue => {
  * @category Operations
  * @services
  */
-export const getRows = (attachments, props) => {
+export const getRows = (attachments, props, setAttachmentRows) => {
+  const { intl: { formatMessage } } = props
   if (attachments && attachments.length) {
     return attachments.map(row => {
       return {
@@ -430,10 +431,30 @@ export const getRows = (attachments, props) => {
           ? getSafe(() => moment(row.expirationDate).format(getLocaleDateFormat()), 'N/A')
           : 'N/A',
         documenIssuer: getSafe(() => row.issuer, 'N/A'),
-        download: (
-          <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)}>
-            <Icon name='file' className='positive' />
-          </a>
+        documentActions: (
+            <>
+              <a href='#' onClick={() => downloadAttachment(row.name, row.id, props)} title={'Download'}>
+                <Icon name='file' className='positive' />
+              </a>
+              <a href='#' onClick={() => {
+                if (row.canBeUnlinked) {
+                  unlinkAttachmentFromOrder(row.id, props, setAttachmentRows)
+                }
+              }}
+                 style={{marginLeft: '5px'}}
+                 title={row.canBeUnlinked
+                   ? formatMessage({
+                       id: 'order.detail.unlinkFromOrder',
+                       defaultMessage: 'Unlink from order'
+                     })
+                   : formatMessage({
+                       id: 'order.detail.cannotUnlinkThisDocument',
+                       defaultMessage: 'Cannot unlink this document'
+                     })
+                 }>
+                <Icon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
+              </a>
+            </>
         )
       }
     })
@@ -534,4 +555,16 @@ export const confirmCancelOrder = async (props, state, setState) => {
       },
       () => {}
     )
+}
+
+const unlinkAttachmentFromOrder = async (attachmentId, props, setAttachmentRows) => {
+  try {
+    await props.unlinkAttachmentToOrder({attachmentId, orderId: props.order.id})
+    const order = await props.getOrderById(props.order.id)
+    if (order.value.length === 1) {
+      setAttachmentRows(getRows(getSafe(() => order.value[0].attachments, []), props, setAttachmentRows))
+    }
+  } catch (error) {
+    console.error(error)
+  }
 }

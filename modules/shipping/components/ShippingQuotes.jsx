@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import moment from 'moment/moment'
-import { bool, objectOf, func, array } from 'prop-types'
+import { bool, object, func, array } from 'prop-types'
 
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
@@ -505,18 +505,23 @@ export default class ShippingQuotes extends Component {
 }
 
 ShippingQuotes.propTypes = {
-  modalProps: objectOf({
-    open: bool,
-    centered: bool,
-    closeModal: func
-  }),
-  companyGenericProduct: array
+  modalProps: object,
+  companyGenericProduct: array,
+  zipCodes: array,
+  getCountries: func,
+  initShipingForm: func,
+  clearShippingQuotes: func
 }
 
 ShippingQuotes.defaultProps = {
   modalProps: {
     open: false,
-    centered: false
+    centered: false,
+    closeModal: () => { }
   },
-  companyGenericProduct: []
+  companyGenericProduct: [],
+  zipCodes: [],
+  getCountries: () => { },
+  initShipingForm: () => { },
+  clearShippingQuotes: () => { }
 }

@@ -171,9 +171,9 @@ export const columnsRelatedOrdersDetailDocuments = [
     width: 150
   },
   {
-    name: 'download',
+    name: 'documentActions',
     title: (
-      <FormattedMessage id='global.download' defaultMessage='Download' />
+      <FormattedMessage id='global.actions' defaultMessage='Actions' />
     ),
     width: 150,
     align: 'center'

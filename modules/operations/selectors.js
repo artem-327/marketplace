@@ -18,6 +18,7 @@ const getSearchedCompanies = state => state?.operations?.searchedCompanies?.map(
 const getSearchedCompaniesLoading = state => getSafe(() => state.operations.searchedCompaniesLoading, false)
 const getFilterValue = state => getSafe(() => state.operations.filterValue, '')
 const getLoading = state => getSafe(() => state.operations.loading, false)
+const getLoadingRelatedDocuments = state => getSafe(() => state.operations.loadingRelatedDocuments, false)
 const getOrderByIdLoading = state => getSafe(() => state.operations.orderByIdLoading, false)
 const getDownloadPdfLoading = state => getSafe(() => state.operations.downloadPdfLoading, false)
 const getEchoSupportPhone = state => getSafe(() => state.auth.identity.settings.find(el => el.key === 'APP_SUPPORT_PHONE_NUMBER').value, 'N/A')
@@ -79,6 +80,9 @@ export const makeGetFilterValue = () => {
 }
 export const makeGetLoading = () => {
     return createSelector([getLoading], loading => loading)
+}
+export const makeGetLoadingRelatedDocuments = () => {
+    return createSelector([getLoadingRelatedDocuments], loading => loading)
 }
 export const makeGetOrderByIdLoading = () => {
     return createSelector([getOrderByIdLoading], loading => loading)

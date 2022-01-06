@@ -52,7 +52,7 @@ const MyProducts = props => {
       }
     }
 
-    const productId = getSafe(() => Router.router.query.id, '')
+    const productId = getSafe(() => Router.router.query.cgp_id, '')
 
     if (productId && !isNaN(parseInt(productId))) {
       let genericProduct

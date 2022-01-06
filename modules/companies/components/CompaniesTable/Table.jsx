@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { injectIntl } from 'react-intl'
 
@@ -70,6 +71,18 @@ const makeMapStateToProps = () => {
     }
   }
   return mapStateToProps
+}
+
+CompaniesTable.propTypes = {
+  rows: PropTypes.array,
+  datagrid: PropTypes.object,
+  editedId: PropTypes.number,
+}
+
+CompaniesTable.defaultProps = {
+  rows: [],
+  datagrid: {},
+  editedId: 0,
 }
 
 export default withDatagrid(connect(makeMapStateToProps, { ...Actions, reviewRequest, removeAttachment })(injectIntl(CompaniesTable)))
