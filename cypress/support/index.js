@@ -19,6 +19,6 @@ import './inventoryHelper'
 import './formHelper'
 import './requestHelper'
 import './jsonHelper'
-import 'cypress-mailosaur'
+require('cypress-mailosaur');
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
