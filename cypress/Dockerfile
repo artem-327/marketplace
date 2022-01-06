@@ -1,5 +1,5 @@
 
-FROM cypress/included:8.4.1
+FROM cypress/included:9.2.0
 
 RUN npm install cypress-mailosaur
 # "root"
