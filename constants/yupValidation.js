@@ -185,9 +185,15 @@ export const passwordValidation = () =>
     .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
     .min(8, errorMessages.minLength(8))
     .required(errorMessages.requiredMessage)
-    .matches(/[a-z]/, errorMessages.oneLowercaseChar)
-    .matches(/[A-Z]/, errorMessages.oneUppercaseChar)
-    .matches(/[^a-zA-Z\s]+/, errorMessages.oneSpecialChar)
+    .matches(/[a-z]/, {
+      message: errorMessages.oneLowercaseChar
+    })
+    .matches(/[A-Z]/, {
+      message: errorMessages.oneUppercaseChar
+    })
+    .matches(/[^a-zA-Z\s]+/, {
+      message: errorMessages.oneSpecialChar
+    })
 
 export const passwordValidationAnyChar = () =>
   Yup.string()
