@@ -1,19 +1,29 @@
-import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { useState } from 'react'
+import { Grid, GridColumn, GridRow, FormField } from 'semantic-ui-react'
+// @ts-ignore
 import { Checkbox, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import get from 'lodash/get'
 import styled from 'styled-components'
+// @ts-ignore
 import { Required } from '~/components/constants/layout'
+// @ts-ignore
 import { AddressForm } from '~/modules/address-form'
+// @ts-ignore
 import { PhoneNumber } from '~/modules/phoneNumber'
+// @ts-ignore
 import { DateInput } from '~/components/custom-formik'
 import { HeadingContainer } from '../styles'
 import { Info } from 'react-feather'
+import InputMask from 'react-input-mask'
+// const InputMask = require('react-input-mask')
 //Components
 import {
   Rectangle,
   CustomDivContent,
   CustomDivInTitle,
   CustomDivTitle
+  // @ts-ignore
 } from '~/modules/cart/components/StyledComponents'
 
 import { StyledTextContainer } from '../styles'
@@ -28,6 +38,7 @@ const CheckboxControlPerson = styled(Checkbox)`
   }
 `
 
+// @ts-ignore
 const DivRectangle = styled(Rectangle)`
   margin: 0px;
   background-color: #f8f9fb;
@@ -45,7 +56,29 @@ const DivRectangleBusinessType = styled.div`
   padding: 1rem 1rem 0 1rem;
 `
 
+const StyledInputMask = styled(InputMask)`
+  background: #ffffff;
+  .default.text {
+    font-weight: normal;
+  };
+`
+
+
+
 function ControlPerson({ formikProps, intl: { formatMessage } }) {
+
+  const { touched, isSubmitting, errors } = formikProps;
+  const SSNError = (get(touched, 'controlPerson.socialSecurityNumber', null) || isSubmitting) && get(errors, 'controlPerson.socialSecurityNumber', null)
+  const [SSN, setSSN] = useState('')
+
+  const beforeMaskedStateChange = (e) => {
+    const { setFieldValue, setFieldTouched } = formikProps;
+    const { value } = e.target;
+    setSSN(value);
+    setFieldValue('controlPerson.socialSecurityNumber', value)
+    setFieldTouched('controlPerson.socialSecurityNumber', true, true)
+  }
+
   return (
     <>
       <GridControlPerson>
@@ -53,15 +86,15 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
           <GridColumn>
             <DivRectangleBusinessType>
               <Grid>
-                  <GridRow>
-                    <GridColumn>
-                      <StyledTextContainer style={{ paddingBlockEnd: '.5rem' }}>
-                        <FormattedMessage id='onboarding.control.person.confirm' />
-                      </StyledTextContainer>
-                      <FormattedMessage id='velloci.controlPerson.infoContent' />
-                    </GridColumn>
-                  </GridRow>
-                  <GridRow>
+                <GridRow>
+                  <GridColumn>
+                    <StyledTextContainer style={{ paddingBlockEnd: '.5rem' }}>
+                      <FormattedMessage id='onboarding.control.person.confirm' />
+                    </StyledTextContainer>
+                    <FormattedMessage id='velloci.controlPerson.infoContent' />
+                  </GridColumn>
+                </GridRow>
+                <GridRow>
                   <GridColumn>
                     <CheckboxControlPerson
                       inputProps={{
@@ -263,13 +296,13 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
         </GridRow>
         <GridRow>
           <GridColumn>
-          <AddressForm
-            prefix='controlPerson'
-            values={formikProps.values}
-            displayHeader={false}
-            required={true}
-            searchEnabled={true}
-            setFieldValue={formikProps.setFieldValue}>
+            <AddressForm
+              prefix='controlPerson'
+              values={formikProps.values}
+              displayHeader={false}
+              required={true}
+              searchEnabled={true}
+              setFieldValue={formikProps.setFieldValue}>
               <Rectangle style={{ margin: '0px 0px 10px 0px' }}>
                 <CustomDivTitle>
                   <Info size={20} style={{ color: '#3bbef6' }} />
@@ -346,7 +379,7 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
         </GridRow>
         <GridRow>
           <GridColumn>
-            <Input
+            {/* <Input
               name='controlPerson.socialSecurityNumber'
               label={
                 <>
@@ -363,9 +396,32 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   defaultMessage: 'xxx-xx-xxxx'
                 }),
                 type: 'text',
-                'data-test': 'control-person-ssn'
+                'data-test': 'control-person-ssn',
               }}
-            />
+            /> */}
+            <FormField error={!!SSNError}>
+              <label><>
+                {formatMessage({
+                  id: 'velloci.personalInfo.socialSecurityNumber',
+                  defaultMessage: 'Social Security Number'
+                })}
+                {<Required />}
+              </></label>
+              <StyledInputMask
+                data-test='control-person-ssn'
+                name='controlPerson.socialSecurityNumber'
+                mask='999-99-9999'
+                type='text'
+                value={SSN}
+                placeholder={formatMessage({
+                  id: 'onboarding.ssn.placeholder',
+                  defaultMessage: 'xxx-xx-xxxx'
+                })}
+                // beforeMaskedStateChange={beforeMaskedStateChange}
+                onChange={beforeMaskedStateChange}
+              />
+              {!!SSNError && <span className='sui-error-message'>{SSNError}</span>}
+            </FormField>
           </GridColumn>
         </GridRow>
       </GridControlPerson>
