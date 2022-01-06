@@ -1,10 +1,6 @@
 
 FROM cypress/included:9.2.0
 
-# Since nodejs 15 When no WORKDIR is specified, npm install is executed in the root directory of the container
-WORKDIR /home/appuser/
-COPY ./ /home/appuser/
-RUN npm install cypress-mailosaur
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
@@ -28,6 +24,10 @@ RUN install -d -m 0755 -o appuser -g appuser /home/appuser
 # move test runner binary folder to the non-root's user home directory
 RUN mv /root/.cache /home/appuser/.cache
 RUN mv /root/.npm /home/appuser/.npm
+
+# Since nodejs 15 When no WORKDIR is specified, npm install is executed in the root directory of the container
+WORKDIR /home/appuser/
+RUN npm install cypress-mailosaur
 
 USER appuser
 ENV CYPRESS_CACHE_FOLDER=/home/appuser/.cache/Cypress
