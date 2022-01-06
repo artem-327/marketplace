@@ -23,6 +23,7 @@
 //
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-mailosaur'
 
 Cypress.Commands.add("FElogin", (email, password) => {
     cy.intercept('POST', '/prodex/oauth/token').as('login')
