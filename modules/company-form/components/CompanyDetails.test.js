@@ -1,4 +1,4 @@
-import Enzyme from 'enzyme'
+import Enzyme, { shallow, ShallowWrapper } from 'enzyme'
 import EnzymeAdapter from '@wojtekmaj/enzyme-adapter-react-17'
 
 // Utils
@@ -15,13 +15,14 @@ import CompanyDetails from './CompanyDetails'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
+  selectLogo: () => { },
+  removeLogo: () => { },
+  companyLogo: null,
+  hasLogo: false
 }
 
 describe('`CompanyDetails` render component', () => {
-
   test('does not throw warning with expected props', () => {
-    //It checks components with default props.
-    // checkProps(CompanyDetails, defaultProps)
+    checkProps(CompanyDetails, defaultProps)
   })
-
 })

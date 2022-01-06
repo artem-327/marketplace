@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Container } from 'semantic-ui-react'
 import { injectIntl } from 'react-intl'
@@ -20,7 +21,7 @@ import { getSafe } from '../../../utils/functions'
 import { getCategories, loadData } from '../actions'
 
 const Alerts = props => {
-  const { isOpenPopupOperations} = props
+  const { isOpenPopupOperations } = props
   const [selectedRows, setSelectedRows] = useState([])
   const [gaSearch, setGaSearch] = useState('')
 
@@ -105,5 +106,15 @@ const mapStateToProps = ({ auth, operations, alerts }) => ({
    */
   categories: alerts.categories.filter(cat => cat.category.indexOf('Wanted_Board') < 0)
 })
+
+Alerts.propTypes = {
+  isOpenPopupOperations: PropTypes.bool,
+  getCategories: PropTypes.func
+}
+
+Alerts.defaultProps = {
+  isOpenPopupOperations: false,
+  getCategories: () => { }
+}
 
 export default connect(mapStateToProps, { getCategories, loadData })(injectIntl(Alerts))

@@ -32,7 +32,7 @@ const DeliveryDatePopup = props => {
   return (
     <Formik
       initialValues={{ date: '' }}
-      validationSchema={getValidationScheme}
+      validationSchema={getValidationScheme(cart.maxLeadTimeDays || 2)}
       onSubmit={async (values, { setSubmitting, setTouched }) => {
         handleManualShipment(onSubmit, values, props)
       }}

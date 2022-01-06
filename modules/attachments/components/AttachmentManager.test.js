@@ -9,7 +9,12 @@ import AttachmentManager from './AttachmentManager'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
-
+  tableProps: {},
+  asModal: true,
+  selectable: true,
+  documentTypesForCertificates: [],
+  singleSelection: false,
+  lockedFileTypes: false
 }
 
 /**
@@ -27,11 +32,11 @@ const setup = (props = {}) => {
  */
 describe('`AttachmentManager` render component', () => {
   test('does not throw warning with expected props', () => {
-    // checkProps(AttachmentManager, defaultProps)
+    checkProps(AttachmentManager, defaultProps)
   })
 
-  // test('renders AttachmentManager component to be there', () => {
-  //   const wrapper = setup()
-  //   expect(wrapper.exists()).toBe(true)
-  // })
+  test('renders AttachmentManager component to be there', () => {
+    const wrapper = setup()
+    expect(wrapper.exists()).toBe(true)
+  })
 })

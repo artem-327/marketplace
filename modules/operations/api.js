@@ -18,8 +18,9 @@ export default {
     pageNumber: 0
   }).then(response => response.data),
   getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
-  markRequestAsProcessed: id =>
-    api.patch(`/prodex/api/company-generic-product-requests/${id}/processed`).then(response => response.data),
+  markRequestAsProcessed: (id, cgp_id) =>
+    api.patch(`/prodex/api/company-generic-product-requests/${id}/processed?companyGenericProductId=${cgp_id}`)
+      .then(response => response.data),
   denyRequest: id => api.patch(`/prodex/api/company-generic-product-requests/${id}/deny`),
   deleteRequest: id => api.delete(`/prodex/api/company-generic-product-requests/${id}`),
   searchManualQuoteRequest: filter =>
@@ -46,4 +47,8 @@ export default {
     api.get(`/prodex/api/purchase-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
     }),
+  searchCompanyGenericProduct: (searchQuery, limit) =>
+    api
+      .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`)
+      .then(response => response.data),
 }

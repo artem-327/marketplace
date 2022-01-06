@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { CornerLeftDown, PlusCircle } from 'react-feather'
 import { Button, Input, Dropdown } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -173,6 +174,24 @@ const mapDispatchToProps = {
   openImportPopup,
   searchCompanyFilter,
   saveFilters
+}
+
+TablesHandlers.propTypes = {
+  openSidebar: PropTypes.func,
+  openImportPopup: PropTypes.func,
+  intl: PropTypes.object,
+  isOpenImportPopup: PropTypes.bool,
+  currentTab: PropTypes.number,
+  searchedCompaniesFilterLoading: PropTypes.bool,
+}
+
+TablesHandlers.defaultProps = {
+  openSidebar: () => { },
+  openImportPopup: () => { },
+  intl: {},
+  isOpenImportPopup: false,
+  currentTab: 0,
+  searchedCompaniesFilterLoading: false,
 }
 
 export default withDatagrid(injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)))
