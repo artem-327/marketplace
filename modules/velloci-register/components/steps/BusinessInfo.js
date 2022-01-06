@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Grid, GridColumn, GridRow } from 'semantic-ui-react'
+import { Button, Grid, GridColumn, GridRow, FormField } from 'semantic-ui-react'
 import { Checkbox, Dropdown, Input } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+import get from 'lodash/get'
 import { Info } from 'react-feather'
 //Components
 import {
@@ -14,6 +16,7 @@ import {
 import { AddressForm } from '~/modules/address-form'
 import { PhoneNumber } from '~/modules/phoneNumber'
 import { Required } from '~/components/constants/layout'
+import InputMask from 'react-input-mask'
 
 const GridBusinessInfo = styled(Grid)`
   margin: 14px 16px !important;
@@ -71,6 +74,13 @@ const PaddedRow = styled(Grid.Row)`
   padding: 1rem 1rem 0 1rem !important;
 `
 
+const StyledInputMask = styled(InputMask)`
+  background: #ffffff;
+  .default.text {
+    font-weight: normal;
+  };
+`
+
 function BusinessInfo({
   formikProps,
   intl: { formatMessage },
@@ -79,6 +89,17 @@ function BusinessInfo({
   enumsBusinessMarkets,
   enumsBusinessTypes
 }) {
+  const { touched, isSubmitting, errors } = formikProps;
+  const SSNError = (get(touched, 'businessInfo.ssn', null) || isSubmitting) && get(errors, 'businessInfo.ssn', null)
+  const [SSN, setSSN] = useState('')
+  const beforeMaskedStateChange = (e) => {
+    const { setFieldValue, setFieldTouched } = formikProps;
+    const { value } = e.target;
+    setSSN(value);
+    setFieldValue('businessInfo.ssn', value)
+    setFieldTouched('businessInfo.ssn', true, true)
+  }
+
   return (
     <GridBusinessInfo className="business-info">
       <GridRow>
@@ -142,7 +163,7 @@ function BusinessInfo({
                 <Grid.Column>
                   <>
                     <FormattedMessage id='velloci.businessInfo.tax' defaultMessage='Tax Identification Number' />
-                    <Required /> 
+                    <Required />
                   </>
                 </Grid.Column>
               </TinLabelRow>
@@ -171,34 +192,51 @@ function BusinessInfo({
                   </ButtonOrCustom>
                 </Grid.Column>
                 <Grid.Column className="m-t-padding" computer={8} tablet={8} mobile={16}>
-                  <Input
-                    name={formikProps.values.businessInfo.isEin ? 'businessInfo.ein' : 'businessInfo.ssn'}
-                    inputProps={{
-                      placeholder: formatMessage({
-                        id: `velloci.businessInfo.${
-                          formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
-                        }.placeholder`,
-                        defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
-                      }),
-                      type: 'text',
-                      'data-test': `business-info-tin-${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'}`
-                    }}
-                  />
+                  {formikProps.values.businessInfo.isEin ? (
+                    <Input
+                      name={formikProps.values.businessInfo.isEin ? 'businessInfo.ein' : 'businessInfo.ssn'}
+                      inputProps={{
+                        placeholder: formatMessage({
+                          id: `velloci.businessInfo.${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'
+                            }.placeholder`,
+                          defaultMessage: `Enter ${formikProps.values.businessInfo.isEin ? 'EIN' : 'SSN'}`
+                        }),
+                        type: 'text',
+                        'data-test': `business-info-tin-${formikProps.values.businessInfo.isEin ? 'ein' : 'ssn'}`
+                      }}
+                    />
+                  ) : (
+                    <FormField error={SSNError ? SSNError : null}>
+                      <StyledInputMask
+                        data-test='business-info-tin-ssn'
+                        name='businessInfo.ssn'
+                        mask='999-99-9999'
+                        type='text'
+                        value={SSN}
+                        placeholder={formatMessage({
+                          id: 'velloci.businessInfo.ssn',
+                          defaultMessage: 'xxx-xx-xxxx'
+                        })}
+                        onChange={beforeMaskedStateChange}
+                      />
+                      {SSNError && <span className='sui-error-message'>{SSNError}</span>}
+                    </FormField>
+                  )}
                 </Grid.Column>
               </Grid.Row>
               <PaddedRow>
                 <Checkbox
-                    inputProps={{
-                      'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
-                    }}
-                    name='businessInfo.isEstablishedUs'
-                  />
-                  <SpanEstablishedLabel>
-                    {formatMessage({
-                      id: 'velloci.businessInfo.establishedUs',
-                      defaultMessage: 'Established in the US?'
-                    })}
-                  </SpanEstablishedLabel>
+                  inputProps={{
+                    'data-test': 'settings_velloci_registration_control_person_legal_isEstablishedUs_chckbx'
+                  }}
+                  name='businessInfo.isEstablishedUs'
+                />
+                <SpanEstablishedLabel>
+                  {formatMessage({
+                    id: 'velloci.businessInfo.establishedUs',
+                    defaultMessage: 'Established in the US?'
+                  })}
+                </SpanEstablishedLabel>
               </PaddedRow>
             </GridBusinessType>
           </DivRectangleBusinessType>
@@ -342,61 +380,61 @@ function BusinessInfo({
       <GridRow>
         <GridColumn>
           <Dropdown
-              label={
-                <>
-                  <FormattedMessage id='company.companyType' defaultMessage='Company Type' />
-                  <Required />
-                </>
-              }
-              name='businessInfo.companyType'
-              options={
-                enumsBusinessTypes?.data?.map(option => ({
-                  text: option.name,
-                  value: option.value,
-                  key: option.value
-                }))
-              }
-              inputProps={{
-                loading: enumsBusinessTypes?.loading,
-                clearable: true,
-                selection: true,
-                search: true,
-                placeholder: formatMessage({ id: 'company.selectCompanyType' }),
-                'data-test': 'business-info-company-type'
-              }}
-            />
+            label={
+              <>
+                <FormattedMessage id='company.companyType' defaultMessage='Company Type' />
+                <Required />
+              </>
+            }
+            name='businessInfo.companyType'
+            options={
+              enumsBusinessTypes?.data?.map(option => ({
+                text: option.name,
+                value: option.value,
+                key: option.value
+              }))
+            }
+            inputProps={{
+              loading: enumsBusinessTypes?.loading,
+              clearable: true,
+              selection: true,
+              search: true,
+              placeholder: formatMessage({ id: 'company.selectCompanyType' }),
+              'data-test': 'business-info-company-type'
+            }}
+          />
         </GridColumn>
       </GridRow>
       <GridRow>
         <GridColumn>
           <Dropdown
-              label={
-                <>
-                  <FormattedMessage id='onboarding.markets' />
-                  <Required />
-                </>
-              }
-              name='businessInfo.markets'
-              options={
-                enumsBusinessMarkets.data.map(option => ({
-                  text: option.name,
-                  value: option.value,
-                  key: option.value
-                }))
-              }
-              inputProps={{
-                loading: enumsBusinessMarkets.loading,
-                clearable: true,
-                multiple: true,
-                selection: true,
-                search: true,
-                placeholder: formatMessage({
-                  id: 'company.selectMarketType',
-                  defaultMessage: 'Select Industry Type'
-                }),
-                'data-test': 'business-info-market-type'
-              }}
-            />
+            label={
+              <>
+                <FormattedMessage id='onboarding.markets' />
+                <Required />
+              </>
+            }
+            name='businessInfo.markets'
+            options={
+              enumsBusinessMarkets.data.map(option => ({
+                text: option.name,
+                value: option.value,
+                key: option.value
+              }))
+            }
+            inputProps={{
+              loading: enumsBusinessMarkets.loading,
+              clearable: true,
+              multiple: true,
+              selection: true,
+              search: true,
+              placeholder: formatMessage({
+                id: 'company.selectMarketType',
+                defaultMessage: 'Select Industry Type'
+              }),
+              'data-test': 'business-info-market-type'
+            }}
+          />
         </GridColumn>
       </GridRow>
     </GridBusinessInfo>
