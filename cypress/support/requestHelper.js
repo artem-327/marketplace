@@ -646,7 +646,7 @@ Cypress.Commands.add("turnOnGlobalBroadcasting", (token) => {
         headers: {
             authorization: "Bearer " + token
         },
-        body: { anonymous: 0, broadcast: 1, priceAddition: 5, priceMultiplier: 0, priceOverride: 0, type: "root" }
+        body: { anonymous: 0, broadcast: 1, priceAddition: 5, priceMultiplier: 0, type: "root" }
     }).then((response) => {
         expect(response.status).to.eq(200)
     })
@@ -664,8 +664,7 @@ Cypress.Commands.add("turnOffGlobalBroadcasting", (token) => {
             broadcast: 0,
             anonymous: 0,
             priceAddition: 0,
-            priceMultiplier: 0,
-            priceOverride: 0
+            priceMultiplier: 0
         }
     }).then((response) => {
         expect(response.status).to.eq(200)

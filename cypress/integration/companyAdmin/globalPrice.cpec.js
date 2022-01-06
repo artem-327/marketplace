@@ -8,10 +8,6 @@ context("Prodex Global Price", () => {
         cy.intercept("POST", '/prodex/api/broadcast-rules/general').as('rulesSaving')
         cy.viewport(1280, 800)
 
-        cy.getUserToken(userJSON.email, userJSON.password).then(token => {
-            cy.deleteWholeCart(token)
-        })
-
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.wait("@dashboardLoading", { timeout: 100000 })
@@ -71,11 +67,13 @@ context("Prodex Global Price", () => {
             .should("have.class", "ui fitted toggle checkbox")
     })
 
-    it("Turns on the broadcasting for Albreta and USA only", () => {
+    it("Turns on the broadcasting for Alberta and USA only", () => {
+        cy.wait(30000)
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
-
+        //Wait until everything is saved
+        cy.wait(30000)
         cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 
         cy.wait("@rulesLoading")
@@ -113,9 +111,11 @@ context("Prodex Global Price", () => {
     })
 
     it("Switch to Region broadcasting", () => {
+        cy.wait(30000)
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {
             cy.turnOffGlobalBroadcasting(token)
         })
+        cy.wait(30000)
 
         cy.get('[data-test=navigation_menu_inventory_global_price_book_drpdn]').click()
 

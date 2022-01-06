@@ -25,7 +25,6 @@ context("Checkout Addresses CRUD", () => {
         cy.intercept("/prodex/api/delivery-addresses*").as("deliveryCreate")
         cy.intercept("PUT", "/prodex/api/delivery-addresses/**").as("deliveryUpdate")
 
-
         cy.FElogin(userJSON.email, userJSON.password)
 
         cy.waitForUI()
@@ -132,6 +131,7 @@ context("Checkout Addresses CRUD", () => {
     })
 
     it("Edit delivery address", () => {
+        cy.waitForUI()
         cy.contains("div", "Delivery Addresses").click()
         cy.contains("Checkout Address").parent().parent().find("svg[class*='IconEdit']").click()
 
