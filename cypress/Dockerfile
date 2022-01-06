@@ -2,8 +2,8 @@
 FROM cypress/included:9.2.0
 
 # Since nodejs 15 When no WORKDIR is specified, npm install is executed in the root directory of the container
-WORKDIR /usr/app
-COPY ./ /usr/app
+WORKDIR /home/appuser/
+COPY ./ /home/appuser/
 RUN npm install cypress-mailosaur
 # "root"
 RUN whoami
