@@ -138,22 +138,37 @@ const UsersSidebar = props => {
                   <CustomSegment>
                     <Grid>
                       <GridRow>
-                        <GridColumn width={8} data-test='admin_users_popup_name_inp'>
+                        <GridColumn width={8} data-test='admin_users_popup_firstName_inp'>
                           <Input
-                            type='text'
                             label={
                               <>
-                                {formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
-                                <Required />
+                                <FormattedMessage id='global.firstName' defaultMessage='First Name' />
                               </>
                             }
-                            name='name'
+                            name='firstName'
                             inputProps={{
-                              placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
+                              placeholder: formatMessage({ id: 'global.enterFirstName', defaultMessage: 'Enter First Name' })
                             }}
                           />
                         </GridColumn>
-                        <GridColumn width={8} data-test='admin_users_popup_title_inp'>
+                        <GridColumn width={8} data-test='admin_users_popup_lastName_inp'>
+                          <Input
+                            label={
+                              <>
+                                <FormattedMessage id='global.lastName' defaultMessage='Last Name' />
+                                <Required />
+                              </>
+                            }
+                            name='lastName'
+                            inputProps={{
+                              placeholder: formatMessage({ id: 'global.enterLastName', defaultMessage: 'Enter Last Name' })
+                            }}
+                          />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn width={16} data-test='admin_users_popup_title_inp'>
                           <Input
                             type='text'
                             label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}

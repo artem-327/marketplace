@@ -18,7 +18,7 @@ export const userFormValidation = (props) =>
     const requiredCompany = !values.roles.some(role => adminRoles.some(d => role === d.id))
 
     return Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       additionalBranches: Yup.array(),
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
@@ -144,12 +144,17 @@ export const submitUser = async (values, actions, props, state) => {
   const { submitUserEdit, postNewUserRequest, closePopup, datagrid } = props
   const { popupValues } = state
 
+  const { firstName, lastName } = values
+  let username = lastName
+  if (firstName && firstName!=='') {
+    username = firstName + ' ' + lastName
+  }
   const data = {
     additionalBranches: values.additionalBranches,
     email: values.email,
     homeBranch: values.homeBranch,
     jobTitle: values.jobTitle,
-    name: values.name,
+    name: username,
     phone: values.phone,
     preferredCurrency: currencyId,
     roles: values.roles
@@ -181,6 +186,20 @@ export const submitUser = async (values, actions, props, state) => {
  * @return {TInitialValues} Object fields for form.
  */
 export const getInitialFormValues = popupValues => {
+  let firstName = "";
+  let lastName = "";
+  if (popupValues) {
+    let { name } = popupValues;
+    name = name.replace(/\s\s+/g, ' ');
+    console.log(name);
+    name = name.split(" ");
+    firstName = name[0];
+    lastName = name[1];
+    if (name.length===1) {  
+      lastName = name[0];
+      firstName = ""
+    }
+  }
   return popupValues
     ? {
       additionalBranches: popupValues.additionalBranches.map(d => d.id),
@@ -189,6 +208,8 @@ export const getInitialFormValues = popupValues => {
       jobTitle: popupValues.jobTitle,
       company: popupValues.company ? popupValues.company.id : '',
       name: popupValues.name,
+      firstName,
+      lastName,
       phone: popupValues.phone,
       preferredCurrency: currencyId,
       roles: popupValues.roles.map(d => d.id),
@@ -196,6 +217,8 @@ export const getInitialFormValues = popupValues => {
       buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
     } : {
       name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       company: '',
       homeBranch: '',

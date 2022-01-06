@@ -98,7 +98,7 @@ export const formValidationNew = () =>
         // if (primaryUserRequired)
         return Yup.object().shape({
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          name: Yup.string().trim().min(2, minLength).required(minLength),
+          lastName: Yup.string().trim().min(2, minLength).required(minLength),
           phone: phoneValidation(10)
         })
         // return Yup.mixed().notRequired()
@@ -238,6 +238,18 @@ export const submitCompany = async (values, actions, state, props) => {
       datagrid.loadData()
       actions.setSubmitting(false)
     } else {
+      const { primaryUser } = values;
+      const { firstName, lastName, jobTitle, phone, email } = primaryUser;
+      if (firstName && firstName!=='') {
+        values.primaryUser = {
+          name: firstName + " " + lastName,
+          jobTitle, phone, email
+        }
+      } else values.primaryUser = {
+        name: lastName,
+        jobTitle, phone, email
+      };
+
       let branches = ['primaryBranch', 'mailingBranch']
 
       if (values.businessType) values.businessType = values.businessType.id

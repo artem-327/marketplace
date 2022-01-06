@@ -71,6 +71,10 @@ const AddEditCompanySidebar = props => {
     setShouldUpdateDoc,
   }
 
+  const [companyName, setCompanyName] = useState({
+    first_name: '',
+    last_name: ''
+  })
   const { closePopup, popupValues, intl, naicsCodes, getNaicsCodes } = props
   const { formatMessage } = intl
 
@@ -87,6 +91,20 @@ const AddEditCompanySidebar = props => {
         let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
           ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
           : ''
+        const onFirstNameChange = (e) => {
+          const first_name = e.target.value
+          setCompanyName({
+            ...companyName,
+            first_name,
+          })
+        }
+        const onLastNameChange = (e) => {
+          const last_name = e.target.value
+          setCompanyName({
+            ...companyName,
+            last_name,
+          })
+        }
         return (
           <Form>
             <FlexSidebar
@@ -160,8 +178,8 @@ const AddEditCompanySidebar = props => {
                       </Accordion.Title>
                       <Accordion.Content active={accordionActive.companyAdmin}>
                         <SegmentCustom>
-                          <FormGroup widths='equal' data-test='admin_popup_company_primaryUserNameEmail_inp'>
-                            <Input
+                          <FormGroup widths='equal' data-test='admin_popup_company_primaryUserName_inp'>
+                            {/* <Input
                               label={
                                 <>
                                   <FormattedMessage id='global.name' defaultMessage='Name' />
@@ -169,7 +187,32 @@ const AddEditCompanySidebar = props => {
                                 </>
                               }
                               name='primaryUser.name'
+                            /> */}
+                            <Input
+                              label={
+                                <>
+                                  <FormattedMessage id='global.firstName' defaultMessage='First Name' />
+                                </>
+                              }
+                              name='primaryUser.firstName'
+                              // inputProps={{
+                              //   onChange: onFirstNameChange
+                              // }}
                             />
+                            <Input
+                              label={
+                                <>
+                                  <FormattedMessage id='global.lastName' defaultMessage='Last Name' />
+                                  <Required />
+                                </>
+                              }
+                              name='primaryUser.lastName'
+                              // inputProps={{
+                              //   onChange: onLastNameChange
+                              // }}
+                            />
+                          </FormGroup>
+                          <FormGroup widths='equal' data-test='admin_popup_company_primaryUserEmail_inp'>
                             <Input
                               label={
                                 <>
