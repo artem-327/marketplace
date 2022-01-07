@@ -2,7 +2,8 @@
  * @category Settings - Users
  * @typedef TInitialValues
  * @type {object}
- * @property {string} name
+ * @property {string} lastName
+ * @property {string} firstName
  * @property {string} email
  * @property {string} [company='']
  * @property {string} homeBranch
