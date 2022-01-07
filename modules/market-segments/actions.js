@@ -45,9 +45,10 @@ export function closeAddPopup() {
 }
 export function postNewRequest(values) {
   return async dispatch => {
+    const newItem = await api.postNewRequest(values)
     await dispatch({
       type: AT.MARKET_SEGMENTS_POST_MARKET_SEGMENTS_DATA,
-      payload: api.postNewRequest(values)
+      payload: newItem
     })
     Datagrid.loadData()
     dispatch(closePopup())
@@ -62,12 +63,12 @@ export function closeEditPopup() {
 export function putEditedDataRequest(id, values) {
   return async dispatch => {
     const editedItem = await api.putEditedDataRequest(values, id)
-
-    dispatch({
+    await dispatch({
       type: AT.MARKET_SEGMENTS_PUT_MARKET_SEGMENTS_DATA,
       payload: editedItem
     })
-    Datagrid.updateRow(id, () => editedItem)
+    // Datagrid.updateRow(id, () => editedItem)
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
