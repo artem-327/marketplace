@@ -191,7 +191,6 @@ export const getInitialFormValues = popupValues => {
   if (popupValues) {
     let { name } = popupValues;
     name = name.replace(/\s\s+/g, ' ');
-    console.log(name);
     name = name.split(" ");
     firstName = name[0];
     lastName = name[1];
