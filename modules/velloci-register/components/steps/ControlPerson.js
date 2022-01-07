@@ -63,8 +63,6 @@ const StyledInputMask = styled(InputMask)`
   };
 `
 
-
-
 function ControlPerson({ formikProps, intl: { formatMessage } }) {
 
   const { touched, isSubmitting, errors } = formikProps;
@@ -417,7 +415,6 @@ function ControlPerson({ formikProps, intl: { formatMessage } }) {
                   id: 'onboarding.ssn.placeholder',
                   defaultMessage: 'xxx-xx-xxxx'
                 })}
-                // beforeMaskedStateChange={beforeMaskedStateChange}
                 onChange={beforeMaskedStateChange}
               />
               {!!SSNError && <span className='sui-error-message'>{SSNError}</span>}
