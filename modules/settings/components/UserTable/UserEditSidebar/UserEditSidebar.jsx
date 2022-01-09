@@ -203,7 +203,7 @@ const UserEditSidebar = props => {
                 <SegmentCustomContent basic>
                   <Form>
                     <FormGroup widths='equal'>
-                      <Input
+                      {/* <Input
                         type='text'
                         label={
                           <>
@@ -215,8 +215,32 @@ const UserEditSidebar = props => {
                         inputProps={{
                           placeholder: formatMessage({ id: 'global.enterName', defaultMessage: 'Enter Name' })
                         }}
+                      /> */}
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='global.firstName' defaultMessage='First Name' />
+                          </>
+                        }
+                        name='firstName'
+                        inputProps={{
+                          placeholder: formatMessage({ id: 'global.enterFirstName', defaultMessage: 'Enter First Name' })
+                        }}
                       />
-
+                      <Input
+                        label={
+                          <>
+                            <FormattedMessage id='global.lastName' defaultMessage='Last Name' />
+                            <Required />
+                          </>
+                        }
+                        name='lastName'
+                        inputProps={{
+                          placeholder: formatMessage({ id: 'global.enterLastName', defaultMessage: 'Enter Last Name' })
+                        }}
+                      />
+                    </FormGroup>
+                    <FormGroup widths='equal'>
                       <Input
                         type='text'
                         label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
@@ -525,11 +549,11 @@ const UserEditSidebar = props => {
                         !sidebarValues?.regulatoryDeaListAuthorized &&
                         !!sidebarValues?.regulatoryDeaListSignAskedDate &&
                         !sidebarValues?.regulatoryDeaListSignedDate && (
-                        <FormattedMessage
-                          id='settings.user.purchaseAuthorized.pending'
-                          defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
-                        />
-                      )}
+                          <FormattedMessage
+                            id='settings.user.purchaseAuthorized.pending'
+                            defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
+                          />
+                        )}
                     </DivNotify>
 
                     <DivLabel>
@@ -597,11 +621,11 @@ const UserEditSidebar = props => {
                         !sidebarValues?.regulatoryDhsCoiAuthorized &&
                         !!sidebarValues?.regulatoryDhsCoiSignAskedDate &&
                         !sidebarValues?.regulatoryDhsCoiSignedDate && (
-                        <FormattedMessage
-                          id='settings.user.purchaseAuthorized.pending'
-                          defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
-                        />
-                      )}
+                          <FormattedMessage
+                            id='settings.user.purchaseAuthorized.pending'
+                            defaultMessage='User has been emailed link to submit their signature. Status pending until a signature is submitted'
+                          />
+                        )}
                     </DivNotify>
 
                     <DivLabel>
