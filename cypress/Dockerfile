@@ -1,6 +1,7 @@
 
 FROM cypress/included:9.2.0
 
+WORKDIR /root
 RUN npm install cypress-mailosaur
 # "root"
 RUN whoami
