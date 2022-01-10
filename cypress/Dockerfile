@@ -1,6 +1,7 @@
 
 FROM cypress/included:9.2.0
 
+RUN npm install cypress-mailosaur
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
@@ -24,14 +25,10 @@ RUN install -d -m 0755 -o appuser -g appuser /home/appuser
 # move test runner binary folder to the non-root's user home directory
 RUN mv /root/.cache /home/appuser/.cache
 RUN mv /root/.npm /home/appuser/.npm
-RUN chown -R 999:999 "/home/appuser/.npm"
 
 # Since nodejs 15 When no WORKDIR is specified, npm install is executed in the root directory of the container
 USER appuser
-
-WORKDIR /home/appuser/
-RUN npm install cypress-mailosaur
-
+# make sure cypress looks in the right place
 ENV CYPRESS_CACHE_FOLDER=/home/appuser/.cache/Cypress
 # show user effective id and group - it should be non-zero
 # meaning the current user is not root
