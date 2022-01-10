@@ -2,11 +2,11 @@ before_script:
   - docker -D info
   - cd cypress/
   - set e+x
+  - cd ..
   - docker build -f ./cypress/Dockerfile -t cypress/artio .
 
 test:
   script:
-    - cd ..
     - docker run -v $PWD:/test -w /test -u appuser cypress/artio --browser chrome
   artifacts:
     when: always
