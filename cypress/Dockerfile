@@ -2,7 +2,14 @@
 FROM cypress/included:9.2.0
 
 WORKDIR /root
-RUN npm install cypress-mailosaur
+COPY package.json .
+COPY package-lock.json .
+
+# by setting CI environment variable we switch the Cypress install messages
+# to small "started / finished" and avoid 1000s of lines of progress messages
+# https://github.com/cypress-io/cypress/issues/1243
+ENV CI=1
+RUN npm install
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
