@@ -9,7 +9,7 @@ COPY package-lock.json .
 # to small "started / finished" and avoid 1000s of lines of progress messages
 # https://github.com/cypress-io/cypress/issues/1243
 ENV CI=1
-RUN npm install
+RUN npm install cypress-mailosaur
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
