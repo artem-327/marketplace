@@ -144,8 +144,12 @@ export const submitUser = async (values, actions, props, state) => {
   const { submitUserEdit, postNewUserRequest, closePopup, datagrid } = props
   const { popupValues } = state
 
-  const { firstName, lastName } = values
-  let username = lastName
+  let { firstName, lastName } = values
+  firstName = firstName.replace(/\s\s+/g, ' ');
+  firstName = firstName.trim();
+  lastName = lastName.replace(/\s\s+/g, ' ');
+  lastName = lastName.trim();
+  let username = lastName;
   if (firstName && firstName!=='') {
     username = firstName + ' ' + lastName
   }
@@ -191,10 +195,11 @@ export const getInitialFormValues = popupValues => {
   if (popupValues) {
     let { name } = popupValues;
     name = name.replace(/\s\s+/g, ' ');
+    name = name.trim();
     name = name.split(" ");
     firstName = name[0];
     lastName = "";
-    if (name.length===1) {  
+    if (name.length===1) {
       lastName = name[0];
       firstName = ""
     } else {
@@ -202,6 +207,8 @@ export const getInitialFormValues = popupValues => {
         lastName = lastName + " " + name[i]
       }
     }
+    lastName = lastName.replace(/\s\s+/g, ' ');
+    lastName = lastName.trim();
   }
   return popupValues
     ? {
