@@ -72,6 +72,7 @@ export const getInitialFormValues = sidebarValues => {
   if (sidebarValues?.name) {
     let { name } = sidebarValues;
     name = name.replace(/\s\s+/g, ' ');
+    name = name.trim();
     name = name.split(" ");
     firstName = name[0];
     lastName = "";
@@ -83,6 +84,8 @@ export const getInitialFormValues = sidebarValues => {
         lastName = lastName + " " + name[i]
       }
     }
+    lastName = lastName.replace(/\s\s+/g, ' ');
+    lastName = lastName.trim();
   }
   
   return !isEmpty(sidebarValues)
@@ -278,7 +281,12 @@ export const switchUser = async (sidebarValues, state) => {
  * @param {object} sidebarValues object with state / set state Hook functions
  */
 export const submitUser = async (values, actions, props, sidebarValues) => {
-  const { firstName, lastName } = values
+  let { firstName, lastName } = values
+  firstName = firstName.replace(/\s\s+/g, ' ')
+  firstName = firstName.trim()
+  lastName = lastName.replace(/\s\s+/g, ' ')
+  lastName = lastName.trim()
+
   let username = lastName
   if (firstName && firstName !== '') {
     username = firstName + ' ' + lastName
