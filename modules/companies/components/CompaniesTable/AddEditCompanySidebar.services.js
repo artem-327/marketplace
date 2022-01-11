@@ -98,6 +98,7 @@ export const formValidationNew = () =>
         // if (primaryUserRequired)
         return Yup.object().shape({
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
+          firstName: Yup.string().trim().min(2, minLength).required(minLength),
           lastName: Yup.string().trim().min(2, minLength).required(minLength),
           phone: phoneValidation(10)
         })

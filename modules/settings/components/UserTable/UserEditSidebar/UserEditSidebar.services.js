@@ -24,6 +24,7 @@ import { TInitialValues } from './UserEditSidebar.types'
 export const userFormValidation = () =>
   Yup.lazy(values => {
     return Yup.object().shape({
+      firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
       email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       additionalBranches: Yup.array(),

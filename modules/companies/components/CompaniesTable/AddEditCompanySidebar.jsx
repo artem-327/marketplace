@@ -192,6 +192,7 @@ const AddEditCompanySidebar = props => {
                               label={
                                 <>
                                   <FormattedMessage id='global.firstName' defaultMessage='First Name' />
+                                  <Required />
                                 </>
                               }
                               name='primaryUser.firstName'
