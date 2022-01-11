@@ -40,8 +40,9 @@ context("Prodex User CRUD", () => {
         //cy.settingsAdd()
         cy.contains("Add User").click()
 
-        cy.enterText("#field_input_name", "John Automator")
-        cy.enterText("#field_input_jobTitle", "Automatior")
+        cy.enterText("#field_input_firstName", "John")
+        cy.enterText("#field_input_lastName", "Automator")
+        cy.enterText("#field_input_jobTitle", "Automation")
         cy.enterText("#field_input_email", testEmail)
 
         cy.get("#field_dropdown_homeBranch").click()
@@ -66,11 +67,14 @@ context("Prodex User CRUD", () => {
             })
         })
 
-        cy.get("#field_input_name")
-            .should("have.value", "John Automator")
+        cy.get("#field_input_firstName")
+            .should("have.value", "John")
+
+        cy.get("#field_input_lastName")
+            .should("have.value", "Automator")
 
         cy.get("#field_input_jobTitle")
-            .should("have.value", "Automatior")
+            .should("have.value", "Automation")
 
         cy.get("#field_input_email")
             .should("have.value", testEmail)
@@ -93,19 +97,21 @@ context("Prodex User CRUD", () => {
 
         cy.openElement(userID, 0)
 
-        cy.get("#field_input_name")
+        cy.get("#field_input_firstName")
             .clear()
-            .type("Jen Automator")
-            .should("have.value", "Jen Automator")
+            .type("Jen")
+            .should("have.value", "Jen")
 
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
-        cy.get('[data-test=settings_users_popup_reset_btn]').click()
 
         cy.waitForUI()
         cy.openElement(userID, 0)
 
-        cy.get("#field_input_name")
-            .should("have.value", "Jen Automator")
+        cy.get("#field_input_firstName")
+            .should("have.value", "Jen")
+
+        cy.get("#field_input_lastName")
+            .should("have.value", "Automator")
         cy.waitForUI()
     })
 
@@ -120,7 +126,6 @@ context("Prodex User CRUD", () => {
         })
 
         cy.get("[data-test=settings_users_popup_submit_btn]").click()
-        cy.get('[data-test=settings_users_popup_reset_btn]').click()
 
         cy.waitForUI()
         cy.openElement(userID, 0)

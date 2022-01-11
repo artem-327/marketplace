@@ -45,7 +45,8 @@ context("Companies CRUD", () => {
         cy.selectFromList("[data-test='form_tin_type_drpdn']", "EIN")
 
         cy.enterText('input[id="field_input_tin"]', "123456789")
-        cy.enterText('input[id="field_input_primaryUser.name"]', "Donal Duck")
+        cy.enterText('input[id="field_input_primaryUser.firstName"]', "Donald")
+        cy.enterText('input[id="field_input_primaryUser.lastName"]', "Duck")
         cy.enterText('input[id="field_input_primaryUser.email"]', "test@example.com")
 
         cy.enterText('input[id="field_input_primaryBranch.deliveryAddress.addressName"]', "New York")

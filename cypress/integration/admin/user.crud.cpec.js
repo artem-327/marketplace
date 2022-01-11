@@ -39,7 +39,8 @@ context("Prodex Admin User CRUD", () => {
 
         cy.get('[data-test=companies_table_add_btn]').click()
 
-        cy.enterText("#field_input_name", "John TesterFE")
+        cy.enterText("#field_input_firstName", "John")
+        cy.enterText("#field_input_lastName", "TesterFE")
         cy.enterText("#field_input_jobTitle", "Automatior")
         cy.enterText("#field_input_email", testEmail)
 
@@ -69,8 +70,11 @@ context("Prodex Admin User CRUD", () => {
             })
         })
 
-        cy.get("#field_input_name")
-            .should("have.value", "John TesterFE")
+        cy.get("#field_input_firstName")
+            .should("have.value", "John")
+
+        cy.get("#field_input_lastName")
+            .should("have.value", "TesterFE")
 
         cy.get("#field_input_jobTitle")
             .should("have.value", "Automatior")
@@ -98,17 +102,20 @@ context("Prodex Admin User CRUD", () => {
         cy.openElement(userID, 0)
         cy.waitForUI()
 
-        cy.get("#field_input_name").clear()
+        cy.get("#field_input_firstName").clear()
 
-        cy.get("#field_input_name").click().clear().type("Jen TesterFE")
-            .should("have.value", "Jen TesterFE")
+        cy.get("#field_input_firstName").click().clear().type("Jen")
+            .should("have.value", "Jen")
 
         cy.get('[data-test=admin_users_popup_submit_btn]').click()
 
         cy.openElement(userID, 0)
 
-        cy.get("#field_input_name")
-            .should("have.value", "Jen TesterFE")
+        cy.get("#field_input_firstName")
+            .should("have.value", "Jen")
+
+        cy.get("#field_input_lastName")
+            .should("have.value", "TesterFE")
     })
 
     it("Edit user roles", () => {
@@ -137,7 +144,7 @@ context("Prodex Admin User CRUD", () => {
 
     it("Checks error messages", () => {
         cy.get('[data-test=companies_table_add_btn]').click()
-        cy.get("#field_input_name").click()
+        cy.get("#field_input_lastName").click()
         cy.get('[data-test=admin_users_popup_submit_btn]').click()
 
         cy.get(".error")
