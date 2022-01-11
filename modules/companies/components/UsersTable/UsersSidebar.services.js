@@ -172,11 +172,12 @@ export const submitUser = async (values, actions, props, state) => {
   try {
     if (popupValues) {
       const { value } = await submitUserEdit(popupValues.id, data)
-      datagrid.updateRow(popupValues.id, () => value)
+      // datagrid.updateRow(popupValues.id, () => value)
     } else {
       await postNewUserRequest(data)
-      datagrid.loadData()
+      // datagrid.loadData()
     }
+    datagrid.loadData()
     closePopup()
   } catch {}
   actions.setSubmitting(false)
