@@ -3,7 +3,7 @@ import { applicationSubmitted, loadSubmitButton, postRegisterVelloci } from '../
 import { getIdentity, updateCompany } from '../../auth/actions'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import PropTypes from 'prop-types'
-import classNames from 'classnames';
+import classNames from 'classnames'
 //Services
 import { getSafe } from '../../../utils/functions'
 import { isFileEmpty } from './steps/CertificateOfInsurance'
@@ -123,7 +123,7 @@ const FormRectangle = props => {
       case 6: {
         // clear existing errors, if any
         if (formikProps?.error?.certificateOfInsurance) {
-          formikProps?.setError({})
+          formikProps?.setStatus({})
         }
 
         const file = formikProps?.values?.certificateOfInsurance?.file
@@ -133,7 +133,7 @@ const FormRectangle = props => {
         // if coi doc has been uploaded (with either upload another or next button), allow user to move to next step
         if (fileType && fileType !== 'application/pdf') {
           formikProps?.resetForm()
-          formikProps?.setError({
+          formikProps?.setStatus({
             'certificateOfInsurance': 'Please upload only PDFs'
           })
           return

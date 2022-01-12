@@ -82,6 +82,6 @@ FormattedNumber.defaultProps = {
   minimumFractionDigits: 3
 }
 
-Formik.defaultProps.validateOnBlur = false
+Formik.validateOnBlur = false
 
 export default withRouter(withRedux(makeStore)(ProdexApp))

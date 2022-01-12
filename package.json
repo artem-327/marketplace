@@ -32,7 +32,7 @@
     "express": "^4.16.4",
     "fibers": "^3.1.0",
     "file-loader": "^3.0.1",
-    "formik": "^1.5.8",
+    "formik": "^2.2.9",
     "formik-semantic-ui-fixed-validation": "^0.10.2",
     "http-proxy-middleware": "^0.19.1",
     "js-cookie": "^2.2.0",
