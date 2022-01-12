@@ -149,6 +149,7 @@
   "resolutions": {
     "lodash": "^4.17.21",
     "lodash.template": "^4.5.0",
-    "tar": "^6.1.11"
+    "tar": "^6.1.11",
+    "postcss": "^8.4.5"
   }
 }
