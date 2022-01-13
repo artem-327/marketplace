@@ -143,6 +143,7 @@ const UsersSidebar = props => {
                             label={
                               <>
                                 <FormattedMessage id='global.firstName' defaultMessage='First Name' />
+                                <Required />
                               </>
                             }
                             name='firstName'
