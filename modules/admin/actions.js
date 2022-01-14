@@ -80,7 +80,8 @@ export const addNmfcNumber = createAsyncAction('ADD_NMFC_NUMBER', async (nmfc) =
 })
 export const editNmfcNumber = createAsyncAction('EDIT_NMFC_NUMBER', async (nmfc) => {
   const data = await api.editNmfcNumber(nmfc)
-  Datagrid.updateRow(nmfc.id, () => nmfc)
+  // Datagrid.updateRow(nmfc.id, () => nmfc)
+  Datagrid.loadData()
   return data
 })
 export const deleteNmfcNumber = createAsyncAction('DELETE_NMFC_NUMBER', async (id) => {

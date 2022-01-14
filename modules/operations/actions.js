@@ -20,7 +20,8 @@ export const deleteTag = createAsyncAction('OPERATIONS_DELETE_TAG', async (id) =
 })
 export const updateTag = createAsyncAction('OPERATIONS_UPDATE_TAG', async (id, name) => {
   const newRow = await api.updateTag(id, name)
-  Datagrid.updateRow(id, () => newRow.data)
+  Datagrid.loadData()
+  // Datagrid.updateRow(id, () => newRow.data)
 })
 export const createTag = createAsyncAction('OPERATIONS_CREATE_TAG', async (name) => {
   await api.createTag(name)

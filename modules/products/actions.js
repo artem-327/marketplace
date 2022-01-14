@@ -175,11 +175,12 @@ export const postProductGroups = createAsyncAction('PRODUCTS_GROUPS_CREATE', asy
 })
 export const putProductGroups = createAsyncAction('PRODUCTS_GROUPS_UPDATE', async (id, request, selectedTagsOptions) => {
   const response = await api.putProductGroups(id, request)
-  Datagrid.updateRow(id, () => ({
-    name: request.name,
-    tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
-    id: id
-  }))
+  // Datagrid.updateRow(id, () => ({
+  //   name: request.name,
+  //   tags: selectedTagsOptions.map(tag => ({ name: tag.text, id: tag.key })),
+  //   id: id
+  // }))
+  Datagrid.loadData()
   return response
 })
 export const deleteProductGroups = createAsyncAction('PRODUCTS_GROUPS_DELETE', async (id) => {
