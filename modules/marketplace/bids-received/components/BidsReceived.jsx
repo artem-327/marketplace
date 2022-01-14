@@ -104,6 +104,7 @@ const BidsReceived = props => {
           lockSelection={false}
           showSelectAll={false}
           isToggleCellComponent={false}
+          noScrollEvent={true}
           estimatedRowHeight={1000} // to fix virtual table for large rows - hiding them too soon and then hiding the whole table
         />
       </div>
