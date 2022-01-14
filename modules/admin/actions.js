@@ -196,7 +196,8 @@ export const putEditedDataRequest = (config, id, values) => {
       type: config.api.update.typeRequest,
       payload: editedItem
     })
-    Datagrid.updateRow(id, () => editedItem)
+    // Datagrid.updateRow(id, () => editedItem)
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }

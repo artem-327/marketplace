@@ -509,12 +509,12 @@ export const submitFormFunc = async (values, setSubmitting, setTouched, props, s
     try {
       const { value } = await addProductOffer(obj, isEdit, false, isGrouped, attachmentFiles)
       data = value
-      if (isEdit) {
-        datagrid.updateRow(data.id, () => data)
-      } else {
-        datagrid.loadData()
-      }
-
+      // if (isEdit) {
+      //   datagrid.updateRow(data.id, () => data)
+      // } else {
+      //   datagrid.loadData()
+      // }
+      datagrid.loadData()
       setState({
         ...state,
         detailValues: { ...data, id: isEdit ? data.id : null },

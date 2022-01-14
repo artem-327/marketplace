@@ -664,15 +664,15 @@ const AddEditEchoProduct = props => {
       // No need to await; just fire it
       verifyEchoProduct(value.id)
 
-      if (popupValues) {
-        datagrid.updateRow(value.id, () => ({
-          ...value,
-          attachments: value.attachments.concat(notLinkedAttachments)
-        }))
-      } else {
-        datagrid.loadData()
-      }
-
+      // if (popupValues) {
+      //   datagrid.updateRow(value.id, () => ({
+      //     ...value,
+      //     attachments: value.attachments.concat(notLinkedAttachments)
+      //   }))
+      // } else {
+      //   datagrid.loadData()
+      // }
+      datagrid.loadData()
       setSubmitting(false)
       callback()
     } catch (err) {
