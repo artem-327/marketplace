@@ -126,7 +126,7 @@ const composeEnhancers =
 
 export const makeStore = preloadedState => {
 
-  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), logger))
+  const middleware = composeEnhancers(applyMiddleware(thunk, promise, logger))
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
   const { auth } = loadState() || {}

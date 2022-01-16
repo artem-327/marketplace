@@ -1,6 +1,6 @@
 const express = require('express')
 const next = require('next')
-const proxy = require('http-proxy-middleware')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 const dev = process.env.NODE_ENV !== 'production'
 const nextApp = next({ dev })
 const port = process.env.PORT || 3000
@@ -46,7 +46,7 @@ nextApp
     
     app.use(cookieParser())
     app.use('/download', router)
-    app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true, ws: true }))
+    app.use('/prodex', createProxyMiddleware({ target: process.env.REACT_APP_API_URL || 'http://127.0.0.1:8080', changeOrigin: true, ws: true }))
     app.use(nextApp.getRequestHandler()).listen(port, err => {
       if (err) throw err
       console.log('> Ready on http://localhost:' + port)
