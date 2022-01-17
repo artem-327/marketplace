@@ -71,10 +71,9 @@ const customConfig = bundleAnalyzer(
 
 module.exports = Object.assign(
   {
-    // future: {
-    //   webpack5: true
-    // }
+     future: {
+      webpack5: true
+     }
   },
-
-  customConfig
+  customConfig, {mode: 'production'}
 )
