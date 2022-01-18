@@ -166,7 +166,7 @@ const MyProducts = props => {
                   onClick={() => openPopup()}
                   data-test='settings_open_popup_btn'>
                   <PlusCircle />
-                  <FormattedMessage id='settings.tables.products.buttonAdd' />
+                  <FormattedMessage id='settings.tables.SKUs.buttonAdd' defaultMessage="Add SKU" />
                 </Button>
               </div>
               <ColumnSettingButton divide={true} />
