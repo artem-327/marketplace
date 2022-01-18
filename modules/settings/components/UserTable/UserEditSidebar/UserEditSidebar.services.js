@@ -121,13 +121,13 @@ export const getInitialFormValues = sidebarValues => {
       regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
       dailyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.dailyPurchaseLimit?.value))
         ? parseFloat(sidebarValues?.dailyPurchaseLimit?.value)
-        : null,
+        : '',
       orderPurchaseLimit: !isNaN(parseFloat(sidebarValues?.orderPurchaseLimit?.value))
         ? parseFloat(sidebarValues?.orderPurchaseLimit?.value)
-        : null,
+        : '',
       monthlyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.monthlyPurchaseLimit?.value))
         ? parseFloat(sidebarValues?.monthlyPurchaseLimit?.value)
-        : null
+        : ''
       }
     : {
       firstName: '',
@@ -147,9 +147,9 @@ export const getInitialFormValues = sidebarValues => {
       regulatoryDhsCoiAuthorized: false,
       regulatoryDhsCoiSignAskedDate: null,
       regulatoryHazmatAuthorized: false,
-      dailyPurchaseLimit: null,
-      orderPurchaseLimit: null,
-      monthlyPurchaseLimit: null
+      dailyPurchaseLimit: '',
+      orderPurchaseLimit: '',
+      monthlyPurchaseLimit: ''
     }
 }
 
@@ -331,41 +331,38 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
     regulatoryHazmatAuthorized: values?.regulatoryHazmatAuthorized
   }
 
-  const settingsData = {
-    settings: [
-      {
-        id: userSettings?.dailyPurchaseLimit?.id || USER_DAILY_PURCHASE_LIMIT_ID,
-        value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      },
-      {
-        id: userSettings?.monthlyPurchaseLimit?.id || USER_MONTHLY_PURCHASE_LIMIT_ID,
-        value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      },
-      {
-        id: userSettings?.orderPurchaseLimit?.id || USER_ORDER_PURCHASE_LIMIT_ID,
-        value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      }
-    ]
-  }
+  let settingsData = { settings: [] }
 
-  const isSettingsPatch = userSettings?.dailyPurchaseLimit?.original || 
-    userSettings?.monthlyPurchaseLimit?.original || 
-    userSettings?.orderPurchaseLimit?.original || 
-    (userSettings?.dailyPurchaseLimit?.value !== (typeof values?.dailyPurchaseLimit?.toString() === 'undefined' ? '' : values?.dailyPurchaseLimit?.toString())) ||
-    (userSettings?.monthlyPurchaseLimit?.value !== (typeof values?.monthlyPurchaseLimit?.toString() === 'undefined' ? '' : values?.monthlyPurchaseLimit?.toString())) ||
-    (userSettings?.orderPurchaseLimit?.value !== (typeof values?.orderPurchaseLimit?.toString() === 'undefined' ? '' : values?.orderPurchaseLimit?.toString()))
+  if (values?.dailyPurchaseLimit?.toString().trim() !== userSettings?.dailyPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.dailyPurchaseLimit?.id || USER_DAILY_PURCHASE_LIMIT_ID,
+      value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
+  if (values?.monthlyPurchaseLimit?.toString().trim() !== userSettings?.monthlyPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.monthlyPurchaseLimit?.id || USER_MONTHLY_PURCHASE_LIMIT_ID,
+      value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
+  if (values?.orderPurchaseLimit?.toString().trim() !== userSettings?.orderPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.orderPurchaseLimit?.id || USER_ORDER_PURCHASE_LIMIT_ID,
+      value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
 
   removeEmpty(data)
 
   try {
     if (sidebarValues) {
-      await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, isSettingsPatch)
+      await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, !!settingsData.settings.length)
       // !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
       if (currentUserId === sidebarValues.id) getIdentity()
     } else {
-      await postNewUserRequest(data, settingsData, isSettingsPatch)
+      await postNewUserRequest(data, settingsData, !!settingsData.settings.length)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
     }
