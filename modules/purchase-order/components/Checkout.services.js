@@ -85,7 +85,7 @@ export const getComponentParameters = (props, state) => {
 
 export const submitUpdateCartItem = async (props, state) => {
   const { cartItems, updateCartItem } = props
-  const { sectionState, setSectionState, setOpenSection } = state
+  const { sectionState, fixedFreightId } = state
 
   let updatedCart = null
   let newState = state
@@ -121,8 +121,18 @@ export const submitUpdateCartItem = async (props, state) => {
       ...state,
       sectionState: {
         ...sectionState,
-        review: { accepted: true, value: initVal }
+        review: { accepted: true, value: initVal },
+        freight: { accepted: false, value: null }
       }
+    }
+
+    if (
+      sectionState.shipping?.accepted &&
+      !updatedCart.weightLimitExceed &&
+      !fixedFreightId &&
+      !updatedCart.palletLimitExceed
+    ) {
+      getShippingQuotes(props, sectionState.shipping.value)
     }
   }
   confirmSection(newState)
