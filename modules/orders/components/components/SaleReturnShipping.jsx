@@ -19,7 +19,7 @@ import FreightLabel from '../../../../components/freight'
 import { DateInput } from '../../../../components/custom-formik'
 // Services
 import { currency } from '../../../../constants/index'
-import '../../../purchase-order/styles/PurchaseOrder.scss'
+import '../../../purchase-order/styles/PurchaseOrder.module.scss'
 import { getSafe } from '../../../../utils/functions'
 import { submitHandler, onDateChange, requestManualShippingQuote, getInitialFormValues, validationSchema } from './SaleReturnShipping.services'
 // Constants

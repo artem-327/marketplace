@@ -12,8 +12,7 @@ const bundleAnalyzer = require('@next/bundle-analyzer')({
 })
 
 const customConfig = bundleAnalyzer(
-  withSass(
-    withCss({
+    {
       webpack: function (config) {
         config.module.rules.push({
           test: /\.(eot|woff|woff2|ttf|svg|png|jpg|gif|ico)$/,
@@ -65,8 +64,7 @@ const customConfig = bundleAnalyzer(
           },
         ]
       }
-    })
-  )
+    }
 )
 
 module.exports = Object.assign(

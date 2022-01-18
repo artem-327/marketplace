@@ -47,7 +47,7 @@ import {
   CustomDivInTitle,
   CustomDivTitle
 } from '../../../modules/cart/components/StyledComponents'
-import '../styles/PurchaseOrder.scss'
+import '../styles/PurchaseOrder.module.scss'
 import styled from 'styled-components'
 
 const FREIGHT_TYPES = {

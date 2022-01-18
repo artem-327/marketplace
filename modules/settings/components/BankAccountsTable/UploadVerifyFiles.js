@@ -1,5 +1,5 @@
 import { Fragment, Component } from 'react'
-import './uploadVerifyFiles.scss'
+import './uploadVerifyFiles.module.scss'
 import PropTypes from 'prop-types'
 import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
