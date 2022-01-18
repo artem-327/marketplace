@@ -2509,6 +2509,7 @@
   "settings.unverified": "Unverified",
   "settings.verificationInProcess": "Verification in process",
   "settings.preferred": "Preferred",
+  "settings.pending": "Pending",
   "settings.cardNumber": "Card Number",
   "settings.cvc": "CVC",
   "settings.expirationMonth": "Expiration Month",

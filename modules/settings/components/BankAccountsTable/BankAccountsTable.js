@@ -12,7 +12,7 @@ import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
-import { Check } from 'react-feather'
+import { Check, Clock } from 'react-feather'
 import {
   openPopup,
   closePopup,
@@ -546,7 +546,7 @@ class BankAccountsTable extends Component {
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
-        if (row.status === 'active') newRows.push(row)
+        if (row.status === 'active' || row.status === 'pending_verification') newRows.push(row)
       })
     } else {
       newRows = rows
@@ -558,9 +558,17 @@ class BankAccountsTable extends Component {
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
+          {row.status === 'pending_verification' ? (
+            <StatusLabel horizontal>
+              <Clock color='#848893' size='12' />
+              <span>
+                <FormattedMessage id='settings.pending' defaultMessage='Pending' />
+              </span>
+            </StatusLabel>
+          ) : null}
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
-              <Check color='#84c225' size='14' strokeWidth='4' />
+              <Check color='#84c225' size='12' strokeWidth='4' />
               <span>
                 <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
               </span>
