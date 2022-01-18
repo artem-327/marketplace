@@ -670,6 +670,7 @@
   "global.editProduct": "Edit Product",
   "global.addProduct": "Add Product",
   "global.uploadANewProduct": "Upload a new Product",
+  "global.uploadANewSDS": "Upload a new SDS",
   "global.uploadASDSInfoSheet": "Upload a SDS/Info Sheet",
   "global.uploadFileRequired": "Required",
   "global.editAltNames": "Edit Alternative Names",
