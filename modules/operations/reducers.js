@@ -28,7 +28,9 @@ import {
   closeGenBOLPopup,
   getOrderById,
   downloadPdf,
-  searchCompanyGenericProduct
+  searchCompanyGenericProduct,
+  getOrderBol,
+  updateOrderBol
 } from './actions'
 import { unlinkAttachmentToOrder } from "../orders/actions"
 
@@ -56,7 +58,10 @@ const initialState = {
   tableHandlersFilters: null,
   searchedManQuotRequests: [],
   searchedManQuotRequestsLoading: false,
-  downloadPdfLoading: false
+  downloadPdfLoading: false,
+  orderBol: null,
+  orderBolLoading: false,
+  orderBolUpdating: false
 }
 
 export default typeToReducer(
@@ -471,6 +476,44 @@ export default typeToReducer(
           text: item.name,
           value: item.id
         }))
+      }
+    },
+    [getOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: true
+      }
+    },
+    [getOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false
+      }
+    },
+    [getOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false,
+        orderBol: action.payload
+      }
+    },
+    [updateOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: true
+      }
+    },
+    [updateOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false
+      }
+    },
+    [updateOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false,
+        //! ! orderBol: action.payload
       }
     },
   },

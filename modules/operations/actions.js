@@ -89,3 +89,5 @@ export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', or
 export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30) =>
   api.searchCompanyGenericProduct(searchQuery, limit))
 export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
+export const getOrderBol = createAsyncAction('OPERATIONS_ORDERS_GET_BOL', orderId => Api.getOrderBol(orderId))
+export const updateOrderBol = createAsyncAction('OPERATIONS_ORDERS_UPDATE_BOL', (orderId, type, body) => Api.updateOrderBol(orderId, type, body))

@@ -44,7 +44,9 @@ export default {
   discardOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/discard`),
   receivedOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/received`),
   accept: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/accept`),
-
+  getOrderBol: orderId => api.get(`/prodex/api/order-documents/bol/${orderId}`).then(response => response.data),
+  updateOrderBol: (orderId, type, body) => api.patch(`/prodex/api/order-documents/bol/${orderId}?type=${type}`, body)
+    .then(response => response.data),
   rejectPurchaseOrder: (orderId, request, files) => {
     let params = { ...request }
     const formData = new FormData()

@@ -65,14 +65,6 @@ const Detail = props => {
     submitting: false
   })
 
-  useEffect(() => {
-    setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
-  }, [getSafe(() => props.order.id, 0)])
-
-  useEffect(() => {
-    setState({ ...state, shippingTrackingCode: props.order.shippingTrackingCode })
-  }, [getSafe(() => props.order.shippingTrackingCode, '')])
-
   const {
     order,
     isDetailFetching,
@@ -89,8 +81,22 @@ const Detail = props => {
     resolveDisputeCredit,
     resolveDisputeAccept,
     downloadDisputeAttachment,
-    isCancelable
+    isCancelable,
+    getOrderBol
   } = props
+
+  useEffect(() => {
+    try {
+      getOrderBol(order.id)
+    } catch (e) {
+      console.error(e)
+    }
+    setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
+  }, [getSafe(() => props.order.id, 0)])
+
+  useEffect(() => {
+    setState({ ...state, shippingTrackingCode: props.order.shippingTrackingCode })
+  }, [getSafe(() => props.order.shippingTrackingCode, '')])
 
   const { activeIndexes, activeDimmer, documentsPopupProduct } = state
   let ordersType = 'Sales'

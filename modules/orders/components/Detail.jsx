@@ -102,8 +102,44 @@ const Detail = props => {
   const [orderItemId, setOrderItemId] = useState(null)
   const [changedTypeOrder, setChangedTypeOrder] = useState(false)
 
+  const {
+    router,
+    order,
+    isDetailFetching,
+    openedAssignLots,
+    openedReinitiateTransfer,
+    openedEnterTrackingIdShip,
+    openedEnterTrackingIdReturnShip,
+    openedPurchaseRejectDelivery,
+    openedPurchaseRequestCreditDelivery,
+    openedPurchaseReviewCreditRequest,
+    openedSaleReturnShipping,
+    openedSaleReviewCreditRequest,
+    openedPurchaseOrderShipping,
+    cancelPayment,
+    toastManager,
+    isPaymentCancellable,
+    opendSaleAttachingProductOffer,
+    loadingRelatedDocuments,
+    intl: { formatMessage },
+    echoSupportPhone,
+    editTrackingCode,
+    editReturnTrackingCode,
+    isOrderProcessing,
+    isCompanyAdmin,
+    isAdmin,
+    openedDisputedRequest,
+    isSending,
+    orderResolutionAccept,
+    orderResolutionReopen,
+    closePopup,
+    appInfo,
+    getOrderBol
+  } = props
+
   useEffect(async () => {
     try {
+      getOrderBol(props.router.query.id)
       if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
 
       const { value: { data } } = props.router.query.type === 'sales'
@@ -125,6 +161,7 @@ const Detail = props => {
   useEffect(async () => {
     if (changedTypeOrder) {
       try {
+        getOrderBol(order.id)
         if (props.listDocumentTypes && !props.listDocumentTypes.length) props.getDocumentTypes()
 
         const { value: { data } } = props.router.query.type === 'sales'
@@ -158,40 +195,6 @@ const Detail = props => {
       setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
     }
   }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
-
-  const {
-    router,
-    order,
-    isDetailFetching,
-    openedAssignLots,
-    openedReinitiateTransfer,
-    openedEnterTrackingIdShip,
-    openedEnterTrackingIdReturnShip,
-    openedPurchaseRejectDelivery,
-    openedPurchaseRequestCreditDelivery,
-    openedPurchaseReviewCreditRequest,
-    openedSaleReturnShipping,
-    openedSaleReviewCreditRequest,
-    openedPurchaseOrderShipping,
-    cancelPayment,
-    toastManager,
-    isPaymentCancellable,
-    opendSaleAttachingProductOffer,
-    loadingRelatedDocuments,
-    intl: { formatMessage },
-    echoSupportPhone,
-    editTrackingCode,
-    editReturnTrackingCode,
-    isOrderProcessing,
-    isCompanyAdmin,
-    isAdmin,
-    openedDisputedRequest,
-    isSending,
-    orderResolutionAccept,
-    orderResolutionReopen,
-    closePopup,
-    appInfo
-  } = props
 
   let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
   let oppositeOrderType = ordersType === 'Sales' ? 'purchase' : 'sales'
@@ -500,6 +503,22 @@ const Detail = props => {
               styled
               fluid
               style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
+
+              <AccordionTitle
+                active={activeIndexes[0]}
+                index={0}
+                onClick={() => handleClick(0, activeIndexes, setActiveIndexes)}
+                data-test='orders_detail_order_info'>
+                <Chevron />
+                <FormattedMessage id={`order.${order.paymentType}`} defaultMessage={order.paymentType} />
+                ikona jak cyp
+              </AccordionTitle>
+              <AccordionContent active={activeIndexes[0]}>
+                obsah jak cyp
+
+              </AccordionContent>
+
+
               <AccordionTitle
                 active={activeIndexes[0]}
                 index={0}
