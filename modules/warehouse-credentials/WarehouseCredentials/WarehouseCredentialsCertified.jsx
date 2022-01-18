@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { withDatagrid } from '~/modules/datagrid'
 import moment from 'moment'
 import { debounce } from 'lodash'
@@ -410,6 +411,20 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     })
   }
+}
+
+WarehouseCredentialsCertified.propTypes = {
+  auth: PropTypes.object,
+  downloadAttachment: PropTypes.func,
+  datagrid: PropTypes.object,
+  rows: PropTypes.array,
+}
+
+WarehouseCredentialsCertified.defaultProps = {
+  auth: {},
+  downloadAttachment: () => { },
+  datagrid: {},
+  rows: [],
 }
 
 export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(WarehouseCredentialsCertified)))

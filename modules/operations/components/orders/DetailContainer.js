@@ -13,6 +13,7 @@ import {
   makeGetIsPaymentCancellable,
   makeGetIsOpenPopup,
   makeGetLoading,
+  makeGetLoadingRelatedDocuments,
   makeGetOrderByIdLoading,
   makeGetDownloadPdfLoading
 } from '../../selectors'
@@ -22,6 +23,7 @@ const makeMapStateToProps = () => {
   const getIsPaymentCancellable = makeGetIsPaymentCancellable()
   const getIsOpenPopup = makeGetIsOpenPopup()
   const getLoading = makeGetLoading()
+  const getLoadingRelatedDocuments = makeGetLoadingRelatedDocuments()
   const getOrderByIdLoading = makeGetOrderByIdLoading()
   const getDownloadPdfLoading = makeGetDownloadPdfLoading()
 
@@ -37,6 +39,7 @@ const makeMapStateToProps = () => {
       action: actionRequired(state?.operations?.orderDetailData),
       isOpenPopup: getIsOpenPopup(state),
       loading: getLoading(state),
+      loadingRelatedDocuments: getLoadingRelatedDocuments(state),
       orderByIdLoading: getOrderByIdLoading(state),
       downloadPdfLoading: getDownloadPdfLoading(state),
       isCancelable,

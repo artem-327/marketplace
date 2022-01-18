@@ -18,7 +18,8 @@ export const userFormValidation = (props) =>
     const requiredCompany = !values.roles.some(role => adminRoles.some(d => role === d.id))
 
     return Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      firstName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+      lastName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
       email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       additionalBranches: Yup.array(),
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
@@ -144,12 +145,21 @@ export const submitUser = async (values, actions, props, state) => {
   const { submitUserEdit, postNewUserRequest, closePopup, datagrid } = props
   const { popupValues } = state
 
+  let { firstName, lastName } = values
+  firstName = firstName.replace(/\s\s+/g, ' ');
+  firstName = firstName.trim();
+  lastName = lastName.replace(/\s\s+/g, ' ');
+  lastName = lastName.trim();
+  let username = lastName;
+  if (firstName && firstName!=='') {
+    username = firstName + ' ' + lastName
+  }
   const data = {
     additionalBranches: values.additionalBranches,
     email: values.email,
     homeBranch: values.homeBranch,
     jobTitle: values.jobTitle,
-    name: values.name,
+    name: username,
     phone: values.phone,
     preferredCurrency: currencyId,
     roles: values.roles
@@ -163,11 +173,12 @@ export const submitUser = async (values, actions, props, state) => {
   try {
     if (popupValues) {
       const { value } = await submitUserEdit(popupValues.id, data)
-      datagrid.updateRow(popupValues.id, () => value)
+      // datagrid.updateRow(popupValues.id, () => value)
     } else {
       await postNewUserRequest(data)
-      datagrid.loadData()
+      // datagrid.loadData()
     }
+    datagrid.loadData()
     closePopup()
   } catch {}
   actions.setSubmitting(false)
@@ -181,6 +192,26 @@ export const submitUser = async (values, actions, props, state) => {
  * @return {TInitialValues} Object fields for form.
  */
 export const getInitialFormValues = popupValues => {
+  let firstName = "";
+  let lastName = "";
+  if (popupValues) {
+    let { name } = popupValues;
+    name = name.replace(/\s\s+/g, ' ');
+    name = name.trim();
+    name = name.split(" ");
+    firstName = name[0];
+    lastName = "";
+    if (name.length===1) {
+      lastName = name[0];
+      firstName = ""
+    } else {
+      for (let i=1; i<name.length; i++) {
+        lastName = lastName + " " + name[i]
+      }
+    }
+    lastName = lastName.replace(/\s\s+/g, ' ');
+    lastName = lastName.trim();
+  }
   return popupValues
     ? {
       additionalBranches: popupValues.additionalBranches.map(d => d.id),
@@ -189,6 +220,8 @@ export const getInitialFormValues = popupValues => {
       jobTitle: popupValues.jobTitle,
       company: popupValues.company ? popupValues.company.id : '',
       name: popupValues.name,
+      firstName,
+      lastName,
       phone: popupValues.phone,
       preferredCurrency: currencyId,
       roles: popupValues.roles.map(d => d.id),
@@ -196,6 +229,8 @@ export const getInitialFormValues = popupValues => {
       buyMarketSegments: getSafe(() => popupValues.buyMarketSegments, []).map(d => d.id)
     } : {
       name: '',
+      firstName: '',
+      lastName: '',
       email: '',
       company: '',
       homeBranch: '',

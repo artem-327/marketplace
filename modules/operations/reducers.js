@@ -27,8 +27,10 @@ import {
   openGenBOLPopup,
   closeGenBOLPopup,
   getOrderById,
-  downloadPdf
+  downloadPdf,
+  searchCompanyGenericProduct
 } from './actions'
+import { unlinkAttachmentToOrder } from "../orders/actions"
 
 
 const initialState = {
@@ -38,6 +40,10 @@ const initialState = {
   rowBOL: null,
   orderByIdLoading: false,
   loading: false,
+  loadingRelatedDocuments: false,
+  markRequestAsProcessedLoading: false,
+  searchedCompanyGenericProducts: [],
+  searchCompanyGenericProductLoading: false,
   searchedCompanies: [],
   searchedCompaniesLoading: false,
   companyProductUnmappedOnly: 'ALL',
@@ -159,15 +165,33 @@ export default typeToReducer(
         loading: false
       }
     },
+    [unlinkAttachmentToOrder.pending]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: true
+      }
+    },
+    [unlinkAttachmentToOrder.rejected]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    },
+    [unlinkAttachmentToOrder.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        loadingRelatedDocuments: false
+      }
+    },
     [searchCompany.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedCompaniesLoading: true
       }
     },
     [searchCompany.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedCompaniesLoading: false
       }
     },
@@ -199,19 +223,19 @@ export default typeToReducer(
     },
     [cancelOrder.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: true
       }
     },
     [cancelOrder.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: false
       }
     },
     [cancelOrder.fulfilled]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         orderProcessing: false
       }
     },
@@ -249,19 +273,19 @@ export default typeToReducer(
     [markRequestAsProcessed.pending]: (state, action) => {
       return {
         ...state,
-        loading: true
+        markRequestAsProcessedLoading: true
       }
     },
     [markRequestAsProcessed.rejected]: (state, action) => {
       return {
         ...state,
-        loading: false
+        markRequestAsProcessedLoading: false
       }
     },
     [markRequestAsProcessed.fulfilled]: (state, action) => {
       return {
         ...state,
-        loading: false
+        markRequestAsProcessedLoading: false
       }
     },
     [denyRequest.pending]: (state, action) => {
@@ -302,13 +326,13 @@ export default typeToReducer(
     },
     [searchManualQuoteRequest.pending]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedManQuotRequestsLoading: true
       }
     },
     [searchManualQuoteRequest.rejected]: (state, action) => {
       return {
-        ...state, 
+        ...state,
         searchedManQuotRequestsLoading: false
       }
     },
@@ -424,6 +448,29 @@ export default typeToReducer(
       return {
         ...state,
         downloadPdfLoading: false
+      }
+    },
+    [searchCompanyGenericProduct.pending]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: true
+      }
+    },
+    [searchCompanyGenericProduct.rejected]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: false
+      }
+    },
+    [searchCompanyGenericProduct.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        searchCompanyGenericProductLoading: false,
+        searchedCompanyGenericProducts: action.payload.map(item => ({
+          key: item.id,
+          text: item.name,
+          value: item.id
+        }))
       }
     },
   },

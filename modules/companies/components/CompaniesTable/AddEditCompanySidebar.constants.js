@@ -28,6 +28,8 @@ export const INITIAL_FORM_VALUES = {
   tagline: '',
   primaryUser: {
     name: '',
+    lastName: '',
+    firstName: '',
     email: '',
     jobTitle: '',
     phone: ''

@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
 import { Modal, Dimmer, Loader } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import moment from 'moment'
@@ -288,6 +289,22 @@ const mapStateToProps = state => {
     savingAvatarPicture: state.profile.savingAvatarPicture,
     identityLoading: state.auth.loading
   }
+}
+
+MyProfile.propTypes = {
+  getUserMeData: PropTypes.func,
+  getLanguages: PropTypes.func,
+  openChangePasswordPopup: PropTypes.func,
+  languages: PropTypes.object,
+  intl: PropTypes.object
+}
+
+MyProfile.defaultProps = {
+  getUserMeData: () => { },
+  getLanguages: () => { },
+  openChangePasswordPopup: () => { },
+  languages: {},
+  intl: { formatMessage: () => { } }
 }
 
 export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(MyProfile))

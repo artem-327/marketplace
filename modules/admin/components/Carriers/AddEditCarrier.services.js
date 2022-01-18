@@ -22,7 +22,8 @@ export const submitForm = async (values, actions, props) => {
     if (popupValues) {
       delete payload.code
       const { value } = await updateCarrier(popupValues.id, payload)
-      datagrid.updateRow(value.id, () => value)
+      // datagrid.updateRow(value.id, () => value)
+      datagrid.loadData()
     } else {
       await postNewCarrier(payload)
       datagrid.loadData()

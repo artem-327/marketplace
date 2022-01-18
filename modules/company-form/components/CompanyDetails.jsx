@@ -494,8 +494,8 @@ CompanyDetails.propTypes = {
 }
 
 CompanyDetails.defaultProps = {
-  selectLogo: () => {},
-  removeLogo: () => {},
+  selectLogo: () => { },
+  removeLogo: () => { },
   companyLogo: null,
   hasLogo: false
 }

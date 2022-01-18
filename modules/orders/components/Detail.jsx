@@ -110,7 +110,7 @@ const Detail = props => {
         ? await props.getSaleOrder(props.router.query.id)
         : await props.getPurchaseOrder(props.router.query.id)
 
-      setAttachmentRows(getRows(data.attachments, props))
+      setAttachmentRows(getRows(data.attachments, props, setAttachmentRows))
       setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
       setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
     } catch (e) {
@@ -131,7 +131,7 @@ const Detail = props => {
           ? await props.getSaleOrder(props.router.query.id)
           : await props.getPurchaseOrder(props.router.query.id)
 
-        setAttachmentRows(getRows(data.attachments, props))
+        setAttachmentRows(getRows(data.attachments, props, setAttachmentRows))
         setShippingTrackingCode(getSafe(() => data.shippingTrackingCode, ''))
         setReturnShippingTrackingCode(getSafe(() => data.returnShippingTrackingCode, ''))
       } catch (e) {
@@ -150,6 +150,12 @@ const Detail = props => {
       } else {
         dataCells[i].className = ''
       }
+    }
+    if (
+      !getSafe(() => attachmentRows.length, false) &&
+      getSafe(() => props.order.attachments.length, false)
+    ) {
+      setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
     }
   }, [getSafe(() => props.order.attachments, []), getSafe(() => props.order.id, 0)])
 
@@ -700,7 +706,7 @@ const Detail = props => {
                         value={listDocumentTypes}
                         selection
                         onChange={(event, { name, value }) => {
-                          const rows = getRows(order.attachments, props)
+                          const rows = getRows(order.attachments, props, setAttachmentRows)
                           setAttachmentRows(value === 0 ? rows : rows.filter(row => row.documentTypeId === value))
                           setListDocumentTypes(value)
                         }}

@@ -1,9 +1,12 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Grid, GridColumn, GridRow, Icon, Popup } from 'semantic-ui-react'
+import { Button, Grid, GridColumn, GridRow, Icon, Popup, FormField } from 'semantic-ui-react'
+import get from 'lodash/get'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import { Info } from 'react-feather'
+import InputMask from 'react-input-mask'
 //Components
 import {
   Rectangle,
@@ -44,6 +47,13 @@ const GridRowTitle = styled.div`
   font-weight: 500;
 `
 
+const StyledInputMask = styled(InputMask)`
+  background: #ffffff;
+  .default.text {
+    font-weight: normal;
+  };
+`
+
 function PersonalInformation({
   countBeneficialOwners,
   formikProps,
@@ -54,8 +64,19 @@ function PersonalInformation({
 }) {
   const { values } = formikProps;
 
+  const [SSN, setSSN] = useState('')
+  const { touched, isSubmitting, errors } = formikProps;
+  const beforeMaskedStateChange = (e, ssnName) => {
+    const { setFieldValue, setFieldTouched } = formikProps;
+    const { value } = e.target;
+    setSSN(value);
+    setFieldValue(ssnName, value)
+    setFieldTouched(ssnName, true, true)
+  }
+  
   let forms = []
   for (let i = 0; i <= numberBeneficialOwners; i++) {
+    const SSNError = (get(touched, `verifyPersonalInformation[${i}].socialSecurityNumber`, null) || isSubmitting) && get(errors, `verifyPersonalInformation[${i}].socialSecurityNumber`, null)
     forms.push(
       <GridPersonalInformation
         className="verify-personal-information"
@@ -254,7 +275,7 @@ function PersonalInformation({
             />
           </ColumnCustom>
           <ColumnCustom className="m-t-padding" computer={8} tablet={8} mobile={16}>
-            <Input
+            {/* <Input
               name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
               label={
                 <>
@@ -273,7 +294,29 @@ function PersonalInformation({
                 type: 'text',
                 'data-test': `verify-personal-information-ssn-${i}`
               }}
-            />
+            /> */}
+            <FormField error={SSNError ? SSNError : null}>
+              <label><>
+                {formatMessage({
+                  id: 'velloci.personalInfo.socialSecurityNumber',
+                  defaultMessage: 'Social Security Number'
+                })}
+                {<Required />}
+              </></label>
+              <StyledInputMask
+                data-test={`verify-personal-information-ssn-${i}`}
+                name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
+                mask='999-99-9999'
+                type='text'
+                value={SSN}
+                placeholder={formatMessage({
+                  id: 'onboarding.ssn.placeholder',
+                  defaultMessage: 'xxx-xx-xxxx'
+                })}
+                onChange={(e) => beforeMaskedStateChange(e, `verifyPersonalInformation[${i}].socialSecurityNumber`)}
+              />
+              {!!SSNError && <span className='sui-error-message'>{SSNError}</span>}
+            </FormField>
           </ColumnCustom>
         </GridRow>
         <GridRow>
@@ -367,7 +410,7 @@ PersonalInformation.propTypes = {
 }
 
 PersonalInformation.defaultProps = {
-  countBeneficialOwners: () => {},
+  countBeneficialOwners: () => { },
   formikProps: {},
   businessRoles: {},
   numberBeneficialOwners: 0,

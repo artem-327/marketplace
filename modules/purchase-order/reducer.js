@@ -244,7 +244,12 @@ export default function reducer(state = initialState, action) {
     }
 
     /* OFFER_FETCH */
-
+    case AT.OFFER_FETCH_REJECTED: {
+      return {
+        ...state,
+        offerDetailIsFetching: false
+      }
+    }
     case AT.OFFER_FETCH_PENDING: {
       return {
         ...state,
@@ -434,6 +439,12 @@ export default function reducer(state = initialState, action) {
     }
 
     /* UPDATE_CART_ITEM */
+    case AT.UPDATE_CART_ITEM_REJECTED: {
+      return {
+        ...state,
+        offerDetailIsFetching: false
+      }
+    }
 
     case AT.UPDATE_CART_ITEM_PENDING: {
       return {

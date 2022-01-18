@@ -459,13 +459,23 @@ export const getRows = (props, state, setState) => {
   }))
 }
 
-export const tableRowClicked = (props, clickedId, sellerId = null, isHoldRequest = false, openInfo = false) => {
+export const tableRowClicked = async (props, clickedId, sellerId = null, isHoldRequest = false, openInfo = false) => {
   const poId = parseInt(clickedId.split('_')[0])
   const { getProductOffer, sidebarChanged, isProductInfoOpen, closePopup } = props
-  getProductOffer(poId, sellerId)
 
-  if (isProductInfoOpen) closePopup()
-  sidebarChanged({ isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo })
+  try {
+    await getProductOffer(poId, sellerId)
+    if (isProductInfoOpen) closePopup()
+    sidebarChanged({isOpen: true, id: poId, quantity: 1, isHoldRequest: isHoldRequest, openInfo: openInfo})
+  } catch (e) {
+    console.error()
+    try {
+      props.getCart()
+      props.datagrid.loadData()
+    } catch (e) {
+      console.error()
+    }
+  }
 }
 
 const checkBuyAttempt = (row, props, state, setState) => {

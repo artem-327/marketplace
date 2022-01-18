@@ -349,16 +349,20 @@ export function putEditWarehouse(payload, id, attachmentFiles, warehousesDatagri
           payload: api.attachmentLinksToBranch(attachment.id, id)
         })
       })
-      if (typeof warehousesDatagrid !== 'undefined')
-        warehousesDatagrid.updateRow(id, () => ({
-          ...value,
-          attachments: value.attachments.concat(attachmentFiles)
-        }))
-      else Datagrid.loadData()
-    } else {
-      if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => value)
-      else Datagrid.updateRow(id, () => value)
+      // if (typeof warehousesDatagrid !== 'undefined')
+      //   warehousesDatagrid.updateRow(id, () => ({
+      //     ...value,
+      //     attachments: value.attachments.concat(attachmentFiles)
+      //   }))
+      // else Datagrid.loadData()
     }
+    // else {
+    //   if (typeof warehousesDatagrid !== 'undefined') warehousesDatagrid.updateRow(id, () => value)
+    //   // else Datagrid.updateRow(id, () => value)
+    //   else Datagrid.loadData()
+    // }
+    // dispatch(getWarehousesDataRequest())
+    Datagrid.loadData()
     dispatch(closeSidebar())
   }
 }
@@ -377,8 +381,8 @@ export function postNewWarehouseRequest(createWarehouse, payload, attachmentFile
         })
       })
     }
-    //dispatch(getWarehousesDataRequest())
-    //dispatch(closeSidebar())
+    // dispatch(getWarehousesDataRequest())
+    dispatch(closeSidebar())
     Datagrid.loadData()
   }
 }

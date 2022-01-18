@@ -3,6 +3,7 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import api from './api'
 // Services
 import { Datagrid } from '../datagrid'
+import Api from "../orders/api";
 
 export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
@@ -19,7 +20,8 @@ export const deleteTag = createAsyncAction('OPERATIONS_DELETE_TAG', async (id) =
 })
 export const updateTag = createAsyncAction('OPERATIONS_UPDATE_TAG', async (id, name) => {
   const newRow = await api.updateTag(id, name)
-  Datagrid.updateRow(id, () => newRow.data)
+  Datagrid.loadData()
+  // Datagrid.updateRow(id, () => newRow.data)
 })
 export const createTag = createAsyncAction('OPERATIONS_CREATE_TAG', async (name) => {
   await api.createTag(name)
@@ -33,7 +35,7 @@ export const cancelOrder = createAsyncAction('OPERATIONS_ORDERS_CANCEL_ORDER', (
 export const clearAccountingDocuments = createAction('OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS_CLEAR')
 export const getAccountingDocuments = createAsyncAction('OPERATIONS_GET_ORDER_ACCOUNTING_DOCUMENTS', (orderId) => api.getAccountingDocuments(orderId))
 export const saveFilters = createAction('OPERATIONS_SAVE_FILTERS', filters => filters)
-export const markRequestAsProcessed = createAsyncAction('OPERATIONS_MARK_REQUEST_AS_PROCESSED', (id) => api.markRequestAsProcessed(id))
+export const markRequestAsProcessed = createAsyncAction('OPERATIONS_MARK_REQUEST_AS_PROCESSED', (id, cgp_id) => api.markRequestAsProcessed(id, cgp_id))
 export const denyRequest = createAsyncAction('OPERATIONS_DENY_REQUEST', (id) => api.denyRequest(id))
 export const deleteRequest = createAsyncAction('OPERATIONS_DELETE_REQUEST', (id) => api.deleteRequest(id))
 export const searchManualQuoteRequest = createAsyncAction('OPERATIONS_SEARCH_MANUAL_QUOTE_REQUEST', async (val) => {
@@ -85,3 +87,6 @@ export const openGenBOLPopup = createAction('SHIPPING_QUOTE_OPEN_GEN_BOL_POPUP',
 export const closeGenBOLPopup = createAction('SHIPPING_QUOTE_CLOSE_GEN_BOL_POPUP')
 export const getOrderById = createAsyncAction('OPERATIONS_ORDERS_GET_ORDER', (orderId) => api.getOrderById(orderId))
 export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', orderId => api.downloadPdf(orderId))
+export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30) =>
+  api.searchCompanyGenericProduct(searchQuery, limit))
+export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))

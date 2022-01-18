@@ -10,7 +10,8 @@ export async function deleteItem(id) {
   return data
 }
 export async function postNewRequest(values) {
-  return await api.post(`/prodex/api/market-segments`, values).data
+  const { data } = await api.post(`/prodex/api/market-segments`, values)
+  return data
 }
 
 export async function putEditedDataRequest(values, id) {

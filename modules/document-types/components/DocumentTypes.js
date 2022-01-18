@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { Container } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { withDatagrid, DatagridProvider } from '~/modules/datagrid'
@@ -55,5 +56,17 @@ const mapStateToProps = state => ({
   isOpenPopup: state.documentTypes.isOpenPopup,
   auth: state.auth
 })
+
+DocumentTypes.propTypes = {
+  isOpenPopup: PropTypes.bool,
+  closePopup: PropTypes.func,
+  auth: PropTypes.object
+}
+
+DocumentTypes.defaultProps = {
+  isOpenPopup: false,
+  closePopup: () => { },
+  auth: {},
+}
 
 export default connect(mapStateToProps, Actions)(DocumentTypes)

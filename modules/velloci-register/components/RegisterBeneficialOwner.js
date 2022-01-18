@@ -11,7 +11,8 @@ import {
   einValidation,
   websiteValidationNotRequired,
   phoneValidation,
-  dateValidation
+  dateValidation,
+  ssnValidation
 } from '~/constants/yupValidation'
 import FormRectangle from './FormRectangle'
 import PersonalInformation from './steps/PersonalInformation'
@@ -65,11 +66,7 @@ class RegisterBeneficialOwner extends Component {
                 .trim()
                 .min(2, errorMessages.minLength(2))
                 .required(errorMessages.requiredMessage),
-              socialSecurityNumber: Yup.string()
-                .trim()
-                .min(9, errorMessages.minLength(9))
-                .max(9, errorMessages.maxLength(9))
-                .required(errorMessages.requiredMessage),
+              socialSecurityNumber: ssnValidation(),
               businessOwnershipPercentage: Yup.string()
                 .trim()
                 .required(errorMessages.requiredMessage)
@@ -110,7 +107,8 @@ class RegisterBeneficialOwner extends Component {
         phone: getSafe(() => val.phoneNumber.substring(1), ''),
         provinceId: getSafe(() => val.address.province, ''),
         zipCode: getSafe(() => val.address.zip, ''),
-        ssn: getSafe(() => val.socialSecurityNumber, ''),
+        // ssn: getSafe(() => val.socialSecurityNumber, ''),
+        ssn: getSafe(() => val.socialSecurityNumber.replaceAll('-', ''), ''),
         email: getSafe(() => val.email, '')
       }
       removeEmpty(body)

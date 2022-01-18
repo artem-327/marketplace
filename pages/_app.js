@@ -9,7 +9,7 @@ import EN from '../localization/en.json'
 import NProgress from 'nprogress'
 import Router, { withRouter } from 'next/router'
 
-import '../semantic/dist/semantic.css'
+import '../semantic/dist/semantic.min.css'
 import '../styles/base.scss'
 import 'nprogress/nprogress.css'
 import { ToastProvider } from 'react-toast-notifications'

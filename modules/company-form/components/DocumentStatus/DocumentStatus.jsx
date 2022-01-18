@@ -86,4 +86,20 @@ function mapStateToProps(state) {
   return { }
 }
 
+DocumentStatus.propTypes = {
+  fileIndex: PropTypes.bool,
+  item: PropTypes.object,
+  uploadedFile: PropTypes.object,
+  onClick: PropTypes.func,
+  onRemove: PropTypes.func,
+}
+
+DocumentStatus.defaultProps = {
+  fileIndex: false,
+  item: null,
+  uploadedFile: null,
+  onClick: () => { },
+  onRemove: () => { },
+}
+
 export default injectIntl(connect(mapStateToProps, { downloadAttachment })(DocumentStatus))

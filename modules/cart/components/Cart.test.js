@@ -9,6 +9,13 @@ import Cart from './Cart'
 Enzyme.configure({ adapter: new EnzymeAdapter() })
 
 const defaultProps = {
+  getCart: () => { },
+  cartIsFetching: false,
+  cart: {},
+  intl: {
+    formatMessage: () => {  }
+  },
+  sidebar: {},
 }
 
 /**
@@ -17,16 +24,20 @@ const defaultProps = {
  * @returns {ShallowWrapper}
  */
 
+const setup = (props = {}) => {
+  const setupProps = { ...defaultProps, props }
+  return shallow(<Cart {...setupProps} />)
+}
 /**
  * @test { Cart }
  */
 describe('`Cart` render component', () => {
   test('does not throw warning with expected props', () => {
-    // checkProps(Cart, defaultProps)
+    checkProps(Cart, defaultProps)
   })
 
-  // test('renders Cart component to be there', () => {
-  //   const wrapper = setup()
-  //   expect(wrapper.exists()).toBe(true)
-  // })
+  test('renders Cart component to be there', () => {
+    const wrapper = setup()
+    expect(wrapper.exists()).toBe(true)
+  })
 })

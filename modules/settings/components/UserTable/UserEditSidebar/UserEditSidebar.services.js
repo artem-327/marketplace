@@ -24,7 +24,8 @@ import { TInitialValues } from './UserEditSidebar.types'
 export const userFormValidation = () =>
   Yup.lazy(values => {
     return Yup.object().shape({
-      name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      firstName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+      lastName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
       email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       additionalBranches: Yup.array(),
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
@@ -79,54 +80,77 @@ export const getBranchesOptions = branches => {
  * @return {TInitialValues} Object fields for form.
  */
 export const getInitialFormValues = sidebarValues => {
+  let firstName = "";
+  let lastName = "";
+  if (sidebarValues?.name) {
+    let { name } = sidebarValues;
+    name = name.replace(/\s\s+/g, ' ');
+    name = name.trim();
+    name = name.split(" ");
+    firstName = name[0];
+    lastName = "";
+    if (name.length === 1) {
+      lastName = name[0];
+      firstName = ""
+    } else {
+      for (let i = 1; i < name.length; i++) {
+        lastName = lastName + " " + name[i]
+      }
+    }
+    lastName = lastName.replace(/\s\s+/g, ' ');
+    lastName = lastName.trim();
+  }
+
   return !isEmpty(sidebarValues)
     ? {
-        additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id) || [],
-        email: sidebarValues?.email,
-        homeBranch: sidebarValues?.homeBranch ? sidebarValues?.homeBranch?.id : '',
-        jobTitle: sidebarValues?.jobTitle,
-        name: sidebarValues?.name,
-        phone: sidebarValues?.phone,
-        preferredCurrency: currencyId,
-        roles: sidebarValues?.roles?.map(d => d?.id) || [],
-        sellMarketSegments: getSafe(() => sidebarValues?.sellMarketSegments, [])?.map(d => d?.id),
-        buyMarketSegments: getSafe(() => sidebarValues?.buyMarketSegments, [])?.map(d => d?.id),
-        regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
-        regulatoryDeaListSignAskedDate: sidebarValues?.regulatoryDeaListSignAskedDate,
-        regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
-        regulatoryDhsCoiSignAskedDate: sidebarValues?.regulatoryDhsCoiSignAskedDate,
-        regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
-        dailyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.dailyPurchaseLimit?.value))
-          ? parseFloat(sidebarValues?.dailyPurchaseLimit?.value)
-          : null,
-        orderPurchaseLimit: !isNaN(parseFloat(sidebarValues?.orderPurchaseLimit?.value))
-          ? parseFloat(sidebarValues?.orderPurchaseLimit?.value)
-          : null,
-        monthlyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.monthlyPurchaseLimit?.value))
-          ? parseFloat(sidebarValues?.monthlyPurchaseLimit?.value)
-          : null
+      additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id) || [],
+      email: sidebarValues?.email,
+      homeBranch: sidebarValues?.homeBranch ? sidebarValues?.homeBranch?.id : '',
+      jobTitle: sidebarValues?.jobTitle,
+      firstName,
+      lastName,
+      phone: sidebarValues?.phone,
+      preferredCurrency: currencyId,
+      roles: sidebarValues?.roles?.map(d => d?.id) || [],
+      sellMarketSegments: getSafe(() => sidebarValues?.sellMarketSegments, [])?.map(d => d?.id),
+      buyMarketSegments: getSafe(() => sidebarValues?.buyMarketSegments, [])?.map(d => d?.id),
+      regulatoryDeaListAuthorized: sidebarValues?.regulatoryDeaListAuthorized,
+      regulatoryDeaListSignAskedDate: sidebarValues?.regulatoryDeaListSignAskedDate,
+      regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
+      regulatoryDhsCoiSignAskedDate: sidebarValues?.regulatoryDhsCoiSignAskedDate,
+      regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
+      dailyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.dailyPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.dailyPurchaseLimit?.value)
+        : null,
+      orderPurchaseLimit: !isNaN(parseFloat(sidebarValues?.orderPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.orderPurchaseLimit?.value)
+        : null,
+      monthlyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.monthlyPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.monthlyPurchaseLimit?.value)
+        : null
       }
     : {
-        name: '',
-        email: '',
-        company: '',
-        homeBranch: '',
-        preferredCurrency: currencyId,
-        additionalBranches: [],
-        jobTitle: '',
-        phone: '',
-        roles: [],
-        buyMarketSegments: [],
-        sellMarketSegments: [],
-        regulatoryDeaListAuthorized: false,
-        regulatoryDeaListSignAskedDate: null,
-        regulatoryDhsCoiAuthorized: false,
-        regulatoryDhsCoiSignAskedDate: null,
-        regulatoryHazmatAuthorized: false,
-        dailyPurchaseLimit: null,
-        orderPurchaseLimit: null,
-        monthlyPurchaseLimit: null
-      }
+      firstName: '',
+      lastName: '',
+      email: '',
+      company: '',
+      homeBranch: '',
+      preferredCurrency: currencyId,
+      additionalBranches: [],
+      jobTitle: '',
+      phone: '',
+      roles: [],
+      buyMarketSegments: [],
+      sellMarketSegments: [],
+      regulatoryDeaListAuthorized: false,
+      regulatoryDeaListSignAskedDate: null,
+      regulatoryDhsCoiAuthorized: false,
+      regulatoryDhsCoiSignAskedDate: null,
+      regulatoryHazmatAuthorized: false,
+      dailyPurchaseLimit: null,
+      orderPurchaseLimit: null,
+      monthlyPurchaseLimit: null
+    }
 }
 
 /**
@@ -270,6 +294,16 @@ export const switchUser = async (sidebarValues, state) => {
  * @param {object} sidebarValues object with state / set state Hook functions
  */
 export const submitUser = async (values, actions, props, sidebarValues) => {
+  let { firstName, lastName } = values
+  firstName = firstName.replace(/\s\s+/g, ' ')
+  firstName = firstName.trim()
+  lastName = lastName.replace(/\s\s+/g, ' ')
+  lastName = lastName.trim()
+
+  let username = lastName
+  if (firstName && firstName !== '') {
+    username = firstName + ' ' + lastName
+  }
   const {
     handlerSubmitUserEditPopup,
     postNewUserRequest,
@@ -288,7 +322,7 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
     email: values?.email,
     homeBranch: values?.homeBranch,
     jobTitle: values?.jobTitle,
-    name: values?.name,
+    name: username,
     phone: values?.phone,
     preferredCurrency: currencyId,
     roles: values?.roles,
@@ -325,8 +359,9 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
 
   try {
     if (sidebarValues) {
-      const { value } = await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, isSettingsPatch)
-      !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
+      await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, isSettingsPatch)
+      // !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
+      !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
       if (currentUserId === sidebarValues.id) getIdentity()
     } else {

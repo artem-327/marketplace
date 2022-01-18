@@ -98,7 +98,8 @@ export const formValidationNew = () =>
         // if (primaryUserRequired)
         return Yup.object().shape({
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          name: Yup.string().trim().min(2, minLength).required(minLength),
+          firstName: Yup.string().trim().min(2, minLength).required(minLength),
+          lastName: Yup.string().trim().min(2, minLength).required(minLength),
           phone: phoneValidation(10)
         })
         // return Yup.mixed().notRequired()
@@ -234,10 +235,22 @@ export const submitCompany = async (values, actions, state, props) => {
         popupValues.w9AttachmentId && await removeAttachment(popupValues.w9AttachmentId);
         if (companyDoc) await addW9Attachment(companyDoc, type, { isTemporary: false, ownerCompanyId: popupValues.id, force: true });
       }
-      datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
+      // datagrid.updateRow(value.id, () => ({ ...value, hasLogo: !!companyLogo }))
       datagrid.loadData()
       actions.setSubmitting(false)
     } else {
+      const { primaryUser } = values;
+      const { firstName, lastName, jobTitle, phone, email } = primaryUser;
+      if (firstName && firstName!=='') {
+        values.primaryUser = {
+          name: firstName + " " + lastName,
+          jobTitle, phone, email
+        }
+      } else values.primaryUser = {
+        name: lastName,
+        jobTitle, phone, email
+      };
+
       let branches = ['primaryBranch', 'mailingBranch']
 
       if (values.businessType) values.businessType = values.businessType.id

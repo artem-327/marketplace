@@ -166,6 +166,7 @@ export const errorMessages = {
   ),
   passwordsMatch: <FormattedMessage id='validation.passwordsMustMatch' defaultMessage='Pass must match' />,
   invalidTime: <FormattedMessage id='validation.invalidTime' defaultMessage='Invalid time' />,
+  invalidTimeFormat: <FormattedMessage id='validation.invalidTimeFormat' defaultMessage='Invalid time format (HH:MM)' />,
   invalidHashtag: <FormattedMessage id='validation.invalidHashtag' defaultMessage='Invalid hashtag' />,
   mustBeInHhMmFormat: (
     <FormattedMessage id='validation.mustBeInHhMmFormat' defaultMessage='Time must be in HH:MM format' />
@@ -184,9 +185,15 @@ export const passwordValidation = () =>
     .test('trailing-spaces', errorMessages.trailingSpaces, val => !val || (val && val.trim() === val))
     .min(8, errorMessages.minLength(8))
     .required(errorMessages.requiredMessage)
-    .matches(/[a-z]/, errorMessages.oneLowercaseChar)
-    .matches(/[A-Z]/, errorMessages.oneUppercaseChar)
-    .matches(/[^a-zA-Z\s]+/, errorMessages.oneSpecialChar)
+    .matches(/[a-z]/, {
+      message: errorMessages.oneLowercaseChar
+    })
+    .matches(/[A-Z]/, {
+      message: errorMessages.oneUppercaseChar
+    })
+    .matches(/[^a-zA-Z\s]+/, {
+      message: errorMessages.oneSpecialChar
+    })
 
 export const passwordValidationAnyChar = () =>
   Yup.string()
@@ -390,8 +397,11 @@ export const dateBefore = (date = 'lotManufacturedDate', beforeDate = 'lotExpira
 export const validateTime = () =>
   Yup.string()
     .trim()
+    .test('t', errorMessages.invalidTimeFormat, t => {
+      return !t || !!/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test(t)
+    })
     .test('time', errorMessages.invalidTime, t => {
-      return moment(t, ['hh:mm a', 'HH:mm']).isValid() || !t
+      return !t || moment(t, ['HH:mm']).isValid()
     })
 
 export const multipleEmails = () =>

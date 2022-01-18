@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 import { injectIntl } from 'react-intl'
 
 // Components
@@ -75,6 +76,20 @@ const mapDispatchToProps = {
   getUsersMe,
   userSwitchEnableDisable,
   openSidebar
+}
+
+UsersTable.propTypes = {
+  loading: PropTypes.bool,
+  rows: PropTypes.array,
+  datagrid: PropTypes.object,
+  editedId: PropTypes.number,
+}
+
+UsersTable.defaultProps = {
+  loading: false,
+  rows: [],
+  datagrid: {},
+  editedId: 0,
 }
 
 export default withDatagrid(connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(UsersTable)))
