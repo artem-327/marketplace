@@ -383,7 +383,7 @@ class Navigation extends Component {
                       as={MenuLink}
                       to='/inventory/my-products'
                       dataTest='navigation_menu_inventory_my_products_drpdn'>
-                      {formatMessage({ id: 'navigation.inventoryMyProducts', defaultMessage: 'My Products' })}
+                      {formatMessage({ id: 'navigation.inventoryMySKUs', defaultMessage: 'My SKUs' })}
                     </Dropdown.Item>
                     <Dropdown.Item
                       as={MenuLink}

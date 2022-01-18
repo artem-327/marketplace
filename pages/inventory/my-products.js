@@ -22,7 +22,7 @@ class MyProductsPage extends Component {
     } = this.props
 
     return (
-      <Layout title={formatMessage({ id: 'title.inventory.myProducts', defaultMessage: 'My Products' })}>
+      <Layout title={formatMessage({ id: 'title.inventory.mySKUs', defaultMessage: 'My SKUs' })}>
         {!(
           auth?.identity?.isCompanyAdmin || auth?.identity?.isMerchant ||
           auth?.identity?.isProductCatalogAdmin || auth?.identity?.isProductOfferManager
