@@ -534,15 +534,18 @@ class BankAccountsTable extends Component {
       unverified: '#f16844',
       verification_in_process: '#ffb24f',
       inactive: '#f16844',
-      active: '#84c225'
+      active: '#84c225',
+      pending_verification: '#84c225'
     }
     const colorAccountName = {
       verified: '#20273a',
       unverified: '#f16844',
       verification_in_process: '#ffb24f',
       inactive: '#f16844',
-      active: '#20273a'
+      active: '#20273a',
+      pending_verification: '#20273a'
     }
+
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
