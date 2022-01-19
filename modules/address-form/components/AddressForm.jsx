@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
 import { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui-fixed-validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -13,12 +15,14 @@ import { getProvinces } from '../api'
 import { getSafe, getDeeply } from '~/utils/functions'
 import { Required } from '~/components/constants/layout'
 
+// Hooks
+import { usePrevious } from '../../../hooks'
+
 const DatalistGroup = styled(FormGroup)`
   input::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
   }
 `
-
 
 const CustomSegment = styled(Segment)`
   background-color: ${({ backgroundColor }) => backgroundColor};
@@ -37,25 +41,26 @@ const InfoIconStyled = styled(Icon)`
   margin: 0 0 0 5px !important;
 `
 
-class AddressForm extends Component {
-  state = {
-    provinces: [],
-    countryId: null,
-    hasProvinces: false,
-    provicesAreFetching: false,
-    previousAddressLength: 0
-  }
+const AddressForm = props => {
+  const [provinces, setProvinces] = useState([])
+  const [countryId, setCountryId] = useState(null)
+  const [hasProvinces, setHasProvinces] = useState(false)
+  const [provincesAreFetching, setProvicesAreFetching] = useState(false)
+  const [previousAddressLength, setPreviousAddressLength] = useState(0)
 
-  fetchProvinces = async (countryId, hasProvinces) => {
+  const prevProps = usePrevious(props)
+
+  const fetchProvinces = async (countryId, hasProvinces) => {
     if (countryId && hasProvinces) {
-      this.setState({ provincesAreFetching: true })
+      setProvicesAreFetching(true)
       let provinces = await getProvinces(countryId)
-      this.setState({ provinces, hasProvinces, countryId, provincesAreFetching: false })
+      setProvinces(provinces)
+      setProvicesAreFetching(false)
     }
   }
 
-  asignPrefix = () => {
-    let { prefix, streetAddress, city, country, zip, province, values, index } = this.props
+  const asignPrefix = () => {
+    let { prefix, streetAddress, city, country, zip, province, values, index } = props
     let fields = { streetAddress, city, country, zip, province }
 
     Object.keys(fields).forEach(key => {
@@ -72,7 +77,7 @@ class AddressForm extends Component {
     return fields
   }
 
-  isJSON = text => {
+  const isJSON = text => {
     try {
       JSON.parse(text)
     } catch {
@@ -81,32 +86,41 @@ class AddressForm extends Component {
     return true
   }
 
-  async componentDidMount() {
-    let { countries, countriesLoading } = this.props
-    const { addZip } = this.props
-    let values = this.getValues()
+  const getValues = (values = props.values) => {
+    let value = props.prefix ? eval('values.' + props.prefix) : values
+    // TODO check wheter this works for array...
+    if (value instanceof Array) return value[props.index]
+    else return value
+
+    // return prefix ? (values[prefix] instanceof Array ? values[prefix][props.index] : values[prefix]) : values
+  }
+
+  useEffect(async () => {
+    let { countries, countriesLoading } = props
+    const { addZip } = props
+    let values = getValues()
     if (!values || (values && !values.address)) return
     let { address } = values
     if (!address) return
     try {
-      if (countries.length === 0 && !countriesLoading) await this.props.getCountries()
+      if (countries.length === 0 && !countriesLoading) await props.getCountries()
       if (address.zip) {
-        if (this.isJSON(address.zip)) await addZip(JSON.parse(address.zip))
+        if (isJSON(address.zip)) await addZip(JSON.parse(address.zip))
         else await addZip(address.zip)
       }
       let { countryId, hasProvinces } =
         address && address.country ? JSON.parse(address.country) : { countryId: null, hasProvinces: null }
 
-      await this.fetchProvinces(countryId, hasProvinces)
+      await fetchProvinces(countryId, hasProvinces)
     } catch (e) {
       console.error(e)
     }
-  }
+  }, [])
 
-  async componentDidUpdate(prevProps, prevState, snapshot) {
-    const { addZip } = this.props
-    const values = this.getValues()
-    const oldValues = this.getValues(prevProps?.values)
+  useEffect(async () => {
+    const { addZip } = props
+    const values = getValues()
+    const oldValues = getValues(prevProps?.values)
 
     const country = values && values.address && values.address.country
     const oldCountry = oldValues && oldValues.address && oldValues.address.country
@@ -119,29 +133,33 @@ class AddressForm extends Component {
     }
     if (country && country !== oldCountry) {
       const parsed = JSON.parse(country)
-
-      this.setState({ hasProvinces: parsed.hasProvinces })
+      setHasProvinces(parsed.hasProvinces)
       if (parsed.hasProvinces) {
-        this.fetchProvinces(parsed.countryId, parsed.hasProvinces)
+        try {
+          fetchProvinces(parsed.countryId, parsed.hasProvinces)
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
-  }
+  }, [prevProps])
 
-  handleChange = (_, { name, value }) => {
-    let { addressDatalistOptions, values, searchEnabled } = this.props
-    const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = this.props
+  const handleChange = (_, { name, value }) => {
+    let { addressDatalistOptions, values, searchEnabled } = props
+    const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = props
 
     if (!values) return
 
-    let fields = this.asignPrefix()
+    let fields = asignPrefix()
 
     let i = addressDatalistOptions.indexOf(value)
     if (i >= 0 && setFieldValue) {
-      let suggest = this.props.addressDatalistData[i]
+      let suggest = props.addressDatalistData[i]
       let { hasProvinces } = suggest.country
 
-      this.fetchProvinces(suggest.country.id, hasProvinces)
-      this.setState({ hasProvinces })
+      fetchProvinces(suggest.country.id, hasProvinces)
+      setHasProvinces(hasProvinces)
+
       if (suggest.zip) {
         addZip({ zip: suggest.zip.zip, id: suggest.zip.id })
       }
@@ -160,12 +178,12 @@ class AddressForm extends Component {
         getSafe(() => newValues.address.streetAddress.length, 0) +
         (getSafe(newValues.address.province !== '', true) && 1)
 
-      if (adrLength > 1 && adrLength > this.state.previousAddressLength && !addressDatalistLength) {
-        this.setState({ previousAddressLength: adrLength })
+      if (adrLength > 1 && adrLength > previousAddressLength && !addressDatalistLength) {
+        setPreviousAddressLength(adrLength)
         return
-      } else if (searchEnabled) {
-        this.setState({ previousAddressLength: adrLength })
-
+      } else if (searchEnabled)
+      {
+        setPreviousAddressLength(adrLength)
         const body = {
           city: getSafe(() => newValues.address.city),
           countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
@@ -180,10 +198,10 @@ class AddressForm extends Component {
     }
   }
 
-  getOptions = values => {
-    let { addressDatalistData } = this.props
+  const getOptions = values => {
+    let { addressDatalistData } = props
     try {
-      let value = this.getValues()
+      let value = getValues()
       return addressDatalistData.map(a => {
         if (
           a.streetAddress.startsWith(getSafe(() => value.address.streetAddress, '')) &&
@@ -208,200 +226,187 @@ class AddressForm extends Component {
     }
   }
 
-  getValues = (values = this.props.values) => {
-    let value = this.props.prefix ? eval('values.' + this.props.prefix) : values
-    // TODO check wheter this works for array...
-    if (value instanceof Array) return value[this.props.index]
-    else return value
+  const {
+    setFieldValue,
+    countries,
+    prefix,
+    initialZipCodes,
+    displayHeader,
+    values,
+    datalistName,
+    additionalCountryInputProps,
+    countryPopup,
+    countriesLoading,
+    loading,
+    required,
+    searchEnabled,
+    children,
+    intl: { formatMessage },
+    customHeader,
+    backgroundColor,
+    noBorder,
+    disableCountry,
+    disableProvince,
+    countryHint,
+    provinceHint
+  } = props
 
-    // return prefix ? (values[prefix] instanceof Array ? values[prefix][this.props.index] : values[prefix]) : values
-  }
+  let fields = asignPrefix()
 
-  render() {
-    const { setFieldValue } = this.props
-    let {
-      countries,
-      prefix,
-      initialZipCodes,
-      displayHeader,
-      values,
-      datalistName,
-      additionalCountryInputProps,
-      countryPopup,
-      countriesLoading,
-      loading,
-      required,
-      searchEnabled,
-      children,
-      intl: { formatMessage },
-      customHeader,
-      backgroundColor,
-      noBorder,
-      disableCountry,
-      disableProvince,
-      countryHint,
-      provinceHint
-    } = this.props
+  // handleChange(e, data)
+  //  TODO - check whether fluid didnt mess up ui somewhere else
 
-    let fields = this.asignPrefix()
+  return (
+    <>
+      <datalist id={datalistName}>
+        {getOptions(values)
+          .filter(el => el !== null)
+          .map((el, i) => (
+            <option key={i} value={el} />
+          ))}
+      </datalist>
+      {customHeader
+        ? customHeader
+        : displayHeader && (
+            <Header as='h3'>
+              <FormattedMessage id='global.address' defaultMessage='Address' />
+            </Header>
+          )}
+      <CustomSegment noBorder={noBorder} bacgroundColor={backgroundColor}>
+        {children}
+        <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
+          <Input
+            inputProps={{
+              'data-test': `${prefix}-street-address`,
+              onFocus: e => (e.target.autocomplete = null),
+              list: datalistName,
+              onChange: handleChange,
+              fluid: true,
+              loading,
+              placeholder: formatMessage({ id: 'global.address.enterStreet', defaultMessage: 'Enter Street' })
+            }}
+            label={
+              <>
+                <FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />
+                {required && <Required />}
+              </>
+            }
+            name={fields.streetAddress}
+          />
+        </DatalistGroup>
 
-    // this.handleChange(e, data)
+        <FormGroup widths='equal'>
+          <Dropdown
+            label={
+              <Popup
+                trigger={
+                  <label>
+                    <FormattedMessage id='global.country' defaultMessage='Country' />
+                    {countryHint && (
+                      <Popup
+                        trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
+                        content={countryHint}
+                      />
+                    )}
+                    {required && <Required />}
+                  </label>
+                }
+                disabled={countryPopup.disabled}
+                content={countryPopup.content}
+              />
+            }
+            name={fields.country}
+            options={countries.map(country => ({
+              key: country.id,
+              text: country.name,
+              value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+            }))}
+            inputProps={{
+              loading: countriesLoading,
+              onFocus: e => (e.target.autocomplete = null),
+              'data-test': 'address_form_country_drpdn',
+              search: true,
+              onChange: async (e, data) => {
+                // let fieldName = prefix ? `${prefix.province}` : 'address.province'
 
-    let { provinces, countryId, provincesAreFetching, hasProvinces } = this.state
-    //  TODO - check whether fluid didnt mess up ui somewhere else
+                setFieldValue(fields[props.province.name], '')
+              },
+              placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
+              ...additionalCountryInputProps,
+              disabled: additionalCountryInputProps.disabled || disableCountry
+            }}
+          />
 
-    return (
-      <>
-        <datalist id={datalistName}>
-          {this.getOptions(values)
-            .filter(el => el !== null)
-            .map((el, i) => (
-              <option key={i} value={el} />
-            ))}
-        </datalist>
-        {customHeader
-          ? customHeader
-          : displayHeader && (
-              <Header as='h3'>
-                <FormattedMessage id='global.address' defaultMessage='Address' />
-              </Header>
-            )}
-        <CustomSegment noBorder={noBorder} bacgroundColor={backgroundColor}>
-          {children}
-          <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
-            <Input
-              inputProps={{
-                'data-test': `${prefix}-street-address`,
-                onFocus: e => (e.target.autocomplete = null),
-                list: datalistName,
-                onChange: this.handleChange,
-                fluid: true,
-                loading,
-                placeholder: formatMessage({ id: 'global.address.enterStreet', defaultMessage: 'Enter Street' })
-              }}
-              label={
-                <>
-                  <FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />
-                  {required && <Required />}
-                </>
-              }
-              name={fields.streetAddress}
-            />
-          </DatalistGroup>
+          <Dropdown
+            label={
+              <>
+                <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
+                {provinceHint && (
+                  <Popup
+                    trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
+                    content={provinceHint}
+                  />
+                )}
+                {required && hasProvinces && <Required />}
+              </>
+            }
+            name={fields.province}
+            options={provinces.map(province => ({
+              key: province.id,
+              text: province.name,
+              value: province.id
+            }))}
+            inputProps={{
+              onFocus: e => (e.target.autocomplete = null),
+              'data-test': `${prefix}-state-province`,
+              search: true,
+              disabled: !hasProvinces || disableProvince,
+              loading: provincesAreFetching,
+              onChange: handleChange,
+              placeholder: formatMessage({
+                id: 'global.address.selectStateProvince',
+                defaultMessage: 'Select State/Province'
+              })
+            }}
+          />
+        </FormGroup>
 
-          <FormGroup widths='equal'>
-            <Dropdown
-              label={
-                <Popup
-                  trigger={
-                    <label>
-                      <FormattedMessage id='global.country' defaultMessage='Country' />
-                      {countryHint && (
-                        <Popup
-                          trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
-                          content={countryHint}
-                        />
-                      )}
-                      {required && <Required />}
-                    </label>
-                  }
-                  disabled={countryPopup.disabled}
-                  content={countryPopup.content}
-                />
-              }
-              name={fields.country}
-              options={countries.map(country => ({
-                key: country.id,
-                text: country.name,
-                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
-              }))}
-              inputProps={{
-                loading: countriesLoading,
-                onFocus: e => (e.target.autocomplete = null),
-                'data-test': 'address_form_country_drpdn',
-                search: true,
-                onChange: async (e, data) => {
-                  // let fieldName = prefix ? `${prefix.province}` : 'address.province'
-
-                  setFieldValue(fields[this.props.province.name], '')
-                },
-                placeholder: formatMessage({ id: 'global.address.selectCountry', defaultMessage: 'Select Country' }),
-                ...additionalCountryInputProps,
-                disabled: additionalCountryInputProps.disabled || disableCountry
-              }}
-            />
-
-            <Dropdown
-              label={
-                <>
-                  <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />
-                  {provinceHint && (
-                    <Popup
-                      trigger={<span><InfoIconStyled color='blue' name='info circle' /></span>}
-                      content={provinceHint}
-                    />
-                  )}
-                  {required && hasProvinces && <Required />}
-                </>
-              }
-              name={fields.province}
-              options={provinces.map(province => ({
-                key: province.id,
-                text: province.name,
-                value: province.id
-              }))}
-              inputProps={{
-                onFocus: e => (e.target.autocomplete = null),
-                'data-test': `${prefix}-state-province`,
-                search: true,
-                disabled: !this.state.hasProvinces || disableProvince,
-                loading: provincesAreFetching,
-                onChange: this.handleChange,
-                placeholder: formatMessage({
-                  id: 'global.address.selectStateProvince',
-                  defaultMessage: 'Select State/Province'
-                })
-              }}
-            />
-          </FormGroup>
-
-          <DatalistGroup widths='equal'>
-            <Input
-              inputProps={{
-                'data-test': `${prefix}-city`,
-                onFocus: e => (e.target.autocomplete = null),
-                list: datalistName,
-                onChange: this.handleChange,
-                fluid: true,
-                loading,
-                placeholder: formatMessage({ id: 'global.address.selectCity', defaultMessage: 'Select City' })
-              }}
-              label={
-                <>
-                  <FormattedMessage id='global.city' defaultMessage='City' />
-                  {required && <Required />}
-                </>
-              }
-              name={fields.city}
-            />
-            <ZipDropdown
-              onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
-              onChange={this.handleChange}
-              additionalInputProps={{
-                icon: null,
-                placeholder: formatMessage({ id: 'global.address.enterZipCode' })
-              }}
-              name={fields.zip}
-              required={required}
-              countryId={countryId}
-              initialZipCodes={initialZipCodes}
-              data-test='address_form_zip_drpdn'
-            />
-          </DatalistGroup>
-        </CustomSegment>
-      </>
-    )
-  }
+        <DatalistGroup widths='equal'>
+          <Input
+            inputProps={{
+              'data-test': `${prefix}-city`,
+              onFocus: e => (e.target.autocomplete = null),
+              list: datalistName,
+              onChange: handleChange,
+              fluid: true,
+              loading,
+              placeholder: formatMessage({ id: 'global.address.selectCity', defaultMessage: 'Select City' })
+            }}
+            label={
+              <>
+                <FormattedMessage id='global.city' defaultMessage='City' />
+                {required && <Required />}
+              </>
+            }
+            name={fields.city}
+          />
+          <ZipDropdown
+            onAddition={(e, data) => setFieldValue(fields[props.zip.name], data.value)}
+            onChange={handleChange}
+            additionalInputProps={{
+              icon: null,
+              placeholder: formatMessage({ id: 'global.address.enterZipCode' })
+            }}
+            name={fields.zip}
+            required={required}
+            countryId={countryId}
+            initialZipCodes={initialZipCodes}
+            data-test='address_form_zip_drpdn'
+          />
+        </DatalistGroup>
+      </CustomSegment>
+    </>
+  )
 }
 
 AddressForm.propTypes = {
