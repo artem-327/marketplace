@@ -217,7 +217,7 @@ export const productCatalogTableColumns =
   {
     name: 'name',
     title: (
-      <FormattedMessage id='global.productName' defaultMessage='Product Name' />
+      <FormattedMessage id='global.SDSName' defaultMessage='SDS Name' />
     ),
     width: 250,
     sortPath: 'CompanyGenericProduct.name',
@@ -248,7 +248,7 @@ export const productCatalogTableColumns =
   {
     name: 'code',
     title: (
-      <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
+      <FormattedMessage id='global.SDSCode' defaultMessage='SDS Code' />
     ),
     width: 150,
     sortPath: 'CompanyGenericProduct.code'

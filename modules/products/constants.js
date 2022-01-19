@@ -18,7 +18,7 @@ import AddEditEchoProduct from './components/ProductCatalogTable/AddEditEchoProd
  */
 export const defaultTabs = [
   { name: 'CAS Products', id: 0, type: 'cas-products' },
-  { name: 'Product Catalog', id: 1, type: 'product-catalog' },
+  { name: 'SDS Catalog', id: 1, type: 'product-catalog' },
   { name: 'Product Groups', id: 2, type: 'product-groups' }
 ]
 
@@ -33,7 +33,7 @@ export const textsTable = {
     SearchText: 'products.casProducts.search'
   },
   'product-catalog': {
-    BtnAddText: 'products.productCatalog.buttonAdd',
+    BtnAddText: 'products.SDSCatalog.buttonAdd',
     SearchText: 'products.productCatalog.search'
   },
   'product-groups': {
