@@ -34,7 +34,8 @@ export const textsTable = {
   },
   'product-catalog': {
     BtnAddText: 'products.SDSCatalog.buttonAdd',
-    SearchText: 'products.productCatalog.search'
+    // SearchText: 'products.SDSCatalog.search',
+    SearchText: 'products.productCatalog.search',
   },
   'product-groups': {
     BtnAddText: 'products.productGroups.buttonAdd',
