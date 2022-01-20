@@ -187,7 +187,8 @@ const ProductPopup = props => {
               <FlexContent>
                 <GridStyled>
                   <GridRowLabel>
-                    <FormattedMessage id='productCatalog.selectProduct' defaultMessage='Select Product' />
+                    {/* <FormattedMessage id='productCatalog.selectProduct' defaultMessage='Select Product' /> */}
+                    <FormattedMessage id='productCatalog.selectSDS' defaultMessage='Select SDS' />
                     <Required />
                   </GridRowLabel>
 
