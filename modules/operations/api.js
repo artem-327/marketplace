@@ -47,8 +47,13 @@ export default {
     api.get(`/prodex/api/purchase-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
     }),
-  searchCompanyGenericProduct: (searchQuery, limit) =>
-    api
-      .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`)
-      .then(response => response.data),
+  searchCompanyGenericProduct: (searchQuery, limit, companyId) => {
+    let url = `/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`
+    if (companyId) {
+      url += `&companyId=${companyId}`
+    }
+    return api
+        .get(url)
+        .then(response => response.data)
+  }
 }
