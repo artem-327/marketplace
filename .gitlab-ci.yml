@@ -21,11 +21,11 @@ test:
 
 after_script:
   - |
-    export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$XRAY_CLIENT_ID\",\"client_secret\": \"$XRAY_CLIENT_SECRET\" }" https://xray.cloud.xpand-it.com/api/v1/authenticate| tr -d '"')
+    export token=$(curl -H "Content-Type: application/json" -X POST --data "{ \"client_id\": \"$XRAY_CLIENT_ID\",\"client_secret\": \"$XRAY_CLIENT_SECRET\" }" https://xray.cloud.xpand-it.com/api/v1/authenticate| tr -d '"') || exit 0
     echo $token
     for FILE in ./cypress/results/results*.xml
     do
-      curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?projectKey=DT&testExecKey=DT-2214"
+      curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?projectKey=DT&testExecKey=DT-2214" || exit 0
     done
     echo "done"
   - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0
