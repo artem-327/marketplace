@@ -87,6 +87,6 @@ export const openGenBOLPopup = createAction('SHIPPING_QUOTE_OPEN_GEN_BOL_POPUP',
 export const closeGenBOLPopup = createAction('SHIPPING_QUOTE_CLOSE_GEN_BOL_POPUP')
 export const getOrderById = createAsyncAction('OPERATIONS_ORDERS_GET_ORDER', (orderId) => api.getOrderById(orderId))
 export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', orderId => api.downloadPdf(orderId))
-export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30) =>
-  api.searchCompanyGenericProduct(searchQuery, limit))
+export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30, companyId) =>
+  api.searchCompanyGenericProduct(searchQuery, limit, companyId))
 export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))

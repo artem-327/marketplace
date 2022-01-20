@@ -57,7 +57,8 @@ const MyProducts = props => {
     if (productId && !isNaN(parseInt(productId))) {
       let genericProduct
       try {
-        genericProduct = await props.getCompanyGenericProductById(parseInt(productId)).then(response => response.value)
+        genericProduct = await props.getCompanyGenericProductById(parseInt(productId))
+            .then(response => response.value.company.id !== props.currentCompany.id ? null : response.value)
       } catch (e) {
         console.error(e)
       }
@@ -212,7 +213,8 @@ MyProducts.propTypes = {
   openImportPopup: PropTypes.func,
   handleVariableSave: PropTypes.func,
   handleProductCatalogUnmappedValue: PropTypes.func,
-  deleteProduct: PropTypes.func
+  deleteProduct: PropTypes.func,
+  currentCompany: PropTypes.object
 }
 
 MyProducts.defaultProps = {
@@ -231,7 +233,8 @@ MyProducts.defaultProps = {
   openImportPopup: () => {},
   handleVariableSave: () => {},
   handleProductCatalogUnmappedValue: () => {},
-  deleteProduct: () => {}
+  deleteProduct: () => {},
+  currentCompany: {}
 }
 
 export default injectIntl(MyProducts)
