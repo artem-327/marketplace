@@ -10,6 +10,9 @@ import { FREIGHT_TYPES } from '../../constants'
 export const submitHandler = async (values, actions, props, state) => {
     const { closePopup, order, orderId, shippingQuotes } = props
 
+    console.log('!!!!!!!!!! submit jak cyp - values', values)
+    return
+
     try {
     let formValues = {
         pickupRemarks: values.pickupRemarks.trim(),

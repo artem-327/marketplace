@@ -213,3 +213,17 @@ export const StyledSegment = styled(OrderSegment)`
   }
 `
 
+export const DivHeaderRow = styled.div`
+  display: flex;
+  justify-content: left;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.67;
+  letter-spacing: normal;
+  color: #848893;
+  text-transform: uppercase;
+`
+
+export const DivShippingQuoteContainer = styled.div`
+  padding-right: 14px;
+`
