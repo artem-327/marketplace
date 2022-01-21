@@ -27,8 +27,10 @@ const ColumnWithRectangle = styled(Grid.Column)`
 `
 
 const ButtonCustom = styled(Button)`
-  height: 34px !important;
-  padding-top: 6px !important;
+  &.ui.button.basic {
+    height: 34px !important;
+    padding-top: 6px !important;
+  }
 `
 
 const FREIGHT_TYPES = {

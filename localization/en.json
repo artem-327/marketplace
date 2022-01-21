@@ -2997,6 +2997,7 @@
   "order.shipperRefNo.enter": "Enter Shipper Reference Number",
   "order.weightLimitExceeded": "Your order weight exceeds weight limit for automatic shipping quotes. Your shipping quote need to be processed manually. If you wish to continue, click the 'Request Shipping Quote' button. Our logistics provider will create a custom freight quote for your order and we'll notify you when it's ready.",
   "order.quoteReceived": "If you already received the shipping quote and agree, please type in the provided Quote Id and continue with shipping order.",
+  "order.iAlreadyHaveQuote": "I already have a Quote",
   "profile.myProfile": "My Profile",
   "profile.avatarPicture": "Avatar Picture",
   "profile.lastLoginAt": "Last login at:",

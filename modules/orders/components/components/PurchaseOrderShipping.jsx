@@ -47,21 +47,20 @@ const PurchaseOrderShipping = props => {
 
   useEffect(() => {
     if (!props.order.cfWeightExceeded) {
-
-      console.log('!!!!!!!!!! useEffect shipDate', props.order?.shipDate)
-
-      let pickupDate = moment().add(1, 'minutes').format()
+      let pickupDate = moment().endOf('day').format()
+      const shipDate = props.order?.shipDate
+      if (shipDate) {
+        if (moment(shipDate).endOf('day').isSameOrAfter(moment())) {
+          pickupDate = moment(shipDate).endOf('day').format()
+        }
+      }
       props.getShippingQuotes(props.orderId, pickupDate)
     }
   }, [])
 
   const onDateChange = debounce(async (event, { name, value }) => {
     if (!value || errors.pickupDate) return
-    let pickupDate = moment(getStringISODate(value)) // Value is date only (it means time = 00:00:00)
-    if (pickupDate.isBefore(moment().add(1, 'minutes'))) {
-      // if current date (today) is selected the pickupDate (datetime) is in past
-      pickupDate = moment().add(1, 'minutes') // BE needs to have pickupDate always in future
-    }
+    let pickupDate = moment(getStringISODate(value)).endOf('day') // Value is date only (it means time = 00:00:00)
     pickupDate = pickupDate.format()
 
     if (!props.order.cfWeightExceeded) {
@@ -96,13 +95,13 @@ const PurchaseOrderShipping = props => {
       style={{ padding: '0' }}
     >
       {formikProps => {
-        let { touched, validateForm, resetForm, values, setFieldValue, errors, handleChange, handleSubmit } = formikProps
+        let { values, setFieldValue, errors, handleSubmit, isSubmitting } = formikProps
         const echoFreight = values.freightType === FREIGHT_TYPES.ECHO
         errors = errors
         return (
           <Modal closeIcon onClose={() => props.closePopup()} open={true} size='small'>
             <Dimmer
-              active={isSending || (shippingQuotesAreFetching && getSafe(() => !shippingQuotes.rates.length, false))}
+              active={isSubmitting || isSending || (shippingQuotesAreFetching && getSafe(() => !shippingQuotes.rates.length, false))}
               inverted>
               <Loader />
             </Dimmer>
@@ -222,8 +221,8 @@ const PurchaseOrderShipping = props => {
                     onClick={() => setState({ ...state, isOpenOptionalInformation: !state.isOpenOptionalInformation })}
                     data-test='purchase_order_shipping_optional_information_expand'
                   >
-                    <FormattedMessage id='wantedBoard.myPostOptionalInformation' defaultMessage='Optional Information' />
-                    {state.isOpenOptionalInformation ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
+                    <FormattedMessage id='order.iAlreadyHaveQuote' defaultMessage='I already have a Quote' />
+                    {state.isOpenOptionalInformation ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
                   </DivHeaderRow>
                   {state.isOpenOptionalInformation && (
                     <>
