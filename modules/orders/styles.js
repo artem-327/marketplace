@@ -213,3 +213,21 @@ export const StyledSegment = styled(OrderSegment)`
   }
 `
 
+export const DivHeaderRow = styled.div`
+  display: flex;
+  justify-content: left;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.67;
+  letter-spacing: normal;
+  color: #848893;
+  text-transform: uppercase;
+`
+
+export const DivShippingQuoteContainer = styled.div` 
+  .table-responsive-wider,
+  .table-responsive-wider > div {
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
+`
