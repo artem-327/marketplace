@@ -31,7 +31,19 @@ export const userFormValidation = () =>
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
       phone: phoneValidation(10),
       homeBranch: Yup.number().required(errorMessages.requiredMessage),
-      roles: Yup.array().min(1, errorMessages.minOneRole)
+      roles: Yup.array().min(1, errorMessages.minOneRole),
+      dailyPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable(),
+      orderPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable(),
+      monthlyPurchaseLimit: Yup.number()
+        .positive(errorMessages.positive)
+        .typeError(errorMessages.mustBeNumber)
+        .nullable()
     })
   })
 
@@ -88,7 +100,7 @@ export const getInitialFormValues = sidebarValues => {
     lastName = lastName.replace(/\s\s+/g, ' ');
     lastName = lastName.trim();
   }
-  
+
   return !isEmpty(sidebarValues)
     ? {
       additionalBranches: sidebarValues?.additionalBranches?.map(d => d?.id) || [],
@@ -107,16 +119,16 @@ export const getInitialFormValues = sidebarValues => {
       regulatoryDhsCoiAuthorized: sidebarValues?.regulatoryDhsCoiAuthorized,
       regulatoryDhsCoiSignAskedDate: sidebarValues?.regulatoryDhsCoiSignAskedDate,
       regulatoryHazmatAuthorized: sidebarValues?.regulatoryHazmatAuthorized,
-      dailyPurchaseLimit: !isNaN(parseInt(sidebarValues?.dailyPurchaseLimit?.value))
-        ? parseInt(sidebarValues?.dailyPurchaseLimit?.value)
-        : null,
-      orderPurchaseLimit: !isNaN(parseInt(sidebarValues?.orderPurchaseLimit?.value))
-        ? parseInt(sidebarValues?.orderPurchaseLimit?.value)
-        : null,
-      monthlyPurchaseLimit: !isNaN(parseInt(sidebarValues?.monthlyPurchaseLimit?.value))
-        ? parseInt(sidebarValues?.monthlyPurchaseLimit?.value)
-        : null
-    }
+      dailyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.dailyPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.dailyPurchaseLimit?.value)
+        : '',
+      orderPurchaseLimit: !isNaN(parseFloat(sidebarValues?.orderPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.orderPurchaseLimit?.value)
+        : '',
+      monthlyPurchaseLimit: !isNaN(parseFloat(sidebarValues?.monthlyPurchaseLimit?.value))
+        ? parseFloat(sidebarValues?.monthlyPurchaseLimit?.value)
+        : ''
+      }
     : {
       firstName: '',
       lastName: '',
@@ -135,9 +147,9 @@ export const getInitialFormValues = sidebarValues => {
       regulatoryDhsCoiAuthorized: false,
       regulatoryDhsCoiSignAskedDate: null,
       regulatoryHazmatAuthorized: false,
-      dailyPurchaseLimit: null,
-      orderPurchaseLimit: null,
-      monthlyPurchaseLimit: null
+      dailyPurchaseLimit: '',
+      orderPurchaseLimit: '',
+      monthlyPurchaseLimit: ''
     }
 }
 
@@ -319,41 +331,38 @@ export const submitUser = async (values, actions, props, sidebarValues) => {
     regulatoryHazmatAuthorized: values?.regulatoryHazmatAuthorized
   }
 
-  const settingsData = {
-    settings: [
-      {
-        id: userSettings?.dailyPurchaseLimit?.id || USER_DAILY_PURCHASE_LIMIT_ID,
-        value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      },
-      {
-        id: userSettings?.monthlyPurchaseLimit?.id || USER_MONTHLY_PURCHASE_LIMIT_ID,
-        value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      },
-      {
-        id: userSettings?.orderPurchaseLimit?.id || USER_ORDER_PURCHASE_LIMIT_ID,
-        value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
-      }
-    ]
-  }
+  let settingsData = { settings: [] }
 
-  const isSettingsPatch = userSettings?.dailyPurchaseLimit?.original ||
-    userSettings?.monthlyPurchaseLimit?.original ||
-    userSettings?.orderPurchaseLimit?.original ||
-    (userSettings?.dailyPurchaseLimit?.value != (typeof values?.dailyPurchaseLimit?.toString() === 'undefined' ? '' : values?.dailyPurchaseLimit?.toString())) ||
-    (userSettings?.monthlyPurchaseLimit?.value != (typeof values?.monthlyPurchaseLimit?.toString() === 'undefined' ? '' : values?.monthlyPurchaseLimit?.toString())) ||
-    (userSettings?.orderPurchaseLimit?.value != (typeof values?.orderPurchaseLimit?.toString() === 'undefined' ? '' : values?.orderPurchaseLimit?.toString()))
+  if (values?.dailyPurchaseLimit?.toString().trim() !== userSettings?.dailyPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.dailyPurchaseLimit?.id || USER_DAILY_PURCHASE_LIMIT_ID,
+      value: values?.dailyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
+  if (values?.monthlyPurchaseLimit?.toString().trim() !== userSettings?.monthlyPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.monthlyPurchaseLimit?.id || USER_MONTHLY_PURCHASE_LIMIT_ID,
+      value: values?.monthlyPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
+  if (values?.orderPurchaseLimit?.toString().trim() !== userSettings?.orderPurchaseLimit?.value) {
+    settingsData.settings.push({
+      id: userSettings?.orderPurchaseLimit?.id || USER_ORDER_PURCHASE_LIMIT_ID,
+      value: values?.orderPurchaseLimit?.toString() || 'EMPTY_SETTING'
+    })
+  }
 
   removeEmpty(data)
 
   try {
     if (sidebarValues) {
-      await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, isSettingsPatch)
+      await handlerSubmitUserEditPopup(sidebarValues.id, data, settingsData, !!settingsData.settings.length)
       // !openGlobalAddForm && datagrid.updateRow(sidebarValues.id, () => value)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
       if (currentUserId === sidebarValues.id) getIdentity()
     } else {
-      await postNewUserRequest(data, settingsData, isSettingsPatch)
+      await postNewUserRequest(data, settingsData, !!settingsData.settings.length)
       !openGlobalAddForm && datagrid.loadData()
       sendSuccess = true
     }
