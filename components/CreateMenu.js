@@ -117,7 +117,7 @@ class CreateMenu extends Component {
             </Dropdown.Item>
           )}
           {/* Temporary commented based on https://bluepallet.atlassian.net/browse/DT-88 */}
-          {false && (isCompanyAdmin || isMerchant) && (
+          {(isCompanyAdmin || isMerchant) && (
             <Dropdown.Item
               onClick={() => {
                 openGlobalAddForm('wanted-board-my-posts')
