@@ -25,7 +25,7 @@ export const submitHandler = async (values, actions, props, state) => {
         : getSafe(() => shippingQuotes.rates[state.selectedShippingQuote].quoteId, '')
       ).trim())
       : null,
-      //await props.purchaseShipmentOrder(orderId, formValues)
+      await props.purchaseShipmentOrder(orderId, formValues)
     props.getPurchaseOrder(orderId)
     closePopup()
   } catch (e) {
