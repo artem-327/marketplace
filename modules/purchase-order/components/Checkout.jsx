@@ -208,7 +208,8 @@ const Checkout = props => {
     twoFactorAuthOptions,
     setTwoFactorAuthOptions,
     twoFactorAuthPass,
-    setTwoFactorAuthPass
+    setTwoFactorAuthPass,
+    fixedFreightId
   }
 
   if (cartIsFetching) return <Spinner />

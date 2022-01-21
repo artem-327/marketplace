@@ -29,13 +29,14 @@ export const StatusLabel = styled(Label)`
   margin-left: 9px !important;
   font-size: 12px !important;
   font-style: normal !important;
-  border-radius: 3px;
+  font-weight: normal !important;
+  border-radius: 2px;
   background-color: #edeef2;
-  color: #20273a;
+  color: #848893 !important;
   span {
     vertical-align: text-top;
     padding-left: 4px;
-    line-height: 8px;
+    line-height: 1;
   }
 `
 

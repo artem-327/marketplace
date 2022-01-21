@@ -166,9 +166,9 @@ const ProductPopup = props => {
                   <div>
                     <span>
                       {!popupValues ? (
-                        <FormattedMessage id='createMenu.addProduct' defaultMessage='Add Product' />
+                        <FormattedMessage id='createMenu.addSKU' defaultMessage='Add SKU' />
                       ) : (
-                        <FormattedMessage id='global.editProduct' defaultMessage='Edit Product' />
+                        <FormattedMessage id='global.editSKU' defaultMessage='Edit SKU' />
                       )}
                     </span>
                     <AddBox className='title-icon' />

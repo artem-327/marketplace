@@ -305,7 +305,7 @@ CompanyGenericProductRequestForm.propTypes = {
 
 CompanyGenericProductRequestForm.defaultProps = {
   buttonCaption: (
-    <FormattedMessage id='global.uploadANewProduct' defaultMessage='Upload a new Product'>
+    <FormattedMessage id='global.uploadANewSDS' defaultMessage='Upload a new SDS'>
       {text => text}
     </FormattedMessage>
   ),
