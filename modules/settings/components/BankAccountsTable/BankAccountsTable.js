@@ -530,19 +530,26 @@ class BankAccountsTable extends Component {
   getRows = rows => {
     const { preferredBankAccountId, isHideInactiveAccounts } = this.props
     const backgroundColorStatus = {
-      verified: '#84c225',
-      unverified: '#f16844',
-      verification_in_process: '#ffb24f',
-      inactive: '#f16844',
-      active: '#84c225'
+      active: '#84c225',
+      pending_verification: '#ffc65d',
+      item_login_required: '#f16844',
+      user_permission_revoked: '#f16844',
+      pending_expiration: '#f16844',
+      verification_expired: '#f16844',
+      removed: '#f16844',
+      inactive: '#f16844'
     }
     const colorAccountName = {
-      verified: '#20273a',
-      unverified: '#f16844',
-      verification_in_process: '#ffb24f',
-      inactive: '#f16844',
-      active: '#20273a'
+      active: '#20273a',
+      pending_verification: '#20273a',
+      item_login_required: '#f16844',
+      user_permission_revoked: '#f16844',
+      pending_expiration: '#f16844',
+      verification_expired: '#f16844',
+      removed: '#f16844',
+      inactive: '#f16844'
     }
+
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
@@ -878,7 +885,7 @@ const mapDispatchToProps = {
   downloadStatement
 }
 
-const statusToLabel = {
+const statusToLabel = { // currently not used, needs to update if re-enabled
   verified: (
     <StatusLabel style={{ backgroundColor: '#84c225' }} horizontal>
       <FormattedMessage id='settings.verified' defaultMessage='Verified' />
