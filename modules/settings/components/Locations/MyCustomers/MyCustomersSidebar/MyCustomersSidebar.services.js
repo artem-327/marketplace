@@ -123,7 +123,8 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
   try {
     if (sidebarValues) {
       const {value} = await updateCustomer(sidebarValues.id, customerData)
-      datagrid.updateRow(sidebarValues.id, () => value)
+      // datagrid.updateRow(sidebarValues.id, () => value)
+      datagrid.loadData()
       props.closeSidebar()
     } else {
       const {value} = await addCustomer(customerData)

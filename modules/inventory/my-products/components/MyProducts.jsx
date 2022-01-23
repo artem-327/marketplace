@@ -57,7 +57,8 @@ const MyProducts = props => {
     if (productId && !isNaN(parseInt(productId))) {
       let genericProduct
       try {
-        genericProduct = await props.getCompanyGenericProductById(parseInt(productId)).then(response => response.value)
+        genericProduct = await props.getCompanyGenericProductById(parseInt(productId))
+            .then(response => response.value.company.id !== props.currentCompany.id ? null : response.value)
       } catch (e) {
         console.error(e)
       }
@@ -166,7 +167,7 @@ const MyProducts = props => {
                   onClick={() => openPopup()}
                   data-test='settings_open_popup_btn'>
                   <PlusCircle />
-                  <FormattedMessage id='settings.tables.products.buttonAdd' />
+                  <FormattedMessage id='settings.tables.SKUs.buttonAdd' defaultMessage="Add SKU" />
                 </Button>
               </div>
               <ColumnSettingButton divide={true} />
@@ -212,7 +213,8 @@ MyProducts.propTypes = {
   openImportPopup: PropTypes.func,
   handleVariableSave: PropTypes.func,
   handleProductCatalogUnmappedValue: PropTypes.func,
-  deleteProduct: PropTypes.func
+  deleteProduct: PropTypes.func,
+  currentCompany: PropTypes.object
 }
 
 MyProducts.defaultProps = {
@@ -231,7 +233,8 @@ MyProducts.defaultProps = {
   openImportPopup: () => {},
   handleVariableSave: () => {},
   handleProductCatalogUnmappedValue: () => {},
-  deleteProduct: () => {}
+  deleteProduct: () => {},
+  currentCompany: {}
 }
 
 export default injectIntl(MyProducts)

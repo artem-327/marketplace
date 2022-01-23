@@ -12,7 +12,7 @@ import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
-import { Check } from 'react-feather'
+import { Check, Clock } from 'react-feather'
 import {
   openPopup,
   closePopup,
@@ -530,23 +530,30 @@ class BankAccountsTable extends Component {
   getRows = rows => {
     const { preferredBankAccountId, isHideInactiveAccounts } = this.props
     const backgroundColorStatus = {
-      verified: '#84c225',
-      unverified: '#f16844',
-      verification_in_process: '#ffb24f',
-      inactive: '#f16844',
-      active: '#84c225'
+      active: '#84c225',
+      pending_verification: '#ffc65d',
+      item_login_required: '#f16844',
+      user_permission_revoked: '#f16844',
+      pending_expiration: '#f16844',
+      verification_expired: '#f16844',
+      removed: '#f16844',
+      inactive: '#f16844'
     }
     const colorAccountName = {
-      verified: '#20273a',
-      unverified: '#f16844',
-      verification_in_process: '#ffb24f',
-      inactive: '#f16844',
-      active: '#20273a'
+      active: '#20273a',
+      pending_verification: '#20273a',
+      item_login_required: '#f16844',
+      user_permission_revoked: '#f16844',
+      pending_expiration: '#f16844',
+      verification_expired: '#f16844',
+      removed: '#f16844',
+      inactive: '#f16844'
     }
+
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
-        if (row.status === 'active') newRows.push(row)
+        if (row.status === 'active' || row.status === 'pending_verification') newRows.push(row)
       })
     } else {
       newRows = rows
@@ -558,9 +565,17 @@ class BankAccountsTable extends Component {
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
+          {row.status === 'pending_verification' ? (
+            <StatusLabel horizontal>
+              <Clock color='#848893' size='12' />
+              <span>
+                <FormattedMessage id='settings.pending' defaultMessage='Pending' />
+              </span>
+            </StatusLabel>
+          ) : null}
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
-              <Check color='#84c225' size='14' strokeWidth='4' />
+              <Check color='#84c225' size='12' strokeWidth='4' />
               <span>
                 <FormattedMessage id='settings.preferred' defaultMessage='Preferred' />
               </span>
@@ -870,7 +885,7 @@ const mapDispatchToProps = {
   downloadStatement
 }
 
-const statusToLabel = {
+const statusToLabel = { // currently not used, needs to update if re-enabled
   verified: (
     <StatusLabel style={{ backgroundColor: '#84c225' }} horizontal>
       <FormattedMessage id='settings.verified' defaultMessage='Verified' />

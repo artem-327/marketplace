@@ -18,7 +18,8 @@ export const userFormValidation = (props) =>
     const requiredCompany = !values.roles.some(role => adminRoles.some(d => role === d.id))
 
     return Yup.object().shape({
-      lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+      firstName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+      lastName: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
       email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
       additionalBranches: Yup.array(),
       jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
@@ -172,11 +173,12 @@ export const submitUser = async (values, actions, props, state) => {
   try {
     if (popupValues) {
       const { value } = await submitUserEdit(popupValues.id, data)
-      datagrid.updateRow(popupValues.id, () => value)
+      // datagrid.updateRow(popupValues.id, () => value)
     } else {
       await postNewUserRequest(data)
-      datagrid.loadData()
+      // datagrid.loadData()
     }
+    datagrid.loadData()
     closePopup()
   } catch {}
   actions.setSubmitting(false)

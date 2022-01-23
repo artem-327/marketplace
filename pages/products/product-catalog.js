@@ -17,7 +17,7 @@ class Index extends Component {
       auth
     } = this.props
     return (
-      <Layout title={formatMessage({ id: 'title.products.productCatalog', defaultMessage: 'Product Catalog' })}>
+      <Layout title={formatMessage({ id: 'title.products.SDSCatalog', defaultMessage: 'SDS Catalog' })}>
         {!auth?.identity?.isAdmin
           ? (null)
           : (<ProductsPage currentTab={'product-catalog'} />)

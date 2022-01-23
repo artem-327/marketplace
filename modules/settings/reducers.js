@@ -1648,8 +1648,10 @@ export default function reducer(state = initialState, action) {
     /* GET_COMPANY_USER */
 
     case AT.GET_COMPANY_USER_PENDING: {
+      let userSettings = { orderPurchaseLimit: null, monthlyPurchaseLimit: null, dailyPurchaseLimit: null }
       return {
         ...state,
+        userSettings,
         updating: true
       }
     }
@@ -1658,7 +1660,7 @@ export default function reducer(state = initialState, action) {
       let userSettings = { orderPurchaseLimit: null, monthlyPurchaseLimit: null, dailyPurchaseLimit: null }
       if (payload?.length) {
         payload?.forEach(p => {
-          if (p?.code === 'OTHER_SETTINGS') {
+          if (p?.code === 'PURCHASE_LIMITS') {
             p?.settings?.forEach(s => {
               if (s.code === 'USER_ORDER_PURCHASE_LIMIT') {
                 userSettings.orderPurchaseLimit = { id: s.id, value: s.value === 'EMPTY_SETTING' ? '' : s.value, original: s.original }
