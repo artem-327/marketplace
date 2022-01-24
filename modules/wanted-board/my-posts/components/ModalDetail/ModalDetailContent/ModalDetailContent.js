@@ -22,7 +22,7 @@ import {
     CasGridStyled,
     AssayGridStyled,
     SegmentStyled
-  } from '../ModalDetail.styles'
+} from '../ModalDetail.styles'
 
 import {
     DivInputWrapper,
@@ -65,7 +65,7 @@ const ModalDetailContent = props => {
     } = props
     const { values, setFieldValue } = formikProps
 
-    useEffect( () => {
+    useEffect(() => {
         const init = async () => {
             if (!props.hazardClasses.length) props.getHazardClasses()
             let {
@@ -98,8 +98,8 @@ const ModalDetailContent = props => {
                 }
 
                 await fetchProvinces(
-                  deliveryCountry ? deliveryCountry.id : primaryBranch?.country?.id,
-                  deliveryCountry ? deliveryCountry.hasProvinces : primaryBranch?.country?.hasProvinces
+                    deliveryCountry ? deliveryCountry.id : primaryBranch?.country?.id,
+                    deliveryCountry ? deliveryCountry.hasProvinces : primaryBranch?.country?.hasProvinces
                 )
             } catch (e) {
                 console.error(e)
@@ -107,7 +107,7 @@ const ModalDetailContent = props => {
         }
         init()
         !popupValues && setFieldValue('deliveryProvince', '')
-    }, []) 
+    }, [])
 
     const fetchProvinces = async (countryId, hasProvinces) => {
         if (countryId && hasProvinces) {
@@ -130,40 +130,41 @@ const ModalDetailContent = props => {
                     <GridRow>
                         <GridColumn width={16} data-test='wanted_board_sidebar_product_name_inpt'>
                             <Input
-                            type='text'
-                            label={
-                                <>
-                                <FormattedMessage id='wantedBoard.myPostIndexProductName' defaultMessage='Product Name' />
-                                <Required />
-                                </>
-                            }
-                            name='productSearchPattern'
-                            inputProps={{
-                                placeholder: formatMessage({
-                                    id: 'wantedBoard.myPostEnterProductName',
-                                    defaultMessage: 'Enter a requested product name'
-                                })
-                            }}
+                                type='text'
+                                label={
+                                    <>
+                                        <FormattedMessage id='wantedBoard.myPostIndexProductName' defaultMessage='Product Name' />
+                                        <Required />
+                                    </>
+                                }
+                                name='productSearchPattern'
+                                inputProps={{
+                                    placeholder: formatMessage({
+                                        id: 'wantedBoard.myPostEnterProductName',
+                                        defaultMessage: 'Enter a requested product name'
+                                    })
+                                }}
                             />
                         </GridColumn>
                     </GridRow>
                     <GridRow>
                         <GridColumn width={8} data-test='wanted_board_sidebar_quantity_inpt'>
                             <Input
-                            type='text'
-                            label={
-                                <>
-                                <FormattedMessage id='wantedBoard.myPostIndexQuantity' defaultMessage='Quantity Needed' />
-                                <Required />
-                                </>
-                            }
-                            name='quantity'
-                            inputProps={{
-                                placeholder: formatMessage({
-                                id: 'wantedBoard.myPostEnterQuantity',
-                                defaultMessage: '0'
-                                })
-                            }}
+                                type='text'
+                                label={
+                                    <>
+                                        <FormattedMessage id='wantedBoard.myPostIndexQuantity' defaultMessage='Quantity Needed' />
+                                        <Required />
+                                    </>
+                                }
+                                name='quantity'
+                                inputProps={{
+                                    placeholder: formatMessage({
+                                        id: 'wantedBoard.myPostEnterQuantity',
+                                        defaultMessage: 0,
+                                    }),
+                                    type: 'number',
+                                }}
                             />
                         </GridColumn>
                         <GridColumn width={8}>
@@ -247,8 +248,8 @@ const ModalDetailContent = props => {
                 </CasGridStyled>
             </SegmentStyled>
             <DivHeaderRow
-              style={{ cursor: 'pointer' }}
-              onClick={() => setState({ ...state, isOpenOptionalInformation: !state.isOpenOptionalInformation })}
+                style={{ cursor: 'pointer' }}
+                onClick={() => setState({ ...state, isOpenOptionalInformation: !state.isOpenOptionalInformation })}
             >
                 <FormattedMessage id='wantedBoard.myPostOptionalInformation' defaultMessage='Optional Information' />
                 {state.isOpenOptionalInformation ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
@@ -258,41 +259,41 @@ const ModalDetailContent = props => {
                     <GridRow>
                         <GridColumn width={8}>
                             <DateInput
-                              inputProps={{ minDate: moment(), id: 'neededAt', clearable: true }}
-                              name='neededAt'
-                              label={
-                                  <>
-                                      <FormattedMessage id='wantedBoard.myPostDateNeededBy' defaultMessage='Date Needed By' />
-                                  </>
-                              }
+                                inputProps={{ minDate: moment(), id: 'neededAt', clearable: true }}
+                                name='neededAt'
+                                label={
+                                    <>
+                                        <FormattedMessage id='wantedBoard.myPostDateNeededBy' defaultMessage='Date Needed By' />
+                                    </>
+                                }
                             />
                         </GridColumn>
                         <GridColumn width={8}>
                             <Dropdown
-                              label={
-                                  <>
-                                      <FormattedMessage id='wantedBoard.myPostWillAcceptEquivalents' defaultMessage='Will Accept Equivalents' />
-                                  </>
-                              }
-                              options={YES_NO_OPTIONS}
-                              name='acceptEquivalents'
-                              inputProps={{ 'data-test': 'wanted_board_sidebar_willAcceptEquivalents_drpdn' }}
+                                label={
+                                    <>
+                                        <FormattedMessage id='wantedBoard.myPostWillAcceptEquivalents' defaultMessage='Will Accept Equivalents' />
+                                    </>
+                                }
+                                options={YES_NO_OPTIONS}
+                                name='acceptEquivalents'
+                                inputProps={{ 'data-test': 'wanted_board_sidebar_willAcceptEquivalents_drpdn' }}
                             />
                         </GridColumn>
                     </GridRow>
                     <GridRow>
                         <GridColumn width={8}>
                             <CustomLabel>
-                              <FormattedMessage id='wantedBoard.myPostPreferredFOBPrice' defaultMessage='Preferred FOB Price' />
+                                <FormattedMessage id='wantedBoard.myPostPreferredFOBPrice' defaultMessage='Preferred FOB Price' />
                             </CustomLabel>
                             <DivInputWrapper className='price'>
                                 <Input
-                                  name='maximumPricePerUOM'
-                                  inputProps={{
-                                      type: 'number',
-                                      placeholder: '0.00',
-                                      fluid: true
-                                  }}
+                                    name='maximumPricePerUOM'
+                                    inputProps={{
+                                        //   type: 'number',
+                                        placeholder: '0.00',
+                                        fluid: true
+                                    }}
                                 />
                                 <Label>$</Label>
                             </DivInputWrapper>
@@ -325,137 +326,137 @@ const ModalDetailContent = props => {
                         </GridColumn>
                     </GridRow>
                     <GridRow>
-                      {false && /* Temporary disabled - https://bluepallet.atlassian.net/browse/DT-1196 */ (
-                        <GridColumn width={8}>
-                            <AssayGridStyled>
-                                <GridRow>
-                                    <GridColumn width={8}>
-                                        <CustomLabel>
-                                            <FormattedMessage id='wantedBoard.myPostAssayMin' defaultMessage='Assay Min' />
-                                        </CustomLabel>
-                                        <DivInputWrapper>
-                                            <Input
-                                              name='assayMin'
-                                              inputProps={{
-                                                  type: 'number',
-                                                  placeholder: '0',
-                                                  fluid: true
-                                              }}
-                                            />
-                                            <Label>%</Label>
-                                        </DivInputWrapper>
-                                    </GridColumn>
-                                    <GridColumn width={8}>
-                                        <CustomLabel>
-                                            <FormattedMessage id='wantedBoard.myPostAssayMax' defaultMessage='Assay Max' />
-                                        </CustomLabel>
-                                        <DivInputWrapper>
-                                            <Input
-                                              name='assayMax'
-                                              inputProps={{
-                                                  type: 'number',
-                                                  placeholder: '0',
-                                                  fluid: true
-                                              }}
-                                            />
-                                            <Label>%</Label>
-                                        </DivInputWrapper>
-                                    </GridColumn>
-                                </GridRow>
-                            </AssayGridStyled>
-                        </GridColumn>
+                        {false && /* Temporary disabled - https://bluepallet.atlassian.net/browse/DT-1196 */ (
+                            <GridColumn width={8}>
+                                <AssayGridStyled>
+                                    <GridRow>
+                                        <GridColumn width={8}>
+                                            <CustomLabel>
+                                                <FormattedMessage id='wantedBoard.myPostAssayMin' defaultMessage='Assay Min' />
+                                            </CustomLabel>
+                                            <DivInputWrapper>
+                                                <Input
+                                                    name='assayMin'
+                                                    inputProps={{
+                                                        type: 'number',
+                                                        placeholder: '0',
+                                                        fluid: true
+                                                    }}
+                                                />
+                                                <Label>%</Label>
+                                            </DivInputWrapper>
+                                        </GridColumn>
+                                        <GridColumn width={8}>
+                                            <CustomLabel>
+                                                <FormattedMessage id='wantedBoard.myPostAssayMax' defaultMessage='Assay Max' />
+                                            </CustomLabel>
+                                            <DivInputWrapper>
+                                                <Input
+                                                    name='assayMax'
+                                                    inputProps={{
+                                                        type: 'number',
+                                                        placeholder: '0',
+                                                        fluid: true
+                                                    }}
+                                                />
+                                                <Label>%</Label>
+                                            </DivInputWrapper>
+                                        </GridColumn>
+                                    </GridRow>
+                                </AssayGridStyled>
+                            </GridColumn>
                         )}
                         <GridColumn width={8}>
                             <Dropdown
-                              label={
-                                  <>
-                                      <FormattedMessage id='wantedBoard.myPostPackaing' defaultMessage='Packaging' />
-                                  </>
-                              }
-                              name="packaingFilter"
-                              options={packagingTypes}
-                              inputProps={{
-                                  multiple: true,
-                                  clearable: true,
-                                  onFocus: e => (e.target.autocomplete = null),
-                                  'data-test': 'wanted_board_sidebar_packaging_drpdn',
-                                  search: true,
-                                  placeholder: formatMessage({ id: 'wantedBoard.selectPackaging', defaultMessage: 'Select Packaging' }),
-                              }}
+                                label={
+                                    <>
+                                        <FormattedMessage id='wantedBoard.myPostPackaing' defaultMessage='Packaging' />
+                                    </>
+                                }
+                                name="packaingFilter"
+                                options={packagingTypes}
+                                inputProps={{
+                                    multiple: true,
+                                    clearable: true,
+                                    onFocus: e => (e.target.autocomplete = null),
+                                    'data-test': 'wanted_board_sidebar_packaging_drpdn',
+                                    search: true,
+                                    placeholder: formatMessage({ id: 'wantedBoard.selectPackaging', defaultMessage: 'Select Packaging' }),
+                                }}
                             />
                         </GridColumn>
                     </GridRow>
                     <GridRow>
                         <GridColumn width={8}>
                             <Dropdown
-                              label={<FormattedMessage id='wantedBoard.myPostIndexConditionFilter' defaultMessage='Condition' />}
-                              options={productConditions}
-                              name='conditionFilter'
-                              inputProps={{
-                                  multiple: true,
-                                  clearable: true,
-                                  loading: productConditionsLoading,
-                                  'data-test': 'wanted_board_sidebar_condition_drpdn',
-                                  placeholder: formatMessage({ id: 'global.address.selectCondition', defaultMessage: 'Select Condition' })
-                              }}
+                                label={<FormattedMessage id='wantedBoard.myPostIndexConditionFilter' defaultMessage='Condition' />}
+                                options={productConditions}
+                                name='conditionFilter'
+                                inputProps={{
+                                    multiple: true,
+                                    clearable: true,
+                                    loading: productConditionsLoading,
+                                    'data-test': 'wanted_board_sidebar_condition_drpdn',
+                                    placeholder: formatMessage({ id: 'global.address.selectCondition', defaultMessage: 'Select Condition' })
+                                }}
                             />
                         </GridColumn>
                         <GridColumn width={8}>
                             <Dropdown
-                            label={<FormattedMessage id='wantedBoard.myPostIndexFormFilter' defaultMessage='Form' />}
-                            options={productForms}
-                            name='formFilter'
-                            inputProps={{
-                                multiple: true,
-                                clearable: true,
-                                loading: productFormsLoading,
-                                'data-test': 'wanted_board_sidebar_form_drpdn',
-                                placeholder: formatMessage({ id: 'global.address.selectForm', defaultMessage: 'Select Form' })
-                            }}
+                                label={<FormattedMessage id='wantedBoard.myPostIndexFormFilter' defaultMessage='Form' />}
+                                options={productForms}
+                                name='formFilter'
+                                inputProps={{
+                                    multiple: true,
+                                    clearable: true,
+                                    loading: productFormsLoading,
+                                    'data-test': 'wanted_board_sidebar_form_drpdn',
+                                    placeholder: formatMessage({ id: 'global.address.selectForm', defaultMessage: 'Select Form' })
+                                }}
                             />
                         </GridColumn>
                     </GridRow>
                     <GridRow>
                         <GridColumn width={8}>
                             <Dropdown
-                              label={<FormattedMessage id='wantedBoard.myPostIndexGradeFilter' defaultMessage='Grade' />}
-                              options={productGrades}
-                              name='gradeFilter'
-                              inputProps={{
-                                  multiple: true,
-                                  clearable: true,
-                                  loading: productGradesLoading,
-                                  'data-test': 'wanted_board_sidebar_grade_drpdn',
-                                  placeholder: formatMessage({ id: 'global.address.selectGrade', defaultMessage: 'Select Grade' })
-                              }}
+                                label={<FormattedMessage id='wantedBoard.myPostIndexGradeFilter' defaultMessage='Grade' />}
+                                options={productGrades}
+                                name='gradeFilter'
+                                inputProps={{
+                                    multiple: true,
+                                    clearable: true,
+                                    loading: productGradesLoading,
+                                    'data-test': 'wanted_board_sidebar_grade_drpdn',
+                                    placeholder: formatMessage({ id: 'global.address.selectGrade', defaultMessage: 'Select Grade' })
+                                }}
                             />
                         </GridColumn>
                         <GridColumn width={8}>
                             <Dropdown
-                              label={<FormattedMessage id='wantedBoard.myPostManufacturer' defaultMessage='Manufacturer' />}
-                              options={manufacturerOptions}
-                              name='manufacturers'
-                              inputProps={{
-                                  multiple: true,
-                                  clearable: true,
-                                  search: true,
-                                  loading: searchedManufacturersLoading,
-                                  onSearchChange: debounce((e, { searchQuery }) => {
-                                      try {
-                                          searchManufacturers(searchQuery)
-                                      } catch (e) {
-                                          console.error(e)
-                                      }
-                                  }, 500),
+                                label={<FormattedMessage id='wantedBoard.myPostManufacturer' defaultMessage='Manufacturer' />}
+                                options={manufacturerOptions}
+                                name='manufacturers'
+                                inputProps={{
+                                    multiple: true,
+                                    clearable: true,
+                                    search: true,
+                                    loading: searchedManufacturersLoading,
+                                    onSearchChange: debounce((e, { searchQuery }) => {
+                                        try {
+                                            searchManufacturers(searchQuery)
+                                        } catch (e) {
+                                            console.error(e)
+                                        }
+                                    }, 500),
 
-                                  onChange: (_, { value }) => {
-                                      let newSelectedManufacturers = []
-                                      manufacturerOptions.forEach(item => value.some(val => val === item.key) && newSelectedManufacturers.push(item))
-                                      setState(prevState => ({ ...prevState, selectedManufacturers: newSelectedManufacturers }))
-                                  },
-                                  'data-test': 'wanted_board_sidebar_manufacturers_drpdn',
-                                  placeholder: formatMessage({ id: 'wantedBoard.myPostSelectManufacturer', defaultMessage: 'Select Manufacturer' })
-                              }}
+                                    onChange: (_, { value }) => {
+                                        let newSelectedManufacturers = []
+                                        manufacturerOptions.forEach(item => value.some(val => val === item.key) && newSelectedManufacturers.push(item))
+                                        setState(prevState => ({ ...prevState, selectedManufacturers: newSelectedManufacturers }))
+                                    },
+                                    'data-test': 'wanted_board_sidebar_manufacturers_drpdn',
+                                    placeholder: formatMessage({ id: 'wantedBoard.myPostSelectManufacturer', defaultMessage: 'Select Manufacturer' })
+                                }}
                             />
                         </GridColumn>
                     </GridRow>
@@ -464,11 +465,11 @@ const ModalDetailContent = props => {
                         <GridColumn width={16}>
                             <TextArea
                                 name='specialNotes'
-                                label={<FormattedMessage id='wantedBoard.myPostIndexSpecialNotesFilter' defaultMessage='Special Notes'  />}
+                                label={<FormattedMessage id='wantedBoard.myPostIndexSpecialNotesFilter' defaultMessage='Special Notes' />}
                                 inputProps={{
                                     placeholder: formatMessage({
-                                    id: 'wantedBoard.writeNotesHere',
-                                    defaultMessage: 'Write Notes Here'
+                                        id: 'wantedBoard.writeNotesHere',
+                                        defaultMessage: 'Write Notes Here'
                                     })
                                 }}
                             />
@@ -492,12 +493,12 @@ ModalDetailContent.propTypes = {
 }
 
 ModalDetailContent.defaultProps = {
-    getHazardClasses: () => {},
-    setProvinceRequired: () => {},
+    getHazardClasses: () => { },
+    setProvinceRequired: () => { },
     provinceRequired: false,
     intl: {},
     formikProps: {},
-    searchManufacturers: () => {},
+    searchManufacturers: () => { },
     searchedManufacturers: [],
     searchedManufacturersLoading: false
 }
