@@ -19,7 +19,8 @@ export const formValidation = (provinceRequired) =>
         val => !val || moment('00:00:00', 'hh:mm:ss').diff(getStringISODate(val), 'days') <= -1
       )
     ),
-    maximumPricePerUOM: Yup.number().positive(errorMessages.positive),
+    // maximumPricePerUOM: Yup.number().positive(errorMessages.positive),
+    maximumPricePerUOM: Yup.string().required(errorMessages.requiredMessage),
     /* Temporary disabled - https://bluepallet.atlassian.net/browse/DT-1196
     assayMin: Yup.string()
       .test('v', errorMessages.minUpToMax, function (v) {
