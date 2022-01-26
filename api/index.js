@@ -80,7 +80,7 @@ customAxios.interceptors.response.use(
       return new Promise((resolve, reject) => {
         let reader = new FileReader()
         reader.onload = () => {
-          error.response.data = JSON.parse(reader.result)
+          error.response.data = JSON.parse(String(reader.result))
 
           Message.checkForMessages(error.response)
 
