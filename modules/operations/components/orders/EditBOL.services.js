@@ -105,9 +105,9 @@ export const getInitialValues = bol => {
         handlingUnitQty: item.handlingUnitQty || '',
         handlingUnitType: item.handlingUnitType || '',
         hazardClass: item.hazardClass || '',
-        hazardous: item.hazardous || '',
+        hazardous: getSafe(() => item.hazardous, ''),
         nmfcNo: item.nmfcNo || '',
-        od: item.od || '',
+        od: getSafe(() => item.od, ''),
         packagingQty: item.packagingQty || '',
         packagingType: item.packagingType || '',
         weight: item.weight || ''
@@ -144,7 +144,7 @@ export const getInitialValues = bol => {
     shipperRefNo: bol?.shipperRefNo || '',
     skidSpot: bol?.skidSpot || '',
     specialInstructions: bol?.specialInstructions || '',
-    stackable: bol?.stackable || '',
+    stackable: getSafe(() => bol.stackable, ''),
     trailerNo: bol?.trailerNo || ''
   }
 }

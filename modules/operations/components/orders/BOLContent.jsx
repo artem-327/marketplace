@@ -324,7 +324,7 @@ const BOLContent = props => {
         <GridColumn>
           <Input
             name='sealNo'
-            label={formatMessage({ id: 'operations.editBol.sealNo', defaultMessage: 'seal #' })}
+            label={formatMessage({ id: 'operations.editBol.sealNo', defaultMessage: 'Seal #' })}
             inputProps={{
               placeholder: formatMessage({ id: 'operations.editBol.enterValue', defaultMessage: 'Enter Value' })
             }}
@@ -435,7 +435,7 @@ const BOLContent = props => {
         <GridColumn>
           <Input
             name='quoteId'
-            label={formatMessage({ id: 'operations.editBol.quoteId', defaultMessage: 'aaaaaaa' })}
+            label={formatMessage({ id: 'operations.editBol.quoteId', defaultMessage: 'Quote ID' })}
             inputProps={{
               placeholder: formatMessage({ id: 'operations.editBol.enterValue', defaultMessage: 'Enter Value' })
             }}
@@ -506,8 +506,16 @@ const BOLContent = props => {
                     name='stackable'
                     label={formatMessage({ id: 'operations.editBol.stackable', defaultMessage: 'Stackable' })}
                     options={[
-                      { key: 0, text: 'No', value: false },
-                      { key: 1, text: 'Yes', value: true }
+                      {
+                        key: 0,
+                        text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                        value: false
+                      },
+                      {
+                        key: 1,
+                        text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                        value: true
+                      }
                     ]}
                     inputProps={{
                       selection: true,
@@ -645,22 +653,48 @@ const BOLContent = props => {
             <TableCarrier celled padded textAlign='center'>
               <Table.Header>
                 <Table.Row>
-                  <Table.HeaderCell colSpan='2'>Packaging Unit</Table.HeaderCell>
-                  <Table.HeaderCell colSpan='2'>Handling Unit</Table.HeaderCell>
-                  <Table.HeaderCell rowSpan='2'>Weight</Table.HeaderCell>
-                  <Table.HeaderCell rowSpan='2'>HM</Table.HeaderCell>
-                  <Table.HeaderCell rowSpan='2'>OD</Table.HeaderCell>
-                  <Table.HeaderCell rowSpan='2'>Commodity Description</Table.HeaderCell>
-                  <Table.HeaderCell colSpan='2'>LTL Only</Table.HeaderCell>
+                  <Table.HeaderCell colSpan='2'>
+                    <FormattedMessage id='operations.editBol.packagingUnit' defaultMessage='Packaging Unit' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell colSpan='2'>
+                    <FormattedMessage id='operations.editBol.handlingUnit' defaultMessage='Handling Unit' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell rowSpan='2'>
+                    <FormattedMessage id='operations.editBol.weight' defaultMessage='Weight' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell rowSpan='2'>
+                    <FormattedMessage id='operations.editBol.hM' defaultMessage='HM' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell rowSpan='2'>
+                    <FormattedMessage id='operations.editBol.oD' defaultMessage='OD' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell rowSpan='2'>
+                    <FormattedMessage id='operations.editBol.commodityDescription' defaultMessage='Commodity Description' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell colSpan='2'>
+                    <FormattedMessage id='operations.editBol.lTLOnly' defaultMessage='LTL Only' />
+                  </Table.HeaderCell>
                   <Table.HeaderCell rowSpan='2' />
                 </Table.Row>
                 <Table.Row>
-                  <Table.HeaderCell>QTY</Table.HeaderCell>
-                  <Table.HeaderCell>Type</Table.HeaderCell>
-                  <Table.HeaderCell>Qty</Table.HeaderCell>
-                  <Table.HeaderCell>Type</Table.HeaderCell>
-                  <Table.HeaderCell>NMFC#</Table.HeaderCell>
-                  <Table.HeaderCell>CLASS</Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.qTY' defaultMessage='QTY' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.type' defaultMessage='Type' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.qTY' defaultMessage='Type' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.type' defaultMessage='Type' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.nMFCNum' defaultMessage='NMFC#' />
+                  </Table.HeaderCell>
+                  <Table.HeaderCell>
+                    <FormattedMessage id='operations.editBol.class' defaultMessage='Class' />
+                  </Table.HeaderCell>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -705,8 +739,16 @@ const BOLContent = props => {
                               <Dropdown
                                 name={`items[${index}].hazardous`}
                                 options={[
-                                  { key: 0, text: 'No', value: false },
-                                  { key: 1, text: 'Yes', value: true }
+                                  {
+                                    key: 0,
+                                    text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                                    value: false
+                                  },
+                                  {
+                                    key: 1,
+                                    text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                                    value: true
+                                  }
                                 ]}
                                 inputProps={{
                                   selection: true,
@@ -718,8 +760,16 @@ const BOLContent = props => {
                               <Dropdown
                                 name={`items[${index}].od`}
                                 options={[
-                                  { key: 0, text: 'No', value: false },
-                                  { key: 1, text: 'Yes', value: true }
+                                  {
+                                    key: 0,
+                                    text: formatMessage({ id: 'global.no', defaultMessage: 'No' }),
+                                    value: false
+                                  },
+                                  {
+                                    key: 1,
+                                    text: formatMessage({ id: 'global.yes', defaultMessage: 'Yes' }),
+                                    value: true
+                                  }
                                 ]}
                                 inputProps={{
                                   selection: true,
