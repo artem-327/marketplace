@@ -7,27 +7,12 @@ import moment from 'moment'
 import { DeleteForever } from '@material-ui/icons'
 
 import { getSafe } from '~/utils/functions'
-import {
-  Form,
-  Accordion,
-  Tab,
-  Menu,
-  Grid,
-  GridColumn,
-  GridRow,
-  Checkbox,
-  Dimmer,
-  Loader,
-  Table
-} from 'semantic-ui-react'
+import { GridColumn, GridRow, Checkbox, Table } from 'semantic-ui-react'
 
 // Components
-import { Formik, FieldArray } from 'formik'
-import { FormattedPhone } from '../../../../components/formatted-messages/'
-import { Button, Input, Dropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
-import ErrorFocus from '../../../../components/error-focus'
+import { FieldArray } from 'formik'
+import { Input, Dropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { PhoneNumber } from '../../../phoneNumber'
-import BasicButton from '../../../../components/buttons/BasicButton'
 import { AddressForm } from '../../../address-form'
 import { DateInput } from '../../../../components/custom-formik'
 
@@ -35,77 +20,21 @@ import { DateInput } from '../../../../components/custom-formik'
 import * as Actions from '../../actions'
 
 // Styles
-import {
-  GridBol,
-  DivTitleSection,
-  GreySegment,
-  TableCarrier,
-  DivPLusIcon
-} from './EditBOL.styles'
-import {
-  OrderSegment,
-  OrderList,
-  OrderAccordion,
-  AccordionTitle,
-  Chevron,
-  GridData,
-  GridDataColumn,
-  StyledTable,
-  TableRowData,
-  GridDataColumnTrackingID,
-  StyledModal,
-  TopRow,
-  StyledHeader,
-  ButtonCancel
-} from '../../styles'
-
-// Services
-//import { formValidation, SubmitBOL } from './EditBOL.services'
+import { GridBol, DivTitleSection, GreySegment, TableCarrier, DivPLusIcon } from './EditBOL.styles'
 
 const BOLContent = props => {
-  // ! ! ? const prevVariable = usePrevious(props.variable)
-  const [tmp, set] = useState(false)
-
   const {
     intl: { formatMessage },
     formikProps
   } = props
 
-  const {
-    values,
-    setFieldValue,
-    setFieldTouched,
-    validateForm,
-    submitForm,
-    touched,
-    isSubmitting,
-    handleSubmit,
-    errors
-  } = formikProps
-
-  // Similar to call componentDidMount:
-  useEffect(() => {
-
-    console.log('!!!!!!!!!! BOLContent bolName', props.bolName)
-    console.log('!!!!!!!!!! BOLContent bol', props.bol)
-
-  }, [])  // If [] is empty then is similar as componentDidMount.
-
-
-  // This useEffect is used similar as componentDidUpdate
-  // Could by used in previous (above) useEffect, but this approach is more clear
-  useEffect(() => {
-
-  }, [/* variableName */])
-
-
-  console.log('!!!!!!!!!! aaaaa values', values)
+  const { values, setFieldValue, setFieldTouched, touched, isSubmitting, errors } = formikProps
 
   return (
     <GridBol>
       <GridRow columns={2}>
         <GridColumn>
-          <GridBol>
+          <GridBol style={{ margin: '0 -5px' }}>
             <GridRow>
               <GridColumn>
                 <DivTitleSection>
@@ -127,6 +56,7 @@ const BOLContent = props => {
             <GridRow>
               <GridColumn>
                 <AddressForm
+                  useStringCountryState={true}
                   prefix={'pickupAddress'}
                   noBorder
                   required={false}
@@ -211,6 +141,7 @@ const BOLContent = props => {
             <GridRow>
               <GridColumn>
                 <AddressForm
+                  useStringCountryState={true}
                   prefix={'destinationAddress'}
                   noBorder
                   required={false}
@@ -444,6 +375,7 @@ const BOLContent = props => {
       <GridRow>
         <GridColumn>
           <AddressForm
+            useStringCountryState={true}
             prefix={'billTo'}
             noBorder
             required={false}
@@ -741,7 +673,7 @@ const BOLContent = props => {
                           <Table.Row>
                             <Table.Cell>
                               <Input
-                                type='number'
+                                type='text'
                                 name={`items[${index}].packagingQty`}
                               />
                             </Table.Cell>
@@ -753,7 +685,7 @@ const BOLContent = props => {
                             </Table.Cell>
                             <Table.Cell>
                               <Input
-                                type='number'
+                                type='text'
                                 name={`items[${index}].handlingUnitQty`}
                               />
                             </Table.Cell>
@@ -765,7 +697,7 @@ const BOLContent = props => {
                             </Table.Cell>
                             <Table.Cell>
                               <Input
-                                type='number'
+                                type='text'
                                 name={`items[${index}].weight`}
                               />
                             </Table.Cell>
@@ -858,11 +790,15 @@ const BOLContent = props => {
 }
 
 BOLContent.propTypes = {
-
+  bolName: PropTypes.string,
+  bol: PropTypes.object,
+  formikProps: PropTypes.object
 }
 
 BOLContent.defaultProps = {
-
+  bolName: '',
+  bol: null,
+  formikProps: {}
 }
 
 function mapStateToProps(store) {

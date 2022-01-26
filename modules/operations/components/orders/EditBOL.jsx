@@ -3,57 +3,25 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-
-import { getSafe } from '~/utils/functions'
-import {
-  Form,
-  Accordion,
-  Tab,
-  Menu,
-  Grid,
-  GridColumn,
-  GridRow,
-  Dimmer,
-  Loader
-} from 'semantic-ui-react'
+import moment from 'moment/moment'
+import { Form, Accordion, Menu, Dimmer, Loader } from 'semantic-ui-react'
 
 // Components
 import { Formik } from 'formik'
-import { FormattedPhone } from '../../../../components/formatted-messages/'
-import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import ErrorFocus from '../../../../components/error-focus'
-import { PhoneNumber } from '../../../phoneNumber'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import BOLContent from './BOLContent'
+import { getSafe } from '../../../../utils/functions'
 
 // Actions
 import * as Actions from '../../actions'
 
 // Styles
-import {
-  TabDetailRow,
-  TabPane,
-  DivButtonsSection
-} from './EditBOL.styles'
-import {
-  OrderSegment,
-  OrderList,
-  OrderAccordion,
-  AccordionTitle,
-  Chevron,
-  GridData,
-  GridDataColumn,
-  StyledTable,
-  TableRowData,
-  GridDataColumnTrackingID,
-  StyledModal,
-  TopRow,
-  StyledHeader,
-  ButtonCancel
-} from '../../styles'
+import { TabDetailRow, TabPane, DivButtonsSection, BolButtonWrapper } from './EditBOL.styles'
+import { AccordionTitle, Chevron } from '../../styles'
 
 // Services
-import { getInitialValues, SubmitHandler } from './EditBOL.services'
+import { validationSchema, getInitialValues, SubmitHandler, SubmitCarrierHandler } from './EditBOL.services'
 
 const EditBOL = props => {
   const {
@@ -62,38 +30,40 @@ const EditBOL = props => {
     order
   } = props
 
-  const [isBolEditing, setIsBolEditing] = useState(true) // ! ! false
+  const [isBolEditing, setIsBolEditing] = useState(false)
   const [tabs, setTabs] = useState([])
   const [activeTab, setActiveTab] = useState(0)
 
   useEffect(() => {
-
-    console.log('!!!!!!!!!! EditBOL componentDidMount props', props)
-  }, [])
-
-  useEffect(() => {
     const { order } = props
-    setIsBolEditing(true) // ! ! false
+    setIsBolEditing(false)
     let newTabs = []
     !!order.buyBillOfLading && newTabs.push('buyBillOfLading')
     !!order.sellBillOfLading && newTabs.push('sellBillOfLading')
     !!order.carrierBillOfLading && newTabs.push('carrierBillOfLading')
     setActiveTab(0)
     setTabs(newTabs)
-
-    console.log('!!!!!!!!!! EditBOL didupdate props.order', props.order)
-    console.log('!!!!!!!!!! EditBOL didupdate newTabs', newTabs)
-
   }, [props.order.id])
 
   const activeBol = tabs[activeTab] ? order[tabs[activeTab]] : null
-  console.log('!!!!!!!!!! aaaaa activeBol', activeBol)
+
+  const canBeEditedBol =
+    order && (
+      (
+        !order.buySellBillOfLadingProcessed &&
+        order.buySellBillOfLadingEditableUntil && moment(order.buySellBillOfLadingEditableUntil).isAfter(moment())
+      ) ||
+      (
+        !order.carrierBillOfLadingProcessed &&
+        order.carrierBillOfLadingEditableUntil && moment(order.carrierBillOfLadingEditableUntil).isAfter(moment())
+      )
+    )
 
   return (
     <Formik
       initialValues={getInitialValues(activeBol)}
       enableReinitialize
-      validationSchema={{}}
+      validationSchema={validationSchema()}
       onSubmit={(values, actions) => {}}
     >
       {formikProps => {
@@ -122,7 +92,7 @@ const EditBOL = props => {
                   } else {
                     // Edited, Errors not found, try to save
 
-                    // ! ! test jestli data touched -> ulozit nebo discard?
+                    // test jestli data touched -> ulozit nebo discard?
                     setActiveTab(index)
                   }
                 })
@@ -139,10 +109,29 @@ const EditBOL = props => {
                 formikProps={formikProps}
               />
               <DivButtonsSection>
-                <div></div>
+                <div>{/* Download button https://xd.adobe.com/view/105dd0f5-3669-4d7f-b00f-cf61ef5c2d68-450e/ */}</div>
                 <div>
                   <BasicButton onClick={() => setIsBolEditing(false)}>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                  </BasicButton>
+                  <BasicButton
+                    background='#069efc !important'
+                    textcolor='#ffffff !important'
+                    disabled={isSubmitting}
+                    data-test='settings_product_popup_submit_btn'
+                    onClick={() => {
+                      formikProps.validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          // Errors found
+                          formikProps.submitForm() // to show errors
+                        } else {
+                          // No errors found
+                          SubmitHandler(formikProps.values, formikProps, props, tabs[activeTab])
+                        }
+                      })
+                    }}>
+                    <FormattedMessage id='global.save' defaultMessage='Save' />
                   </BasicButton>
                   <BasicButton
                     disabled={isSubmitting}
@@ -155,13 +144,15 @@ const EditBOL = props => {
                           formikProps.submitForm() // to show errors
                         } else {
                           // No errors found
-                          console.log('!!!!!!!!!! aaaaa Save', values)
-                          //setLoadSidebar(true)
-                          SubmitHandler(formikProps.values, formikProps, props, tabs[activeTab])
+                          const valuesToSubmit = tabs[activeTab] === 'carrierBillOfLading'
+                            ? formikProps.values
+                            : getInitialValues(order.carrierBillOfLading)
+
+                          SubmitCarrierHandler(valuesToSubmit, formikProps, props)
                         }
                       })
                     }}>
-                    <FormattedMessage id='global.save' defaultMessage='Save' />
+                    <FormattedMessage id='global.submit' defaultMessage='Submit' />
                   </BasicButton>
                 </div>
               </DivButtonsSection>
@@ -171,12 +162,15 @@ const EditBOL = props => {
 
         if (!isBolEditing) {
           return (
-            <BasicButton
-              disabled={false}
-              onClick={() => setIsBolEditing(true)}
-            >
-              <FormattedMessage id='operations.orders.detail.editBol' defaultMessage='Edit BOL' />
-            </BasicButton>
+            <BolButtonWrapper>
+              <BasicButton
+                background={canBeEditedBol ? '#069efc !important' : '#d2d2d2 !important'}
+                textcolor={'#ffffff !important'}
+                disabled={!canBeEditedBol}
+                onClick={() => setIsBolEditing(true)}>
+                <FormattedMessage id='operations.orders.detail.editBol' defaultMessage='Edit BOL' />
+              </BasicButton>
+            </BolButtonWrapper>
           )
         } else {
         return (

@@ -30,7 +30,8 @@ import {
   downloadPdf,
   searchCompanyGenericProduct,
   getOrderBol,
-  updateOrderBol
+  updateOrderBol,
+  submitCarrierBol
 } from './actions'
 import { unlinkAttachmentToOrder } from "../orders/actions"
 
@@ -513,7 +514,24 @@ export default typeToReducer(
       return {
         ...state,
         orderBolUpdating: false,
-        //! ! orderBol: action.payload
+      }
+    },
+    [submitCarrierBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: true
+      }
+    },
+    [submitCarrierBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false
+      }
+    },
+    [submitCarrierBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false,
       }
     },
   },

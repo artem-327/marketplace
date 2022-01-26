@@ -99,3 +99,7 @@ export const DivPLusIcon = styled.div`
   font-size: 24px;
   cursor: pointer;
 `
+
+export const BolButtonWrapper = styled.div`
+  margin: 0 0 14px -5px;
+`

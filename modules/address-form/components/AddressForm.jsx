@@ -19,7 +19,6 @@ const DatalistGroup = styled(FormGroup)`
   }
 `
 
-
 const CustomSegment = styled(Segment)`
   background-color: ${({ backgroundColor }) => backgroundColor};
   ${({ noBorder }) =>
@@ -82,7 +81,7 @@ class AddressForm extends Component {
   }
 
   async componentDidMount() {
-    let { countries, countriesLoading } = this.props
+    let { countries, countriesLoading, useStringCountryState } = this.props
     const { addZip } = this.props
     let values = this.getValues()
     if (!values || (values && !values.address)) return
@@ -94,17 +93,29 @@ class AddressForm extends Component {
         if (this.isJSON(address.zip)) await addZip(JSON.parse(address.zip))
         else await addZip(address.zip)
       }
-      let { countryId, hasProvinces } =
-        address && address.country ? JSON.parse(address.country) : { countryId: null, hasProvinces: null }
 
-      await this.fetchProvinces(countryId, hasProvinces)
+      if (useStringCountryState) {
+        const searchedCountry = address?.country
+          ? countries.find(el => el.name === address.country)
+          : null
+        if (searchedCountry) {
+          await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+          this.setState({ hasProvinces: searchedCountry.hasProvinces })
+        }
+      } else {
+        let { countryId, hasProvinces } =
+          address && address.country ? JSON.parse(address.country) : { countryId: null, hasProvinces: null }
+
+        this.setState({ hasProvinces: hasProvinces })
+        await this.fetchProvinces(countryId, hasProvinces)
+      }
     } catch (e) {
       console.error(e)
     }
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    const { addZip } = this.props
+    const { addZip, countries, useStringCountryState } = this.props
     const values = this.getValues()
     const oldValues = this.getValues(prevProps?.values)
 
@@ -115,21 +126,37 @@ class AddressForm extends Component {
       values?.id !== oldValues?.id ||
       getSafe(() => values.address.id, '') !== getSafe(() => oldValues.address.id, '')
     ) {
-      if (getSafe(() => values.address.zip, '')) await addZip(JSON.parse(values.address.zip))
+      if (getSafe(() => values.address.zip, '')) {
+        if (this.isJSON(values.address.zip)) await addZip(JSON.parse(values.address.zip))
+        else await addZip(values.address.zip)
+      }
     }
     if (country && country !== oldCountry) {
-      const parsed = JSON.parse(country)
+      let parsed
+      if (useStringCountryState) {
+        const searchedCountry = country
+          ? countries.find(el => el.name === country)
+          : null
 
-      this.setState({ hasProvinces: parsed.hasProvinces })
-      if (parsed.hasProvinces) {
-        this.fetchProvinces(parsed.countryId, parsed.hasProvinces)
+        if (searchedCountry) {
+          this.setState({ hasProvinces: searchedCountry.hasProvinces })
+          if (searchedCountry.hasProvinces) {
+            this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+          }
+        }
+      } else {
+        parsed = JSON.parse(country)
+        this.setState({ hasProvinces: parsed.hasProvinces })
+        if (parsed.hasProvinces) {
+          this.fetchProvinces(parsed.countryId, parsed.hasProvinces)
+        }
       }
     }
   }
 
   handleChange = (_, { name, value }) => {
     let { addressDatalistOptions, values, searchEnabled } = this.props
-    const { getAddressSearch, setFieldValue, addZip, addressDatalistLength } = this.props
+    const { getAddressSearch, setFieldValue, addZip, addressDatalistLength, useStringCountryState } = this.props
 
     if (!values) return
 
@@ -145,12 +172,16 @@ class AddressForm extends Component {
       if (suggest.zip) {
         addZip({ zip: suggest.zip.zip, id: suggest.zip.id })
       }
-
       setFieldValue(fields.streetAddress, suggest.streetAddress)
       setFieldValue(fields.city, suggest.city)
-      setFieldValue(fields.country, JSON.stringify({ countryId: suggest.country.id, hasProvinces }))
+      if (useStringCountryState) {
+        setFieldValue(fields.country, suggest.country.name)
+        setFieldValue(fields.province, suggest.province ? suggest.province.name : '')
+      } else {
+        setFieldValue(fields.country, JSON.stringify({countryId: suggest.country.id, hasProvinces}))
+        setFieldValue(fields.province, suggest.province ? suggest.province.id : '')
+      }
       setFieldValue(fields.zip, suggest.zip && suggest.zip.zip)
-      setFieldValue(fields.province, suggest.province ? suggest.province.id : '')
     } else {
       const parts = name.split('.')
       let newValues = { ...values, address: { ...values.address, [parts.pop()]: value } }
@@ -164,18 +195,19 @@ class AddressForm extends Component {
         this.setState({ previousAddressLength: adrLength })
         return
       } else if (searchEnabled) {
-        this.setState({ previousAddressLength: adrLength })
+        if (!useStringCountryState) {
+          this.setState({ previousAddressLength: adrLength })
+          const body = {
+            city: getSafe(() => newValues.address.city),
+            countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
+            provinceId: getSafe(() => newValues.address.province),
+            streetAddress: getSafe(() => newValues.address.streetAddress),
+            zip: getSafe(() => newValues.address.zip)
+          }
 
-        const body = {
-          city: getSafe(() => newValues.address.city),
-          countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
-          provinceId: getSafe(() => newValues.address.province),
-          streetAddress: getSafe(() => newValues.address.streetAddress),
-          zip: getSafe(() => newValues.address.zip)
+          if (Object.entries(body).length === 0) return
+          getAddressSearch(body)
         }
-
-        if (Object.entries(body).length === 0) return
-        getAddressSearch(body)
       }
     }
   }
@@ -240,7 +272,8 @@ class AddressForm extends Component {
       disableCountry,
       disableProvince,
       countryHint,
-      provinceHint
+      provinceHint,
+      useStringCountryState
     } = this.props
 
     let fields = this.asignPrefix()
@@ -313,7 +346,9 @@ class AddressForm extends Component {
               options={countries.map(country => ({
                 key: country.id,
                 text: country.name,
-                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+                value: useStringCountryState
+                  ? country.name
+                  : JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
               }))}
               inputProps={{
                 loading: countriesLoading,
@@ -348,7 +383,7 @@ class AddressForm extends Component {
               options={provinces.map(province => ({
                 key: province.id,
                 text: province.name,
-                value: province.id
+                value: useStringCountryState ? province.name : province.id
               }))}
               inputProps={{
                 onFocus: e => (e.target.autocomplete = null),

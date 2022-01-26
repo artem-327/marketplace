@@ -92,3 +92,4 @@ export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_
 export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
 export const getOrderBol = createAsyncAction('OPERATIONS_ORDERS_GET_BOL', orderId => api.getOrderBol(orderId))
 export const updateOrderBol = createAsyncAction('OPERATIONS_ORDERS_UPDATE_BOL', (orderId, type, body) => api.updateOrderBol(orderId, type, body))
+export const submitCarrierBol = createAsyncAction('OPERATIONS_ORDERS_SUBMIT_CARRIER_BOL', (orderId, body) => api.submitCarrierBol(orderId, body))
