@@ -277,6 +277,8 @@
   "navigation.network": "Network",
   "navigation.credentials.certified": "Certified",
   "navigation.credentials.pending": "Pending",
+  "navigation.monitoring":  "Monitoring",
+  "navigation.monitoring.broadcasts": "Broadcast calculations",
   "dwolla.controllerTitlePopup": "Please read below for the definition of Controller in this context.",
   "dwolla.paymentPoweredBy": "{companyName} Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Account Administrator Information",
@@ -3097,6 +3099,7 @@
   "title.products.SDSCatalog": "SDS Catalog",
   "title.products.productGroups": "Product Groups",
   "title.operations.shippingQuoteRequests": "Shipping Quote Requests",
+  "title.monitoring.broadcasts": "Broadcasts Monitoring",
   "holds.intProductName": "Product Name",
   "holds.pkgsHeld": "Quantity",
   "holds.expirationTime": "Expires",
@@ -3803,5 +3806,12 @@
   "search.showByTag": "Show all products by tag:",
   "search.showByElements": "Show all products by elements:",
   "inventory.isBelowMin": "The available quantity is below the min quantity",
-  "priceBook.noElementsChanged": "There are no elements to be changed"
+  "priceBook.noElementsChanged": "There are no elements to be changed",
+  "monitoring.broadcastCalculations.entityType": "Entity Type",
+  "monitoring.broadcastCalculations.entityId": "Entity ID",
+  "monitoring.broadcastCalculations.views": "Views found",
+  "monitoring.broadcastCalculations.durationMs": "Duration (ms)",
+  "monitoring.broadcastCalculations.threadId": "Thread ID",
+  "monitoring.broadcastCalculations.startDate": "Start Date",
+  "monitoring.broadcastCalculations.endDate": "End Date"
 }

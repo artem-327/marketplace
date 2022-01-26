@@ -20,7 +20,7 @@ import {
   ChevronDown,
   ChevronUp,
   Globe,
-  Menu as MenuIcon
+  Menu as MenuIcon, Monitor
 } from 'react-feather'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 
@@ -118,6 +118,8 @@ class Navigation extends Component {
     credentials:
       getSafe(() => Router.router.pathname === '/warehouse-credentials/certified', false) ||
       getSafe(() => Router.router.pathname === '/warehouse-credentials/pending', false),
+    monitoring:
+      getSafe(() => Router.router.pathname === '/monitoring/broadcast-calculations', false),
     activeNetworkStatus: 'ALL'
   }
 
@@ -204,6 +206,7 @@ class Navigation extends Component {
       inventory: false,
       marketplace: false,
       myNetwork: false,
+      monitoring: false,
       [type]: !typeState,
       currentType: type
     })
@@ -305,7 +308,8 @@ class Navigation extends Component {
       wantedBoard,
       myNetwork,
       alerts,
-      credentials
+      credentials,
+      monitoring
     } = this.state
 
     const MenuLink = withRouter(({ router: { pathname }, to, children, tab, className, dataTest }) => {
@@ -932,6 +936,36 @@ class Navigation extends Component {
               </DropdownItem>
             )}
           </>
+        )}
+        {(isAdmin || isOperator) && (
+            <DropdownItem
+                icon={<Monitor size={22} />}
+                text={
+                  <>
+                    <FormattedMessage id='navigation.monitoring' defaultMessage='Monitoring' />
+                    {monitoring ? <ChevronUp /> : <ChevronDown />}
+                  </>
+                }
+                className={monitoring ? 'opened' : null}
+                open={monitoring.toString()}
+                onClick={(data, e) => {
+                  this.toggleOpened('monitoring', '/monitoring/broadcast-calculations')
+                }}
+                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                refId={'monitoring'}>
+              <Dropdown.Menu data-test='navigation_menu_monitoring'>
+                <PerfectScrollbar>
+                  <Dropdown.Item
+                      as={MenuLink}
+                      to='/monitoring/broadcast-calculations'
+                      dataTest='navigation_menu_monitoring_broadcasts'>
+                    {formatMessage({ id: 'navigation.monitoring.broadcasts', defaultMessage: 'Broadcast calculations' })}
+                  </Dropdown.Item>
+
+                </PerfectScrollbar>
+              </Dropdown.Menu>
+
+            </DropdownItem>
         )}
         {!(allUserRoles.length === 1 && isBusinessDevelopmentRepresentative) && (
           <DropdownItem
