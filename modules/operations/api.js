@@ -17,6 +17,11 @@ export default {
     pageSize: 50,
     pageNumber: 0
   }).then(response => response.data),
+  getOrderBol: orderId => api.get(`/prodex/api/order-documents/order/${orderId}/bill-of-lading`).then(response => response.data),
+  updateOrderBol: (orderId, type, body) => api.patch(`/prodex/api/order-documents/order/${orderId}/bill-of-lading?type=${type}`, body)
+    .then(response => response.data),
+  submitCarrierBol: (orderId, body) => api.patch(`/prodex/api/order-documents/order/${orderId}/bill-of-lading/submit-carrier-bol`, body)
+    .then(response => response.data),
   getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   markRequestAsProcessed: (id, cgp_id) =>
     api.patch(`/prodex/api/company-generic-product-requests/${id}/processed?companyGenericProductId=${cgp_id}`)

@@ -116,3 +116,5 @@ export const saveFilters = createAction('ORDERS_SAVE_FILTERS', filters => filter
 export const orderResolutionReopen = createAsyncAction('ORDERS_RESOLUTION_REOPEN', (orderId, ordersType) => Api.orderResolutionReopen(orderId, ordersType))
 export const orderResolutionAccept = createAsyncAction('ORDERS_RESOLUTION_ACCEPT', (orderId, ordersType) => Api.orderResolutionAccept(orderId, ordersType))
 export const downloadDisputeAttachment = createAsyncAction('DOWNLOAD_DISPUTE_ATTACHMENT', (orderId, attachmentId) => Api.downloadDisputeAttachment(orderId, attachmentId))
+export const getOrderBol = createAsyncAction('ORDERS_GET_BOL', orderId => Api.getOrderBol(orderId))
+export const updateOrderBol = createAsyncAction('ORDERS_UPDATE_BOL', (orderId, type, body) => Api.updateOrderBol(orderId, type, body))
