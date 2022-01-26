@@ -13,6 +13,7 @@ import Spinner from '../../../../components/Spinner/Spinner'
 import { FormattedPhone } from '../../../../components/formatted-messages/'
 import ProdexGrid from '../../../../components/table'
 import TransactionInfo from '../../../orders/components/components/TransactionInfoConatiner'
+import EditBOL from './EditBOL'
 // Constants
 import { currency } from '../../../../constants/index'
 // Styles
@@ -54,7 +55,7 @@ import {
 const Detail = props => {
   const [attachmentRows, setAttachmentRows] = useState([])
   const [state, setState] = useState({
-    activeIndexes: [true, true, true, true, true, false, false, false, false, false, false],
+    activeIndexes: [false, true, true, true, true, true, false, false, false, false, false, false],
     activeDimmer: false,
     replaceRow: '',
     toggleTrackingID: false,
@@ -81,16 +82,10 @@ const Detail = props => {
     resolveDisputeCredit,
     resolveDisputeAccept,
     downloadDisputeAttachment,
-    isCancelable,
-    getOrderBol
+    isCancelable
   } = props
 
   useEffect(() => {
-    try {
-      getOrderBol(order.id)
-    } catch (e) {
-      console.error(e)
-    }
     setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
   }, [getSafe(() => props.order.id, 0)])
 
@@ -368,19 +363,20 @@ const Detail = props => {
 
             <Divider hidden />
             <OrderAccordion
-              defaultActiveIndex={[0, 1, 2, 3]}
+              defaultActiveIndex={[1, 2, 3, 4]}
               styled
               fluid
               style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
+              <EditBOL order={order} />
               <AccordionTitle
-                active={activeIndexes[0]}
-                index={0}
+                active={activeIndexes[1]}
+                index={1}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_order_info'>
                 <Chevron />
                 <FormattedMessage id='order.customer' defaultMessage='Customer' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[0]}>
+              <Accordion.Content active={activeIndexes[1]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -422,14 +418,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[1]}
-                index={1}
+                active={activeIndexes[2]}
+                index={2}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_order_seller'>
                 <Chevron />
                 <FormattedMessage id='order.seller' defaultMessage='Seller' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[1]}>
+              <Accordion.Content active={activeIndexes[2]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -471,14 +467,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[2]}
-                index={2}
+                active={activeIndexes[3]}
+                index={3}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_order_info'>
                 <Chevron />
                 <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[2]}>
+              <Accordion.Content active={activeIndexes[3]}>
                 <Grid divided='horizontally'>
                   <Grid.Row>
                     <Grid.Column width={6}>
@@ -565,14 +561,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[3]}
-                index={3}
+                active={activeIndexes[4]}
+                index={4}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.relatedDocuments' defaultMessage='RELATED DOCUMENTS' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[3]}>
+              <Accordion.Content active={activeIndexes[4]}>
                 <Grid>
                   <Grid.Row>
                     <Grid.Column style={{ paddingLeft: '30px', paddingRight: '2.2857143em' }}>
@@ -590,14 +586,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[4]}
-                index={4}
+                active={activeIndexes[5]}
+                index={5}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_product_info'>
                 <Chevron />
                 <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[4]}>
+              <Accordion.Content active={activeIndexes[5]}>
                 <div className='table-responsive'>
                   <Table>
                     <Table.Header>
@@ -682,14 +678,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[5]}
-                index={5}
+                active={activeIndexes[6]}
+                index={6}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_pickup_info'>
                 <Chevron />
                 <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[5]}>
+              <Accordion.Content active={activeIndexes[6]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -723,14 +719,14 @@ const Detail = props => {
               {order.reviewStatus === 'Rejected' && (
                 <>
                   <AccordionTitle
-                    active={activeIndexes[6]}
-                    index={6}
+                    active={activeIndexes[7]}
+                    index={7}
                     onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                     data-test='orders_detail_return_shipping'>
                     <Chevron />
                     <FormattedMessage id='order.returnShipping' defaultMessage='Return Shipping' />
                   </AccordionTitle>
-                  <Accordion.Content active={activeIndexes[6]}>
+                  <Accordion.Content active={activeIndexes[7]}>
                     <Grid divided='horizontally'>
                       <Grid.Row columns={2}>
                         <Grid.Column>
@@ -786,14 +782,14 @@ const Detail = props => {
               )}
 
               <AccordionTitle
-                active={activeIndexes[7]}
-                index={7}
+                active={activeIndexes[8]}
+                index={8}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_shipping'>
                 <Chevron />
                 <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[7]}>
+              <Accordion.Content active={activeIndexes[8]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -855,14 +851,14 @@ const Detail = props => {
               </Accordion.Content>
 
               <AccordionTitle
-                active={activeIndexes[8]}
-                index={8}
+                active={activeIndexes[9]}
+                index={9}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_payment'>
                 <Chevron />
                 <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[8]}>
+              <Accordion.Content active={activeIndexes[9]}>
                 <Grid divided='horizontally'>
                   <Grid.Row columns={2}>
                     <Grid.Column>
@@ -927,14 +923,14 @@ const Detail = props => {
                 </Grid>
               </Accordion.Content>
               <AccordionTitle
-                active={activeIndexes[9]}
-                index={9}
+                active={activeIndexes[10]}
+                index={10}
                 onClick={(e, titleProps) => handleClick(titleProps, state, setState)}
                 data-test='orders_detail_notes'>
                 <Chevron />
                 <FormattedMessage id='order.detailNotes' defaultMessage='NOTES' />
               </AccordionTitle>
-              <Accordion.Content active={activeIndexes[9]}>
+              <Accordion.Content active={activeIndexes[10]}>
                 <Grid.Row>
                   <Grid.Column>{getSafe(() => props.order.note, '')}</Grid.Column>
                 </Grid.Row>

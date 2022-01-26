@@ -3,7 +3,7 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import api from './api'
 // Services
 import { Datagrid } from '../datagrid'
-import Api from "../orders/api";
+import Api from "../orders/api"
 
 export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
@@ -90,5 +90,5 @@ export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', or
 export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30, companyId) =>
   api.searchCompanyGenericProduct(searchQuery, limit, companyId))
 export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
-export const getOrderBol = createAsyncAction('OPERATIONS_ORDERS_GET_BOL', orderId => Api.getOrderBol(orderId))
-export const updateOrderBol = createAsyncAction('OPERATIONS_ORDERS_UPDATE_BOL', (orderId, type, body) => Api.updateOrderBol(orderId, type, body))
+export const getOrderBol = createAsyncAction('OPERATIONS_ORDERS_GET_BOL', orderId => api.getOrderBol(orderId))
+export const updateOrderBol = createAsyncAction('OPERATIONS_ORDERS_UPDATE_BOL', (orderId, type, body) => api.updateOrderBol(orderId, type, body))
