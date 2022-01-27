@@ -33,7 +33,8 @@ const EditBOL = props => {
     intl: { formatMessage },
     isEditing,
     popupValues,
-    orderBolUpdating
+    orderBolUpdating,
+    isOrderBuyType
   } = props
 
   const keyColumn = 5
@@ -123,10 +124,6 @@ const EditBOL = props => {
                                 clearable={true}
                               />
                             </GridDataColumn>
-                          </GridData>
-                        </GridColumn>
-                        <GridColumn>
-                          <GridData columns={2}>
                             <GridDataColumn width={keyColumn} className='key edit'>
                               <FormattedMessage id='order.bol.referenceInformation' defaultMessage='Reference Information'/>
                             </GridDataColumn>
@@ -155,42 +152,62 @@ const EditBOL = props => {
                                 }}
                               />
                             </GridDataColumn>
-                           {/* Specified in design but not accepted by Patch endpoint, DT-2515
-                            <GridDataColumn width={keyColumn} className='key edit'>
-                              <FormattedMessage id='order.bol.shipperInstructions' defaultMessage='Shipper Instructions'/>
-                            </GridDataColumn>
-                            <GridDataColumn width={valColumn}>
-                              <Input
-                                name='shipperInstructions'
-                                inputProps={{
-                                  placeholder: formatMessage({
-                                    id: 'global.enterText',
-                                    defaultMessage: 'Enter Text'
-                                  })
-                                }}
-                              />
-                            </GridDataColumn>
-                            <GridDataColumn width={keyColumn} className='key edit'>
-                              <FormattedMessage id='order.bol.consigneeInstructions' defaultMessage='Consignee Instructions'/>
-                            </GridDataColumn>
-                            <GridDataColumn width={valColumn}>
-                              <Input
-                                name='consigneeInstructions'
-                                inputProps={{
-                                  placeholder: formatMessage({
-                                    id: 'global.enterText',
-                                    defaultMessage: 'Enter Text'
-                                  })
-                                }}
-                              />
-                            </GridDataColumn>
-                            */}
+                          </GridData>
+                        </GridColumn>
+
+                        <GridColumn>
+                          <GridData columns={2}>
                             <GridDataColumn width={keyColumn} className='key edit'>
                               <FormattedMessage id='order.bol.specialInstructions' defaultMessage='Special Instructions'/>
                             </GridDataColumn>
                             <GridDataColumn width={valColumn}>
                               <Input
                                 name='specialInstructions'
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'global.enterText',
+                                    defaultMessage: 'Enter Text'
+                                  })
+                                }}
+                              />
+                            </GridDataColumn>
+                            <GridDataColumn width={keyColumn} className='key edit'>
+                              {isOrderBuyType
+                                ? (<FormattedMessage id='order.bol.deliveryNo' defaultMessage='Delivery #'/>)
+                                : (<FormattedMessage id='order.bol.pickUpNo' defaultMessage='Pick Up #'/>)
+                              }
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>
+                              <Input
+                                name='pickupDeliveryNo'
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'global.enterText',
+                                    defaultMessage: 'Enter Text'
+                                  })
+                                }}
+                              />
+                            </GridDataColumn>
+                            <GridDataColumn width={keyColumn} className='key edit'>
+                              <FormattedMessage id='order.bol.locType' defaultMessage='Loc Type'/>
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>
+                              <Input
+                                name='locType'
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'global.enterText',
+                                    defaultMessage: 'Enter Text'
+                                  })
+                                }}
+                              />
+                            </GridDataColumn>
+                            <GridDataColumn width={keyColumn} className='key edit'>
+                              <FormattedMessage id='order.bol.specialServices' defaultMessage='Special Services'/>
+                            </GridDataColumn>
+                            <GridDataColumn width={valColumn}>
+                              <Input
+                                name='specialServices'
                                 inputProps={{
                                   placeholder: formatMessage({
                                     id: 'global.enterText',
@@ -236,10 +253,6 @@ const EditBOL = props => {
                           <GridDataColumn width={valColumn}>
                             <FormattedPhone value={props.popupValues.faxNumber} />
                           </GridDataColumn>
-                        </GridData>
-                      </GridColumn>
-                      <GridColumn>
-                        <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.bol.referenceInformation' defaultMessage='Reference Information'/>
                           </GridDataColumn>
@@ -248,20 +261,29 @@ const EditBOL = props => {
                             <FormattedMessage id='order.bol.stopNotes' defaultMessage='Stop Notes'/>
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{props.popupValues.stopNotes}</GridDataColumn>
-                          {/* Specified in design but not accepted by Patch endpoint, DT-2515
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.bol.shipperInstructions' defaultMessage='Shipper Instructions'/>
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{props.popupValues.shipperInstructions}</GridDataColumn>
-                          <GridDataColumn width={keyColumn} className='key'>
-                            <FormattedMessage id='order.bol.consigneeInstructions' defaultMessage='Consignee Instructions'/>
-                          </GridDataColumn>
-                          <GridDataColumn width={valColumn}>{props.popupValues.consigneeInstructions}</GridDataColumn>
-                          */}
+                        </GridData>
+                      </GridColumn>
+                      <GridColumn>
+                        <GridData columns={2}>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.bol.specialInstructions' defaultMessage='Special Instructions'/>
                           </GridDataColumn>
                           <GridDataColumn width={valColumn}>{props.popupValues.specialInstructions}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            {isOrderBuyType
+                              ? (<FormattedMessage id='order.bol.deliveryNo' defaultMessage='Delivery #'/>)
+                              : (<FormattedMessage id='order.bol.pickUpNo' defaultMessage='Pick Up #'/>)
+                            }
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{props.popupValues.pickupDeliveryNo}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.bol.locType' defaultMessage='Loc Type'/>
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{props.popupValues.locType}</GridDataColumn>
+                          <GridDataColumn width={keyColumn} className='key'>
+                            <FormattedMessage id='order.bol.specialServices' defaultMessage='Special Services'/>
+                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{props.popupValues.specialServices}</GridDataColumn>
                         </GridData>
                       </GridColumn>
                     </GridRow>
@@ -302,21 +324,23 @@ function mapStateToProps(store, props) {
             contactName: getSafe(() => bol.destinationContactName, ''),
             phoneNumber: getSafe(() => bol.destinationPhoneNo, ''),
             faxNumber: getSafe(() => bol.destinationFaxNo, ''),
-            stopNotes: getSafe(() => bol.destinationStopNotes, '')
+            stopNotes: getSafe(() => bol.destinationStopNotes, ''),
+            pickupDeliveryNo: getSafe(() => bol.consigneeInstructionsDeliveryNo, ''),
+            locType: getSafe(() => bol.consigneeInstructionsLocType, ''),
+            specialServices: getSafe(() => bol.consigneeInstructionsSpecialServices, '')
           }
           : {
             contactName: getSafe(() => bol.pickupContactName, ''),
             phoneNumber: getSafe(() => bol.pickupPhoneNo, ''),
             faxNumber: getSafe(() => bol.pickupFaxNo, ''),
-            stopNotes: getSafe(() => bol.pickupStopNotes, '')
+            stopNotes: getSafe(() => bol.pickupStopNotes, ''),
+            pickupDeliveryNo: getSafe(() => bol.shipperInstructionsPickupNo, ''),
+            locType: getSafe(() => bol.shipperInstructionsLocType, ''),
+            specialServices: getSafe(() => bol.shipperInstructionsSpecialServices, '')
           }
         ),
       referenceInformation: getSafe(() => bol.referenceInformation, ''),
       specialInstructions: getSafe(() => bol.specialInstructions, '')
-      /* Specified in design but not accepted by Patch endpoint, DT-2515
-      shipperInstructions: getSafe(() => bol.shipperInstructionsSpecialServices, ''),
-      consigneeInstructions: getSafe(() => bol.consigneeInstructionsSpecialServices, ''),
-      */
     }
   }
 }
