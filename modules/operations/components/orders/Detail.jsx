@@ -86,6 +86,12 @@ const Detail = props => {
   } = props
 
   useEffect(() => {
+    return () => {
+      props.openOrderDetail(null)
+    }
+  }, [])
+
+  useEffect(() => {
     setAttachmentRows(getRows(props.order.attachments, props, setAttachmentRows))
   }, [getSafe(() => props.order.id, 0)])
 
