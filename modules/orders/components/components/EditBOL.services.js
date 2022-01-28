@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 //Services
 import { removeEmpty } from '../../../../utils/functions'
-import { errorMessages, phoneValidation } from '../../../../constants/yupValidation'
+import { phoneValidation } from '../../../../constants/yupValidation'
 
 /**
  * Validation of form.
@@ -9,7 +9,7 @@ import { errorMessages, phoneValidation } from '../../../../constants/yupValidat
  * @method
  */
 export const formValidation = () =>
-  Yup.lazy(values => {
+  Yup.lazy(() => {
     return Yup.object().shape({
       phoneNumber: phoneValidation(10),
       faxNumber: phoneValidation(10),
@@ -20,7 +20,7 @@ export const formValidation = () =>
  * Submit form - update BOL values
  * @category Orders - BOL edit
  * @method
- * @param {Object<string, any>} values Values of form.
+ * @param {Object} values Values of form.
  * @param {Object} {{setSubmitting: (isSubmitting: boolean) => void}} Formik actions,
  * @param {Object} props Input props
  */
@@ -34,20 +34,22 @@ export const SubmitBOL = async (values, { setSubmitting }, props) => {
           destinationContactName: values.contactName,
           destinationPhoneNo: values.phoneNumber,
           destinationFaxNo: values.faxNumber,
-          destinationStopNotes: values.stopNotes
+          destinationStopNotes: values.stopNotes,
+          consigneeInstructionsDeliveryNo: values.pickupDeliveryNo,
+          consigneeInstructionsLocType: values.locType,
+          consigneeInstructionsSpecialServices: values.specialServices
         }
         : {
           pickupContactName: values.contactName,
           pickupPhoneNo: values.phoneNumber,
           pickupFaxNo: values.faxNumber,
-          pickupStopNotes: values.stopNotes
+          pickupStopNotes: values.stopNotes,
+          shipperInstructionsPickupNo: values.pickupDeliveryNo,
+          shipperInstructionsLocType: values.locType,
+          shipperInstructionsSpecialServices: values.specialServices
         }
     ),
     referenceInformation: values.referenceInformation,
-    /* Specified in design but not accepted by Patch endpoint, DT-2515
-    shipperInstructionsSpecialServices: values.shipperInstructions,
-    consigneeInstructionsSpecialServices: values.consigneeInstructions,
-    */
     specialInstructions: values.specialInstructions
   }
   removeEmpty(body)
