@@ -1,4 +1,4 @@
-import {BroadcastCalculationHistory, CalculationsTableRow, CalculationTarget, GraphPoint} from "./Model"
+import { BroadcastCalculationHistory, CalculationsTableRow, CalculationTarget, GraphPoint } from "./Model"
 
 const getEntityId = (calculation: BroadcastCalculationHistory): number => {
     return calculation.calculationTarget === CalculationTarget.PRODUCT_OFFER ? calculation.productOffer : calculation.branch;
