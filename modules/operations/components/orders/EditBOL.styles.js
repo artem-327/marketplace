@@ -63,6 +63,8 @@ export const DivButtonsSection = styled.div`
 
 export const TableCarrier = styled(Table)`
   &.ui.celled.padded.center.aligned.table {
+    max-width: 100%;
+    
     thead tr th {
       background: unset;
       color: #848893;
@@ -75,7 +77,24 @@ export const TableCarrier = styled(Table)`
      
           .field {         
             .ui.input {
-              min-width: 100px !important;
+              min-width: 50px !important;
+              
+              input {
+                box-sizing: border-box;
+                width: 100%;
+              }
+            }
+            
+            .ui.dropdown .text {
+              min-width: 30px;
+              max-width: 50px;
+            }
+          }
+          
+          &.qty .field {         
+            .ui.input {
+              min-width: 40px !important;
+              max-width: 60px !important;
             }
           }
         }

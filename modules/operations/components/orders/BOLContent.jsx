@@ -704,9 +704,8 @@ const BOLContent = props => {
                       {values.items.map((item, index) => {
                         return (
                           <Table.Row>
-                            <Table.Cell>
+                            <Table.Cell className='qty'>
                               <Input
-                                style={{ minWidth: '50px !important;'}}
                                 type='text'
                                 name={`items[${index}].packagingQty`}
                               />
@@ -717,7 +716,7 @@ const BOLContent = props => {
                                 name={`items[${index}].packagingType`}
                               />
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell className='qty'>
                               <Input
                                 type='text'
                                 name={`items[${index}].handlingUnitQty`}
