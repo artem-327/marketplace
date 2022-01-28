@@ -31,7 +31,8 @@ import {
   searchCompanyGenericProduct,
   getOrderBol,
   updateOrderBol,
-  submitCarrierBol
+  submitCarrierBol,
+  downloadBOL
 } from './actions'
 import { unlinkAttachmentToOrder } from "../orders/actions"
 
@@ -62,7 +63,8 @@ const initialState = {
   downloadPdfLoading: false,
   orderBol: null,
   orderBolLoading: false,
-  orderBolUpdating: false
+  orderBolUpdating: false,
+  orderBolDownloading: false
 }
 
 export default typeToReducer(
@@ -435,7 +437,8 @@ export default typeToReducer(
     [getOrderById.fulfilled]: (state, action) => {
       return {
         ...state,
-        orderByIdLoading: false
+        orderByIdLoading: false,
+        orderDetailData: action.payload?.length !== 0 ? action.payload[0] : null
       }
     },
     [downloadPdf.pending]: (state, action) => {
@@ -532,6 +535,24 @@ export default typeToReducer(
       return {
         ...state,
         orderBolUpdating: false,
+      }
+    },
+    [downloadBOL.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: true
+      }
+    },
+    [downloadBOL.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: false
+      }
+    },
+    [downloadBOL.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: false,
       }
     },
   },

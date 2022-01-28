@@ -16,7 +16,6 @@ import { Formik } from 'formik'
 import { FormattedPhone } from '../../../../components/formatted-messages/'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import ErrorFocus from '../../../../components/error-focus'
-import { PhoneNumber } from '../../../phoneNumber'
 import { getSafe } from '../../../../utils/functions'
 
 // Actions
@@ -26,7 +25,7 @@ import * as Actions from '../../actions'
 import { GridData, GridDataColumn } from '../Detail.styles'
 
 // Services
-import { formValidation, SubmitBOL } from './EditBOL.services'
+import { SubmitBOL } from './EditBOL.services'
 
 const EditBOL = props => {
   const {
@@ -43,19 +42,11 @@ const EditBOL = props => {
   return (
     <Formik
       initialValues={popupValues}
-      validationSchema={formValidation()}
+      validationSchema={{}}
       onSubmit={(values, actions) => SubmitBOL(values, actions, props)}
     >
       {formikProps => {
-        const {
-          values,
-          setFieldValue,
-          setFieldTouched,
-          touched,
-          isSubmitting,
-          handleSubmit,
-          errors
-        } = formikProps
+        const { isSubmitting, handleSubmit } = formikProps
 
         return (
           <Form>
@@ -88,40 +79,28 @@ const EditBOL = props => {
                               <FormattedMessage id='order.bol.phoneNumber' defaultMessage='Phone Number'/>
                             </GridDataColumn>
                             <GridDataColumn width={valColumn}>
-                              <PhoneNumber
+                              <Input
                                 name='phoneNumber'
-                                values={values}
-                                setFieldValue={setFieldValue}
-                                setFieldTouched={setFieldTouched}
-                                errors={errors}
-                                touched={touched}
-                                isSubmitting={isSubmitting}
-                                label={null}
-                                placeholder={formatMessage({
-                                  id: 'global.phonePlaceholder',
-                                  defaultMessage: '000 000 0000'
-                                })}
-                                clearable={true}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'global.phonePlaceholder',
+                                    defaultMessage: '000 000 0000'
+                                  })
+                                }}
                               />
                             </GridDataColumn>
                             <GridDataColumn width={keyColumn} className='key edit'>
                               <FormattedMessage id='order.bol.faxNumber' defaultMessage='Fax Number'/>
                             </GridDataColumn>
                             <GridDataColumn width={valColumn}>
-                              <PhoneNumber
+                              <Input
                                 name='faxNumber'
-                                values={values}
-                                setFieldValue={setFieldValue}
-                                setFieldTouched={setFieldTouched}
-                                errors={errors}
-                                touched={touched}
-                                isSubmitting={isSubmitting}
-                                label={null}
-                                placeholder={formatMessage({
-                                  id: 'global.phonePlaceholder',
-                                  defaultMessage: '000 000 0000'
-                                })}
-                                clearable={true}
+                                inputProps={{
+                                  placeholder: formatMessage({
+                                    id: 'global.phonePlaceholder',
+                                    defaultMessage: '000 000 0000'
+                                  })
+                                }}
                               />
                             </GridDataColumn>
                             <GridDataColumn width={keyColumn} className='key edit'>
@@ -319,6 +298,7 @@ function mapStateToProps(store, props) {
   return {
     orderBolUpdating: store.orders.orderBolUpdating,
     popupValues: {
+      ...bol,
       ...(isOrderBuyType
           ? {
             contactName: getSafe(() => bol.destinationContactName, ''),

@@ -21,12 +21,19 @@ import { TabDetailRow, TabPane, DivButtonsSection, BolButtonWrapper } from './Ed
 import { AccordionTitle, Chevron } from '../../styles'
 
 // Services
-import { validationSchema, getInitialValues, SubmitHandler, SubmitCarrierHandler } from './EditBOL.services'
+import {
+  validationSchema,
+  getInitialValues,
+  SubmitHandler,
+  SubmitCarrierHandler,
+  DownloadBolHandler
+} from './EditBOL.services'
 
 const EditBOL = props => {
   const {
     intl: { formatMessage },
     orderBolUpdating,
+    orderBolDownloading,
     order
   } = props
 
@@ -50,12 +57,15 @@ const EditBOL = props => {
   const canBeEditedBol =
     order && (
       (
-        !order.buySellBillOfLadingProcessed &&
-        order.buySellBillOfLadingEditableUntil && moment(order.buySellBillOfLadingEditableUntil).isAfter(moment())
+        !order.rawData.buySellBillOfLadingProcessed &&
+        (
+          !order.rawData.confirmationDate ||
+          order.rawData.confirmationDate && moment(order.rawData.confirmationDate).add(1, 'days').isAfter(moment())
+        )
       ) ||
       (
         !order.carrierBillOfLadingProcessed &&
-        order.carrierBillOfLadingEditableUntil && moment(order.carrierBillOfLadingEditableUntil).isAfter(moment())
+        order.rawData.shippingStatus < 2  // Before 'In Transit'
       )
     )
 
@@ -109,16 +119,24 @@ const EditBOL = props => {
                 formikProps={formikProps}
               />
               <DivButtonsSection>
-                <div>{/* Download button https://xd.adobe.com/view/105dd0f5-3669-4d7f-b00f-cf61ef5c2d68-450e/ */}</div>
                 <div>
-                  <BasicButton onClick={() => setIsBolEditing(false)}>
+                  <BasicButton
+                    disabled={orderBolDownloading}
+                    loading={orderBolDownloading}
+                    data-test='edit_bol_download_btn'
+                    onClick={() => DownloadBolHandler(props, tabs[activeTab])}>
+                    <FormattedMessage id='global.download' defaultMessage='Download' />
+                  </BasicButton>
+                </div>
+                <div>
+                  <BasicButton onClick={() => setIsBolEditing(false)} data-test='edit_bol_cancel_btn'>
                     <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </BasicButton>
                   <BasicButton
                     background='#069efc !important'
                     textcolor='#ffffff !important'
                     disabled={isSubmitting}
-                    data-test='settings_product_popup_submit_btn'
+                    data-test='edit_bol_save_btn'
                     onClick={() => {
                       formikProps.validateForm().then(err => {
                         const errors = Object.keys(err)
@@ -135,7 +153,7 @@ const EditBOL = props => {
                   </BasicButton>
                   <BasicButton
                     disabled={isSubmitting}
-                    data-test='settings_product_popup_submit_btn'
+                    data-test='edit_bol_submit_btn'
                     onClick={() => {
                       formikProps.validateForm().then(err => {
                         const errors = Object.keys(err)
@@ -205,7 +223,7 @@ const EditBOL = props => {
 function mapStateToProps(store, props) {
   return {
     orderBolUpdating: store.operations.orderBolUpdating,
-
+    orderBolDownloading: store.operations.orderBolDownloading,
   }
 }
 

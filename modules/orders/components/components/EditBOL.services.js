@@ -1,20 +1,5 @@
-import * as Yup from 'yup'
 //Services
 import { removeEmpty } from '../../../../utils/functions'
-import { phoneValidation } from '../../../../constants/yupValidation'
-
-/**
- * Validation of form.
- * @category Orders - BOL edit
- * @method
- */
-export const formValidation = () =>
-  Yup.lazy(() => {
-    return Yup.object().shape({
-      phoneNumber: phoneValidation(10),
-      faxNumber: phoneValidation(10),
-    })
-  })
 
 /**
  * Submit form - update BOL values
@@ -29,6 +14,21 @@ export const SubmitBOL = async (values, { setSubmitting }, props) => {
   const type = isOrderBuyType ? 'BUY' : 'SELL'
 
   let body = {
+    pickupContactName: values.pickupContactName,
+    pickupPhoneNo: values.pickupPhoneNo,
+    pickupFaxNo: values.pickupFaxNo,
+    pickupStopNotes: values.pickupStopNotes,
+    destinationContactName: values.destinationContactName,
+    destinationPhoneNo: values.destinationPhoneNo,
+    destinationFaxNo: values.destinationFaxNo,
+    destinationStopNotes: values.destinationStopNotes,
+    consigneeInstructionsDeliveryNo: values.consigneeInstructionsDeliveryNo,
+    consigneeInstructionsLocType: values.consigneeInstructionsLocType,
+    consigneeInstructionsSpecialServices: values.consigneeInstructionsSpecialServices,
+    shipperInstructionsPickupNo: values.shipperInstructionsPickupNo,
+    shipperInstructionsLocType: values.shipperInstructionsLocType,
+    shipperInstructionsSpecialServices: values.shipperInstructionsSpecialServices,
+
     ...(isOrderBuyType
         ? {
           destinationContactName: values.contactName,

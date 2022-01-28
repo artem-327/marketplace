@@ -206,7 +206,7 @@ const getBody = values => ({
   pickupAddressZip: values.pickupAddress.address.zip,
 
   pickupContactName: values.pickupContactName,
-  pickupDate: values.pickupDate ? moment(getStringISODate(values.pickupDate)).format() : '',
+  pickupDate: values.pickupDate ? moment(getStringISODate(values.pickupDate)).startOf('day').format() : '',
   pickupFaxNo: values.pickupFaxNo,
   pickupName: values.pickupName,
   pickupPhoneNo: values.pickupPhoneNo,
@@ -274,5 +274,32 @@ export const SubmitCarrierHandler = async (values, actions, props) => {
     console.error(e.response)
   } finally {
     actions.setSubmitting(false)
+  }
+}
+
+/**
+ * Submit form - Download BOL file
+ * @category Orders - BOL edit
+ * @method
+ * @param {Object} props Input props
+ * @param {string} type Type of BOL (buyBillOfLading, sellBillOfLading, carrierBillOfLading)
+ */
+export const DownloadBolHandler = async (props, type) => {
+  const { order, downloadBOL } = props
+  const typeSubmit = type === 'buyBillOfLading' ? 'BUY' : (type === 'sellBillOfLading' ? 'SELL' : 'CARRIER')
+
+  try {
+    let pdf = await downloadBOL(order.id, typeSubmit)
+
+    const element = document.createElement('a')
+    const file = new Blob([pdf.value.data], { type: 'application/pdf' })
+    let fileURL = URL.createObjectURL(file)
+
+    element.href = fileURL
+    element.download = `BOL-order-${props.order.id}-${typeSubmit}.pdf`
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  } catch (e) {
+    console.error(e.response)
   }
 }
