@@ -41,6 +41,7 @@ export const getOrder = (state, ownProps) => {
         paymentNetDays = paymentNetDays.length ? parseInt(paymentNetDays[paymentNetDays.length - 1], 10) : 0
     
         return {
+        rawData: data,
         ...data,
         paymentTerms: data.paymentTerms,
         paymentNetDays,

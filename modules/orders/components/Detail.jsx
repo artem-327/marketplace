@@ -212,11 +212,13 @@ const Detail = props => {
 
   const bol = ordersType === 'Sales' ? order.sellBillOfLading : order.buyBillOfLading
   const bolEditable = !order.buySellBillOfLadingProcessed &&
-    order.buySellBillOfLadingEditableUntil &&
-    moment(order.buySellBillOfLadingEditableUntil).isAfter(moment())
+    (!order?.rawData?.confirmationDate ||
+      order?.rawData?.confirmationDate &&
+      moment(order.rawData.confirmationDate).add(1, 'days').isAfter(moment())
+    )
 
-  const periodBolEditable = order?.buySellBillOfLadingEditableUntil
-    && moment(moment(order.buySellBillOfLadingEditableUntil).diff(intervalSecsTime))
+  const periodBolEditable = order?.rawData?.confirmationDate
+    && moment(moment(order.rawData.confirmationDate).diff(intervalSecsTime))
 
   return (
     <div id='page' className='auto-scrolling'>
@@ -537,7 +539,7 @@ const Detail = props => {
                     }}
                     $canBeClicked={bolEditable && !isEditing}
                   />
-                  {!isEditing && (
+                  {!isEditing && order?.rawData?.confirmationDate && (
                     <DivFlexRow
                       style={{ marginLeft: 'auto', cursor: 'normal' }}
                       onClick={() => handleClick(0, activeIndexes, setActiveIndexes)}>
@@ -545,8 +547,10 @@ const Detail = props => {
                         id='order.bol.timeAvailableToMakeEdits'
                         defaultMessage='Time Available to Make Edits: '
                       />
-                      {bolEditable ? (
-                        periodBolEditable ? `${periodBolEditable.format('HH')}:${periodBolEditable.format('mm')}:${periodBolEditable.format('ss')}` : ''
+                      {!order.buySellBillOfLadingProcessed && order?.rawData?.confirmationDate && bolEditable ? (
+                        periodBolEditable
+                          ? `${periodBolEditable.format('HH')}:${periodBolEditable.format('mm')}:${periodBolEditable.format('ss')}`
+                          : ''
                       ) : (
                         '00:00:00'
                       )}

@@ -12,7 +12,6 @@ import { GridColumn, GridRow, Checkbox, Table } from 'semantic-ui-react'
 // Components
 import { FieldArray } from 'formik'
 import { Input, Dropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
-import { PhoneNumber } from '../../../phoneNumber'
 import { AddressForm } from '../../../address-form'
 import { DateInput } from '../../../../components/custom-formik'
 
@@ -80,27 +79,27 @@ const BOLContent = props => {
             </GridRow>
             <GridRow columns={2}>
               <GridColumn>
-                <PhoneNumber
+                <Input
                   name='pickupPhoneNo'
-                  values={values}
                   label={<FormattedMessage id='global.phoneNo' defaultMessage='Phone No.' />}
-                  setFieldValue={setFieldValue}
-                  setFieldTouched={setFieldTouched}
-                  errors={errors}
-                  touched={touched}
-                  isSubmitting={isSubmitting}
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'global.phonePlaceholder',
+                      defaultMessage: '000 000 0000'
+                    })
+                  }}
                 />
               </GridColumn>
               <GridColumn>
-                <PhoneNumber
+                <Input
                   name='pickupFaxNo'
-                  values={values}
                   label={<FormattedMessage id='global.faxNo' defaultMessage='Fax No.' />}
-                  setFieldValue={setFieldValue}
-                  setFieldTouched={setFieldTouched}
-                  errors={errors}
-                  touched={touched}
-                  isSubmitting={isSubmitting}
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'global.phonePlaceholder',
+                      defaultMessage: '000 000 0000'
+                    })
+                  }}
                 />
               </GridColumn>
             </GridRow>
@@ -165,27 +164,27 @@ const BOLContent = props => {
             </GridRow>
             <GridRow columns={2}>
               <GridColumn>
-                <PhoneNumber
+                <Input
                   name='destinationPhoneNo'
-                  values={values}
                   label={<FormattedMessage id='operations.editBol.phoneNo' defaultMessage='Phone No.' />}
-                  setFieldValue={setFieldValue}
-                  setFieldTouched={setFieldTouched}
-                  errors={errors}
-                  touched={touched}
-                  isSubmitting={isSubmitting}
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'global.phonePlaceholder',
+                      defaultMessage: '000 000 0000'
+                    })
+                  }}
                 />
               </GridColumn>
               <GridColumn>
-                <PhoneNumber
+                <Input
                   name='destinationFaxNo'
-                  values={values}
                   label={<FormattedMessage id='operations.editBol.faxNo' defaultMessage='Fax No.' />}
-                  setFieldValue={setFieldValue}
-                  setFieldTouched={setFieldTouched}
-                  errors={errors}
-                  touched={touched}
-                  isSubmitting={isSubmitting}
+                  inputProps={{
+                    placeholder: formatMessage({
+                      id: 'global.phonePlaceholder',
+                      defaultMessage: '000 000 0000'
+                    })
+                  }}
                 />
               </GridColumn>
             </GridRow>
@@ -262,27 +261,27 @@ const BOLContent = props => {
           />
         </GridColumn>
         <GridColumn>
-          <PhoneNumber
+          <Input
             name='pickupTerminalPhoneNo'
-            values={values}
             label={<FormattedMessage id='operations.editBol.originTerminalPhone' defaultMessage='Origin Terminal (Phone)' />}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
-            errors={errors}
-            touched={touched}
-            isSubmitting={isSubmitting}
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'global.phonePlaceholder',
+                defaultMessage: '000 000 0000'
+              })
+            }}
           />
         </GridColumn>
         <GridColumn>
-          <PhoneNumber
+          <Input
             name='destinationTerminalPhoneNo'
-            values={values}
             label={<FormattedMessage id='operations.editBol.destinationTerminalPhone' defaultMessage='Destination Terminal (Phone)' />}
-            setFieldValue={setFieldValue}
-            setFieldTouched={setFieldTouched}
-            errors={errors}
-            touched={touched}
-            isSubmitting={isSubmitting}
+            inputProps={{
+              placeholder: formatMessage({
+                id: 'global.phonePlaceholder',
+                defaultMessage: '000 000 0000'
+              })
+            }}
           />
         </GridColumn>
       </GridRow>
@@ -582,7 +581,7 @@ const BOLContent = props => {
                 </GridColumn>
                 <GridColumn>
                   <Input
-                    name='shipperInstructionsLocType	'
+                    name='shipperInstructionsLocType'
                     label={formatMessage({ id: 'operations.editBol.locType', defaultMessage: 'Loc Type' })}
                     inputProps={{
                       placeholder: formatMessage({ id: 'operations.editBol.enterValue', defaultMessage: 'Enter Value' })
@@ -707,6 +706,7 @@ const BOLContent = props => {
                           <Table.Row>
                             <Table.Cell>
                               <Input
+                                style={{ minWidth: '50px !important;'}}
                                 type='text'
                                 name={`items[${index}].packagingQty`}
                               />

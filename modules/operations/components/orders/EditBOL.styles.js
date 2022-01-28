@@ -1,9 +1,5 @@
 import styled from 'styled-components'
-import Dropzone from 'react-dropzone'
-import { Sidebar, Segment, GridColumn, Icon, Grid, Modal, Table, Header, ModalContent, Tab, Button } from 'semantic-ui-react'
-import { TextArea } from 'formik-semantic-ui-fixed-validation'
-import {MapTable} from "../../../inventory/styles";
-
+import { Segment, Grid, Table, Tab } from 'semantic-ui-react'
 
 export const TabDetailRow = styled(Tab)`
   .ui.secondary.menu:not(.vertical) {
@@ -77,8 +73,10 @@ export const TableCarrier = styled(Table)`
         td {
           padding: 5px;
      
-          .field .ui.input {
-            min-width: unset;
+          .field {         
+            .ui.input {
+              min-width: 100px !important;
+            }
           }
         }
 
