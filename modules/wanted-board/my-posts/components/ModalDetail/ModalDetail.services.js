@@ -20,7 +20,7 @@ export const formValidation = (provinceRequired) =>
       )
     ),
     // maximumPricePerUOM: Yup.number().positive(errorMessages.positive),
-    maximumPricePerUOM: Yup.string().required(errorMessages.requiredMessage),
+    maximumPricePerUOM: Yup.string(),
     /* Temporary disabled - https://bluepallet.atlassian.net/browse/DT-1196
     assayMin: Yup.string()
       .test('v', errorMessages.minUpToMax, function (v) {
