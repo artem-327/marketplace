@@ -28,7 +28,11 @@ import {
   closeGenBOLPopup,
   getOrderById,
   downloadPdf,
-  searchCompanyGenericProduct
+  searchCompanyGenericProduct,
+  getOrderBol,
+  updateOrderBol,
+  submitCarrierBol,
+  downloadBOL
 } from './actions'
 import { unlinkAttachmentToOrder } from "../orders/actions"
 
@@ -56,7 +60,11 @@ const initialState = {
   tableHandlersFilters: null,
   searchedManQuotRequests: [],
   searchedManQuotRequestsLoading: false,
-  downloadPdfLoading: false
+  downloadPdfLoading: false,
+  orderBol: null,
+  orderBolLoading: false,
+  orderBolUpdating: false,
+  orderBolDownloading: false
 }
 
 export default typeToReducer(
@@ -429,7 +437,8 @@ export default typeToReducer(
     [getOrderById.fulfilled]: (state, action) => {
       return {
         ...state,
-        orderByIdLoading: false
+        orderByIdLoading: false,
+        orderDetailData: action.payload?.length !== 0 ? action.payload[0] : null
       }
     },
     [downloadPdf.pending]: (state, action) => {
@@ -471,6 +480,79 @@ export default typeToReducer(
           text: item.name,
           value: item.id
         }))
+      }
+    },
+    [getOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: true
+      }
+    },
+    [getOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false
+      }
+    },
+    [getOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false,
+        orderBol: action.payload
+      }
+    },
+    [updateOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: true
+      }
+    },
+    [updateOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false
+      }
+    },
+    [updateOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false,
+      }
+    },
+    [submitCarrierBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: true
+      }
+    },
+    [submitCarrierBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false
+      }
+    },
+    [submitCarrierBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false,
+      }
+    },
+    [downloadBOL.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: true
+      }
+    },
+    [downloadBOL.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: false
+      }
+    },
+    [downloadBOL.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolDownloading: false,
       }
     },
   },

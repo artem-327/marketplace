@@ -64,12 +64,10 @@ function PersonalInformation({
 }) {
   const { values } = formikProps;
 
-  const [SSN, setSSN] = useState('')
   const { touched, isSubmitting, errors } = formikProps;
   const beforeMaskedStateChange = (e, ssnName) => {
     const { setFieldValue, setFieldTouched } = formikProps;
     const { value } = e.target;
-    setSSN(value);
     setFieldValue(ssnName, value)
     setFieldTouched(ssnName, true, true)
   }
@@ -308,7 +306,6 @@ function PersonalInformation({
                 name={`verifyPersonalInformation[${i}].socialSecurityNumber`}
                 mask='999-99-9999'
                 type='text'
-                value={SSN}
                 placeholder={formatMessage({
                   id: 'onboarding.ssn.placeholder',
                   defaultMessage: 'xxx-xx-xxxx'

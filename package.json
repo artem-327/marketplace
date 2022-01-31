@@ -87,14 +87,16 @@
     "styled-jsx": "^3.4.7",
     "tree-model": "^1.0.7",
     "type-to-reducer": "^1.1.0",
+    "typescript": "^4.5.4",
     "universal-cookie": "^4.0.3",
     "url-loader": "^1.1.2",
     "webpack": "^4.29.6",
     "xlsx": "^0.17.3",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+    "websocket": "^1.0.34"
   },
   "scripts": {
-    "dev": "node --max-old-space-size=8192 server.js",
+    "dev": "node --inspect --max-old-space-size=8192 server.js",
     "build": "next build",
     "build:review": "BABEL_ENV=review APP_ENV=local next build",
     "next:start": "next start",
