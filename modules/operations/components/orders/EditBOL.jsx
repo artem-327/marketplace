@@ -54,20 +54,7 @@ const EditBOL = props => {
 
   const activeBol = tabs[activeTab] ? order[tabs[activeTab]] : null
 
-  const canBeEditedBol =
-    order && (
-      (
-        !order.rawData.buySellBillOfLadingProcessed &&
-        (
-          !order.rawData.confirmationDate ||
-          order.rawData.confirmationDate && moment(order.rawData.confirmationDate).add(1, 'days').isAfter(moment())
-        )
-      ) ||
-      (
-        !order.carrierBillOfLadingProcessed &&
-        order.rawData.shippingStatus < 2  // Before 'In Transit'
-      )
-    )
+  const canBeEditedBol = order?.rawData?.shippingStatus < 2
 
   return (
     <Formik
@@ -151,27 +138,25 @@ const EditBOL = props => {
                     }}>
                     <FormattedMessage id='global.save' defaultMessage='Save' />
                   </BasicButton>
-                  <BasicButton
-                    disabled={isSubmitting}
-                    data-test='edit_bol_submit_btn'
-                    onClick={() => {
-                      formikProps.validateForm().then(err => {
-                        const errors = Object.keys(err)
-                        if (errors.length && errors[0] !== 'isCanceled') {
-                          // Errors found
-                          formikProps.submitForm() // to show errors
-                        } else {
-                          // No errors found
-                          const valuesToSubmit = tabs[activeTab] === 'carrierBillOfLading'
-                            ? formikProps.values
-                            : getInitialValues(order.carrierBillOfLading)
-
-                          SubmitCarrierHandler(valuesToSubmit, formikProps, props)
-                        }
-                      })
-                    }}>
-                    <FormattedMessage id='global.submit' defaultMessage='Submit' />
-                  </BasicButton>
+                  {tabs[activeTab] === 'carrierBillOfLading' && (
+                    <BasicButton
+                      disabled={isSubmitting}
+                      data-test='edit_bol_submit_btn'
+                      onClick={() => {
+                        formikProps.validateForm().then(err => {
+                          const errors = Object.keys(err)
+                          if (errors.length && errors[0] !== 'isCanceled') {
+                            // Errors found
+                            formikProps.submitForm() // to show errors
+                          } else {
+                            // No errors found
+                            SubmitCarrierHandler(formikProps.values, formikProps, props)
+                          }
+                        })
+                      }}>
+                      <FormattedMessage id='global.submit' defaultMessage='Submit' />
+                    </BasicButton>
+                  )}
                 </div>
               </DivButtonsSection>
             </TabPane>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import Router from 'next/router'
 import Link from 'next/link'
 import { withToastManager } from 'react-toast-notifications'
 import { Grid, Segment, Accordion, Table, List, Button, Divider, Header, GridRow, Modal, Dimmer, Loader } from 'semantic-ui-react'
@@ -147,7 +148,10 @@ const Detail = props => {
       <div className='scroll-area'>
         <TopRow>
           <a
-            onClick={() => props.openOrderDetail(null)}
+            onClick={() => {
+              Router.push('/operations/orders')
+              props.openOrderDetail(null)
+            }}
             style={{ cursor: 'pointer' }}
             data-test='orders_detail_back_btn'>
             <ArrowLeft />

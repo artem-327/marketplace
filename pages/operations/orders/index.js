@@ -16,7 +16,6 @@ const Index = props => {
       props.auth?.identity?.isOperator ||
       props.auth?.identity?.isOrderOperator
     )) props.displayErrorForbidden()
-    if (id) router.push(`/operations/orders/detail/${id}`)
   }, [])
   const {
     intl: { formatMessage },
