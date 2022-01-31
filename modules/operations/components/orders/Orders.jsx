@@ -53,10 +53,21 @@ const Orders = props => {
     submitting: false
   })
 
-  useEffect(() => {
-    const { getDocumentTypes, listDocumentTypes } = props
+  useEffect(async () => {
+    const { getDocumentTypes, listDocumentTypes, router } = props
     if (listDocumentTypes && !listDocumentTypes.length) {
       getDocumentTypes()
+    }
+    const orderId = props.router?.query?.id
+    if (orderId) {
+      try {
+        const { value } = await props.getOrderById(orderId)
+        if (value && value.length) {
+          props.openOrderDetail(value[0])
+        }
+      } catch (e) {
+        console.error(e)
+      }
     }
   }, [])
 

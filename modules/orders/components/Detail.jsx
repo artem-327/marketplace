@@ -217,8 +217,10 @@ const Detail = props => {
       moment(order.rawData.confirmationDate).add(1, 'days').isAfter(moment())
     )
 
-  const periodBolEditable = order?.rawData?.confirmationDate
-    && moment(moment(order.rawData.confirmationDate).diff(intervalSecsTime))
+  const periodBolEditable = order?.rawData?.buySellBillOfLadingEditableUntil
+    && moment(moment(order.rawData.buySellBillOfLadingEditableUntil).diff(intervalSecsTime))
+  const buySellBillOfLadingEditableUntil = order?.rawData?.buySellBillOfLadingEditableUntil &&
+    moment(order.rawData.buySellBillOfLadingEditableUntil)
 
   return (
     <div id='page' className='auto-scrolling'>
@@ -547,9 +549,9 @@ const Detail = props => {
                         id='order.bol.timeAvailableToMakeEdits'
                         defaultMessage='Time Available to Make Edits: '
                       />
-                      {!order.buySellBillOfLadingProcessed && order?.rawData?.confirmationDate && bolEditable ? (
+                      {!order.buySellBillOfLadingProcessed && buySellBillOfLadingEditableUntil && bolEditable ? (
                         periodBolEditable
-                          ? `${periodBolEditable.format('HH')}:${periodBolEditable.format('mm')}:${periodBolEditable.format('ss')}`
+                          ? `${buySellBillOfLadingEditableUntil.diff(intervalSecsTime, 'hours')}:${periodBolEditable.format('mm')}:${periodBolEditable.format('ss')}`
                           : ''
                       ) : (
                         '00:00:00'

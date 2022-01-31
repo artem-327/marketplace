@@ -616,7 +616,6 @@ const getActions = (props, state, setState) => {
         }),
         callback: async row => {
         await props.openOrderDetail(row.rawData)
-        await router.push(`/operations/orders/detail/${row.id}`)
         }
     },
     {
