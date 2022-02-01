@@ -6,7 +6,8 @@ export interface BroadcastCalculationHistory {
     end: string,
     viewsFound: number,
     threadId: number,
-    durationMs: number
+    durationMs: number,
+    seller?: number
 }
 
 export interface CalculationsTableRow {
@@ -16,8 +17,9 @@ export interface CalculationsTableRow {
     durationMs: number,
     viewsFound: number,
     threadId: number,
-    endDate: string,
-    startDate: string
+    endTime: string,
+    startTime: string,
+    sellerCompany?: number
 }
 
 export enum CalculationTarget {

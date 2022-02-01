@@ -23,6 +23,14 @@ export const columns = [
         width: 120
     },
     {
+        name: 'sellerCompany',
+        title: (
+            <FormattedMessage id='monitoring.broadcastCalculations.sellerCompany' defaultMessage='Company ID' />
+        ),
+        allowReordering: false,
+        width: 120
+    },
+    {
         name: 'viewsFound',
         title: (
             <FormattedMessage id='monitoring.broadcastCalculations.views' defaultMessage='Views found' />
@@ -47,17 +55,17 @@ export const columns = [
         width: 120
     },
     {
-        name: 'endDate',
+        name: 'startTime',
         title: (
-            <FormattedMessage id='monitoring.broadcastCalculations.endDate' defaultMessage='End Date' />
+            <FormattedMessage id='monitoring.broadcastCalculations.startDate' defaultMessage='Start Time' />
         ),
         allowReordering: false,
         width: 200
     },
     {
-        name: 'startDate',
+        name: 'endTime',
         title: (
-            <FormattedMessage id='monitoring.broadcastCalculations.startDate' defaultMessage='Start Date' />
+            <FormattedMessage id='monitoring.broadcastCalculations.endTime' defaultMessage='End Time' />
         ),
         allowReordering: false,
         width: 200

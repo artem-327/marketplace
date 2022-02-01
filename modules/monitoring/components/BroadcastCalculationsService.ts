@@ -5,7 +5,11 @@ const getEntityId = (calculation: BroadcastCalculationHistory): number => {
 }
 
 const formatDate = (date: Date): string => {
-    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
+    return twoDigit(date.getHours()) + ':' + twoDigit(date.getMinutes()) + ':' + twoDigit(date.getSeconds()) + ':' + date.getMilliseconds()
+}
+
+const twoDigit = (val: number): string => {
+    return val < 10 ? '0' + val : String(val)
 }
 
 const formatEntityType = (entityType: CalculationTarget): string => {
@@ -21,8 +25,9 @@ export const getRows = (calculations: BroadcastCalculationHistory[]): Calculatio
             viewsFound: calculation.viewsFound,
             durationMs: calculation.durationMs,
             threadId: calculation.threadId,
-            endDate: formatDate(new Date(calculation.end)),
-            startDate: formatDate(new Date(calculation.start))
+            endTime: formatDate(new Date(calculation.end)),
+            startTime: formatDate(new Date(calculation.start)),
+            sellerCompany: calculation.seller
         }))
     }
     return []
