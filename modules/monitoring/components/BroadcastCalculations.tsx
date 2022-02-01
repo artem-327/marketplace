@@ -8,6 +8,7 @@ import api from '../api'
 import { BroadcastCalculationsGraph } from './Graph'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
+import { w3cwebsocket as  W3Cwebsocket } from 'websocket'
 
 const StyledPS = styled(PerfectScrollbar)`
 flex-grow: 1;
@@ -65,18 +66,24 @@ const BroadcastCalculations = (props) => {
     const [currentWaiting, setCurrentWaiting] = useState<number>(0)
     const [calculationRows, setCalculationRows] = useState([])
 
-    useEffect((): void => {
-        props.activeCalcultionsWebsocket.onmessage = (message: MessageEvent<string>): void => {
+    const initWebsockets = async (): Promise<void> => {
+        const websocketUrl:string = await api.getCurrentEnvironmentUrl()
+        const activeCalcultionsWebsocket = new W3Cwebsocket('wss://' + websocketUrl + '/prodex/broadcast-calculations-threads')
+        activeCalcultionsWebsocket.onmessage = (message: MessageEvent<string>): void => {
             const calculations: CurrentBroadcastCalculations = JSON.parse(message.data)
             setGraphData((data) => prepareGraphData(data, props.graphMaxPoints, calculations.count))
             setCurrentRunning(calculations.count)
         }
 
-        props.calculationsQueueWebsocket.onmessage = (message: MessageEvent<number>): void => {
+        const calculationsQueueWebsocket= new W3Cwebsocket('wss://' + websocketUrl + '/prodex/broadcast-calculations-queue')
+        calculationsQueueWebsocket.onmessage = (message: MessageEvent<number>): void => {
             setGraphData((data) => prepareGraphData(data, props.graphMaxPoints, null, message.data))
             setCurrentWaiting(message.data)
         }
+    }
 
+    useEffect((): void => {
+        initWebsockets()
         api.getBroadcastCalculationsHistory().then((data) => setCalculationRows(getRows(data)))
     }, [])
 

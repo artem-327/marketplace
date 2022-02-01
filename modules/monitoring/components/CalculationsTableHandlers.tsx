@@ -1,5 +1,5 @@
-import { Input, Dropdown } from "semantic-ui-react"
-import {ChangeEvent, useState } from 'react'
+import { Input, Dropdown, Button  } from "semantic-ui-react"
+import { ChangeEvent, useState } from 'react'
 import { InputOnChangeData } from "semantic-ui-react/dist/commonjs/elements/Input/Input"
 import api from "../api"
 import { BroadcastCalculationHistory, CalculationTarget} from "./Model"
@@ -18,6 +18,11 @@ const CalculationsTableHandlers  = (props) => {
     }
 
     const changedFilterEntityType = (data: DropdownProps): void => {
+        if (data.value == "") {
+            setEntityType(null)
+            loadAndUpdateRows(entityId, null)
+            return
+        }
         setEntityType(CalculationTarget[String(data.value)])
         loadAndUpdateRows(entityId, CalculationTarget[String(data.value)])
     }
@@ -44,6 +49,7 @@ const CalculationsTableHandlers  = (props) => {
             />
             <Dropdown
                 style={{ width: '220px', marginRight: 40 }}
+                clearable={true}
                 placeholder={'Entity Type'}
                 name='status'
                 selection
@@ -51,6 +57,10 @@ const CalculationsTableHandlers  = (props) => {
                 options={entityTypes}
                 onChange={(event: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => changedFilterEntityType(data)}
             />
+            <Button
+                icon={'refresh'}
+                onClick={() => loadAndUpdateRows(entityId, entityType)}>
+            </Button>
         </div>
     )
 }

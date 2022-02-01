@@ -3813,9 +3813,10 @@
   "priceBook.noElementsChanged": "There are no elements to be changed",
   "monitoring.broadcastCalculations.entityType": "Entity Type",
   "monitoring.broadcastCalculations.entityId": "Entity ID",
+  "monitoring.broadcastCalculations.sellerCompany": "Company ID",
   "monitoring.broadcastCalculations.views": "Views found",
   "monitoring.broadcastCalculations.durationMs": "Duration (ms)",
   "monitoring.broadcastCalculations.threadId": "Thread ID",
-  "monitoring.broadcastCalculations.startDate": "Start Date",
-  "monitoring.broadcastCalculations.endDate": "End Date"
+  "monitoring.broadcastCalculations.starTime": "Start Time",
+  "monitoring.broadcastCalculations.endTime": "End Time"
 }
