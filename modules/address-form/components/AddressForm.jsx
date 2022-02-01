@@ -9,7 +9,7 @@ import { func, string, shape, array, bool, object, oneOfType, node, any } from '
 import styled from 'styled-components'
 
 import { getProvinces } from '../api'
-
+import get from 'lodash/get'
 import { getSafe, getDeeply } from '~/utils/functions'
 import { Required } from '~/components/constants/layout'
 
@@ -50,7 +50,9 @@ class AddressForm extends Component {
       this.setState({ provincesAreFetching: true })
       let provinces = await getProvinces(countryId)
       this.setState({ provinces, hasProvinces, countryId, provincesAreFetching: false })
+      return provinces
     }
+    return []
   }
 
   asignPrefix = () => {
@@ -81,30 +83,45 @@ class AddressForm extends Component {
   }
 
   async componentDidMount() {
-    let { countries, countriesLoading, useStringCountryState } = this.props
+    let { countries, countriesLoading, useStringCountryState, setFieldValue } = this.props
     const { addZip } = this.props
+    let fields = this.asignPrefix()
+
     let values = this.getValues()
-    if (!values || (values && !values.address)) return
-    let { address } = values
-    if (!address) return
+    //if (!values || (values && !values.address)) return
+    //let { address } = values
+    //if (!address) return
+
+    const zip = get(this.props.values, fields.zip)
+    const country = get(this.props.values, fields.country)
+
     try {
       if (countries.length === 0 && !countriesLoading) await this.props.getCountries()
-      if (address.zip) {
-        if (this.isJSON(address.zip)) await addZip(JSON.parse(address.zip))
-        else await addZip(address.zip)
+      if (zip) {
+        if (this.isJSON(zip)) addZip(JSON.parse(zip))
+        else addZip(zip)
       }
-
       if (useStringCountryState) {
-        const searchedCountry = address?.country
-          ? countries.find(el => el.name === address.country)
+        const searchedCountry = country
+          ? countries.find(el => el.name === country)
           : null
         if (searchedCountry) {
-          await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+          const provinces = await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
           this.setState({ hasProvinces: searchedCountry.hasProvinces })
+          if (searchedCountry.hasProvinces) {
+
+            const provinceValue = get(this.props.values, fields.province)
+            if (provinces.length && !provinces.some(el => el.name === provinceValue)) {
+              const searchedProvince = provinces.find(el => el.abbreviation === provinceValue)
+              if (searchedProvince) {
+                setFieldValue(fields.province, searchedProvince.name)
+              }
+            }
+          }
         }
       } else {
         let { countryId, hasProvinces } =
-          address && address.country ? JSON.parse(address.country) : { countryId: null, hasProvinces: null }
+          country ? JSON.parse(country) : { countryId: null, hasProvinces: null }
 
         this.setState({ hasProvinces: hasProvinces })
         await this.fetchProvinces(countryId, hasProvinces)
@@ -115,20 +132,20 @@ class AddressForm extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    const { addZip, countries, useStringCountryState } = this.props
+    const { addZip, countries, useStringCountryState, setFieldValue } = this.props
+    let fields = this.asignPrefix()
     const values = this.getValues()
     const oldValues = this.getValues(prevProps?.values)
 
-    const country = values && values.address && values.address.country
-    const oldCountry = oldValues && oldValues.address && oldValues.address.country
-
+    const country = get(this.props.values, fields.country)
+    const oldCountry = get(prevProps.values, fields.country)
     if (
-      values?.id !== oldValues?.id ||
+      this.props.values?.id !== prevProps.values?.id ||
       getSafe(() => values.address.id, '') !== getSafe(() => oldValues.address.id, '')
     ) {
-      if (getSafe(() => values.address.zip, '')) {
-        if (this.isJSON(values.address.zip)) await addZip(JSON.parse(values.address.zip))
-        else await addZip(values.address.zip)
+      if (get(this.props.values, fields.zip)) {
+        if (this.isJSON(this.props.values, fields.zip)) await addZip(JSON.parse(this.props.values, fields.zip))
+        else await addZip(this.props.values, fields.zip)
       }
     }
     if (country && country !== oldCountry) {
@@ -137,11 +154,18 @@ class AddressForm extends Component {
         const searchedCountry = country
           ? countries.find(el => el.name === country)
           : null
-
         if (searchedCountry) {
           this.setState({ hasProvinces: searchedCountry.hasProvinces })
           if (searchedCountry.hasProvinces) {
-            this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+            const provinces = await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+            const provinceValue = get(this.props.values, fields.province)
+            if (provinces.length && !provinces.some(el => el.name === provinceValue)) {
+              const searchedProvince = provinces.find(el => el.abbreviation === provinceValue)
+              if (searchedProvince) {
+                setFieldValue(fields.province, searchedProvince.name)
+              }
+            }
+
           }
         }
       } else {
