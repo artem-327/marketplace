@@ -50,7 +50,9 @@ class AddressForm extends Component {
       this.setState({ provincesAreFetching: true })
       let provinces = await getProvinces(countryId)
       this.setState({ provinces, hasProvinces, countryId, provincesAreFetching: false })
+      return provinces
     }
+    return []
   }
 
   asignPrefix = () => {
@@ -81,7 +83,7 @@ class AddressForm extends Component {
   }
 
   async componentDidMount() {
-    let { countries, countriesLoading, useStringCountryState } = this.props
+    let { countries, countriesLoading, useStringCountryState, setFieldValue } = this.props
     const { addZip } = this.props
     let values = this.getValues()
     if (!values || (values && !values.address)) return
@@ -99,8 +101,18 @@ class AddressForm extends Component {
           ? countries.find(el => el.name === address.country)
           : null
         if (searchedCountry) {
-          await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
+          const provinces = await this.fetchProvinces(searchedCountry.id, searchedCountry.hasProvinces)
           this.setState({ hasProvinces: searchedCountry.hasProvinces })
+          if (searchedCountry.hasProvinces) {
+            const provinceValue = address.province
+            if (provinces.length && !provinces.some(el => el.name === provinceValue)) {
+              const searchedProvince = provinces.find(el => el.abbreviation === provinceValue)
+              if (searchedProvince) {
+                let fields = this.asignPrefix()
+                setFieldValue(fields.province, searchedProvince.name)
+              }
+            }
+          }
         }
       } else {
         let { countryId, hasProvinces } =
@@ -115,7 +127,7 @@ class AddressForm extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    const { addZip, countries, useStringCountryState } = this.props
+    const { addZip, countries, useStringCountryState, setFieldValue } = this.props
     const values = this.getValues()
     const oldValues = this.getValues(prevProps?.values)
 

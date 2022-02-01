@@ -212,6 +212,7 @@ const Detail = props => {
 
   const bol = ordersType === 'Sales' ? order.sellBillOfLading : order.buyBillOfLading
   const bolEditable = !order.buySellBillOfLadingProcessed &&
+    order?.rawData?.shippingStatus < 2 &&
     (!order?.rawData?.confirmationDate ||
       order?.rawData?.confirmationDate &&
       moment(order.rawData.confirmationDate).add(1, 'days').isAfter(moment())

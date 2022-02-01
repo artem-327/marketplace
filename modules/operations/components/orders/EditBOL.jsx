@@ -3,15 +3,12 @@ import { connect } from 'react-redux'
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import moment from 'moment/moment'
 import { Form, Accordion, Menu, Dimmer, Loader } from 'semantic-ui-react'
 
 // Components
 import { Formik } from 'formik'
-import ErrorFocus from '../../../../components/error-focus'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import BOLContent from './BOLContent'
-import { getSafe } from '../../../../utils/functions'
 
 // Actions
 import * as Actions from '../../actions'

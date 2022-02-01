@@ -14,6 +14,7 @@ import { FieldArray } from 'formik'
 import { Input, Dropdown, TextArea } from 'formik-semantic-ui-fixed-validation'
 import { AddressForm } from '../../../address-form'
 import { DateInput } from '../../../../components/custom-formik'
+import ErrorFocus from '../../../../components/error-focus'
 
 // Actions
 import * as Actions from '../../actions'
@@ -27,7 +28,7 @@ const BOLContent = props => {
     formikProps
   } = props
 
-  const { values, setFieldValue, setFieldTouched, touched, isSubmitting, errors } = formikProps
+  const { values, setFieldValue } = formikProps
 
   return (
     <GridBol>
@@ -834,6 +835,7 @@ const BOLContent = props => {
           >+</DivPLusIcon>
         </GridColumn>
       </GridRow>
+      <ErrorFocus />
     </GridBol>
   )
 }
