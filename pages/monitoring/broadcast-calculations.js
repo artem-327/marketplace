@@ -5,15 +5,6 @@ import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
 import BroadcastCalculations from '~/modules/monitoring'
 import { injectIntl } from 'react-intl'
-import { w3cwebsocket as  W3Cwebsocket } from 'websocket'
-
-const getWebsocketUrl = () => {
-    if (process.env.REACT_APP_API_URL) {
-        return process.env.REACT_APP_API_URL.replace('https:', 'ws:').replace('http:', 'ws:')
-    }
-
-    return 'ws://localhost:8080/'
-}
 
 class Index extends Component {
 
@@ -31,8 +22,6 @@ class Index extends Component {
                 {!(auth?.identity?.isAdmin || auth?.identity?.isOperator)
                     ? null :
                     (<BroadcastCalculations
-                        activeCalcultionsWebsocket={new W3Cwebsocket(getWebsocketUrl() + 'prodex/broadcast-calculations-threads')}
-                        calculationsQueueWebsocket={new W3Cwebsocket(getWebsocketUrl() + 'prodex/broadcast-calculations-queue')}
                         graphMaxPoints={120}
                     />)
                 }
