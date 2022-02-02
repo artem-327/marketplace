@@ -32,6 +32,7 @@ const AddBankAccounts = ({
   const plaidConfig = {
     publicKey: vellociBusinessId,
     token: vellociToken,
+    // callback that fires the users public token within plaid Link --- em
     onSuccess: async (_publicToken, metadata) => {
       try {
         await addVellociAcount(magicToken, metadata)
