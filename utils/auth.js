@@ -46,7 +46,8 @@ export const unsetAuth = () => {
 export async function authorize(username, password, session = null, option = null, code = null) {
   const fp = await FingerprintJS.load()
   const result = await fp.get()
-  const visitorId = result.visitorId
+  const { screenFrame, screenResolution, ...fingerprintResult } = result.components
+  const visitorId = FingerprintJS.hashComponents(fingerprintResult)
 
   const { data } = await api.post(
     '/prodex/oauth/token',
