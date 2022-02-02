@@ -257,11 +257,13 @@ class CompanyModal extends Component {
             let data = await onSubmit(payload, isEdit)
             if (companyLogo) postCompanyLogo(data.id, companyLogo)
             else if (!companyLogo && getSafe(() => popupValues.hasLogo, false)) deleteCompanyLogo(data.id)
-            if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
-            else {
-              Datagrid.clear()
-              Datagrid.loadData()
-            }
+            // if (isEdit) Datagrid.updateRow(data.id, () => ({ ...data, hasLogo: !!companyLogo }))
+            if (!isEdit) Datagrid.clear()
+            // else {
+            //   Datagrid.clear()
+            //   Datagrid.loadData()
+            // }
+            Datagrid.loadData()
           } catch (err) {
             actions.setSubmitting(false)
             console.error(err)

@@ -3,6 +3,7 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import api from './api'
 // Services
 import { Datagrid } from '../datagrid'
+import Api from "../orders/api"
 
 export const openPopup = createAction('OPERATIONS_OPEN_POPUP', (rows = null) => rows)
 export const closePopup = createAction('OPERATIONS_CLOSE_POPUP', (rows = null) => rows)
@@ -19,7 +20,8 @@ export const deleteTag = createAsyncAction('OPERATIONS_DELETE_TAG', async (id) =
 })
 export const updateTag = createAsyncAction('OPERATIONS_UPDATE_TAG', async (id, name) => {
   const newRow = await api.updateTag(id, name)
-  Datagrid.updateRow(id, () => newRow.data)
+  Datagrid.loadData()
+  // Datagrid.updateRow(id, () => newRow.data)
 })
 export const createTag = createAsyncAction('OPERATIONS_CREATE_TAG', async (name) => {
   await api.createTag(name)
@@ -85,5 +87,10 @@ export const openGenBOLPopup = createAction('SHIPPING_QUOTE_OPEN_GEN_BOL_POPUP',
 export const closeGenBOLPopup = createAction('SHIPPING_QUOTE_CLOSE_GEN_BOL_POPUP')
 export const getOrderById = createAsyncAction('OPERATIONS_ORDERS_GET_ORDER', (orderId) => api.getOrderById(orderId))
 export const downloadPdf = createAsyncAction('OPERATIONS_ORDER_DOWNLOAD_PDF', orderId => api.downloadPdf(orderId))
-export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30) =>
-  api.searchCompanyGenericProduct(searchQuery, limit))
+export const searchCompanyGenericProduct = createAsyncAction('OPERATIONS_SEARCH_COMPANY_GENERIC_PRODUCTS', (searchQuery, limit = 30, companyId) =>
+  api.searchCompanyGenericProduct(searchQuery, limit, companyId))
+export const unlinkAttachmentToOrder = createAsyncAction('UNLINK_ATTACHMENT_TO_ORDER', (query) => Api.unlinkAttachmentToOrder(query))
+export const getOrderBol = createAsyncAction('OPERATIONS_ORDERS_GET_BOL', orderId => api.getOrderBol(orderId))
+export const updateOrderBol = createAsyncAction('OPERATIONS_ORDERS_UPDATE_BOL', (orderId, type, body) => api.updateOrderBol(orderId, type, body))
+export const submitCarrierBol = createAsyncAction('OPERATIONS_ORDERS_SUBMIT_CARRIER_BOL', (orderId, body) => api.submitCarrierBol(orderId, body))
+export const downloadBOL = createAsyncAction('OPERATIONS_ORDERS_DOWNLOAD_BOL', (orderId, type) => api.downloadBOL(orderId, type))

@@ -134,6 +134,14 @@ export const removeEmpty = (obj, checkFn) =>
       } else if (typeof val === 'string') {
         if (val.trim() === '') delete obj[key]
         else obj[key] = val.trim()
+      } else if (Array.isArray(val)) {
+        val.forEach(arrItem => removeEmpty(arrItem))
+        const newArray = val.filter(arrItem => {
+          if (Array.isArray(arrItem) && arrItem.length === 0) return false
+          if (typeof arrItem === 'object' && Object.entries(arrItem).length === 0) return false
+          return true
+        })
+        obj[key] = newArray
       }
     }
   })

@@ -71,7 +71,8 @@ const AddEditLogisticProvider = props => {
                 }
                 removeEmpty(payload)
                 const { value } = await updateLogisticsProvider(popupValues.id, payload)
-                datagrid.updateRow(value.id, () => value)
+                // datagrid.updateRow(value.id, () => value)
+                datagrid.loadData()
               } else {
                 const parsed = JSON.parse(values.providerIdentifier)
                 const payload = {

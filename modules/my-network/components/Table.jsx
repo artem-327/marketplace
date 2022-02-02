@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 //Components
 import ProdexTable from '../../../components/table'
 import DetailRow from './DetailRow/DetailRow'
@@ -57,6 +58,7 @@ const Table = props => {
   }
 
   const getRowDetail = ({ row }) => {
+    console.log(row);
     return (
       <DetailRow
         row={row}
@@ -81,9 +83,32 @@ const Table = props => {
         expandedRowIds={expandedRowIds}
         onExpandedRowIdsChange={expandedRowIds => setExpandedRowIds(expandedRowIds)}
         estimatedRowHeight={1000}
+        noScrollEvent={true}
       />
     </div>
   )
+}
+
+Table.propTypes = {
+  loadingDatagrid: PropTypes.bool,
+  rows: PropTypes.array,
+  connectionsStatuses: PropTypes.func,
+  getConnection: PropTypes.func,
+  loadingDetailRow: PropTypes.bool,
+  showBluePallet: PropTypes.func,
+  query: PropTypes.object,
+  isCompanyAdmin: PropTypes.bool
+}
+
+Table.defaultValues = {
+  loadingDatagrid: false,
+  rows: [],
+  connectionsStatuses: () => { },
+  getConnection: () => { },
+  loadingDetailRow: false,
+  showBluePallet: () => { },
+  query: {},
+  isCompanyAdmin: false
 }
 
 export default Table

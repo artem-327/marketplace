@@ -8,7 +8,7 @@ import { errorMessages } from "../../../../constants/yupValidation"
  * @method
  */
 export const handleSearchChange = debounce((searchQuery, props) => {
-  props.searchCompanyGenericProduct(searchQuery)
+  props.searchCompanyGenericProduct(searchQuery, 30, props.popupValues.requestedBy.company.id)
 }, 250)
 
 /**

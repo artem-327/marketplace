@@ -11,7 +11,7 @@ import {
   Input,
   Modal
 } from 'semantic-ui-react'
-import { ChevronDown, PlusCircle, UploadCloud, Link2 } from 'react-feather'
+import { ChevronDown, PlusCircle, UploadCloud, Link2, Edit2 } from 'react-feather'
 
 
 export const OrderSegment = styled(Segment)`
@@ -232,6 +232,10 @@ line-height: 1.4285714 !important;
   color: #848893;
   line-height: 2.86;
 }
+
+&.edit {
+  padding-top: 18px !important;
+}
 `
 
 export const StyledTable = styled(Table)`
@@ -392,7 +396,22 @@ color: #2599d5;
 `
 
 export const CustomDivAddDocument = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
+ display: flex;
+ flex-direction: row;
+ justify-content: space-between;
+`
+
+export const EditIcon = styled(Edit2)`
+  margin: 0; 
+  margin-left: 20px;
+  border-radius: 3px;
+  border: solid 1px #dee2e6;
+  transform: rotate(0deg) !important;
+  ${({ $canBeClicked }) => ($canBeClicked ? 'color: #2599d5 !important; fill: #2599d5; cursor: pointer;' : 'color: #848893 !important; fill: #848893 !important; cursor: default;')}
+  padding: 5.5px;
+`
+
+export const DivFlexRow = styled.div`
+ display: flex;
+ flex-direction: row;
 `

@@ -291,7 +291,7 @@ const FreightSelection = props => {
                           </DivLabel>
                           <Input
                             fluid
-                            onChange={ (_, { value }) => {setShipmentQuoteId(value); onValueChange(null);} }
+                            onChange={(_, { value }) => { setShipmentQuoteId(value); onValueChange(null); }}
                             name='shipmentQuoteId'
                             value={shipmentQuoteId}
                             disabled={isOwn}
@@ -373,8 +373,40 @@ const FreightSelection = props => {
   )
 }
 
-FreightSelection.propTypes = {}
+FreightSelection.propTypes = {
+  isExpanded: PropTypes.bool,
+  allAccepted: PropTypes.bool,
+  sectionState: PropTypes.object,
+  shippingQuotes: PropTypes.object,
+  onValueChange: PropTypes.func,
+  setSummaryButtonCaption: PropTypes.func,
+  value: PropTypes.object,
+  orderTotal: PropTypes.string,
+  fixedFreightId: PropTypes.number,
+  cart: PropTypes.object,
+  intl: PropTypes.object,
+  shippingQuotesAreFetching: PropTypes.bool,
+  shipmentQuoteId: PropTypes.number,
+  setShipmentQuoteId: PropTypes.number
+}
 
-FreightSelection.defaultProps = {}
+FreightSelection.defaultProps = {
+  intl: {
+    formatMessage: () => { }
+  },
+  isExpanded: false,
+  allAccepted: false,
+  sectionState: {},
+  shippingQuotes: {},
+  onValueChange: () => { },
+  setSummaryButtonCaption: () => { },
+  value: {},
+  orderTotal: '',
+  fixedFreightId: 0,
+  cart: {},
+  shippingQuotesAreFetching: false,
+  shipmentQuoteId: 0,
+  setShipmentQuoteId: 0
+}
 
 export default injectIntl(FreightSelection)

@@ -100,7 +100,8 @@ export const submitHandler = async (values, { setSubmitting }, props) => {
 
     if (popupValues) {
       const { value } = await updateCasProductRequest(popupValues.id, payload)
-      datagrid.updateRow(popupValues.id, () => value)
+      datagrid.loadData()
+      // datagrid.updateRow(popupValues.id, () => value)
     } else {
       await postNewCasProductRequest(payload)
       datagrid.loadData()

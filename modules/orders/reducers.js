@@ -61,7 +61,9 @@ import {
   saveFilters,
   orderResolutionReopen,
   orderResolutionAccept,
-  downloadDisputeAttachment
+  downloadDisputeAttachment,
+  getOrderBol,
+  updateOrderBol
 } from './actions'
 
 const initialState = {
@@ -103,7 +105,10 @@ const initialState = {
   loadingRelatedDocuments: false,
   tableHandlersFilters: null,
   isThirdPartyConnectionException: false,
-  openedDisputedRequest: false
+  openedDisputedRequest: false,
+  orderBol: null,
+  orderBolLoading: false,
+  orderBolUpdating: false
 }
 
 
@@ -1116,7 +1121,45 @@ export default typeToReducer(
       return {
         ...state
       }
-    }
+    },
+    [getOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: true
+      }
+    },
+    [getOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false
+      }
+    },
+    [getOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolLoading: false,
+        orderBol: action.payload
+      }
+    },
+    [updateOrderBol.pending]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: true
+      }
+    },
+    [updateOrderBol.rejected]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false
+      }
+    },
+    [updateOrderBol.fulfilled]: (state, action) => {
+      return {
+        ...state,
+        orderBolUpdating: false,
+        //! ! orderBol: action.payload
+      }
+    },
   },
   initialState
 )

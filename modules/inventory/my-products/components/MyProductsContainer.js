@@ -36,7 +36,8 @@ const makeMapStateToProps = () => {
             rows: getMappedRows(datagrid),
             action: getSafe(() => Router.router.query.action, null), // ! ! ?
             actionId: getSafe(() => Router.router.query.id, null), // ! ! ?
-            tutorialCompleted: getTutorialCompleted(state)
+            tutorialCompleted: getTutorialCompleted(state),
+            currentCompany: state.auth.identity.company
         }
     }
     return mapStateToProps

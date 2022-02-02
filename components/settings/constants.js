@@ -4,8 +4,7 @@ import * as Yup from 'yup'
 import { errorMessages, validateTime } from '../../constants/yupValidation'
 import { getSafe } from '../../utils/functions'
 import UploadAttachment from '../../modules/inventory/components/upload/UploadAttachment'
-
-import { DivLogoWrapper, ImageSearchStyled } from './settings.styles'
+import { DivLogoDisabledComponent, DivLogoDisabledContent, DivLogoWrapper, ImageSearchStyled } from './settings.styles'
 
 export const roles = {
   admin: 'admin',
@@ -29,7 +28,9 @@ const supportedValidation = {
 const numberAllowEmptyString = Yup.number()
   .test('numbers', errorMessages.mustBeNumber, value => (!value || !isNaN(value)))
   .transform(value => (isNaN(value) ? null : value))
+  .nullable()
   .typeError(errorMessages.mustBeNumber)
+  .min(0, errorMessages.minimum(0))
 
 const integerAllowEmptyString = Yup.number()
   .test('numbers', errorMessages.mustBeNumber, value => !value || /^[0-9]*$/.test(value))
@@ -37,6 +38,7 @@ const integerAllowEmptyString = Yup.number()
   .nullable()
   .integer(errorMessages.integer)
   .typeError(errorMessages.mustBeNumber)
+  .min(0, errorMessages.minimum(0))
 
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
@@ -61,6 +63,8 @@ export const getRole = accessRights => {
 export const typeToComponent = (type, options = {}, formikProps, componentName, props) => {
   const { intl: { formatMessage } } = props
   const inputProps = getSafe(() => options.inputProps, {})
+  const disabled = inputProps?.disabled
+
   switch (type) {
     case 'NUMBER':
       return (
@@ -171,45 +175,59 @@ export const typeToComponent = (type, options = {}, formikProps, componentName, 
       const picture = get(values, componentName, '')
 
       return (
-        <UploadAttachment
-          {...getSafe(() => options.props, {})}
-          {...getSafe(() => options.inputProps, {})}
-          acceptFiles='image/jpeg, image/png, image/gif, image/svg'
-          name={componentName}
-          filesLimit={1}
-          fileMaxSize={2}
-          attachments={(picture && picture !== 'EMPTY_SETTING')
-            ? [{
-              id: componentName,
-              name: formatMessage({id: 'profile.avatarPicture', defaultMessage: 'Avatar Picture'})
-            }]
-            : []
-          }
-          onChange={file => {
-            try {
-              const reader = new FileReader()
-              reader.readAsDataURL(file[0])
-              reader.onloadend = function () {
-                const base64String = reader.result
-                // without additional data: Attributes.
-                const newBase64Pic = base64String.substr(base64String.indexOf(', ') + 1)
-                setFieldValue(componentName, newBase64Pic)
-              }
-            } catch (e) {
-              console.error(e)
+        disabled
+          ? (
+            <DivLogoDisabledComponent>
+              <DivLogoDisabledContent>
+                <DivLogoWrapper>
+                  {(picture && picture !== 'EMPTY_SETTING')
+                    ? (<img src={picture}/>)
+                    : (<ImageSearchStyled />)
+                  }
+                </DivLogoWrapper>
+              </DivLogoDisabledContent>
+            </DivLogoDisabledComponent>
+          ) : (
+          <UploadAttachment
+            {...getSafe(() => options.props, {})}
+            {...getSafe(() => options.inputProps, {})}
+            acceptFiles='image/jpeg, image/png, image/gif, image/svg'
+            name={componentName}
+            filesLimit={1}
+            fileMaxSize={2}
+            attachments={(picture && picture !== 'EMPTY_SETTING')
+              ? [{
+                id: componentName,
+                name: formatMessage({id: 'profile.avatarPicture', defaultMessage: 'Avatar Picture'})
+              }]
+              : []
             }
-          }}
-          removeAttachment={() => setFieldValue(componentName, 'EMPTY_SETTING')}
-          emptyContent={<DivLogoWrapper><ImageSearchStyled /></DivLogoWrapper>}
-          uploadedContent={
-            <div>
-              {(picture && picture !== 'EMPTY_SETTING') && (
-                <img src={picture}/>
-              )}
-            </div>
-          }
+            onChange={file => {
+              try {
+                const reader = new FileReader()
+                reader.readAsDataURL(file[0])
+                reader.onloadend = function () {
+                  const base64String = reader.result
+                  // without additional data: Attributes.
+                  const newBase64Pic = base64String.substr(base64String.indexOf(', ') + 1)
+                  setFieldValue(componentName, newBase64Pic)
+                }
+              } catch (e) {
+                console.error(e)
+              }
+            }}
+            removeAttachment={() => setFieldValue(componentName, 'EMPTY_SETTING')}
+            emptyContent={<DivLogoWrapper><ImageSearchStyled /></DivLogoWrapper>}
+            uploadedContent={
+              <div>
+                {(picture && picture !== 'EMPTY_SETTING') && (
+                  <img src={picture}/>
+                )}
+              </div>
+            }
 
-        />
+          />
+        )
       )
     }
     default:

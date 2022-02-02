@@ -22,9 +22,8 @@ import {
   FlexContent,
   HighSegment,
   BottomButtons,
-  LabeledRow
-} from '~/modules/wanted-board/constants/layout'
-import ErrorFocus from '~/components/error-focus'
+} from '../../../modules/wanted-board/styles'
+import ErrorFocus from '../../../components/error-focus'
 
 const CustomSegment = styled(Segment)`
   background-color: #f8f9fb !important;

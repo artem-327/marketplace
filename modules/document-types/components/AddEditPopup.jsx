@@ -80,11 +80,12 @@ const AddEditDocumentType = props => {
             try {
               if (popupValues) {
                 const { value } = await editDocumentType(popupValues.id, data)
-                datagrid.updateRow(popupValues.id, () => value)
+                // datagrid.updateRow(popupValues.id, () => value)
               } else {
                 await addDocumentType(data)
-                datagrid.loadData()
+                // datagrid.loadData()
               }
+              datagrid.loadData()
               closePopup()
             } catch (e) {
               console.error(e)

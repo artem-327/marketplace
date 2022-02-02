@@ -21,6 +21,7 @@ import { Checkbox } from 'formik-semantic-ui-fixed-validation'
 
 import * as Yup from 'yup'
 
+import ErrorFocus from '../error-focus'
 import { getSafe } from '../../utils/functions'
 import { typeToComponent, toYupSchema, dataTypes } from './constants'
 
@@ -525,6 +526,7 @@ class Settings extends Component {
                   ) : null}
                 </Grid.Column>
               </ButtonsWrapper>
+              <ErrorFocus />
             </FormSpaced>
           )
         }}

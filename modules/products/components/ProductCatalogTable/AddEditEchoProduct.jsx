@@ -664,15 +664,15 @@ const AddEditEchoProduct = props => {
       // No need to await; just fire it
       verifyEchoProduct(value.id)
 
-      if (popupValues) {
-        datagrid.updateRow(value.id, () => ({
-          ...value,
-          attachments: value.attachments.concat(notLinkedAttachments)
-        }))
-      } else {
-        datagrid.loadData()
-      }
-
+      // if (popupValues) {
+      //   datagrid.updateRow(value.id, () => ({
+      //     ...value,
+      //     attachments: value.attachments.concat(notLinkedAttachments)
+      //   }))
+      // } else {
+      //   datagrid.loadData()
+      // }
+      datagrid.loadData()
       setSubmitting(false)
       callback()
     } catch (err) {
@@ -1155,10 +1155,10 @@ const AddEditEchoProduct = props => {
           <GridColumnForm width={16}>
             {RowInput({
               name: 'name',
-              id: 'global.productName',
-              defaultMessage: 'Product Name',
+              id: 'global.SDSName',
+              defaultMessage: 'SDS Name',
               required: true,
-              placeholderId: 'productCatalog.enterProductName'
+              placeholderId: 'productCatalog.enterSDSName'
             })}
           </GridColumnForm>
         </GridRowCustom>
@@ -1167,10 +1167,10 @@ const AddEditEchoProduct = props => {
           <GridColumnForm width={8}>
             {RowInput({
               name: 'code',
-              id: 'global.productCode',
-              defaultMessage: 'Product Code',
+              id: 'global.SDSCode',
+              defaultMessage: 'SDS Code',
               required: true,
-              placeholderId: 'productCatalog.enterProductCode'
+              placeholderId: 'productCatalog.enterSDSCode'
             })}
           </GridColumnForm>
           <GridColumnForm width={8}>

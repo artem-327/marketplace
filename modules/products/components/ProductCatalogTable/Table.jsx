@@ -42,15 +42,15 @@ const ProductCatalogTable = props => {
       },
       {
         text: formatMessage({
-          id: 'admin.deleteCompanyGenericProduct',
-          defaultMessage: 'Delete Company Generic Product'
+          id: 'admin.deleteSDS',
+          defaultMessage: 'Delete SDS'
         }),
         disabled: () => props.editedId === row.id,
         callback: () => {
           confirm(
             formatMessage({
-              id: 'confirm.deleteCompanyGenericProduct.title',
-              defaultMessage: 'Delete Company Generic Product?'
+              id: 'confirm.deleteSDS.title',
+              defaultMessage: 'Delete SDS?'
             }),
             formatMessage(
               {
