@@ -31,6 +31,7 @@ const numberAllowEmptyString = Yup.number()
   .nullable()
   .typeError(errorMessages.mustBeNumber)
   .min(0, errorMessages.minimum(0))
+  .max(Number.MAX_VALUE, errorMessages.maximum(Number.MAX_VALUE))
 
 const integerAllowEmptyString = Yup.number()
   .test('numbers', errorMessages.mustBeNumber, value => !value || /^[0-9]*$/.test(value))
@@ -39,6 +40,7 @@ const integerAllowEmptyString = Yup.number()
   .integer(errorMessages.integer)
   .typeError(errorMessages.mustBeNumber)
   .min(0, errorMessages.minimum(0))
+  .max(2147483647, errorMessages.maximum(2147483647))
 
 export const dataTypes = {
   STRING: Yup.string(errorMessages.invalidString).trim().max(255, errorMessages.maxLength(255)),
