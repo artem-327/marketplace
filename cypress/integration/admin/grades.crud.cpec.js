@@ -61,14 +61,14 @@ context("Grades CRUD", () => {
 
         cy.get("#field_input_val0")
             .clear()
-            .type("Graceful")
-            .should("have.value", "Graceful")
+            .type("Test Graceful")
+            .should("have.value", "Test Graceful")
 
         cy.clickSave()
 
         cy.openElement(gradeId, 0)
 
-        cy.get("#field_input_val0").should("have.value", "Graceful")
+        cy.get("#field_input_val0").should("have.value", "Test Graceful")
     })
 
     it("Checks error message", () => {
@@ -84,7 +84,7 @@ context("Grades CRUD", () => {
     })
 
     it("Deletes a grade", () => {
-        cy.searchInList("Graceful")
+        cy.searchInList("Test")
         cy.openElement(gradeId, 1)
 
         cy.contains("Yes").click()

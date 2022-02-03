@@ -59,7 +59,6 @@ context("Prodex Warehouse CRUD", () => {
         cy.wait("@warehouseCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })
-        cy.get('[data-test="settings_warehouse_popup_reset_btn"]').click()
 
         cy.searchInList("Central")
 

@@ -54,7 +54,6 @@ context("Prodex Branches CRUD", () => {
         cy.wait("@branchCreate").then(({ request, response }) => {
             expect(response.statusCode).to.eq(201)
         })
-        cy.get('[data-test=settings_branches_popup_reset_btn]').click()
         cy.waitForUI()
 
         cy.getUserToken(userJSON.email, userJSON.password).then(token => {

@@ -60,7 +60,8 @@ context("Prodex Admin User CRUD", () => {
 
         cy.wait("@usersSave")
         cy.waitForUI()
-        cy.searchInList("John")
+        cy.wait("@usersLogin", {timeout: 100000})
+        cy.searchInList("TesterFE")
 
         cy.getUserToken(adminJSON.email, adminJSON.password).then(token => {
             cy.getFirstAdminUsersWithFilter(token, filter).then(itemId => {
@@ -95,7 +96,7 @@ context("Prodex Admin User CRUD", () => {
 
     it("Edits a user", () => {
         cy.waitForUI()
-        cy.searchInList("John TesterFE")
+        cy.searchInList("TesterFE")
         cy.wait("@usersLogin")
         cy.waitForUI()
 
@@ -148,7 +149,7 @@ context("Prodex Admin User CRUD", () => {
         cy.get('[data-test=admin_users_popup_submit_btn]').click()
 
         cy.get(".error")
-            .should("have.length", 9)
+            .should("have.length", 10)
             .find(".sui-error-message").each((element) => {
             expect(element.text()).to.match(/(Required)|(At least one role should be selected)/i)
         })

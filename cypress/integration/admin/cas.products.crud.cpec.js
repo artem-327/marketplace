@@ -56,7 +56,7 @@ context("CAS products CRUD", () => {
 
     it("Edits a CAS product", () => {
         cy.get('.column > .ui > input')
-            .type("Testinonium")
+            .type("Test")
 
         cy.wait("@CASloading")
 

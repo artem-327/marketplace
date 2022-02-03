@@ -62,7 +62,7 @@ context("Wanted Board Purchase Request CRUD", () => {
                 cy.wait("@updateRequest").then(({ request, response }) => {
                     expect(response.statusCode).to.eq(200)
                 })
-
+                cy.waitForUI()
                 cy.openElement(itemId, 0)
                 cy.waitForUI()
 
