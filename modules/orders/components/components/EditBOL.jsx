@@ -13,7 +13,6 @@ import {
 
 // Components
 import { Formik } from 'formik'
-import { FormattedPhone } from '../../../../components/formatted-messages/'
 import { Button, Input } from 'formik-semantic-ui-fixed-validation'
 import ErrorFocus from '../../../../components/error-focus'
 import { getSafe } from '../../../../utils/functions'
@@ -223,15 +222,11 @@ const EditBOL = props => {
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.bol.phoneNumber' defaultMessage='Phone Number'/>
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>
-                            <FormattedPhone value={props.popupValues.phoneNumber} />
-                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{props.popupValues.phoneNumber}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.bol.faxNumber' defaultMessage='Fax Number'/>
                           </GridDataColumn>
-                          <GridDataColumn width={valColumn}>
-                            <FormattedPhone value={props.popupValues.faxNumber} />
-                          </GridDataColumn>
+                          <GridDataColumn width={valColumn}>{props.popupValues.faxNumber}</GridDataColumn>
                           <GridDataColumn width={keyColumn} className='key'>
                             <FormattedMessage id='order.bol.referenceInformation' defaultMessage='Reference Information'/>
                           </GridDataColumn>
