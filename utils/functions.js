@@ -310,6 +310,10 @@ export const getFloatValue = value => {
   if (typeof value === 'string') {
     let valueFormatted = value.replace(' ', '').replace(',', '.')
 
+    console.log('!!!!!!!!!! getFloatValue entered value', value)
+
+
+
     console.log('!!!!!!!!!! getFloatValue /^[0-9]*$/.test(value)', /^[-+]?[0-9]*[.]?[0-9]+$/.test(value))
 
     if (!(/^[-+]?[0-9]*[.]?[0-9]+$/.test(value))) return NaN
