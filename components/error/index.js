@@ -57,7 +57,7 @@ class ErrorComponent extends Component {
             <br />
             <Button size='massive' primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
               <FormattedMessage id='error.backButtonText' values={{
-                companyName: getSafe(() => this.props.appInfo.applicationName, '')
+                companyName: getSafe(() => this.props.appInfo.applicationName, 'BluePallet')
               }}>{text => text}</FormattedMessage>
             </Button>
           </Message>
@@ -65,7 +65,11 @@ class ErrorComponent extends Component {
             <FormattedMessage
               id='error.footer'
               values={{
-                email: this.props?.appInfo?.supportEmail ? <a href={`mailto:${this.props.appInfo.supportEmail}`}>{this.props.appInfo.supportEmail}</a> : ''
+                email: (
+                  <a href={`mailto:${this.props?.appInfo?.supportEmail ? this.props.appInfo.supportEmail : 'support@bluepallet.io'}`}>
+                    {this.props?.appInfo?.supportEmail ? this.props.appInfo.supportEmail : 'support@bluepallet.io'}
+                  </a>
+                )
               }}
             />
           </Footer>
