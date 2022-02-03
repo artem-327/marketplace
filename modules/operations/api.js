@@ -24,7 +24,7 @@ export default {
     api.get(`/prodex/api/order-documents/order/${id}/bill-of-lading/download?type=${bolType}`, {
       responseType: 'blob'
     }),
-  submitCarrierBol: (orderId, body) => api.patch(`/prodex/api/order-documents/order/${orderId}/bill-of-lading/submit-carrier-bol`, body)
+  submitOrderBol: (orderId, bolType, body) => api.patch(`/prodex/api/order-documents/order/${orderId}/bill-of-lading/submit?type=${bolType}`, body)
     .then(response => response.data),
   getAccountingDocuments: orderId => api.get(`/prodex/api/accounting-documents/order/${orderId}`),
   markRequestAsProcessed: (id, cgp_id) =>
