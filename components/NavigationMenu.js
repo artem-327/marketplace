@@ -935,37 +935,37 @@ class Navigation extends Component {
                 </Dropdown.Menu>
               </DropdownItem>
             )}
+            {(isAdmin || isOperator) && (
+                <DropdownItem
+                    icon={<Monitor size={22} />}
+                    text={
+                      <>
+                        <FormattedMessage id='navigation.monitoring' defaultMessage='Monitoring' />
+                        {monitoring ? <ChevronUp /> : <ChevronDown />}
+                      </>
+                    }
+                    className={monitoring ? 'opened' : null}
+                    open={monitoring.toString()}
+                    onClick={(data, e) => {
+                      this.toggleOpened('monitoring', '/monitoring/broadcast-calculations')
+                    }}
+                    refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
+                    refId={'monitoring'}>
+                  <Dropdown.Menu data-test='navigation_menu_monitoring'>
+                    <PerfectScrollbar>
+                      <Dropdown.Item
+                          as={MenuLink}
+                          to='/monitoring/broadcast-calculations'
+                          dataTest='navigation_menu_monitoring_broadcasts'>
+                        {formatMessage({ id: 'navigation.monitoring.broadcasts', defaultMessage: 'Broadcast calculations' })}
+                      </Dropdown.Item>
+
+                    </PerfectScrollbar>
+                  </Dropdown.Menu>
+
+                </DropdownItem>
+            )}
           </>
-        )}
-        {(isAdmin || isOperator) && (
-            <DropdownItem
-                icon={<Monitor size={22} />}
-                text={
-                  <>
-                    <FormattedMessage id='navigation.monitoring' defaultMessage='Monitoring' />
-                    {monitoring ? <ChevronUp /> : <ChevronDown />}
-                  </>
-                }
-                className={monitoring ? 'opened' : null}
-                open={monitoring.toString()}
-                onClick={(data, e) => {
-                  this.toggleOpened('monitoring', '/monitoring/broadcast-calculations')
-                }}
-                refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
-                refId={'monitoring'}>
-              <Dropdown.Menu data-test='navigation_menu_monitoring'>
-                <PerfectScrollbar>
-                  <Dropdown.Item
-                      as={MenuLink}
-                      to='/monitoring/broadcast-calculations'
-                      dataTest='navigation_menu_monitoring_broadcasts'>
-                    {formatMessage({ id: 'navigation.monitoring.broadcasts', defaultMessage: 'Broadcast calculations' })}
-                  </Dropdown.Item>
-
-                </PerfectScrollbar>
-              </Dropdown.Menu>
-
-            </DropdownItem>
         )}
         {!(allUserRoles.length === 1 && isBusinessDevelopmentRepresentative) && (
           <DropdownItem
