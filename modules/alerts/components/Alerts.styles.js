@@ -65,7 +65,7 @@ export const ListTable = styled(List)`
 `
 
 export const StyledNotification = styled.div`
-  margin: auto 0;
+  margin: auto 8px auto 0;
   &.clickable {
     cursor: pointer;
 
@@ -209,7 +209,7 @@ export const CheckIcon = styled.div`
   display: inline-block;
   width: 16px;
   height: 16px;
-  margin-left: 8px;
+  margin: auto 0 auto auto;
   border-radius: 50%;
   padding: 1px;
   background: #84c225;
