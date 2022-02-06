@@ -82,6 +82,7 @@ const RuleItem = props => {
     return null
   }
 
+  const disabledByRegion = !rule.enabled
   let companyName = findCompany()
   let styleRow = asModal ? { justifyContent: 'flex-end' } : {}
   styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow
@@ -107,14 +108,16 @@ const RuleItem = props => {
                   fitted
                   indeterminate={nodeBroadcast === 2}
                   checked={nodeBroadcast === 1}
-                  disabled={toggleDisabled}
-                  onClick={e => onChange(item, 'broadcast', e)}
+                  disabled={toggleDisabled || disabledByRegion}
+                  onClick={e => !(toggleDisabled || disabledByRegion) && onChange(item, 'broadcast', e)}
                 />
               </div>
             }
-            disabled={!toggleDisabled}
+            disabled={!(toggleDisabled || disabledByRegion)}
             content={
-              <FormattedMessage id='priceBook.noElementsChanged' defaultMessage='There are no elements to be changed' />
+              disabledByRegion
+                ? <FormattedMessage id='priceBook.unableToBeBroadcastedToRegion' defaultMessage='This listing is unable to be broadcasted to this region' />
+                : <FormattedMessage id='priceBook.noElementsChanged' defaultMessage='There are no elements to be changed' />
             }
           />
         </Rule.Toggle>

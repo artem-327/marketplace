@@ -3811,6 +3811,7 @@
   "search.showByElements": "Show all products by elements:",
   "inventory.isBelowMin": "The available quantity is below the min quantity",
   "priceBook.noElementsChanged": "There are no elements to be changed",
+  "priceBook.unableToBeBroadcastedToRegion": "This listing is unable to be broadcasted to this region",
   "monitoring.broadcastCalculations.entityType": "Entity Type",
   "monitoring.broadcastCalculations.entityId": "Entity ID",
   "monitoring.broadcastCalculations.sellerCompany": "Company ID",

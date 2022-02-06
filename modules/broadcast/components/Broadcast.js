@@ -105,8 +105,8 @@ class Broadcast extends Component {
     let path = node.getPath()
 
     for (let i = 0; i < path.length - 1; i++) {
-      let { priceAddition, priceMultiplier } = path[i].model.rule
-      if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
+      let { priceAddition, priceMultiplier, enabled } = path[i].model.rule
+      if ((priceAddition || priceMultiplier) && enabled) node.model.rule.priceOverride = 1
     }
 
     this.setState({ change: true, saved: false })
@@ -371,7 +371,8 @@ class Broadcast extends Component {
         'priceAddition',
         'priceMultiplier',
         'priceOverride',
-        'type'
+        'type',
+        'enabled'
       ]
 
       const index = propertiesOfInterest.indexOf('expanded')
@@ -476,6 +477,8 @@ class Broadcast extends Component {
     let { rule } = node.model
 
     const value = rule[propertyName]
+    if (!rule.enabled) return
+
     let newValue = 0
     switch (value) {
       case 2: {
@@ -495,7 +498,7 @@ class Broadcast extends Component {
     let foundAllNodes = ''
     if (node.hasChildren()) {
       node.walk(n => {
-        if (!getSafe(() => n.model.rule.hidden, n.model.hidden)) {
+        if (!getSafe(() => n.model.rule.hidden, n.model.hidden) && n.model.rule.enabled) {
           n.model.rule[propertyName] = newValue
           if (getSafe(() => n.model.rule.elements.length, 0) > 0) {
             this.changeInModel(n.model.rule.elements, { propertyName, value: newValue })
@@ -539,7 +542,7 @@ class Broadcast extends Component {
             element[propertyName] = value
           }
         }
-        if (getSafe(() => element.elements.length, '') > 0) this.changeInModel(element.elements, data)
+        if (getSafe(() => element.elements.length, '') > 0 && element.enabled) this.changeInModel(element.elements, data)
       })
     }
   }
