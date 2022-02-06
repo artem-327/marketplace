@@ -13,7 +13,8 @@ import {
     Form,
     Accordion,
     Table,
-    Button
+    Button,
+    Icon
 } from 'semantic-ui-react'
 import { ChevronDown } from 'react-feather'
 
@@ -803,5 +804,23 @@ export const ButtonCancel = styled(Button)`
     height: 32px;
     margin-left: 10px;
     padding: 5px 25px !important;
+  }
+`
+
+export const DeleteIcon = styled(Icon)`
+  &.trash.alternate.outline.icon {
+    position: relative;
+    vertical-align: top;
+    width: 22px;
+    height: 24px;
+    margin: 3px 0 -3px 8px;
+    border-radius: 0;
+    font-size: 24px;
+    color: #f16844;
+    font-weight: 400;
+  }
+  
+  &.disabled {
+    cursor: default;
   }
 `

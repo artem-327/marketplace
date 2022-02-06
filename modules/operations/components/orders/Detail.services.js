@@ -10,6 +10,8 @@ import { getSafe, getFormattedAddress, getMimeType } from '../../../../utils/fun
 import * as OrdersHelper from '../../../../components/helpers/Orders'
 // Constants
 import { currency } from '../../../../constants/index'
+// Styles
+import { DeleteIcon } from '../../styles'
 
 /**
  * action Required function used in DetailContainer
@@ -452,7 +454,7 @@ export const getRows = (attachments, props, setAttachmentRows) => {
                        defaultMessage: 'Cannot unlink this document'
                      })
                  }>
-                <Icon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
+                <DeleteIcon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
               </a>
             </>
         )
