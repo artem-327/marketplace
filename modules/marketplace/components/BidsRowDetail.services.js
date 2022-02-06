@@ -23,7 +23,7 @@ export const formValidation = requiredInputs =>
   })
 
 export const submitOffer = async ({ values, setSubmitting }, props, state) => {
-  const { popupValues, onClose, counterOffer, acceptOffer, rejectOffer, datagrid } = props
+  const { popupValues, onClose, counterOffer, acceptOffer, rejectOffer, datagrid, seller } = props
   const { radioState } = state
 
   switch (radioState) {
@@ -48,7 +48,7 @@ export const submitOffer = async ({ values, setSubmitting }, props, state) => {
       try {
         const { value } = await acceptOffer(popupValues.id)
         datagrid.updateRow(popupValues.id, () => value)
-        onClose(popupValues)
+        if (seller) onClose(popupValues)
       } catch (e) {
         console.error(e)
       }
