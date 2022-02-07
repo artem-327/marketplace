@@ -604,7 +604,7 @@ export const getRows = (props, state, setState) => {
             header={formatMessage({ id: 'myInventory.whoShouldSee', defaultMessage: 'Who should see this offer?' })}
             pointing='top right'
             value={
-            r.broadcastTemplateResponse ? r.broadcastOption + '|' + r.broadcastTemplateResponse.id : r.broadcastOption
+              r.rawData.broadcastTemplateResponse ? r.rawData.broadcastOption + '|' + r.rawData.broadcastTemplateResponse.id : r.rawData.broadcastOption
             }
             loading={!!r.isBroadcastLoading}
             closeOnChange
@@ -617,7 +617,7 @@ export const getRows = (props, state, setState) => {
                 content: <Header icon={option.icon} content={option.title} subheader={option.subtitle} />,
                 onClick: () =>
                 onClickBroadcast(
-                    r,
+                    r.rawData,
                     option.value,
                     broadcastChange,
                     datagrid,
