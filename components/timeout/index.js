@@ -75,11 +75,11 @@ export default class TimeoutWarning extends Component {
   }
   setIdleTimeout = async () => {
     let settings = await api.getSettings('user')
-    settings = settings[1].settings
-    let autoLogOutSettings = settings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")    
-    let timeout = parseInt(autoLogOutSettings[0].value)
-    let timediff = timeout * 60 * 1000 - WARNING_OFFSET
-    if(timeout > 0) {
+    if (settings && settings.length > 1) {
+      let newsettings = settings[1].settings
+      let autoLogOutSettings = newsettings.filter(s => s.code === "USER_AUTO_LOGOUT_MINUTES")    
+      let timeout = parseInt(autoLogOutSettings[0].value)
+      let timediff = timeout * 60 * 1000 - WARNING_OFFSET
       this.setState({ timeout })
       this.preSetIdleTimeout(timediff)
     }

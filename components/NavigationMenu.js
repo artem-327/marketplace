@@ -798,7 +798,7 @@ class Navigation extends Component {
                       }
                       className={products ? 'opened' : null}
                       opened={products}
-                      onClick={() => this.toggleOpened('products', '/products/cas-products')}
+                      onClick={() => this.toggleOpened('products', '/products/product-catalog')}
                       refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
                       refId={'products'}
                       data-test='navigation_menu_products_drpdn'>
@@ -839,7 +839,7 @@ class Navigation extends Component {
                       }
                       className={admin ? 'opened' : null}
                       opened={admin.toString()}
-                      onClick={() => this.toggleOpened('admin', '/admin/units-of-measure')}
+                      onClick={() => this.toggleOpened('admin', '/admin/cas-products')}
                       refFunc={(dropdownItem, refId) => this.createRef(dropdownItem, refId)}
                       refId={'admin'}
                       data-test='navigation_menu_admin_settings_drpdn'>

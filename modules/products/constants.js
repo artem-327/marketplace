@@ -17,7 +17,6 @@ import AddEditEchoProduct from './components/ProductCatalogTable/AddEditEchoProd
  * @constant
  */
 export const defaultTabs = [
-  { name: 'CAS Products', id: 0, type: 'cas-products' },
   { name: 'SDS Catalog', id: 1, type: 'product-catalog' },
   { name: 'Product Groups', id: 2, type: 'product-groups' }
 ]
