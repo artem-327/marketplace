@@ -9,7 +9,7 @@ import * as OrdersHelper from '../../../components/helpers/Orders'
 import { columnsRelatedOrdersDetailDocuments } from '../constants'
 import { currencyUSSymbol } from '../../../constants/index'
 // Styles
-import { CustomDivAddDocument } from './Detail.styles'
+import { CustomDivAddDocument, DeleteIcon } from './Detail.styles'
 // Services
 import { getSafe, getFormattedAddress, uniqueArrayByKey, getMimeType } from '../../../utils/functions'
 import { getLocaleDateFormat } from '../../../components/date-format'
@@ -306,7 +306,7 @@ export const getRows = (attachments, props, setAttachmentRows) => {
                 }
             }}
                style={{marginLeft: '5px'}} title={row.canBeUnlinked ? 'Unlink from order' : 'Cannot unlink this document'}>
-              <Icon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
+              <DeleteIcon name='trash alternate outline' className='positive' disabled={!row.canBeUnlinked} />
             </a>
               </>
           )
