@@ -15,8 +15,12 @@ import { getSafe, removeEmpty } from '../../../../utils/functions'
 export const submitForm = async (values, actions, props) => {
   const { closePopup, popupValues, postNewCarrier, updateCarrier, datagrid } = props
   const { setSubmitting } = actions
-  let payload = { ...values }
+  let payload = {
+    ...values,
+    priceMarkup: values?.priceMarkup ? parseFloat(values.priceMarkup) : 0
+  }
   removeEmpty(payload)
+  if (payload.priceMarkup === 0) delete payload.priceMarkup
 
   try {
     if (popupValues) {
@@ -60,6 +64,6 @@ export const getInitValues = popupValues => {
 export const getValidationSchema = () => {
   return Yup.object().shape({
     code: Yup.string().trim().required(errorMessages.requiredMessage),
-    priceMarkup: Yup.number().moreThan(0, errorMessages.greaterThan(0))
+    priceMarkup: Yup.number().min(0, errorMessages.minimum(0))
   })
 }
