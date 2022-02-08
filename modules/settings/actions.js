@@ -249,6 +249,15 @@ export const deleteProduct = (id, name) => ({
   }
 })
 
+export const forceDeleteProduct = (id, name) => ({
+  type: AT.DELETE_PRODUCT,
+  async payload() {
+    await api.forceDeleteProduct(id)
+    Datagrid.removeRow(id)
+    return name
+  }
+})
+
 export const deleteBankAccount = (id, type) => ({
   type: AT.DELETE_BANK_ACCOUNT,
   payload: type === 'DWOLLA' ? api.deleteDwollaBankAccount(id) : api.deleteVellociBankAccount(id)
