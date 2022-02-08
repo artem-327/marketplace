@@ -238,10 +238,14 @@ export const submitCompany = async (values, actions, state, props) => {
       actions.setSubmitting(false)
     } else {
       const { primaryUser } = values;
-      const { firstName, lastName } = primaryUser;
+      const { firstName, lastName, email, phone, jobTitle } = primaryUser;
       values.primaryUser = {
-        ...primaryUser,
-        name: firstName ? firstName + " " + lastName : lastName
+        email,
+        phone,
+        jobTitle,
+        name: firstName ? firstName + " " + lastName : lastName,
+        firstName,
+        lastName,
       }
 
       let branches = ['primaryBranch', 'mailingBranch']
