@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, last } from 'lodash'
 import { FormattedMessage } from 'react-intl'
 
 // Constants
@@ -73,7 +73,7 @@ export const formValidationNew = () =>
                 .trim()
                 .email(errorMessages.invalidEmail)
                 .required(errorMessages.invalidEmail),
-              contactName: Yup.string().trim().min(2, minLength).required(minLength),
+              contactName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
               contactPhone: phoneValidation(10),
               address: addressValidationSchema()
             })
@@ -89,20 +89,18 @@ export const formValidationNew = () =>
         deliveryAddress: Yup.object().shape({
           addressName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          contactName: Yup.string().trim().min(2, minLength).required(minLength),
+          contactName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
           address: addressValidationSchema()
         })
       }),
       primaryUser: Yup.lazy(() => {
-        // if (primaryUserRequired)
         return Yup.object().shape({
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          firstName: Yup.string().trim().min(2, minLength).required(minLength),
-          lastName: Yup.string().trim().min(2, minLength).required(minLength),
+          firstName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+          lastName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           phone: phoneValidation(10)
         })
-        // return Yup.mixed().notRequired()
       })
     })
 
@@ -240,16 +238,11 @@ export const submitCompany = async (values, actions, state, props) => {
       actions.setSubmitting(false)
     } else {
       const { primaryUser } = values;
-      const { firstName, lastName, jobTitle, phone, email } = primaryUser;
-      if (firstName && firstName!=='') {
-        values.primaryUser = {
-          name: firstName + " " + lastName,
-          jobTitle, phone, email
-        }
-      } else values.primaryUser = {
-        name: lastName,
-        jobTitle, phone, email
-      };
+      const { firstName, lastName } = primaryUser;
+      values.primaryUser = {
+        ...primaryUser,
+        name: firstName ? firstName + " " + lastName : lastName
+      }
 
       let branches = ['primaryBranch', 'mailingBranch']
 

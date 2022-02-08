@@ -91,20 +91,7 @@ const AddEditCompanySidebar = props => {
         let mailingBranchRequired = getSafe(() => values.mailingBranch.deliveryAddress, false)
           ? deepSearch(values.mailingBranch.deliveryAddress, val => val !== '')
           : ''
-        const onFirstNameChange = (e) => {
-          const first_name = e.target.value
-          setCompanyName({
-            ...companyName,
-            first_name,
-          })
-        }
-        const onLastNameChange = (e) => {
-          const last_name = e.target.value
-          setCompanyName({
-            ...companyName,
-            last_name,
-          })
-        }
+          
         return (
           <Form>
             <FlexSidebar
@@ -179,15 +166,6 @@ const AddEditCompanySidebar = props => {
                       <Accordion.Content active={accordionActive.companyAdmin}>
                         <SegmentCustom>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryUserName_inp'>
-                            {/* <Input
-                              label={
-                                <>
-                                  <FormattedMessage id='global.name' defaultMessage='Name' />
-                                  <Required />
-                                </>
-                              }
-                              name='primaryUser.name'
-                            /> */}
                             <Input
                               label={
                                 <>
@@ -196,9 +174,6 @@ const AddEditCompanySidebar = props => {
                                 </>
                               }
                               name='primaryUser.firstName'
-                              // inputProps={{
-                              //   onChange: onFirstNameChange
-                              // }}
                             />
                             <Input
                               label={
@@ -208,9 +183,6 @@ const AddEditCompanySidebar = props => {
                                 </>
                               }
                               name='primaryUser.lastName'
-                              // inputProps={{
-                              //   onChange: onLastNameChange
-                              // }}
                             />
                           </FormGroup>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryUserEmail_inp'>
@@ -243,8 +215,6 @@ const AddEditCompanySidebar = props => {
                           </FormGroup>
                         </SegmentCustom>
                       </Accordion.Content>
-                      {/* {AddressSuggestPrimaryBranchInput}
-                      {AddressSuggestMailingBranchInput} */}
                       <Divider />
                       <Accordion.Title
                         active={accordionActive.billingAddress}
