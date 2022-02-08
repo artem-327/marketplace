@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { cloneDeep, last } from 'lodash'
+import { cloneDeep } from 'lodash'
 import { FormattedMessage } from 'react-intl'
 
 // Constants
