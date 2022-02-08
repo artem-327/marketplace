@@ -3,6 +3,7 @@ var withSass = require('@zeit/next-sass')
 var withCss = require('@zeit/next-css')
 var path = require('path')
 var Dotenv = require('dotenv-webpack')
+var GlobalizePlugin = require('globalize-webpack-plugin')
 
 const bundleAnalyzer = require('@next/bundle-analyzer')({
   analyzerMode: 'static',
@@ -36,6 +37,13 @@ const customConfig = bundleAnalyzer(
           new Dotenv({
             path: path.join(__dirname, '.env'),
             systemvars: true
+          }),
+          new GlobalizePlugin({
+            production: false, // true: production, false: development
+            developmentLocale: "en", // locale to be used for development.
+            supportedLocales: [ "en", "es"], // locales that should be built support for.
+            messages: "localization/[locale].json",
+            output: "globalize-compiled-data-[locale].[hash].js" // build output.
           })
         ]
 

@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Image, List } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
-var Globalize = require('globalize')
-//var enParser = Globalize( "en" ).numberParser()
+var Globalize = require("globalize")
+//var enParser = Globalize("en-US").numberParser()
 
 // Components
 import BasicButton from '../../../../../components/buttons/BasicButton'
