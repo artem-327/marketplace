@@ -3061,6 +3061,7 @@
   "order.requestCreditSend": "Request credit was successfully sent",
   "order.relatedDocuments": "RELATED DOCUMENTS",
   "order.relatedDocumentsFor": "RELATED DOCUMENTS FOR ",
+  "order.publicWarehouse": "Public Warehouse",
   "settings.wrongUrl": "Wrong URL",
   "settings.rerenderToInventory": "You are not authorized to view this page. You will be automatically redirected to Inventory.",
   "settings.rerenderToUsers": "You are not authorized to view this page. You will be automatically redirected to Users.",

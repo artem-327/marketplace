@@ -43,6 +43,8 @@ const makeMapStateToProps = () => {
       orderByIdLoading: getOrderByIdLoading(state),
       downloadPdfLoading: getDownloadPdfLoading(state),
       isCancelable,
+      isPickupPublic: true, // ! ! TODO
+      isDeliveryPublic: true // ! ! TODO
     }
   }
   return mapStateToProps
