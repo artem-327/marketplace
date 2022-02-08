@@ -10,6 +10,8 @@ import { FileTextIcon, DivCircle } from './MyProducts.styles'
 // Services
 import { getSafe } from '../../../../utils/functions'
 
+const COMPANY_PRODUCT_IN_USE = 'COMPANY_PRODUCT_IN_USE'
+
 /**
  * Get rows from datagrid in Container
  * @category Inventory - My Products
@@ -104,37 +106,60 @@ export const handleFilterChangeMappedUnmapped = (data, props, state, setState) =
 }
 
 const getActions = props => {
-    const { openPopup, deleteProduct, intl, datagrid } = props
+    const { openPopup, intl, } = props
     const { formatMessage } = intl
     return [
-    {
-        text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
-        callback: row => openPopup(row.rawData)
-    },
-    {
-        text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-        disabled: row => props.editedId === row.id,
-        callback: row => {
-        return confirm(
-            formatMessage({ id: 'confirm.deleteProduct', defaultMessage: 'Delete Product' }),
-            formatMessage(
+        {
+            text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }),
+            callback: row => openPopup(row.rawData)
+        },
+        {
+            text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+            disabled: row => props.editedId === row.id,
+            callback: row => removeCompanyProduct(row, props)
+        }
+    ]
+}
+
+const removeCompanyProduct = (row, props) => {
+    confirm(
+        props.intl.formatMessage({id: 'confirm.deleteProduct', defaultMessage: 'Delete Product'}),
+        props.intl.formatMessage(
             {
                 id: 'confirm.deleteItem',
                 defaultMessage: `Do you really want to delete '${row.rawData.intProductName}'?`
             },
-            { item: row.rawData.intProductName }
-            )
-        ).then(async () => {
-            try {
-            await deleteProduct(row.id, row.intProductName)
-            datagrid.removeRow(row.id)
-            } catch (e) {
-            console.error(e)
+            {item: row.rawData.intProductName}
+        )
+    ).then(async () => {
+        try {
+            await props.deleteProduct(row.id, row.intProductName)
+            props.datagrid.removeRow(row.id)
+        } catch (ex) {
+            // Company product has existing Product Offers linked, Ask for explicit consent and remove the product.
+            if (ex.response && ex.response.data && COMPANY_PRODUCT_IN_USE === ex.response.data.exceptionMessage) {
+                confirm(
+                    props.intl.formatMessage({id: 'confirm.deleteProduct', defaultMessage: 'Delete Product'}),
+                    props.intl.formatMessage(
+                        {
+                            id: 'confirm.forceDeleteItem',
+                            defaultMessage: 'Deleting this SKU will delete the associated Listings from your inventory.'
+                        },
+                        {item: row.rawData.intProductName}
+                    ))
+                    .then(async () => {
+                        try {
+                            await props.forceDeleteProduct(row.id, row.intProductName)
+                            props.datagrid.removeRow(row.id)
+                        } catch (ex) {
+                            console.error(ex)
+                        }
+                    })
+            } else {
+                console.error(ex)
             }
-        })
         }
-    }
-    ]
+    })
 }
 
 const getProductStatus = product => {

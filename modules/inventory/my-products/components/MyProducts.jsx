@@ -214,6 +214,7 @@ MyProducts.propTypes = {
   handleVariableSave: PropTypes.func,
   handleProductCatalogUnmappedValue: PropTypes.func,
   deleteProduct: PropTypes.func,
+  forceDeleteProduct: PropTypes.func,
   currentCompany: PropTypes.object
 }
 
@@ -234,6 +235,7 @@ MyProducts.defaultProps = {
   handleVariableSave: () => {},
   handleProductCatalogUnmappedValue: () => {},
   deleteProduct: () => {},
+  forceDeleteProduct: () => {},
   currentCompany: {}
 }
 

@@ -181,6 +181,7 @@ export default {
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`).then(() => userId),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`).then(() => branchId),
   deleteProduct: productId => api.delete(`/prodex/api/company-products/id/${productId}`).then(() => productId),
+  forceDeleteProduct: productId => api.delete(`/prodex/api/company-products/id/${productId}?forceDelete=true`).then(() => productId),
   deleteCreditCard: cardId => api.delete(`/prodex/api/payments/cards/${cardId}`).then(() => cardId),
   deleteDwollaBankAccount: bankAccountId =>
     api.delete(`/prodex/api/payments/bank-accounts/dwolla/${bankAccountId}`).then(() => bankAccountId),
