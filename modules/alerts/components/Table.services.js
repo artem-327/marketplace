@@ -11,6 +11,7 @@ import { getSafe } from '../../../utils/functions'
 import GenericProductRequest from './DetailMessages/GenericProductRequest'
 import ShippingQuoteRequest from './DetailMessages/ShippingQuoteRequest'
 import ShippingQuoteInfo from './DetailMessages/ShippingQuoteInfo'
+import DefaultDetailMessage from './DetailMessages/DefaultDetailMessage'
 
 // Styles
 import {
@@ -35,19 +36,21 @@ import {
  */
 const notificationText = (row, state, props) => {
   return (
-    <StyledNotification
-      style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
-      onClick={() => {
-        if (row.info) toggleDetail(row.id, state)
-        if (!row.read) handleClickOnUnread(row, props)
-      }}>
-      <StyledAlertHeader>{ReactHtmlParser(row.text)}</StyledAlertHeader>
+    <>
+      <StyledNotification
+        style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+        onClick={() => {
+          toggleDetail(row.id, state)
+          if (!row.read) handleClickOnUnread(row, props)
+        }}>
+        <StyledAlertHeader>{ReactHtmlParser(row.text)}</StyledAlertHeader>
+      </StyledNotification>
       {row.read && (
         <CheckIcon>
           <Check />
         </CheckIcon>
       )}
-    </StyledNotification>
+    </>
   )
 }
 
@@ -168,7 +171,7 @@ export const getRows = (state, props) => {
                 ? 'This Month'
                 : 'Older'
         : '',
-      expand: r.info ? (
+      expand:
         open ? (
           <ChevronUp size={16} onClick={() => toggleDetail(r.id, state)} style={{ cursor: 'pointer' }} />
         ) : (
@@ -181,7 +184,6 @@ export const getRows = (state, props) => {
             style={{ cursor: 'pointer' }}
           />
         )
-      ) : null
     }
   })
 }
@@ -202,6 +204,7 @@ export const getRowDetail = ({ row }, state) => {
       <ShippingQuoteInfo row={row.rawData} onClose={() => toggleDetail(row.id, state)} />
     )
   }
+
   // TODO when BE will have GET endpoint for Detail Order in Operatins
   // and FE adjust component Detail in Operation
   // then we can call specific detail with /detail/${row?.info?.orderId} in href
@@ -213,7 +216,12 @@ export const getRowDetail = ({ row }, state) => {
     ) : (
       ReactHtmlParser(row.text)
     )
-  return <>{messageType && messageDetailTable[messageType] ? messageDetailTable[messageType] : textMessage}</>
+
+  return <>{
+    messageType && messageDetailTable[messageType]
+      ? messageDetailTable[messageType]
+      : <DefaultDetailMessage content={textMessage} />
+  }</>
 }
 
 /**
