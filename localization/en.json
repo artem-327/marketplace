@@ -2123,6 +2123,7 @@
   "productCatalog.typeToSearchOrSelect": "Type to Search or Select Similar Product",
   "productCatalog.chooseExistingDocument": "Choose Existing Document",
   "productCatalog.orUploadNewDocument": "Or Upload New Document",
+  "productCatalog.moreThan30Results": "More than 30 items exist, start typing to narrow results",
   "notifications.systemSettingsUpdated.header": "System settings updated",
   "notifications.systemSettingsUpdated.content": "System settings successfully updated",
   "notifications.userCreated.content": "User {name} successfully created.",
