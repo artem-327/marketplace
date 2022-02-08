@@ -31,6 +31,7 @@ import { FixyWrapper, AdminSegment } from './styles'
  * @constant
  */
 export const defaultTabs = [
+  { name: 'CAS Products', id: 0, type: 'cas-products' },
   { name: 'Units of Measure', id: 1, type: 'units-of-measure' },
   { name: 'Packaging Types', id: 2, type: 'packaging-types' },
   { name: 'Manufacturers', id: 3, type: 'manufacturers' },
