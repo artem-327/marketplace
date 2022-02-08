@@ -52,6 +52,15 @@ const RuleItem = props => {
     return ''
   }
 
+  const checkEnabled = item => {
+    if (!item?.model?.rule?.enabled) return false
+    if (item?.parent) {
+      return checkEnabled(item.parent)
+    } else {
+      return true
+    }
+  }
+
   const nodePath = item.getPath()
 
   const broadcastedParents = nodePath
@@ -81,8 +90,7 @@ const RuleItem = props => {
   if (rule.hidden || (filter.category === 'branch' && rule.type === 'company' && !hasNonHiddenChild)) {
     return null
   }
-
-  const disabledByRegion = !rule.enabled
+  const disabledByRegion = !checkEnabled(item)
   let companyName = findCompany()
   let styleRow = asModal ? { justifyContent: 'flex-end' } : {}
   styleRow = item.model.rule.expanded ? { ...styleRow, background: '#eff9ff' } : styleRow

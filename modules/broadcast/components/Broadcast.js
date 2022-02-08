@@ -97,6 +97,15 @@ class Broadcast extends Component {
     this.props.getAssociations()
   }
 
+  checkEnabled = item => {
+    if (!item?.model?.rule?.enabled) return false
+    if (item?.parent) {
+      return this.checkEnabled(item.parent)
+    } else {
+      return true
+    }
+  }
+
   formChanged = () => {
     if (this.props.changedForm) this.props.changedForm()
   }
@@ -477,7 +486,7 @@ class Broadcast extends Component {
     let { rule } = node.model
 
     const value = rule[propertyName]
-    if (!rule.enabled) return
+    if (!this.checkEnabled(node)) return
 
     let newValue = 0
     switch (value) {
@@ -498,7 +507,7 @@ class Broadcast extends Component {
     let foundAllNodes = ''
     if (node.hasChildren()) {
       node.walk(n => {
-        if (!getSafe(() => n.model.rule.hidden, n.model.hidden) && n.model.rule.enabled) {
+        if (!getSafe(() => n.model.rule.hidden, n.model.hidden) && this.checkEnabled(n)) {
           n.model.rule[propertyName] = newValue
           if (getSafe(() => n.model.rule.elements.length, 0) > 0) {
             this.changeInModel(n.model.rule.elements, { propertyName, value: newValue })
@@ -535,7 +544,7 @@ class Broadcast extends Component {
     const { propertyName, value } = data
     if (getSafe(() => elementsParam.length, false)) {
       elementsParam.forEach(element => {
-        if (!element.hidden) {
+        if (!element.hidden && element.enabled) {
           if (Array.isArray(propertyName)) {
             propertyName.forEach(name => (element[name] = value))
           } else {
