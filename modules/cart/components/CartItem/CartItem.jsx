@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
 import { getSafe } from '../../../../utils/functions'
-import { GridColumn, GridRow } from 'semantic-ui-react'
+import { GridColumn, GridRow, Dimmer, Loader } from 'semantic-ui-react'
 import moment from 'moment'
 import confirm from '../../../../components/Confirmable/confirm'
 import { currency } from '../../../../constants/index'
@@ -31,6 +32,7 @@ import { sidebarChanged, getProductOffer, deleteCartItem, getCart } from '../../
 import { CART_ITEM_TYPES } from './CartItem.constants'
 
 const CartItem = props => {
+  const [loadingProductOffer, setLoadingProductOffer] = useState(false)
   const {
     intl: { formatMessage },
     cart,
@@ -48,6 +50,7 @@ const CartItem = props => {
     let { id, pkgAmount } = cartItem
 
     try {
+      setLoadingProductOffer(true)
       await props.getProductOffer(cartItem?.productOffer?.id, cartItem?.productOffer?.sellerId, true)
       props.sidebarChanged({isOpen: true, id, pkgAmount})
     } catch (e) {
@@ -57,6 +60,8 @@ const CartItem = props => {
       } catch {
         console.error(e)
       }
+    } finally {
+      setLoadingProductOffer(false)
     }
   }
 
@@ -180,6 +185,9 @@ const CartItem = props => {
           </GridColumn>
         </GridRow>
       </ItemDescriptionGrid>
+      <Dimmer inverted active={loadingProductOffer}>
+        <Loader />
+      </Dimmer>
     </Item>
   )
 }
