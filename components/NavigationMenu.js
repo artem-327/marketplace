@@ -74,6 +74,7 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/orders/purchase', false) ||
       getSafe(() => Router.router.pathname === '/orders/detail', false),
     admin:
+      getSafe(() => Router.router.pathname === '/admin/cas-products', false) ||
       getSafe(() => Router.router.pathname === '/admin/units-of-measure', false) ||
       getSafe(() => Router.router.pathname === '/admin/packaging-types', false) ||
       getSafe(() => Router.router.pathname === '/admin/manufacturers', false) ||
@@ -94,7 +95,6 @@ class Navigation extends Component {
       getSafe(() => Router.router.pathname === '/operations/orders', false) ||
       getSafe(() => Router.router.pathname === '/operations/company-generic-products', false),
     products:
-      getSafe(() => Router.router.pathname === '/products/cas-products', false) ||
       getSafe(() => Router.router.pathname === '/products/product-catalog', false) ||
       getSafe(() => Router.router.pathname === '/products/product-groups', false),
     companies:
@@ -176,13 +176,13 @@ class Navigation extends Component {
     })
 
     if (type === 'admin') {
-      Router.push('/admin/units-of-measure')
+      Router.push('/admin/cas-products')
     }
     if (type === 'operations') {
       !isAdmin && isOrderOperator ? Router.push('/operations/orders') : Router.push('/operations/shipping-quotes')
     }
     if (type === 'products') {
-      Router.push('/products/cas-products')
+      Router.push('/products/product-catalog')
     }
     if (type === 'companies') {
       Router.push('/companies/companies')
