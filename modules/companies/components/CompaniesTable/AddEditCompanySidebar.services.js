@@ -239,23 +239,15 @@ export const submitCompany = async (values, actions, state, props) => {
     } else {
       const { primaryUser } = values
       const { firstName, lastName, email, phone, jobTitle } = primaryUser
-
       let branches = ['primaryBranch', 'mailingBranch']
-
       if (values.businessType) values.businessType = values.businessType.id
 
       let payload = cloneDeep(values)
-      payload.primaryUser.email = email.trim()
-      payload.primaryUser.name = firstName ? firstName + " " + lastName : lastName
-      payload.primaryUser.jobTitle = jobTitle ? jobTitle : ""
-      payload.primaryUser.phone = phone ? phone : ""
       payload.primaryBranch.deliveryAddress.contactEmail = payload.primaryBranch.deliveryAddress.contactEmail.trim()
-
       branches.forEach(branch => {
         let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
         if (country) payload[branch].deliveryAddress.address.country = country
       })
-
       if (
         !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
         !deepSearch(
@@ -268,11 +260,15 @@ export const submitCompany = async (values, actions, state, props) => {
         if (payload.mailingBranch.deliveryAddress.contactEmail !== '')
           payload.mailingBranch.deliveryAddress.contactEmail = payload.mailingBranch.deliveryAddress.contactEmail.trim()
       }
-
       if (!payload.type) delete payload.type
       delete payload.enabled
       if (!payload.businessType) delete payload.businessType
       removeEmpty(payload)
+      payload.primaryUser = {}
+      payload.primaryUser.email = email.trim()
+      payload.primaryUser.name = firstName ? firstName + " " + lastName : lastName
+      payload.primaryUser.jobTitle = jobTitle ? jobTitle : ""
+      payload.primaryUser.phone = phone ? phone : ""
       if (companyLogo || companyDoc) {
         // let reader = new FileReader()
         // reader.onload = async function () {
