@@ -78,6 +78,7 @@ const ProductPopup = props => {
 
   useEffect(() => {
     const init = async () => {
+      props.searchCompanyGenericProduct('', 30, true)
       const [packagingTypesAll, unitsAll, hazardClasses, packagingGroups, documentTypes] = await Promise.all([
         !props.packagingTypesAll.length ? props.getPackagingTypes().then(response => response.value) : props.packagingTypesAll,
         !props.unitsAll.length ? props.getUnits().then(response => response.value) : props.unitsAll,
@@ -133,11 +134,27 @@ const ProductPopup = props => {
 
   let editable = popupValues ? popupValues.cfProductOfferCount === 0 || !popupValues.cfProductOfferCount : true
   let allCompanyGenericProduct = uniqueArrayByKey(
-    companyGenericProduct.concat(
-      getSafe(() => popupValues.companyGenericProduct) ? popupValues.companyGenericProduct : []
-    ),
+    (getSafe(() => popupValues.companyGenericProduct) ? [popupValues.companyGenericProduct] : [])
+      .concat(companyGenericProduct),
     'id'
   )
+  let companyGenericProductOptions = allCompanyGenericProduct.map(echo => ({
+    key: echo.id,
+    text: echo.name,
+    value: echo.id
+  }))
+
+  if (companyGenericProduct && companyGenericProduct.length >= 6) {
+    companyGenericProductOptions.push({
+      key: -1,
+      text: formatMessage({
+        id: 'productCatalog.moreThan30Results',
+        defaultMessage: 'More than 30 items exist, start typing to narrow results'
+      }),
+      value: -1,
+      disabled: true
+    })
+  }
 
   return (
     <Formik
@@ -196,11 +213,7 @@ const ProductPopup = props => {
                     <GridColumn width={10}>
                       <Dropdown
                         name='companyGenericProduct'
-                        options={allCompanyGenericProduct.map(echo => ({
-                          key: echo.id,
-                          text: echo.name,
-                          value: echo.id
-                        }))}
+                        options={companyGenericProductOptions}
                         inputProps={{
                           fluid: true,
                           search: val => val,

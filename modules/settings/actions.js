@@ -1106,9 +1106,9 @@ export const setPreferredLanguage = lang => ({
   payload: api.setPreferredLanguage(lang)
 })
 
-export const searchCompanyGenericProduct = (searchQuery, limit = 30) => ({
+export const searchCompanyGenericProduct = (searchQuery, limit = 30, returnWhenEmpty = false) => ({
   type: AT.SEARCH_COMPANY_GENERIC_PRODUCTS,
-  payload: api.searchCompanyGenericProduct(searchQuery, limit)
+  payload: api.searchCompanyGenericProduct(searchQuery, limit, returnWhenEmpty)
 })
 
 export const getCompanyGenericProductById = id => ({
