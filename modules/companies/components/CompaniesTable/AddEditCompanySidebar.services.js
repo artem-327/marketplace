@@ -237,23 +237,18 @@ export const submitCompany = async (values, actions, state, props) => {
       datagrid.loadData()
       actions.setSubmitting(false)
     } else {
-      const { primaryUser } = values;
-      const { firstName, lastName, email, phone, jobTitle } = primaryUser;
-      values.primaryUser = {
-        email,
-        phone,
-        jobTitle,
-        name: firstName ? firstName + " " + lastName : lastName,
-        firstName,
-        lastName,
-      }
+      const { primaryUser } = values
+      const { firstName, lastName, email, phone, jobTitle } = primaryUser
 
       let branches = ['primaryBranch', 'mailingBranch']
 
       if (values.businessType) values.businessType = values.businessType.id
 
       let payload = cloneDeep(values)
-      payload.primaryUser.email = payload.primaryUser.email.trim()
+      payload.primaryUser.email = email.trim()
+      payload.primaryUser.name = firstName ? firstName + " " + lastName : lastName
+      payload.primaryUser.jobTitle = jobTitle ? jobTitle : ""
+      payload.primaryUser.phone = phone ? phone : ""
       payload.primaryBranch.deliveryAddress.contactEmail = payload.primaryBranch.deliveryAddress.contactEmail.trim()
 
       branches.forEach(branch => {
