@@ -45,8 +45,10 @@ const BidsRowDetail = props => {
   const [buyAttemptHasDhs, setBuyAttemptHasDhs] = useState(null)
 
   const state = {
-    initialFormValues, setInitialFormValues, detailExpandedIds, setDetailExpandedIds,
-    touched, setTouched, radioState, setRadioState,
+    initialFormValues, setInitialFormValues,
+    detailExpandedIds, setDetailExpandedIds,
+    touched, setTouched,
+    radioState, setRadioState,
     buyAttemptHasDeaI, setBuyAttemptHasDeaI,
     buyAttemptHasDeaII, setBuyAttemptHasDeaII,
     buyAttemptHasDhs, setBuyAttemptHasDhs
@@ -81,6 +83,9 @@ const BidsRowDetail = props => {
       setDetailExpandedIds(initValues.state.detailExpandedIds)
       setTouched(initValues.state.touched)
       setRadioState(initValues.state.radioState)
+      setBuyAttemptHasDeaI(initValues.state.buyAttemptHasDeaI)
+      setBuyAttemptHasDeaII(initValues.state.buyAttemptHasDeaII)
+      setBuyAttemptHasDhs(initValues.state.buyAttemptHasDhs)
     } else {
       setInitialFormValues({
         id: popupValues.id,
@@ -98,11 +103,18 @@ const BidsRowDetail = props => {
       if ((touched || Object.keys(formikPropsSelf.touched).length) && props.onUnmount) {
         props.onUnmount({
           values: formikPropsSelf.values,
-          state: { detailExpandedIds, touched, radioState }
+          state: {
+            detailExpandedIds,
+            touched,
+            radioState,
+            buyAttemptHasDeaI,
+            buyAttemptHasDeaII,
+            buyAttemptHasDhs
+          }
         })
       }
     }
-  }, [formikPropsSelf, detailExpandedIds, touched, radioState])
+  }, [formikPropsSelf, detailExpandedIds, touched, radioState, buyAttemptHasDeaI, buyAttemptHasDeaII, buyAttemptHasDhs])
 
   const getDetailTable = table => {
     return (
