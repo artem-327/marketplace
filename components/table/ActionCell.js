@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 
 export const DivRow = styled.div`
   display: flex !important;
-
+  align-items: center;
   > div {
     flex-grow: 0;
     flex-shrink: 0;

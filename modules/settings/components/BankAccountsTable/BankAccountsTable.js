@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
 import { Header, Modal, Form, Segment, Table, Dropdown } from 'semantic-ui-react'
+import { Button as VerifyButton }  from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/components/Confirmable/confirm'
 import { Formik } from 'formik'
@@ -51,6 +52,19 @@ const Container = styled.div`
   padding: 0 1em 2em 1em;
   max-height: 70vh;
 `
+
+const StylesVerifyButton = styled(VerifyButton)`
+  color: #2599d5 !important;
+  background-color: white !important;
+  border: solid 1px #e8e8e8 !important;
+  border-radius: 3px !important;
+  min-width: unset !important;
+  width: 70px !important;
+  max-width: 70px !important;
+  height: 32px !important;
+  padding: 6px 14px 6px 15px !important;
+`
+
 
 const CustomDiv = styled.div`
   border-radius: 4px;
@@ -296,7 +310,7 @@ class BankAccountsTable extends Component {
   }
 
   async componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.isReloadBankAcounts || (prevProps.isLoadingAddedAccounts !== this.props.isLoadingAddedAccounts)) {
+    if (this.props.isReloadBankAcounts || prevProps.isLoadingAddedAccounts !== this.props.isLoadingAddedAccounts) {
       await this.props.reloadBankAccounts(false)
       await this.props.getBankAccountsDataRequest(this.props.paymentProcessor)
       await this.props.getIdentity().then(resp => {
@@ -309,8 +323,12 @@ class BankAccountsTable extends Component {
   }
 
   downloadStatement = async () => {
-    if(this.state.statementMonth && this.state.documentType) {
-      const element = await this.prepareLinkToAttachment(this.state.statementMonth.split('-')[0], this.state.statementMonth.split('-')[1], this.state.documentType)
+    if (this.state.statementMonth && this.state.documentType) {
+      const element = await this.prepareLinkToAttachment(
+        this.state.statementMonth.split('-')[0],
+        this.state.statementMonth.split('-')[1],
+        this.state.documentType
+      )
 
       element.download = this.state.documentType === 'CSV' ? 'Transaction Statement.csv' : 'Transaction Statement'
       document.body.appendChild(element) // Required for this to work in FireFox
@@ -358,21 +376,19 @@ class BankAccountsTable extends Component {
   }
 
   getYearMonth = () => {
-    const date = new Date();
+    const date = new Date()
     const month = date.getMonth() + 1
     const year = date.getFullYear()
     const fromYear = year - 2
     const fromMonth = month + 1
     let result = []
     for (let y = year; y >= fromYear; y--) {
-      for(let m = 12; m > 0; m--) {
-        if(y == year) {
-          if(m <= month) {
+      for (let m = 12; m > 0; m--) {
+        if (y == year) {
+          if (m <= month) {
             let temp
-            if(m < 10)
-              temp = '' + y + '-0' + m
-            else
-              temp = '' + y + '-' + m
+            if (m < 10) temp = '' + y + '-0' + m
+            else temp = '' + y + '-' + m
             result.push({
               key: temp,
               text: temp,
@@ -380,12 +396,10 @@ class BankAccountsTable extends Component {
             })
           }
         } else if (y == fromYear) {
-          if(m >= fromMonth) {
+          if (m >= fromMonth) {
             let temp
-            if(m < 10)
-              temp = '' + y + '-0' + m
-            else
-              temp = '' + y + '-' + m
+            if (m < 10) temp = '' + y + '-0' + m
+            else temp = '' + y + '-' + m
             result.push({
               key: temp,
               text: temp,
@@ -394,10 +408,8 @@ class BankAccountsTable extends Component {
           }
         } else {
           let temp
-          if(m < 10)
-            temp = '' + y + '-0' + m
-          else
-            temp = '' + y + '-' + m
+          if (m < 10) temp = '' + y + '-0' + m
+          else temp = '' + y + '-' + m
           result.push({
             key: temp,
             text: temp,
@@ -408,7 +420,7 @@ class BankAccountsTable extends Component {
     }
     return result
   }
- 
+
   getColumns = () => [
     { name: 'accountName', disabled: true },
     {
@@ -550,6 +562,20 @@ class BankAccountsTable extends Component {
       inactive: '#f16844'
     }
 
+    // const verifyButtonClick = () => {
+    //   fetch("https://jsonip.com/about")
+    //   // change endpoint
+    //   .then(res => res.json())
+    //   .then(data => {
+    //     // to do: when we get a successsful reply, change the status to row.status = 'pending_verification'
+    //     console.log(data)
+
+    //   })
+    //   .catch(error => alert(error))
+
+    // }
+
+
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
@@ -560,18 +586,27 @@ class BankAccountsTable extends Component {
     }
     return newRows.map(row => {
       const accountRow = (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', alignItems: "center" }}>
           <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
+
+          {/* if status is pending verification then display a verify button */}
+
           {row.status === 'pending_verification' ? (
-            <StatusLabel horizontal>
-              <Clock color='#848893' size='12' />
-              <span>
-                <FormattedMessage id='settings.pending' defaultMessage='Pending' />
-              </span>
-            </StatusLabel>
+            <>
+              <StatusLabel horizontal>
+                <Clock color='#848893' size='12' />
+                <span>
+                  <FormattedMessage id='settings.pending' defaultMessage='Pending' />
+                </span>
+              </StatusLabel>
+
+              <StylesVerifyButton type='button'>
+              Verify 
+              </StylesVerifyButton>
+            </>
           ) : null}
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
@@ -620,11 +655,22 @@ class BankAccountsTable extends Component {
             institutId={institutId}
             reloadBankAccounts={reloadBankAccounts}
           />
-          
-          { myRows.length > 0 ?
-            <div style={{height: '150px', position: 'sticky', zIndex: 501, backgroundColor: 'white', padding: '20px', borderRadius: '3px', border: '1px solid #ddd'}}>
-              <b>Financial Statement</b> <br/>
-              <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
+
+          {myRows.length > 0 ? (
+            <div
+              style={{
+                height: '150px',
+                position: 'sticky',
+                zIndex: 501,
+                backgroundColor: 'white',
+                padding: '20px',
+                borderRadius: '3px',
+                border: '1px solid #ddd'
+              }}>
+              <b>Financial Statement</b> <br />
+              <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span>{' '}
+              <br />
+              <br />
               <div>
                 <Dropdown
                   style={{ width: '500px', marginRight: '50px' }}
@@ -634,7 +680,9 @@ class BankAccountsTable extends Component {
                   options={this.getYearMonth()}
                   loading={false}
                   placeholder='Statement Month'
-                  onChange={(e, { value }) => {this.setState({statementMonth: value})}}
+                  onChange={(e, { value }) => {
+                    this.setState({ statementMonth: value })
+                  }}
                 />
                 <Dropdown
                   style={{ width: '200px', marginRight: '50px' }}
@@ -655,15 +703,22 @@ class BankAccountsTable extends Component {
                   ]}
                   loading={false}
                   placeholder='Document Type'
-                  onChange={(e, { value }) => {this.setState({documentType: value})}}
+                  onChange={(e, { value }) => {
+                    this.setState({ documentType: value })
+                  }}
                 />
-                <ButtonDownload loading={downloading} primary onClick={this.downloadStatement} data-test='bankaccount-monthly-statement-history-download'>
+                <ButtonDownload
+                  loading={downloading}
+                  primary
+                  onClick={this.downloadStatement}
+                  data-test='bankaccount-monthly-statement-history-download'>
                   <FormattedMessage id='global.download' defaultMessage='Download' />
                 </ButtonDownload>
               </div>
             </div>
-          : <></>
-          }
+          ) : (
+            <></>
+          )}
           {isThirdPartyConnectionException && (
             <DivThirdExceptions>
               <FormattedMessage
@@ -885,7 +940,8 @@ const mapDispatchToProps = {
   downloadStatement
 }
 
-const statusToLabel = { // currently not used, needs to update if re-enabled
+const statusToLabel = {
+  // currently not used, needs to update if re-enabled
   verified: (
     <StatusLabel style={{ backgroundColor: '#84c225' }} horizontal>
       <FormattedMessage id='settings.verified' defaultMessage='Verified' />
