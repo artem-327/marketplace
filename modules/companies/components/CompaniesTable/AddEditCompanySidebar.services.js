@@ -73,7 +73,7 @@ export const formValidationNew = () =>
                 .trim()
                 .email(errorMessages.invalidEmail)
                 .required(errorMessages.invalidEmail),
-              contactName: Yup.string().trim().min(2, minLength).required(minLength),
+              contactName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
               contactPhone: phoneValidation(10),
               address: addressValidationSchema()
             })
@@ -89,20 +89,18 @@ export const formValidationNew = () =>
         deliveryAddress: Yup.object().shape({
           addressName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          contactName: Yup.string().trim().min(2, minLength).required(minLength),
+          contactName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           contactPhone: phoneValidation(10).concat(Yup.string().required(errorMessages.requiredMessage)),
           address: addressValidationSchema()
         })
       }),
       primaryUser: Yup.lazy(() => {
-        // if (primaryUserRequired)
         return Yup.object().shape({
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
-          firstName: Yup.string().trim().min(2, minLength).required(minLength),
-          lastName: Yup.string().trim().min(2, minLength).required(minLength),
+          firstName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+          lastName: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
           phone: phoneValidation(10)
         })
-        // return Yup.mixed().notRequired()
       })
     })
 
@@ -239,31 +237,17 @@ export const submitCompany = async (values, actions, state, props) => {
       datagrid.loadData()
       actions.setSubmitting(false)
     } else {
-      const { primaryUser } = values;
-      const { firstName, lastName, jobTitle, phone, email } = primaryUser;
-      if (firstName && firstName!=='') {
-        values.primaryUser = {
-          name: firstName + " " + lastName,
-          jobTitle, phone, email
-        }
-      } else values.primaryUser = {
-        name: lastName,
-        jobTitle, phone, email
-      };
-
+      const { primaryUser } = values
+      const { firstName, lastName, email, phone, jobTitle } = primaryUser
       let branches = ['primaryBranch', 'mailingBranch']
-
       if (values.businessType) values.businessType = values.businessType.id
 
       let payload = cloneDeep(values)
-      payload.primaryUser.email = payload.primaryUser.email.trim()
       payload.primaryBranch.deliveryAddress.contactEmail = payload.primaryBranch.deliveryAddress.contactEmail.trim()
-
       branches.forEach(branch => {
         let country = getSafe(() => JSON.parse(payload[branch].deliveryAddress.address.country).countryId)
         if (country) payload[branch].deliveryAddress.address.country = country
       })
-
       if (
         !getSafe(() => values.primaryBranch.deliveryAddress, '') ||
         !deepSearch(
@@ -276,10 +260,14 @@ export const submitCompany = async (values, actions, state, props) => {
         if (payload.mailingBranch.deliveryAddress.contactEmail !== '')
           payload.mailingBranch.deliveryAddress.contactEmail = payload.mailingBranch.deliveryAddress.contactEmail.trim()
       }
-
       if (!payload.type) delete payload.type
       delete payload.enabled
       if (!payload.businessType) delete payload.businessType
+      payload.primaryUser = {}
+      payload.primaryUser.email = email.trim()
+      payload.primaryUser.name = firstName ? firstName + ' ' + lastName : lastName
+      payload.primaryUser.jobTitle = jobTitle ? jobTitle.trim() : ''
+      payload.primaryUser.phone = phone ? phone : ''
       removeEmpty(payload)
       if (companyLogo || companyDoc) {
         // let reader = new FileReader()
