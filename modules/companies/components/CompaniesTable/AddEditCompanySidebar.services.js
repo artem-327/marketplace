@@ -263,12 +263,12 @@ export const submitCompany = async (values, actions, state, props) => {
       if (!payload.type) delete payload.type
       delete payload.enabled
       if (!payload.businessType) delete payload.businessType
-      removeEmpty(payload)
       payload.primaryUser = {}
       payload.primaryUser.email = email.trim()
       payload.primaryUser.name = firstName ? firstName + " " + lastName : lastName
-      payload.primaryUser.jobTitle = jobTitle ? jobTitle : ""
+      payload.primaryUser.jobTitle = jobTitle ? jobTitle.trim() : ""
       payload.primaryUser.phone = phone ? phone : ""
+      removeEmpty(payload)
       if (companyLogo || companyDoc) {
         // let reader = new FileReader()
         // reader.onload = async function () {
