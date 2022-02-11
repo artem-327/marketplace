@@ -4,7 +4,7 @@ import { Formik } from 'formik'
 import { AddBox } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 // Components
-import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal, Popup, Grid, GridRow, GridColumn, Divider, Form, Dimmer, Loader } from 'semantic-ui-react'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui-fixed-validation'
 import BasicButton from '../../../../components/buttons/BasicButton'
 import { AttachmentManager } from '../../../attachments'
@@ -19,7 +19,6 @@ import TabsHandler from './ProductPopupTabs/TabsHandler'
 import TabsContent from './ProductPopupTabs/TabsContent'
 // Styles
 import {
-  FormStyled,
   SegmentHigh,
   DivBottomButtons,
   DivIcon,
@@ -31,7 +30,10 @@ import {
   GridColumnFlex,
   DivCheckboxWrapper,
   InfoCustom,
-  ModalContent
+  DimmerSidebarOpened,
+  SidebarFlex,
+  DivFlexContent,
+  SegmentCustomContent
 } from './ProductPopup.styles'
 // Constants
 import { COLUMNS } from './ProductPopup.constants'
@@ -182,8 +184,14 @@ const ProductPopup = props => {
         const palletParamsRequired = checkPalletParamsRequired(values)
 
         return (
-          <Modal open={true} onClose={() => {!!openGlobalAddForm && openGlobalAddForm(''); closePopup();}}>
-            <FormStyled>
+          <>
+            <DimmerSidebarOpened
+              active={true}
+              onClickOutside={() => {!!openGlobalAddForm && openGlobalAddForm(''); closePopup();}}
+              page
+            />
+          <SidebarFlex visible={true} direction='bottom' animation='overlay'>
+
               <Dimmer inverted active={loading || loadSidebar}>
                 <Loader />
               </Dimmer>
@@ -214,319 +222,94 @@ const ProductPopup = props => {
                 actualTab={actualTab}
                 onChange={(tab) => setActualTab(tab)}
               />
+              <DivFlexContent>
+                <SegmentCustomContent basic>
+                  <Form>
+                    {actualTab === 'edit' && (
+                      <GridStyled>
+                        <GridRowLabel>
+                          {/* <FormattedMessage id='productCatalog.selectProduct' defaultMessage='Select Product' /> */}
+                          <FormattedMessage id='productCatalog.selectSDS' defaultMessage='Select SDS' />
+                          <Required />
+                        </GridRowLabel>
 
-              <ModalContent scrolling>
-                {actualTab === 'edit' && (
-                  <GridStyled>
-                    <GridRowLabel>
-                      {/* <FormattedMessage id='productCatalog.selectProduct' defaultMessage='Select Product' /> */}
-                      <FormattedMessage id='productCatalog.selectSDS' defaultMessage='Select SDS' />
-                      <Required />
-                    </GridRowLabel>
-
-                    <GridRow>
-                      <GridColumn width={10}>
-                        <Dropdown
-                          name='companyGenericProduct'
-                          options={companyGenericProductOptions}
-                          inputProps={{
-                            fluid: true,
-                            search: val => val,
-                            clearable: true,
-                            selection: true,
-                            loading: companyGenericProductFetching,
-                            onChange: (_, { value }) => {
-                              const selectedCompanyGenericProduct = allCompanyGenericProduct.find(el => el.id === value)
-                              setSelectedSDS(selectedCompanyGenericProduct)
-                              setFieldValue(
-                                'casProducts',
-                                getDesiredCasProductsProps(
-                                  getSafe(() => allCompanyGenericProduct.find(el => el.id === value).elements, [])
-                                )
-                              )
-                            },
-                            onSearchChange: (_, { searchQuery }) => handleSearchChange(searchQuery, props),
-                            placeholder: formatMessage({
-                              id: 'productCatalog.typeToSearch',
-                              defaultMessage: 'Type to Search...'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn width={6}>
-                        <CompanyGenericProductRequestForm />
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
-                      <GridColumn>
-                        <Input
-                          type='text'
-                          name='intProductName'
-                          label={
-                            <>
-                              <FormattedMessage id='global.productName' defaultMessage='Product Name' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'productCatalog.enterProductName',
-                              defaultMessage: 'Enter Product Name'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
-                      <GridColumn>
-                        <Input
-                          type='text'
-                          name='intProductCode'
-                          label={
-                            <>
-                              <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{
-                            placeholder: formatMessage({
-                              id: 'productCatalog.enterProductCode',
-                              defaultMessage: 'Enter Product Code'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow>
-                      <GridColumn>
-                        <DivTitleSegment>
-                          <FormattedMessage id='global.packaging' defaultMessage='Packaging' />
-                        </DivTitleSegment>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow columns={3}>
-                      <GridColumn>
-                        <Input
-                          name='packagingSize'
-                          label={
-                            <>
-                              <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{ placeholder: '0', type: 'number', min: 0 }}
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        <Dropdown
-                          name='packagingUnit'
-                          options={productsUnitsType}
-                          label={
-                            <>
-                              <FormattedMessage id='global.packagingUnit' defaultMessage='Unit' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{
-                            'data-test': 'settings_product_popup_packagingUnit_drpdn',
-                            onChange: (e, d) => {
-                              setFieldValue('packagingType', '')
-                              filterPackagingTypes(
-                                d.value,
-                                props.unitsAll,
-                                props.packagingTypesAll,
-                                setpackagingTypesReduced
-                              )
-                            },
-                            placeholder: formatMessage({
-                              id: 'productCatalog.selectUnit',
-                              defaultMessage: 'Select Unit'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        <Popup
-                          disabled={!!getSafe(() => formikProps.values.packagingUnit, false)}
-                          position={'bottom left'}
-                          content={
-                            <FormattedMessage
-                              id='product.packaging.selectFirst'
-                              defaultMessage='Please select Packaging Unit'
+                        <GridRow>
+                          <GridColumn width={10}>
+                            <Dropdown
+                              name='companyGenericProduct'
+                              options={companyGenericProductOptions}
+                              inputProps={{
+                                fluid: true,
+                                search: val => val,
+                                clearable: true,
+                                selection: true,
+                                loading: companyGenericProductFetching,
+                                onChange: (_, { value }) => {
+                                  const selectedCompanyGenericProduct = allCompanyGenericProduct.find(el => el.id === value)
+                                  setSelectedSDS(selectedCompanyGenericProduct)
+                                  setFieldValue(
+                                    'casProducts',
+                                    getDesiredCasProductsProps(
+                                      getSafe(() => allCompanyGenericProduct.find(el => el.id === value).elements, [])
+                                    )
+                                  )
+                                },
+                                onSearchChange: (_, { searchQuery }) => handleSearchChange(searchQuery, props),
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.typeToSearch',
+                                  defaultMessage: 'Type to Search...'
+                                })
+                              }}
                             />
-                          }
-                          trigger={
-                            <div>
-                              <Dropdown
-                                name='packagingType'
-                                options={packagingTypesReduced}
-                                label={
-                                  <>
-                                    <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
-                                    <Required />
-                                  </>
-                                }
-                                inputProps={{
-                                  disabled: !getSafe(() => formikProps.values.packagingUnit, false),
-                                  'data-test': 'settings_product_popup_packagingType_drpdn',
-                                  placeholder: formatMessage({
-                                    id: 'productCatalog.selectType',
-                                    defaultMessage: 'Select Type'
-                                  }),
-                                  onChange: (e, { value }) => {
-                                    handleChangePackagingType(e, value, setFieldValue, values, props)
-                                  }
-                                }}
-                              />
-                            </div>
-                          }
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow columns={3}>
-                      <GridColumn>
-                        <Input
-                          name='palletMaxPkgs'
-                          label={
-                            <>
-                              <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
-                              {(palletParamsRequired || values.palletSaleOnly) && <Required />}
-                            </>
-                          }
-                          inputProps={{ placeholder: '0', type: 'number', min: 1 }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumn>
-                        <DivTitleSegment>
-                          <FormattedMessage id='global.freight' defaultMessage='Freight' />
-                        </DivTitleSegment>
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow columns={2}>
-                      <GridColumn>
-                        <Input
-                          name='packageWeight'
-                          label={
-                            <>
-                              <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight Per Package' />
-                              <Popup
-                                content={
-                                  <FormattedMessage
-                                    id='global.infoPackageWeight'
-                                    defaultMessage="The total weight of the contents and it's packaging"
-                                  />
-                                }
-                                position='top center'
-                                trigger={<InfoCustom size='12' />}
-                              />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{ placeholder: '0', type: 'number', min: 0 }}
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        <Dropdown
-                          name='packageWeightUnit'
-                          options={packageWeightUnits}
-                          label={
-                            <>
-                              <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{
-                            'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
-                            placeholder: formatMessage({
-                              id: 'productCatalog.selectWeightUnit',
-                              defaultMessage: 'Select Weight Unit'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-                    <GridRow columns={2}>
-                      <GridColumn>
-                        <Dropdown
-                          options={nmfcNumbersFiltered}
-                          inputProps={{
-                            fluid: true,
-                            search: val => val,
-                            selection: true,
-                            loading: nmfcNumbersFetching,
-                            onSearchChange: (_, { searchQuery }) => handleSearchNmfcNumberChange(searchQuery, props),
-                            placeholder: formatMessage({
-                              id: 'productCatalog.selectNmfcCode',
-                              defaultMessage: 'Select NMFC Code'
-                            })
-                          }}
-                          name='nmfcNumber'
-                          label={
-                            <>
-                              <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
-                              <Required />
-                            </>
-                          }
-                        />
-                      </GridColumn>
-                      <GridColumn>
-                        <Dropdown
-                          name='freightClass'
-                          options={freightClasses}
-                          label={
-                            <>
-                              <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
-                              <Required />
-                            </>
-                          }
-                          inputProps={{
-                            'data-test': 'settings_product_popup_freightClass_drpdn',
-                            placeholder: formatMessage({
-                              id: 'productCatalog.selectFreightClass',
-                              defaultMessage: 'Select Freight Class'
-                            })
-                          }}
-                        />
-                      </GridColumn>
-                    </GridRow>
-
-                    <GridRow>
-                      <GridColumnFlex>
-                        <DivCheckboxWrapper>
-                          <Checkbox
-                            label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
-                            name='stackable'
-                            inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
-                          />
-                        </DivCheckboxWrapper>
-                        <DivCheckboxWrapper>
-                          <Checkbox
-                            label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
-                            name='hazardous'
-                            inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
-                          />
-                        </DivCheckboxWrapper>
-                        <DivCheckboxWrapper>
-                          <Checkbox
-                            label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
-                            name='freezeProtect'
-                          />
-                        </DivCheckboxWrapper>
-                      </GridColumnFlex>
-                    </GridRow>
-
-                    {!values.palletSaleOnly ? (
-                      <>
+                          </GridColumn>
+                          <GridColumn width={6}>
+                            <CompanyGenericProductRequestForm />
+                          </GridColumn>
+                        </GridRow>
+                        <GridRow>
+                          <GridColumn>
+                            <Input
+                              type='text'
+                              name='intProductName'
+                              label={
+                                <>
+                                  <FormattedMessage id='global.productName' defaultMessage='Product Name' />
+                                  <Required />
+                                </>
+                              }
+                              inputProps={{
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.enterProductName',
+                                  defaultMessage: 'Enter Product Name'
+                                })
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRow>
+                        <GridRow>
+                          <GridColumn>
+                            <Input
+                              type='text'
+                              name='intProductCode'
+                              label={
+                                <>
+                                  <FormattedMessage id='global.productCode' defaultMessage='Product Code' />
+                                  <Required />
+                                </>
+                              }
+                              inputProps={{
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.enterProductCode',
+                                  defaultMessage: 'Enter Product Code'
+                                })
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRow>
                         <GridRow>
                           <GridColumn>
                             <DivTitleSegment>
-                              <FormattedMessage id='global.packagingDimensions' defaultMessage='Packaging Dimensions' />
+                              <FormattedMessage id='global.packaging' defaultMessage='Packaging' />
                             </DivTitleSegment>
                           </GridColumn>
                         </GridRow>
@@ -534,10 +317,10 @@ const ProductPopup = props => {
                         <GridRow columns={3}>
                           <GridColumn>
                             <Input
-                              name='packagingWidth'
+                              name='packagingSize'
                               label={
                                 <>
-                                  <FormattedMessage id='global.packageWidth' defaultMessage='Package Width' />
+                                  <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />
                                   <Required />
                                 </>
                               }
@@ -545,269 +328,497 @@ const ProductPopup = props => {
                             />
                           </GridColumn>
                           <GridColumn>
-                            <Input
-                              name='packagingHeight'
+                            <Dropdown
+                              name='packagingUnit'
+                              options={productsUnitsType}
                               label={
                                 <>
-                                  <FormattedMessage id='global.packageHeight' defaultMessage='Package Height' />
+                                  <FormattedMessage id='global.packagingUnit' defaultMessage='Unit' />
                                   <Required />
                                 </>
                               }
-                              inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                              inputProps={{
+                                'data-test': 'settings_product_popup_packagingUnit_drpdn',
+                                onChange: (e, d) => {
+                                  setFieldValue('packagingType', '')
+                                  filterPackagingTypes(
+                                    d.value,
+                                    props.unitsAll,
+                                    props.packagingTypesAll,
+                                    setpackagingTypesReduced
+                                  )
+                                },
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.selectUnit',
+                                  defaultMessage: 'Select Unit'
+                                })
+                              }}
                             />
                           </GridColumn>
                           <GridColumn>
-                            <Input
-                              name='packagingLength'
-                              label={
-                                <>
-                                  <FormattedMessage id='global.packageLength' defaultMessage='Package Length' />
-                                  <Required />
-                                </>
+                            <Popup
+                              disabled={!!getSafe(() => formikProps.values.packagingUnit, false)}
+                              position={'bottom left'}
+                              content={
+                                <FormattedMessage
+                                  id='product.packaging.selectFirst'
+                                  defaultMessage='Please select Packaging Unit'
+                                />
                               }
-                              inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                              trigger={
+                                <div>
+                                  <Dropdown
+                                    name='packagingType'
+                                    options={packagingTypesReduced}
+                                    label={
+                                      <>
+                                        <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />
+                                        <Required />
+                                      </>
+                                    }
+                                    inputProps={{
+                                      disabled: !getSafe(() => formikProps.values.packagingUnit, false),
+                                      'data-test': 'settings_product_popup_packagingType_drpdn',
+                                      placeholder: formatMessage({
+                                        id: 'productCatalog.selectType',
+                                        defaultMessage: 'Select Type'
+                                      }),
+                                      onChange: (e, { value }) => {
+                                        handleChangePackagingType(e, value, setFieldValue, values, props)
+                                      }
+                                    }}
+                                  />
+                                </div>
+                              }
                             />
                           </GridColumn>
                         </GridRow>
 
-                        {false && (
+                        <GridRow columns={3}>
+                          <GridColumn>
+                            <Input
+                              name='palletMaxPkgs'
+                              label={
+                                <>
+                                  <FormattedMessage id='global.palletMaxPkgs' defaultMessage='Max Pkgs per Pallet' />
+                                  {(palletParamsRequired || values.palletSaleOnly) && <Required />}
+                                </>
+                              }
+                              inputProps={{ placeholder: '0', type: 'number', min: 1 }}
+                            />
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumn>
+                            <DivTitleSegment>
+                              <FormattedMessage id='global.freight' defaultMessage='Freight' />
+                            </DivTitleSegment>
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow columns={2}>
+                          <GridColumn>
+                            <Input
+                              name='packageWeight'
+                              label={
+                                <>
+                                  <FormattedMessage id='global.packageWeight' defaultMessage='Gross Weight Per Package' />
+                                  <Popup
+                                    content={
+                                      <FormattedMessage
+                                        id='global.infoPackageWeight'
+                                        defaultMessage="The total weight of the contents and it's packaging"
+                                      />
+                                    }
+                                    position='top center'
+                                    trigger={<InfoCustom size='12' />}
+                                  />
+                                  <Required />
+                                </>
+                              }
+                              inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                            />
+                          </GridColumn>
+                          <GridColumn>
+                            <Dropdown
+                              name='packageWeightUnit'
+                              options={packageWeightUnits}
+                              label={
+                                <>
+                                  <FormattedMessage id='global.weightUnit' defaultMessage='Weight Unit' />
+                                  <Required />
+                                </>
+                              }
+                              inputProps={{
+                                'data-test': 'settings_product_popup_packageWeightUnit_drpdn',
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.selectWeightUnit',
+                                  defaultMessage: 'Select Weight Unit'
+                                })
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRow>
+                        <GridRow columns={2}>
+                          <GridColumn>
+                            <Dropdown
+                              options={nmfcNumbersFiltered}
+                              inputProps={{
+                                fluid: true,
+                                search: val => val,
+                                selection: true,
+                                loading: nmfcNumbersFetching,
+                                onSearchChange: (_, { searchQuery }) => handleSearchNmfcNumberChange(searchQuery, props),
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.selectNmfcCode',
+                                  defaultMessage: 'Select NMFC Code'
+                                })
+                              }}
+                              name='nmfcNumber'
+                              label={
+                                <>
+                                  <FormattedMessage id='global.nmfcCode' defaultMessage='NMFC Code' />
+                                  <Required />
+                                </>
+                              }
+                            />
+                          </GridColumn>
+                          <GridColumn>
+                            <Dropdown
+                              name='freightClass'
+                              options={freightClasses}
+                              label={
+                                <>
+                                  <FormattedMessage id='global.freightClass' defaultMessage='Freight Class' />
+                                  <Required />
+                                </>
+                              }
+                              inputProps={{
+                                'data-test': 'settings_product_popup_freightClass_drpdn',
+                                placeholder: formatMessage({
+                                  id: 'productCatalog.selectFreightClass',
+                                  defaultMessage: 'Select Freight Class'
+                                })
+                              }}
+                            />
+                          </GridColumn>
+                        </GridRow>
+
+                        <GridRow>
+                          <GridColumnFlex>
+                            <DivCheckboxWrapper>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.stackable', defaultMessage: 'Stackable' })}
+                                name='stackable'
+                                inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }}
+                              />
+                            </DivCheckboxWrapper>
+                            <DivCheckboxWrapper>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.hazardous', defaultMessage: 'Hazardous' })}
+                                name='hazardous'
+                                inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }}
+                              />
+                            </DivCheckboxWrapper>
+                            <DivCheckboxWrapper>
+                              <Checkbox
+                                label={formatMessage({ id: 'global.freezeProtect', defaultMessage: 'Freeze Protect' })}
+                                name='freezeProtect'
+                              />
+                            </DivCheckboxWrapper>
+                          </GridColumnFlex>
+                        </GridRow>
+
+                        {!values.palletSaleOnly ? (
+                          <>
+                            <GridRow>
+                              <GridColumn>
+                                <DivTitleSegment>
+                                  <FormattedMessage id='global.packagingDimensions' defaultMessage='Packaging Dimensions' />
+                                </DivTitleSegment>
+                              </GridColumn>
+                            </GridRow>
+
+                            <GridRow columns={3}>
+                              <GridColumn>
+                                <Input
+                                  name='packagingWidth'
+                                  label={
+                                    <>
+                                      <FormattedMessage id='global.packageWidth' defaultMessage='Package Width' />
+                                      <Required />
+                                    </>
+                                  }
+                                  inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                                />
+                              </GridColumn>
+                              <GridColumn>
+                                <Input
+                                  name='packagingHeight'
+                                  label={
+                                    <>
+                                      <FormattedMessage id='global.packageHeight' defaultMessage='Package Height' />
+                                      <Required />
+                                    </>
+                                  }
+                                  inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                                />
+                              </GridColumn>
+                              <GridColumn>
+                                <Input
+                                  name='packagingLength'
+                                  label={
+                                    <>
+                                      <FormattedMessage id='global.packageLength' defaultMessage='Package Length' />
+                                      <Required />
+                                    </>
+                                  }
+                                  inputProps={{ placeholder: '0', type: 'number', min: 0 }}
+                                />
+                              </GridColumn>
+                            </GridRow>
+
+                            {false && (
+                              <GridRow>
+                                <GridColumn>
+                                  <Input
+                                    label={formatMessage({
+                                      id: 'global.packagesPerPallet',
+                                      defaultMessage: 'Packages per Pallet'
+                                    })}
+                                    name='packagesPerPallet'
+                                    inputProps={{ placeholder: '0', type: 'number', min: 1 }}
+                                  />
+                                </GridColumn>
+                              </GridRow>
+                            )}
+                          </>
+                        ) : null}
+
+                        <GridRow>
+                          <GridColumn>
+                            <DivTitleSegment>
+                              <FormattedMessage id='global.document' defaultMessage='Document' />
+                            </DivTitleSegment>
+                          </GridColumn>
+                        </GridRow>
+                        {documentTypes.length && (
+                          <>
+                            <GridRow>
+                              <GridColumn>
+                                <div style={{ marginBottom: '6px' }}>
+                                  <FormattedMessage
+                                    id='productCatalog.chooseExistingDocument'
+                                    defaultMessage='Choose Existing Document'
+                                  />
+                                </div>
+                                <AttachmentManager
+                                  color='#20273a'
+                                  background='#edeef2'
+                                  border='none'
+                                  asModal
+                                  returnSelectedRows={rows => attachDocumentsManager(rows, values, setFieldValue, state)}
+                                />
+                              </GridColumn>
+                            </GridRow>
+                            <GridRow style={{ paddingBottom: '12.5px !important', marginTop: '12.5px !important' }}>
+                              <GridColumn>
+                                <Dropdown
+                                  name='documents.documentType'
+                                  closeOnChange
+                                  options={documentTypes}
+                                  inputProps={{
+                                    placeholder: formatMessage({
+                                      id: 'global.documentType.choose',
+                                      defaultMessage: 'Choose document type'
+                                    }),
+                                    onChange: (e, { name, value }) => {
+                                      handleChangeDocumentType(e, name, value, state)
+                                    }
+                                  }}
+                                  label={
+                                    <FormattedMessage
+                                      id='productCatalog.orUploadNewDocument'
+                                      defaultMessage='Or Upload New Document'
+                                    />
+                                  }
+                                />
+                              </GridColumn>
+                            </GridRow>
+                          </>
+                        )}
+
+                        {values.documents.documentType && openUpload ? (
                           <GridRow>
                             <GridColumn>
-                              <Input
-                                label={formatMessage({
-                                  id: 'global.packagesPerPallet',
-                                  defaultMessage: 'Packages per Pallet'
-                                })}
-                                name='packagesPerPallet'
-                                inputProps={{ placeholder: '0', type: 'number', min: 1 }}
+                              <UploadAttachment
+                                {...props}
+                                header={
+                                  <DivIcon onClick={() => setOpenUpload(!openUpload)}>
+                                    <IconClose name='close' color='grey' />
+                                  </DivIcon>
+                                }
+                                hideAttachments
+                                edit={getSafe(() => popupValues.id, 0)}
+                                attachments={values.documents.attachments}
+                                name='documents.attachments'
+                                type={documentType}
+                                fileMaxSize={20}
+                                onChange={files => {
+                                  attachDocumentsUploadAttachment(files, values, setFieldValue, state)
+                                }}
+                                data-test='settings_product_catalog_attachments_drop'
+                                emptyContent={
+                                  <div style={{ margin: '25px' }}>
+                                    <div>
+                                      <UploadCloudIcon />
+                                    </div>
+                                    {formatMessage({ id: 'addInventory.dragDrop' })}
+                                    <br />
+                                    <FormattedMessage
+                                      id='addInventory.dragDropOr'
+                                      defaultMessage={'or {link} to select from computer'}
+                                      values={{
+                                        link: (
+                                          <a>
+                                            <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                          </a>
+                                        )
+                                      }}
+                                    />
+                                  </div>
+                                }
+                                uploadedContent={
+                                  <label>
+                                    <FormattedMessage
+                                      id='addInventory.dragDrop'
+                                      defaultMessage={'Drag and drop to add file here'}
+                                    />
+                                    <br />
+                                    <FormattedMessage
+                                      id='addInventory.dragDropOr'
+                                      defaultMessage={'or {link} to select from computer'}
+                                      values={{
+                                        link: (
+                                          <a>
+                                            <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                          </a>
+                                        )
+                                      }}
+                                    />
+                                  </label>
+                                }
+                              />
+                            </GridColumn>
+                          </GridRow>
+                        ) : null}
+                        {values.documents.attachments && (
+                          <GridRow>
+                            <GridColumn>
+                              <ProdexGrid
+                                virtual={false}
+                                tableName='company_product_documents'
+                                onTableReady={() => {}}
+                                columns={COLUMNS}
+                                normalWidth={true}
+                                rows={attachments
+                                  .map(row => ({
+                                    ...row,
+                                    documentTypeName: row.documentType
+                                  }))
+                                  .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
+                                rowActions={[
+                                  {
+                                    text: (
+                                      <FormattedMessage id='global.unlink' defaultMessage='Unlink' />
+                                    ),
+                                    callback: async row => {
+                                      try {
+                                        if (row.linked) {
+                                          const unlinkResponse = await props.removeAttachmentLinkCompanyProduct(
+                                            popupValues.id,
+                                            row.id
+                                          )
+                                          datagrid.loadData() // Reload product with updated attachments
+                                          toastManager.add(
+                                            generateToastMarkup(
+                                              <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
+                                              <FormattedMessage
+                                                id='addInventory.unlinkeAttachment'
+                                                defaultMessage='Attachment was successfully unlinked.'
+                                              />
+                                            ),
+                                            {
+                                              appearance: 'success'
+                                            }
+                                          )
+                                          if (unlinkResponse.value.data.lastLink) {
+                                            confirm(
+                                              formatMessage({
+                                                id: 'confirm.attachments.delete.title',
+                                                defaultMessage: 'Delete Attachment'
+                                              }),
+                                              formatMessage(
+                                                {
+                                                  id: 'confirm.attachments.delete.content',
+                                                  defaultMessage: `Do you want to delete file ${row.name}?`
+                                                },
+                                                { fileName: row.name }
+                                              )
+                                            ).then(
+                                              async () => {
+                                                // confirm
+                                                try {
+                                                  await props.removeAttachment(row.id)
+                                                  toastManager.add(
+                                                    generateToastMarkup(
+                                                      <FormattedMessage
+                                                        id='notifications.attachments.deleted.header'
+                                                        defaultMessage='File Deleted'
+                                                      />,
+                                                      <FormattedMessage
+                                                        id='notifications.attachments.deleted.content'
+                                                        defaultMessage={`File ${row.name} successfully deleted.`}
+                                                        values={{ fileName: row.name }}
+                                                      />
+                                                    ),
+                                                    {
+                                                      appearance: 'success'
+                                                    }
+                                                  )
+                                                } catch (e) {
+                                                  console.error(e)
+                                                }
+                                              },
+                                              () => {
+                                                // cancel
+                                              }
+                                            )
+                                          }
+                                        }
+                                        setAttachments(attachments.filter(o => o.id !== row.id))
+                                      } catch (e) {
+                                        console.error(e)
+                                      }
+                                    }
+                                  }
+                                ]}
                               />
                             </GridColumn>
                           </GridRow>
                         )}
-                      </>
-                    ) : null}
-
-                    <GridRow>
-                      <GridColumn>
-                        <DivTitleSegment>
-                          <FormattedMessage id='global.document' defaultMessage='Document' />
-                        </DivTitleSegment>
-                      </GridColumn>
-                    </GridRow>
-                    {documentTypes.length && (
-                      <>
-                        <GridRow>
-                          <GridColumn>
-                            <div style={{ marginBottom: '6px' }}>
-                              <FormattedMessage
-                                id='productCatalog.chooseExistingDocument'
-                                defaultMessage='Choose Existing Document'
-                              />
-                            </div>
-                            <AttachmentManager
-                              color='#20273a'
-                              background='#edeef2'
-                              border='none'
-                              asModal
-                              returnSelectedRows={rows => attachDocumentsManager(rows, values, setFieldValue, state)}
-                            />
-                          </GridColumn>
-                        </GridRow>
-                        <GridRow style={{ paddingBottom: '12.5px !important', marginTop: '12.5px !important' }}>
-                          <GridColumn>
-                            <Dropdown
-                              name='documents.documentType'
-                              closeOnChange
-                              options={documentTypes}
-                              inputProps={{
-                                placeholder: formatMessage({
-                                  id: 'global.documentType.choose',
-                                  defaultMessage: 'Choose document type'
-                                }),
-                                onChange: (e, { name, value }) => {
-                                  handleChangeDocumentType(e, name, value, state)
-                                }
-                              }}
-                              label={
-                                <FormattedMessage
-                                  id='productCatalog.orUploadNewDocument'
-                                  defaultMessage='Or Upload New Document'
-                                />
-                              }
-                            />
-                          </GridColumn>
-                        </GridRow>
-                      </>
+                      </GridStyled>
                     )}
-
-                    {values.documents.documentType && openUpload ? (
-                      <GridRow>
-                        <GridColumn>
-                          <UploadAttachment
-                            {...props}
-                            header={
-                              <DivIcon onClick={() => setOpenUpload(!openUpload)}>
-                                <IconClose name='close' color='grey' />
-                              </DivIcon>
-                            }
-                            hideAttachments
-                            edit={getSafe(() => popupValues.id, 0)}
-                            attachments={values.documents.attachments}
-                            name='documents.attachments'
-                            type={documentType}
-                            fileMaxSize={20}
-                            onChange={files => {
-                              attachDocumentsUploadAttachment(files, values, setFieldValue, state)
-                            }}
-                            data-test='settings_product_catalog_attachments_drop'
-                            emptyContent={
-                              <div style={{ margin: '25px' }}>
-                                <div>
-                                  <UploadCloudIcon />
-                                </div>
-                                {formatMessage({ id: 'addInventory.dragDrop' })}
-                                <br />
-                                <FormattedMessage
-                                  id='addInventory.dragDropOr'
-                                  defaultMessage={'or {link} to select from computer'}
-                                  values={{
-                                    link: (
-                                      <a>
-                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                      </a>
-                                    )
-                                  }}
-                                />
-                              </div>
-                            }
-                            uploadedContent={
-                              <label>
-                                <FormattedMessage
-                                  id='addInventory.dragDrop'
-                                  defaultMessage={'Drag and drop to add file here'}
-                                />
-                                <br />
-                                <FormattedMessage
-                                  id='addInventory.dragDropOr'
-                                  defaultMessage={'or {link} to select from computer'}
-                                  values={{
-                                    link: (
-                                      <a>
-                                        <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                      </a>
-                                    )
-                                  }}
-                                />
-                              </label>
-                            }
-                          />
-                        </GridColumn>
-                      </GridRow>
-                    ) : null}
-                    {values.documents.attachments && (
-                      <GridRow>
-                        <GridColumn>
-                          <ProdexGrid
-                            virtual={false}
-                            tableName='company_product_documents'
-                            onTableReady={() => {}}
-                            columns={COLUMNS}
-                            normalWidth={true}
-                            rows={attachments
-                              .map(row => ({
-                                ...row,
-                                documentTypeName: row.documentType
-                              }))
-                              .sort((a, b) => (a.name > b.name ? 1 : b.name > a.name ? -1 : 0))}
-                            rowActions={[
-                              {
-                                text: (
-                                  <FormattedMessage id='global.unlink' defaultMessage='Unlink' />
-                                ),
-                                callback: async row => {
-                                  try {
-                                    if (row.linked) {
-                                      const unlinkResponse = await props.removeAttachmentLinkCompanyProduct(
-                                        popupValues.id,
-                                        row.id
-                                      )
-                                      datagrid.loadData() // Reload product with updated attachments
-                                      toastManager.add(
-                                        generateToastMarkup(
-                                          <FormattedMessage id='addInventory.success' defaultMessage='Success' />,
-                                          <FormattedMessage
-                                            id='addInventory.unlinkeAttachment'
-                                            defaultMessage='Attachment was successfully unlinked.'
-                                          />
-                                        ),
-                                        {
-                                          appearance: 'success'
-                                        }
-                                      )
-                                      if (unlinkResponse.value.data.lastLink) {
-                                        confirm(
-                                          formatMessage({
-                                            id: 'confirm.attachments.delete.title',
-                                            defaultMessage: 'Delete Attachment'
-                                          }),
-                                          formatMessage(
-                                            {
-                                              id: 'confirm.attachments.delete.content',
-                                              defaultMessage: `Do you want to delete file ${row.name}?`
-                                            },
-                                            { fileName: row.name }
-                                          )
-                                        ).then(
-                                          async () => {
-                                            // confirm
-                                            try {
-                                              await props.removeAttachment(row.id)
-                                              toastManager.add(
-                                                generateToastMarkup(
-                                                  <FormattedMessage
-                                                    id='notifications.attachments.deleted.header'
-                                                    defaultMessage='File Deleted'
-                                                  />,
-                                                  <FormattedMessage
-                                                    id='notifications.attachments.deleted.content'
-                                                    defaultMessage={`File ${row.name} successfully deleted.`}
-                                                    values={{ fileName: row.name }}
-                                                  />
-                                                ),
-                                                {
-                                                  appearance: 'success'
-                                                }
-                                              )
-                                            } catch (e) {
-                                              console.error(e)
-                                            }
-                                          },
-                                          () => {
-                                            // cancel
-                                          }
-                                        )
-                                      }
-                                    }
-                                    setAttachments(attachments.filter(o => o.id !== row.id))
-                                  } catch (e) {
-                                    console.error(e)
-                                  }
-                                }
-                              }
-                            ]}
-                          />
-                        </GridColumn>
-                      </GridRow>
+                    {actualTab !== 'edit' && (
+                      <TabsContent
+                        actualTab={actualTab}
+                        product={selectedSDS}
+                      />
                     )}
-                  </GridStyled>
-                )}
-                {actualTab !== 'edit' && (
-                  <TabsContent
-                    actualTab={actualTab}
-                    product={selectedSDS}
-                  />
-                )}
-              </ModalContent>
+                  </Form>
+                </SegmentCustomContent>
+              </DivFlexContent>
 
               <DivBottomButtons className='bottom-buttons'>
                 <BasicButton noBorder onClick={() => {closePopup(); !!openGlobalAddForm && openGlobalAddForm('');}} data-test='settings_product_popup_reset_btn'>
@@ -847,8 +858,9 @@ const ProductPopup = props => {
                 />
               </DivBottomButtons>
               <ErrorFocus />
-            </FormStyled>
-          </Modal>
+
+          </SidebarFlex>
+          </>
         )
       }}
     </Formik>

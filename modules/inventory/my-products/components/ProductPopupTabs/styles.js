@@ -4,6 +4,7 @@ import {  Grid, Menu } from 'semantic-ui-react'
 export const StyledMenu = styled(Menu)`
   &.ui.pointing.secondary.menu {
     margin: -20px -1px 0;
+    background-color: #fff;
   }
 `
 
@@ -34,7 +35,6 @@ export const GridStyled = styled(Grid)`
 `
 
 export const DivProductNameSegment = styled.div`
-  //! !margin: 0 0 9px;
   border-radius: 4px;
   border: solid 1px #dee2e6;
   background-color: #f5f7fa;

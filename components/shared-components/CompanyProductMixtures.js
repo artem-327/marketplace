@@ -10,7 +10,7 @@ const StyledGrid = styled(Grid)`
     margin: -10px 0 -5px;
    
     >.row {
-      padding: 5px 0 !important;
+      padding: 0 !important;
       .column {
         padding: 0 10px !important;
       } 
@@ -61,58 +61,58 @@ export default class CompanyProductMixtures extends Component {
     return (
       <StyledGrid>
         {casProducts.length > 0 && (
-          <BottomUnpaddedRow columns={6}>
-            <GridColumn>
+          <BottomUnpaddedRow>
+            <GridColumn width={4}>
                 <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
             </GridColumn>
 
-            <GridColumn>
+            <GridColumn width={4}>
                 <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
             </GridColumn>
 
-            <GridColumn>
+            <GridColumn width={2}>
                 <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />
             </GridColumn>
 
-            <GridColumn>
+            <GridColumn width={2}>
                 <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
             </GridColumn>
 
-            <GridColumn>
+            <GridColumn width={2}>
                 <FormattedMessage id='global.caProp65' defaultMessage='CA PROP 65' />
             </GridColumn>
 
-            <GridColumn>
+            <GridColumn width={2}>
                 <FormattedMessage id='global.regulatoryReach' defaultMessage='REACH' />
             </GridColumn>
           </BottomUnpaddedRow>
         )}
         {casProducts.map((el, i) => {
           return (
-            <StyledRow columns={6} key={i}>
-              <GridColumn>
+            <StyledRow key={i}>
+              <GridColumn width={4}>
                 <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
-              <GridColumn>
+              <GridColumn width={4}>
                 <Input name={`${prefix}[${i}].casIndexName`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
 
-              <GridColumn>
+              <GridColumn width={2}>
                 <Input name={`${prefix}[${i}].min`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
 
-              <GridColumn>
+              <GridColumn width={2}>
                 <Input name={`${prefix}[${i}].max`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
 
-              <GridColumn>
+              <GridColumn width={2}>
                 {el?.casProduct?.caprop65 === true
                   ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
                   : (el?.casProduct?.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
                 }
               </GridColumn>
 
-              <GridColumn>
+              <GridColumn width={2}>
                 {el?.casProduct?.reach === true
                   ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
                   : (el?.casProduct?.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
