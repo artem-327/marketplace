@@ -145,8 +145,11 @@ const removeCompanyProduct = (row, props) => {
                             id: 'confirm.forceDeleteItem',
                             defaultMessage: 'Deleting this SKU will delete the associated Listings from your inventory.'
                         },
-                        {item: row.rawData.intProductName}
-                    ))
+                        {item: row.rawData.intProductName}),
+                        {
+                            cancelText:  props.intl.formatMessage({id: 'confirm.forceDeleteItem.cancel', defaultMessage: 'Cancel'}),
+                            proceedText: props.intl.formatMessage({id: 'confirm.forceDeleteItem.delete', defaultMessage: 'Delete'})}
+                    )
                     .then(async () => {
                         try {
                             await props.forceDeleteProduct(row.id, row.intProductName)
