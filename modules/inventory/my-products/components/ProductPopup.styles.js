@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { UploadCloud, Info } from 'react-feather'
-import { Grid, Icon, Form, Segment, GridRow, GridColumn } from 'semantic-ui-react'
+import { Modal, Grid, Icon, Form, Segment, GridRow, GridColumn } from 'semantic-ui-react'
 
 export const FormStyled = styled(Form)`
   flex-grow: 0 !important;
@@ -10,33 +10,35 @@ export const FormStyled = styled(Form)`
 `
 
 export const SegmentHigh = styled(Segment)`
-  margin: 0 0 1px 0 !important;
-  padding: 16px 30px !important;
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  color: #20273a;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06), inset 0 -1px 0 0 #dee2e6;
-  border: unset !important;
-  display: flex;
-  flex-direction: row;
-
-  svg {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-
-  svg.title-icon {
-    margin-left: 15px;
-    color: #cecfd4;
-  }
-
-  svg.close-icon {
-    right: 0;
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
+  &.ui.segment {
+    margin: 0 0 1px 0 !important;
+    padding: 16px 30px !important;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    color: #20273a;
+    border: none !important;
+    display: flex;
+    flex-direction: row;
+    box-shadow: none;
+  
+    svg {
+      font-size: 18px;
+      vertical-align: middle;
+    }
+  
+    svg.title-icon {
+      margin-left: 15px;
+      color: #cecfd4;
+    }
+  
+    svg.close-icon {
+      right: 0;
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
   }
 `
 
@@ -68,6 +70,10 @@ export const UploadCloudIcon = styled(UploadCloud)`
   height: 40px;
   object-fit: contain;
   color: #dee2e6;
+`
+
+export const ModalContent = styled(Modal.Content)`
+  margin: 2px 0;
 `
 
 export const GridStyled = styled(Grid)`

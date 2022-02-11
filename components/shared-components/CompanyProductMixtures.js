@@ -1,16 +1,57 @@
 import { Component } from 'react'
 import { array, string } from 'prop-types'
 import styled from 'styled-components'
-import { GridColumn, GridRow } from 'semantic-ui-react'
+import { Grid, GridColumn, GridRow } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { Input } from 'formik-semantic-ui-fixed-validation'
 
-const BottomUnpaddedRow = styled(GridRow)`
-  padding-bottom: 0px !important;
+const StyledGrid = styled(Grid)`
+  &.ui.grid {
+    margin: -10px 0 -5px;
+   
+    >.row {
+      padding: 5px 0 !important;
+      .column {
+        padding: 0 10px !important;
+      } 
+    }
+    
+    >.row:nth-child(2){
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+      border-top: 1px solid #dde2e6 !important;
+    }
+    
+    >.row:last-child {
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    
+    >.row:not(:first-child) {
+      border-left: 1px solid #dde2e6 !important;    
+      border-right: 1px solid #dde2e6 !important;
+      border-bottom: 1px solid #dde2e6 !important;
+    }
+  }
 `
 
-const BoldLabel = styled.label`
-  font-weight: bolder;
+const BottomUnpaddedRow = styled(GridRow)`
+  &.row {
+    padding-bottom: 10px !important;
+    font-size: 12px;
+    font-weight: bold;
+    color: #848893;
+    line-height: 1.67;
+    
+    >.column:first-child {
+      padding-left: 0 !important;
+    }
+  }
+`
+
+
+const StyledRow = styled(GridRow)`
+
 `
 
 export default class CompanyProductMixtures extends Component {
@@ -18,49 +59,37 @@ export default class CompanyProductMixtures extends Component {
     let { casProducts, prefix } = this.props
 
     return (
-      <>
+      <StyledGrid>
         {casProducts.length > 0 && (
           <BottomUnpaddedRow columns={6}>
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.casIndexNumber' defaultMessage='CAS Index Number' />
-              </BoldLabel>
             </GridColumn>
 
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.casIndexName' defaultMessage='CAS Index Name' />
-              </BoldLabel>
             </GridColumn>
 
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />
-              </BoldLabel>
             </GridColumn>
 
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />
-              </BoldLabel>
             </GridColumn>
 
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.caProp65' defaultMessage='CA PROP 65' />
-              </BoldLabel>
             </GridColumn>
 
             <GridColumn>
-              <BoldLabel>
                 <FormattedMessage id='global.regulatoryReach' defaultMessage='REACH' />
-              </BoldLabel>
             </GridColumn>
           </BottomUnpaddedRow>
         )}
         {casProducts.map((el, i) => {
           return (
-            <GridRow columns={6}>
+            <StyledRow columns={6} key={i}>
               <GridColumn>
                 <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
@@ -77,22 +106,22 @@ export default class CompanyProductMixtures extends Component {
               </GridColumn>
 
               <GridColumn>
-                {el.caprop65 === true
+                {el?.casProduct?.caprop65 === true
                   ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                  : (el.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                  : (el?.casProduct?.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
                 }
               </GridColumn>
 
               <GridColumn>
-                {el.reach === true
+                {el?.casProduct?.reach === true
                   ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                  : (el.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                  : (el?.casProduct?.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
                 }
               </GridColumn>
-            </GridRow>
+            </StyledRow>
           )
         })}
-      </>
+      </StyledGrid>
     )
   }
 }
