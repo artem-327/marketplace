@@ -25,6 +25,3 @@ after_script:
       curl -H "Content-Type: text/xml" -X POST -H "Authorization: Bearer $token" --data-binary @$FILE  "https://xray.cloud.xpand-it.com/api/v1/import/execution/junit?projectKey=DT&testExecKey=DT-2214" || exit 0
     done
     echo "done"
-  - docker rmi --force $(docker images --filter dangling=true -q --no-trunc) || exit 0
-  - docker rm -f $(docker ps -a -q) || exit 0
-  - docker volume rm $(docker volume ls -q) || exit 0

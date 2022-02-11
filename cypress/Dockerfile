@@ -1,5 +1,5 @@
 
-FROM cypress/included:9.2.0
+FROM cypress/included:9.4.1
 
 WORKDIR /root
 COPY package.json .
@@ -10,7 +10,7 @@ COPY npm-shrinkwrap.json .
 # to small "started / finished" and avoid 1000s of lines of progress messages
 # https://github.com/cypress-io/cypress/issues/1243
 ENV CI=1
-RUN npm ci
+#RUN npm ci
 # "root"
 RUN whoami
 # uid=0(root) gid=0(root) groups=0(root)
