@@ -155,7 +155,7 @@ const ProductPopup = props => {
     value: echo.id
   }))
 
-  if (companyGenericProduct && companyGenericProduct.length >= 6) {
+  if (companyGenericProduct && companyGenericProduct.length >= 30) {
     companyGenericProductOptions.push({
       key: -1,
       text: formatMessage({

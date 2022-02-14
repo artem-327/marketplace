@@ -244,9 +244,9 @@ export default {
     api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   setPreferredLanguage: language =>
     api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
-  searchCompanyGenericProduct: (searchQuery, limit, returnWhenEmpty) => // ! ! TBD
+  searchCompanyGenericProduct: (searchQuery, limit, returnWhenEmpty) =>
     api
-      .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`)
+      .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data),
   getCompanyGenericProductById: id =>
     api.get(`/prodex/api/company-generic-products/id/${id}`).then(response => response.data),
