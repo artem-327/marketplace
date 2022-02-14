@@ -9,7 +9,8 @@ import {
   Button,
   Dropdown,
   Input,
-  Modal
+  Modal,
+  Icon
 } from 'semantic-ui-react'
 import { ChevronDown, PlusCircle, UploadCloud, Link2, Edit2 } from 'react-feather'
 
@@ -414,4 +415,22 @@ export const EditIcon = styled(Edit2)`
 export const DivFlexRow = styled.div`
  display: flex;
  flex-direction: row;
+`
+
+export const DeleteIcon = styled(Icon)`
+  &.trash.alternate.outline.icon {
+    position: relative;
+    vertical-align: top;
+    width: 22px;
+    height: 24px;
+    margin: 3px 0 -3px 8px;
+    border-radius: 0;
+    font-size: 24px;
+    color: #f16844;
+    font-weight: 400;
+  }
+  
+  &.disabled {
+    cursor: default;
+  }
 `

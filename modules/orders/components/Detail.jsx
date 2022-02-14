@@ -158,7 +158,7 @@ const Detail = props => {
       console.error(e)
     }
 
-    intervalSecs = setInterval(() => setIntervalSecsTime(moment()), 1000)
+    //intervalSecs = setInterval(() => setIntervalSecsTime(moment()), 1000)
 
     return () => {
       clearInterval(intervalSecs)

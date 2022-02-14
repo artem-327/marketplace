@@ -306,7 +306,7 @@ export const handlerSubmit = async (values, actions, props, attachments, setLoad
  * @method
  */
 export const handleSearchChange = debounce((searchQuery, props) => {
-  props.searchCompanyGenericProduct(searchQuery)
+  props.searchCompanyGenericProduct(searchQuery, 30, true)
 }, 250)
 
 /**
