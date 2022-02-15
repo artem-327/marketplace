@@ -807,6 +807,22 @@ export const ButtonCancel = styled(Button)`
   }
 `
 
+export const DivHeaderLabel = styled.span`
+  text-transform: none;
+  margin-left: 15px;
+  padding: 5px 7px 5px 8px;
+  border-radius: 2px;
+  border: solid 1px #dee2e6;
+  background-color: #f5f7fa;
+  height: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1;
+  color: #20273a;
+`
+
 export const DeleteIcon = styled(Icon)`
   &.trash.alternate.outline.icon {
     position: relative;

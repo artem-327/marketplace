@@ -42,7 +42,7 @@ const makeMapStateToProps = () => {
       loadingRelatedDocuments: getLoadingRelatedDocuments(state),
       orderByIdLoading: getOrderByIdLoading(state),
       downloadPdfLoading: getDownloadPdfLoading(state),
-      isCancelable,
+      isCancelable
     }
   }
   return mapStateToProps

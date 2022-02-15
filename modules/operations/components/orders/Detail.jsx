@@ -32,7 +32,8 @@ import {
   StyledModal,
   TopRow,
   StyledHeader,
-  ButtonCancel
+  ButtonCancel,
+  DivHeaderLabel
 } from '../../styles'
 // Services
 import { getSafe } from '../../../../utils/functions'
@@ -694,6 +695,11 @@ const Detail = props => {
                 data-test='orders_detail_pickup_info'>
                 <Chevron />
                 <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
+                {order.isPickupPublic && (
+                  <DivHeaderLabel>
+                    <FormattedMessage id='order.publicWarehouse' defaultMessage='Public Warehouse' />
+                  </DivHeaderLabel>
+                )}
               </AccordionTitle>
               <Accordion.Content active={activeIndexes[6]}>
                 <Grid divided='horizontally'>
@@ -798,6 +804,11 @@ const Detail = props => {
                 data-test='orders_detail_shipping'>
                 <Chevron />
                 <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
+                {order.isDeliveryPublic && (
+                  <DivHeaderLabel>
+                    <FormattedMessage id='order.publicWarehouse' defaultMessage='Public Warehouse' />
+                  </DivHeaderLabel>
+                )}
               </AccordionTitle>
               <Accordion.Content active={activeIndexes[8]}>
                 <Grid divided='horizontally'>
