@@ -91,6 +91,7 @@ export const DivFlexContent = styled.div`
   overflow-y: auto;
   align-self: center;
   padding: 30px !important;
+  margin: 3px 0;
 `
 
 export const SegmentCustomContent = styled(Segment)`
