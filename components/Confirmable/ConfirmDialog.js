@@ -11,7 +11,7 @@ import { ModalCustom } from './ConfirmDialog.styles'
  */
 
 const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, options, basicModal }) => {
-  const { cancelText, proceedText } = options
+  const { cancelText, proceedText, cancelEnabled, proceedEnabled } = options
   return (
     <ModalCustom $basicModal={basicModal} closeIcon size='tiny' centered={false} open={show} onClose={dismiss}>
       <ModalCustom.Header>{title}</ModalCustom.Header>
@@ -19,12 +19,14 @@ const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, op
 
       <ModalCustom.Actions>
         {cancelText ? (
-          <BasicButton noBorder onClick={cancel} data-test='confirm_dialog_cancel_btn'>
+          <BasicButton noBorder onClick={cancel} data-test='confirm_dialog_cancel_btn'
+                       disabled={cancelEnabled === undefined ? false : !cancelEnabled}>
             {cancelText}
           </BasicButton>
         ) : null}
         {proceedText ? (
-          <BasicButton onClick={proceed} data-test='confirm_dialog_proceed_btn'>
+          <BasicButton onClick={proceed} data-test='confirm_dialog_proceed_btn'
+                       disabled={proceedEnabled === undefined ? false : !proceedEnabled}>
             {proceedText}
           </BasicButton>
         ) : null}
