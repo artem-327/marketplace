@@ -84,9 +84,7 @@ const Detail = props => {
     resolveDisputeCredit,
     resolveDisputeAccept,
     downloadDisputeAttachment,
-    isCancelable,
-    isPickupPublic,
-    isDeliveryPublic
+    isCancelable
   } = props
 
   useEffect(() => {
@@ -697,7 +695,7 @@ const Detail = props => {
                 data-test='orders_detail_pickup_info'>
                 <Chevron />
                 <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
-                {isPickupPublic && (
+                {order.isPickupPublic && (
                   <DivHeaderLabel>
                     <FormattedMessage id='order.publicWarehouse' defaultMessage='Public Warehouse' />
                   </DivHeaderLabel>
@@ -806,7 +804,7 @@ const Detail = props => {
                 data-test='orders_detail_shipping'>
                 <Chevron />
                 <FormattedMessage id='order.deliveryInfo' defaultMessage='Delivery Info' />
-                {isDeliveryPublic && (
+                {order.isDeliveryPublic && (
                   <DivHeaderLabel>
                     <FormattedMessage id='order.publicWarehouse' defaultMessage='Public Warehouse' />
                   </DivHeaderLabel>

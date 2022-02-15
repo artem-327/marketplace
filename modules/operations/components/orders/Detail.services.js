@@ -37,8 +37,6 @@ const getReturnAddress = (data) => {
     return returnAddr
 }
 
-
-
 /**
  * prepare Detail function used in DetailContainer
  * @category Operations
@@ -148,6 +146,7 @@ export const prepareDetail = (data, type = 'sales') => {
         province: data.returnAddressProvince,
         country: data.returnAddressCountry
       }),
+      isPickupPublic: data.returnAddressPublic,
       productCode: orderItems.map(d => (d.companyGenericProductCode ? d.companyGenericProductCode : 'N/A')),
       productName: orderItems.map(d => (d.companyGenericProductName ? d.companyGenericProductName : 'N/A')),
       productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
@@ -186,6 +185,7 @@ export const prepareDetail = (data, type = 'sales') => {
         province: data.shippingAddressProvince,
         country: data.shippingAddressCountry
       }),
+      isDeliveryPublic: data.shippingAddressPublic,
       shipToEmail: data.shippingAddressContactEmail,
       shipToPhone: data.shippingAddressContactPhone,
       subtotal: (
