@@ -54,10 +54,10 @@ export async function authorize(username, password, session = null, option = nul
     session
       ? (
         option
-          ? `grant_type=password&username=${username}&mfa_session=${session}&mfa_option=${option}&device_id=${visitorId}`
-          : `grant_type=password&username=${username}&mfa_session=${session}&mfa_code=${code}&device_id=${visitorId}`
+          ? `grant_type=password&username=${encodeURIComponent(username)}&mfa_session=${session}&mfa_option=${option}&device_id=${visitorId}`
+          : `grant_type=password&username=${encodeURIComponent(username)}&mfa_session=${session}&mfa_code=${code}&device_id=${visitorId}`
       )
-      : `grant_type=password&username=${username}&password=${password}&device_id=${visitorId}`,
+      : `grant_type=password&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&device_id=${visitorId}`,
     {
       headers: {
         Authorization: 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
