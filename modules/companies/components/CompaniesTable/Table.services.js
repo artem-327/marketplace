@@ -140,7 +140,16 @@ const reRegisterP44 = async (id, state, props) => {
  * @returns {array}
  */
 const getActions = props => {
-  const { datagrid, openEditCompany, deleteCompany, removeAttachment, takeOverCompany, resendWelcomeEmail, intl } = props
+  const {
+    datagrid,
+    openEditCompany,
+    deleteCompany,
+    removeAttachment,
+    takeOverCompany,
+    recalculateBroadcastedOffersForCompany,
+    resendWelcomeEmail,
+    intl
+  } = props
 
   const { formatMessage } = intl
   return [
@@ -162,8 +171,8 @@ const getActions = props => {
           )
         ).then(async () => {
           try {
-            row.w9AttachmentId && await removeAttachment(row.w9AttachmentId);
-            await deleteCompany(row.id);
+            row.w9AttachmentId && await removeAttachment(row.w9AttachmentId)
+            await deleteCompany(row.id)
             datagrid.removeRow(row.id)
           } catch (err) {
             console.error(err)
@@ -187,6 +196,10 @@ const getActions = props => {
       text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
       callback: row => takeOverCompany(row.id),
       hidden: row => !row.primaryUser
+    },
+    {
+      text: <FormattedMessage id='admin.recalculateOffers' defaultMessage='Recalculate Broadcasting' />,
+      callback: row => recalculateBroadcastedOffersForCompany(row.id, row.name, formatMessage)
     },
     {
       text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,

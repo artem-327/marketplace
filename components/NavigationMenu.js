@@ -4,6 +4,7 @@ import Router, { withRouter } from 'next/router'
 import { Menu, Dropdown } from 'semantic-ui-react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
+import confirm from '../components/Confirmable/confirm'
 import {
   Layers,
   Settings,
@@ -39,6 +40,8 @@ import { Datagrid } from '../modules/datagrid'
 import { getSafe } from '../utils/functions'
 //Styles
 import { DivNavItem } from './NavigationMenu.styles'
+import api from '../api'
+
 
 const DropdownItem = ({ children, refFunc, refId, ...props }) => {
   return (
@@ -58,6 +61,7 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     currentType: '',
+    broadcastRecalculationChecked: false,
     settings:
       getSafe(() => Router.router.pathname === '/settings/my-tradepass', false) ||
       getSafe(() => Router.router.pathname === '/settings/company-details', false) ||
@@ -893,6 +897,37 @@ class Navigation extends Component {
                           {formatMessage({ id: `navigation.operations.${tab.type}`, defaultMessage: `${tab.name}` })}
                         </Dropdown.Item>
                       ))}
+                      {isAdmin && (
+                         <Link href={{}}>
+                          <Menu.Item
+                             as='a'
+                             active={false}
+                             onClick={() => {
+                               confirm("Full Recalculation",
+                                   <>
+                                     Are you sure you want to run full broadcasting recalculation? This may take longer and cause increased system load.
+                                     {/*<br></br>*/}
+                                     {/*<FormGroup>*/}
+                                     {/*  <FormControlLabel control={<Checkbox onChange={(e) => {*/}
+                                     {/*    this.setState({ broadcastRecalculationChecked: e.target.checked})*/}
+                                     {/*  }}/>} label='Yes, perform full recalculation' />*/}
+                                     {/*</FormGroup>*/}
+                                   </>,
+                                   { cancelText: 'Cancel', proceedText: 'Start' , proceedEnabled: true}, //this.state.broadcastRecalculationChecked },
+                                   true
+                               ).then(async () => {
+                                     try {
+                                       await api.patch('/prodex/api/admin/broadcasted-offers/reload?runInBackground=true')
+                                           .then((response) => null)
+                                     } catch (e) {
+                                       console.error(e)
+                                     }
+                                   })
+                             }}>
+                         {'Recalculate Broadcasting'}
+                         </Menu.Item>
+                       </Link>
+                      )}
                     </PerfectScrollbar>
                   </Dropdown.Menu>
                 </DropdownItem>
