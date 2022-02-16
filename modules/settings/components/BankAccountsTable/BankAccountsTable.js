@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check, Clock } from 'react-feather'
+import { PlaidLink } from 'react-plaid-link'
 import {
   openPopup,
   closePopup,
@@ -559,20 +560,39 @@ class BankAccountsTable extends Component {
       newRows = rows
     }
     return newRows.map(row => {
+      console.log('!!!row: ', row)
+
       const accountRow = (
         <div style={{ display: 'flex' }}>
           <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
-          {row.status === 'pending_verification' ? (
-            <StatusLabel horizontal>
-              <Clock color='#848893' size='12' />
-              <span>
-                <FormattedMessage id='settings.pending' defaultMessage='Pending' />
-              </span>
-            </StatusLabel>
-          ) : null}
+          {row.status === 'pending_verification' &&
+            <>
+              <StatusLabel horizontal>
+                <Clock color='#848893' size='12' />
+                <span>
+                  <FormattedMessage id='settings.pending' defaultMessage='Pending' />
+                </span>
+              </StatusLabel>
+              <PlaidLink
+                onSuccess={(public_token, metadata) => {
+                  console.log('!!!public_token: ', public_token)
+                  conso.e.log('!!!metadata: ', metadata)
+                }}
+                onExit={(err, metadata) => {
+                  console.log('!!!err: ', err)
+                  console.log('!!! err metadata: ', metadata)
+                }}
+                token='link-sandbox-b70a8e3e-0485-4a53-b2e2-d454c12fb698' // this should not be hardcoded, use row.link_token instead
+              >
+                <span>
+                  <FormattedMessage id='global.verify' defaultMessage='Verify' />
+                </span>
+              </PlaidLink>
+            </>
+          }
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
               <Check color='#84c225' size='12' strokeWidth='4' />
