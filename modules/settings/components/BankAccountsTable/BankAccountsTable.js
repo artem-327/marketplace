@@ -2,18 +2,20 @@ import { Fragment, Component } from 'react'
 import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
 import ProdexTable from '~/components/table'
+import { useState } from 'react'
 import { Header, Modal, Form, Segment, Table, Dropdown } from 'semantic-ui-react'
 import { Button as VerifyButton }  from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/components/Confirmable/confirm'
 import { Formik } from 'formik'
+import { usePlaidLink } from 'react-plaid-link'
 import { Input, Button } from 'formik-semantic-ui-fixed-validation'
 import * as Yup from 'yup'
 import get from 'lodash/get'
 import styled from 'styled-components'
 import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
-import { Check, Clock } from 'react-feather'
+import { Check, Clock, RotateCw } from 'react-feather'
 import {
   openPopup,
   closePopup,
@@ -41,6 +43,8 @@ import ActionCell from '~/components/table/ActionCell'
 import ConfirmDeleteInstitution from './ConfirmDeleteInstitution'
 //Styles
 import { DivCircle, StatusLabel } from './styles'
+import { CartesianAxis } from 'recharts'
+import e from 'express'
 
 const ButtonDownload = styled(Button)`
   background-color: #2599d5 !important;
@@ -562,20 +566,9 @@ class BankAccountsTable extends Component {
       inactive: '#f16844'
     }
 
-    // const verifyButtonClick = () => {
-    //   fetch("https://jsonip.com/about")
-    //   // change endpoint
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     // to do: when we get a successsful reply, change the status to row.status = 'pending_verification'
-    //     console.log(data)
+    
 
-    //   })
-    //   .catch(error => alert(error))
-
-    // }
-
-
+    
     let newRows = []
     if (isHideInactiveAccounts) {
       rows.forEach(row => {
@@ -591,11 +584,9 @@ class BankAccountsTable extends Component {
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
-
-          {/* if status is pending verification then display a verify button */}
-
-          {row.status === 'pending_verification' ? (
+          {row.status === 'pending_verification' && (
             <>
+            {console.log("emilyyy", row.link_token)}
               <StatusLabel horizontal>
                 <Clock color='#848893' size='12' />
                 <span>
@@ -604,10 +595,21 @@ class BankAccountsTable extends Component {
               </StatusLabel>
 
               <StylesVerifyButton type='button'>
+                <PlaidButton
+                  disabled={
+                    !publicKey ||
+                    !(vellociBusinessId && vellociAccountStatus !== 'inactive') ||
+                    isThirdPartyConnectionException}
+                  token={vellociToken}
+                  publicKey={vellociBusinessId}
+                  onExit={this.onExit}
+                  onSuccess={this.onSuccess}
+                  onEvent={this.onEvent}>
+                </PlaidButton>
               Verify 
               </StylesVerifyButton>
             </>
-          ) : null}
+          )}
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
             <StatusLabel horizontal>
               <Check color='#84c225' size='12' strokeWidth='4' />
@@ -644,6 +646,150 @@ class BankAccountsTable extends Component {
       isThirdPartyConnectionException,
       downloading
     } = this.props
+    
+    
+    //create function called verifyButtonClick to look through the bank
+    // accounts added and onoly display the ones with status of pending 
+    //1. function called verifyButtonClick
+    //2. create a variable equal to an empty string
+    //3. loop/map through the objects in the array of objects untill the key value status: "pending_verification"
+    //4. exit the loop or return the map displaying only the objects with a key value of 'pending
+
+    
+   
+  //  const verifyButtonClick = () => {
+  //   const [verified, setVerified] = useState({})
+  //  }
+
+  // const ankAccounts = ({
+  //   getLink_token,
+  //   link_token,
+  //   access_token,
+  //   addAccessAccount,
+  //   loading,
+  //   getMyRows,
+  //   onEventAccess_token,
+  //   toastManager
+  // }) => {
+  //   useEffect(() => {
+  //     getLink_token(access_token)
+  //     getMyRows(access_token)
+  //   }, [getLinkToken, getMyRows, access_token])
+
+  //    const plaidConfigTable = {
+  //       publicKey: vellocioken,
+  //       link_token: link_token,
+  //       onSuccess: async (_myToken, metadata) => {
+  //        try {
+  //          await addAccessAccount(access_token, metadata)
+  //          await toastManager.add(
+  //            generateToastMarkup(
+  //              <FormattedMessage id='addBankAccounts.successfully.title' defaultMessage='Success!' />,
+  //              <FormattedMessage
+  //               id='addBankAccounts.successfully.content'
+  //              defaultMessage='Bank accounts were successfully added!'
+  //             />
+  //            ),
+  //         {
+  //             appearance: 'success'
+  //            }
+  //          )
+  //        } catch (error) {
+  //          console.error(error.message)
+  //        } finally {
+  //          await Router.push('/auth/login')
+  //       }
+  //      },
+  //      onEvent: (eventName, metadata) => onEventAccess_token(eventName, metadata, access_token),
+  //      onExit: (err, metadata) => {
+  //       if (!err && getSafe(() => metadata.link_session_id, '')) {
+  //          Router.push('/auth/login')
+  //        }
+  //      }
+  //   }
+  
+  //   const { open, ready, error } = usePlaidLink(plaidConfigTable)
+  //         useEffect(() => {
+  //     if (ready) {
+  //       open()
+  //     }
+  //   }, [ready, open, error])
+  
+  //   if ((!publicKey && !link_token && !loading) || error) {
+  //     return <ErrorPage type='forbidden' status='403' logout />
+  //   } else {
+  //     return (
+  //       <Grid verticalAlign='middle' centered>
+  //         <Dimmer active={loading} inverted>
+  //            <Loader size='large' />
+  //          </Dimmer>
+  //       </Grid>
+  //     )
+  //   }
+  // }
+    //  {
+  //     let link_token = bank_token
+  //     bank_token
+
+  //   useEffect(() => {
+  //     if(link_token !== null && status === "pending_verification"){
+  //       fetch('velloci-url}}/accounts/5cde8181-0715-4af9-9378-159c30e69fd7')
+  //         .then(response => response.json())
+  //         .then(link_token => bank_token(link_token))
+  //         .catch(err => alert(err))
+  //     }
+  // }, [token , status])
+
+  //   fetch('velloci-url}}/accounts/5cde8181-0715-4af9-9378-159c30e69fd7'){
+
+  //     .then(res => res.json())
+  //     .then(data => status(data))
+  //     .catch(error => alert(error))
+  //   }
+  //   return
+  //  }
+    // }
+    // const verifyButtonClick = (stat) => {
+    //   for(let i = 0; i < status.length; i++ )
+    // }
+    //  let emily = fetch('velloci-url}}/accounts/5cde8181-0715-4af9-9378-159c30e69fd7')
+    //   console.log(emily.map((pendingRow) => {
+    //     emily(pendingRow)
+      //})
+    //   let pending_verification_rows = ''
+      
+    //   if(pending_verification_rows.status === 'pending_verification'){
+    //     pending_verification_rows.push(newStatus)
+    //  } else {
+    //   pending_verification_rows.status !== 'pending_verification'
+    //  }
+    //  return 
+    //  <div>
+    //  pending_verification_rows.status.map(newStatus => console.log(newStatus, "my rowzzzz")
+    //   )}
+      // </div>
+     //  for(let i = 0; i < rows.length; i)++)
+    //  console.log('rows')
+
+    
+      // if status = 
+      //  for(i = 0; i < rows.length; i++)
+        // let rows = display_pending_status.push(link_token)
+        // return ()rowStatus
+      //  let status = stat
+  
+    //   .then(res => res.json())
+    //   .then(status => {
+        
+    //     console.log(status)
+
+      
+    //   .catch(error => alert(error))
+    
+
+    // console.log('myRows: ', myRows)
+// loop through rows array and read status then render the verify button if status === pending_verification
+
     const { formatMessage } = intl
     return (
       <Fragment>
