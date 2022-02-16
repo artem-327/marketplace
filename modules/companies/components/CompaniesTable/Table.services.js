@@ -148,6 +148,7 @@ const getActions = props => {
     takeOverCompany,
     recalculateBroadcastedOffersForCompany,
     resendWelcomeEmail,
+    isAdmin,
     intl
   } = props
 
@@ -199,7 +200,8 @@ const getActions = props => {
     },
     {
       text: <FormattedMessage id='admin.recalculateOffers' defaultMessage='Recalculate Broadcasting' />,
-      callback: row => recalculateBroadcastedOffersForCompany(row.id, row.name, formatMessage)
+      callback: row => recalculateBroadcastedOffersForCompany(row.id, row.name, formatMessage),
+      hidden: !isAdmin
     },
     {
       text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
