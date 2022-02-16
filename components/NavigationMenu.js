@@ -1,10 +1,10 @@
 import { Component } from 'react'
 import Link from 'next/link'
 import Router, { withRouter } from 'next/router'
-import { Menu, Dropdown } from 'semantic-ui-react'
+import { Menu, Dropdown, Checkbox } from 'semantic-ui-react'
 import { injectIntl, FormattedMessage } from 'react-intl'
 import { connect } from 'react-redux'
-import confirm from '../components/Confirmable/confirm'
+import ConfirmDialog from '../components/Confirmable/ConfirmDialog'
 import {
   Layers,
   Settings,
@@ -39,7 +39,7 @@ import { Datagrid } from '../modules/datagrid'
 //Services
 import { getSafe } from '../utils/functions'
 //Styles
-import { DivNavItem } from './NavigationMenu.styles'
+import { DivNavItem, DivCheckboxWrapper } from './NavigationMenu.styles'
 import api from '../api'
 
 
@@ -61,6 +61,7 @@ class Navigation extends Component {
   state = {
     dropdowns: {},
     currentType: '',
+    isBroadcastRecalculationOpen: false,
     broadcastRecalculationChecked: false,
     settings:
       getSafe(() => Router.router.pathname === '/settings/my-tradepass', false) ||
@@ -898,35 +899,19 @@ class Navigation extends Component {
                         </Dropdown.Item>
                       ))}
                       {isAdmin && (
-                         <Link href={{}}>
+                        <Link href={{}}>
                           <Menu.Item
                              as='a'
-                             active={false}
-                             onClick={() => {
-                               confirm("Full Recalculation",
-                                   <>
-                                     Are you sure you want to run full broadcasting recalculation? This may take longer and cause increased system load.
-                                     {/*<br></br>*/}
-                                     {/*<FormGroup>*/}
-                                     {/*  <FormControlLabel control={<Checkbox onChange={(e) => {*/}
-                                     {/*    this.setState({ broadcastRecalculationChecked: e.target.checked})*/}
-                                     {/*  }}/>} label='Yes, perform full recalculation' />*/}
-                                     {/*</FormGroup>*/}
-                                   </>,
-                                   { cancelText: 'Cancel', proceedText: 'Start' , proceedEnabled: true}, //this.state.broadcastRecalculationChecked },
-                                   true
-                               ).then(async () => {
-                                     try {
-                                       await api.patch('/prodex/api/admin/broadcasted-offers/reload?runInBackground=true')
-                                           .then((response) => null)
-                                     } catch (e) {
-                                       console.error(e)
-                                     }
-                                   })
-                             }}>
-                         {'Recalculate Broadcasting'}
+                             active={this.state.isBroadcastRecalculationOpen}
+                             onClick={(e) => {
+                               e.preventDefault()
+                               e.stopPropagation()
+                               this.setState({ isBroadcastRecalculationOpen: true })
+                             }}
+                             dataTest={'navigation_menu_operations_recalculate_broadcasting'}>
+                            <FormattedMessage id='navigation.recalculateBroadcasting' defaultMessage='Recalculate Broadcasting' />
                          </Menu.Item>
-                       </Link>
+                        </Link>
                       )}
                     </PerfectScrollbar>
                   </Dropdown.Menu>
@@ -1056,6 +1041,50 @@ class Navigation extends Component {
               </PerfectScrollbar>
             </Dropdown.Menu>
           </DropdownItem>
+        )}
+        {this.state.isBroadcastRecalculationOpen && (
+          <ConfirmDialog
+            show={true}
+            title={formatMessage({ id: 'navigation.fullRecalculation', defaultMessage: 'Full Recalculation' })}
+            confirmation={
+              <>
+                <FormattedMessage
+                  id='navigation.runFullBroadcastingRecalculation'
+                  defaultMessage='Are you sure you want to run full broadcasting recalculation? This may take longer and cause increased system load.'
+                />
+                <DivCheckboxWrapper>
+                  <Checkbox
+                    checked={this.state.broadcastRecalculationChecked}
+                    label={
+                      formatMessage({
+                        id: 'navigation.yesPerformFullRecalculation', defaultMessage: 'Yes, perform full recalculation'
+                      })}
+                    onChange={() =>
+                      this.setState({broadcastRecalculationChecked: !this.state.broadcastRecalculationChecked})
+                    }
+                    data-test={'navigation_operations_confirm_full_recalculation'}
+                  />
+                </DivCheckboxWrapper>
+              </>
+            }
+            options={{
+              cancelText: formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' }),
+              proceedText: formatMessage({ id: 'global.start', defaultMessage: 'Start' }),
+              proceedEnabled: this.state.broadcastRecalculationChecked
+            }}
+            basicModal={false}
+            proceed={async () => {
+              try {
+                await api.patch('/prodex/api/admin/broadcasted-offers/reload?runInBackground=true')
+                  .then((response) => null)
+                this.setState({ isBroadcastRecalculationOpen: false, broadcastRecalculationChecked: false })
+              } catch (e) {
+                console.error(e)
+              }
+            }}
+            cancel={() => this.setState({ isBroadcastRecalculationOpen: false, broadcastRecalculationChecked: false })}
+            dismiss={() => this.setState({ isBroadcastRecalculationOpen: false, broadcastRecalculationChecked: false })}
+          />
         )}
       </div>
     )
