@@ -10,7 +10,6 @@ import {
   addProductOffer,
   downloadAttachment,
   downloadAttachmentPdf,
-  findProducts,
   getProductOffer,
   getSharedProductOffer,
   deleteProductOffer,

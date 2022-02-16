@@ -39,10 +39,6 @@ export function downloadAttachment(id) {
 
 export const updateAttachment = (id, params) => api.put(`/prodex/api/attachments/${id}${generateQueryString(params)}`)
 
-export function findProducts(search) {
-  return api.get(`/prodex/api/products/search?search=${encodeURIComponent(search)}`)
-}
-
 export async function getSharedProductOffer(poId) {
   return api
     .post('/prodex/api/product-offers/shared-listings/datagrid', {

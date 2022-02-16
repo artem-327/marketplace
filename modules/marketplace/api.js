@@ -3,8 +3,6 @@ import api from '../../api'
 // Services
 import { generateQueryString } from '../../utils/functions'
 
-export const findProducts = search =>
-  api.get(`/prodex/api/company-products/search?search=${encodeURIComponent(search)}`)
 export const getAutocompleteData = (pattern, limit = 15) =>
   api
     .get(`/prodex/api/product-groups/search?limit=${limit}&pattern=${encodeURIComponent(pattern)}`)

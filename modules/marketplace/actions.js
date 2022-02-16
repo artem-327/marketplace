@@ -2,7 +2,6 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 // Apis
 import * as api from './api'
 
-export const findProducts = createAsyncAction('MARKETPLACE_FIND_PRODUCTS', (search) => api.findProducts(search))
 export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA_MARKETPLACE', ({ searchQuery }) => api.getAutocompleteData(searchQuery))
 export const clearAutocompleteData = createAction('CLEAR_AUTOCOMPLETE_DATA', () => ({}))
 export const applyDatagridFilter = createAction('MARKETPLACE_APPLY_FILTER', (filter, reload = true) => ({ filter, reload }))
