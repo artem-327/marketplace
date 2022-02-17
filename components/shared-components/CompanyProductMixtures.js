@@ -49,9 +49,9 @@ const BottomUnpaddedRow = styled(GridRow)`
   }
 `
 
-
-const StyledRow = styled(GridRow)`
-
+const DivBoolWrapper = styled.div`
+  padding: 5.5px 0;
+  color: #20273a;
 `
 
 export default class CompanyProductMixtures extends Component {
@@ -89,7 +89,7 @@ export default class CompanyProductMixtures extends Component {
         )}
         {casProducts.map((el, i) => {
           return (
-            <StyledRow key={i}>
+            <GridRow key={i}>
               <GridColumn width={4}>
                 <Input name={`${prefix}[${i}].casIndexNumber`} inputProps={{ transparent: true, readOnly: true }} />
               </GridColumn>
@@ -106,19 +106,23 @@ export default class CompanyProductMixtures extends Component {
               </GridColumn>
 
               <GridColumn width={2}>
-                {el?.casProduct?.caprop65 === true
-                  ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                  : (el?.casProduct?.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
-                }
+                <DivBoolWrapper>
+                  {el?.casProduct?.caprop65 === true
+                    ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                    : (el?.casProduct?.caprop65 === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                  }
+                </DivBoolWrapper>
               </GridColumn>
 
               <GridColumn width={2}>
-                {el?.casProduct?.reach === true
-                  ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
-                  : (el?.casProduct?.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
-                }
+                <DivBoolWrapper>
+                  {el?.casProduct?.reach === true
+                    ? <FormattedMessage id='global.yes' defaultMessage='Yes' />
+                    : (el?.casProduct?.reach === false ? <FormattedMessage id='global.no' defaultMessage='No' /> : '')
+                  }
+                </DivBoolWrapper>
               </GridColumn>
-            </StyledRow>
+            </GridRow>
           )
         })}
       </StyledGrid>
