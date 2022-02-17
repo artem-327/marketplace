@@ -211,7 +211,11 @@ const Detail = props => {
   const { counterOrderId } = order
 
   const bol = ordersType === 'Sales' ? order.sellBillOfLading : order.buyBillOfLading
-  const bolEditable = !order.buySellBillOfLadingProcessed &&
+  const buySellBillOfLadingProcessed = ordersType === 'Sales'
+    ? order?.rawData?.sellBillOfLadingProcessed
+    : order?.rawData?.buyBillOfLadingProcessed
+
+  const bolEditable = !buySellBillOfLadingProcessed &&
     order?.rawData?.shippingStatus < 2 &&
     (!order?.rawData?.confirmationDate ||
       order?.rawData?.confirmationDate &&
@@ -550,7 +554,7 @@ const Detail = props => {
                         id='order.bol.timeAvailableToMakeEdits'
                         defaultMessage='Time Available to Make Edits: '
                       />
-                      {!order.buySellBillOfLadingProcessed && buySellBillOfLadingEditableUntil && bolEditable ? (
+                      {!buySellBillOfLadingProcessed && buySellBillOfLadingEditableUntil && bolEditable ? (
                         periodBolEditable
                           ? `${buySellBillOfLadingEditableUntil.diff(intervalSecsTime, 'hours')}:${periodBolEditable.format('mm')}:${periodBolEditable.format('ss')}`
                           : ''
