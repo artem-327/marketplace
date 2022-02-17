@@ -254,21 +254,23 @@ export const SubmitHandler = async (values, actions, props, type) => {
 }
 
 /**
- * Submit form - submit Carrier BOL values
+ * Submit form - submit BOL values
  * @category Orders - BOL edit
  * @method
  * @param {Object<string, any>} values Values of form.
  * @param {Object} actions Formik actions,
  * @param {Object} props Input props
+ * @param {string} type bol type (buyBillOfLading/sellBillOfLading/carrierBillOfLading)
  */
-export const SubmitCarrierHandler = async (values, actions, props) => {
-  const { order, submitCarrierBol, getOrderById } = props
+export const SubmitOrderBolHandler = async (values, actions, props, type) => {
+  const { order, submitOrderBol, getOrderById } = props
+  const typeSubmit = type === 'buyBillOfLading' ? 'BUY' : (type === 'sellBillOfLading' ? 'SELL' : 'CARRIER')
 
   let body = getBody(values)
   removeEmpty(body)
 
   try {
-    await submitCarrierBol(order.id, body)
+    await submitOrderBol(order.id, typeSubmit, body)
     getOrderById(order.id)
   } catch (e) {
     console.error(e.response)

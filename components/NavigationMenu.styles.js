@@ -8,3 +8,7 @@ export const DivNavItem = styled.div`
   font-size: 12px !important;
   ${({ pointer }) => (pointer ? 'cursor: pointer' : null)};
 `
+
+export const DivCheckboxWrapper = styled.div`
+  padding: 20px 0;
+`

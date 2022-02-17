@@ -22,7 +22,7 @@ import {
   validationSchema,
   getInitialValues,
   SubmitHandler,
-  SubmitCarrierHandler,
+  SubmitOrderBolHandler,
   DownloadBolHandler
 } from './EditBOL.services'
 
@@ -135,25 +135,23 @@ const EditBOL = props => {
                     }}>
                     <FormattedMessage id='global.save' defaultMessage='Save' />
                   </BasicButton>
-                  {tabs[activeTab] === 'carrierBillOfLading' && (
-                    <BasicButton
-                      disabled={isSubmitting}
-                      data-test='edit_bol_submit_btn'
-                      onClick={() => {
-                        formikProps.validateForm().then(err => {
-                          const errors = Object.keys(err)
-                          if (errors.length && errors[0] !== 'isCanceled') {
-                            // Errors found
-                            formikProps.submitForm() // to show errors
-                          } else {
-                            // No errors found
-                            SubmitCarrierHandler(formikProps.values, formikProps, props)
-                          }
-                        })
-                      }}>
-                      <FormattedMessage id='global.submit' defaultMessage='Submit' />
-                    </BasicButton>
-                  )}
+                  <BasicButton
+                    disabled={isSubmitting}
+                    data-test='edit_bol_submit_btn'
+                    onClick={() => {
+                      formikProps.validateForm().then(err => {
+                        const errors = Object.keys(err)
+                        if (errors.length && errors[0] !== 'isCanceled') {
+                          // Errors found
+                          formikProps.submitForm() // to show errors
+                        } else {
+                          // No errors found
+                          SubmitOrderBolHandler(formikProps.values, formikProps, props, tabs[activeTab])
+                        }
+                      })
+                    }}>
+                    <FormattedMessage id='global.submit' defaultMessage='Submit' />
+                  </BasicButton>
                 </div>
               </DivButtonsSection>
             </TabPane>

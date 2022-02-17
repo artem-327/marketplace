@@ -8,6 +8,11 @@ export const deleteCompany = id => api.delete(`/prodex/api/companies/id/${id}`).
 export const takeOverCompany = id =>
   api.patch(`/prodex/api/admin/company/${id}/take-over`).then(response => response.data)
 
+export const recalculateBroadcastedOffers = (companyId) => {
+  return api.patch(`/prodex/api/admin/broadcasted-offers/company/${companyId}/reload-offers`)
+      .then(response => companyId)
+}
+
 export const getCompanyDetails = id =>
   api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)
 

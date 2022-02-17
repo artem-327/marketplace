@@ -237,13 +237,8 @@ export const submitCompany = async (values, actions, state, props) => {
       datagrid.loadData()
       actions.setSubmitting(false)
     } else {
-      const { primaryUser } = values;
-      const { firstName, lastName } = primaryUser;
-      values.primaryUser = {
-        ...primaryUser,
-        name: firstName ? firstName + " " + lastName : lastName
-      }
-
+      const { primaryUser } = values
+      const { firstName, lastName, email, phone, jobTitle } = primaryUser
       let branches = ['primaryBranch', 'mailingBranch']
 
       if (values.businessType) values.businessType = values.businessType.id
@@ -273,6 +268,11 @@ export const submitCompany = async (values, actions, state, props) => {
       if (!payload.type) delete payload.type
       delete payload.enabled
       if (!payload.businessType) delete payload.businessType
+      payload.primaryUser = {}
+      payload.primaryUser.email = email.trim()
+      payload.primaryUser.name = firstName ? firstName + ' ' + lastName : lastName
+      payload.primaryUser.jobTitle = jobTitle ? jobTitle.trim() : ''
+      payload.primaryUser.phone = phone ? phone : ''
       removeEmpty(payload)
       if (companyLogo || companyDoc) {
         // let reader = new FileReader()
