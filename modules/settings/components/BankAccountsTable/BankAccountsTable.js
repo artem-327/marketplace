@@ -32,7 +32,8 @@ import {
   hideInactiveAccounts,
   openPopupDeleteInstitutions,
   getCompanyDetails,
-  downloadStatement
+  downloadStatement,
+  vellociAddAcount
 } from '../../actions'
 
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -528,6 +529,10 @@ class BankAccountsTable extends Component {
     ]
   }
 
+  onPlaidSuccess = async (publicToken, metadata) => {
+    await vellociAddAcount(publicToken, metadata)
+  }
+
   getRows = rows => {
     const { preferredBankAccountId, isHideInactiveAccounts } = this.props
     const backgroundColorStatus = {
@@ -560,8 +565,6 @@ class BankAccountsTable extends Component {
       newRows = rows
     }
     return newRows.map(row => {
-      console.log('!!!row: ', row)
-
       const accountRow = (
         <div style={{ display: 'flex' }}>
           <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
@@ -576,21 +579,18 @@ class BankAccountsTable extends Component {
                   <FormattedMessage id='settings.pending' defaultMessage='Pending' />
                 </span>
               </StatusLabel>
-              <PlaidLink
-                onSuccess={(public_token, metadata) => {
-                  console.log('!!!public_token: ', public_token)
-                  conso.e.log('!!!metadata: ', metadata)
-                }}
-                onExit={(err, metadata) => {
-                  console.log('!!!err: ', err)
-                  console.log('!!! err metadata: ', metadata)
-                }}
-                token='link-sandbox-b70a8e3e-0485-4a53-b2e2-d454c12fb698' // this should not be hardcoded, use row.link_token instead
-              >
-                <span>
-                  <FormattedMessage id='global.verify' defaultMessage='Verify' />
-                </span>
-              </PlaidLink>
+              {(row.link_token) &&
+                <PlaidLink
+                  token={row.link_token}
+                  onSuccess={(public_token, metadata) => {
+                    this.onPlaidSuccess(public_token, metadata)
+                  }}
+                >
+                  <span>
+                    <FormattedMessage id='global.verify' defaultMessage='Verify' />
+                  </span>
+                </PlaidLink>
+              }
             </>
           }
           {preferredBankAccountId === row.id || preferredBankAccountId === row.account_public_id ? (
