@@ -51,8 +51,6 @@ const EditBOL = props => {
 
   const activeBol = tabs[activeTab] ? order[tabs[activeTab]] : null
 
-  const canBeEditedBol = order?.rawData?.shippingStatus < 2
-
   return (
     <Formik
       initialValues={getInitialValues(activeBol)}
@@ -162,9 +160,8 @@ const EditBOL = props => {
           return (
             <BolButtonWrapper>
               <BasicButton
-                background={canBeEditedBol ? '#069efc !important' : '#d2d2d2 !important'}
+                background={'#069efc !important'}
                 textcolor={'#ffffff !important'}
-                disabled={!canBeEditedBol}
                 onClick={() => setIsBolEditing(true)}>
                 <FormattedMessage id='operations.orders.detail.editBol' defaultMessage='Edit BOL' />
               </BasicButton>
