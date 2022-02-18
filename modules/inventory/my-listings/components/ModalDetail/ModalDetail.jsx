@@ -76,7 +76,8 @@ import {
   GridColumnRequired,
   CustomGridColumn,
   CustomGridRow,
-  DivFlex
+  DivFlex,
+  TdsTypicalPropertiesWapper
 } from './ModalDetail.styles'
 //Constants
 import {
@@ -1099,7 +1100,7 @@ const ModalDetail = props => {
                               <Tab.Pane key='tds' style={{ padding: '16px' }}>
                                 <Grid>
                                   <Grid.Row>
-                                    <Grid.Column width={6}>
+                                    <Grid.Column >
                                       <ModalTdsList
                                         open={openedTdsList}
                                         tdsTemplates={tdsTemplates}
@@ -1124,17 +1125,104 @@ const ModalDetail = props => {
                                     </Grid.Column>
                                   </Grid.Row>
                                   <Grid.Row>
+                                    <Grid.Column>
+                                      <FormattedMessage id='addInventory.productDescription' defaultMessage='Product Description' />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <Input
+                                        type='text'
+                                        name={`edit.tdsTab.productDescription`}
+                                        inputProps={{
+                                          placeholder: formatMessage({
+                                            id: 'addInventory.tdsFields.enterProductDescription',
+                                            defaultMessage: 'Enter Product Description'
+                                          }),
+                                          fluid: true
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <FormattedMessage id='addInventory.applicationBenefits' defaultMessage='Applications, Benefits, Key Attributes' />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <Input
+                                        type='text'
+                                        name={`edit.tdsTab.applicationBenefits`}
+                                        inputProps={{
+                                          placeholder: formatMessage({
+                                            id: 'addInventory.tdsFields.enterApplicationBenefits',
+                                            defaultMessage: 'Enter Applications, Benefits, Key Attributes'
+                                          }),
+                                          fluid: true
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <FormattedMessage id='addInventory.storageHandling' defaultMessage='Storage & Handling' />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <Input
+                                        type='text'
+                                        name={`edit.tdsTab.storageHandling`}
+                                        inputProps={{
+                                          placeholder: formatMessage({
+                                            id: 'addInventory.tdsFields.enterStorageHandling',
+                                            defaultMessage: 'Enter Storage & Handling'
+                                          }),
+                                          fluid: true
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <FormattedMessage id='addInventory.healthSafety' defaultMessage='Health & Safety' />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <Input
+                                        type='text'
+                                        name={`edit.tdsTab.healthSafety`}
+                                        inputProps={{
+                                          placeholder: formatMessage({
+                                            id: 'addInventory.tdsFields.enterHealthSafety',
+                                            defaultMessage: 'Enter Health & Safety'
+                                          }),
+                                          fluid: true
+                                        }}
+                                      />
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
+                                    <Grid.Column>
+                                      <TdsTypicalPropertiesWapper>
+                                        <FormattedMessage id='addInventory.typicalPropertiesSpecifications' defaultMessage='Typical Properties, Specifications' />
+                                      </TdsTypicalPropertiesWapper>
+                                    </Grid.Column>
+                                  </Grid.Row>
+                                  <Grid.Row>
                                     <Grid.Column width={4}>
                                       <FormattedMessage id='addInventory.property' defaultMessage='Property' />
                                     </Grid.Column>
                                     <Grid.Column width={6}>
                                       <FormattedMessage
                                         id='addInventory.specifications'
-                                        defaultMessage='Specifications'
+                                        defaultMessage='Typical Value, Units'
                                       />
                                     </Grid.Column>
                                     <Grid.Column width={4}>
-                                      <FormattedMessage id='addInventory.testMethod' defaultMessage='Test Method' />
+                                      <FormattedMessage id='addInventory.testMethod' defaultMessage='Test Method, Conditions' />
                                     </Grid.Column>
                                   </Grid.Row>
                                   <GridFields>
@@ -1166,7 +1254,7 @@ const ModalDetail = props => {
                                                           inputProps={{
                                                             placeholder: formatMessage({
                                                               id: 'addInventory.tdsFields.enterSpecifications',
-                                                              defaultMessage: 'Enter Specifications'
+                                                              defaultMessage: 'Enter Typical Value, Units'
                                                             }),
                                                             fluid: true
                                                           }}
@@ -1179,7 +1267,7 @@ const ModalDetail = props => {
                                                           inputProps={{
                                                             placeholder: formatMessage({
                                                               id: 'addInventory.tdsFields.enterTestMethod',
-                                                              defaultMessage: 'Enter Test Method'
+                                                              defaultMessage: 'Enter Test Method, Conditions'
                                                             }),
                                                             fluid: true
                                                           }}

@@ -105,3 +105,10 @@ export const DivFlex = styled.div`
   font-size: 1em !important;
   color: #404040 !important;
 `
+
+export const TdsTypicalPropertiesWapper = styled.div`
+  background-color: #edeef2;
+  width: 100%;
+  padding: 5px 10px;
+  margin: 20px 0 10px;
+`
