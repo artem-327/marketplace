@@ -781,3 +781,71 @@ Cypress.Commands.add("getPurchaseRequestFirstOfferId", (token, purchaseRequestId
         return response.body.purchaseRequestOffers[ 0 ].id
     })
 })
+
+Cypress.Commands.add("requestWarehouseCertification", (token, warehouseId) => {
+    cy.request({
+        method: 'PUT',
+        url: '/prodex/api/branches/' + warehouseId,
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {
+            "deaListReceiveFlag":true,
+            "epaReceiveFlag":true,
+            "deliveryAddress":{
+                "address":{
+                    "streetAddress":"820 Washington Ave S",
+                    "city":"Madison",
+                    "province":42,
+                    "country":1,
+                    "zip":"57042"
+                },
+                "liftGate":false,
+                "forkLift":false,
+                "callAhead":false,
+                "addressName":"Credential Test",
+                "contactName":"Jimmy Johnes",
+                "contactPhone":"+15678653456",
+                "contactEmail":"test@example.com"
+            },
+            "public":false,
+            "warehouse":true
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("turnOffWarehouseCertification", (token, warehouseId) => {
+    cy.request({
+        method: 'PUT',
+        url: '/prodex/api/branches/' + warehouseId,
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {
+            "deaListReceiveFlag":false,
+            "epaReceiveFlag":false,
+            "deliveryAddress":{
+                "address":{
+                    "streetAddress":"820 Washington Ave S",
+                    "city":"Madison",
+                    "province":42,
+                    "country":1,
+                    "zip":"57042"
+                },
+                "liftGate":false,
+                "forkLift":false,
+                "callAhead":false,
+                "addressName":"Credential Test",
+                "contactName":"Jimmy Johnes",
+                "contactPhone":"+15678653456",
+                "contactEmail":"test@example.com"
+            },
+            "public":false,
+            "warehouse":true
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})

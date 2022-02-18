@@ -130,7 +130,7 @@ context("Checkout Addresses CRUD", () => {
         cy.waitForUI()
     })
 
-    it("Edit delivery address", () => {
+    xit("Edit delivery address", () => {
         cy.waitForUI()
         cy.contains("div", "Delivery Addresses").click()
         cy.contains("Checkout Address").parent().parent().find("svg[class*='IconEdit']").click()
@@ -148,7 +148,7 @@ context("Checkout Addresses CRUD", () => {
         cy.waitForUI()
     })
 
-    it("Search delivery address", () => {
+    xit("Search delivery address", () => {
         cy.contains("div", "Delivery Addresses").click()
         cy.searchInList("Checkout")
 

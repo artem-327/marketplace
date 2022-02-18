@@ -18,7 +18,7 @@ context("CAS products CRUD", () => {
         cy.FElogin(adminJSON.email, adminJSON.password)
 
         cy.wait("@loading")
-        cy.get('.flex-wrapper > :nth-child(3)').click()
+        cy.get('.flex-wrapper > :nth-child(6)').click()
         cy.wait("@CASloading")
     })
 
