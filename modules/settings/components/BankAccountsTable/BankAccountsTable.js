@@ -13,7 +13,7 @@ import styled from 'styled-components'
 import { getSafe, generateToastMarkup, getMimeType } from '~/utils/functions'
 import { getIdentity } from '~/modules/auth/actions'
 import { Check, Clock } from 'react-feather'
-import { PlaidLink } from 'react-plaid-link'
+import { PlaidLink as plaidLinkButton } from 'react-plaid-link'
 import {
   openPopup,
   closePopup,
@@ -53,6 +53,20 @@ const Container = styled.div`
   padding: 0 1em 2em 1em;
   max-height: 70vh;
 `
+
+const PlaidLink = styled(plaidLinkButton)`
+  display: flex;
+  align-items: center !important;
+  color: #2599d5 !important;
+  background-color: white !important;
+  border: solid 1px #e8e8e8 !important;
+  border-radius: 3px !important;
+  min-width: unset !important;
+  padding: 6px 14px 6px 15px !important;
+  height: 32px !important;
+  width: 70px !important;
+  max-width: 70px !important;
+  `
 
 const CustomDiv = styled.div`
   border-radius: 4px;
@@ -566,8 +580,8 @@ class BankAccountsTable extends Component {
     }
     return newRows.map(row => {
       const accountRow = (
-        <div style={{ display: 'flex' }}>
-          <DivCircle backgroundColor={backgroundColorStatus[row.status]} />
+        <div style={{ display: 'flex', justifyContent:'flex-start', alignItems:'center', height:'20px' }}>
+          <DivCircle backgroundColor={backgroundColorStatus[row.status]}  />
           <span style={{ color: colorAccountName[row.status] || '#20273a', lineHeight: '22px' }}>
             {row.accountName.toUpperCase()}
           </span>
@@ -580,6 +594,8 @@ class BankAccountsTable extends Component {
                 </span>
               </StatusLabel>
               {(row.link_token) &&
+
+              <plaidLinkButton>
                 <PlaidLink
                   token={row.link_token}
                   onSuccess={(public_token, metadata) => {
@@ -590,6 +606,8 @@ class BankAccountsTable extends Component {
                     <FormattedMessage id='global.verify' defaultMessage='Verify' />
                   </span>
                 </PlaidLink>
+              </plaidLinkButton>
+              
               }
             </>
           }

@@ -1,6 +1,7 @@
 import { Modal, Grid, Label } from 'semantic-ui-react'
 import styled from 'styled-components'
 
+
 export const ModalActions = styled(Modal.Actions)`
   background-color: #ffffff !important;
   text-align: center !important;
@@ -54,6 +55,8 @@ export const DivCircleIcon = styled.div`
   margin-bottom: 34px;
   display: flex;
   justify-content: center;
+ 
+
 `
 
 export const DivIcon = styled.div`
