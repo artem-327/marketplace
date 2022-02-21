@@ -11,7 +11,7 @@ import { Grid, Modal, Header, Button } from 'semantic-ui-react'
  * @css line-height: 20px !important;
  */
 export const SelectTemplates = styled(Button)`
-  width: auto !important;
+  width: 100% !important;
   padding-left: 32px !important;
   padding-right: 31px !important;
   font-size: 14px !important;
