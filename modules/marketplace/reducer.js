@@ -3,7 +3,6 @@ import typeToReducer from 'type-to-reducer'
 import { uniqueArrayByKey, getSafe } from '../../utils/functions'
 // Actions
 import {
-  findProducts,
   getAutocompleteData,
   clearAutocompleteData,
   applyDatagridFilter,

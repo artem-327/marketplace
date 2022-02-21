@@ -50,9 +50,9 @@ export const submitUserEdit = (id, body) =>
   api.patch(`/prodex/api/users/id/${id}`, body).then(response => response.data)
 export const deleteUser = id => api.delete(`/prodex/api/users/id/${id}`).then(() => id)
 
-export const searchCompany = (companyText, limit = 30) =>
+export const searchCompany = (companyText, limit = 30, returnWhenEmpty = true) =>
   api
-    .get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+    .get(`/prodex/api/companies/search/all-info?limit=${limit}&pattern=${encodeURIComponent(companyText)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
     .then(response => response.data)
 export const getCompanyInfo = id => api.get(`/prodex/api/companies/id/${id}`).then(response => response.data)
 

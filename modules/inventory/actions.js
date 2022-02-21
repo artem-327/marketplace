@@ -148,7 +148,6 @@ export const addProductOffer = createAsyncAction('INVENTORY_ADD_PRODUCT_OFFER', 
 })
 export const downloadAttachment = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT', id => api.downloadAttachment(id))
 export const downloadAttachmentPdf = createAsyncAction('INVENTORY_DOWNLOAD_ATTACHMENT_PDF', id => api.downloadAttachmentPdf(id))
-export const findProducts = createAsyncAction('INVENTORY_FIND_PRODUCTS', search => api.findProducts(search))
 export const getSharedProductOffer = createAsyncAction('INVENTORY_GET_SHARED_PRODUCT_OFFER', productOfferId => api.getSharedProductOffer(productOfferId))
 export const deleteProductOffer = createAsyncAction('INVENTORY_DELETE_PRODUCT_OFFER', async productOfferId => {
   await api.deleteProductOffer(productOfferId)

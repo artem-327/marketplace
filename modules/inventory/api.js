@@ -39,10 +39,6 @@ export function downloadAttachment(id) {
 
 export const updateAttachment = (id, params) => api.put(`/prodex/api/attachments/${id}${generateQueryString(params)}`)
 
-export function findProducts(search) {
-  return api.get(`/prodex/api/products/search?search=${encodeURIComponent(search)}`)
-}
-
 export async function getSharedProductOffer(poId) {
   return api
     .post('/prodex/api/product-offers/shared-listings/datagrid', {
@@ -88,11 +84,11 @@ export function removeAttachmentLink(isLot, itemId, aId) {
   )
 }
 
-export async function searchManufacturers(text, limit) {
+export async function searchManufacturers(text, limit, returnWhenEmpty = true) {
   const response = await api.get(
     `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
-    }`
+    }${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`
   )
   return response
 }

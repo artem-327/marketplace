@@ -13,19 +13,19 @@ export default {
   updateProductName: (id, value) => api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value),
   deleteProductName: id => api.delete(`/prodex/api/cas-products/alternative-names/id/${id}`),
   deleteCompanyGenericProduct: id => api.delete(`/prodex/api/company-generic-products/id/${id}`),
-  searchCasProduct: pattern =>
+  searchCasProduct: (pattern, returnWhenEmpty = true) =>
     api
-      .get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}`)
+      .get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data),
   putCompanyGenericProducts: (id, values) =>
     api.put(`/prodex/api/company-generic-products/id/${id}/`, values).then(response => response.data),
   postCompanyGenericProducts: values =>
     api.post(`/prodex/api/company-generic-products`, values).then(response => response.data),
-  searchManufacturers: (text, limit) =>
+  searchManufacturers: (text, limit, returnWhenEmpty = true) =>
     api.get(
       `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
         Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
-      }`
+      }${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`
     ),
   loadFile: attachment => {
     return api({
@@ -62,8 +62,8 @@ export default {
       `/prodex/api/attachment-links/to-company-generic-product?attachmentId=${attachmentId}&companyGenericProductId=${echoId}`
     ),
   removeAttachment: attachmentId => api.delete(`/prodex/api/attachments/${attachmentId}`),
-  getUnNumbersByString: async (value, limit = 30) => {
-    const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
+  getUnNumbersByString: async (value, limit = 30, returnWhenEmpty = true) => {
+    const { data } = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${encodeURIComponent(value)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
     return data
   },
   searchTags: filter => api.post(`/prodex/api/tags/datagrid`, filter).then(response => response.data),
@@ -87,8 +87,8 @@ export default {
   deleteProductGroups: id => api.delete(`/prodex/api/product-groups/${id}`),
   searchProductGroups: filter =>
     api.post(`/prodex/api/product-groups/datagrid`, filter).then(response => response.data),
-  searchCompany: (companyText, limit = 30) =>
+  searchCompany: (companyText, limit = 30, returnWhenEmpty = true) =>
     api
-      .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+      .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data)
 }
