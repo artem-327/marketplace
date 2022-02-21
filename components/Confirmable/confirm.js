@@ -34,7 +34,7 @@ const confirm = createConfirmation(ConfirmDialog)
 export default function ConfirmComponent(
   title,
   confirmation,
-  options = { cancelText: 'No', proceedText: 'Yes' },
+  options = { cancelText: 'No', proceedText: 'Yes' , cancelEnabled: true, proceedEnabled: true},
   basicModal
 ) {
   return confirm({ title, confirmation, options, basicModal })

@@ -1,8 +1,7 @@
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
-import * as AT from './action-types'
 import * as api from './api'
 import Router from 'next/router'
-
+import confirm from '../../components/Confirmable/confirm'
 import { updateIdentity } from '../auth/actions'
 
 export const udpateEnabled = createAsyncAction('COMPANIES_ENABLED_COMPANY', (id, enabled) =>
@@ -28,6 +27,25 @@ export const takeOverCompany = id => {
     Router.push('/inventory/my-listings')
   }
 }
+
+export const recalculateBroadcastedOffersForCompany = createAsyncAction("COMPANIES_RECALCULATE_BROADCASTED_OFFERS",
+    (companyId, companyName, formatMessage) => {
+        confirm(formatMessage({
+            id: 'confirm.admin.recalculateBroadcastedOffers.title',
+            defaultMessage: 'Recalculate Broadcasted Offers'
+        }), formatMessage({
+            id: 'confirm.admin.recalculateBroadcastedOffers.content',
+            defaultMessage: `Do you really want to run broadcasting recalculation for company ${companyName} ?`
+        }, { companyName }
+        )).then(async () => {
+                try {
+                    await api.recalculateBroadcastedOffers(companyId)
+                } catch (e) {
+                    console.error(e)
+                }
+            })
+    }
+)
 
 export const resendWelcomeEmail = createAsyncAction('RESEND_WELCOME_EMAIL',  userId =>
   api.resendWelcomeEmail(userId)

@@ -31,7 +31,7 @@ import {
   searchCompanyGenericProduct,
   getOrderBol,
   updateOrderBol,
-  submitCarrierBol,
+  submitOrderBol,
   downloadBOL
 } from './actions'
 import { unlinkAttachmentToOrder } from "../orders/actions"
@@ -519,19 +519,19 @@ export default typeToReducer(
         orderBolUpdating: false,
       }
     },
-    [submitCarrierBol.pending]: (state, action) => {
+    [submitOrderBol.pending]: (state, action) => {
       return {
         ...state,
         orderBolUpdating: true
       }
     },
-    [submitCarrierBol.rejected]: (state, action) => {
+    [submitOrderBol.rejected]: (state, action) => {
       return {
         ...state,
         orderBolUpdating: false
       }
     },
-    [submitCarrierBol.fulfilled]: (state, action) => {
+    [submitOrderBol.fulfilled]: (state, action) => {
       return {
         ...state,
         orderBolUpdating: false,
