@@ -312,7 +312,7 @@ export const config = {
         dataName: 'manufacturersRows',
         typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
         typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
-        apiCall: '/prodex/api/manufacturers/search',
+        apiCall: '/prodex/api/manufacturers/search?returnWhenEmpty=true',
         retFcnProcess: (state, action, config) => {
           // Order alphabetically by name
           const rows = action.payload.sort(function (a, b) {

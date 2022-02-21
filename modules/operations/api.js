@@ -6,9 +6,9 @@ export default {
   deleteTag: id => api.delete(`/prodex/api/tags/id/${id}`),
   createTag: name => api.post(`/prodex/api/tags?name=${encodeURIComponent(name)}`),
   updateTag: (id, name) => api.patch(`/prodex/api/tags/id/${id}?name=${encodeURIComponent(name)}`),
-  searchCompany: (companyText, limit = 30) =>
+  searchCompany: (companyText, limit = 30, returnWhenEmpty = true) =>
     api
-      .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}`)
+      .get(`/prodex/api/companies/search?limit=${limit}&pattern=${encodeURIComponent(companyText)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data),
   cancelOrder: orderId => api.patch(`/prodex/api/purchase-orders/${orderId}/cancel`),
   getOrderById: orderId => api.post('/prodex/api/admin/orders/datagrid', {
@@ -56,8 +56,8 @@ export default {
     api.get(`/prodex/api/purchase-orders/${orderId}/download-pdf`, {
       responseType: 'blob'
     }),
-  searchCompanyGenericProduct: (searchQuery, limit, companyId) => {
-    let url = `/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}`
+  searchCompanyGenericProduct: (searchQuery, limit, companyId, returnWhenEmpty = true) => {
+    let url = `/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`
     if (companyId) {
       url += `&companyId=${companyId}`
     }

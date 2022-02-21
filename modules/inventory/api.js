@@ -84,11 +84,11 @@ export function removeAttachmentLink(isLot, itemId, aId) {
   )
 }
 
-export async function searchManufacturers(text, limit) {
+export async function searchManufacturers(text, limit, returnWhenEmpty = true) {
   const response = await api.get(
     `/prodex/api/manufacturers/search?search=${encodeURIComponent(text)}${
       Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''
-    }`
+    }${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`
   )
   return response
 }

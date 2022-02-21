@@ -34,6 +34,6 @@ export const counterOffer = (id, body) => {
 export const addOfferToCart = id => {
   return api.patch(`/prodex/api/product-offer-bids/id/${id}/to-cart`).then(response => response.data)
 }
-export const searchCompanies = name => {
-  return api.get(`/prodex/api/companies/search?onlyWithInventory=true&pattern=${encodeURIComponent(name)}`).then(response => response.data)
+export const searchCompanies = (name, returnWhenEmpty = true) => {
+  return api.get(`/prodex/api/companies/search?onlyWithInventory=true&pattern=${encodeURIComponent(name)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`).then(response => response.data)
 }

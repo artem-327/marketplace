@@ -175,8 +175,8 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body).then(r => r.data),
   patchUserRole: (id, body) => api.put(`/prodex/api/users/id/${id}/roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
-  searchCasProduct: pattern =>
-    api.get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}`),
+  searchCasProduct: (pattern, returnWhenEmpty = true) =>
+    api.get(`/prodex/api/cas-products/search?limit=5&pattern=${encodeURIComponent(pattern)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`),
   searchUnNumber: pattern => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${encodeURIComponent(pattern)}`),
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`).then(() => userId),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`).then(() => branchId),
@@ -188,9 +188,9 @@ export default {
   deleteVellociBankAccount: bankAccountId =>
     api.delete(`/prodex/api/payments/bank-accounts/velloci/${bankAccountId}`).then(() => bankAccountId),
   getAddressSearch: body => api.post('/prodex/api/addresses/search', body).then(response => response.data),
-  getDeliveryAddressesByStringRequest: async (value, limit = 30) => {
+  getDeliveryAddressesByStringRequest: async (value, limit = 30, returnWhenEmpty = true) => {
     return await api
-      .get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${encodeURIComponent(value)}`)
+      .get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${encodeURIComponent(value)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data)
   },
   getDeliveryAddressesByFilterRequest: async value => {
@@ -244,7 +244,7 @@ export default {
     api.get('/prodex/api/payments/dwolla/documents/types').then(response => response.data),
   setPreferredLanguage: language =>
     api.patch(`/prodex/api/users/me/preferred-language?language=${language.language}`).then(() => language),
-  searchCompanyGenericProduct: (searchQuery, limit, returnWhenEmpty) =>
+  searchCompanyGenericProduct: (searchQuery, limit, returnWhenEmpty = true) =>
     api
       .get(`/prodex/api/company-generic-products/search?pattern=${encodeURIComponent(searchQuery)}&limit=${limit}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`)
       .then(response => response.data),

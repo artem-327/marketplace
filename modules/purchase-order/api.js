@@ -20,7 +20,7 @@ export const postNewDeliveryAddress = address =>
 export const updateDeliveryAddress = (address, id) =>
   api.put(`/prodex/api/delivery-addresses/id/${id}`, address).then(response => response.data)
 
-export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses/search-broadcasted-by-cart')
+export const getDeliveryAddresses = (returnWhenEmpty = true) => api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart${returnWhenEmpty ? '?returnWhenEmpty=true' : ''}`)
   .then(response => response.data)
 
 export const getDwollaPayments = () =>
@@ -43,7 +43,7 @@ export const getStateDetail = id =>
   api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
 export const getBranches = () => api.get('/prodex/api/branches').then(response => response.data)
 
-export const getWarehouses = () => api.get('/prodex/api/branches/warehouses/search-broadcasted-by-cart')
+export const getWarehouses = (returnWhenEmpty = true) => api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart${returnWhenEmpty ? '?returnWhenEmpty=true' : ''}`)
   .then(response => response.data)
 
 
@@ -70,7 +70,7 @@ export const postNewWarehouse = (createWarehouse, payload) =>
 export const updateWarehouse = (payload, id) =>
   api.put(`/prodex/api/branches/${id}`, payload).then(response => response.data)
 
-export const searchDeliveryAddresses = val =>
-  api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}`).then(response => response.data)
-export const searchWarehouses = val =>
-  api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}`).then(response => response.data)
+export const searchDeliveryAddresses = (val, returnWhenEmpty = true) =>
+  api.get(`/prodex/api/delivery-addresses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`).then(response => response.data)
+export const searchWarehouses = (val, returnWhenEmpty = true) =>
+  api.get(`/prodex/api/branches/warehouses/search-broadcasted-by-cart?pattern=${encodeURIComponent(val)}${returnWhenEmpty ? '&returnWhenEmpty=true' : ''}`).then(response => response.data)
