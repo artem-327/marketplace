@@ -68,6 +68,7 @@ context("Warehouse Credentials Manipulation", () => {
                 expect(response.statusCode).to.eq(200)
             })
         })
+        cy.waitForUI()
     })
 
     it("Deny Credentials", () => {
@@ -88,6 +89,7 @@ context("Warehouse Credentials Manipulation", () => {
             cy.contains("button", "Deny").eq(0).click()
             cy.wait("@processWarehouse")
         })
+        cy.waitForUI()
     })
 
     it("Assert Certified Warehouse", () => {
