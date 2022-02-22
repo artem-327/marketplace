@@ -256,7 +256,11 @@ const getEditValues = detailValues => {
       warehouse: getSafe(() => detailValues.warehouse.id, null),
       tdsFields: getSafe(() => tdsFields, [{ property: '', specifications: '' }]),
       shared: getSafe(() => detailValues.shared, false),
-      acceptBids: detailValues?.acceptBids ?? false
+      acceptBids: detailValues?.acceptBids ?? false,
+      tds_description: getSafe(() => detailValues.tds_description, ''),
+      tds_application: getSafe(() => detailValues.tds_application, ''),
+      tds_storage: getSafe(() => detailValues.tds_storage, ''),
+      tds_safety: getSafe(() => detailValues.tds_safety, ''),
     },
     priceTiers: {
       priceTiers: getSafe(() => detailValues.pricingTiers.length, 0),
