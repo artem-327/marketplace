@@ -69,6 +69,10 @@ const DivThirdExceptions = styled.div`
   flex-grow: 0 !important;
 `
 
+const DivDescription = styled.div`
+  padding-bottom: 4px;
+`
+
 const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
   <Formik
     initialValues={{
@@ -623,11 +627,13 @@ class BankAccountsTable extends Component {
           
           { myRows.length > 0 ?
             <div style={{height: '150px', position: 'sticky', zIndex: 501, backgroundColor: 'white', padding: '20px', borderRadius: '3px', border: '1px solid #ddd'}}>
-              <b>Financial Statement</b> <br/>
-              <span>Financial statements are generated monthly and can be downloaded in .csv or .pdf formats</span> <br/><br/>
+              <DivDescription>
+                <b><FormattedMessage id='settings.accounts.financialStatement' defaultMessage='Financial Statement' /></b><br/>
+                <FormattedMessage id='settings.accounts.financialStatementContent' defaultMessage='Financial statements are generated monthly and can be downloaded in .csv or .pdf formats' /><br/>
+              </DivDescription>
               <div>
                 <Dropdown
-                  style={{ width: '500px', marginRight: '50px' }}
+                  style={{ width: '500px', marginRight: '15px' }}
                   name='seller'
                   selection
                   value={this.state.statementMonth}
@@ -637,7 +643,7 @@ class BankAccountsTable extends Component {
                   onChange={(e, { value }) => {this.setState({statementMonth: value})}}
                 />
                 <Dropdown
-                  style={{ width: '200px', marginRight: '50px' }}
+                  style={{ width: '200px', marginRight: '15px' }}
                   name='seller'
                   selection
                   value={this.state.documentType}

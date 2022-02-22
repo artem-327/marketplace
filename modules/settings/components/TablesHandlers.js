@@ -151,10 +151,11 @@ const PlaidButton = styled(PlaidLink)`
   cursor: ${props => (props.disabled ? 'not-allowed !important' : 'pointer !important')};
   pointer-events: ${props => (props.disabled ? 'none !important' : 'auto !important')};
   margin-right: 4px;
-  width: 125px !important;
   box-shadow: none !important;
-  border: solid 1px #dee2e6 !important;
-  color: #20273a !important;
+  border: solid 1px #2599d5 !important;
+  background-color: #2599d5 !important;
+  color: #ffffff !important;
+  padding: 10px 26px !important;
   opacity: ${props => (props.disabled ? '0.3 !important' : '1 !important')};
   height: 40px !important;
   border-radius: 3px !important;
@@ -620,9 +621,8 @@ class TablesHandlers extends Component {
                           onExit={this.onExit}
                           onSuccess={this.onSuccess}
                           onEvent={this.onEvent}>
-                          <div style={{ marginLeft: '10px' }}>
-                            <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
-                          </div>
+                          <CustomIcon size='20' />
+                          <FormattedMessage id={textsTable[currentTab].BtnAddText}>{text => text}</FormattedMessage>
                         </PlaidButton>
                       </div>
                     }
