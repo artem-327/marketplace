@@ -1133,7 +1133,7 @@ const ModalDetail = props => {
                                         </label>
                                         <Input
                                           type='text'
-                                          name='tds_description'
+                                          name='edit.tds_description'
                                           inputProps={{
                                             placeholder: formatMessage({
                                               id: 'addInventory.tdsFields.enterProductDescription',
@@ -1153,7 +1153,7 @@ const ModalDetail = props => {
                                         </label>
                                         <Input
                                           type='text'
-                                          name='tds_application'
+                                          name='edit.tds_application'
                                           inputProps={{
                                             placeholder: formatMessage({
                                               id: 'addInventory.tdsFields.enterApplicationBenefits',
@@ -1173,7 +1173,7 @@ const ModalDetail = props => {
                                         </label>
                                         <Input
                                           type='text'
-                                          name='tds_storage'
+                                          name='edit.tds_storage'
                                           inputProps={{
                                             placeholder: formatMessage({
                                               id: 'addInventory.tdsFields.enterStorageHandling',
@@ -1193,7 +1193,7 @@ const ModalDetail = props => {
                                         </label>
                                         <Input
                                           type='text'
-                                          name='tds_safety'
+                                          name='edit.tds_safety'
                                           inputProps={{
                                             placeholder: formatMessage({
                                               id: 'addInventory.tdsFields.enterHealthSafety',
