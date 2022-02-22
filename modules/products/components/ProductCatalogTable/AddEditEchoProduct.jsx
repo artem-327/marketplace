@@ -2115,7 +2115,7 @@ const AddEditEchoProduct = props => {
     <CustomForm
       enableReinitialize
       initialValues={getInitialFormValues()}
-      validationSchema={AddEditEchoProductPopupValidationScheme}
+      validationSchema={AddEditEchoProductPopupValidationScheme()}
       onSubmit={async (values, { setSubmitting }) => {
         submitForm(values, setSubmitting, closePopup)
       }}
