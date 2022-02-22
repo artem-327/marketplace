@@ -148,5 +148,9 @@
       "^~/(.*)$": "<rootDir>/$1"
     },
     "resetMocks": false
+  },
+  "resolutions": {
+    "lodash": "^4.17.21",
+    "lodash.template": "^4.5.0"
   }
 }
