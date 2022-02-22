@@ -62,78 +62,95 @@ Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
     })
 })
     
-export const AddEditEchoProductPopupValidationScheme = Yup.object().shape({
-    code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-    name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
-    productGroup: Yup.number().required(errorMessages.minOneGroup),
-    company: Yup.number().required(errorMessages.minOneCompany),
-    emergencyPhone: phoneValidation(10),
-    elements: Yup.array().of(
-        Yup.object()
-        .uniqueProperty(
-            'casProduct',
-            errorMessages.unique('CAS Product has to be unique')
-        )
-        .shape({
-            name: Yup.string()
-            .trim()
-            .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
-                const { proprietary } = this.parent
-                if (proprietary) {
-                return value !== null && value !== ''
-                }
-                return true
+export const AddEditEchoProductPopupValidationScheme = () =>
+  Yup.lazy(values => {
+      const emergencyRequired = !!values.emergencyPhone || !!values.emergencyCompanyName || !!values.emergencyContactName
+      return Yup.object().shape({
+          code: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+          name: Yup.string().trim().min(2, errorMessages.minLength(2)).required(errorMessages.minLength(2)),
+          productGroup: Yup.number().required(errorMessages.minOneGroup),
+          company: Yup.number().required(errorMessages.minOneCompany),
+          emergencyPhone: phoneValidation(10)
+            .test('emergencyPhoneRequired', errorMessages.requiredMessage, function (value) {
+                return !emergencyRequired || !!value
             }),
-            casProduct: Yup.string()
-            .nullable()
-            .trim()
-            .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
-                const { proprietary } = this.parent
-                if (!proprietary) {
-                return parseInt(value)
-                }
-                return true
+          emergencyCompanyName: Yup.string().trim()
+            .min(2, errorMessages.minLength(2))
+            .test('emergencyCompanyNameRequired', errorMessages.requiredMessage, function (value) {
+                return !emergencyRequired || !!value
             }),
-            assayMin: Yup.string()
-            .test('v', errorMessages.minUpToMax, function (v) {
-                const { assayMax: v2 } = this.parent
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
-                return Number(v) <= v2
-            })
-            .test('v', errorMessages.minimum(0), function (v) {
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                return Number(v) >= 0
-            })
-            .test('v', errorMessages.maximum(100), function (v) {
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                return Number(v) <= 100
-            })
-            .test('v', errorMessages.mustBeNumber, function (v) {
-                return v === null || v === '' || !isNaN(v)
+          emergencyContactName: Yup.string().trim()
+            .min(2, errorMessages.minLength(2))
+            .test('emergencyContactNameRequired', errorMessages.requiredMessage, function (value) {
+                return !emergencyRequired || !!value
             }),
-            assayMax: Yup.string()
-            .test('v', errorMessages.maxAtLeastMin, function (v) {
-                const { assayMin: v2 } = this.parent
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
-                return Number(v) >= v2
-            })
-            .test('v', errorMessages.minimum(0), function (v) {
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                return Number(v) >= 0
-            })
-            .test('v', errorMessages.maximum(100), function (v) {
-                if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
-                return Number(v) <= 100
-            })
-            .test('v', errorMessages.mustBeNumber, function (v) {
-                return v === null || v === '' || !isNaN(v)
-            })
-        })
-    ),
-    sdsIssuedDate: dateValidation(false),
-    sdsRevisionDate: dateValidation(false),
-    tdsIssuedDate: dateValidation(false),
-    tdsRevisionDate: dateValidation(false)
-})
+          elements: Yup.array().of(
+            Yup.object()
+              .uniqueProperty(
+                'casProduct',
+                errorMessages.unique('CAS Product has to be unique')
+              )
+              .shape({
+                  name: Yup.string()
+                    .trim()
+                    .test('requiredIfProprietary', errorMessages.requiredMessage, function (value) {
+                        const {proprietary} = this.parent
+                        if (proprietary) {
+                            return value !== null && value !== ''
+                        }
+                        return true
+                    }),
+                  casProduct: Yup.string()
+                    .nullable()
+                    .trim()
+                    .test('requiredIfNotProprietary', errorMessages.requiredMessage, function (value) {
+                        const {proprietary} = this.parent
+                        if (!proprietary) {
+                            return parseInt(value)
+                        }
+                        return true
+                    }),
+                  assayMin: Yup.string()
+                    .test('v', errorMessages.minUpToMax, function (v) {
+                        const {assayMax: v2} = this.parent
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        if (v2 === null || v2 === '' || isNaN(v2)) return true // No max limit value - can not be tested
+                        return Number(v) <= v2
+                    })
+                    .test('v', errorMessages.minimum(0), function (v) {
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        return Number(v) >= 0
+                    })
+                    .test('v', errorMessages.maximum(100), function (v) {
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        return Number(v) <= 100
+                    })
+                    .test('v', errorMessages.mustBeNumber, function (v) {
+                        return v === null || v === '' || !isNaN(v)
+                    }),
+                  assayMax: Yup.string()
+                    .test('v', errorMessages.maxAtLeastMin, function (v) {
+                        const {assayMin: v2} = this.parent
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        if (v2 === null || v2 === '' || isNaN(v2)) return true // No min limit value - can not be tested
+                        return Number(v) >= v2
+                    })
+                    .test('v', errorMessages.minimum(0), function (v) {
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        return Number(v) >= 0
+                    })
+                    .test('v', errorMessages.maximum(100), function (v) {
+                        if (v === null || v === '' || isNaN(v)) return true // No number value - can not be tested
+                        return Number(v) <= 100
+                    })
+                    .test('v', errorMessages.mustBeNumber, function (v) {
+                        return v === null || v === '' || !isNaN(v)
+                    })
+              })
+          ),
+          sdsIssuedDate: dateValidation(false),
+          sdsRevisionDate: dateValidation(false),
+          tdsIssuedDate: dateValidation(false),
+          tdsRevisionDate: dateValidation(false)
+      })
+  })
