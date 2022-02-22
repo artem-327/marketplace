@@ -3650,6 +3650,8 @@
   "settings.accounts.hideInactiveAccounts": "Hide Inactive Accounts",
   "settings.accounts.deleteInstitutions": "Delete Institutions",
   "settings.accounts.confirm.deleteInstitutions": "Deleting this institution will remove all accounts associated with it. Do you wish to continue?",
+  "settings.accounts.financialStatement": "Financial Statement",
+  "settings.accounts.financialStatementContent": "Financial statements are generated monthly and can be downloaded in .csv or .pdf formats",
   "confirm.deactivateBankAccount": "Deactivate Bank Account",
   "confirm.deactivate": "Do you really want to deactivate {item}?",
   "addBankAccounts.successfully.title": "Success!",

@@ -3121,6 +3121,14 @@ input[type='number'] {
           &.group-row {
             td {
               padding-bottom: 8px !important;
+
+              &:nth-child(2) {
+                border-left: 1px solid #dde2e6;
+              }
+
+              &:nth-last-child(2) {
+                border-right: 1px solid #dde2e6;
+              }
             }
           }
 
