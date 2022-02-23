@@ -131,17 +131,20 @@ export const removeEmpty = (obj, checkFn) =>
           console.error(e)
           console.error('tried to delete', { obj, key })
         }
-      } else if (typeof val === 'string') {
-        if (val.trim() === '') delete obj[key]
-        else obj[key] = val.trim()
       } else if (Array.isArray(val)) {
-        val.forEach(arrItem => removeEmpty(arrItem))
+        val.forEach(arrItem => {
+          if (arrItem && (typeof arrItem === 'object' || Array.isArray(arrItem))) removeEmpty(arrItem)
+        })
         const newArray = val.filter(arrItem => {
           if (Array.isArray(arrItem) && arrItem.length === 0) return false
           if (typeof arrItem === 'object' && Object.entries(arrItem).length === 0) return false
+          if (typeof arrItem === 'string' && arrItem.trim() === '') return false
           return true
         })
         obj[key] = newArray
+      } else if (typeof val === 'string') {
+        if (val.trim() === '') delete obj[key]
+        else obj[key] = val.trim()
       }
     }
   })
